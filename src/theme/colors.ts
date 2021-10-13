@@ -1,0 +1,66 @@
+import { ETHEME } from "utils/enums";
+
+const colors = [
+  {
+    name: ETHEME.Black,
+    colors: {
+      transparent: "#0000",
+      default: "#000",
+      reverse: "#FFF",
+      white: "#fff",
+      black: "#000",
+      primary: "#1B1657",
+      secondary: "#322C79",
+      white1: "#f2f2f2",
+      white2: "#f0f0f0",
+      black1: "#281900",
+      black2: "#2e2e2e",
+      black3: "#303030",
+      gray1: "#c9c9c9",
+      gray2: "#7a7a7a",
+      brown0: "#8b5700",
+      brown1: "#281900",
+      warn: "#f00",
+      warn1: "#f9d100",
+      success: "#a5d6a7",
+      pending: "#fff59d",
+      failed: "#ef9a9a",
+      blue: "#2196F3",
+      elevation1: "0px 0px 36px rgba(7, 4, 34, 0.4)",
+      elevation3:
+        "0px 1px 8px 0px rgb(80 80 80 / 20%), 0px 3px 4px 0px rgb(80 80 80 / 14%), 0px 3px 3px -2px rgb(80 80 80 / 12%)",
+    },
+  },
+  {
+    name: ETHEME.White,
+    colors: {
+      transparent: "#0000",
+      default: "#000",
+      reverse: "#FFF",
+      white: "#fff",
+      black: "#000",
+      primary: "#1B1657",
+      secondary: "#322C79",
+      white1: "#f2f2f2",
+      white2: "#f0f0f0",
+      black1: "#281900",
+      black2: "#2e2e2e",
+      black3: "#303030",
+      gray1: "#c9c9c9",
+      gray2: "#7a7a7a",
+      brown0: "#8b5700",
+      brown1: "#281900",
+      warn: "#f00",
+      warn1: "#f9d100",
+      success: "#a5d6a7",
+      pending: "#fff59d",
+      failed: "#ef9a9a",
+      blue: "#2196F3",
+      elevation1: "0px 0px 36px rgba(7, 4, 34, 0.4)",
+      elevation3:
+        "0px 1px 8px 0px rgb(80 80 80 / 20%), 0px 3px 4px 0px rgb(80 80 80 / 14%), 0px 3px 3px -2px rgb(80 80 80 / 12%)",
+    },
+  },
+];
+
+export default colors;
