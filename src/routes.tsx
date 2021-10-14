@@ -10,13 +10,33 @@ const routes = [
     routes: [
       {
         exact: true,
-        path: "/",
+        path: "/home",
+        component: lazy(() => import("pages/ComingSoonPage")),
+      },
+      {
+        exact: true,
+        path: "/market",
+        component: lazy(() => import("pages/ComingSoonPage")),
+      },
+      {
+        exact: true,
+        path: "/cafe",
+        component: lazy(() => import("pages/ComingSoonPage")),
+      },
+      {
+        exact: true,
+        path: "/vote",
+        component: lazy(() => import("pages/ComingSoonPage")),
+      },
+      {
+        exact: true,
+        path: "/terminal",
         component: lazy(() => import("pages/ComingSoonPage")),
       },
       {
         path: "*",
         // eslint-disable-next-line
-        component: () => <Redirect to="/" />,
+        component: () => <Redirect to="/home" />,
       },
     ],
   },

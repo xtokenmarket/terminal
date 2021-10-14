@@ -1,0 +1,45 @@
+@font-face {
+  font-family: "Gilmer";
+  font-display: auto;
+  src: local("Gilmer"),
+    url(assets/fonts/Gilmer/Gilmer-Regular.woff) format("woff");
+}
+
+@font-face {
+  font-family: "Gilmer";
+  font-weight: 200;
+  font-display: auto;
+  src: local("Gilmer"),
+    url(assets/fonts/Gilmer/Gilmer-Light.woff) format("woff");
+}
+
+@font-face {
+  font-family: "Gilmer";
+  font-weight: 300;
+  font-display: auto;
+  src: local("Gilmer"),
+    url(assets/fonts/Gilmer/Gilmer-Medium.woff) format("woff");
+}
+
+@font-face {
+  font-family: "Gilmer";
+  font-weight: 100;
+  font-display: auto;
+  src: local("Gilmer"),
+    url(assets/fonts/Gilmer/Gilmer-Outline.woff) format("woff");
+}
+
+@font-face {
+  font-family: "Gilmer";
+  font-weight: 600;
+  font-display: auto;
+  src: local("Gilmer"), url(assets/fonts/Gilmer/Gilmer-Bold.woff) format("woff");
+}
+
+@font-face {
+  font-family: "Gilmer";
+  font-weight: 700;
+  font-display: auto;
+  src: local("Gilmer"),
+    url(assets/fonts/Gilmer/Gilmer-Heavy.woff) format("woff");
+}

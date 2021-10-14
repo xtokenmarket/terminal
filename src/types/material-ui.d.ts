@@ -1,4 +1,4 @@
-declare module "@mui/styles/makeStyles" {
+declare module "@mui/material/styles" {
   interface Theme {
     custom: {
       appHeaderHeight: number;
@@ -16,6 +16,9 @@ declare module "@mui/styles/makeStyles" {
       black: string;
       primary: string;
       secondary: string;
+      third: string;
+      fourth: string;
+      fifth: string;
       white1: string;
       white2: string;
       black1: string;
@@ -33,6 +36,7 @@ declare module "@mui/styles/makeStyles" {
       pending: string;
       failed: string;
       blue: string;
+      gradient1: string;
     };
   }
   // allow configuration using `createMuiTheme`
@@ -53,6 +57,9 @@ declare module "@mui/styles/makeStyles" {
       black: string;
       primary: string;
       secondary: string;
+      third: string;
+      fourth: string;
+      fifth: string;
       white1: string;
       white2: string;
       black1: string;
@@ -70,6 +77,7 @@ declare module "@mui/styles/makeStyles" {
       pending: string;
       failed: string;
       blue: string;
+      gradient1: string;
     };
   }
 }

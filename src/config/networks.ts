@@ -17,16 +17,16 @@ export const networkIds = {
 
 const networks: { [K in NetworkId]: INetwork } = {
   [networkIds.MAINNET]: {
-    label: "",
-    url: "",
+    label: "Ethereum Mainnet",
+    url: `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_ID}`,
     contracts: {},
-    etherscanUri: "",
+    etherscanUri: "https://etherscan.io",
   },
   [networkIds.KOVAN]: {
-    label: "Avalanche Fuji Testnet",
-    url: "",
+    label: "Kovan Test Network",
+    url: `https://kovan.infura.io/v3/${process.env.REACT_APP_INFURA_ID}`,
     contracts: {},
-    etherscanUri: "",
+    etherscanUri: "https://kovan.etherscan.io",
   },
 };
 

@@ -11,6 +11,9 @@ const colors = [
       black: "#000",
       primary: "#1B1657",
       secondary: "#322C79",
+      third: "#5549DA",
+      fourth: "#9891F0",
+      fifth: "#29236B",
       white1: "#f2f2f2",
       white2: "#f0f0f0",
       black1: "#281900",
@@ -29,6 +32,8 @@ const colors = [
       elevation1: "0px 0px 36px rgba(7, 4, 34, 0.4)",
       elevation3:
         "0px 1px 8px 0px rgb(80 80 80 / 20%), 0px 3px 4px 0px rgb(80 80 80 / 14%), 0px 3px 3px -2px rgb(80 80 80 / 12%)",
+      gradient1:
+        "linear-gradient(0deg, #554ADA, #554ADA), linear-gradient(99.23deg, #37CBFC 10.32%, #9180FF 96.35%)",
     },
   },
   {
@@ -41,6 +46,9 @@ const colors = [
       black: "#000",
       primary: "#1B1657",
       secondary: "#322C79",
+      third: "#5549DA",
+      fourth: "#9891F0",
+      fifth: "#29236B",
       white1: "#f2f2f2",
       white2: "#f0f0f0",
       black1: "#281900",
@@ -59,6 +67,8 @@ const colors = [
       elevation1: "0px 0px 36px rgba(7, 4, 34, 0.4)",
       elevation3:
         "0px 1px 8px 0px rgb(80 80 80 / 20%), 0px 3px 4px 0px rgb(80 80 80 / 14%), 0px 3px 3px -2px rgb(80 80 80 / 12%)",
+      gradient1:
+        "linear-gradient(0deg, #554ADA, #554ADA), linear-gradient(99.23deg, #37CBFC 10.32%, #9180FF 96.35%)",
     },
   },
 ];

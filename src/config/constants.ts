@@ -1,6 +1,15 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import { ConnectorNames } from "utils/enums";
 
+import { ReactComponent as HomeIcon } from "assets/svgs/home.svg";
+import { ReactComponent as MarketIcon } from "assets/svgs/shopping.svg";
+import { ReactComponent as CafeIcon } from "assets/svgs/cup.svg";
+import { ReactComponent as VoteIcon } from "assets/svgs/like.svg";
+import { ReactComponent as TerminalIcon } from "assets/svgs/monitor.svg";
+import { ReactComponent as GithubIcon } from "assets/svgs/github.svg";
+import { ReactComponent as TwitterIcon } from "assets/svgs/twitter.svg";
+import { ReactComponent as DiscordIcon } from "assets/svgs/discord.svg";
+
 export const STORAGE_KEY_CONNECTOR = "CONNECTOR";
 
 export const LOGGER_ID = "xToken-Terminal";
@@ -32,3 +41,14 @@ export const MIN_START_TIME_DIFF = 10 * 60; // 10 mins
 export const LIQUIDITY_LOCK_MIN_DURATION = 30 * 24 * 60 * 60; // 1 month
 
 export const FLEEK_STORAGE_START_URL = "https://storageapi.fleek.co/";
+
+export const SvgIcons = {
+  home: HomeIcon,
+  market: MarketIcon,
+  cafe: CafeIcon,
+  vote: VoteIcon,
+  terminal: TerminalIcon,
+  github: GithubIcon,
+  twitter: TwitterIcon,
+  discord: DiscordIcon,
+};
