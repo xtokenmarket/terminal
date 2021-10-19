@@ -71,3 +71,6 @@ export function calculateGasMargin(value: BigNumber): BigNumber {
     .mul(BigNumber.from(10000).add(BigNumber.from(1000)))
     .div(BigNumber.from(10000));
 }
+
+export const waitSeconds = (sec?: number) =>
+  new Promise((resolve) => setTimeout(resolve, (sec || 1) * 1000));

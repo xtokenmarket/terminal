@@ -1,5 +1,5 @@
 import { LoadingScreen } from "components";
-import { MainLayout } from "layouts";
+import { MainLayout, TerminalLayout } from "layouts";
 import React, { Fragment, Suspense, lazy } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 
@@ -29,9 +29,30 @@ const routes = [
         component: lazy(() => import("pages/ComingSoonPage")),
       },
       {
-        exact: true,
         path: "/terminal",
-        component: lazy(() => import("pages/ComingSoonPage")),
+        layout: TerminalLayout,
+        routes: [
+          {
+            exact: true,
+            path: "/terminal/discover",
+            component: lazy(() => import("pages/TerminalDiscoverPage")),
+          },
+          {
+            exact: true,
+            path: "/terminal/my-pool",
+            component: lazy(() => import("pages/TerminalMyPoolsPage")),
+          },
+          {
+            exact: true,
+            path: "/terminal/about",
+            component: lazy(() => import("pages/TerminalAboutPage")),
+          },
+          {
+            path: "*",
+            // eslint-disable-next-line
+            component: () => <Redirect to="/terminal/discover" />,
+          },
+        ],
       },
       {
         path: "*",

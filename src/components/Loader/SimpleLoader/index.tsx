@@ -4,7 +4,7 @@ import { makeStyles } from "@mui/styles";
 const useStyles = makeStyles((theme: any) => ({
   root: { textAlign: "center", padding: 32 },
   loader: {
-    color: theme.colors.primary,
+    color: `${theme.colors.white} !important`,
   },
 }));
 

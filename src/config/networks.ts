@@ -18,28 +18,54 @@ export const networkIds = {
 const networks: { [K in NetworkId]: INetwork } = {
   [networkIds.MAINNET]: {
     label: "Ethereum Mainnet",
-    url: `https://mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_ID}`,
-    contracts: {},
+    url: "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+    contracts: {
+      LM: "",
+      multicall: "",
+    },
     etherscanUri: "https://etherscan.io",
   },
   [networkIds.KOVAN]: {
     label: "Kovan Test Network",
-    url: `https://kovan.infura.io/v3/${process.env.REACT_APP_INFURA_ID}`,
-    contracts: {},
+    url: "https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+    contracts: {
+      LM: "0xA019a4BeC92031A7719f25234B2f259D6fc3704a",
+      multicall: "0x0284D6D74C31B23179CB642aa77164752C6859ed",
+    },
     etherscanUri: "https://kovan.etherscan.io",
   },
 };
 
 const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
   xtk: {
-    name: "",
-    symbol: "",
+    name: "xToken",
+    symbol: "XTK",
     addresses: {
       [networkIds.MAINNET]: "",
       [networkIds.KOVAN]: "",
     },
     decimals: 18,
-    image: "",
+    image: "/assets/tokens/xtoken.svg",
+  },
+  dai: {
+    name: "DAI",
+    symbol: "DAI",
+    addresses: {
+      [networkIds.MAINNET]: "",
+      [networkIds.KOVAN]: "0x2E4DfEaAB649261c84B132a3E0a365114a107356",
+    },
+    decimals: 18,
+    image: "/assets/tokens/dai.png",
+  },
+  weth: {
+    name: "Wrapped ETHER",
+    symbol: "wETH",
+    addresses: {
+      [networkIds.MAINNET]: "",
+      [networkIds.KOVAN]: "0xC0e65b207a2713C5C9CA05D29E86C3B0A2E30e3e",
+    },
+    decimals: 18,
+    image: "/assets/tokens/weth.png",
   },
 };
 
@@ -155,8 +181,8 @@ export const setupNetwork = async () => {
             chainId: `0x${chainId.toString(16)}`,
             chainName: networks[DEFAULT_NETWORK_ID].label,
             nativeCurrency: {
-              name: "AVAX",
-              symbol: "avax",
+              name: networks[DEFAULT_NETWORK_ID].label,
+              symbol: "ETH",
               decimals: 18,
             },
             rpcUrls: [networks[chainId].url],

@@ -37,6 +37,7 @@ const themesOptions = [
     overrides: {
       MuiInputBase: {
         input: {
+          color: "#fff",
           "&::placeholder": {
             opacity: 1,
             color: colors.blueGrey[600],
@@ -93,6 +94,7 @@ const themesOptions = [
     overrides: {
       MuiInputBase: {
         input: {
+          color: "#fff",
           "&::placeholder": {
             opacity: 1,
             color: colors.blueGrey[600],

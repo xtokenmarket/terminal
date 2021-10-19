@@ -1,11 +1,10 @@
-import clsx from "clsx";
 import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 import { makeStyles } from "@mui/styles";
 import { matchPath, useHistory } from "react-router";
 import { useMemo } from "react";
 import { MENU_ITEMS } from "config/layout";
 import { useConnectedWeb3Context } from "contexts";
-import { Button, IconButton } from "@mui/material";
+import { Button } from "@mui/material";
 import { shortenAddress } from "utils";
 import MenuIcon from "@mui/icons-material/Menu";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
@@ -22,6 +21,7 @@ const useStyles = makeStyles((theme: any) => ({
     left: 0,
     justifyContent: "center",
     padding: "0 24px",
+    backgroundColor: theme.colors.primary,
     [theme.breakpoints.up("sm")]: {
       height: theme.custom.appHeaderHeight,
       flexDirection: "row",
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme: any) => ({
     },
   },
   connect: {
-    background: theme.colors.gradient1,
+    background: `${theme.colors.secondary} !important`,
     borderRadius: 4,
   },
   networkWrapper: {

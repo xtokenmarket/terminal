@@ -40,3 +40,8 @@ export enum EPresaleStatus {
   Failed,
   Success,
 }
+
+export enum ESort {
+  ASC = "asc",
+  DESC = "desc",
+}

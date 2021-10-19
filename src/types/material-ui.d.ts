@@ -19,6 +19,8 @@ declare module "@mui/material/styles" {
       third: string;
       fourth: string;
       fifth: string;
+      sixth: string;
+      seventh: string;
       white1: string;
       white2: string;
       black1: string;
@@ -60,6 +62,8 @@ declare module "@mui/material/styles" {
       third: string;
       fourth: string;
       fifth: string;
+      sixth: string;
+      seventh: string;
       white1: string;
       white2: string;
       black1: string;
