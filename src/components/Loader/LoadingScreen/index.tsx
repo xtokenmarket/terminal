@@ -1,5 +1,5 @@
-import { Box, LinearProgress } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { makeStyles, Box, LinearProgress } from "@material-ui/core";
+
 import React from "react";
 
 const useStyles = makeStyles({

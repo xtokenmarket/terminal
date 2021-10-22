@@ -1,4 +1,4 @@
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "@material-ui/core";
 import clsx from "clsx";
 
 const useStyles = makeStyles((theme: any) => ({

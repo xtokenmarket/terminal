@@ -1,6 +1,10 @@
-import { CheckBox } from "@mui/icons-material";
-import { FormControlLabel, Input, TextField } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import {
+  makeStyles,
+  Checkbox,
+  FormControlLabel,
+  TextField,
+} from "@material-ui/core";
+
 import clsx from "clsx";
 
 const useStyles = makeStyles((theme: any) => ({
@@ -11,24 +15,24 @@ const useStyles = makeStyles((theme: any) => ({
   },
   input: {
     width: "100%",
-    border: `1px solid ${theme.colors.fourth} !important`,
+    border: `1px solid ${theme.colors.fourth} `,
     borderRadius: 4,
-    marginBottom: `16px !important`,
-    padding: "8px 12px !important",
+    marginBottom: 16,
+    padding: "8px 12px ",
     "& input": {
-      color: `${theme.colors.white} !important`,
+      color: theme.colors.white,
     },
     [theme.breakpoints.up("sm")]: {
       width: "50%",
-      marginBottom: `0 !important`,
-      marginRight: `32px !important`,
+      marginBottom: 0,
+      marginRight: 32,
     },
   },
   checkLabel: {
-    marginLeft: "0 !important",
+    marginLeft: 0,
     color: theme.colors.fourth,
     "& + &": {
-      marginLeft: "16px !important",
+      marginLeft: 16,
     },
   },
 }));
@@ -49,12 +53,12 @@ export const HeaderSection = (props: IProps) => {
       />
       <FormControlLabel
         className={classes.checkLabel}
-        control={<CheckBox />}
+        control={<Checkbox />}
         label="Staked Only"
       />
       <FormControlLabel
         className={classes.checkLabel}
-        control={<CheckBox />}
+        control={<Checkbox />}
         label="Staked Ended"
       />
     </div>

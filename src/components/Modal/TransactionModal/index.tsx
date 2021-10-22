@@ -1,6 +1,10 @@
-import { CircularProgress, Modal, Typography } from "@mui/material";
 import clsx from "clsx";
-import { makeStyles } from "@mui/styles";
+import {
+  makeStyles,
+  CircularProgress,
+  Modal,
+  Typography,
+} from "@material-ui/core";
 
 import { DEFAULT_NETWORK_ID } from "config/constants";
 import { getEtherscanUri } from "config/networks";

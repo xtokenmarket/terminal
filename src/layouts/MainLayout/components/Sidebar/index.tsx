@@ -1,5 +1,4 @@
-import { Typography } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { makeStyles, Typography } from "@material-ui/core";
 import clsx from "clsx";
 import { MENU_ITEMS, SOCIAL_ITEMS } from "config/layout";
 import { NavLink, useHistory, matchPath } from "react-router-dom";

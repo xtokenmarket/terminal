@@ -1,10 +1,10 @@
 import { Web3Provider } from "@ethersproject/providers";
-import { ThemeProvider } from "@mui/material";
+import { ThemeProvider } from "@material-ui/styles";
 import { Web3ReactProvider } from "@web3-react/core";
 import { SnackbarProvider } from "notistack";
 import { BrowserRouter } from "react-router-dom";
 import routes, { renderRoutes } from "routes";
-import { createMuiTheme as createTheme } from "theme";
+import { createTheme } from "theme";
 import { ETHEME } from "utils/enums";
 
 import React from "react";

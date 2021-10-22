@@ -1,10 +1,9 @@
-import { CircularProgress } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { makeStyles, CircularProgress } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: any) => ({
   root: { textAlign: "center", padding: 32 },
   loader: {
-    color: `${theme.colors.white} !important`,
+    color: theme.colors.white,
   },
 }));
 

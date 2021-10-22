@@ -1,4 +1,4 @@
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "@material-ui/core";
 import { Tabs } from "./components";
 
 const useStyles = makeStyles((theme: any) => ({

@@ -1,4 +1,4 @@
-declare module "@mui/material/styles" {
+declare module "@material-ui/core/styles/createMuiTheme" {
   interface Theme {
     custom: {
       appHeaderHeight: number;

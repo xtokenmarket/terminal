@@ -1,13 +1,13 @@
-import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import { makeStyles } from "@mui/styles";
+import { makeStyles, Button } from "@material-ui/core";
+
+import AccountBalanceWalletIcon from "@material-ui/icons/AccountBalanceWallet";
 import { matchPath, useHistory } from "react-router";
 import { useMemo } from "react";
 import { MENU_ITEMS } from "config/layout";
 import { useConnectedWeb3Context } from "contexts";
-import { Button } from "@mui/material";
 import { shortenAddress } from "utils";
-import MenuIcon from "@mui/icons-material/Menu";
-import MenuOpenIcon from "@mui/icons-material/MenuOpen";
+import MenuIcon from "@material-ui/icons/Menu";
+import MenuOpenIcon from "@material-ui/icons/MenuOpen";
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme: any) => ({
     },
   },
   connect: {
-    background: `${theme.colors.secondary} !important`,
+    background: theme.colors.secondary,
     borderRadius: 4,
   },
   networkWrapper: {

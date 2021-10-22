@@ -1,4 +1,4 @@
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "@material-ui/core";
 import { transparentize } from "polished";
 
 const useCommonStyles = makeStyles((theme: any) => ({
@@ -46,12 +46,12 @@ const useCommonStyles = makeStyles((theme: any) => ({
   },
   hideBelowWide: {
     [theme.breakpoints.down("sm")]: {
-      display: "none !important",
+      display: "none",
     },
   },
   showBelowWide: {
     [theme.breakpoints.up("md")]: {
-      display: "none !important",
+      display: "none",
     },
   },
   maxHeightTransition: {

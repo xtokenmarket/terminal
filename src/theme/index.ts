@@ -1,5 +1,4 @@
-import { createTheme } from "@mui/material";
-import * as colors from "@mui/material/colors";
+import { colors, createMuiTheme } from "@material-ui/core";
 
 import _ from "lodash";
 import { ETHEME } from "utils/enums";
@@ -147,7 +146,7 @@ const themesOptions = [
   },
 ];
 
-export const createMuiTheme = (themeId: ETHEME) => {
+export const createTheme = (themeId: ETHEME) => {
   let themeOptions = themesOptions.find((theme) => theme.name === themeId);
   let customColor = CustomColors.find((element) => element.name === themeId);
 
@@ -160,7 +159,7 @@ export const createMuiTheme = (themeId: ETHEME) => {
     [customColor] = CustomColors;
   }
 
-  let theme = createTheme(
+  let theme = createMuiTheme(
     _.merge({}, baseOptions, themeOptions, { custom }, customColor) as any
   );
 

@@ -1,6 +1,11 @@
-import { CircularProgress, Modal, Typography } from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import { makeStyles } from "@mui/styles";
+import {
+  makeStyles,
+  CircularProgress,
+  Modal,
+  Typography,
+} from "@material-ui/core";
+
+import CloseIcon from "@material-ui/icons/Close";
 
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { useWeb3React } from "@web3-react/core";
