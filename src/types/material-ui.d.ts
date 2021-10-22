@@ -1,4 +1,6 @@
-declare module "@material-ui/core/styles/createMuiTheme" {
+import { Theme } from "@material-ui/core/styles/createTheme";
+
+declare module "@material-ui/core/styles/createTheme" {
   interface Theme {
     custom: {
       appHeaderHeight: number;
@@ -21,23 +23,18 @@ declare module "@material-ui/core/styles/createMuiTheme" {
       fifth: string;
       sixth: string;
       seventh: string;
+      eighth: string;
       white1: string;
       white2: string;
+      white3: string;
       black1: string;
       black2: string;
       black3: string;
       gray1: string;
       gray2: string;
-      brown0: string;
-      brown1: string;
       elevation1: string;
       elevation3: string;
       warn: string;
-      warn1: string;
-      success: string;
-      pending: string;
-      failed: string;
-      blue: string;
       gradient1: string;
     };
   }
@@ -64,23 +61,18 @@ declare module "@material-ui/core/styles/createMuiTheme" {
       fifth: string;
       sixth: string;
       seventh: string;
+      eighth: string;
       white1: string;
       white2: string;
+      white3: string;
       black1: string;
       black2: string;
       black3: string;
       gray1: string;
       gray2: string;
-      brown0: string;
-      brown1: string;
       elevation1: string;
       elevation3: string;
       warn: string;
-      warn1: string;
-      success: string;
-      pending: string;
-      failed: string;
-      blue: string;
       gradient1: string;
     };
   }

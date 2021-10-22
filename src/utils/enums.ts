@@ -45,3 +45,9 @@ export enum ESort {
   ASC = "asc",
   DESC = "desc",
 }
+
+export enum ENetwork {
+  Ethereum = "Ethereum",
+  Arbitrum = "Arbitrum",
+  Optimism = "Optimism",
+}

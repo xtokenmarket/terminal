@@ -50,10 +50,10 @@ const themesOptions = [
           textTransform: "none",
         },
         containedPrimary: {
-          backgroundColor: "#ff872e",
-          color: "#000",
+          backgroundColor: "#6E27E4",
+          color: "#FFFFFF",
           "&:hover": {
-            backgroundColor: "#ff872e",
+            backgroundColor: "#6E27E499",
           },
         },
         label: {
@@ -107,10 +107,10 @@ const themesOptions = [
           textTransform: "none",
         },
         containedPrimary: {
-          backgroundColor: "#ff872e",
-          color: "#000",
+          backgroundColor: "#6E27E4",
+          color: "#FFFFFF",
           "&:hover": {
-            backgroundColor: "#ff872e",
+            backgroundColor: "#6E27E499",
           },
         },
         label: {

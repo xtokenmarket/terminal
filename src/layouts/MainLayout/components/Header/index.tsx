@@ -8,8 +8,10 @@ import { useConnectedWeb3Context } from "contexts";
 import { shortenAddress } from "utils";
 import MenuIcon from "@material-ui/icons/Menu";
 import MenuOpenIcon from "@material-ui/icons/MenuOpen";
+import { NetworkSelector } from "../NetworkSelector";
+import { ENetwork } from "utils/enums";
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     position: "fixed",
     zIndex: 90,
@@ -61,21 +63,10 @@ const useStyles = makeStyles((theme: any) => ({
   connect: {
     background: theme.colors.secondary,
     borderRadius: 4,
+    height: 40,
   },
   networkWrapper: {
     marginRight: 16,
-    height: 36,
-    display: "flex",
-    alignItems: "center",
-    borderRadius: 4,
-    backgroundColor: theme.colors.fifth,
-    padding: 8,
-    color: theme.colors.fourth,
-    "& img": {
-      marginRight: 6,
-      width: 24,
-      height: 24,
-    },
   },
   menuIcon: {
     width: 40,
@@ -134,11 +125,11 @@ export const Header = (props: IProps) => {
         </span>
       </div>
       <div className={classes.right}>
-        {account && (
-          <div className={classes.networkWrapper}>
-            <img src="/assets/tokens/ethereum.svg" /> <span>Ethereum</span>
-          </div>
-        )}
+        <NetworkSelector
+          className={classes.networkWrapper}
+          network={ENetwork.Ethereum}
+        />
+
         <Button
           className={classes.connect}
           color="primary"
