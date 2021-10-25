@@ -18,6 +18,7 @@ declare module "@material-ui/core/styles/createTheme" {
       black: string;
       primary: string;
       secondary: string;
+      secondary1: string;
       third: string;
       fourth: string;
       fifth: string;
@@ -56,6 +57,7 @@ declare module "@material-ui/core/styles/createTheme" {
       black: string;
       primary: string;
       secondary: string;
+      secondary1: string;
       third: string;
       fourth: string;
       fifth: string;

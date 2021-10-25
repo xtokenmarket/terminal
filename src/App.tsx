@@ -4,7 +4,7 @@ import { Web3ReactProvider } from "@web3-react/core";
 import { SnackbarProvider } from "notistack";
 import { BrowserRouter } from "react-router-dom";
 import routes, { renderRoutes } from "routes";
-import { createTheme } from "theme";
+import { createGlobalTheme as createTheme } from "theme";
 import { ETHEME } from "utils/enums";
 
 import React from "react";

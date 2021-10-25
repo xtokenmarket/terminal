@@ -1,6 +1,5 @@
-import { SimpleLoader } from "components";
+import { SimpleLoader, HeaderSection, PoolTable } from "components";
 import { useTerminalPools } from "helpers";
-import { HeaderSection, PoolTable } from "./components";
 
 const TerminalDiscoverPage = () => {
   const { pools: poolAddresses, loading } = useTerminalPools();

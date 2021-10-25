@@ -10,6 +10,8 @@ import MenuIcon from "@material-ui/icons/Menu";
 import MenuOpenIcon from "@material-ui/icons/MenuOpen";
 import { NetworkSelector } from "../NetworkSelector";
 import { ENetwork } from "utils/enums";
+import { useScrollYPosition } from "helpers";
+import clsx from "clsx";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,7 +25,11 @@ const useStyles = makeStyles((theme) => ({
     left: 0,
     justifyContent: "center",
     padding: "0 24px",
-    backgroundColor: theme.colors.primary,
+    backgroundColor: theme.colors.transparent,
+    transition: "all 0.4s",
+    "&.blur-header": {
+      backgroundColor: theme.colors.primary,
+    },
     [theme.breakpoints.up("sm")]: {
       height: theme.custom.appHeaderHeight,
       flexDirection: "row",
@@ -100,8 +106,9 @@ export const Header = (props: IProps) => {
   const { opened, onOpen } = props;
   const classes = useStyles();
   const history = useHistory();
-  const { account, networkId, setWalletConnectModalOpened, onDisconnect } =
+  const { account, setWalletConnectModalOpened, onDisconnect } =
     useConnectedWeb3Context();
+  const yPosition = useScrollYPosition();
 
   const selectedMenuItem = useMemo(() => {
     const item = MENU_ITEMS.find(
@@ -117,7 +124,7 @@ export const Header = (props: IProps) => {
   const Icon = selectedMenuItem?.icon;
 
   return (
-    <div className={classes.root}>
+    <div className={clsx(classes.root, yPosition >= 30 && "blur-header")}>
       <div className={classes.title}>
         {Icon && <Icon />}
         <span>

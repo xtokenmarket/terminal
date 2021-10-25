@@ -29,7 +29,7 @@ const networks: { [K in NetworkId]: INetwork } = {
     label: "Kovan Test Network",
     url: "https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
     contracts: {
-      LM: "0xA019a4BeC92031A7719f25234B2f259D6fc3704a",
+      LM: "0x710FB60B0D45f97f679B4F818AD0c2Fd77d569a1",
       multicall: "0x0284D6D74C31B23179CB642aa77164752C6859ed",
     },
     etherscanUri: "https://kovan.etherscan.io",

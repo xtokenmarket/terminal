@@ -6,7 +6,10 @@ import { Sidebar, Header } from "./components";
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
-    backgroundImage: "url(/assets/imgs/bg.svg)",
+    backgroundImage: "url(/assets/imgs/bg.png)",
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "right",
+    backgroundSize: "contain",
   },
   content: {
     padding: "0 24px",
