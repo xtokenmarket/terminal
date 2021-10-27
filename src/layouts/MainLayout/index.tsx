@@ -53,7 +53,7 @@ export const MainLayout = (props: IProps) => {
       />
       <Header
         opened={state.sidebarOpened}
-        onOpen={() => setSidebarOpened(true)}
+        onOpen={() => setSidebarOpened(!state.sidebarOpened)}
       />
       <div className={classes.content}>
         <div className={classes.childrenWrapper}>{props.children}</div>

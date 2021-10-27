@@ -5,7 +5,7 @@ import { NavLink, useHistory, matchPath } from "react-router-dom";
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
-    backgroundColor: theme.colors.secondary,
+    backgroundColor: theme.colors.primary,
     boxShadow: theme.colors.elevation1,
     position: "fixed",
     top: 0,
@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme: any) => ({
     position: "absolute",
     top: 0,
     bottom: 0,
+    zIndex: 98,
     left: 0,
     right: 0,
     display: "none",
@@ -92,7 +93,7 @@ const useStyles = makeStyles((theme: any) => ({
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: theme.colors.primary,
+      backgroundColor: theme.colors.primary300,
       color: theme.colors.fourth,
       transition: "all 0.4s",
       "& svg": {
@@ -111,7 +112,7 @@ const useStyles = makeStyles((theme: any) => ({
 
     "&:hover": {
       "& .menu-item-icon-wrapper": {
-        backgroundColor: theme.colors.third,
+        backgroundColor: theme.colors.primary400,
         color: theme.colors.white,
         "& svg": {
           "& g": { opacity: 1 },

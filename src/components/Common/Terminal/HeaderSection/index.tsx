@@ -3,11 +3,10 @@ import {
   Checkbox,
   FormControlLabel,
   TextField,
-  Button,
   InputAdornment,
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
-import clsx from "clsx";
+import { NavLink } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,14 +30,19 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   tmp: { flex: 1 },
-  button: {
+  link: {
     height: 40,
-    backgroundColor: theme.colors.secondary1,
-    "& span": {
-      fontSize: 14,
-      color: theme.colors.black1,
-      fontWeight: 600,
-    },
+    backgroundColor: theme.colors.secondary,
+
+    fontSize: 14,
+    color: theme.colors.primary700,
+    fontWeight: 600,
+    textDecoration: "none",
+    display: "inline-flex",
+    alignItems: "center",
+    borderRadius: 4,
+    justifyContent: "center",
+    padding: "0 20px",
   },
   input: {
     width: "100%",
@@ -99,9 +103,9 @@ export const HeaderSection = (props: IProps) => {
           label="Staked Ended"
         />
         <div className={classes.tmp} />
-        <Button variant="contained" color="primary" className={classes.button}>
+        <NavLink to="/terminal/new-pool" className={classes.link}>
           CREATE POOL
-        </Button>
+        </NavLink>
       </div>
     </div>
   );

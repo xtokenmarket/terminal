@@ -29,6 +29,11 @@ const routes = [
         component: lazy(() => import("pages/ComingSoonPage")),
       },
       {
+        exact: true,
+        path: "/terminal/new-pool",
+        component: lazy(() => import("pages/TerminalNewPoolPage")),
+      },
+      {
         path: "/terminal",
         layout: TerminalLayout,
         routes: [

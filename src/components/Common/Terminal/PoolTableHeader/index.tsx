@@ -26,6 +26,9 @@ export const PoolTableHeader = (props: IProps) => {
       <PoolTd type="pool">
         <div className={classes.item}>POOL</div>
       </PoolTd>
+      <PoolTd type="allocation">
+        <div className={classes.item}>ALLOCATION</div>
+      </PoolTd>
       <PoolTd type="tvl">
         <div className={classes.item}>
           TVL

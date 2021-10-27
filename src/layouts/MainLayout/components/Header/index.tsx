@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.transparent,
     transition: "all 0.4s",
     "&.blur-header": {
-      backgroundColor: theme.colors.primary,
+      backgroundColor: theme.colors.primary700,
     },
     [theme.breakpoints.up("sm")]: {
       height: theme.custom.appHeaderHeight,
@@ -65,14 +65,23 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("sm")]: {
       marginTop: 0,
     },
+    [theme.breakpoints.down(theme.custom.xsss)]: {
+      marginTop: 16,
+    },
   },
   connect: {
-    background: theme.colors.secondary,
+    background: theme.colors.primary,
     borderRadius: 4,
     height: 40,
+    [theme.breakpoints.down(theme.custom.xsss)]: {
+      height: 36,
+    },
   },
   networkWrapper: {
     marginRight: 16,
+    [theme.breakpoints.down(theme.custom.xsss)]: {
+      height: 36,
+    },
   },
   menuIcon: {
     width: 40,
@@ -80,19 +89,29 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    position: "fixed",
+
     zIndex: 90,
-    top: 24,
-    right: 24,
+
     outline: "none",
     color: theme.colors.white,
     background: "none",
     boxShadow: "none",
-    border: `1px solid ${theme.colors.secondary}`,
+    border: `1px solid ${theme.colors.primary}`,
     transition: "all 0.4s",
     "&:hover": { opacity: 0.7 },
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up(theme.custom.smd)]: {
       display: "none",
+    },
+    [theme.breakpoints.down("xs")]: {
+      top: 24,
+      right: 24,
+      position: "fixed",
+    },
+    [theme.breakpoints.down(theme.custom.xsss)]: {
+      top: 12,
+      right: 12,
+      width: 32,
+      height: 32,
     },
   },
 }));

@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: any) => ({
     alignItems: "center",
     padding: "0 24px",
     textDecoration: "none",
-    backgroundColor: theme.colors.sixth,
+    backgroundColor: theme.colors.primary500,
     color: theme.colors.fourth,
     height: "100%",
     transition: "all 0.4s",

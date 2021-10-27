@@ -3,7 +3,7 @@ import { useTerminalPool } from "helpers";
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
-    backgroundColor: theme.colors.seventh,
+    backgroundColor: theme.colors.primary400,
     borderRadius: 4,
     padding: 12,
     "&+&": {

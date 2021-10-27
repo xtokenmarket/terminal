@@ -3,7 +3,8 @@ import clsx from "clsx";
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
-    "&.pool": { flex: 1 },
+    "&.pool": { width: "10%" },
+    "&.allocation": { flex: 1 },
     "&.tvl": { width: "10%" },
     "&.vesting": { width: "10%" },
     "&.program": { width: "15%" },
@@ -17,7 +18,14 @@ const useStyles = makeStyles((theme: any) => ({
 }));
 
 interface IProps {
-  type: "pool" | "tvl" | "vesting" | "program" | "ending" | "apr";
+  type:
+    | "pool"
+    | "tvl"
+    | "vesting"
+    | "program"
+    | "ending"
+    | "apr"
+    | "allocation";
   children: React.ReactNode | React.ReactNode[];
 }
 

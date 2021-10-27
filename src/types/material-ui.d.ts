@@ -9,6 +9,8 @@ declare module "@material-ui/core/styles/createTheme" {
       maxContentWidth: number;
       smd: number;
       ml: number;
+      xss: number;
+      xsss: number;
     };
     colors: {
       transparent: string;
@@ -17,13 +19,19 @@ declare module "@material-ui/core/styles/createTheme" {
       white: string;
       black: string;
       primary: string;
+      primary100: string;
+      primary200: string;
+      primary300: string;
+      primary400: string;
+      primary500: string;
+      primary600: string;
+      primary700: string;
       secondary: string;
       secondary1: string;
       third: string;
       fourth: string;
       fifth: string;
       sixth: string;
-      seventh: string;
       eighth: string;
       white1: string;
       white2: string;
@@ -48,6 +56,8 @@ declare module "@material-ui/core/styles/createTheme" {
       maxContentWidth: number;
       smd: number;
       ml: number;
+      xss: number;
+      xsss: number;
     };
     colors: {
       transparent: string;
@@ -56,13 +66,19 @@ declare module "@material-ui/core/styles/createTheme" {
       white: string;
       black: string;
       primary: string;
+      primary100: string;
+      primary200: string;
+      primary300: string;
+      primary400: string;
+      primary500: string;
+      primary600: string;
+      primary700: string;
       secondary: string;
       secondary1: string;
       third: string;
       fourth: string;
       fifth: string;
       sixth: string;
-      seventh: string;
       eighth: string;
       white1: string;
       white2: string;

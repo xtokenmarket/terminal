@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme: any) => ({
     height: 40,
   },
   content: {
-    backgroundColor: theme.colors.sixth,
+    backgroundColor: theme.colors.primary500,
     borderRadius: 4,
     padding: 24,
   },
