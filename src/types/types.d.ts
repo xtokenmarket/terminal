@@ -24,7 +24,7 @@ export type NetworkId = 1 | 42;
 
 export type KnownContracts = keyof INetwork["contracts"];
 
-export type KnownToken = "xtk" | "dai" | "weth";
+export type KnownToken = "xtk" | "dai" | "weth" | "usdt" | "usdc" | "aave";
 
 export interface IKnownTokenData {
   name: string;
@@ -40,8 +40,7 @@ export interface IToken {
   decimals: number;
   symbol: string;
   name: string;
-  image: string;
-  totalSupply?: BigNumber;
+  image?: string;
 }
 
 export type ITerminalPoolTableSortFactor = "tvl" | "vesting" | "ending" | "apr";

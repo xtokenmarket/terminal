@@ -45,7 +45,7 @@ const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
       [networkIds.KOVAN]: "",
     },
     decimals: 18,
-    image: "/assets/tokens/xtoken.svg",
+    image: "/assets/tokens/xtk.png",
   },
   dai: {
     name: "DAI",
@@ -67,7 +67,40 @@ const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     decimals: 18,
     image: "/assets/tokens/weth.png",
   },
+  aave: {
+    name: "AAVE",
+    symbol: "AAVE",
+    addresses: {
+      [networkIds.MAINNET]: "",
+      [networkIds.KOVAN]: "0xC0e65b207a2713C5C9CA05D29E86C3B0A2E30e3e",
+    },
+    decimals: 18,
+    image: "/assets/tokens/aave.png",
+  },
+  usdt: {
+    name: "Tether USD",
+    symbol: "USDT",
+    addresses: {
+      [networkIds.MAINNET]: "",
+      [networkIds.KOVAN]: "0xC0e65b207a2713C5C9CA05D29E86C3B0A2E30e3e",
+    },
+    decimals: 18,
+    image: "/assets/tokens/usdt.png",
+  },
+  usdc: {
+    name: "USD Coin",
+    symbol: "USDC",
+    addresses: {
+      [networkIds.MAINNET]: "",
+      [networkIds.KOVAN]: "0xC0e65b207a2713C5C9CA05D29E86C3B0A2E30e3e",
+    },
+    decimals: 18,
+    image: "/assets/tokens/usdc.png",
+  },
 };
+
+export const tokenSymbols = Object.keys(knownTokens);
+export const commonBaseTokenSymbols = ["usdt", "weth"];
 
 export const supportedNetworkIds = Object.keys(networks).map(
   Number

@@ -32,6 +32,7 @@ declare module "@material-ui/core/styles/createTheme" {
       fourth: string;
       fifth: string;
       sixth: string;
+      seventh: string;
       eighth: string;
       white1: string;
       white2: string;
@@ -79,6 +80,7 @@ declare module "@material-ui/core/styles/createTheme" {
       fourth: string;
       fifth: string;
       sixth: string;
+      seventh: string;
       eighth: string;
       white1: string;
       white2: string;

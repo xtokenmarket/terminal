@@ -6,11 +6,29 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    position: "relative",
+    borderBottom: `1px solid ${theme.colors.primary200}`,
   },
-  backWrapper: {},
+  backWrapper: {
+    display: "flex",
+    position: "absolute",
+    left: 0,
+    cursor: "pointer",
+    transition: "all 0.4s",
+    "&:hover": {
+      opacity: 0.7,
+    },
+  },
   backIcon: {},
-  backText: {},
-  title: {},
+  backText: {
+    color: theme.colors.primary100,
+    marginLeft: 16,
+  },
+  title: {
+    fontSize: 18,
+    color: theme.colors.white,
+    fontWeight: 700,
+  },
 }));
 
 interface IProps {
@@ -26,7 +44,7 @@ export const PageHeader = (props: IProps) => {
   return (
     <div className={classes.root}>
       {props.backVisible ? (
-        <button
+        <span
           className={classes.backWrapper}
           onClick={props.onBack || (() => {})}
         >
@@ -36,7 +54,7 @@ export const PageHeader = (props: IProps) => {
             className={classes.backIcon}
           />
           <span className={classes.backText}>Back</span>
-        </button>
+        </span>
       ) : null}
       {props.headerTitle ? (
         <Typography className={classes.title}>{props.headerTitle}</Typography>
