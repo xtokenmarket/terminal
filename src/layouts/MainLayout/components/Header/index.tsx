@@ -6,8 +6,6 @@ import { useMemo } from "react";
 import { MENU_ITEMS } from "config/layout";
 import { useConnectedWeb3Context } from "contexts";
 import { shortenAddress } from "utils";
-import MenuIcon from "@material-ui/icons/Menu";
-import MenuOpenIcon from "@material-ui/icons/MenuOpen";
 import { NetworkSelector } from "../NetworkSelector";
 import { ENetwork } from "utils/enums";
 import { useScrollYPosition } from "helpers";
@@ -21,22 +19,25 @@ const useStyles = makeStyles((theme) => ({
     right: 0,
     height: theme.custom.appHeaderHeight * 1.2,
     display: "flex",
-    flexDirection: "column",
     left: 0,
-    justifyContent: "center",
+    justifyContent: "space-between",
     padding: "0 24px",
     backgroundColor: theme.colors.transparent,
     transition: "all 0.4s",
-    "&.blur-header": {
-      backgroundColor: theme.colors.primary700,
+    alignItems: "center",
+    [theme.breakpoints.down("xs")]: {
+      padding: "0 12px",
+      height: theme.custom.appHeaderHeight * 0.8,
+      backgroundColor: theme.colors.primary300,
     },
     [theme.breakpoints.up("sm")]: {
       height: theme.custom.appHeaderHeight,
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
+
+      "&.blur-header": {
+        backgroundColor: theme.colors.primary700,
+      },
     },
-    [theme.breakpoints.up(theme.custom.smd)]: {
+    [theme.breakpoints.up("sm")]: {
       left: `calc(${theme.custom.tabletNavbarWidth}px)`,
       padding: "0 36px",
     },
@@ -55,6 +56,9 @@ const useStyles = makeStyles((theme) => ({
     "& span": {
       color: theme.colors.white,
       "& span": { color: theme.colors.fourth },
+    },
+    [theme.breakpoints.down("xs")]: {
+      display: "none",
     },
   },
   right: {
@@ -83,46 +87,9 @@ const useStyles = makeStyles((theme) => ({
       height: 36,
     },
   },
-  menuIcon: {
-    width: 40,
-    height: 40,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-
-    zIndex: 90,
-
-    outline: "none",
-    color: theme.colors.white,
-    background: "none",
-    boxShadow: "none",
-    border: `1px solid ${theme.colors.primary}`,
-    transition: "all 0.4s",
-    "&:hover": { opacity: 0.7 },
-    [theme.breakpoints.up(theme.custom.smd)]: {
-      display: "none",
-    },
-    [theme.breakpoints.down("xs")]: {
-      top: 24,
-      right: 24,
-      position: "fixed",
-    },
-    [theme.breakpoints.down(theme.custom.xsss)]: {
-      top: 12,
-      right: 12,
-      width: 32,
-      height: 32,
-    },
-  },
 }));
 
-interface IProps {
-  opened: boolean;
-  onOpen: () => void;
-}
-
-export const Header = (props: IProps) => {
-  const { opened, onOpen } = props;
+export const Header = () => {
   const classes = useStyles();
   const history = useHistory();
   const { account, setWalletConnectModalOpened, onDisconnect } =
@@ -168,9 +135,6 @@ export const Header = (props: IProps) => {
           {account ? shortenAddress(account) : "Connect Account"}
         </Button>
       </div>
-      <button className={classes.menuIcon} onClick={onOpen}>
-        {opened ? <MenuOpenIcon /> : <MenuIcon />}
-      </button>
     </div>
   );
 };

@@ -1,6 +1,8 @@
 import { Contract, Wallet, ethers } from "ethers";
 import { Maybe, MultiCallResponse } from "types";
-import multicallAbi from "abis/multicall.json";
+import abis from "abis";
+
+const multicallAbi = abis.Multicall;
 
 interface Call {
   address: string; // Address of the contract
@@ -47,11 +49,31 @@ class MulticallService {
       call.address.toLowerCase(),
       itf.encodeFunctionData(call.name, call.params),
     ]);
-    const returnData = await multi.tryAggregate(requireSuccess, calldata);
+
+    const returnData = await multi.callStatic.tryAggregate(
+      requireSuccess,
+      calldata
+    );
     const res = returnData.map((call: any, i: number) => {
       const [result, data] = call;
       return result ? itf.decodeFunctionResult(calls[i].name, data) : null;
     });
+
+    return res;
+  };
+
+  multicall = async <T = any>(abi: any[], calls: Call[]): Promise<T> => {
+    const itf = new ethers.utils.Interface(abi);
+
+    const calldata = calls.map((call) => [
+      call.address.toLowerCase(),
+      itf.encodeFunctionData(call.name, call.params),
+    ]);
+    const { returnData } = await this.contract.callStatic.aggregate(calldata);
+
+    const res = returnData.map((call: any, i: number) =>
+      itf.decodeFunctionResult(calls[i].name, call)
+    );
 
     return res;
   };

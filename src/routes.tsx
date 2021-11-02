@@ -8,11 +8,11 @@ const routes = [
     path: "/",
     layout: MainLayout,
     routes: [
-      {
-        exact: true,
-        path: "/home",
-        component: lazy(() => import("pages/ComingSoonPage")),
-      },
+      // {
+      //   exact: true,
+      //   path: "/home",
+      //   component: lazy(() => import("pages/ComingSoonPage")),
+      // },
       {
         exact: true,
         path: "/market",
@@ -62,7 +62,7 @@ const routes = [
       {
         path: "*",
         // eslint-disable-next-line
-        component: () => <Redirect to="/home" />,
+        component: () => <Redirect to="/terminal" />,
       },
     ],
   },

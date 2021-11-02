@@ -16,14 +16,11 @@ const useStyles = makeStyles((theme: any) => ({
     "&::-webkit-scrollbar": {
       width: 0,
     },
-    [theme.breakpoints.down(theme.custom.smd)]: {
-      left: 0,
+    [theme.breakpoints.down("xs")]: {
       width: 0,
-      "&.visible": {
-        width: theme.custom.desktopNavbarWidth,
-      },
+      left: 0,
     },
-    [theme.breakpoints.up(theme.custom.smd)]: {
+    [theme.breakpoints.up("sm")]: {
       left: 0,
       width: theme.custom.tabletNavbarWidth,
       "&:hover": {
@@ -33,20 +30,6 @@ const useStyles = makeStyles((theme: any) => ({
     [theme.breakpoints.up("lg")]: {
       left: 0,
       width: theme.custom.desktopNavbarWidth,
-    },
-  },
-  backDrop: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    zIndex: 98,
-    left: 0,
-    right: 0,
-    display: "none",
-    [theme.breakpoints.down(theme.custom.smd)]: {
-      "&.visible": {
-        display: "block",
-      },
     },
   },
   content: {
@@ -122,22 +105,28 @@ const useStyles = makeStyles((theme: any) => ({
         color: theme.colors.white,
       },
     },
+    "&.active": {
+      "& .menu-item-icon-wrapper": {
+        backgroundColor: theme.colors.primary400,
+        color: theme.colors.white,
+        "& svg": {
+          "& g": { opacity: 1 },
+        },
+      },
+      "& span": {
+        color: theme.colors.white,
+      },
+    },
   },
 }));
 
-interface IProps {
-  opened: boolean;
-  onClose: () => void;
-}
-
-export const Sidebar = (props: IProps) => {
+export const Sidebar = () => {
   const classes = useStyles();
-  const { opened, onClose } = props;
   const history = useHistory();
 
   return (
     <>
-      <div className={clsx(classes.root, opened ? "visible" : "")}>
+      <div className={classes.root}>
         <div onClick={(e) => e.stopPropagation()} className={classes.content}>
           <div className={classes.header}>
             <div className={classes.logoWrapper}>
@@ -152,17 +141,18 @@ export const Sidebar = (props: IProps) => {
               return (
                 <NavLink
                   isActive={() =>
-                    !!matchPath(history.location.pathname, { path: item.href })
+                    !!matchPath(history.location.pathname, {
+                      path: item.href,
+                      exact: false,
+                    })
                   }
                   to={item.href}
                   key={item.href}
                   className={classes.item}
-                  onClick={onClose}
                 >
                   <div className="menu-item-icon-wrapper">
                     <Icon />
                   </div>
-                  <span>{item.label}</span>
                 </NavLink>
               );
             })}
@@ -178,22 +168,16 @@ export const Sidebar = (props: IProps) => {
                   href={item.href}
                   key={item.href}
                   className={classes.item}
-                  onClick={onClose}
                 >
                   <div className="menu-item-icon-wrapper">
                     <Icon />
                   </div>
-                  <span>{item.label}</span>
                 </a>
               );
             })}
           </div>
         </div>
       </div>
-      <div
-        className={clsx(classes.backDrop, opened ? "visible" : "")}
-        onClick={onClose}
-      ></div>
     </>
   );
 };

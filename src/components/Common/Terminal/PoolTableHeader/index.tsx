@@ -1,4 +1,4 @@
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, Tooltip } from "@material-ui/core";
 import clsx from "clsx";
 import { SortButton } from "components";
 import { PoolTd } from "..";
@@ -27,7 +27,12 @@ export const PoolTableHeader = (props: IProps) => {
         <div className={classes.item}>POOL</div>
       </PoolTd>
       <PoolTd type="allocation">
-        <div className={classes.item}>ALLOCATION</div>
+        <div className={classes.item}>
+          ALLOCATION&nbsp;
+          <Tooltip title="This is lorem ipsum sit dolor allocation. Lorem allocation ipsum.">
+            <img alt="question" src="/assets/icons/question.svg" />
+          </Tooltip>
+        </div>
       </PoolTd>
       <PoolTd type="tvl">
         <div className={classes.item}>

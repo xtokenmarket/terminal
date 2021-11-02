@@ -1,4 +1,4 @@
-import { providers } from "ethers";
+import { BigNumber, providers } from "ethers";
 import { entries } from "utils/type-utils";
 import {
   IKnownTokenData,
@@ -22,17 +22,39 @@ const networks: { [K in NetworkId]: INetwork } = {
     contracts: {
       LM: "",
       multicall: "",
+      rewardEscrow: "",
+      uniswapFactory: "",
+      uniRouter: "",
+      uniQuoter: "",
+      uniPositionManager: "",
+      xTokenManager: "",
     },
-    etherscanUri: "https://etherscan.io",
+    terminal: {
+      tradeFee: BigNumber.from(1000),
+      rewardFee: BigNumber.from(100),
+      deploymentFee: BigNumber.from(1),
+    },
+    etherscanUri: "https://etherscan.io/",
   },
   [networkIds.KOVAN]: {
     label: "Kovan Test Network",
     url: "https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
     contracts: {
-      LM: "0x710FB60B0D45f97f679B4F818AD0c2Fd77d569a1",
+      LM: "0xDF1D35aCbce60B22b6E3987F3BD09A6EB1d5F291",
       multicall: "0x0284D6D74C31B23179CB642aa77164752C6859ed",
+      rewardEscrow: "0x8d5e5aa90a2ed3450da3273d9ecd96d09cf34419",
+      uniswapFactory: "0x1f98431c8ad98523631ae4a59f267346ea31f984",
+      uniRouter: "0xe592427a0aece92de3edee1f18e0157c05861564",
+      uniQuoter: "0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6",
+      uniPositionManager: "0xc36442b4a4522e871399cd717abdd847ab11fe88",
+      xTokenManager: "0xa691a88f03a4fbbfe36055d1df15003456bbe55f",
     },
-    etherscanUri: "https://kovan.etherscan.io",
+    terminal: {
+      tradeFee: BigNumber.from(1000),
+      rewardFee: BigNumber.from(100),
+      deploymentFee: BigNumber.from(1),
+    },
+    etherscanUri: "https://kovan.etherscan.io/",
   },
 };
 
@@ -41,8 +63,8 @@ const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     name: "xToken",
     symbol: "XTK",
     addresses: {
-      [networkIds.MAINNET]: "",
-      [networkIds.KOVAN]: "",
+      [networkIds.MAINNET]: "0x7f3edcdd180dbe4819bd98fee8929b5cedb3adeb",
+      [networkIds.KOVAN]: "0xE4026AF6a896f0599e9b9E063851710593bE35b2",
     },
     decimals: 18,
     image: "/assets/tokens/xtk.png",
@@ -51,7 +73,7 @@ const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     name: "DAI",
     symbol: "DAI",
     addresses: {
-      [networkIds.MAINNET]: "",
+      [networkIds.MAINNET]: "0x6b175474e89094c44da98b954eedeac495271d0f",
       [networkIds.KOVAN]: "0x2E4DfEaAB649261c84B132a3E0a365114a107356",
     },
     decimals: 18,
@@ -61,7 +83,7 @@ const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     name: "Wrapped ETHER",
     symbol: "wETH",
     addresses: {
-      [networkIds.MAINNET]: "",
+      [networkIds.MAINNET]: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
       [networkIds.KOVAN]: "0xC0e65b207a2713C5C9CA05D29E86C3B0A2E30e3e",
     },
     decimals: 18,
@@ -71,7 +93,7 @@ const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     name: "AAVE",
     symbol: "AAVE",
     addresses: {
-      [networkIds.MAINNET]: "",
+      [networkIds.MAINNET]: "0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9",
       [networkIds.KOVAN]: "0xC0e65b207a2713C5C9CA05D29E86C3B0A2E30e3e",
     },
     decimals: 18,
@@ -81,7 +103,7 @@ const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     name: "Tether USD",
     symbol: "USDT",
     addresses: {
-      [networkIds.MAINNET]: "",
+      [networkIds.MAINNET]: "0xdac17f958d2ee523a2206206994597c13d831ec7",
       [networkIds.KOVAN]: "0xC0e65b207a2713C5C9CA05D29E86C3B0A2E30e3e",
     },
     decimals: 18,
@@ -91,7 +113,7 @@ const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     name: "USD Coin",
     symbol: "USDC",
     addresses: {
-      [networkIds.MAINNET]: "",
+      [networkIds.MAINNET]: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
       [networkIds.KOVAN]: "0xC0e65b207a2713C5C9CA05D29E86C3B0A2E30e3e",
     },
     decimals: 18,
@@ -180,6 +202,21 @@ export const getEtherscanUri = (networkId?: number): string => {
   }
 
   return networks[fNetworkId].etherscanUri;
+};
+
+export const getTerminalConfig = (
+  networkId?: number
+): {
+  tradeFee: BigNumber;
+  rewardFee: BigNumber;
+  deploymentFee: BigNumber;
+} => {
+  const fNetworkId = networkId || DEFAULT_NETWORK_ID;
+  if (!validNetworkId(fNetworkId)) {
+    throw new Error(`Unsupported network id: '${fNetworkId}'`);
+  }
+
+  return networks[fNetworkId].terminal;
 };
 
 export const getContractAddress = (

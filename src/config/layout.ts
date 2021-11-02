@@ -1,7 +1,7 @@
 import { SvgIcons } from "./constants";
 
 export const MENU_ITEMS = [
-  { id: "home", label: "home", icon: SvgIcons.home, href: "/home" },
+  // { id: "home", label: "home", icon: SvgIcons.home, href: "/home" },
   { id: "market", label: "market", icon: SvgIcons.market, href: "/market" },
   { id: "cafe", label: "cafe", icon: SvgIcons.cafe, href: "/cafe" },
   { id: "vote", label: "vote", icon: SvgIcons.vote, href: "/vote" },

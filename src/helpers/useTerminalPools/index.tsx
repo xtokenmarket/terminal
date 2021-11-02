@@ -15,11 +15,11 @@ export const useTerminalPools = () => {
   const loadPools = async () => {
     setState((prev) => ({ ...prev, loading: true }));
     try {
-      await waitSeconds(2);
+      await waitSeconds(1);
       if (!networkId || networkId === networkIds.KOVAN) {
         setState((prev) => ({
           ...prev,
-          pools: ["0x3154443A52619077603445736874374e12608ae9"],
+          pools: ["0x932f43E6E49Feb2659b9ab6Ca9E1d22883EBeD60"],
           loading: false,
         }));
       } else {

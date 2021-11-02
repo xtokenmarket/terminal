@@ -16,6 +16,17 @@ export interface INetwork {
   contracts: {
     LM: string;
     multicall: string;
+    rewardEscrow: string;
+    uniswapFactory: string;
+    uniRouter: string;
+    uniQuoter: string;
+    uniPositionManager: string;
+    xTokenManager: string;
+  };
+  terminal: {
+    tradeFee: BigNumber;
+    rewardFee: BigNumber;
+    deploymentFee: BigNumber;
   };
   etherscanUri: string;
 }
@@ -40,18 +51,24 @@ export interface IToken {
   decimals: number;
   symbol: string;
   name: string;
-  image?: string;
+  image: string;
 }
 
 export type ITerminalPoolTableSortFactor = "tvl" | "vesting" | "ending" | "apr";
 
 export interface ITerminalPool {
   address: string;
-  tvl: BigNumber;
-  vesting: number;
-  program: BigNumber;
-  ending: number;
-  apr: number;
   token0: IToken;
   token1: IToken;
+  stakedToken: IToken;
+  tokenId: BigNumber; // token id representing this uniswap position
+  token0DecimalMultiplier: BigNumber; // 10 ** (18 - token0 decimals)
+  token1DecimalMultiplier: BigNumber; // 10 ** (18 - token1 decimals)
+  tokenDiffDecimalMultiplier: BigNumber; // 10 ** (token0 decimals - token1 decimals)
+  tradeFee: BigNumber; // xToken Trade Fee as a divisor (100 = 1%)
+  poolFee: BigNumber;
+  uniswapPool: string;
+  rewardTokens: IToken[];
+  rewardsDuration: BigNumber;
+  rewardsAreEscrowed: boolean;
 }

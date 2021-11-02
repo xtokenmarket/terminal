@@ -108,17 +108,19 @@ class ERC20Service {
     return balance.gte(amount);
   };
 
-  getDetails = async (): Promise<{
-    name: string;
-    symbol: string;
-    decimals: number;
-  }> => {
+  getDetails = async (): Promise<IToken> => {
     const [decimals, symbol, name] = await Promise.all([
       this.contract.decimals(),
       this.contract.symbol(),
       this.contract.name(),
     ]);
-    return { name, symbol, decimals };
+    return {
+      name,
+      symbol,
+      decimals,
+      address: this.contract.address,
+      image: "/assets/tokens/unknown.png",
+    };
   };
 
   getInfo = async (): Promise<IToken> => {

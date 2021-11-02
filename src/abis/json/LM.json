@@ -5,17 +5,23 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "previousOwner",
+        "name": "pool",
         "type": "address"
       },
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount0",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount1",
+        "type": "uint256"
       }
     ],
-    "name": "OwnershipTransferred",
+    "name": "ClaimFeeWithdraw",
     "type": "event"
   },
   {
@@ -34,7 +40,7 @@
         "type": "address"
       }
     ],
-    "name": "claimedReward",
+    "name": "ClaimedReward",
     "type": "event"
   },
   {
@@ -47,7 +53,7 @@
         "type": "address"
       }
     ],
-    "name": "deployedIncentivizedPool",
+    "name": "DeployedIncentivizedPool",
     "type": "event"
   },
   {
@@ -60,7 +66,20 @@
         "type": "address"
       }
     ],
-    "name": "deployedUniV3Pool",
+    "name": "DeployedUniV3Pool",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "EthFeeWithdraw",
     "type": "event"
   },
   {
@@ -74,15 +93,15 @@
       },
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "rewardToken",
-        "type": "address"
+        "internalType": "address[]",
+        "name": "rewardTokens",
+        "type": "address[]"
       },
       {
         "indexed": false,
-        "internalType": "uint256",
-        "name": "totalRewardAmount",
-        "type": "uint256"
+        "internalType": "uint256[]",
+        "name": "totalRewardAmounts",
+        "type": "uint256[]"
       },
       {
         "indexed": false,
@@ -91,7 +110,7 @@
         "type": "uint256"
       }
     ],
-    "name": "initiatedRewardsProgram",
+    "name": "InitiatedRewardsProgram",
     "type": "event"
   },
   {
@@ -104,7 +123,7 @@
         "type": "address"
       }
     ],
-    "name": "managerSet",
+    "name": "ManagerSet",
     "type": "event"
   },
   {
@@ -135,7 +154,7 @@
         "type": "uint256"
       }
     ],
-    "name": "providedLiquidity",
+    "name": "ProvidedLiquidity",
     "type": "event"
   },
   {
@@ -160,9 +179,29 @@
         "type": "uint256"
       }
     ],
-    "name": "removedLiquidity",
+    "name": "RemovedLiquidity",
     "type": "event"
   },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "TokenFeeWithdraw",
+    "type": "event"
+  },
+  { "stateMutability": "payable", "type": "fallback" },
   {
     "inputs": [
       {
@@ -178,9 +217,9 @@
   },
   {
     "inputs": [],
-    "name": "clr",
+    "name": "clrDeployer",
     "outputs": [
-      { "internalType": "contract IxAssetCLR", "name": "", "type": "address" }
+      { "internalType": "contract CLRDeployer", "name": "", "type": "address" }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -188,28 +227,50 @@
   {
     "inputs": [
       { "internalType": "string", "name": "symbol", "type": "string" },
-      { "internalType": "int24", "name": "lowerTick", "type": "int24" },
-      { "internalType": "int24", "name": "upperTick", "type": "int24" },
       {
-        "internalType": "uint256",
-        "name": "rewardsProgramDuration",
-        "type": "uint256"
+        "components": [
+          { "internalType": "int24", "name": "lowerTick", "type": "int24" },
+          { "internalType": "int24", "name": "upperTick", "type": "int24" }
+        ],
+        "internalType": "struct LMTerminal.PositionTicks",
+        "name": "ticks",
+        "type": "tuple"
       },
       {
-        "internalType": "uint256",
-        "name": "totalRewardsAmount",
-        "type": "uint256"
+        "components": [
+          {
+            "internalType": "address[]",
+            "name": "rewardTokens",
+            "type": "address[]"
+          },
+          { "internalType": "uint256", "name": "duration", "type": "uint256" },
+          {
+            "internalType": "uint256",
+            "name": "vestingPeriod",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct LMTerminal.RewardsProgram",
+        "name": "rewardsProgram",
+        "type": "tuple"
       },
-      { "internalType": "uint256", "name": "vestingPeriod", "type": "uint256" },
-      { "internalType": "address", "name": "token0", "type": "address" },
-      { "internalType": "address", "name": "token1", "type": "address" },
-      { "internalType": "uint256", "name": "amount0", "type": "uint256" },
-      { "internalType": "uint256", "name": "amount1", "type": "uint256" },
-      { "internalType": "address", "name": "rewardToken", "type": "address" }
+      {
+        "components": [
+          { "internalType": "uint24", "name": "fee", "type": "uint24" },
+          { "internalType": "address", "name": "token0", "type": "address" },
+          { "internalType": "address", "name": "token1", "type": "address" },
+          { "internalType": "uint256", "name": "amount0", "type": "uint256" },
+          { "internalType": "uint256", "name": "amount1", "type": "uint256" }
+        ],
+        "internalType": "struct LMTerminal.PoolDetails",
+        "name": "pool",
+        "type": "tuple"
+      },
+      { "internalType": "address", "name": "proxyAdmin", "type": "address" }
     ],
     "name": "deployIncentivizedPool",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -227,17 +288,50 @@
     "type": "function"
   },
   {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "deployedCLRPools",
+    "outputs": [
+      { "internalType": "contract IxAssetCLR", "name": "", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "deploymentFee",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "token0", "type": "address" },
+      { "internalType": "address", "name": "token1", "type": "address" },
+      { "internalType": "uint24", "name": "fee", "type": "uint24" }
+    ],
+    "name": "getPool",
+    "outputs": [
+      { "internalType": "address", "name": "pool", "type": "address" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
-        "name": "_xTokenFeeManager",
+        "name": "_xTokenManager",
         "type": "address"
       },
       { "internalType": "address", "name": "_rewardEscrow", "type": "address" },
       { "internalType": "address", "name": "_clrDeployer", "type": "address" },
       {
+        "internalType": "address",
+        "name": "_uniswapFactory",
+        "type": "address"
+      },
+      {
         "components": [
-          { "internalType": "address", "name": "pool", "type": "address" },
           { "internalType": "address", "name": "router", "type": "address" },
           { "internalType": "address", "name": "quoter", "type": "address" },
           {
@@ -251,19 +345,12 @@
         "type": "tuple"
       },
       {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "deploymentFee",
-            "type": "uint256"
-          },
-          { "internalType": "uint256", "name": "rewardFee", "type": "uint256" },
-          { "internalType": "uint256", "name": "tradeFee", "type": "uint256" }
-        ],
-        "internalType": "struct LMTerminal.Fees",
-        "name": "_fees",
-        "type": "tuple"
-      }
+        "internalType": "uint256",
+        "name": "_deploymentFee",
+        "type": "uint256"
+      },
+      { "internalType": "uint256", "name": "_rewardFee", "type": "uint256" },
+      { "internalType": "uint256", "name": "_tradeFee", "type": "uint256" }
     ],
     "name": "initialize",
     "outputs": [],
@@ -278,9 +365,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
-        "name": "totalRewardAmount",
-        "type": "uint256"
+        "internalType": "uint256[]",
+        "name": "totalRewardAmounts",
+        "type": "uint256[]"
       },
       {
         "internalType": "uint256",
@@ -302,9 +389,9 @@
         "type": "address"
       },
       {
-        "internalType": "uint256",
-        "name": "totalRewardAmount",
-        "type": "uint256"
+        "internalType": "uint256[]",
+        "name": "totalRewardAmounts",
+        "type": "uint256[]"
       }
     ],
     "name": "initiateRewardsProgram",
@@ -314,8 +401,14 @@
   },
   {
     "inputs": [],
-    "name": "owner",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "positionManager",
+    "outputs": [
+      {
+        "internalType": "contract INonfungiblePositionManager",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -364,26 +457,59 @@
   },
   {
     "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "address", "name": "_manager", "type": "address" }
+    "name": "rewardEscrow",
+    "outputs": [
+      {
+        "internalType": "contract IRewardEscrow",
+        "name": "",
+        "type": "address"
+      }
     ],
-    "name": "setManager",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "stakedToken",
+    "name": "rewardFee",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "rewardFeesTotal",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "tradeFee",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "uniContracts",
+    "outputs": [
+      { "internalType": "address", "name": "router", "type": "address" },
+      { "internalType": "address", "name": "quoter", "type": "address" },
+      {
+        "internalType": "address",
+        "name": "positionManager",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "uniswapFactory",
     "outputs": [
       {
-        "internalType": "contract StakedCLRToken",
+        "internalType": "contract IUniswapV3Factory",
         "name": "",
         "type": "address"
       }
@@ -393,11 +519,36 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "newOwner", "type": "address" }
+      {
+        "internalType": "contract IxAssetCLR",
+        "name": "pool",
+        "type": "address"
+      }
     ],
-    "name": "transferOwnership",
+    "name": "withdrawClaimFees",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
-  }
+  },
+  {
+    "inputs": [],
+    "name": "withdrawFees",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "xTokenManager",
+    "outputs": [
+      {
+        "internalType": "contract IxTokenManager",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  { "stateMutability": "payable", "type": "receive" }
 ]
