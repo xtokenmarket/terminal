@@ -14,7 +14,7 @@ interface IState {
 export const useTerminalPool = (poolAddress: string) => {
   const [state, setState] = useState<IState>({ loading: false });
   const { account, library: provider, networkId } = useConnectedWeb3Context();
-  const { multicall } = useServices();
+  const { multicall, rewardEscrow } = useServices();
 
   const getTokenDetails = async (addr: string) => {
     try {
@@ -48,6 +48,9 @@ export const useTerminalPool = (poolAddress: string) => {
         "getRewardTokens",
         "rewardsDuration",
         "rewardsAreEscrowed",
+        "owner",
+        "periodFinish",
+        "getTicks",
       ].map((method) => ({
         name: method,
         address: poolAddress,
@@ -67,18 +70,40 @@ export const useTerminalPool = (poolAddress: string) => {
         [rewardTokenAddresses],
         [rewardsDuration],
         [rewardsAreEscrowed],
+        [owner],
+        [periodFinish],
+        ticks,
       ] = await multicall.multicallv2(abis.xAssetCLR, calls, {
         requireSuccess: false,
       });
+
       const [token0, token1, stakedToken] = await Promise.all([
         getTokenDetails(token0Address),
         getTokenDetails(token1Address),
         getTokenDetails(stakedTokenAddress),
       ]);
 
+      const vestingPeriod = await rewardEscrow.clrPoolVestingPeriod(
+        poolAddress
+      );
+
       const rewardTokens = (await Promise.all(
         rewardTokenAddresses.map((addr: string) => getTokenDetails(addr))
       )) as IToken[];
+
+      const rewardCalls = rewardTokens.map((token) => ({
+        name: "rewardPerToken",
+        address: poolAddress,
+        params: [token.address],
+      }));
+      const rewardsResponse = await multicall.multicallv2(
+        abis.xAssetCLR,
+        rewardCalls,
+        { requireSuccess: false }
+      );
+      const rewardsPerToken = rewardsResponse.map(
+        (response: any) => response[0]
+      );
 
       setState((prev) => ({
         ...prev,
@@ -98,10 +123,19 @@ export const useTerminalPool = (poolAddress: string) => {
           rewardTokens,
           rewardsDuration,
           rewardsAreEscrowed,
+          owner,
+          periodFinish,
+          vestingPeriod,
+          ticks: {
+            tick0: ticks[0],
+            tick1: ticks[1],
+          },
+          rewardsPerToken,
         },
       }));
     } catch (error) {
-      setState((prev) => ({ loading: false }));
+      console.error(error);
+      setState(() => ({ loading: false }));
     }
   };
 

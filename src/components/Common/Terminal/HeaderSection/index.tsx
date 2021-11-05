@@ -5,6 +5,7 @@ import {
   TextField,
   InputAdornment,
 } from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
 import SearchIcon from "@material-ui/icons/Search";
 import { NavLink } from "react-router-dom";
 
@@ -21,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     display: "flex",
     alignItems: "center",
+    margin: "0 -4px",
     [theme.breakpoints.down("md")]: {
       flex: "unset",
       width: "100%",
@@ -33,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   link: {
     height: 40,
     backgroundColor: theme.colors.secondary,
-
+    margin: 4,
     fontSize: 14,
     color: theme.colors.primary700,
     fontWeight: 600,
@@ -62,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   checkLabel: {
-    marginLeft: 0,
+    margin: 4,
     color: theme.colors.fourth,
     "& span": { fontSize: 14 },
   },
@@ -104,7 +106,8 @@ export const HeaderSection = (props: IProps) => {
         />
         <div className={classes.tmp} />
         <NavLink to="/terminal/new-pool" className={classes.link}>
-          CREATE POOL
+          <AddIcon />
+          &nbsp; CREATE
         </NavLink>
       </div>
     </div>

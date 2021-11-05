@@ -217,6 +217,15 @@
     "type": "event"
   },
   {
+    "inputs": [
+      { "internalType": "address", "name": "_manager", "type": "address" }
+    ],
+    "name": "addManager",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "adminRebalance",
     "outputs": [],
@@ -391,6 +400,15 @@
     "inputs": [
       { "internalType": "uint256", "name": "amount", "type": "uint256" }
     ],
+    "name": "getAmountInAsset0Terms",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
     "name": "getAmountInAsset1Terms",
     "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
@@ -405,6 +423,20 @@
       { "internalType": "uint256", "name": "amount0", "type": "uint256" },
       { "internalType": "uint256", "name": "amount1", "type": "uint256" }
     ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getAsset0Price",
+    "outputs": [{ "internalType": "int128", "name": "", "type": "int128" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getAsset1Price",
+    "outputs": [{ "internalType": "int128", "name": "", "type": "int128" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -598,7 +630,7 @@
   {
     "inputs": [
       { "internalType": "uint256", "name": "rewardAmount", "type": "uint256" },
-      { "internalType": "uint256", "name": "tokenIndex", "type": "uint256" }
+      { "internalType": "address", "name": "token", "type": "address" }
     ],
     "name": "initializeReward",
     "outputs": [],
@@ -633,7 +665,8 @@
   {
     "inputs": [
       { "internalType": "uint256", "name": "amount0", "type": "uint256" },
-      { "internalType": "uint256", "name": "amount1", "type": "uint256" }
+      { "internalType": "uint256", "name": "amount1", "type": "uint256" },
+      { "internalType": "address", "name": "sender", "type": "address" }
     ],
     "name": "mintInitial",
     "outputs": [],
@@ -693,7 +726,11 @@
     "inputs": [],
     "name": "rewardEscrow",
     "outputs": [
-      { "internalType": "contract RewardEscrow", "name": "", "type": "address" }
+      {
+        "internalType": "contract IRewardEscrow",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"

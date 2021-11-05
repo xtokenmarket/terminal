@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core";
 import { useState } from "react";
 
 import { Sidebar, Header } from "./components";
+import { BottomBar } from "./components/BottomBar";
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
@@ -15,7 +16,12 @@ const useStyles = makeStyles((theme: any) => ({
     padding: "0 24px",
     paddingTop: theme.custom.appHeaderHeight * 1.2,
     paddingBottom: 16,
-    // [theme.breakpoints.up("sm")]: { paddingTop: theme.custom.appHeaderHeight },
+    [theme.breakpoints.down("xs")]: {
+      paddingLeft: 0,
+      paddingRight: 0,
+      paddingBottom: 0,
+      paddingTop: theme.custom.appHeaderHeight * 0.8,
+    },
     [theme.breakpoints.up("sm")]: {
       paddingRight: 36,
       paddingLeft: `calc(${theme.custom.tabletNavbarWidth}px + 36px)`,
@@ -27,6 +33,9 @@ const useStyles = makeStyles((theme: any) => ({
   },
   childrenWrapper: {
     padding: "6px 0",
+    [theme.breakpoints.down("xs")]: {
+      padding: 0,
+    },
   },
 }));
 
@@ -44,6 +53,7 @@ export const MainLayout = (props: IProps) => {
       <div className={classes.content}>
         <div className={classes.childrenWrapper}>{props.children}</div>
       </div>
+      <BottomBar />
     </div>
   );
 };

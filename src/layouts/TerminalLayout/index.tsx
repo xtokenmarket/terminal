@@ -1,15 +1,18 @@
 import { makeStyles } from "@material-ui/core";
 import { Tabs } from "./components";
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles = makeStyles((theme) => ({
   root: {},
   tabs: {
-    height: 40,
+    height: 48,
   },
   content: {
     backgroundColor: theme.colors.primary500,
     borderRadius: 4,
     padding: 24,
+    [theme.breakpoints.down("xs")]: {
+      backgroundColor: theme.colors.primary700,
+    },
   },
 }));
 

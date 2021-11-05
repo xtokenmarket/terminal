@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   input: {
     display: "flex",
     alignItems: "center",
-    backgroundColor: theme.colors.fifth,
+    backgroundColor: theme.colors.primary600,
     paddingLeft: 8,
     paddingTop: 8,
     paddingBottom: 8,
@@ -28,6 +28,12 @@ const useStyles = makeStyles((theme) => ({
       width: 24,
       height: 24,
       marginRight: 6,
+    },
+    [theme.breakpoints.down("xs")]: {
+      backgroundColor: theme.colors.primary,
+      "& span": {
+        display: "none",
+      },
     },
   },
   paper: { backgroundColor: theme.colors.fifth },

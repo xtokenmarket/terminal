@@ -69,6 +69,11 @@ export interface ITerminalPool {
   poolFee: BigNumber;
   uniswapPool: string;
   rewardTokens: IToken[];
+  rewardsPerToken: BigNumber[];
   rewardsDuration: BigNumber;
   rewardsAreEscrowed: boolean;
+  owner: string;
+  periodFinish: BigNumber;
+  vestingPeriod: BigNumber;
+  ticks: { tick0: BigNumber; tick1: BigNumber };
 }

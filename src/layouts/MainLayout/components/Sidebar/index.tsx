@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { MENU_ITEMS, SOCIAL_ITEMS } from "config/layout";
 import { NavLink, useHistory, matchPath } from "react-router-dom";
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.colors.primary,
     boxShadow: theme.colors.elevation1,

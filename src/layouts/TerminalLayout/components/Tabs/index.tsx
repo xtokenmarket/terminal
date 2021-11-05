@@ -2,11 +2,15 @@ import { makeStyles } from "@material-ui/core";
 import { NavLink } from "react-router-dom";
 import { useHistory, matchPath } from "react-router-dom";
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     height: "100%",
     display: "flex",
+
     alignItems: "center",
+    [theme.breakpoints.down("xs")]: {
+      backgroundColor: theme.colors.primary500,
+    },
   },
   item: {
     display: "flex",
@@ -28,6 +32,14 @@ const useStyles = makeStyles((theme: any) => ({
     "&.active": {
       color: theme.colors.white,
       boxShadow: "none",
+    },
+    [theme.breakpoints.down("xs")]: {
+      boxShadow: "none",
+      borderBottom: "2px solid transparent",
+      "&:hover": { borderColor: theme.colors.secondary },
+      "&.active": {
+        borderColor: theme.colors.secondary,
+      },
     },
   },
 }));

@@ -61,17 +61,16 @@ const useStyles = makeStyles((theme) => ({
       display: "none",
     },
   },
+  logo: {
+    display: "none",
+    [theme.breakpoints.down("xs")]: {
+      display: "block",
+      "& img": { width: 32, height: 32 },
+    },
+  },
   right: {
     display: "flex",
     alignItems: "center",
-    marginTop: 12,
-
-    [theme.breakpoints.up("sm")]: {
-      marginTop: 0,
-    },
-    [theme.breakpoints.down(theme.custom.xsss)]: {
-      marginTop: 16,
-    },
   },
   connect: {
     background: theme.colors.primary,
@@ -111,6 +110,9 @@ export const Header = () => {
 
   return (
     <div className={clsx(classes.root, yPosition >= 30 && "blur-header")}>
+      <div className={classes.logo}>
+        <img alt="logo" src="/assets/logo.png" />
+      </div>
       <div className={classes.title}>
         {Icon && <Icon />}
         <span>
@@ -132,7 +134,7 @@ export const Header = () => {
           }
         >
           {account && <AccountBalanceWalletIcon />}
-          {account ? shortenAddress(account) : "Connect Account"}
+          {account ? shortenAddress(account) : "CONNECT WALLET"}
         </Button>
       </div>
     </div>

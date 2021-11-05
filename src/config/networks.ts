@@ -40,14 +40,14 @@ const networks: { [K in NetworkId]: INetwork } = {
     label: "Kovan Test Network",
     url: "https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
     contracts: {
-      LM: "0xDF1D35aCbce60B22b6E3987F3BD09A6EB1d5F291",
+      LM: "0x499be5f13216BC2E4e01D1E763DB6e710ADd67D3",
       multicall: "0x0284D6D74C31B23179CB642aa77164752C6859ed",
-      rewardEscrow: "0x8d5e5aa90a2ed3450da3273d9ecd96d09cf34419",
+      rewardEscrow: "0x02bdd65a0f22f2232388c302542e8e8ea035c6a9",
       uniswapFactory: "0x1f98431c8ad98523631ae4a59f267346ea31f984",
       uniRouter: "0xe592427a0aece92de3edee1f18e0157c05861564",
       uniQuoter: "0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6",
       uniPositionManager: "0xc36442b4a4522e871399cd717abdd847ab11fe88",
-      xTokenManager: "0xa691a88f03a4fbbfe36055d1df15003456bbe55f",
+      xTokenManager: "0x5b5061c2be2924ea6f5751d0d932873694d82232",
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -64,7 +64,7 @@ const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     symbol: "XTK",
     addresses: {
       [networkIds.MAINNET]: "0x7f3edcdd180dbe4819bd98fee8929b5cedb3adeb",
-      [networkIds.KOVAN]: "0xE4026AF6a896f0599e9b9E063851710593bE35b2",
+      [networkIds.KOVAN]: "0x657ad2B770aFC7ACb0A219525C4c22BE6b807023",
     },
     decimals: 18,
     image: "/assets/tokens/xtk.png",
@@ -74,7 +74,7 @@ const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     symbol: "DAI",
     addresses: {
       [networkIds.MAINNET]: "0x6b175474e89094c44da98b954eedeac495271d0f",
-      [networkIds.KOVAN]: "0x2E4DfEaAB649261c84B132a3E0a365114a107356",
+      [networkIds.KOVAN]: "0x5DFf3c4eed89C6BBC8f4CfCd85157020199e2b99",
     },
     decimals: 18,
     image: "/assets/tokens/dai.png",
@@ -84,7 +84,7 @@ const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     symbol: "wETH",
     addresses: {
       [networkIds.MAINNET]: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-      [networkIds.KOVAN]: "0xC0e65b207a2713C5C9CA05D29E86C3B0A2E30e3e",
+      [networkIds.KOVAN]: "0xF20cD8C7BF13002076C437711cbaEb8E500af193",
     },
     decimals: 18,
     image: "/assets/tokens/weth.png",
