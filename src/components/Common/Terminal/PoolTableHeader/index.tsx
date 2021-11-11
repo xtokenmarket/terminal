@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: any) => ({
     marginBottom: 12,
   },
   item: {
-    color: theme.colors.fourth,
+    color: theme.colors.purple0,
     fontSize: 11,
     display: "flex",
     alignItems: "center",

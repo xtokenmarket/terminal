@@ -21,6 +21,23 @@ export const numberWithCommas = (x: number | string) => {
   return [first, splits[1]].join(".");
 };
 
+export const formatToShortNumber = (number: string, decimals = 2): string => {
+  if (number.length < 1) {
+    return "0";
+  }
+
+  const units = ["", "K", "M", "B", "T"];
+  let unitIndex = 0;
+  let rNumber = parseFloat(number.split(",").join(""));
+
+  while (rNumber >= 1000 && unitIndex < 4) {
+    unitIndex += 1;
+    rNumber = rNumber / 1000;
+  }
+
+  return `${parseFloat(rNumber.toFixed(decimals))}${units[unitIndex]}`;
+};
+
 export const hideInsignificantZeros = (x: string) => {
   const splits = x.toString().split(".");
   if (splits.length === 1) {
@@ -37,25 +54,59 @@ export const hideInsignificantZeros = (x: string) => {
   return [splits[0], right].join(".");
 };
 
-export const getLeftTimeString = (dest: number, current: number) => {
-  if (dest > current) {
-    const secs = dest - current;
-    if (secs < 60) {
-      return `${secs} secs`;
-    }
-    const mins = Math.floor(secs / 60);
-    if (mins < 60) {
-      return `${mins} mins`;
-    }
-    const hours = Math.floor(mins / 60);
-    if (hours < 24) {
-      return `${hours} hours`;
-    }
-    const days = Math.floor(hours / 24);
-    return `${days} days`;
-  } else {
-    return "";
+export const getTimeDurationUnitInfo = (
+  secs: number
+): { unit: number; unitStr: string } => {
+  if (secs < 60) {
+    return { unit: 1, unitStr: "sec" };
   }
+  const mins = Math.floor(secs / 60);
+  if (mins < 60) {
+    return { unit: 60, unitStr: "min" };
+  }
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) {
+    return { unit: 3600, unitStr: "hour" };
+  }
+  const days = Math.floor(hours / 24);
+
+  if (days < 7) {
+    return { unit: 86400, unitStr: "day" };
+  }
+
+  const weeks = Math.floor(days / 7);
+  if (weeks < 5) {
+    return { unit: 604800, unitStr: "week" };
+  }
+
+  return { unit: 2592000, unitStr: "month" };
+};
+
+export const getTimeDurationStr = (secs: number) => {
+  if (secs < 60) {
+    return `${secs} secs`;
+  }
+  const mins = Math.floor(secs / 60);
+  if (mins < 60) {
+    return `${mins} mins`;
+  }
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) {
+    return `${hours} hours`;
+  }
+  const days = Math.floor(hours / 24);
+
+  if (days < 7) {
+    return `${days} days`;
+  }
+
+  const weeks = Math.floor(days / 7);
+  if (weeks < 5) {
+    return `${weeks} weeks`;
+  }
+
+  const months = Math.floor(days / 30);
+  return `${months} months`;
 };
 
 export const getFloatDecimalNumber = (num: string, decimals: number) => {

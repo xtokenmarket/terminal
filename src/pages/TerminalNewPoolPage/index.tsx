@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
     marginBottom: 16,
   },
+  content: { padding: "26px 0" },
 }));
 
 interface IState {
@@ -52,57 +53,65 @@ const TerminalNewPoolPage = () => {
         onBack={onBack}
       />
       <PageContent>
-        <div>
-          <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
-              <Typography className={classes.label}>Select pair</Typography>
-              <TokenSelect
-                token={state.token0}
-                onChange={(token0) => setState((prev) => ({ ...prev, token0 }))}
-              />
-              <TokenSelect
-                token={state.token1}
-                onChange={(token1) => setState((prev) => ({ ...prev, token1 }))}
-              />
-              <div>
+        <div className={classes.content}>
+          <div>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6}>
+                <Typography className={classes.label}>Select pair</Typography>
+                <TokenSelect
+                  token={state.token0}
+                  onChange={(token0) =>
+                    setState((prev) => ({ ...prev, token0 }))
+                  }
+                />
+                <TokenSelect
+                  token={state.token1}
+                  onChange={(token1) =>
+                    setState((prev) => ({ ...prev, token1 }))
+                  }
+                />
+                <div>
+                  <Typography className={classes.label}>
+                    Select fee tier
+                  </Typography>
+                  <FeeTierSection
+                    tier={state.tier}
+                    onChange={(tier) => setState((prev) => ({ ...prev, tier }))}
+                  />
+                </div>
+                {state.token0 && state.token1 && (
+                  <div>
+                    <Typography className={classes.label}>
+                      Deposit amounts
+                    </Typography>
+                    <TokenAmountInput
+                      token={state.token0}
+                      value={state.token0Amount}
+                      onChange={(token0Amount) =>
+                        setState((prev) => ({ ...prev, token0Amount }))
+                      }
+                    />
+                    <TokenAmountInput
+                      token={state.token1}
+                      value={state.token1Amount}
+                      onChange={(token1Amount) =>
+                        setState((prev) => ({ ...prev, token1Amount }))
+                      }
+                    />
+                  </div>
+                )}
+              </Grid>
+              <Grid item xs={12} sm={6}>
                 <Typography className={classes.label}>
                   Select fee tier
                 </Typography>
-                <FeeTierSection
-                  tier={state.tier}
-                  onChange={(tier) => setState((prev) => ({ ...prev, tier }))}
-                />
-              </div>
-              {state.token0 && state.token1 && (
-                <div>
-                  <Typography className={classes.label}>
-                    Deposit amounts
-                  </Typography>
-                  <TokenAmountInput
-                    token={state.token0}
-                    value={state.token0Amount}
-                    onChange={(token0Amount) =>
-                      setState((prev) => ({ ...prev, token0Amount }))
-                    }
-                  />
-                  <TokenAmountInput
-                    token={state.token1}
-                    value={state.token1Amount}
-                    onChange={(token1Amount) =>
-                      setState((prev) => ({ ...prev, token1Amount }))
-                    }
-                  />
-                </div>
-              )}
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography className={classes.label}>Select fee tier</Typography>
-            </Grid>
-          </Grid>
+          </div>
+          <Button color="primary" fullWidth variant="contained">
+            CREATE NEW POOL
+          </Button>
         </div>
-        <Button color="primary" fullWidth variant="contained">
-          CREATE NEW POOL
-        </Button>
       </PageContent>
     </PageWrapper>
   );

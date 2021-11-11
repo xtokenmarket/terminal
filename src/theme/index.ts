@@ -56,6 +56,14 @@ const themesOptions = [
             backgroundColor: "#6E27E499",
           },
         },
+        containedSecondary: {
+          backgroundColor: "#0000",
+          border: `1px solid #543BB8`,
+          color: "#FFFFFF",
+          "&:hover": {
+            backgroundColor: "#0003",
+          },
+        },
         label: {
           fontWeight: 400,
         },
@@ -111,6 +119,14 @@ const themesOptions = [
           color: "#FFFFFF",
           "&:hover": {
             backgroundColor: "#6E27E499",
+          },
+        },
+        containedSecondary: {
+          backgroundColor: "#0000",
+          border: `1px solid #543BB8`,
+          color: "#FFFFFF",
+          "&:hover": {
+            backgroundColor: "#0003",
           },
         },
         label: {

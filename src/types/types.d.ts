@@ -29,6 +29,7 @@ export interface INetwork {
     deploymentFee: BigNumber;
   };
   etherscanUri: string;
+  unigraph: string;
 }
 
 export type NetworkId = 1 | 42;

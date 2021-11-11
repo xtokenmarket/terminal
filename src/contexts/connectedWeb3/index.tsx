@@ -8,6 +8,8 @@ import connectors from "utils/connectors";
 import { ConnectorNames } from "utils/enums";
 import { Maybe } from "types/types";
 import { useSnackbar } from "notistack";
+import { BigNumber } from "@ethersproject/bignumber";
+import { ZERO } from "utils/number";
 
 export interface ConnectedWeb3Context {
   account: Maybe<string> | null;
@@ -30,6 +32,7 @@ export interface ConnectedWeb3Context {
     description?: string,
     txHash?: string
   ) => void;
+  getTokenPrices: (tokens: string[]) => Promise<BigNumber[]>;
 }
 
 const ConnectedWeb3Context =
@@ -65,9 +68,11 @@ export const ConnectedWeb3: React.FC = (props) => {
       txHash: string;
       title: string;
     };
+    tokenPrices: { [key: string]: BigNumber };
   }>({
     initialized: false,
     walletConnectModalOpened: false,
+    tokenPrices: {},
   });
   const { enqueueSnackbar } = useSnackbar();
 
@@ -152,6 +157,29 @@ export const ConnectedWeb3: React.FC = (props) => {
     }));
   };
 
+  const getTokenPrices = async (tokens: string[]): Promise<BigNumber[]> => {
+    const tokensToFetch = tokens
+      .map((token) => token.toLowerCase())
+      .filter((token) => !state.tokenPrices[token]);
+    try {
+      const response: { [key: string]: BigNumber } = {};
+      // get price info with tokensToFetch
+      const updatedTokenPrices = { ...state.tokenPrices, ...response };
+
+      setState((prev) => ({
+        ...prev,
+        tokenPrices: { ...prev.tokenPrices, ...response },
+      }));
+
+      return tokens
+        .map((token) => token.toLowerCase())
+        .map((token) => updatedTokenPrices[token] || ZERO);
+    } catch (error) {
+      console.error(error);
+      return tokens.map(() => ZERO);
+    }
+  };
+
   const value = {
     account: account || null,
     library,
@@ -162,6 +190,7 @@ export const ConnectedWeb3: React.FC = (props) => {
     setWalletConnectModalOpened,
     onDisconnect,
     setTxModalInfo,
+    getTokenPrices,
   };
 
   return (

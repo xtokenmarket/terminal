@@ -4,6 +4,10 @@ const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.colors.primary500,
     padding: "0 32px",
+    [theme.breakpoints.down("xs")]: {
+      backgroundColor: theme.colors.transparent,
+      padding: 0,
+    },
   },
 }));
 

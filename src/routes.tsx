@@ -34,6 +34,11 @@ const routes = [
         component: lazy(() => import("pages/TerminalNewPoolPage")),
       },
       {
+        exact: true,
+        path: "/terminal/pools/:id",
+        component: lazy(() => import("pages/TerminalPoolDetailsPage")),
+      },
+      {
         path: "/terminal",
         layout: TerminalLayout,
         routes: [
@@ -52,6 +57,7 @@ const routes = [
             path: "/terminal/about",
             component: lazy(() => import("pages/TerminalAboutPage")),
           },
+
           {
             path: "*",
             // eslint-disable-next-line

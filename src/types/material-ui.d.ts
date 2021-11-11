@@ -29,7 +29,7 @@ declare module "@material-ui/core/styles/createTheme" {
       secondary: string;
       secondary1: string;
       third: string;
-      fourth: string;
+      purple0: string;
       fifth: string;
       sixth: string;
       seventh: string;
@@ -42,6 +42,10 @@ declare module "@material-ui/core/styles/createTheme" {
       black3: string;
       gray1: string;
       gray2: string;
+      positive: string;
+      positive1: string;
+      negative: string;
+      negative1: string;
       elevation1: string;
       elevation3: string;
       warn: string;
@@ -77,7 +81,7 @@ declare module "@material-ui/core/styles/createTheme" {
       secondary: string;
       secondary1: string;
       third: string;
-      fourth: string;
+      purple0: string;
       fifth: string;
       sixth: string;
       seventh: string;
@@ -90,6 +94,10 @@ declare module "@material-ui/core/styles/createTheme" {
       black3: string;
       gray1: string;
       gray2: string;
+      positive: string;
+      positive1: string;
+      negative: string;
+      negative1: string;
       elevation1: string;
       elevation3: string;
       warn: string;

@@ -77,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
       alignItems: "center",
       justifyContent: "center",
       backgroundColor: theme.colors.primary300,
-      color: theme.colors.fourth,
+      color: theme.colors.purple0,
       transition: "all 0.4s",
       "& svg": {
         width: 20,
@@ -89,7 +89,7 @@ const useStyles = makeStyles((theme) => ({
     "& span": {
       textTransform: "uppercase",
       marginLeft: 20,
-      color: theme.colors.fourth,
+      color: theme.colors.purple0,
       transition: "all 0.4s",
     },
 

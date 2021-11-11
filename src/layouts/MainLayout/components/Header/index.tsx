@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   title: {
-    color: theme.colors.fourth,
+    color: theme.colors.purple0,
     display: "flex",
     alignItems: "center",
     "& svg": {
@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
     },
     "& span": {
       color: theme.colors.white,
-      "& span": { color: theme.colors.fourth },
+      "& span": { color: theme.colors.purple0 },
     },
     [theme.breakpoints.down("xs")]: {
       display: "none",

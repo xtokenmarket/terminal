@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   close: { position: "absolute", padding: 12, top: 0, right: 0 },
   searchIcon: { color: theme.colors.eighth },
   search: {
-    border: `1px solid ${theme.colors.fourth} `,
+    border: `1px solid ${theme.colors.purple0} `,
     borderRadius: 4,
     padding: "8px 12px ",
   },

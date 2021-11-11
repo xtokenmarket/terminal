@@ -2,8 +2,12 @@ import { makeStyles } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    padding: "26px 0",
     position: "relative",
+    [theme.breakpoints.down("xs")]: {
+      margin: 16,
+      backgroundColor: theme.colors.primary500,
+      padding: 16,
+    },
   },
 }));
 

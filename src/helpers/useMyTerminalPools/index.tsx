@@ -8,7 +8,7 @@ interface IState {
   loading: boolean;
 }
 
-export const useTerminalPools = () => {
+export const useMyTerminalPools = () => {
   const [state, setState] = useState<IState>({ pools: [], loading: true });
   const { networkId } = useConnectedWeb3Context();
 

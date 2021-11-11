@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
   },
   input: {
     width: "100%",
-    border: `1px solid ${theme.colors.fourth} `,
+    border: `1px solid ${theme.colors.purple0} `,
     borderRadius: 4,
     padding: "8px 12px ",
     "& input": {
@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
   },
   checkLabel: {
     margin: 4,
-    color: theme.colors.fourth,
+    color: theme.colors.purple0,
     "& span": { fontSize: 14 },
   },
   checkIcon: { padding: 4 },

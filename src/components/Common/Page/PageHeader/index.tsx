@@ -8,6 +8,11 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     position: "relative",
     borderBottom: `1px solid ${theme.colors.primary200}`,
+    [theme.breakpoints.down("xs")]: {
+      backgroundColor: theme.colors.primary500,
+      borderBottom: "none",
+      padding: 14,
+    },
   },
   backWrapper: {
     display: "flex",
@@ -17,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
     transition: "all 0.4s",
     "&:hover": {
       opacity: 0.7,
+    },
+    [theme.breakpoints.down("xs")]: {
+      left: 15,
     },
   },
   backIcon: {},
@@ -57,7 +65,9 @@ export const PageHeader = (props: IProps) => {
         </span>
       ) : null}
       {props.headerTitle ? (
-        <Typography className={classes.title}>{props.headerTitle}</Typography>
+        <Typography className={classes.title}>
+          &nbsp;{props.headerTitle}&nbsp;
+        </Typography>
       ) : null}
       {props.headerComponent ? <>{props.headerComponent}</> : null}
     </div>

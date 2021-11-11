@@ -35,14 +35,15 @@ const networks: { [K in NetworkId]: INetwork } = {
       deploymentFee: BigNumber.from(1),
     },
     etherscanUri: "https://etherscan.io/",
+    unigraph: "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
   },
   [networkIds.KOVAN]: {
     label: "Kovan Test Network",
     url: "https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
     contracts: {
-      LM: "0x499be5f13216BC2E4e01D1E763DB6e710ADd67D3",
+      LM: "0xdeD920A9e66126A06fb93F8971CFe40223aA56a2",
       multicall: "0x0284D6D74C31B23179CB642aa77164752C6859ed",
-      rewardEscrow: "0x02bdd65a0f22f2232388c302542e8e8ea035c6a9",
+      rewardEscrow: "0x948Be003951F570F311AB87233b6d4051baAE189",
       uniswapFactory: "0x1f98431c8ad98523631ae4a59f267346ea31f984",
       uniRouter: "0xe592427a0aece92de3edee1f18e0157c05861564",
       uniQuoter: "0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6",
@@ -55,6 +56,7 @@ const networks: { [K in NetworkId]: INetwork } = {
       deploymentFee: BigNumber.from(1),
     },
     etherscanUri: "https://kovan.etherscan.io/",
+    unigraph: "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
   },
 };
 
@@ -74,7 +76,7 @@ const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     symbol: "DAI",
     addresses: {
       [networkIds.MAINNET]: "0x6b175474e89094c44da98b954eedeac495271d0f",
-      [networkIds.KOVAN]: "0x5DFf3c4eed89C6BBC8f4CfCd85157020199e2b99",
+      [networkIds.KOVAN]: "0x55237A60d484cc996B8eC302f93e01F145897FA9",
     },
     decimals: 18,
     image: "/assets/tokens/dai.png",
@@ -84,7 +86,7 @@ const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     symbol: "wETH",
     addresses: {
       [networkIds.MAINNET]: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-      [networkIds.KOVAN]: "0xF20cD8C7BF13002076C437711cbaEb8E500af193",
+      [networkIds.KOVAN]: "0x63A10FC577C85CA133b846813a7346859580b83B",
     },
     decimals: 18,
     image: "/assets/tokens/weth.png",
@@ -202,6 +204,15 @@ export const getEtherscanUri = (networkId?: number): string => {
   }
 
   return networks[fNetworkId].etherscanUri;
+};
+
+export const getUniGraph = (networkId?: number): string => {
+  const fNetworkId = networkId || DEFAULT_NETWORK_ID;
+  if (!validNetworkId(fNetworkId)) {
+    throw new Error(`Unsupported network id: '${fNetworkId}'`);
+  }
+
+  return networks[fNetworkId].unigraph;
 };
 
 export const getTerminalConfig = (
