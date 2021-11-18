@@ -41,14 +41,14 @@ const networks: { [K in NetworkId]: INetwork } = {
     label: "Kovan Test Network",
     url: "https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
     contracts: {
-      LM: "0xdeD920A9e66126A06fb93F8971CFe40223aA56a2",
+      LM: "0xfcCcC94a9b016f09c9Ec8A42e85bee4392DBE415",
       multicall: "0x0284D6D74C31B23179CB642aa77164752C6859ed",
-      rewardEscrow: "0x948Be003951F570F311AB87233b6d4051baAE189",
+      rewardEscrow: "0x1ab0b52f7980b06f6694ea1ae25091c24c4477f5",
       uniswapFactory: "0x1f98431c8ad98523631ae4a59f267346ea31f984",
       uniRouter: "0xe592427a0aece92de3edee1f18e0157c05861564",
       uniQuoter: "0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6",
       uniPositionManager: "0xc36442b4a4522e871399cd717abdd847ab11fe88",
-      xTokenManager: "0x5b5061c2be2924ea6f5751d0d932873694d82232",
+      xTokenManager: "0x3edcc1520e8b98a0f0c607cbb161291f1d5f40d5",
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -76,7 +76,7 @@ const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     symbol: "DAI",
     addresses: {
       [networkIds.MAINNET]: "0x6b175474e89094c44da98b954eedeac495271d0f",
-      [networkIds.KOVAN]: "0x55237A60d484cc996B8eC302f93e01F145897FA9",
+      [networkIds.KOVAN]: "0x0006A0f7620882eB03d8b6309dC3a6b5ba5865Bd",
     },
     decimals: 18,
     image: "/assets/tokens/dai.png",
@@ -86,7 +86,7 @@ const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     symbol: "wETH",
     addresses: {
       [networkIds.MAINNET]: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-      [networkIds.KOVAN]: "0x63A10FC577C85CA133b846813a7346859580b83B",
+      [networkIds.KOVAN]: "0x984f15F966e67A62a3C4B7d1F542FF1dF4C038B4",
     },
     decimals: 18,
     image: "/assets/tokens/weth.png",
@@ -96,7 +96,7 @@ const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     symbol: "AAVE",
     addresses: {
       [networkIds.MAINNET]: "0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9",
-      [networkIds.KOVAN]: "0xC0e65b207a2713C5C9CA05D29E86C3B0A2E30e3e",
+      [networkIds.KOVAN]: "0x40911223ee38C35E2ffd6a2F2AA64Dd0d10e9406",
     },
     decimals: 18,
     image: "/assets/tokens/aave.png",
@@ -106,7 +106,7 @@ const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     symbol: "USDT",
     addresses: {
       [networkIds.MAINNET]: "0xdac17f958d2ee523a2206206994597c13d831ec7",
-      [networkIds.KOVAN]: "0xC0e65b207a2713C5C9CA05D29E86C3B0A2E30e3e",
+      [networkIds.KOVAN]: "0x41E56694d09168947eEDD64CfF093ce4018B90bF",
     },
     decimals: 18,
     image: "/assets/tokens/usdt.png",
@@ -116,7 +116,7 @@ const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     symbol: "USDC",
     addresses: {
       [networkIds.MAINNET]: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
-      [networkIds.KOVAN]: "0xC0e65b207a2713C5C9CA05D29E86C3B0A2E30e3e",
+      [networkIds.KOVAN]: "0x7b492527F49cB50518dAFc7668dE2E5eaBd8a009",
     },
     decimals: 18,
     image: "/assets/tokens/usdc.png",

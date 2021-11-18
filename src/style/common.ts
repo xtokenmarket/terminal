@@ -4,7 +4,7 @@ import { transparentize } from "polished";
 const useCommonStyles = makeStyles((theme: any) => ({
   scroll: {
     "&::-webkit-scrollbar": {
-      width: theme.spacing(0.5),
+      width: 8,
       boxShadow: `inset 0 0 6px ${transparentize(0.3, theme.colors.default)}`,
     },
     "&::-webkit-scrollbar-track": {},

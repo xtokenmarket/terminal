@@ -1,3 +1,4 @@
+import { BigNumber } from "@ethersproject/bignumber";
 import { makeStyles, Typography } from "@material-ui/core";
 import clsx from "clsx";
 import { transparentize } from "polished";
@@ -56,22 +57,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface IProps {
-  tier: number;
-  onChange: (_: number) => void;
+  tier: BigNumber;
+  onChange: (_: BigNumber) => void;
   className?: string;
 }
 
 const TIERS = [
   {
-    value: 0.05,
+    value: BigNumber.from(500),
     label: "Best for stable pairs",
   },
   {
-    value: 0.3,
+    value: BigNumber.from(3000),
     label: "Best for most pairs",
   },
   {
-    value: 1,
+    value: BigNumber.from(10000),
     label: "Best for exact pairs",
   },
 ];
@@ -83,7 +84,7 @@ export const FeeTierSection = (props: IProps) => {
   return (
     <div className={clsx(classes.root, props.className)}>
       {TIERS.map((item) => {
-        const isActive = item.value === tier;
+        const isActive = item.value.eq(tier);
 
         return (
           <div
@@ -91,7 +92,7 @@ export const FeeTierSection = (props: IProps) => {
             key={item.label}
             onClick={() => onChange(item.value)}
           >
-            <p>{item.value}%</p>
+            <p>{item.value.toNumber() / 100}%</p>
             <span>{item.label}</span>
             <img src="/assets/icons/checked.svg" />
           </div>

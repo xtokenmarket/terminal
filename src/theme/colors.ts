@@ -36,6 +36,8 @@ const colors = [
       negative: "#990000",
       negative1: "#FFA49C",
       warn: "#f00",
+      warn1: "#F29800",
+      warn2: "rgb(255, 169, 25)",
       elevation1: "0px 0px 36px rgba(7, 4, 34, 0.4)",
       elevation3:
         "0px 1px 8px 0px rgb(80 80 80 / 20%), 0px 3px 4px 0px rgb(80 80 80 / 14%), 0px 3px 3px -2px rgb(80 80 80 / 12%)",
@@ -78,6 +80,8 @@ const colors = [
       negative: "#990000",
       negative1: "#FFA49C",
       warn: "#f00",
+      warn1: "#F29800",
+      warn2: "rgb(255, 169, 25)",
       elevation1: "0px 0px 36px rgba(7, 4, 34, 0.4)",
       elevation3:
         "0px 1px 8px 0px rgb(80 80 80 / 20%), 0px 3px 4px 0px rgb(80 80 80 / 14%), 0px 3px 3px -2px rgb(80 80 80 / 12%)",

@@ -36,8 +36,6 @@ const useStyles = makeStyles((theme) => ({
       "&.blur-header": {
         backgroundColor: theme.colors.primary700,
       },
-    },
-    [theme.breakpoints.up("sm")]: {
       left: `calc(${theme.custom.tabletNavbarWidth}px)`,
       padding: "0 36px",
     },

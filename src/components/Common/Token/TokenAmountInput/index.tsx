@@ -45,7 +45,6 @@ const useStyles = makeStyles((theme) => ({
   },
   balance: {
     fontSize: 12,
-
     color: theme.colors.primary100,
     marginTop: 8,
     textDecoration: "underline",
@@ -70,17 +69,21 @@ export const TokenAmountInput = (props: IProps) => {
   const commonClasses = useCommonStyles();
   const { balance } = useTokenBalance(token.address);
 
-  const [state, setState] = useState<IState>({ amount: "0" });
+  const [state, setState] = useState<IState>({ amount: "" });
   useEffect(() => {
     if (
       !ethers.utils
         .parseUnits(state.amount || "0", token.decimals)
         .eq(props.value)
     ) {
-      setState((prev) => ({
-        ...prev,
-        amount: ethers.utils.formatUnits(props.value || "0", token.decimals),
-      }));
+      if (props.value.isZero()) {
+        setState((prev) => ({ ...prev, amount: "" }));
+      } else {
+        setState((prev) => ({
+          ...prev,
+          amount: ethers.utils.formatUnits(props.value || "0", token.decimals),
+        }));
+      }
     }
   }, [props.value, state.amount, token.decimals]);
 

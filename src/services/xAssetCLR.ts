@@ -1,4 +1,4 @@
-import { Contract, Wallet, ethers } from "ethers";
+import { BigNumber, Contract, Wallet, ethers } from "ethers";
 import { Maybe } from "types";
 import abis from "abis";
 
@@ -25,6 +25,21 @@ class xAssetCLRService {
   get address(): string {
     return this.contract.address;
   }
+
+  calculateAmountsMintedSingleToken = async (
+    inputAsset: number,
+    amount: BigNumber
+  ) => {
+    return this.contract.calculateAmountsMintedSingleToken(inputAsset, amount);
+  };
+
+  getLiquidityForAmounts = async (amount0: BigNumber, amount1: BigNumber) => {
+    return this.contract.getLiquidityForAmounts(amount0, amount1);
+  };
+
+  getTotalLiquidity = async () => {
+    return this.contract.getTotalLiquidity();
+  };
 }
 
 export { xAssetCLRService };

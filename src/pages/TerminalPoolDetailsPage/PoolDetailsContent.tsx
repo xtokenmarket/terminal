@@ -1,17 +1,26 @@
+import { BigNumber } from "@ethersproject/bignumber";
 import { Button, Grid, makeStyles } from "@material-ui/core";
 import clsx from "clsx";
 import { SimpleLoader } from "components";
-import { useTerminalPool } from "helpers";
+import { useConnectedWeb3Context } from "contexts";
+import { useIsMountedRef, useServices, useTerminalPool } from "helpers";
+import { useEffect, useState } from "react";
+import { ERC20Service } from "services";
+import { ITerminalPool } from "types";
 import { formatToShortNumber } from "utils";
-import { BalanceSection, HistorySection, InfoSection } from "./components";
+import { ZERO } from "utils/number";
+import {
+  BalanceSection,
+  DepositModal,
+  HistorySection,
+  InfoSection,
+} from "./components";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
   content: { paddingBottom: 32 },
-
   balance: {
     position: "relative",
-
     "&+&": {
       "&::before": {
         content: `""`,
@@ -127,17 +136,74 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface IProps {
-  poolAddress: string;
+  poolData: ITerminalPool;
+  reloadTerminalPool: () => Promise<void>;
 }
 
-export const PoolDetailsContent = (props: IProps) => {
-  const { pool: poolData, loading } = useTerminalPool(props.poolAddress);
-  const classes = useStyles();
-  const isLoading = !poolData && loading;
+interface IState {
+  stakedTokenBalance: BigNumber;
+  depositVisible: boolean;
+}
 
-  const renderContent = () => {
-    if (!poolData) return null;
-    return (
+const initialState: IState = {
+  stakedTokenBalance: ZERO,
+  depositVisible: false,
+};
+
+export const PoolDetailsContent = (props: IProps) => {
+  const { poolData } = props;
+  const [state, setState] = useState<IState>(initialState);
+  const classes = useStyles();
+  const {
+    account,
+    library: provider,
+    networkId,
+    setWalletConnectModalOpened,
+  } = useConnectedWeb3Context();
+  const { multicall } = useServices();
+  const isMountedRef = useIsMountedRef();
+
+  const isPoolOwner = poolData.owner === (account || "").toLowerCase();
+  const isDeposited = !state.stakedTokenBalance.isZero();
+
+  const setDepositModalVisible = (depositVisible: boolean) => {
+    setState((prev) => ({ ...prev, depositVisible }));
+  };
+
+  const loadPersonalInfo = async () => {
+    if (!account || !provider) {
+      setState((prev) => ({ ...prev, stakedTokenBalance: ZERO }));
+      return;
+    }
+    try {
+      const stakedToken = new ERC20Service(
+        provider,
+        account,
+        poolData.stakedToken.address
+      );
+      const balance = await stakedToken.getBalanceOf(account);
+      if (isMountedRef.current === true) {
+        setState((prev) => ({ ...prev, stakedTokenBalance: balance }));
+      }
+    } catch (error) {
+      if (isMountedRef.current === true) {
+        setState((prev) => ({ ...prev, stakedTokenBalance: ZERO }));
+      }
+    }
+  };
+
+  useEffect(() => {
+    loadPersonalInfo();
+  }, [account, networkId]);
+
+  return (
+    <div className={classes.root}>
+      {state.depositVisible && (
+        <DepositModal
+          onClose={() => setDepositModalVisible(false)}
+          poolData={poolData}
+        />
+      )}
       <div className={classes.content}>
         <div>
           <Grid container spacing={0}>
@@ -190,6 +256,11 @@ export const PoolDetailsContent = (props: IProps) => {
           <Button
             className={classes.button}
             color="primary"
+            onClick={() =>
+              account
+                ? setDepositModalVisible(true)
+                : setWalletConnectModalOpened(true)
+            }
             variant="contained"
           >
             DEPOSIT
@@ -197,40 +268,41 @@ export const PoolDetailsContent = (props: IProps) => {
           <Button
             className={classes.button}
             color="secondary"
+            disabled={!isDeposited}
             variant="contained"
           >
             WITHDRAW
           </Button>
-          <Button
-            className={classes.button}
-            color="secondary"
-            variant="contained"
-          >
-            VEST
-          </Button>
-          <Button
-            className={classes.button}
-            color="secondary"
-            variant="contained"
-          >
-            REWARDS
-          </Button>
-          <Button
-            className={classes.button}
-            color="secondary"
-            variant="contained"
-          >
-            REBALANCE
-          </Button>
+          {isDeposited && (
+            <Button
+              className={classes.button}
+              color="secondary"
+              variant="contained"
+            >
+              VEST
+            </Button>
+          )}
+          {isPoolOwner && (
+            <Button
+              className={classes.button}
+              color="secondary"
+              variant="contained"
+            >
+              REWARDS
+            </Button>
+          )}
+          {isPoolOwner && (
+            <Button
+              className={classes.button}
+              color="secondary"
+              variant="contained"
+            >
+              REBALANCE
+            </Button>
+          )}
         </div>
         <HistorySection pool={poolData} />
       </div>
-    );
-  };
-
-  return (
-    <div className={classes.root}>
-      {isLoading ? <SimpleLoader /> : renderContent()}
     </div>
   );
 };

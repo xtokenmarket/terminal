@@ -55,6 +55,9 @@ const themesOptions = [
           "&:hover": {
             backgroundColor: "#6E27E499",
           },
+          "&:disabled": {
+            color: "#fff3",
+          },
         },
         containedSecondary: {
           backgroundColor: "#0000",
@@ -62,6 +65,9 @@ const themesOptions = [
           color: "#FFFFFF",
           "&:hover": {
             backgroundColor: "#0003",
+          },
+          "&:disabled": {
+            color: "#fff3",
           },
         },
         label: {
@@ -120,6 +126,9 @@ const themesOptions = [
           "&:hover": {
             backgroundColor: "#6E27E499",
           },
+          "&:disabled": {
+            color: "#fff3",
+          },
         },
         containedSecondary: {
           backgroundColor: "#0000",
@@ -127,6 +136,9 @@ const themesOptions = [
           color: "#FFFFFF",
           "&:hover": {
             backgroundColor: "#0003",
+          },
+          "&:disabled": {
+            color: "#fff3",
           },
         },
         label: {

@@ -49,6 +49,8 @@ declare module "@material-ui/core/styles/createTheme" {
       elevation1: string;
       elevation3: string;
       warn: string;
+      warn1: string;
+      warn2: string;
       gradient1: string;
     };
   }
@@ -101,6 +103,8 @@ declare module "@material-ui/core/styles/createTheme" {
       elevation1: string;
       elevation3: string;
       warn: string;
+      warn1: string;
+      warn2: string;
       gradient1: string;
     };
   }

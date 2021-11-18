@@ -51,3 +51,11 @@ export enum ENetwork {
   Arbitrum = "Arbitrum",
   Optimism = "Optimism",
 }
+
+export enum EDepositStep {
+  Init = "Init",
+  Input = "Input",
+  Confirm = "Confirm",
+  Deposit = "Deposit",
+  Success = "Success",
+}

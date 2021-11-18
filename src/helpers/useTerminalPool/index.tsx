@@ -12,7 +12,7 @@ interface IState {
 }
 
 export const useTerminalPool = (poolAddress: string) => {
-  const [state, setState] = useState<IState>({ loading: false });
+  const [state, setState] = useState<IState>({ loading: true });
   const { account, library: provider, networkId } = useConnectedWeb3Context();
   const { multicall, rewardEscrow } = useServices();
 
@@ -123,7 +123,7 @@ export const useTerminalPool = (poolAddress: string) => {
           rewardTokens,
           rewardsDuration,
           rewardsAreEscrowed,
-          owner,
+          owner: owner.toLowerCase(),
           periodFinish,
           vestingPeriod,
           ticks: {
@@ -148,5 +148,5 @@ export const useTerminalPool = (poolAddress: string) => {
     };
   }, [networkId, poolAddress]);
 
-  return state;
+  return { ...state, loadInfo };
 };

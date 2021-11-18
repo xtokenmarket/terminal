@@ -21,7 +21,7 @@ import { transparentize } from "polished";
 
 const logger = getLogger("ConnectWalletModal::Index");
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
     alignItems: "center",
