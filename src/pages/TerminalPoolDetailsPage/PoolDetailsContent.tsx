@@ -201,6 +201,10 @@ export const PoolDetailsContent = (props: IProps) => {
       {state.depositVisible && (
         <DepositModal
           onClose={() => setDepositModalVisible(false)}
+          onSuccess={async () => {
+            setDepositModalVisible(false);
+            await props.reloadTerminalPool();
+          }}
           poolData={poolData}
         />
       )}

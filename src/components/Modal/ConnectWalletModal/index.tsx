@@ -29,16 +29,16 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     outline: "none",
-    backgroundColor: theme.colors.white1,
+    backgroundColor: theme.colors.fifth,
     width: 400,
     borderRadius: theme.spacing(0.5),
     padding: `${theme.spacing(2)}px 0`,
     userSelect: `none`,
     position: "relative",
-    border: `1px solid ${transparentize(0.9, theme.colors.white)}`,
+    border: `1px solid ${transparentize(0.9, theme.colors.fifth)}`,
   },
   title: {
-    color: theme.colors.primary,
+    color: theme.colors.white,
     padding: `0 ${theme.spacing(2)}px`,
     fontWeight: "bold",
     fontSize: theme.spacing(2.5),
@@ -56,12 +56,12 @@ const useStyles = makeStyles((theme) => ({
     right: 21,
     width: 24,
     height: 24,
-    color: theme.colors.primary,
+    color: theme.colors.white,
     cursor: "pointer",
     "& svg": { width: 24, height: 24 },
   },
   connectingText: {
-    color: theme.colors.default,
+    color: theme.colors.white,
   },
 }));
 

@@ -13,6 +13,7 @@ const erc20Abi = [
   "function totalSupply() external view returns (uint256)",
   "function transferFrom(address sender, address recipient, uint256 amount) public returns (bool)",
   "function transfer(address to, uint256 value) public returns (bool)",
+  "event Approval(address indexed owner, address indexed spender, uint256 value)",
 ];
 
 class ERC20Service {
@@ -93,6 +94,36 @@ class ERC20Service {
       `Approve unlimited transaction hash: ${transactionObject.hash}`
     );
     return transactionObject.hash;
+  };
+
+  waitUntilApproved = async (
+    owner: string,
+    spender: string,
+    txId: string
+  ): Promise<void> => {
+    let resolved = false;
+    return new Promise(async (resolve) => {
+      this.contract.on(
+        "Approval",
+        (ownerAddress: string, spenderAddress: string) => {
+          if (
+            ownerAddress.toLowerCase() === owner.toLowerCase() &&
+            spenderAddress.toLowerCase() === spender.toLowerCase()
+          ) {
+            if (!resolved) {
+              resolved = true;
+              resolve();
+            }
+          }
+        }
+      );
+
+      await this.contract.provider.waitForTransaction(txId);
+      if (!resolved) {
+        resolved = true;
+        resolve();
+      }
+    });
   };
 
   getBalanceOf = async (address: string): Promise<BigNumber> => {

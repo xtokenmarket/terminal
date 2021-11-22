@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { makeStyles, Modal } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { EDepositStep } from "utils/enums";
 import {
   ConfirmSection,
@@ -13,6 +13,7 @@ import { ITerminalPool } from "types";
 import { BigNumber } from "@ethersproject/bignumber";
 import { ZERO } from "utils/number";
 import useCommonStyles from "style/common";
+import { useConnectedWeb3Context } from "contexts";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,6 +28,9 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: "80vh",
     userSelect: "none",
     overflowY: "auto",
+    "&.transparent": {
+      backgroundColor: theme.colors.transparent,
+    },
   },
 }));
 
@@ -34,6 +38,7 @@ interface IProps {
   className?: string;
   onClose: () => void;
   poolData: ITerminalPool;
+  onSuccess: () => Promise<void>;
 }
 
 export interface IDepositState {
@@ -44,11 +49,16 @@ export interface IDepositState {
   amount1Estimation: BigNumber;
   lpEstimation: BigNumber;
   totalLiquidity: BigNumber;
+  // used
+  amount0Used: BigNumber;
+  amount1Used: BigNumber;
+  liquidityAdded: BigNumber;
 }
 
 export const DepositModal = (props: IProps) => {
   const classes = useStyles();
   const commonClasses = useCommonStyles();
+  const { account } = useConnectedWeb3Context();
 
   const { onClose } = props;
   const [state, setState] = useState<IDepositState>({
@@ -59,7 +69,16 @@ export const DepositModal = (props: IProps) => {
     amount1Estimation: ZERO,
     lpEstimation: ZERO,
     totalLiquidity: ZERO,
+    amount0Used: ZERO,
+    amount1Used: ZERO,
+    liquidityAdded: ZERO,
   });
+
+  useEffect(() => {
+    if (!account) {
+      onClose();
+    }
+  }, [account]);
 
   const updateState = (e: any) => {
     setState((prev) => ({ ...prev, ...e }));
@@ -99,18 +118,43 @@ export const DepositModal = (props: IProps) => {
           />
         );
       case EDepositStep.Confirm:
-        return <ConfirmSection onNext={onNextStep} />;
+        return (
+          <ConfirmSection
+            onNext={onNextStep}
+            depositState={state}
+            onClose={props.onClose}
+            poolData={props.poolData}
+          />
+        );
       case EDepositStep.Deposit:
-        return <DepositSection onNext={onNextStep} />;
+        return (
+          <DepositSection
+            onNext={onNextStep}
+            depositState={state}
+            poolData={props.poolData}
+            updateState={updateState}
+          />
+        );
       default:
-        return <SuccessSection onNext={onNextStep} />;
+        return (
+          <SuccessSection
+            onClose={props.onSuccess}
+            depositState={state}
+            poolData={props.poolData}
+          />
+        );
     }
   };
 
   return (
     <Modal open>
       <div
-        className={clsx(classes.root, commonClasses.scroll, props.className)}
+        className={clsx(
+          classes.root,
+          commonClasses.scroll,
+          props.className,
+          state.step === EDepositStep.Success ? "transparent" : ""
+        )}
       >
         {renderContent()}
       </div>

@@ -1,3 +1,4 @@
+import { BigNumber } from "@ethersproject/bignumber";
 import { makeStyles, Typography } from "@material-ui/core";
 import clsx from "clsx";
 import { TokenIcon } from "components";
@@ -47,18 +48,25 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   className?: string;
   poolData: ITerminalPool;
-  depositState: IDepositState;
+  amount0: BigNumber;
+  amount1: BigNumber;
+  lpValue: BigNumber;
+  totalLiquidity: BigNumber;
+  isEstimation?: boolean;
 }
 
 export const OutputEstimation = (props: IProps) => {
   const classes = useStyles();
-  const { poolData, depositState } = props;
+  const { poolData, amount0, amount1, lpValue, totalLiquidity } = props;
+  const isEstimation =
+    props.isEstimation !== undefined ? props.isEstimation : true;
 
   return (
     <div className={clsx(classes.root, props.className)}>
       <div className={classes.estimation}>
         <Typography className={classes.label}>
-          {poolData.token0.symbol}/{poolData.token1.symbol} LP YOU WILL RECEIVE
+          {poolData.token0.symbol}/{poolData.token1.symbol}{" "}
+          {isEstimation ? "LP YOU WILL RECEIVE" : "LP YOU RECEIVED"}
         </Typography>
         <div className={classes.infoRow}>
           <div>
@@ -67,20 +75,18 @@ export const OutputEstimation = (props: IProps) => {
           </div>
           &nbsp;&nbsp;
           <Typography className={classes.amount}>
-            {formatBigNumber(depositState.lpEstimation, ETHER_DECIMAL, 4)}&nbsp;
+            {formatBigNumber(lpValue, ETHER_DECIMAL, 4)}&nbsp;
             <span>~ $13.009</span>
           </Typography>
         </div>
-        <Typography className={classes.label}>YOU WILL DEPOSIT</Typography>
+        <Typography className={classes.label}>
+          {isEstimation ? "YOU WILL DEPOSIT" : "YOU DEPOSITED"}
+        </Typography>
         <div className={classes.infoRow}>
           <TokenIcon token={poolData.token0} className={classes.tokenIcon} />
           &nbsp;&nbsp;
           <Typography className={classes.amount}>
-            {formatBigNumber(
-              depositState.amount0Estimation,
-              poolData.token0.decimals,
-              4
-            )}
+            {formatBigNumber(amount0, poolData.token0.decimals, 4)}
             &nbsp;
             <span>~ $13.009</span>
           </Typography>
@@ -89,11 +95,7 @@ export const OutputEstimation = (props: IProps) => {
           <TokenIcon token={poolData.token1} className={classes.tokenIcon} />
           &nbsp;&nbsp;
           <Typography className={classes.amount}>
-            {formatBigNumber(
-              depositState.amount1Estimation,
-              poolData.token1.decimals,
-              4
-            )}
+            {formatBigNumber(amount1, poolData.token1.decimals, 4)}
             &nbsp;
             <span>~ $13.009</span>
           </Typography>
@@ -101,13 +103,10 @@ export const OutputEstimation = (props: IProps) => {
         <Typography className={classes.label}>SHARE OF POOL</Typography>
         <div>
           <Typography className={classes.amount}>
-            {depositState.totalLiquidity.isZero()
+            {totalLiquidity.isZero()
               ? "-"
               : `${
-                  depositState.lpEstimation
-                    .mul(1000000)
-                    .div(depositState.totalLiquidity)
-                    .toNumber() / 10000
+                  lpValue.mul(1000000).div(totalLiquidity).toNumber() / 10000
                 }%`}
           </Typography>
         </div>

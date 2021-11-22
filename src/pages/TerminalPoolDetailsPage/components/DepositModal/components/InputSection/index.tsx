@@ -4,7 +4,7 @@ import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
 import { TokenAmountInput } from "components";
 import { DefaultReadonlyProvider } from "config/networks";
 import { useConnectedWeb3Context } from "contexts";
-import { useIsMountedRef } from "helpers";
+import { useIsMountedRef, useTokenBalance } from "helpers";
 import { IDepositState } from "pages/TerminalPoolDetailsPage/components";
 import { xAssetCLRService } from "services";
 import { ITerminalPool } from "types";
@@ -55,6 +55,8 @@ export const InputSection = (props: IProps) => {
   const { onNext, onClose, depositState, updateState, poolData } = props;
   const { account, library: provider, networkId } = useConnectedWeb3Context();
   const isMountedRef = useIsMountedRef();
+  const { balance: balance0 } = useTokenBalance(poolData.token0.address);
+  const { balance: balance1 } = useTokenBalance(poolData.token1.address);
 
   const loadEstimations = async (amount0: BigNumber, amount1: BigNumber) => {
     try {
@@ -113,9 +115,7 @@ export const InputSection = (props: IProps) => {
   return (
     <div className={classes.root}>
       <div className={classes.header}>
-        <Typography className={classes.title}>
-          Deposit xAssetCLR Liquidity
-        </Typography>
+        <Typography className={classes.title}>Deposit Liquidity</Typography>
         <IconButton className={classes.closeButton} onClick={onClose}>
           <CloseOutlinedIcon />
         </IconButton>
@@ -136,7 +136,13 @@ export const InputSection = (props: IProps) => {
           />
         </div>
       </div>
-      <OutputEstimation poolData={poolData} depositState={depositState} />
+      <OutputEstimation
+        poolData={poolData}
+        amount0={depositState.amount0Estimation}
+        amount1={depositState.amount1Estimation}
+        lpValue={depositState.lpEstimation}
+        totalLiquidity={depositState.totalLiquidity}
+      />
       <div className={classes.actions}>
         <OutputEstimationInfo />
         <Button
@@ -146,7 +152,9 @@ export const InputSection = (props: IProps) => {
           className={classes.deposit}
           onClick={onNext}
           disabled={
-            depositState.amount0.isZero() && depositState.amount1.isZero()
+            (depositState.amount0.isZero() && depositState.amount1.isZero()) ||
+            depositState.amount0.gt(balance0) ||
+            depositState.amount1.gt(balance1)
           }
         >
           DEPOSIT

@@ -5,9 +5,10 @@ import React from "react";
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
-    height: 50,
+    height: 60,
     background: theme.colors.transparent,
-    borderRadius: 2,
+    borderRadius: 6,
+    padding: "0 16px",
     border: `1px solid ${theme.colors.primary}`,
     "& span": { flex: 1, textAlign: "left" },
     "& img": {
@@ -16,7 +17,7 @@ const useStyles = makeStyles((theme: any) => ({
     },
   },
   label: {
-    color: theme.colors.primary,
+    color: theme.colors.white,
     textTransform: "none",
     fontWeight: 700,
     fontSize: 16,
@@ -42,7 +43,7 @@ export const ConnectWalletItem = (props: IProps) => {
       fullWidth
       onClick={onClick}
     >
-      <span>{text}</span>
+      <span className={classes.label}>{text}</span>
 
       <img alt="icon" src={icon} />
     </Button>
