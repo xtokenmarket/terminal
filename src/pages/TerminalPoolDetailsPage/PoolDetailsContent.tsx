@@ -14,6 +14,7 @@ import {
   DepositModal,
   HistorySection,
   InfoSection,
+  WithdrawModal,
 } from "./components";
 
 const useStyles = makeStyles((theme) => ({
@@ -143,11 +144,13 @@ interface IProps {
 interface IState {
   stakedTokenBalance: BigNumber;
   depositVisible: boolean;
+  withdrawVisible: boolean;
 }
 
 const initialState: IState = {
   stakedTokenBalance: ZERO,
   depositVisible: false,
+  withdrawVisible: false,
 };
 
 export const PoolDetailsContent = (props: IProps) => {
@@ -168,6 +171,10 @@ export const PoolDetailsContent = (props: IProps) => {
 
   const setDepositModalVisible = (depositVisible: boolean) => {
     setState((prev) => ({ ...prev, depositVisible }));
+  };
+
+  const setWithdrawModalVisible = (withdrawVisible: boolean) => {
+    setState((prev) => ({ ...prev, withdrawVisible }));
   };
 
   const loadPersonalInfo = async () => {
@@ -203,6 +210,16 @@ export const PoolDetailsContent = (props: IProps) => {
           onClose={() => setDepositModalVisible(false)}
           onSuccess={async () => {
             setDepositModalVisible(false);
+            await props.reloadTerminalPool();
+          }}
+          poolData={poolData}
+        />
+      )}
+      {state.withdrawVisible && (
+        <WithdrawModal
+          onClose={() => setWithdrawModalVisible(false)}
+          onSuccess={async () => {
+            setWithdrawModalVisible(false);
             await props.reloadTerminalPool();
           }}
           poolData={poolData}
@@ -274,6 +291,11 @@ export const PoolDetailsContent = (props: IProps) => {
             color="secondary"
             disabled={!isDeposited}
             variant="contained"
+            onClick={() =>
+              account
+                ? setWithdrawModalVisible(true)
+                : setWalletConnectModalOpened(true)
+            }
           >
             WITHDRAW
           </Button>

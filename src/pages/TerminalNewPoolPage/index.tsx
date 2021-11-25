@@ -4,7 +4,7 @@ import {
   PageContent,
   PageHeader,
   PageWrapper,
-  TokenAmountInput,
+  TokenBalanceInput,
   TokenSelect,
 } from "components";
 import { NULL_ADDRESS } from "config/constants";
@@ -163,14 +163,14 @@ const TerminalNewPoolPage = () => {
                     <Typography className={classes.label}>
                       Deposit amounts
                     </Typography>
-                    <TokenAmountInput
+                    <TokenBalanceInput
                       token={state.token0}
                       value={state.token0Amount}
                       onChange={(token0Amount) =>
                         setState((prev) => ({ ...prev, token0Amount }))
                       }
                     />
-                    <TokenAmountInput
+                    <TokenBalanceInput
                       token={state.token1}
                       value={state.token1Amount}
                       onChange={(token1Amount) =>

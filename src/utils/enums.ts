@@ -59,3 +59,14 @@ export enum EDepositStep {
   Deposit = "Deposit",
   Success = "Success",
 }
+
+export enum EWithdrawStep {
+  Input = "Input",
+  Withdraw = "Withdraw",
+  Success = "Success",
+}
+
+export enum EVestStep {
+  Input = "Input",
+  Success = "Success",
+}

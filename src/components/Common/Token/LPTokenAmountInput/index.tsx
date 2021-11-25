@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   notchedOutline: {
     borderColor: theme.colors.primary200,
   },
-  token: {
+  tokens: {
     position: "absolute",
     right: 16,
     top: -6,
@@ -35,7 +35,28 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
   },
-  tokenIcon: { width: 32, height: 32, borderRadius: "50%" },
+  tokenIcons: {
+    display: "flex",
+    alignItems: "center",
+  },
+  token: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    position: "relative",
+    "&+&": {
+      marginLeft: -12,
+      "& img": {
+        borderColor: theme.colors.primary500,
+      },
+    },
+  },
+  tokenIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: "50%",
+    border: `4px solid ${theme.colors.transparent}`,
+  },
   tokenLabel: {
     fontSize: 10,
     fontWeight: 700,
@@ -53,7 +74,8 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   className?: string;
-  token: IToken;
+  tokens: IToken[];
+  lpToken: IToken;
   value: BigNumber;
   onChange: (_: BigNumber) => void;
   max: BigNumber;
@@ -63,8 +85,8 @@ interface IState {
   amount: string;
 }
 
-export const TokenAmountInput = (props: IProps) => {
-  const { token, onChange, max } = props;
+export const LPTokenAmountInput = (props: IProps) => {
+  const { tokens, onChange, lpToken, max } = props;
   const classes = useStyles();
   const commonClasses = useCommonStyles();
 
@@ -72,7 +94,7 @@ export const TokenAmountInput = (props: IProps) => {
   useEffect(() => {
     if (
       !ethers.utils
-        .parseUnits(state.amount || "0", token.decimals)
+        .parseUnits(state.amount || "0", lpToken.decimals)
         .eq(props.value)
     ) {
       if (props.value.isZero()) {
@@ -80,11 +102,16 @@ export const TokenAmountInput = (props: IProps) => {
       } else {
         setState((prev) => ({
           ...prev,
-          amount: ethers.utils.formatUnits(props.value || "0", token.decimals),
+          amount: ethers.utils.formatUnits(
+            props.value || "0",
+            lpToken.decimals
+          ),
         }));
       }
     }
-  }, [props.value, state.amount, token.decimals]);
+  }, [props.value, state.amount, lpToken.decimals]);
+
+  const lpSymbol = tokens.map((token) => token.symbol.toUpperCase()).join("-");
 
   return (
     <div className={clsx(classes.root, props.className)}>
@@ -104,22 +131,31 @@ export const TokenAmountInput = (props: IProps) => {
           if (Number(e.target.value) < 0) return;
           setState((prev) => ({ ...prev, amount: e.target.value }));
           onChange(
-            ethers.utils.parseUnits(e.target.value || "0", token.decimals)
+            ethers.utils.parseUnits(e.target.value || "0", lpToken.decimals)
           );
         }}
         variant="outlined"
         fullWidth
         type="number"
-        label={`${token.symbol.toUpperCase()} amount`}
+        label={`LP amount`}
       />
-      <div className={classes.token}>
-        <TokenIcon token={token} className={classes.tokenIcon} />
-        <span className={classes.tokenLabel}>{token.symbol}</span>
+      <div className={classes.tokens}>
+        <div className={classes.tokenIcons}>
+          {tokens.map((token) => (
+            <div className={classes.token} key={token.address}>
+              <TokenIcon token={token} className={classes.tokenIcon} />
+            </div>
+          ))}
+        </div>
+
+        <span className={classes.tokenLabel}>
+          {tokens.map((token) => token.symbol).join("/")}
+        </span>
       </div>
       <Typography className={classes.balance}>
         Available -{" "}
         <span>
-          {formatBigNumber(max, token.decimals, 4)} {token.symbol}
+          {formatBigNumber(max, lpToken.decimals, 4)} {lpSymbol}
         </span>
       </Typography>
     </div>

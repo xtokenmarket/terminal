@@ -9,6 +9,7 @@ import { ReactComponent as TerminalIcon } from "assets/svgs/monitor.svg";
 import { ReactComponent as GithubIcon } from "assets/svgs/github.svg";
 import { ReactComponent as TwitterIcon } from "assets/svgs/twitter.svg";
 import { ReactComponent as DiscordIcon } from "assets/svgs/discord.svg";
+import { IToken } from "types";
 
 export const STORAGE_KEY_CONNECTOR = "CONNECTOR";
 
@@ -52,3 +53,13 @@ export const SvgIcons = {
   twitter: TwitterIcon,
   discord: DiscordIcon,
 };
+
+export const LP_TOKEN_BASIC: IToken = {
+  name: "LP",
+  symbol: "",
+  decimals: ETHER_DECIMAL,
+  image: "",
+  address: "",
+};
+
+export const MINT_BURN_SLIPPAGE = BigNumber.from(100);

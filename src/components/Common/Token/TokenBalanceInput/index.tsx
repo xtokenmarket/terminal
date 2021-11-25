@@ -3,6 +3,7 @@ import { makeStyles, TextField, Typography } from "@material-ui/core";
 import clsx from "clsx";
 import { TokenIcon } from "components";
 import { ethers } from "ethers";
+import { useTokenBalance } from "helpers";
 import { useEffect, useState } from "react";
 import useCommonStyles from "style/common";
 import { IToken } from "types";
@@ -56,17 +57,17 @@ interface IProps {
   token: IToken;
   value: BigNumber;
   onChange: (_: BigNumber) => void;
-  max: BigNumber;
 }
 
 interface IState {
   amount: string;
 }
 
-export const TokenAmountInput = (props: IProps) => {
-  const { token, onChange, max } = props;
+export const TokenBalanceInput = (props: IProps) => {
+  const { token, value, onChange } = props;
   const classes = useStyles();
   const commonClasses = useCommonStyles();
+  const { balance } = useTokenBalance(token.address);
 
   const [state, setState] = useState<IState>({ amount: "" });
   useEffect(() => {
@@ -119,7 +120,7 @@ export const TokenAmountInput = (props: IProps) => {
       <Typography className={classes.balance}>
         Available -{" "}
         <span>
-          {formatBigNumber(max, token.decimals, 4)} {token.symbol}
+          {formatBigNumber(balance, token.decimals, 4)} {token.symbol}
         </span>
       </Typography>
     </div>
