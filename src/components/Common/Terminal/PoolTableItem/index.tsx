@@ -96,7 +96,6 @@ export const PoolTableItem = (props: IProps) => {
     if (!poolData) {
       return null;
     }
-    console.log("===data=", poolData);
     return (
       <NavLink
         className={classes.content}

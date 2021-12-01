@@ -5,7 +5,8 @@ import { TokenIcon } from "components";
 import { ETHER_DECIMAL } from "config/constants";
 import { IDepositState } from "pages/TerminalPoolDetailsPage/components";
 import { ITerminalPool } from "types";
-import { formatBigNumber } from "utils";
+import { formatBigNumber, getTimeDurationStr } from "utils";
+import { ZERO } from "utils/number";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -48,16 +49,13 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   className?: string;
   poolData: ITerminalPool;
-  amount0: BigNumber;
-  amount1: BigNumber;
-  lpValue: BigNumber;
-  totalLiquidity: BigNumber;
   isEstimation?: boolean;
+  earned: BigNumber[];
 }
 
 export const OutputEstimation = (props: IProps) => {
   const classes = useStyles();
-  const { poolData, amount0, amount1, lpValue, totalLiquidity } = props;
+  const { poolData, earned } = props;
   const isEstimation =
     props.isEstimation !== undefined ? props.isEstimation : true;
 
@@ -65,51 +63,35 @@ export const OutputEstimation = (props: IProps) => {
     <div className={clsx(classes.root, props.className)}>
       <div className={classes.estimation}>
         <Typography className={classes.label}>
-          {poolData.token0.symbol}/{poolData.token1.symbol}{" "}
-          {isEstimation ? "LP YOU WILL RECEIVE" : "LP YOU RECEIVED"}
+          {isEstimation ? "AVAILABLE TO VEST" : "YOU VESTED"}
         </Typography>
-        <div className={classes.infoRow}>
-          <div>
-            <TokenIcon token={poolData.token0} className={classes.tokenIcon} />
-            <TokenIcon token={poolData.token1} className={classes.tokenIcon} />
-          </div>
-          &nbsp;&nbsp;
-          <Typography className={classes.amount}>
-            {formatBigNumber(lpValue, ETHER_DECIMAL, 4)}&nbsp;
-            <span>~ $13.009</span>
-          </Typography>
-        </div>
-        <Typography className={classes.label}>
-          {isEstimation ? "YOU WILL DEPOSIT" : "YOU DEPOSITED"}
-        </Typography>
-        <div className={classes.infoRow}>
-          <TokenIcon token={poolData.token0} className={classes.tokenIcon} />
-          &nbsp;&nbsp;
-          <Typography className={classes.amount}>
-            {formatBigNumber(amount0, poolData.token0.decimals, 4)}
-            &nbsp;
-            <span>~ $13.009</span>
-          </Typography>
-        </div>
-        <div className={classes.infoRow}>
-          <TokenIcon token={poolData.token1} className={classes.tokenIcon} />
-          &nbsp;&nbsp;
-          <Typography className={classes.amount}>
-            {formatBigNumber(amount1, poolData.token1.decimals, 4)}
-            &nbsp;
-            <span>~ $13.009</span>
-          </Typography>
-        </div>
-        <Typography className={classes.label}>SHARE OF POOL</Typography>
-        <div>
-          <Typography className={classes.amount}>
-            {totalLiquidity.isZero()
-              ? "-"
-              : `${
-                  lpValue.mul(1000000).div(totalLiquidity).toNumber() / 10000
-                }%`}
-          </Typography>
-        </div>
+        {poolData.rewardTokens.map((rewardToken, index) => {
+          return (
+            <div className={classes.infoRow} key={rewardToken.address}>
+              <div>
+                <TokenIcon token={rewardToken} className={classes.tokenIcon} />
+              </div>
+              &nbsp;&nbsp;
+              <Typography className={classes.amount}>
+                {formatBigNumber(
+                  earned[index] || ZERO,
+                  rewardToken.decimals,
+                  4
+                )}
+                &nbsp;
+                <span>~ $13.009</span>
+              </Typography>
+            </div>
+          );
+        })}
+        {isEstimation && (
+          <>
+            <Typography className={classes.label}>VESTING PERIOD</Typography>
+            <Typography className={classes.amount}>
+              {getTimeDurationStr(poolData.rewardsDuration.toNumber())}
+            </Typography>
+          </>
+        )}
       </div>
     </div>
   );

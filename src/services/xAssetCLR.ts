@@ -1,6 +1,7 @@
 import { BigNumber, Contract, Wallet, ethers } from "ethers";
 import { Maybe } from "types";
 import abis from "abis";
+import { Interface } from "@ethersproject/abi";
 
 const xAssetCLRAbi = abis.xAssetCLR;
 
@@ -39,6 +40,61 @@ class xAssetCLRService {
 
   getTotalLiquidity = async () => {
     return this.contract.getTotalLiquidity();
+  };
+
+  claimReward = async (address: string): Promise<string> => {
+    const transactionObject = await this.contract.claimReward(address);
+    console.log(`claimReward transaction hash: ${transactionObject.hash}`);
+
+    return transactionObject.hash;
+  };
+
+  waitUntilClaimReward = async (
+    account: string,
+    txId: string
+  ): Promise<string> => {
+    let resolved = false;
+    return new Promise(async (resolve) => {
+      this.contract.on(
+        "RewardClaimed",
+        (sender: string, token: any, amountStr: any, ...rest) => {
+          if (account.toLowerCase() === sender.toLowerCase()) {
+            if (!resolved) {
+              resolved = true;
+              resolve(rest[0].transactionHash);
+            }
+          }
+        }
+      );
+
+      await this.contract.provider.waitForTransaction(txId);
+      if (!resolved) {
+        resolved = true;
+        resolve(txId);
+      }
+    });
+  };
+
+  parseClaimTx = async (
+    txId: string
+  ): Promise<{
+    [key: string]: BigNumber;
+  }> => {
+    const result: {
+      [key: string]: BigNumber;
+    } = {};
+    const { logs } = await this.contract.provider.getTransactionReceipt(txId);
+    const uniPositionInterface = new Interface(abis.xAssetCLR);
+    for (let index = 0; index < logs.length; index++) {
+      const log = logs[index];
+      try {
+        const parsed = uniPositionInterface.parseLog(log);
+        if (parsed.name === "RewardClaimed") {
+          result[String(parsed.args[1]).toLowerCase()] = parsed.args[2];
+        }
+      } catch (error) {}
+    }
+    return result;
   };
 }
 

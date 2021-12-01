@@ -1,13 +1,12 @@
-import { Button, makeStyles, Typography } from "@material-ui/core";
+import { makeStyles, Typography } from "@material-ui/core";
 import { transparentize } from "polished";
-import ReportProblemOutlinedIcon from "@material-ui/icons/ReportProblemOutlined";
 import clsx from "clsx";
 
 const useStyles = makeStyles((theme) => ({
   noteWrapper: {
-    padding: 24,
-    backgroundColor: transparentize(0.65, theme.colors.warn2),
-    border: `2px solid ${theme.colors.warn1}`,
+    padding: 16,
+    backgroundColor: transparentize(0.7, theme.colors.primary200),
+    border: `2px solid ${theme.colors.primary200}`,
     borderRadius: 4,
     display: "flex",
     [theme.breakpoints.down(theme.custom.xss)]: {
@@ -15,24 +14,28 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   noteIcon: {
-    backgroundColor: theme.colors.warn1,
+    backgroundColor: theme.colors.primary200,
     width: 40,
     height: 40,
-    marginRight: 24,
+    marginRight: 16,
     borderRadius: 4,
     display: "flex",
     color: theme.colors.white,
     alignItems: "center",
     justifyContent: "center",
     minWidth: 40,
-    marginTop: 12,
     [theme.breakpoints.down(theme.custom.xss)]: {
       marginTop: 0,
       alignSelf: "center",
+      marginBottom: 12,
+    },
+    "& img": {
+      width: 24,
+      height: 24,
     },
   },
-  noteTitle: { fontSize: 22, color: theme.colors.white, fontWeight: 600 },
-  noteDescription: { color: theme.colors.white, marginTop: 8 },
+  noteTitle: { fontSize: 16, color: theme.colors.white, fontWeight: 600 },
+  noteDescription: { color: theme.colors.white, marginTop: 3, fontSize: 14 },
 }));
 
 interface IProps {
@@ -47,7 +50,7 @@ export const WarningInfo = (props: IProps) => {
   return (
     <div className={clsx(classes.noteWrapper, props.className)}>
       <div className={classes.noteIcon}>
-        <ReportProblemOutlinedIcon />
+        <img alt="info" src="/assets/icons/info.svg" />
       </div>
       <div>
         <Typography className={classes.noteTitle}>{props.title}</Typography>

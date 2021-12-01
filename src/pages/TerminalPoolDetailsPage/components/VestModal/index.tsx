@@ -1,14 +1,8 @@
 import clsx from "clsx";
 import { makeStyles, Modal } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { EDepositStep } from "utils/enums";
-import {
-  ConfirmSection,
-  DepositSection,
-  InitSection,
-  InputSection,
-  SuccessSection,
-} from "./components";
+import { EVestStep } from "utils/enums";
+import { InfoSection, SuccessSection, VestSection } from "./components";
 import { ITerminalPool } from "types";
 import { BigNumber } from "@ethersproject/bignumber";
 import { ZERO } from "utils/number";
@@ -42,17 +36,11 @@ interface IProps {
 }
 
 export interface IVestState {
-  step: EDepositStep;
-  amount0: BigNumber;
-  amount1: BigNumber;
-  amount0Estimation: BigNumber;
-  amount1Estimation: BigNumber;
-  lpEstimation: BigNumber;
-  totalLiquidity: BigNumber;
-  // used
-  amount0Used: BigNumber;
-  amount1Used: BigNumber;
-  liquidityAdded: BigNumber;
+  step: EVestStep;
+  claimedEarn: BigNumber[];
+  vestings: { amount: BigNumber; timestamp: BigNumber }[][];
+  //
+  earned: BigNumber[];
 }
 
 export const VestModal = (props: IProps) => {
@@ -62,16 +50,10 @@ export const VestModal = (props: IProps) => {
 
   const { onClose } = props;
   const [state, setState] = useState<IVestState>({
-    step: EDepositStep.Init,
-    amount0: ZERO,
-    amount1: ZERO,
-    amount0Estimation: ZERO,
-    amount1Estimation: ZERO,
-    lpEstimation: ZERO,
-    totalLiquidity: ZERO,
-    amount0Used: ZERO,
-    amount1Used: ZERO,
-    liquidityAdded: ZERO,
+    step: EVestStep.Input,
+    earned: [],
+    claimedEarn: [],
+    vestings: [],
   });
 
   useEffect(() => {
@@ -86,17 +68,11 @@ export const VestModal = (props: IProps) => {
 
   const onNextStep = () => {
     switch (state.step) {
-      case EDepositStep.Init:
-        setState((prev) => ({ ...prev, step: EDepositStep.Input }));
+      case EVestStep.Input:
+        setState((prev) => ({ ...prev, step: EVestStep.Vest }));
         break;
-      case EDepositStep.Input:
-        setState((prev) => ({ ...prev, step: EDepositStep.Confirm }));
-        break;
-      case EDepositStep.Confirm:
-        setState((prev) => ({ ...prev, step: EDepositStep.Deposit }));
-        break;
-      case EDepositStep.Deposit:
-        setState((prev) => ({ ...prev, step: EDepositStep.Success }));
+      case EVestStep.Vest:
+        setState((prev) => ({ ...prev, step: EVestStep.Success }));
         break;
       default:
         onClose();
@@ -105,32 +81,21 @@ export const VestModal = (props: IProps) => {
 
   const renderContent = () => {
     switch (state.step) {
-      case EDepositStep.Init:
-        return <InitSection onNext={onNextStep} />;
-      case EDepositStep.Input:
+      case EVestStep.Input:
         return (
-          <InputSection
+          <InfoSection
             onNext={onNextStep}
             updateState={updateState}
-            depositState={state}
+            vestState={state}
             onClose={props.onClose}
             poolData={props.poolData}
           />
         );
-      case EDepositStep.Confirm:
+      case EVestStep.Vest:
         return (
-          <ConfirmSection
+          <VestSection
             onNext={onNextStep}
-            depositState={state}
-            onClose={props.onClose}
-            poolData={props.poolData}
-          />
-        );
-      case EDepositStep.Deposit:
-        return (
-          <DepositSection
-            onNext={onNextStep}
-            depositState={state}
+            vestState={state}
             poolData={props.poolData}
             updateState={updateState}
           />
@@ -139,7 +104,7 @@ export const VestModal = (props: IProps) => {
         return (
           <SuccessSection
             onClose={props.onSuccess}
-            depositState={state}
+            vestState={state}
             poolData={props.poolData}
           />
         );
@@ -153,7 +118,7 @@ export const VestModal = (props: IProps) => {
           classes.root,
           commonClasses.scroll,
           props.className,
-          state.step === EDepositStep.Success ? "transparent" : ""
+          state.step === EVestStep.Success ? "transparent" : ""
         )}
       >
         {renderContent()}

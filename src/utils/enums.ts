@@ -68,5 +68,6 @@ export enum EWithdrawStep {
 
 export enum EVestStep {
   Input = "Input",
+  Vest = "Vest",
   Success = "Success",
 }

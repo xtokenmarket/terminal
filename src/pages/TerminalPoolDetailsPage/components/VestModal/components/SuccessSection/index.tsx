@@ -1,8 +1,8 @@
 import { Button, makeStyles, Typography } from "@material-ui/core";
-import { IDepositState } from "pages/TerminalPoolDetailsPage/components";
+import { IVestState } from "pages/TerminalPoolDetailsPage/components";
 import { ITerminalPool } from "types";
 
-import { OutputEstimation, OutputEstimationInfo } from "..";
+import { OutputEstimation } from "..";
 
 const ICON_SIZE = 150;
 
@@ -44,13 +44,13 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   onClose: () => void;
-  depositState: IDepositState;
+  vestState: IVestState;
   poolData: ITerminalPool;
 }
 
 export const SuccessSection = (props: IProps) => {
   const classes = useStyles();
-  const { depositState, poolData, onClose } = props;
+  const { vestState, poolData, onClose } = props;
 
   return (
     <div className={classes.root}>
@@ -66,14 +66,15 @@ export const SuccessSection = (props: IProps) => {
           details of your transaction.
         </Typography>
       </div>
-      <OutputEstimation
+      {/* <OutputEstimation
         poolData={poolData}
-        amount0={depositState.amount0Used}
-        amount1={depositState.amount1Used}
-        lpValue={depositState.liquidityAdded}
-        totalLiquidity={depositState.totalLiquidity}
+        amount0={vestState.amount0Withdrawn}
+        amount1={vestState.amount1Withdrawn}
+        lpValue={vestState.liquidityWithdrawn}
+        totalLiquidity={vestState.totalLiquidity}
         isEstimation={false}
-      />
+        earned={vestState.claimedEarn}
+      /> */}
       <div className={classes.actions}>
         <Button
           color="primary"
