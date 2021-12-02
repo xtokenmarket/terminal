@@ -60,21 +60,17 @@ export const SuccessSection = (props: IProps) => {
           src="/assets/icons/confirmed.png"
           className={classes.img}
         />
-        <Typography className={classes.title}>Deposit confirmed!</Typography>
+        <Typography className={classes.title}>Vest confirmed!</Typography>
         <Typography className={classes.description}>
-          You have successfully finished your deposit process! Below you can see
-          details of your transaction.
+          You have successfully finished your vest creation process! Below you
+          can see details of your transaction.
         </Typography>
       </div>
-      {/* <OutputEstimation
+      <OutputEstimation
         poolData={poolData}
-        amount0={vestState.amount0Withdrawn}
-        amount1={vestState.amount1Withdrawn}
-        lpValue={vestState.liquidityWithdrawn}
-        totalLiquidity={vestState.totalLiquidity}
+        earned={vestState.earned}
         isEstimation={false}
-        earned={vestState.claimedEarn}
-      /> */}
+      />
       <div className={classes.actions}>
         <Button
           color="primary"

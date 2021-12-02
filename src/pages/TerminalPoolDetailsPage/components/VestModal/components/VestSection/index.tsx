@@ -4,7 +4,6 @@ import { useConnectedWeb3Context } from "contexts";
 import { useIsMountedRef, useServices } from "helpers";
 import { IVestState } from "pages/TerminalPoolDetailsPage/components";
 import { useEffect, useState } from "react";
-import { xAssetCLRService } from "services";
 import { ITerminalPool } from "types";
 import { ZERO } from "utils/number";
 import { ActionStepRow, ViewTransaction, WarningInfo } from "..";
@@ -99,14 +98,9 @@ export const VestSection = (props: IProps) => {
         ...prev,
         vesting: true,
       }));
-      const xAssetCLR = new xAssetCLRService(
-        provider,
-        account,
-        poolData.address
-      );
 
-      const txId = await xAssetCLR.claimReward(account);
-      const finalTxId = await xAssetCLR.waitUntilClaimReward(account, txId);
+      const txId = await lmService.claimReward(poolData.address);
+      const finalTxId = await lmService.waitUntilClaimReward(account, txId);
 
       const claimInfo = await lmService.parseClaimTx(finalTxId);
 
