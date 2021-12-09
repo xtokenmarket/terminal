@@ -100,19 +100,24 @@ class ERC20Service {
     owner: string,
     spender: string,
     txId: string
-  ): Promise<void> => {
+  ): Promise<string> => {
     let resolved = false;
     return new Promise(async (resolve) => {
       this.contract.on(
         "Approval",
-        (ownerAddress: string, spenderAddress: string) => {
+        (
+          ownerAddress: string,
+          spenderAddress: string,
+          amount: any,
+          ...rest
+        ) => {
           if (
             ownerAddress.toLowerCase() === owner.toLowerCase() &&
             spenderAddress.toLowerCase() === spender.toLowerCase()
           ) {
             if (!resolved) {
               resolved = true;
-              resolve();
+              resolve(rest[0].transactionHash);
             }
           }
         }
@@ -121,7 +126,7 @@ class ERC20Service {
       await this.contract.provider.waitForTransaction(txId);
       if (!resolved) {
         resolved = true;
-        resolve();
+        resolve(txId);
       }
     });
   };

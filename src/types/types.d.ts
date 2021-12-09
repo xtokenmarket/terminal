@@ -77,4 +77,5 @@ export interface ITerminalPool {
   periodFinish: BigNumber;
   vestingPeriod: BigNumber;
   ticks: { tick0: BigNumber; tick1: BigNumber };
+  manager: string;
 }

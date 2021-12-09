@@ -1,13 +1,12 @@
 import { BigNumber } from "@ethersproject/bignumber";
 import { Button, Grid, makeStyles } from "@material-ui/core";
 import clsx from "clsx";
-import { SimpleLoader } from "components";
 import { useConnectedWeb3Context } from "contexts";
-import { useIsMountedRef, useServices, useTerminalPool } from "helpers";
+import { useIsMountedRef, useServices } from "helpers";
 import { useEffect, useState } from "react";
 import { ERC20Service } from "services";
 import { ITerminalPool } from "types";
-import { formatToShortNumber } from "utils";
+import { formatToShortNumber, getCurrentTimeStamp } from "utils";
 import { ZERO } from "utils/number";
 import {
   BalanceSection,
@@ -16,6 +15,7 @@ import {
   InfoSection,
   VestModal,
   WithdrawModal,
+  RewardModal,
 } from "./components";
 
 const useStyles = makeStyles((theme) => ({
@@ -147,6 +147,7 @@ interface IState {
   depositVisible: boolean;
   withdrawVisible: boolean;
   vestVisible: boolean;
+  rewardVisible: boolean;
 }
 
 const initialState: IState = {
@@ -154,6 +155,7 @@ const initialState: IState = {
   depositVisible: false,
   withdrawVisible: false,
   vestVisible: false,
+  rewardVisible: false,
 };
 
 export const PoolDetailsContent = (props: IProps) => {
@@ -169,8 +171,12 @@ export const PoolDetailsContent = (props: IProps) => {
   const { multicall } = useServices();
   const isMountedRef = useIsMountedRef();
 
-  const isPoolOwner = poolData.owner === (account || "").toLowerCase();
+  const timestamp = getCurrentTimeStamp();
+  const isManageable = [poolData.owner, poolData.manager]
+    .map((e) => e.toLowerCase())
+    .includes((account || "").toLowerCase());
   const isDeposited = !state.stakedTokenBalance.isZero();
+  const rewardPeriodFinished = poolData.periodFinish.toNumber() < timestamp;
 
   const setDepositModalVisible = (depositVisible: boolean) => {
     setState((prev) => ({ ...prev, depositVisible }));
@@ -182,6 +188,10 @@ export const PoolDetailsContent = (props: IProps) => {
 
   const setVestModalVisible = (vestVisible: boolean) => {
     setState((prev) => ({ ...prev, vestVisible }));
+  };
+
+  const setRewardModalVisible = (rewardVisible: boolean) => {
+    setState((prev) => ({ ...prev, rewardVisible }));
   };
 
   const loadPersonalInfo = async () => {
@@ -217,6 +227,16 @@ export const PoolDetailsContent = (props: IProps) => {
           onClose={() => setDepositModalVisible(false)}
           onSuccess={async () => {
             setDepositModalVisible(false);
+            await props.reloadTerminalPool();
+          }}
+          poolData={poolData}
+        />
+      )}
+      {state.rewardVisible && (
+        <RewardModal
+          onClose={() => setRewardModalVisible(false)}
+          onSuccess={async () => {
+            setRewardModalVisible(false);
             await props.reloadTerminalPool();
           }}
           poolData={poolData}
@@ -330,16 +350,22 @@ export const PoolDetailsContent = (props: IProps) => {
               VEST
             </Button>
           )}
-          {isPoolOwner && (
+          {isManageable && (
             <Button
               className={classes.button}
               color="secondary"
               variant="contained"
+              disabled={!rewardPeriodFinished}
+              onClick={() =>
+                account
+                  ? setRewardModalVisible(true)
+                  : setWalletConnectModalOpened(true)
+              }
             >
               REWARDS
             </Button>
           )}
-          {isPoolOwner && (
+          {isManageable && (
             <Button
               className={classes.button}
               color="secondary"

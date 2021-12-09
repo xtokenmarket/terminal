@@ -125,3 +125,5 @@ export function calculateGasMargin(value: BigNumber): BigNumber {
 
 export const waitSeconds = (sec?: number) =>
   new Promise((resolve) => setTimeout(resolve, (sec || 1) * 1000));
+
+export const getCurrentTimeStamp = () => Math.floor(Date.now() / 1000);

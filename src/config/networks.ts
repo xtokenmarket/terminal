@@ -41,14 +41,14 @@ const networks: { [K in NetworkId]: INetwork } = {
     label: "Kovan Test Network",
     url: "https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
     contracts: {
-      LM: "0xE5e3650C0dC77762830897BbfD38B61d32FDb79D",
+      LM: "0x7f0C08f63697d49249Ca4f5a5E1608f4D6E1606E",
       multicall: "0x0284D6D74C31B23179CB642aa77164752C6859ed",
-      rewardEscrow: "0x1ab0b52f7980b06f6694ea1ae25091c24c4477f5",
+      rewardEscrow: "0x6caccdc70a90f623cc1b0dea2a1e4272ce932d1e",
       uniswapFactory: "0x1f98431c8ad98523631ae4a59f267346ea31f984",
       uniRouter: "0xe592427a0aece92de3edee1f18e0157c05861564",
       uniQuoter: "0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6",
       uniPositionManager: "0xc36442b4a4522e871399cd717abdd847ab11fe88",
-      xTokenManager: "0x3edcc1520e8b98a0f0c607cbb161291f1d5f40d5",
+      xTokenManager: "0x9a03bbeb70447f50a80e5d5733526cca125966ee",
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -76,7 +76,7 @@ const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     symbol: "DAI",
     addresses: {
       [networkIds.MAINNET]: "0x6b175474e89094c44da98b954eedeac495271d0f",
-      [networkIds.KOVAN]: "0xEA3C27479B0e42c5C10EA2f869826557D2D471F8",
+      [networkIds.KOVAN]: "0x2100A17644995438F58Da6e05322F122e254AC10",
     },
     decimals: 18,
     image: "/assets/tokens/dai.png",
@@ -86,7 +86,7 @@ const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     symbol: "wETH",
     addresses: {
       [networkIds.MAINNET]: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
-      [networkIds.KOVAN]: "0xf8929B0B365659Cc8384edB92441720e2142e41E",
+      [networkIds.KOVAN]: "0x21344Ebc08B4dC8BadE8889D034A3f2Ec83ECbef",
     },
     decimals: 18,
     image: "/assets/tokens/weth.png",

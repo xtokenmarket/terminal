@@ -71,3 +71,10 @@ export enum EVestStep {
   Vest = "Vest",
   Success = "Success",
 }
+
+export enum ERewardStep {
+  Input = "Input",
+  Confirm = "Confirm",
+  Initiate = "Initiate",
+  Success = "Success",
+}

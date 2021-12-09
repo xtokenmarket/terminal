@@ -19,7 +19,7 @@ export const useTerminalPools = () => {
       if (!networkId || networkId === networkIds.KOVAN) {
         setState((prev) => ({
           ...prev,
-          pools: ["0xb150478c112A8Cc90c0B540B32a7D304e32E26f7"],
+          pools: ["0x1bE9Fe7B8113598642DEedF1F05F2085d9968C87"],
           loading: false,
         }));
       } else {

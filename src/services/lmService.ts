@@ -211,6 +211,63 @@ class LMService {
     return result;
   };
 
+  // initiate rewards program
+  initiateNewRewardsProgram = async (
+    clrPool: string,
+    amounts: BigNumber[],
+    duration: number,
+    rewardsAreEscrowed: boolean
+  ): Promise<string> => {
+    const transactionObject = await this.contract.initiateNewRewardsProgram(
+      clrPool,
+      amounts,
+      duration,
+      rewardsAreEscrowed
+    );
+    console.log(
+      `initiateNewRewardsProgram transaction hash: ${transactionObject.hash}`
+    );
+
+    return transactionObject.hash;
+  };
+
+  waitUntilNewRewardsProgramInitiated = async (
+    clrPool: string,
+    amounts: BigNumber[],
+    duration: number,
+    txId: string
+  ): Promise<string> => {
+    let resolved = false;
+    return new Promise(async (resolve) => {
+      this.contract.on(
+        "InitiatedRewardsProgram",
+        (
+          clrPoolAddress: string,
+          rewardTokens: string[],
+          rewardAmounts: string[],
+          durationStr: any,
+          ...rest
+        ) => {
+          if (
+            clrPool.toLowerCase() === clrPoolAddress.toLowerCase() &&
+            duration === BigNumber.from(durationStr).toNumber()
+          ) {
+            if (!resolved) {
+              resolved = true;
+              resolve(rest[0].transactionHash);
+            }
+          }
+        }
+      );
+
+      await this.contract.provider.waitForTransaction(txId);
+      if (!resolved) {
+        resolved = true;
+        resolve(txId);
+      }
+    });
+  };
+
   getPool = async (
     token0: string,
     token1: string,

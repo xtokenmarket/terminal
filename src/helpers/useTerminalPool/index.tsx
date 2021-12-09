@@ -51,6 +51,7 @@ export const useTerminalPool = (poolAddress: string) => {
         "owner",
         "periodFinish",
         "getTicks",
+        "manager",
       ].map((method) => ({
         name: method,
         address: poolAddress,
@@ -73,6 +74,7 @@ export const useTerminalPool = (poolAddress: string) => {
         [owner],
         [periodFinish],
         ticks,
+        [manager],
       ] = await multicall.multicallv2(abis.xAssetCLR, calls, {
         requireSuccess: false,
       });
@@ -131,6 +133,7 @@ export const useTerminalPool = (poolAddress: string) => {
             tick1: ticks[1],
           },
           rewardsPerToken,
+          manager,
         },
       }));
     } catch (error) {
