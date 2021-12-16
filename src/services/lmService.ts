@@ -3,6 +3,7 @@ import { Maybe } from "types";
 import abis from "abis";
 import { getSortedToken } from "utils/token";
 import { Interface } from "@ethersproject/abi";
+import { NULL_ADDRESS } from "config/constants";
 
 const lmAbi = abis.LM;
 
@@ -276,42 +277,71 @@ class LMService {
     return this.contract.getPool(...getSortedToken(token0, token1), tier);
   };
 
-  createPool = async (
+  deployUniswapPool = async (
     token0: string,
     token1: string,
-    tier: BigNumber
+    tier: BigNumber,
+    initPrice: any
   ): Promise<string> => {
-    const transactionObject = await this.contract.createPool(
+    const transactionObject = await this.contract.deployUniswapPool(
       token0,
       token1,
       tier,
+      initPrice,
       {
         value: "0x0",
       }
     );
-    console.log(`CreatePool transaction hash: ${transactionObject.hash}`);
+    console.log(
+      `deployUniswapPool transaction hash: ${transactionObject.hash}`
+    );
     return transactionObject.hash;
   };
 
   waitUntilPoolCreated = async (
     tokenA: string,
     tokenB: string,
-    tier: BigNumber
-  ): Promise<void> => {
+    tier: BigNumber,
+    txId: string
+  ): Promise<string> => {
     const [token0, token1] = getSortedToken(tokenA, tokenB);
-    return new Promise((resolve) => {
-      this.contract.on("PoolCreated", (t0, t1, fee) => {
-        console.log("====", t0, t1, fee);
+    let resolved = false;
+
+    return new Promise(async (resolve) => {
+      this.contract.on("DeployedUniV3Pool", (pool, t0, t1, fee, ...rest) => {
         if (
           t0.toLowerCase() === token0 &&
           t1.toLowerCase() === token1 &&
           tier.eq(BigNumber.from(fee))
         ) {
-          console.log("eq");
-          resolve();
+          if (!resolved) {
+            resolved = true;
+            resolve(rest[0].transactionHash);
+          }
         }
       });
+
+      await this.contract.provider.waitForTransaction(txId);
+      if (!resolved) {
+        resolved = true;
+        resolve(txId);
+      }
     });
+  };
+
+  parsePoolCreatedTx = async (txId: string): Promise<string> => {
+    const { logs } = await this.contract.provider.getTransactionReceipt(txId);
+    const uniPositionInterface = new Interface(abis.LM);
+    for (let index = 0; index < logs.length; index++) {
+      const log = logs[index];
+      try {
+        const parsed = uniPositionInterface.parseLog(log);
+        if (parsed.name === "DeployedUniV3Pool") {
+          return parsed.args[0];
+        }
+      } catch (error) {}
+    }
+    return NULL_ADDRESS;
   };
 
   claimReward = async (clrPool: string): Promise<string> => {

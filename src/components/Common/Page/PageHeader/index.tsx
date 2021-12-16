@@ -4,7 +4,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     padding: "26px 0",
     display: "flex",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
     position: "relative",
     borderBottom: `1px solid ${theme.colors.primary200}`,

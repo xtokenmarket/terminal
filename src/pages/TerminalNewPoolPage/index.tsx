@@ -1,20 +1,12 @@
 import { BigNumber } from "@ethersproject/bignumber";
-import { Button, Grid, makeStyles, Typography } from "@material-ui/core";
-import {
-  PageContent,
-  PageHeader,
-  PageWrapper,
-  TokenBalanceInput,
-  TokenSelect,
-} from "components";
-import { NULL_ADDRESS } from "config/constants";
-import { useConnectedWeb3Context } from "contexts";
-import { useIsMountedRef, useServices } from "helpers";
-import { useEffect, useState } from "react";
+import { makeStyles } from "@material-ui/core";
+import { PageContent, PageHeader, PageWrapper } from "components";
+import { useState } from "react";
 import { useHistory } from "react-router";
 import { IToken } from "types";
+import { ECreatePoolStep } from "utils/enums";
 import { ZERO } from "utils/number";
-import { FeeTierSection } from "./components";
+import { HeaderStep, TokenPairStep } from "./components";
 
 const useStyles = makeStyles((theme) => ({
   label: {
@@ -28,18 +20,14 @@ interface IState {
   token0?: IToken;
   token1?: IToken;
   tier: BigNumber;
-  token0Amount: BigNumber;
-  token1Amount: BigNumber;
-  uniPoolExist: boolean;
   uniPool: string;
+  step: ECreatePoolStep;
 }
 
 const initialState: IState = {
   tier: BigNumber.from(500),
-  token0Amount: ZERO,
-  token1Amount: ZERO,
-  uniPoolExist: false,
   uniPool: "",
+  step: ECreatePoolStep.TokenPair,
 };
 
 const TerminalNewPoolPage = () => {
@@ -47,159 +35,53 @@ const TerminalNewPoolPage = () => {
   const classes = useStyles();
 
   const [state, setState] = useState<IState>(initialState);
-  const { account, networkId, setWalletConnectModalOpened, setTxModalInfo } =
-    useConnectedWeb3Context();
-  const { lmService } = useServices();
-
-  const mountedRef = useIsMountedRef();
 
   const onBack = () => {
     history.push("/terminal/discover");
   };
 
-  const loadIfUniPoolExists = async () => {
-    if (state.token0 && state.token1) {
-      try {
-        const uniPoolAddress = await lmService.getPool(
-          state.token0.address,
-          state.token1.address,
-          state.tier
-        );
-        const isExists = uniPoolAddress !== NULL_ADDRESS;
+  const updateData = (e: any) => {
+    setState((prev) => ({ ...prev, ...e }));
+  };
 
-        if (mountedRef.current === true) {
-          setState((prev) => ({
-            ...prev,
-            uniPoolExist: isExists,
-            uniPool: uniPoolAddress,
-          }));
-        }
-      } catch (error) {}
+  const onNext = () => {
+    switch (state.step) {
+      case ECreatePoolStep.TokenPair:
+        setState((prev) => ({ ...prev, step: ECreatePoolStep.PriceRange }));
+        break;
+      case ECreatePoolStep.PriceRange:
+        setState((prev) => ({ ...prev, step: ECreatePoolStep.Rewards }));
+        break;
+      case ECreatePoolStep.Rewards:
+        setState((prev) => ({ ...prev, step: ECreatePoolStep.Done }));
+        break;
+      default:
+        onBack();
+        break;
     }
   };
 
-  useEffect(() => {
-    const timer = setTimeout(loadIfUniPoolExists, 1500);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [
-    state.tier._hex,
-    state.token0?.address,
-    state.token1?.address,
-    networkId,
-  ]);
-
-  const onCreateUniPool = async () => {
-    if (!account) {
-      setWalletConnectModalOpened(true);
-      return;
-    }
-    if (state.token0 && state.token1 && !state.uniPoolExist) {
-      try {
-        setTxModalInfo(true, "Creating Pool on Uniswap");
-        const txId = await lmService.createPool(
-          state.token0.address,
-          state.token1.address,
-          state.tier
+  const renderContent = () => {
+    switch (state.step) {
+      case ECreatePoolStep.TokenPair:
+        return (
+          <TokenPairStep data={state} updateData={updateData} onNext={onNext} />
         );
-        setTxModalInfo(
-          true,
-          "Creating Pool on Uniswap",
-          "Please wait until tx is confirmed",
-          txId
-        );
-        await lmService.waitUntilPoolCreated(
-          state.token0.address,
-          state.token1.address,
-          state.tier
-        );
-
-        setTxModalInfo(false);
-      } catch (error) {
-        console.error(error);
-        setTxModalInfo(false);
-      }
+      default:
+        return null;
     }
   };
 
   return (
     <PageWrapper>
       <PageHeader
-        headerTitle="Create new LM pool"
-        backVisible
+        headerTitle="Create New pool"
+        backVisible={false}
         onBack={onBack}
+        headerComponent={<HeaderStep step={state.step} onCancel={onBack} />}
       />
       <PageContent>
-        <div className={classes.content}>
-          <div>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={6}>
-                <Typography className={classes.label}>Select pair</Typography>
-                <TokenSelect
-                  token={state.token0}
-                  onChange={(token0) =>
-                    setState((prev) => ({ ...prev, token0 }))
-                  }
-                />
-                <TokenSelect
-                  token={state.token1}
-                  onChange={(token1) =>
-                    setState((prev) => ({ ...prev, token1 }))
-                  }
-                />
-                <div>
-                  <Typography className={classes.label}>
-                    Select fee tier
-                  </Typography>
-                  <FeeTierSection
-                    tier={state.tier}
-                    onChange={(tier) => setState((prev) => ({ ...prev, tier }))}
-                  />
-                </div>
-                {state.token0 && state.token1 && state.uniPoolExist && (
-                  <div>
-                    <Typography className={classes.label}>
-                      Deposit amounts
-                    </Typography>
-                    <TokenBalanceInput
-                      token={state.token0}
-                      value={state.token0Amount}
-                      onChange={(token0Amount) =>
-                        setState((prev) => ({ ...prev, token0Amount }))
-                      }
-                    />
-                    <TokenBalanceInput
-                      token={state.token1}
-                      value={state.token1Amount}
-                      onChange={(token1Amount) =>
-                        setState((prev) => ({ ...prev, token1Amount }))
-                      }
-                    />
-                  </div>
-                )}
-              </Grid>
-              {state.token0 && state.token1 && state.uniPoolExist && (
-                <Grid item xs={12} sm={6}>
-                  <Typography className={classes.label}>
-                    Select fee tier
-                  </Typography>
-                </Grid>
-              )}
-            </Grid>
-          </div>
-          {state.token0 && state.token1 && !state.uniPoolExist && (
-            <Button
-              color="primary"
-              fullWidth
-              onClick={onCreateUniPool}
-              variant="contained"
-            >
-              CREATE NEW POOL
-            </Button>
-          )}
-        </div>
+        <div className={classes.content}>{renderContent()}</div>
       </PageContent>
     </PageWrapper>
   );
