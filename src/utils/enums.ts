@@ -85,3 +85,11 @@ export enum ECreatePoolStep {
   Rewards = "Rewards (Optional)",
   Done = "Done",
 }
+
+// uni v3
+export enum PoolState {
+  LOADING,
+  NOT_EXISTS,
+  EXISTS,
+  INVALID,
+}

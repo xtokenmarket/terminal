@@ -53,7 +53,9 @@ export const TokenSelect = (props: IProps) => {
     <>
       <div
         className={clsx(classes.root, props.className)}
-        onClick={() => setModalVisible(true)}
+        onClick={() => {
+          setModalVisible(true);
+        }}
       >
         <TokenIcon token={token} />
         <Typography className={classes.text}>

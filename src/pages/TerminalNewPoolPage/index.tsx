@@ -6,7 +6,7 @@ import { useHistory } from "react-router";
 import { IToken } from "types";
 import { ECreatePoolStep } from "utils/enums";
 import { ZERO } from "utils/number";
-import { HeaderStep, TokenPairStep } from "./components";
+import { HeaderStep, TokenPairStep, PriceRangeStep } from "./components";
 
 const useStyles = makeStyles((theme) => ({
   label: {
@@ -19,6 +19,8 @@ const useStyles = makeStyles((theme) => ({
 interface IState {
   token0?: IToken;
   token1?: IToken;
+  amount0: BigNumber;
+  amount1: BigNumber;
   tier: BigNumber;
   uniPool: string;
   step: ECreatePoolStep;
@@ -28,6 +30,8 @@ const initialState: IState = {
   tier: BigNumber.from(500),
   uniPool: "",
   step: ECreatePoolStep.TokenPair,
+  amount0: ZERO,
+  amount1: ZERO,
 };
 
 const TerminalNewPoolPage = () => {
@@ -66,6 +70,14 @@ const TerminalNewPoolPage = () => {
       case ECreatePoolStep.TokenPair:
         return (
           <TokenPairStep data={state} updateData={updateData} onNext={onNext} />
+        );
+      case ECreatePoolStep.PriceRange:
+        return (
+          <PriceRangeStep
+            data={state as Required<IState>}
+            updateData={updateData}
+            onNext={onNext}
+          />
         );
       default:
         return null;

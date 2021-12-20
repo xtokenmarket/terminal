@@ -90,7 +90,9 @@ export const FeeTierSection = (props: IProps) => {
           <div
             className={clsx(classes.tier, isActive && "active")}
             key={item.label}
-            onClick={() => onChange(item.value)}
+            onClick={() => {
+              onChange(item.value);
+            }}
           >
             <p>{item.value.toNumber() / 100}%</p>
             <span>{item.label}</span>
