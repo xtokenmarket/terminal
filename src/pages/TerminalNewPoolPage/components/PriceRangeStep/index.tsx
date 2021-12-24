@@ -13,9 +13,14 @@ import { TokenBalanceInput, TokenSelect } from "components";
 import { DEFAULT_NETWORK_ID, NULL_ADDRESS } from "config/constants";
 import { useConnectedWeb3Context } from "contexts";
 import { useIsMountedRef, useServices } from "helpers";
+import {
+  useRangeHopCallbacks,
+  useV3DerivedMintInfo,
+} from "helpers/univ3/hooks";
 import { transparentize } from "polished";
 import { useEffect, useState } from "react";
-import { IToken } from "types";
+import { IToken, MintState } from "types";
+import { Bound, Field } from "utils/enums";
 import { ZERO } from "utils/number";
 
 const useStyles = makeStyles((theme) => ({
@@ -52,17 +57,17 @@ interface IProps {
   onNext: () => void;
 }
 
-interface IState {
-  independentField: string;
-  typedValue: string;
-  startPriceTypedValue: string;
+interface IState extends MintState {
   successVisible: boolean;
 }
 
 const initialState: IState = {
-  independentField: "",
+  independentField: Field.CURRENCY_A,
   typedValue: "",
+  otherTypedValue: "",
   startPriceTypedValue: "",
+  leftRangeTypedValue: "",
+  rightRangeTypedValue: "",
   successVisible: false,
 };
 
@@ -100,6 +105,111 @@ export const PriceRangeStep = (props: IProps) => {
     baseCurrency && currencyB && baseCurrency.equals(currencyB)
       ? undefined
       : currencyB;
+
+  const {
+    pool,
+    ticks,
+    dependentField,
+    price,
+    pricesAtTicks,
+    parsedAmounts,
+    currencyBalances,
+    position,
+    noLiquidity,
+    currencies,
+    errorMessage,
+    invalidPool,
+    invalidRange,
+    outOfRange,
+    depositADisabled,
+    depositBDisabled,
+    invertPrice,
+  } = useV3DerivedMintInfo(
+    state,
+    baseCurrency ?? undefined,
+    currencyB ?? undefined,
+    feeAmount,
+    baseCurrency ?? undefined,
+    undefined
+  );
+
+  // get value and prices at ticks
+  const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks;
+  const { [Bound.LOWER]: priceLower, [Bound.UPPER]: priceUpper } =
+    pricesAtTicks;
+
+  const {
+    getDecrementLower,
+    getIncrementLower,
+    getDecrementUpper,
+    getIncrementUpper,
+  } = useRangeHopCallbacks(
+    baseCurrency ?? undefined,
+    quoteCurrency ?? undefined,
+    feeAmount,
+    tickLower,
+    tickUpper,
+    pool
+  );
+
+  const onFieldAInput = (typedValue: string) => {
+    if (noLiquidity) {
+      if (state.independentField === Field.CURRENCY_A) {
+        setState((prev) => ({
+          ...prev,
+          independentField: Field.CURRENCY_A,
+          typedValue,
+        }));
+      } else {
+        setState((prev) => ({
+          ...prev,
+          independentField: Field.CURRENCY_A,
+          typedValue,
+        }));
+      }
+    } else {
+      setState((prev) => ({
+        ...prev,
+        independentField: Field.CURRENCY_A,
+        typedValue,
+      }));
+    }
+  };
+  const onFieldBInput = (typedValue: string) => {
+    if (noLiquidity) {
+      if (state.independentField === Field.CURRENCY_B) {
+        setState((prev) => ({
+          ...prev,
+          independentField: Field.CURRENCY_B,
+          typedValue,
+        }));
+      } else {
+        setState((prev) => ({
+          ...prev,
+          independentField: Field.CURRENCY_B,
+          typedValue,
+        }));
+      }
+    } else {
+      setState((prev) => ({
+        ...prev,
+        independentField: Field.CURRENCY_B,
+        typedValue,
+      }));
+    }
+  };
+  const onLeftRangeInput = (typedValue: string) => {
+    setState((prev) => ({
+      ...prev,
+      leftRangeTypedValue: typedValue,
+    }));
+  };
+  const onRightRangeInput = (typedValue: string) => {
+    setState((prev) => ({
+      ...prev,
+      rightRangeTypedValue: typedValue,
+    }));
+  };
 
   return (
     <div className={classes.root}>

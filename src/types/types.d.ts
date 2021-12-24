@@ -79,3 +79,14 @@ export interface ITerminalPool {
   ticks: { tick0: BigNumber; tick1: BigNumber };
   manager: string;
 }
+
+// uni
+
+interface MintState {
+  independentField: Field;
+  typedValue: string;
+  otherTypedValue: string; // for the case when there's no liquidity
+  startPriceTypedValue: string; // for the case when there's no liquidity
+  leftRangeTypedValue: string;
+  rightRangeTypedValue: string;
+}

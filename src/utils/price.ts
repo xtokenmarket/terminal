@@ -146,4 +146,15 @@ function getPriceInX96(
   return priceInX96;
 }
 
-export { getTicksAndPrices, getPriceInX96 };
+export { getTicksAndPrices, getPriceInX96, tryParseTick };
+
+export function getTickToPrice(
+  baseToken?: Token,
+  quoteToken?: Token,
+  tick?: number
+): Price | undefined {
+  if (!baseToken || !quoteToken || typeof tick !== "number") {
+    return undefined;
+  }
+  return tickToPrice(baseToken, quoteToken, tick);
+}

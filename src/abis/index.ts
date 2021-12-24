@@ -5,6 +5,7 @@ import StakingCLRTokenAbi from "./json/StakingCLRToken.json";
 import RewardEscrowAbi from "./json/RewardEscrow.json";
 import Univ3FactoryAbi from "./json/Univ3Factory.json";
 import Univ3PositionAbi from "./json/UniPosition.json";
+import UniPoolStateAbi from "./json/UniPoolState.json";
 import Erc20Abi from "./json/erc20.json";
 
 const abis = {
@@ -15,6 +16,7 @@ const abis = {
   RewardEscrow: RewardEscrowAbi,
   Univ3Factory: Univ3FactoryAbi,
   Univ3Position: Univ3PositionAbi,
+  UniPoolState: UniPoolStateAbi,
   Erc20: Erc20Abi,
 };
 
