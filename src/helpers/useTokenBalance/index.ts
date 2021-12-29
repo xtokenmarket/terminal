@@ -28,18 +28,18 @@ export const useTokenBalance = (
       if (tokenAddress === NULL_ADDRESS) {
         // ethBalance;
         const bal = await fProvider.getBalance(user || account || "");
-        if (isMountedRef.current === true) {
+        if (isMountedRef.current) {
           setBalance(() => bal);
         }
       } else {
         const erc20 = new ERC20Service(fProvider, account, tokenAddress);
         const bal = await erc20.getBalanceOf(user || account || "");
-        if (isMountedRef.current === true) {
+        if (isMountedRef.current) {
           setBalance(() => bal);
         }
       }
     } catch (error) {
-      if (isMountedRef.current === true) {
+      if (isMountedRef.current) {
         setBalance(() => ZERO);
       }
     }

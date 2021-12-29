@@ -165,9 +165,9 @@ export const getToken = (tokenId: KnownToken, networkId?: number): IToken => {
 
 export const getTokenFromAddress = (
   address: string,
-  chianId?: number
+  chainId?: number
 ): IToken => {
-  const networkId = chianId || DEFAULT_NETWORK_ID;
+  const networkId = chainId || DEFAULT_NETWORK_ID;
 
   if (!validNetworkId(networkId)) {
     throw new Error(`Unsupported network id: '${networkId}'`);

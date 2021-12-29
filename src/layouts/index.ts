@@ -1,2 +1,2 @@
-export * from "./MainLayout";
-export * from "./TerminalLayout";
+export * from "./Main";
+export * from "./Terminal";

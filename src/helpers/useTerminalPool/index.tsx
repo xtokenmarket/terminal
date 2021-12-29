@@ -33,7 +33,9 @@ export const useTerminalPool = (poolAddress: string) => {
 
   const loadInfo = async () => {
     setState((prev) => ({ ...prev, loading: true }));
+    // console.time(`loadInfo ${poolAddress}`)
     try {
+      // console.time(`loadInfo multicall ${poolAddress}`)
       const calls = [
         "token0",
         "token1",
@@ -78,31 +80,42 @@ export const useTerminalPool = (poolAddress: string) => {
       ] = await multicall.multicallv2(abis.xAssetCLR, calls, {
         requireSuccess: false,
       });
+      // console.timeEnd(`loadInfo multicall ${poolAddress}`)
 
+      // console.time(`loadInfo token details ${poolAddress}`)
       const [token0, token1, stakedToken] = await Promise.all([
         getTokenDetails(token0Address),
         getTokenDetails(token1Address),
         getTokenDetails(stakedTokenAddress),
       ]);
+      // console.timeEnd(`loadInfo token details ${poolAddress}`)
 
+      // console.time(`loadInfo vesting period ${poolAddress}`)
       const vestingPeriod = await rewardEscrow.clrPoolVestingPeriod(
         poolAddress
       );
+      // console.timeEnd(`loadInfo vesting period ${poolAddress}`)
 
+      // console.time(`loadInfo reward tokens ${poolAddress}`)
       const rewardTokens = (await Promise.all(
         rewardTokenAddresses.map((addr: string) => getTokenDetails(addr))
       )) as IToken[];
+      // console.timeEnd(`loadInfo reward tokens ${poolAddress}`)
 
       const rewardCalls = rewardTokens.map((token) => ({
         name: "rewardPerToken",
         address: poolAddress,
         params: [token.address],
       }));
+
+      // console.time(`loadInfo rewards response ${poolAddress}`)
       const rewardsResponse = await multicall.multicallv2(
         abis.xAssetCLR,
         rewardCalls,
         { requireSuccess: false }
       );
+      // console.timeEnd(`loadInfo rewards response ${poolAddress}`)
+
       const rewardsPerToken = rewardsResponse.map(
         (response: any) => response[0]
       );
@@ -140,6 +153,7 @@ export const useTerminalPool = (poolAddress: string) => {
       console.error(error);
       setState(() => ({ loading: false }));
     }
+    // console.timeEnd(`loadInfo ${poolAddress}`)
   };
 
   useEffect(() => {
