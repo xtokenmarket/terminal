@@ -11,32 +11,32 @@ const routes = [
       // {
       //   exact: true,
       //   path: "/home",
-      //   component: lazy(() => import("pages/ComingSoonPage")),
+      //   component: lazy(() => import("pages/ComingSoon")),
       // },
       {
         exact: true,
         path: "/market",
-        component: lazy(() => import("pages/ComingSoonPage")),
+        component: lazy(() => import("pages/ComingSoon")),
       },
       {
         exact: true,
         path: "/cafe",
-        component: lazy(() => import("pages/ComingSoonPage")),
+        component: lazy(() => import("pages/ComingSoon")),
       },
       {
         exact: true,
         path: "/vote",
-        component: lazy(() => import("pages/ComingSoonPage")),
+        component: lazy(() => import("pages/ComingSoon")),
       },
       {
         exact: true,
         path: "/terminal/new-pool",
-        component: lazy(() => import("pages/TerminalNewPoolPage")),
+        component: lazy(() => import("pages/CreatePool")),
       },
       {
         exact: true,
         path: "/terminal/pools/:id",
-        component: lazy(() => import("pages/TerminalPoolDetailsPage")),
+        component: lazy(() => import("pages/PoolDetails")),
       },
       {
         path: "/terminal",
@@ -45,17 +45,17 @@ const routes = [
           {
             exact: true,
             path: "/terminal/discover",
-            component: lazy(() => import("pages/TerminalDiscoverPage")),
+            component: lazy(() => import("pages/Discover")),
           },
           {
             exact: true,
             path: "/terminal/my-pool",
-            component: lazy(() => import("pages/TerminalMyPoolsPage")),
+            component: lazy(() => import("pages/MyPools")),
           },
           {
             exact: true,
             path: "/terminal/about",
-            component: lazy(() => import("pages/TerminalAboutPage")),
+            component: lazy(() => import("pages/About")),
           },
 
           {

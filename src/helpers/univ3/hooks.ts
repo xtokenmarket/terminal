@@ -1,4 +1,4 @@
-import { DEFAULT_NETWORK_ID } from "./../../config/constants";
+import { DEFAULT_NETWORK_ID } from 'config/constants';
 import {
   Currency,
   CurrencyAmount,
