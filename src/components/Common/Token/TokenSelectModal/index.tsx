@@ -118,19 +118,24 @@ interface IProps {
   className?: string;
   onClose: () => void;
   onSelect: (_: IToken) => void;
+  open: boolean;
 }
 
-export const TokenSelectModal = (props: IProps) => {
+export const TokenSelectModal: React.FC<IProps> = ({
+  onSelect,
+  onClose,
+  open,
+  className,
+}) => {
   const classes = useStyles();
   const { networkId } = useConnectedWeb3Context();
-  const { onSelect } = props;
 
   return (
-    <Modal open onClose={props.onClose} disableBackdropClick>
-      <div className={clsx(classes.root, props.className)}>
+    <Modal open={open} onClose={onClose}>
+      <div className={clsx(classes.root, className)}>
         <div className={classes.content}>
           <Typography className={classes.title}>Select Token</Typography>
-          <IconButton className={classes.close} onClick={props.onClose}>
+          <IconButton className={classes.close} onClick={onClose}>
             <img alt="close" src="/assets/icons/close.svg" />
           </IconButton>
           <div>

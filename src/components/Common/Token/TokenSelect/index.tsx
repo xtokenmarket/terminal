@@ -61,15 +61,14 @@ export const TokenSelect: React.FC<IProps> = ({
           src="/assets/icons/down-arrow.svg"
         />
       </div>{" "}
-      {modalVisible && (
-        <TokenSelectModal
-          onClose={() => setModalVisible(false)}
-          onSelect={(token) => {
-            onChange(token);
-            setModalVisible(false);
-          }}
-        />
-      )}
+      <TokenSelectModal
+        open={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onSelect={(token) => {
+          onChange(token);
+          setModalVisible(false);
+        }}
+      />
     </>
   );
 };
