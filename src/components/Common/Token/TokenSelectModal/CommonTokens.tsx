@@ -21,7 +21,9 @@ const useStyles = makeStyles((theme) => ({
     margin: 4,
     cursor: "pointer",
     transition: "all 0.4s",
-    "&:hover": { opacity: 0.7 },
+    "&:hover": {
+      backgroundColor: "rgba(255, 255, 255, 0.1)",
+    },
     "& img": {
       width: 24,
       height: 24,
