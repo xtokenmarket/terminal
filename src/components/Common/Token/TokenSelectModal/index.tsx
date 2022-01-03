@@ -7,6 +7,7 @@ import {
   TextField,
   InputAdornment,
 } from "@material-ui/core";
+import { CloseOutlined } from "@material-ui/icons";
 import SearchIcon from "@material-ui/icons/Search";
 
 import React from "react";
@@ -39,11 +40,16 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
     marginBottom: theme.spacing(2),
   },
-  close: {
+  closeButton: {
     position: "absolute",
     padding: 12,
-    top: 4,
-    right: 4,
+    top: 0,
+    right: 0,
+    color: theme.colors.purple0,
+    "&:hover": {
+      background: "none",
+      color: "white",
+    },
   },
   search: {
     "& .MuiInput-root": {
@@ -52,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
       padding: theme.spacing(1),
       transition: "all 0.2s ease",
       "&.Mui-focused": {
-        border: "1px solid white",
+        border: `1px solid ${theme.colors.white}`,
         "& .searchIcon": {
           color: "white",
         }
@@ -61,6 +67,9 @@ const useStyles = makeStyles((theme) => ({
     "& .searchIcon": {
       color: theme.colors.eighth,
       transition: "all 0.2s ease",
+    },
+    "& input::placeholder": {
+      color: "rgba(255, 255, 255, 0.2)",
     },
   },
   commonLabel: {
@@ -92,8 +101,8 @@ export const TokenSelectModal: React.FC<IProps> = ({
         <div className={classes.content}>
           <div className={classes.topSection}>
             <Typography className={classes.title}>Select Token</Typography>
-            <IconButton className={classes.close} onClick={onClose}>
-              <img alt="close" src="/assets/icons/close.svg" />
+            <IconButton className={classes.closeButton} onClick={onClose}>
+              <CloseOutlined />
             </IconButton>
             <div>
               <TextField

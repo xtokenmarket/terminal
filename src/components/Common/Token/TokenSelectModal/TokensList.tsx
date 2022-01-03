@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     transition: "all 0.4s",
     padding: theme.spacing(2),
     "&:hover": {
-      backgroundColor: "rgba(255, 255, 255, 0.1)",
+      backgroundColor: theme.colors.primary500,
     },
   },
   image: {

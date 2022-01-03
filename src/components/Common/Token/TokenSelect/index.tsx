@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
     transition: "all 0.4s",
     "&:hover": {
-      opacity: 0.7,
+      backgroundColor: theme.colors.primary200,
     },
   },
   icon: {},
