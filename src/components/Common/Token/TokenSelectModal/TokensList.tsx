@@ -15,25 +15,28 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     cursor: "pointer",
     transition: "all 0.4s",
-    "&:hover": { opacity: 0.7 },
-    "&+&": {
-      marginTop: 20,
+    padding: theme.spacing(2),
+    "&:hover": {
+      backgroundColor: "rgba(255, 255, 255, 0.1)",
     },
-    "& img": { width: 32, height: 32, borderRadius: "50%", marginRight: 16 },
-    "& div": {
-      "& p": {
-        color: theme.colors.white,
-        fontSize: 18,
-        fontWeight: 700,
-        margin: 0,
-        lineHeight: "14px",
-      },
-      "& span": {
-        color: theme.colors.primary100,
-        fontSize: 12,
-        fontWeight: 700,
-      },
-    },
+  },
+  image: {
+    width: 32,
+    height: 32,
+    borderRadius: "50%",
+    marginRight: theme.spacing(2),
+  },
+  symbol: {
+    color: theme.colors.white,
+    fontSize: 18,
+    fontWeight: 700,
+    margin: 0,
+    lineHeight: "14px",
+  },
+  name: {
+    color: theme.colors.primary100,
+    fontSize: 12,
+    fontWeight: 700,
   },
 }));
 
@@ -54,10 +57,10 @@ export const TokensList: React.FC<IProps> = ({ onSelectToken }) => {
             key={token.address}
             onClick={() => onSelectToken(token)}
           >
-            <img alt="img" src={token.image || ""} />
+            <img className={cl.image} alt="img" src={token.image || ""} />
             <div>
-              <p>{token.symbol}</p>
-              <span>{token.name}</span>
+              <p className={cl.symbol}>{token.symbol}</p>
+              <span className={cl.name}>{token.name}</span>
             </div>
           </div>
         );

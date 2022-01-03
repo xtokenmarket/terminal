@@ -45,13 +45,23 @@ const useStyles = makeStyles((theme) => ({
     top: 4,
     right: 4,
   },
-  searchIcon: {
-    color: theme.colors.eighth
-  },
   search: {
-    border: `1px solid ${theme.colors.purple0}`,
-    borderRadius: 4,
-    padding: theme.spacing(1),
+    "& .MuiInput-root": {
+      border: `1px solid ${theme.colors.purple0}`,
+      borderRadius: 4,
+      padding: theme.spacing(1),
+      transition: "all 0.2s ease",
+      "&.Mui-focused": {
+        border: "1px solid white",
+        "& .searchIcon": {
+          color: "white",
+        }
+      },
+    },
+    "& .searchIcon": {
+      color: theme.colors.eighth,
+      transition: "all 0.2s ease",
+    },
   },
   commonLabel: {
     color: theme.colors.primary100,
@@ -93,7 +103,7 @@ export const TokenSelectModal: React.FC<IProps> = ({
                   disableUnderline: true,
                   startAdornment: (
                     <InputAdornment position="start">
-                      <SearchIcon className={classes.searchIcon} />
+                      <SearchIcon className="searchIcon" />
                     </InputAdornment>
                   ),
                 }}
