@@ -5,7 +5,7 @@ import { useConnectedWeb3Context } from "contexts";
 import { IToken } from "types";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  commonTokens: {
     display: "flex",
     alignItems: "center",
     flexWrap: "wrap",
@@ -45,7 +45,7 @@ export const CommonTokens: React.FC<IProps> = ({ onSelectToken }) => {
   const { networkId } = useConnectedWeb3Context();
 
   return (
-    <div className={cl.root}>
+    <div className={cl.commonTokens}>
       {commonBaseTokenSymbols.map((tokenId) => {
         const token = getToken(tokenId as any, networkId);
         return (
