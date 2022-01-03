@@ -42,14 +42,19 @@ export const TokenSelect: React.FC<IProps> = ({
 }) => {
   const classes = useStyles();
   const [modalVisible, setModalVisible] = useState(false);
-
   return (
-    <>
+    <div>
+      <TokenSelectModal
+        open={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onSelect={(token) => {
+          onChange(token);
+          setModalVisible(false);
+        }}
+      />
       <div
         className={clsx(classes.root, className)}
-        onClick={() => {
-          setModalVisible(true);
-        }}
+        onClick={() => setModalVisible(true)}
       >
         <TokenIcon token={token} />
         <Typography className={classes.text}>
@@ -60,15 +65,7 @@ export const TokenSelect: React.FC<IProps> = ({
           className={classes.downArrow}
           src="/assets/icons/down-arrow.svg"
         />
-      </div>{" "}
-      <TokenSelectModal
-        open={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onSelect={(token) => {
-          onChange(token);
-          setModalVisible(false);
-        }}
-      />
-    </>
+      </div>
+    </div>
   );
 };

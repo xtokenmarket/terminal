@@ -16,17 +16,15 @@ import { CommonTokens } from "./CommonTokens";
 import { TokensList } from "./TokensList";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  modal: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    flexDirection: "column",
-    width: "100vw",
-    height: "100vh",
   },
   content: {
     position: "relative",
     outline: "none",
+    userSelect: "none",
     width: 700,
     maxWidth: "90vw",
     maxHeight: "80vh",
@@ -81,7 +79,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 interface IProps {
-  className?: string;
   onClose: () => void;
   onSelect: (_: IToken) => void;
   open: boolean;
@@ -91,43 +88,39 @@ export const TokenSelectModal: React.FC<IProps> = ({
   onSelect,
   onClose,
   open,
-  className,
 }) => {
-  const classes = useStyles();
-
+  const cl = useStyles();
   return (
-    <Modal open={open} onClose={onClose}>
-      <div className={clsx(classes.root, className)}>
-        <div className={classes.content}>
-          <div className={classes.topSection}>
-            <Typography className={classes.title}>Select Token</Typography>
-            <IconButton className={classes.closeButton} onClick={onClose}>
-              <CloseOutlined />
-            </IconButton>
-            <div>
-              <TextField
-                className={classes.search}
-                fullWidth
-                InputProps={{
-                  disableUnderline: true,
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon className="searchIcon" />
-                    </InputAdornment>
-                  ),
-                }}
-                variant="standard"
-                color="primary"
-                placeholder="Search by token name or paste address"
-              />
-              <Typography className={classes.commonLabel}>
-                COMMON BASES
-              </Typography>
-              <CommonTokens onSelectToken={onSelect} />
-            </div>
+    <Modal className={cl.modal} open={open} onClose={onClose}>
+      <div className={cl.content}>
+        <div className={cl.topSection}>
+          <Typography className={cl.title}>Select Token</Typography>
+          <IconButton className={cl.closeButton} onClick={onClose}>
+            <CloseOutlined />
+          </IconButton>
+          <div>
+            <TextField
+              className={cl.search}
+              fullWidth
+              InputProps={{
+                disableUnderline: true,
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon className="searchIcon" />
+                  </InputAdornment>
+                ),
+              }}
+              variant="standard"
+              color="primary"
+              placeholder="Search by token name or paste address"
+            />
+            <Typography className={cl.commonLabel}>
+              COMMON BASES
+            </Typography>
+            <CommonTokens onSelectToken={onSelect} />
           </div>
-          <TokensList onSelectToken={onSelect} />
         </div>
+        <TokensList onSelectToken={onSelect} />
       </div>
     </Modal>
   );
