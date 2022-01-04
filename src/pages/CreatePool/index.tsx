@@ -11,9 +11,11 @@ import { HeaderStep, TokenPairStep, PriceRangeStep } from "./components";
 const useStyles = makeStyles((theme) => ({
   label: {
     color: theme.colors.white,
-    marginBottom: 16,
+    marginBottom: theme.spacing(2),
   },
-  content: { padding: "26px 0" },
+  content: {
+    padding: theme.spacing(3, 0),
+  },
 }));
 
 interface IState {

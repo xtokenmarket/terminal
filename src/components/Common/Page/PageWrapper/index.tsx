@@ -3,7 +3,8 @@ import { makeStyles } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.colors.primary500,
-    padding: "0 32px",
+    borderRadius: 4,
+    padding: theme.spacing(0, 4),
     [theme.breakpoints.down("xs")]: {
       backgroundColor: theme.colors.transparent,
       padding: 0,
