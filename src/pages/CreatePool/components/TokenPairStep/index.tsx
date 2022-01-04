@@ -1,4 +1,4 @@
-import { BigNumber } from "@ethersproject/bignumber";
+import { BigNumber } from '@ethersproject/bignumber'
 import {
   Button,
   CircularProgress,
@@ -6,22 +6,22 @@ import {
   makeStyles,
   TextField,
   Typography,
-} from "@material-ui/core";
-import { TokenSelect } from "components";
-import { DEFAULT_NETWORK_ID, NULL_ADDRESS } from "config/constants";
-import { useConnectedWeb3Context } from "contexts";
-import { useIsMountedRef, useServices } from "helpers";
-import { transparentize } from "polished";
-import { useEffect, useState } from "react";
-import { IToken } from "types";
-import { ZERO } from "utils/number";
-import { getPriceInX96 } from "utils/price";
-import { FeeTierSection } from "../";
-import { PairCreateModal } from "../PairCreateModal";
+} from '@material-ui/core'
+import { TokenSelect } from 'components'
+import { DEFAULT_NETWORK_ID, NULL_ADDRESS } from 'config/constants'
+import { useConnectedWeb3Context } from 'contexts'
+import { useIsMountedRef, useServices } from 'helpers'
+import { transparentize } from 'polished'
+import { useEffect, useState } from 'react'
+import { IToken } from 'types'
+import { ZERO } from 'utils/number'
+import { getPriceInX96 } from 'utils/price'
+import { FeeTierSection } from '../'
+import { PairCreateModal } from '../PairCreateModal'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    position: "relative",
+    position: 'relative',
   },
   label: {
     color: theme.colors.white,
@@ -34,16 +34,16 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 8,
   },
   progressWrapper: {
-    position: "absolute",
+    position: 'absolute',
     left: 0,
     right: 0,
     top: 0,
     bottom: 0,
     backgroundColor: transparentize(0.9, theme.colors.gray2),
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "column",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column',
     zIndex: 5,
   },
   spinner: {
@@ -69,56 +69,56 @@ const useStyles = makeStyles((theme) => ({
   priceInput: {
     border: `1px solid ${theme.colors.primary100}`,
     borderRadius: 4,
-    padding: "12px 16px",
+    padding: '12px 16px',
   },
-}));
+}))
 
 interface IProps {
   data: {
-    token0?: IToken;
-    token1?: IToken;
-    tier: BigNumber;
-  };
-  updateData: (_: any) => void;
-  onNext: () => void;
+    token0?: IToken
+    token1?: IToken
+    tier: BigNumber
+  }
+  updateData: (_: any) => void
+  onNext: () => void
 }
 
 interface IState {
-  startPrice: string;
-  uniPoolExist: boolean;
-  loading: boolean;
-  poolChecked: boolean;
-  successVisible: boolean;
+  startPrice: string
+  uniPoolExist: boolean
+  loading: boolean
+  poolChecked: boolean
+  successVisible: boolean
 }
 
 const initialState: IState = {
-  startPrice: "0",
+  startPrice: '0',
   uniPoolExist: false,
   loading: false,
   poolChecked: false,
   successVisible: false,
-};
+}
 
 export const TokenPairStep = (props: IProps) => {
-  const classes = useStyles();
+  const classes = useStyles()
   const { account, networkId, setWalletConnectModalOpened, setTxModalInfo } =
-    useConnectedWeb3Context();
-  const { lmService } = useServices();
-  const [state, setState] = useState<IState>(initialState);
+    useConnectedWeb3Context()
+  const { lmService } = useServices()
+  const [state, setState] = useState<IState>(initialState)
 
-  const mountedRef = useIsMountedRef();
-  const { data, updateData } = props;
+  const mountedRef = useIsMountedRef()
+  const { data, updateData } = props
 
   const loadIfUniPoolExists = async () => {
     if (data.token0 && data.token1) {
       try {
-        setState((prev) => ({ ...prev, loading: true, poolChecked: false }));
+        setState((prev) => ({ ...prev, loading: true, poolChecked: false }))
         const uniPoolAddress = await lmService.getPool(
           data.token0.address,
           data.token1.address,
           data.tier
-        );
-        const isExists = uniPoolAddress !== NULL_ADDRESS;
+        )
+        const isExists = uniPoolAddress !== NULL_ADDRESS
 
         if (mountedRef.current === true) {
           setState((prev) => ({
@@ -126,31 +126,31 @@ export const TokenPairStep = (props: IProps) => {
             uniPoolExist: isExists,
             loading: false,
             poolChecked: true,
-          }));
-          updateData({ uniPool: uniPoolAddress });
+          }))
+          updateData({ uniPool: uniPoolAddress })
         }
       } catch (error) {
-        setState((prev) => ({ ...prev, loading: false, poolChecked: false }));
+        setState((prev) => ({ ...prev, loading: false, poolChecked: false }))
       }
     }
-  };
+  }
 
   useEffect(() => {
-    const timer = setTimeout(loadIfUniPoolExists, 1500);
+    const timer = setTimeout(loadIfUniPoolExists, 1500)
 
     return () => {
-      clearTimeout(timer);
-    };
-  }, [data.tier._hex, data.token0?.address, data.token1?.address, networkId]);
+      clearTimeout(timer)
+    }
+  }, [data.tier._hex, data.token0?.address, data.token1?.address, networkId])
 
   const onCreateUniPool = async () => {
     if (!account) {
-      setWalletConnectModalOpened(true);
-      return;
+      setWalletConnectModalOpened(true)
+      return
     }
     if (data.token0 && data.token1 && !state.uniPoolExist) {
       try {
-        setTxModalInfo(true, "Creating Pool on Uniswap");
+        setTxModalInfo(true, 'Creating Pool on Uniswap')
 
         const { token0, token1, startPrice } = (() => {
           if (
@@ -162,14 +162,14 @@ export const TokenPairStep = (props: IProps) => {
               token0: data.token0,
               token1: data.token1,
               startPrice: state.startPrice,
-            };
+            }
           }
           return {
             token0: data.token1,
             token1: data.token0,
             startPrice: String(1 / Number(state.startPrice)),
-          };
-        })();
+          }
+        })()
 
         const txId = await lmService.deployUniswapPool(
           token0.address,
@@ -182,39 +182,39 @@ export const TokenPairStep = (props: IProps) => {
             networkId || DEFAULT_NETWORK_ID,
             data.tier.toNumber()
           ).toString()
-        );
+        )
         setTxModalInfo(
           true,
-          "Creating Pool on Uniswap",
-          "Please wait until tx is confirmed",
+          'Creating Pool on Uniswap',
+          'Please wait until tx is confirmed',
           txId
-        );
+        )
         const finalTxId = await lmService.waitUntilPoolCreated(
           data.token0.address,
           data.token1.address,
           data.tier,
           txId
-        );
-        const poolAddress = await lmService.parsePoolCreatedTx(finalTxId);
+        )
+        const poolAddress = await lmService.parsePoolCreatedTx(finalTxId)
 
-        updateData({ uniPool: poolAddress });
+        updateData({ uniPool: poolAddress })
         setState((prev) => ({
           ...prev,
           uniPoolExist: true,
           successVisible: true,
-        }));
+        }))
 
-        setTxModalInfo(false);
+        setTxModalInfo(false)
       } catch (error) {
-        console.error(error);
-        setTxModalInfo(false);
+        console.error(error)
+        setTxModalInfo(false)
       }
     }
-  };
+  }
 
   const onCloseSuccess = () => {
-    setState((prev) => ({ ...prev, successVisible: false }));
-  };
+    setState((prev) => ({ ...prev, successVisible: false }))
+  }
 
   return (
     <div className={classes.root}>
@@ -267,19 +267,19 @@ export const TokenPairStep = (props: IProps) => {
                         fullWidth
                         placeholder="0"
                         helperText={`1 ${data.token0.symbol}=${
-                          state.startPrice || "0"
+                          state.startPrice || '0'
                         } ${data.token1.symbol}`}
                         type="number"
                         value={state.startPrice}
                         onChange={(event) => {
-                          let newValue = event.target.value;
-                          if (Number(newValue || "0") < 0) {
-                            newValue = "0";
+                          let newValue = event.target.value
+                          if (Number(newValue || '0') < 0) {
+                            newValue = '0'
                           }
                           setState((prev) => ({
                             ...prev,
                             startPrice: newValue,
-                          }));
+                          }))
                         }}
                       />
                     </>
@@ -309,7 +309,7 @@ export const TokenPairStep = (props: IProps) => {
         <Button
           color="primary"
           fullWidth
-          disabled={Number(state.startPrice || "0") === 0}
+          disabled={Number(state.startPrice || '0') === 0}
           onClick={onCreateUniPool}
           variant="contained"
         >
@@ -327,5 +327,5 @@ export const TokenPairStep = (props: IProps) => {
         </Button>
       )}
     </div>
-  );
-};
+  )
+}

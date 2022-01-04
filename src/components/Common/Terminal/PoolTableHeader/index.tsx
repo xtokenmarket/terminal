@@ -1,25 +1,23 @@
-import { makeStyles, Tooltip } from "@material-ui/core";
-import clsx from "clsx";
-import { SortButton } from "components";
-import { PoolTd } from "..";
+import { makeStyles, Tooltip } from '@material-ui/core'
+import clsx from 'clsx'
+import { SortButton } from 'components'
+import { PoolTd } from '..'
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
-    display: "flex",
+    display: 'flex',
     marginBottom: 12,
   },
   item: {
     color: theme.colors.purple0,
     fontSize: 11,
-    display: "flex",
-    alignItems: "center",
+    display: 'flex',
+    alignItems: 'center',
   },
-}));
+}))
 
-interface IProps {}
-
-export const PoolTableHeader = (props: IProps) => {
-  const classes = useStyles();
+export const PoolTableHeader = () => {
+  const classes = useStyles()
 
   return (
     <div className={classes.root}>
@@ -62,5 +60,5 @@ export const PoolTableHeader = (props: IProps) => {
         </div>
       </PoolTd>
     </div>
-  );
-};
+  )
+}

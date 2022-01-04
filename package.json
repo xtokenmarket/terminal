@@ -10,10 +10,6 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
-    "@types/jest": "^26.0.15",
-    "@types/node": "^12.0.0",
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
     "@uniswap/sdk-core": "^1.0.10",
     "@uniswap/v2-sdk": "^1.0.9",
     "@uniswap/v3-sdk": "^1.0.8",
@@ -22,7 +18,7 @@
     "@web3-react/walletconnect-connector": "^6.2.4",
     "axios": "^0.22.0",
     "clsx": "^1.1.1",
-    "ethers": "^5.4.7",
+    "ethers": "5.5.2",
     "lodash": "^4.17.21",
     "logdown": "^3.3.1",
     "moment": "^2.29.1",
@@ -41,7 +37,26 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "serve": "PORT=5000 serve -s build -n"
+    "serve": "PORT=5000 serve -s build -n",
+    "typechain": "typechain --target ethers-v5 --out-dir ./src/types/contracts './src/abis/*.json'",
+    "format:staged": "lint-staged",
+    "lint:check": "eslint \"./src/**/*.{js,ts,tsx}\"",
+    "lint:fix": "yarn lint:check --fix",
+    "prettier": "prettier './src/**/*.{js,ts,tsx}'",
+    "prettier:check": "yarn prettier --check",
+    "prettier:fix": "yarn prettier --write"
+  },
+  "lint-staged": {
+    "src/**/*.{js,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged --allow-empty",
+      "pre-push": "yarn lint:check"
+    }
   },
   "eslintConfig": {
     "extends": [
@@ -62,7 +77,21 @@
     ]
   },
   "devDependencies": {
+    "@typechain/ethers-v5": "^8.0.5",
+    "@types/jest": "^26.0.15",
     "@types/lodash": "^4.14.175",
-    "@types/react-router-dom": "^5.3.1"
+    "@types/node": "^12.0.0",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "@types/react-router-dom": "^5.3.1",
+    "@typescript-eslint/eslint-plugin": "^5.9.0",
+    "@typescript-eslint/parser": "^5.9.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.28.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.1.5",
+    "prettier": "^2.5.1",
+    "typechain": "^6.1.0"
   }
 }

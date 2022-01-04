@@ -1,4 +1,4 @@
-import { makeStyles, Typography } from "@material-ui/core";
+import { makeStyles, Typography } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -11,22 +11,22 @@ const useStyles = makeStyles((theme) => ({
   },
   value: { color: theme.colors.white, fontSize: 18, fontWeight: 700 },
   valueWrapper: {
-    display: "flex",
-    alignItems: "flex-end",
-    flexWrap: "wrap",
-    "&>*+*": { marginLeft: 8 },
+    display: 'flex',
+    alignItems: 'flex-end',
+    flexWrap: 'wrap',
+    '&>*+*': { marginLeft: 8 },
   },
-}));
+}))
 
 interface IProps {
-  label: string;
-  value: string;
-  right?: React.ReactNode;
+  label: string
+  value: string
+  right?: React.ReactNode
 }
 
 export const InfoSection = (props: IProps) => {
-  const classes = useStyles();
-  const { label, value, right: RightComponent } = props;
+  const classes = useStyles()
+  const { label, value, right: RightComponent } = props
 
   return (
     <div className={classes.root}>
@@ -36,5 +36,5 @@ export const InfoSection = (props: IProps) => {
         {RightComponent}
       </div>
     </div>
-  );
-};
+  )
+}

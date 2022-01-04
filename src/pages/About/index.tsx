@@ -1,4 +1,4 @@
-import { makeStyles, Typography } from "@material-ui/core";
+import { makeStyles, Typography } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -6,18 +6,18 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
     fontWeight: 600,
     fontSize: 32,
-    lineHeight: "42px",
+    lineHeight: '42px',
   },
   description: {
     marginTop: 24,
     color: theme.colors.white,
     fontSize: 18,
-    lineHeight: "25px",
+    lineHeight: '25px',
   },
-}));
+}))
 
 const About = () => {
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <div className={classes.root}>
@@ -45,7 +45,7 @@ const About = () => {
         urna efficitur non.
       </Typography>
     </div>
-  );
-};
+  )
+}
 
-export default About;
+export default About

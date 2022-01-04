@@ -1,13 +1,13 @@
-import { Button, makeStyles, Typography } from "@material-ui/core";
-import { IRewardState } from "pages/PoolDetails/components";
-import { ITerminalPool } from "types";
-import { WarningInfo, OutputEstimation } from "..";
+import { Button, makeStyles, Typography } from '@material-ui/core'
+import { IRewardState } from 'pages/PoolDetails/components'
+import { ITerminalPool } from 'types'
+import { WarningInfo, OutputEstimation } from '..'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
   header: {
     padding: 32,
-    position: "relative",
+    position: 'relative',
     paddingBottom: 16,
   },
   title: {
@@ -24,16 +24,16 @@ const useStyles = makeStyles((theme) => ({
     padding: 32,
   },
   warning: {
-    padding: "16px !important",
-    "& div": {
-      "&:first-child": {
+    padding: '16px !important',
+    '& div': {
+      '&:first-child': {
         marginTop: 0,
         marginRight: 16,
       },
-      "& p": {
+      '& p': {
         fontSize: 14,
         marginTop: 3,
-        "&:first-child": { fontSize: 16, marginTop: 0 },
+        '&:first-child': { fontSize: 16, marginTop: 0 },
       },
     },
   },
@@ -41,21 +41,21 @@ const useStyles = makeStyles((theme) => ({
   tokenIcon: {
     width: 24,
     height: 24,
-    borderRadius: "50%",
+    borderRadius: '50%',
   },
-}));
+}))
 
 interface IProps {
-  onNext: () => void;
-  rewardState: IRewardState;
-  poolData: ITerminalPool;
-  updateState: (e: any) => void;
+  onNext: () => void
+  rewardState: IRewardState
+  poolData: ITerminalPool
+  updateState: (e: any) => void
 }
 
 export const ConfirmSection = (props: IProps) => {
-  const classes = useStyles();
+  const classes = useStyles()
 
-  const { onNext, rewardState, poolData } = props;
+  const { onNext, rewardState, poolData } = props
 
   return (
     <div className={classes.root}>
@@ -84,5 +84,5 @@ export const ConfirmSection = (props: IProps) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

@@ -6,8 +6,8 @@ import {
   Token,
   TokenAmount,
   WETH9,
-} from "@uniswap/sdk-core";
-import { supportedNetworkIds } from "config/networks";
+} from '@uniswap/sdk-core'
+import { supportedNetworkIds } from 'config/networks'
 
 export function wrappedCurrency(
   currency: Currency | undefined,
@@ -17,7 +17,7 @@ export function wrappedCurrency(
     ? WETH9[chainId]
     : currency instanceof Token
     ? currency
-    : undefined;
+    : undefined
 }
 
 export function wrappedCurrencyAmount(
@@ -27,17 +27,17 @@ export function wrappedCurrencyAmount(
   const token =
     currencyAmount && chainId
       ? wrappedCurrency(currencyAmount.currency, chainId)
-      : undefined;
+      : undefined
   return token && currencyAmount
     ? new TokenAmount(token, currencyAmount.raw)
-    : undefined;
+    : undefined
 }
 
 export function unwrappedToken(token: Token): Currency {
   const formattedChainId = (supportedNetworkIds as any).includes(token.chainId)
     ? token.chainId
-    : undefined;
+    : undefined
   if (formattedChainId && token.equals((WETH9 as any)[formattedChainId]))
-    return ETHER;
-  return token;
+    return ETHER
+  return token
 }

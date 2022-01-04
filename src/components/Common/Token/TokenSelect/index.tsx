@@ -1,21 +1,21 @@
-import { makeStyles, Typography } from "@material-ui/core";
-import clsx from "clsx";
-import { TokenIcon, TokenSelectModal } from "components";
-import { useState } from "react";
-import { IToken } from "types";
+import { makeStyles, Typography } from '@material-ui/core'
+import clsx from 'clsx'
+import { TokenIcon, TokenSelectModal } from 'components'
+import { useState } from 'react'
+import { IToken } from 'types'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex",
+    display: 'flex',
     backgroundColor: theme.colors.primary400,
     height: 80,
-    alignItems: "center",
+    alignItems: 'center',
     padding: theme.spacing(2),
     borderRadius: 4,
     marginBottom: theme.spacing(2),
-    cursor: "pointer",
-    transition: "all 0.4s",
-    "&:hover": {
+    cursor: 'pointer',
+    transition: 'all 0.4s',
+    '&:hover': {
       backgroundColor: theme.colors.primary200,
     },
   },
@@ -27,29 +27,29 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 700,
   },
   downArrow: {},
-}));
+}))
 
 interface IProps {
-  className?: string;
-  token?: IToken;
-  onChange: (_?: IToken) => void;
+  className?: string
+  token?: IToken
+  onChange: (_?: IToken) => void
 }
 
 export const TokenSelect: React.FC<IProps> = ({
   token,
   onChange,
-  className
+  className,
 }) => {
-  const classes = useStyles();
-  const [modalVisible, setModalVisible] = useState(false);
+  const classes = useStyles()
+  const [modalVisible, setModalVisible] = useState(false)
   return (
     <div>
       <TokenSelectModal
         open={modalVisible}
         onClose={() => setModalVisible(false)}
         onSelect={(token) => {
-          onChange(token);
-          setModalVisible(false);
+          onChange(token)
+          setModalVisible(false)
         }}
       />
       <div
@@ -58,7 +58,7 @@ export const TokenSelect: React.FC<IProps> = ({
       >
         <TokenIcon token={token} />
         <Typography className={classes.text}>
-          {token ? token.symbol : "Select token"}
+          {token ? token.symbol : 'Select token'}
         </Typography>
         <img
           alt="down"
@@ -67,5 +67,5 @@ export const TokenSelect: React.FC<IProps> = ({
         />
       </div>
     </div>
-  );
-};
+  )
+}

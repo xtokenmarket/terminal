@@ -1,7 +1,7 @@
-import { makeStyles, Typography } from "@material-ui/core";
-import clsx from "clsx";
-import { transparentize } from "polished";
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
+import { makeStyles, Typography } from '@material-ui/core'
+import clsx from 'clsx'
+import { transparentize } from 'polished'
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -9,9 +9,9 @@ const useStyles = makeStyles((theme) => ({
     border: `2px solid ${theme.colors.primary200}`,
     padding: 16,
     borderRadius: 4,
-    display: "flex",
+    display: 'flex',
     [theme.breakpoints.down(theme.custom.xss)]: {
-      flexDirection: "column",
+      flexDirection: 'column',
     },
   },
   icon: {
@@ -19,24 +19,24 @@ const useStyles = makeStyles((theme) => ({
     width: 40,
     height: 40,
     minWidth: 40,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: theme.colors.primary200,
     borderRadius: 4,
     marginRight: 16,
-    transform: "rotate(180deg)",
+    transform: 'rotate(180deg)',
   },
   title: { color: theme.colors.white, fontWeight: 600 },
   description: { color: theme.colors.white, fontSize: 14 },
-}));
+}))
 
 interface IProps {
-  className?: string;
+  className?: string
 }
 
 export const OutputEstimationInfo = (props: IProps) => {
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <div className={clsx(classes.root, props.className)}>
@@ -51,5 +51,5 @@ export const OutputEstimationInfo = (props: IProps) => {
         </Typography>
       </div>
     </div>
-  );
-};
+  )
+}

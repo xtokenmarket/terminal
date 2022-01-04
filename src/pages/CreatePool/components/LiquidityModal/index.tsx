@@ -1,88 +1,88 @@
-import clsx from "clsx";
-import { makeStyles, Modal } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
-import { ERewardStep } from "utils/enums";
+import clsx from 'clsx'
+import { makeStyles, Modal } from '@material-ui/core'
+import React, { useEffect, useState } from 'react'
+import { ERewardStep } from 'utils/enums'
 import {
   RewardSection,
   InputSection,
   SuccessSection,
   ConfirmSection,
-} from "./components";
-import { ITerminalPool } from "types";
-import { BigNumber } from "@ethersproject/bignumber";
-import { ZERO } from "utils/number";
-import useCommonStyles from "style/common";
-import { useConnectedWeb3Context } from "contexts";
+} from './components'
+import { ITerminalPool } from 'types'
+import { BigNumber } from '@ethersproject/bignumber'
+import { ZERO } from 'utils/number'
+import useCommonStyles from 'style/common'
+import { useConnectedWeb3Context } from 'contexts'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    position: "absolute",
-    width: "90vw",
+    position: 'absolute',
+    width: '90vw',
     maxWidth: 600,
     backgroundColor: theme.colors.primary500,
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    outline: "none",
-    maxHeight: "80vh",
-    userSelect: "none",
-    overflowY: "auto",
-    "&.transparent": {
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    outline: 'none',
+    maxHeight: '80vh',
+    userSelect: 'none',
+    overflowY: 'auto',
+    '&.transparent': {
       backgroundColor: theme.colors.transparent,
     },
   },
-}));
+}))
 
 interface IProps {
-  className?: string;
-  onClose: () => void;
-  poolData: ITerminalPool;
-  onSuccess: () => Promise<void>;
+  className?: string
+  onClose: () => void
+  poolData: ITerminalPool
+  onSuccess: () => Promise<void>
 }
 
 export interface IRewardState {
-  step: ERewardStep;
-  period: string;
-  amounts: BigNumber[];
+  step: ERewardStep
+  period: string
+  amounts: BigNumber[]
 }
 
 export const LiquidityModal = (props: IProps) => {
-  const classes = useStyles();
-  const commonClasses = useCommonStyles();
-  const { account } = useConnectedWeb3Context();
+  const classes = useStyles()
+  const commonClasses = useCommonStyles()
+  const { account } = useConnectedWeb3Context()
 
-  const { onClose } = props;
+  const { onClose } = props
   const [state, setState] = useState<IRewardState>({
     step: ERewardStep.Input,
-    period: "",
+    period: '',
     amounts: props.poolData.rewardTokens.map((e) => ZERO),
-  });
+  })
 
   useEffect(() => {
     if (!account) {
-      onClose();
+      onClose()
     }
-  }, [account]);
+  }, [account])
 
   const updateState = (e: any) => {
-    setState((prev) => ({ ...prev, ...e }));
-  };
+    setState((prev) => ({ ...prev, ...e }))
+  }
 
   const onNextStep = () => {
     switch (state.step) {
       case ERewardStep.Input:
-        setState((prev) => ({ ...prev, step: ERewardStep.Confirm }));
-        break;
+        setState((prev) => ({ ...prev, step: ERewardStep.Confirm }))
+        break
       case ERewardStep.Confirm:
-        setState((prev) => ({ ...prev, step: ERewardStep.Initiate }));
-        break;
+        setState((prev) => ({ ...prev, step: ERewardStep.Initiate }))
+        break
       case ERewardStep.Initiate:
-        setState((prev) => ({ ...prev, step: ERewardStep.Success }));
-        break;
+        setState((prev) => ({ ...prev, step: ERewardStep.Success }))
+        break
       default:
-        onClose();
+        onClose()
     }
-  };
+  }
 
   const renderContent = () => {
     switch (state.step) {
@@ -95,7 +95,7 @@ export const LiquidityModal = (props: IProps) => {
             onClose={props.onClose}
             poolData={props.poolData}
           />
-        );
+        )
       case ERewardStep.Confirm:
         return (
           <ConfirmSection
@@ -104,7 +104,7 @@ export const LiquidityModal = (props: IProps) => {
             poolData={props.poolData}
             updateState={updateState}
           />
-        );
+        )
       case ERewardStep.Initiate:
         return (
           <RewardSection
@@ -113,7 +113,7 @@ export const LiquidityModal = (props: IProps) => {
             poolData={props.poolData}
             updateState={updateState}
           />
-        );
+        )
       default:
         return (
           <SuccessSection
@@ -121,9 +121,9 @@ export const LiquidityModal = (props: IProps) => {
             rewardState={state}
             poolData={props.poolData}
           />
-        );
+        )
     }
-  };
+  }
 
   return (
     <Modal open>
@@ -132,11 +132,11 @@ export const LiquidityModal = (props: IProps) => {
           classes.root,
           commonClasses.scroll,
           props.className,
-          state.step === ERewardStep.Success ? "transparent" : ""
+          state.step === ERewardStep.Success ? 'transparent' : ''
         )}
       >
         {renderContent()}
       </div>
     </Modal>
-  );
-};
+  )
+}

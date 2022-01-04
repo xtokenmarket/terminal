@@ -1,44 +1,44 @@
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from '@material-ui/core'
 
-import clsx from "clsx";
-import React from "react";
-import { ESort } from "utils/enums";
+import clsx from 'clsx'
+import React from 'react'
+import { ESort } from 'utils/enums'
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
     height: 13,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    border: "none",
-    outline: "none",
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    border: 'none',
+    outline: 'none',
     backgroundColor: theme.colors.sixth,
   },
   icon: {},
-}));
+}))
 
 interface IProps {
-  className?: string;
-  onChange?: (_?: ESort) => void;
-  type?: ESort;
+  className?: string
+  onChange?: (_?: ESort) => void
+  type?: ESort
 }
 
 export const SortButton = (props: IProps) => {
-  const classes = useStyles();
-  const { onChange, type } = props;
+  const classes = useStyles()
+  const { onChange, type } = props
   return (
     <button
       className={clsx(classes.root, props.className)}
       onClick={() => {
-        if (!onChange) return;
+        if (!onChange) return
         if (!type) {
-          return onChange(ESort.ASC);
+          return onChange(ESort.ASC)
         }
         if (type === ESort.ASC) {
-          return onChange(ESort.DESC);
+          return onChange(ESort.DESC)
         }
         if (type === ESort.DESC) {
-          return onChange();
+          return onChange()
         }
       }}
     >
@@ -49,5 +49,5 @@ export const SortButton = (props: IProps) => {
         <img alt="down" className={classes.icon} src="/assets/icons/down.svg" />
       )}
     </button>
-  );
-};
+  )
+}

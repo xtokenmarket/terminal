@@ -1,2 +1,2 @@
-export * from "./LoadingScreen";
-export * from "./SimpleLoader";
+export * from './LoadingScreen'
+export * from './SimpleLoader'

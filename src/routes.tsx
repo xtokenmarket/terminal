@@ -1,11 +1,11 @@
-import { LoadingScreen } from "components";
-import { MainLayout, TerminalLayout } from "layouts";
-import React, { Fragment, Suspense, lazy } from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { LoadingScreen } from 'components'
+import { MainLayout, TerminalLayout } from 'layouts'
+import React, { Fragment, Suspense, lazy } from 'react'
+import { Redirect, Route, Switch } from 'react-router-dom'
 
 const routes = [
   {
-    path: "/",
+    path: '/',
     layout: MainLayout,
     routes: [
       // {
@@ -15,71 +15,71 @@ const routes = [
       // },
       {
         exact: true,
-        path: "/market",
-        component: lazy(() => import("pages/ComingSoon")),
+        path: '/market',
+        component: lazy(() => import('pages/ComingSoon')),
       },
       {
         exact: true,
-        path: "/cafe",
-        component: lazy(() => import("pages/ComingSoon")),
+        path: '/cafe',
+        component: lazy(() => import('pages/ComingSoon')),
       },
       {
         exact: true,
-        path: "/vote",
-        component: lazy(() => import("pages/ComingSoon")),
+        path: '/vote',
+        component: lazy(() => import('pages/ComingSoon')),
       },
       {
         exact: true,
-        path: "/terminal/new-pool",
-        component: lazy(() => import("pages/CreatePool")),
+        path: '/terminal/new-pool',
+        component: lazy(() => import('pages/CreatePool')),
       },
       {
         exact: true,
-        path: "/terminal/pools/:id",
-        component: lazy(() => import("pages/PoolDetails")),
+        path: '/terminal/pools/:id',
+        component: lazy(() => import('pages/PoolDetails')),
       },
       {
-        path: "/terminal",
+        path: '/terminal',
         layout: TerminalLayout,
         routes: [
           {
             exact: true,
-            path: "/terminal/discover",
-            component: lazy(() => import("pages/Discover")),
+            path: '/terminal/discover',
+            component: lazy(() => import('pages/Discover')),
           },
           {
             exact: true,
-            path: "/terminal/my-pool",
-            component: lazy(() => import("pages/MyPools")),
+            path: '/terminal/my-pool',
+            component: lazy(() => import('pages/MyPools')),
           },
           {
             exact: true,
-            path: "/terminal/about",
-            component: lazy(() => import("pages/About")),
+            path: '/terminal/about',
+            component: lazy(() => import('pages/About')),
           },
 
           {
-            path: "*",
+            path: '*',
             // eslint-disable-next-line
             component: () => <Redirect to="/terminal/discover" />,
           },
         ],
       },
       {
-        path: "*",
+        path: '*',
         // eslint-disable-next-line
         component: () => <Redirect to="/terminal" />,
       },
     ],
   },
-];
+]
 
 export const renderRoutes = (routes = []) => (
   <Suspense fallback={<LoadingScreen />}>
     <Switch>
       {routes.map((route: any, i) => {
-        const Layout = route.layout || Fragment;
-        const Component = route.component;
+        const Layout = route.layout || Fragment
+        const Component = route.component
 
         return (
           <Route
@@ -96,10 +96,10 @@ export const renderRoutes = (routes = []) => (
               </Layout>
             )}
           />
-        );
+        )
       })}
     </Switch>
   </Suspense>
-);
+)
 
-export default routes;
+export default routes

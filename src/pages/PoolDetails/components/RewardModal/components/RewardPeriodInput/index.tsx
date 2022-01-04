@@ -1,13 +1,13 @@
-import { InputAdornment, makeStyles, TextField } from "@material-ui/core";
-import clsx from "clsx";
-import { transparentize } from "polished";
-import useCommonStyles from "style/common";
+import { InputAdornment, makeStyles, TextField } from '@material-ui/core'
+import clsx from 'clsx'
+import { transparentize } from 'polished'
+import useCommonStyles from 'style/common'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
   input: {
-    "& .Mui-focused": {
-      "& .MuiOutlinedInput-notchedOutline": {
+    '& .Mui-focused': {
+      '& .MuiOutlinedInput-notchedOutline': {
         borderColor: theme.colors.white,
         borderWidth: 1,
       },
@@ -19,46 +19,46 @@ const useStyles = makeStyles((theme) => ({
     borderColor: theme.colors.primary200,
   },
   buttons: {
-    display: "flex",
-    alignItems: "center",
-    margin: "4px -4px",
+    display: 'flex',
+    alignItems: 'center',
+    margin: '4px -4px',
   },
   button: {
     margin: 4,
     height: 32,
     width: 54,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: theme.colors.primary400,
     color: theme.colors.primary100,
     border: `1px solid ${theme.colors.eighth}`,
-    transition: "all 0.4s",
+    transition: 'all 0.4s',
     borderRadius: 4,
     fontSize: 12,
-    cursor: "pointer",
-    "&:hover": {
+    cursor: 'pointer',
+    '&:hover': {
       backgroundColor: transparentize(0.8, theme.colors.secondary),
       borderColor: theme.colors.secondary,
       color: theme.colors.white,
     },
-    "&.active": {
+    '&.active': {
       backgroundColor: transparentize(0.8, theme.colors.secondary),
       borderColor: theme.colors.secondary,
       color: theme.colors.white,
     },
   },
-}));
+}))
 
 interface IProps {
-  value: string;
-  onChange: (_: string) => void;
-  className?: string;
+  value: string
+  onChange: (_: string) => void
+  className?: string
 }
 
 export const RewardPeriodInput = (props: IProps) => {
-  const classes = useStyles();
-  const commonClasses = useCommonStyles();
+  const classes = useStyles()
+  const commonClasses = useCommonStyles()
 
   return (
     <div className={classes.root}>
@@ -72,11 +72,11 @@ export const RewardPeriodInput = (props: IProps) => {
         }}
         fullWidth
         onChange={(event) => {
-          let newValue = event.target.value;
-          if (newValue !== "") {
-            newValue = Math.floor(Number(event.target.value)).toString();
+          let newValue = event.target.value
+          if (newValue !== '') {
+            newValue = Math.floor(Number(event.target.value)).toString()
           }
-          props.onChange(newValue);
+          props.onChange(newValue)
         }}
         InputProps={{
           classes: {
@@ -93,7 +93,7 @@ export const RewardPeriodInput = (props: IProps) => {
             key={`${week}`}
             className={clsx(
               classes.button,
-              week === Number(props.value || "0") && "active"
+              week === Number(props.value || '0') && 'active'
             )}
             onClick={() => props.onChange(week.toString())}
           >
@@ -102,5 +102,5 @@ export const RewardPeriodInput = (props: IProps) => {
         ))}
       </div>
     </div>
-  );
-};
+  )
+}

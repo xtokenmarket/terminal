@@ -1,1 +1,1 @@
-export * from "./SuccessSection";
+export * from './SuccessSection'

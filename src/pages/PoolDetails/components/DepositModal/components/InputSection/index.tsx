@@ -1,21 +1,21 @@
-import { BigNumber } from "@ethersproject/bignumber";
-import { Button, IconButton, makeStyles, Typography } from "@material-ui/core";
-import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
-import { TokenBalanceInput } from "components";
-import { DefaultReadonlyProvider } from "config/networks";
-import { useConnectedWeb3Context } from "contexts";
-import { useIsMountedRef, useTokenBalance } from "helpers";
-import { IDepositState } from "pages/PoolDetails/components";
-import { xAssetCLRService } from "services";
-import { ITerminalPool } from "types";
-import { ZERO } from "utils/number";
-import { OutputEstimation, OutputEstimationInfo } from "..";
+import { BigNumber } from '@ethersproject/bignumber'
+import { Button, IconButton, makeStyles, Typography } from '@material-ui/core'
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
+import { TokenBalanceInput } from 'components'
+import { DefaultReadonlyProvider } from 'config/networks'
+import { useConnectedWeb3Context } from 'contexts'
+import { useIsMountedRef, useTokenBalance } from 'helpers'
+import { IDepositState } from 'pages/PoolDetails/components'
+import { xAssetCLRService } from 'services'
+import { ITerminalPool } from 'types'
+import { ZERO } from 'utils/number'
+import { OutputEstimation, OutputEstimationInfo } from '..'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
   header: {
     padding: 32,
-    position: "relative",
+    position: 'relative',
     paddingBottom: 16,
   },
   title: {
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 24,
   },
   closeButton: {
-    position: "absolute",
+    position: 'absolute',
     right: 12,
     top: 12,
     padding: 12,
@@ -38,25 +38,25 @@ const useStyles = makeStyles((theme) => ({
 
   deposit: { marginTop: 32 },
   buy: { marginTop: 8 },
-}));
+}))
 
 interface IProps {
-  onNext: () => void;
-  onClose: () => void;
-  depositState: IDepositState;
-  updateState: (e: any) => void;
-  poolData: ITerminalPool;
+  onNext: () => void
+  onClose: () => void
+  depositState: IDepositState
+  updateState: (e: any) => void
+  poolData: ITerminalPool
 }
 
-let timer: any = undefined;
+let timer: any = undefined
 
 export const InputSection = (props: IProps) => {
-  const classes = useStyles();
-  const { onNext, onClose, depositState, updateState, poolData } = props;
-  const { account, library: provider, networkId } = useConnectedWeb3Context();
-  const isMountedRef = useIsMountedRef();
-  const { balance: balance0 } = useTokenBalance(poolData.token0.address);
-  const { balance: balance1 } = useTokenBalance(poolData.token1.address);
+  const classes = useStyles()
+  const { onNext, onClose, depositState, updateState, poolData } = props
+  const { account, library: provider, networkId } = useConnectedWeb3Context()
+  const isMountedRef = useIsMountedRef()
+  const { balance: balance0 } = useTokenBalance(poolData.token0.address)
+  const { balance: balance1 } = useTokenBalance(poolData.token1.address)
 
   const loadEstimations = async (amount0: BigNumber, amount1: BigNumber) => {
     try {
@@ -66,30 +66,30 @@ export const InputSection = (props: IProps) => {
           amount1Estimation: ZERO,
           lpEstimation: ZERO,
           totalLiquidity: ZERO,
-        });
-        return;
+        })
+        return
       }
       const xAssetCLR = new xAssetCLRService(
         provider || DefaultReadonlyProvider,
         account,
         poolData.address
-      );
+      )
       const [amount0Estimation, amount1Estimation] =
         await xAssetCLR.calculateAmountsMintedSingleToken(
           amount0.isZero() ? 1 : 0,
           amount0.isZero() ? amount1 : amount0
-        );
+        )
       const [lpEstimation, totalLiquidity] = await Promise.all([
         xAssetCLR.getLiquidityForAmounts(amount0Estimation, amount1Estimation),
         xAssetCLR.getTotalLiquidity(),
-      ]);
+      ])
       if (isMountedRef.current === true) {
         updateState({
           amount0Estimation,
           amount1Estimation,
           lpEstimation,
           totalLiquidity,
-        });
+        })
       }
     } catch (error) {
       if (isMountedRef.current === true)
@@ -98,19 +98,19 @@ export const InputSection = (props: IProps) => {
           amount1Estimation: ZERO,
           lpEstimation: ZERO,
           totalLiquidity: ZERO,
-        });
+        })
     }
-  };
+  }
 
   const handleAmountsChange = (amount0: BigNumber, amount1: BigNumber) => {
-    updateState({ amount0, amount1 });
+    updateState({ amount0, amount1 })
     if (timer) {
-      clearTimeout(timer);
+      clearTimeout(timer)
     }
     timer = setTimeout(() => {
-      loadEstimations(amount0, amount1);
-    }, 1000);
-  };
+      loadEstimations(amount0, amount1)
+    }, 1000)
+  }
 
   return (
     <div className={classes.root}>
@@ -123,14 +123,14 @@ export const InputSection = (props: IProps) => {
           <TokenBalanceInput
             value={depositState.amount0}
             onChange={(amount0) => {
-              handleAmountsChange(amount0, ZERO);
+              handleAmountsChange(amount0, ZERO)
             }}
             token={poolData.token0}
           />
           <TokenBalanceInput
             value={depositState.amount1}
             onChange={(amount1) => {
-              handleAmountsChange(ZERO, amount1);
+              handleAmountsChange(ZERO, amount1)
             }}
             token={poolData.token1}
           />
@@ -169,5 +169,5 @@ export const InputSection = (props: IProps) => {
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}

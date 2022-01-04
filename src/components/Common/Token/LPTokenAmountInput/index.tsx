@@ -1,22 +1,22 @@
-import { BigNumber } from "@ethersproject/bignumber";
-import { makeStyles, TextField, Typography } from "@material-ui/core";
-import clsx from "clsx";
-import { TokenIcon } from "components";
-import { ethers } from "ethers";
-import { useEffect, useState } from "react";
-import useCommonStyles from "style/common";
-import { IToken } from "types";
-import { formatBigNumber } from "utils";
+import { BigNumber } from '@ethersproject/bignumber'
+import { makeStyles, TextField, Typography } from '@material-ui/core'
+import clsx from 'clsx'
+import { TokenIcon } from 'components'
+import { ethers } from 'ethers'
+import { useEffect, useState } from 'react'
+import useCommonStyles from 'style/common'
+import { IToken } from 'types'
+import { formatBigNumber } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     marginBottom: 16,
-    position: "relative",
+    position: 'relative',
     paddingTop: 10,
   },
   input: {
-    "& .Mui-focused": {
-      "& .MuiOutlinedInput-notchedOutline": {
+    '& .Mui-focused': {
+      '& .MuiOutlinedInput-notchedOutline': {
         borderColor: theme.colors.white,
         borderWidth: 1,
       },
@@ -28,25 +28,25 @@ const useStyles = makeStyles((theme) => ({
     borderColor: theme.colors.primary200,
   },
   tokens: {
-    position: "absolute",
+    position: 'absolute',
     right: 16,
     top: -6,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   tokenIcons: {
-    display: "flex",
-    alignItems: "center",
+    display: 'flex',
+    alignItems: 'center',
   },
   token: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    position: "relative",
-    "&+&": {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    position: 'relative',
+    '&+&': {
       marginLeft: -12,
-      "& img": {
+      '& img': {
         borderColor: theme.colors.primary500,
       },
     },
@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
   tokenIcon: {
     width: 36,
     height: 36,
-    borderRadius: "50%",
+    borderRadius: '50%',
     border: `4px solid ${theme.colors.transparent}`,
   },
   tokenLabel: {
@@ -67,51 +67,51 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 12,
     color: theme.colors.primary100,
     marginTop: 8,
-    textDecoration: "underline",
-    "& span": { fontWeight: 700 },
+    textDecoration: 'underline',
+    '& span': { fontWeight: 700 },
   },
-}));
+}))
 
 interface IProps {
-  className?: string;
-  tokens: IToken[];
-  lpToken: IToken;
-  value: BigNumber;
-  onChange: (_: BigNumber) => void;
-  max: BigNumber;
+  className?: string
+  tokens: IToken[]
+  lpToken: IToken
+  value: BigNumber
+  onChange: (_: BigNumber) => void
+  max: BigNumber
 }
 
 interface IState {
-  amount: string;
+  amount: string
 }
 
 export const LPTokenAmountInput = (props: IProps) => {
-  const { tokens, onChange, lpToken, max } = props;
-  const classes = useStyles();
-  const commonClasses = useCommonStyles();
+  const { tokens, onChange, lpToken, max } = props
+  const classes = useStyles()
+  const commonClasses = useCommonStyles()
 
-  const [state, setState] = useState<IState>({ amount: "" });
+  const [state, setState] = useState<IState>({ amount: '' })
   useEffect(() => {
     if (
       !ethers.utils
-        .parseUnits(state.amount || "0", lpToken.decimals)
+        .parseUnits(state.amount || '0', lpToken.decimals)
         .eq(props.value)
     ) {
       if (props.value.isZero()) {
-        setState((prev) => ({ ...prev, amount: "" }));
+        setState((prev) => ({ ...prev, amount: '' }))
       } else {
         setState((prev) => ({
           ...prev,
           amount: ethers.utils.formatUnits(
-            props.value || "0",
+            props.value || '0',
             lpToken.decimals
           ),
-        }));
+        }))
       }
     }
-  }, [props.value, state.amount, lpToken.decimals]);
+  }, [props.value, state.amount, lpToken.decimals])
 
-  const lpSymbol = tokens.map((token) => token.symbol.toUpperCase()).join("-");
+  const lpSymbol = tokens.map((token) => token.symbol.toUpperCase()).join('-')
 
   return (
     <div className={clsx(classes.root, props.className)}>
@@ -128,11 +128,11 @@ export const LPTokenAmountInput = (props: IProps) => {
         className={classes.input}
         value={state.amount}
         onChange={(e) => {
-          if (Number(e.target.value) < 0) return;
-          setState((prev) => ({ ...prev, amount: e.target.value }));
+          if (Number(e.target.value) < 0) return
+          setState((prev) => ({ ...prev, amount: e.target.value }))
           onChange(
-            ethers.utils.parseUnits(e.target.value || "0", lpToken.decimals)
-          );
+            ethers.utils.parseUnits(e.target.value || '0', lpToken.decimals)
+          )
         }}
         variant="outlined"
         fullWidth
@@ -149,15 +149,15 @@ export const LPTokenAmountInput = (props: IProps) => {
         </div>
 
         <span className={classes.tokenLabel}>
-          {tokens.map((token) => token.symbol).join("/")}
+          {tokens.map((token) => token.symbol).join('/')}
         </span>
       </div>
       <Typography className={classes.balance}>
-        Available -{" "}
+        Available -{' '}
         <span>
           {formatBigNumber(max, lpToken.decimals, 4)} {lpSymbol}
         </span>
       </Typography>
     </div>
-  );
-};
+  )
+}

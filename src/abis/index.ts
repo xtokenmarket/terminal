@@ -1,23 +1,23 @@
-import LMAbi from "./json/LM.json";
-import MulticallAbi from "./json/multicall.json";
-import xAssetCLRAbi from "./json/xAssetCLR.json";
-import StakingCLRTokenAbi from "./json/StakingCLRToken.json";
-import RewardEscrowAbi from "./json/RewardEscrow.json";
-import Univ3FactoryAbi from "./json/Univ3Factory.json";
-import Univ3PositionAbi from "./json/UniPosition.json";
-import UniPoolStateAbi from "./json/UniPoolState.json";
-import Erc20Abi from "./json/erc20.json";
+import ERC20Abi from './ERC20.json'
+import LMTerminalAbi from './LMTerminal.json'
+import MulticallAbi from './Multicall.json'
+import RewardEscrowAbi from './RewardEscrow.json'
+import StakingCLRTokenAbi from './StakingCLRToken.json'
+import UniswapV3FactoryAbi from './UniswapV3Factory.json'
+import UniswapV3PoolStateAbi from './UniswapV3PoolState.json'
+import UniswapV3PositionAbi from './UniswapV3Position.json'
+import xAssetCLRAbi from './xAssetCLR.json'
 
-const abis = {
-  LM: LMAbi,
+const Abi = {
+  ERC20: ERC20Abi,
+  LMTerminal: LMTerminalAbi,
   Multicall: MulticallAbi,
-  xAssetCLR: xAssetCLRAbi,
-  StakingCLRToken: StakingCLRTokenAbi,
   RewardEscrow: RewardEscrowAbi,
-  Univ3Factory: Univ3FactoryAbi,
-  Univ3Position: Univ3PositionAbi,
-  UniPoolState: UniPoolStateAbi,
-  Erc20: Erc20Abi,
-};
+  StakingCLRToken: StakingCLRTokenAbi,
+  UniswapV3Factory: UniswapV3FactoryAbi,
+  UniswapV3PoolState: UniswapV3PoolStateAbi,
+  UniswapV3Position: UniswapV3PositionAbi, // NonfungiblePositionManager
+  xAssetCLR: xAssetCLRAbi,
+}
 
-export default abis;
+export default Abi

@@ -1,34 +1,34 @@
-import { BigNumber, Contract, Wallet, ethers } from "ethers";
-import { Maybe } from "types";
-import abis from "abis";
+import { BigNumber, Contract, Wallet, ethers } from 'ethers'
+import { Maybe } from 'types'
+import Abi from 'abis'
 
-const rewardEscrowAbi = abis.RewardEscrow;
+const rewardEscrowAbi = Abi.RewardEscrow
 
 class RewardEscrowService {
-  provider: any;
-  contract: Contract;
+  provider: any
+  contract: Contract
 
   constructor(provider: any, signerAddress: Maybe<string>, address: string) {
-    this.provider = provider;
+    this.provider = provider
     if (signerAddress) {
-      const signer: Wallet = provider.getSigner();
+      const signer: Wallet = provider.getSigner()
       this.contract = new ethers.Contract(
         address,
         rewardEscrowAbi,
         provider
-      ).connect(signer);
+      ).connect(signer)
     } else {
-      this.contract = new ethers.Contract(address, rewardEscrowAbi, provider);
+      this.contract = new ethers.Contract(address, rewardEscrowAbi, provider)
     }
   }
 
   get address(): string {
-    return this.contract.address;
+    return this.contract.address
   }
 
   clrPoolVestingPeriod = async (addr: string): Promise<BigNumber> => {
-    return this.contract.clrPoolVestingPeriod(addr);
-  };
+    return this.contract.clrPoolVestingPeriod(addr)
+  }
 }
 
-export { RewardEscrowService };
+export { RewardEscrowService }

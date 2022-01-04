@@ -1,52 +1,52 @@
-import { makeStyles, Typography } from "@material-ui/core";
-import clsx from "clsx";
-import { MENU_ITEMS, SOCIAL_ITEMS } from "config/layout";
-import { NavLink, useHistory, matchPath } from "react-router-dom";
+import { makeStyles, Typography } from '@material-ui/core'
+import clsx from 'clsx'
+import { MENU_ITEMS, SOCIAL_ITEMS } from 'config/layout'
+import { NavLink, useHistory, matchPath } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.colors.primary,
     boxShadow: theme.colors.elevation1,
-    position: "fixed",
+    position: 'fixed',
     top: 0,
     bottom: 0,
-    transition: "all 0.5s",
-    overflowY: "auto",
+    transition: 'all 0.5s',
+    overflowY: 'auto',
     zIndex: 99,
-    "&::-webkit-scrollbar": {
+    '&::-webkit-scrollbar': {
       width: 0,
     },
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down('xs')]: {
       width: 0,
       left: 0,
     },
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up('sm')]: {
       left: 0,
       width: theme.custom.tabletNavbarWidth,
-      "&:hover": {
+      '&:hover': {
         width: theme.custom.desktopNavbarWidth,
       },
     },
-    [theme.breakpoints.up("lg")]: {
+    [theme.breakpoints.up('lg')]: {
       left: 0,
       width: theme.custom.desktopNavbarWidth,
     },
   },
   content: {
-    height: "100%",
+    height: '100%',
     minHeight: 650,
-    overflowX: "hidden",
-    display: "flex",
-    flexDirection: "column",
+    overflowX: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
     padding: 20,
   },
   header: {
     padding: 4,
-    margin: "20px 0",
+    margin: '20px 0',
   },
   logoWrapper: {
-    display: "flex",
-    alignItems: "center",
+    display: 'flex',
+    alignItems: 'center',
   },
   logo: {
     width: 32,
@@ -60,69 +60,69 @@ const useStyles = makeStyles((theme) => ({
   body: { flex: 1, paddingTop: 32 },
   footer: {},
   item: {
-    "& + &": {
+    '& + &': {
       marginTop: 16,
     },
-    display: "flex",
-    alignItems: "center",
+    display: 'flex',
+    alignItems: 'center',
 
-    textDecoration: "none",
+    textDecoration: 'none',
 
-    "& .menu-item-icon-wrapper": {
+    '& .menu-item-icon-wrapper': {
       borderRadius: 4,
       width: 40,
       minWidth: 40,
       height: 40,
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
       backgroundColor: theme.colors.primary300,
       color: theme.colors.purple0,
-      transition: "all 0.4s",
-      "& svg": {
+      transition: 'all 0.4s',
+      '& svg': {
         width: 20,
         height: 20,
-        "& g": { opacity: 0.6 },
+        '& g': { opacity: 0.6 },
       },
     },
 
-    "& span": {
-      textTransform: "uppercase",
+    '& span': {
+      textTransform: 'uppercase',
       marginLeft: 20,
       color: theme.colors.purple0,
-      transition: "all 0.4s",
+      transition: 'all 0.4s',
     },
 
-    "&:hover": {
-      "& .menu-item-icon-wrapper": {
+    '&:hover': {
+      '& .menu-item-icon-wrapper': {
         backgroundColor: theme.colors.primary400,
         color: theme.colors.white,
-        "& svg": {
-          "& g": { opacity: 1 },
+        '& svg': {
+          '& g': { opacity: 1 },
         },
       },
-      "& span": {
+      '& span': {
         color: theme.colors.white,
       },
     },
-    "&.active": {
-      "& .menu-item-icon-wrapper": {
+    '&.active': {
+      '& .menu-item-icon-wrapper': {
         backgroundColor: theme.colors.primary400,
         color: theme.colors.white,
-        "& svg": {
-          "& g": { opacity: 1 },
+        '& svg': {
+          '& g': { opacity: 1 },
         },
       },
-      "& span": {
+      '& span': {
         color: theme.colors.white,
       },
     },
   },
-}));
+}))
 
 export const Sidebar = () => {
-  const classes = useStyles();
-  const history = useHistory();
+  const classes = useStyles()
+  const history = useHistory()
 
   return (
     <>
@@ -136,7 +136,7 @@ export const Sidebar = () => {
           </div>
           <div className={classes.body}>
             {MENU_ITEMS.map((item) => {
-              const Icon = item.icon;
+              const Icon = item.icon
 
               return (
                 <NavLink
@@ -154,12 +154,12 @@ export const Sidebar = () => {
                     <Icon />
                   </div>
                 </NavLink>
-              );
+              )
             })}
           </div>
           <div className={classes.footer}>
             {SOCIAL_ITEMS.map((item) => {
-              const Icon = item.icon;
+              const Icon = item.icon
 
               return (
                 <a
@@ -173,11 +173,11 @@ export const Sidebar = () => {
                     <Icon />
                   </div>
                 </a>
-              );
+              )
             })}
           </div>
         </div>
       </div>
     </>
-  );
-};
+  )
+}

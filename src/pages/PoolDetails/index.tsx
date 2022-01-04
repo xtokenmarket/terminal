@@ -1,30 +1,30 @@
-import { PageWrapper, PageHeader, PageContent, SimpleLoader } from "components";
-import { useTerminalPool } from "helpers";
-import { useEffect } from "react";
-import { useHistory, useParams } from "react-router";
-import { isAddress } from "utils/tools";
-import { Content } from "./components";
+import { PageWrapper, PageHeader, PageContent, SimpleLoader } from 'components'
+import { useTerminalPool } from 'helpers'
+import { useEffect } from 'react'
+import { useHistory, useParams } from 'react-router'
+import { isAddress } from 'utils/tools'
+import { Content } from './components'
 
 const PoolDetails = () => {
-  const history = useHistory();
-  const params = useParams();
+  const history = useHistory()
+  const params = useParams()
 
-  const poolAddress = (params as any).id;
+  const poolAddress = (params as any).id
 
-  const { pool: poolData, loading, loadInfo } = useTerminalPool(poolAddress);
+  const { pool: poolData, loading, loadInfo } = useTerminalPool(poolAddress)
 
   const onBack = () => {
-    history.push("/terminal/discover");
-  };
+    history.push('/terminal/discover')
+  }
 
   useEffect(() => {
     if (!isAddress(poolAddress)) {
-      onBack();
+      onBack()
     }
     if (!loading && !poolData) {
-      onBack();
+      onBack()
     }
-  }, [poolAddress, loading, poolData]);
+  }, [poolAddress, loading, poolData])
 
   return (
     <PageWrapper>
@@ -34,14 +34,11 @@ const PoolDetails = () => {
           (!poolData ? (
             <SimpleLoader />
           ) : (
-            <Content
-              poolData={poolData}
-              reloadTerminalPool={loadInfo}
-            />
+            <Content poolData={poolData} reloadTerminalPool={loadInfo} />
           ))}
       </PageContent>
     </PageWrapper>
-  );
-};
+  )
+}
 
-export default PoolDetails;
+export default PoolDetails

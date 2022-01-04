@@ -1,19 +1,19 @@
-import { Button, makeStyles } from "@material-ui/core";
-import { WarningInfo } from "..";
+import { Button, makeStyles } from '@material-ui/core'
+import { WarningInfo } from '..'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: 32,
   },
   button: { height: 48, marginTop: 24 },
-}));
+}))
 
 interface IProps {
-  onNext: () => void;
+  onNext: () => void
 }
 
 export const InitSection = (props: IProps) => {
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <div className={classes.root}>
@@ -32,5 +32,5 @@ export const InitSection = (props: IProps) => {
         CONTINUE
       </Button>
     </div>
-  );
-};
+  )
+}

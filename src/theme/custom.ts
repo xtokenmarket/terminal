@@ -7,6 +7,6 @@ const custom = {
   ml: 1024,
   xss: 500,
   xsss: 420,
-};
+}
 
-export default custom;
+export default custom
