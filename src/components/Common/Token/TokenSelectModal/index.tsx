@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import clsx from 'clsx'
 import {
   makeStyles,
   Modal,
@@ -6,28 +6,28 @@ import {
   IconButton,
   TextField,
   InputAdornment,
-} from "@material-ui/core";
-import { CloseOutlined } from "@material-ui/icons";
-import SearchIcon from "@material-ui/icons/Search";
+} from '@material-ui/core'
+import { CloseOutlined } from '@material-ui/icons'
+import SearchIcon from '@material-ui/icons/Search'
 
-import React from "react";
-import { IToken } from "types";
-import { CommonTokens } from "./CommonTokens";
-import { TokensList } from "./TokensList";
+import React from 'react'
+import { IToken } from 'types'
+import { CommonTokens } from './CommonTokens'
+import { TokensList } from './TokensList'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   content: {
-    position: "relative",
-    outline: "none",
-    userSelect: "none",
+    position: 'relative',
+    outline: 'none',
+    userSelect: 'none',
     width: 700,
-    maxWidth: "90vw",
-    maxHeight: "80vh",
+    maxWidth: '90vw',
+    maxHeight: '80vh',
     backgroundColor: theme.colors.primary500,
   },
   topSection: {
@@ -39,35 +39,35 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
   },
   closeButton: {
-    position: "absolute",
+    position: 'absolute',
     padding: 12,
     top: 0,
     right: 0,
     color: theme.colors.purple0,
-    "&:hover": {
-      background: "none",
-      color: "white",
+    '&:hover': {
+      background: 'none',
+      color: 'white',
     },
   },
   search: {
-    "& .MuiInput-root": {
+    '& .MuiInput-root': {
       border: `1px solid ${theme.colors.purple0}`,
       borderRadius: 4,
       padding: theme.spacing(1),
-      transition: "all 0.2s ease",
-      "&.Mui-focused": {
+      transition: 'all 0.2s ease',
+      '&.Mui-focused': {
         border: `1px solid ${theme.colors.white}`,
-        "& .searchIcon": {
-          color: "white",
-        }
+        '& .searchIcon': {
+          color: 'white',
+        },
       },
     },
-    "& .searchIcon": {
+    '& .searchIcon': {
       color: theme.colors.eighth,
-      transition: "all 0.2s ease",
+      transition: 'all 0.2s ease',
     },
-    "& input::placeholder": {
-      color: "rgba(255, 255, 255, 0.2)",
+    '& input::placeholder': {
+      color: 'rgba(255, 255, 255, 0.2)',
     },
   },
   commonLabel: {
@@ -76,12 +76,12 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 10,
     margin: theme.spacing(3, 0, 1, 0),
   },
-}));
+}))
 
 interface IProps {
-  onClose: () => void;
-  onSelect: (_: IToken) => void;
-  open: boolean;
+  onClose: () => void
+  onSelect: (_: IToken) => void
+  open: boolean
 }
 
 export const TokenSelectModal: React.FC<IProps> = ({
@@ -89,7 +89,7 @@ export const TokenSelectModal: React.FC<IProps> = ({
   onClose,
   open,
 }) => {
-  const cl = useStyles();
+  const cl = useStyles()
   return (
     <Modal className={cl.modal} open={open} onClose={onClose}>
       <div className={cl.content}>
@@ -114,14 +114,12 @@ export const TokenSelectModal: React.FC<IProps> = ({
               color="primary"
               placeholder="Search by token name or paste address"
             />
-            <Typography className={cl.commonLabel}>
-              COMMON BASES
-            </Typography>
+            <Typography className={cl.commonLabel}>COMMON BASES</Typography>
             <CommonTokens onSelectToken={onSelect} />
           </div>
         </div>
         <TokensList onSelectToken={onSelect} />
       </div>
     </Modal>
-  );
-};
+  )
+}

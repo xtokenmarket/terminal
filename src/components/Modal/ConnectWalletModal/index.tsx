@@ -3,108 +3,108 @@ import {
   CircularProgress,
   Modal,
   Typography,
-} from "@material-ui/core";
+} from '@material-ui/core'
 
-import CloseIcon from "@material-ui/icons/Close";
+import CloseIcon from '@material-ui/icons/Close'
 
-import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
-import { useWeb3React } from "@web3-react/core";
-import { setupNetwork, supportedNetworkIds } from "config/networks";
-import { ConnectWalletItem } from "components/Button";
-import { STORAGE_KEY_CONNECTOR, WALLET_ICONS } from "config/constants";
-import { useSnackbar } from "notistack";
-import React, { useCallback, useEffect } from "react";
-import { ConnectorNames } from "utils/enums";
-import connectors from "utils/connectors";
-import { getLogger } from "utils/logger";
-import { transparentize } from "polished";
+import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
+import { useWeb3React } from '@web3-react/core'
+import { setupNetwork, supportedNetworkIds } from 'config/networks'
+import { ConnectWalletItem } from 'components/Button'
+import { STORAGE_KEY_CONNECTOR, WALLET_ICONS } from 'config/constants'
+import { useSnackbar } from 'notistack'
+import React, { useCallback, useEffect } from 'react'
+import { ConnectorNames } from 'utils/enums'
+import connectors from 'utils/connectors'
+import { getLogger } from 'utils/logger'
+import { transparentize } from 'polished'
 
-const logger = getLogger("ConnectWalletModal::Index");
+const logger = getLogger('ConnectWalletModal::Index')
 
 const useStyles = makeStyles((theme) => ({
   modal: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   content: {
-    outline: "none",
+    outline: 'none',
     backgroundColor: theme.colors.fifth,
     width: 400,
     borderRadius: theme.spacing(0.5),
     padding: `${theme.spacing(2)}px 0`,
     userSelect: `none`,
-    position: "relative",
+    position: 'relative',
     border: `1px solid ${transparentize(0.9, theme.colors.fifth)}`,
   },
   title: {
     color: theme.colors.white,
     padding: `0 ${theme.spacing(2)}px`,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     fontSize: theme.spacing(2.5),
     marginBottom: theme.spacing(2),
   },
   bottom: {
     marginTop: theme.spacing(2),
     padding: `0 ${theme.spacing(2)}px`,
-    textAlign: "center",
-    "& > * + *": { marginTop: theme.spacing(2) },
+    textAlign: 'center',
+    '& > * + *': { marginTop: theme.spacing(2) },
   },
   closeButton: {
-    position: "absolute",
+    position: 'absolute',
     top: 21,
     right: 21,
     width: 24,
     height: 24,
     color: theme.colors.white,
-    cursor: "pointer",
-    "& svg": { width: 24, height: 24 },
+    cursor: 'pointer',
+    '& svg': { width: 24, height: 24 },
   },
   connectingText: {
     color: theme.colors.white,
   },
-}));
+}))
 
 interface IProps {
-  visible: boolean;
-  onClose: () => void;
+  visible: boolean
+  onClose: () => void
 }
 
 export const ConnectWalletModal = (props: IProps) => {
-  const context = useWeb3React();
-  const classes = useStyles();
-  const { onClose } = props;
-  const { enqueueSnackbar } = useSnackbar();
+  const context = useWeb3React()
+  const classes = useStyles()
+  const { onClose } = props
+  const { enqueueSnackbar } = useSnackbar()
 
   // handle logic to recognize the connector currently being activated
-  const [activatingConnector, setActivatingConnector] = React.useState<any>();
+  const [activatingConnector, setActivatingConnector] = React.useState<any>()
 
   useEffect(() => {
     if (activatingConnector && activatingConnector === context.connector) {
-      setActivatingConnector(undefined);
-      onClose();
+      setActivatingConnector(undefined)
+      onClose()
     }
     // eslint-disable-next-line
-  }, [activatingConnector, context.connector]);
+  }, [activatingConnector, context.connector])
 
   if (context.error) {
-    localStorage.removeItem(STORAGE_KEY_CONNECTOR);
-    context.deactivate();
-    onClose();
-    logger.error("Error in web3 context", context.error);
+    localStorage.removeItem(STORAGE_KEY_CONNECTOR)
+    context.deactivate()
+    onClose()
+    logger.error('Error in web3 context', context.error)
   }
 
-  const isMetamaskEnabled = "ethereum" in window || "web3" in window;
-  const isTrustWalletEnabled = isMetamaskEnabled && window.ethereum.isTrust;
+  const isMetamaskEnabled = 'ethereum' in window || 'web3' in window
+  const isTrustWalletEnabled = isMetamaskEnabled && window.ethereum.isTrust
 
   const onClick = async (wallet: ConnectorNames) => {
-    const currentConnector = connectors[wallet];
+    const currentConnector = connectors[wallet]
     if (wallet === ConnectorNames.Injected) {
-      setActivatingConnector(currentConnector);
+      setActivatingConnector(currentConnector)
     } else if (wallet === ConnectorNames.WalletConnect) {
-      setActivatingConnector(currentConnector);
+      setActivatingConnector(currentConnector)
     } else if (wallet === ConnectorNames.TrustWallet) {
-      setActivatingConnector(currentConnector);
+      setActivatingConnector(currentConnector)
     }
 
     if (wallet) {
@@ -112,55 +112,55 @@ export const ConnectWalletModal = (props: IProps) => {
         currentConnector instanceof WalletConnectConnector &&
         currentConnector.walletConnectProvider?.wc?.uri
       ) {
-        currentConnector.walletConnectProvider = undefined;
+        currentConnector.walletConnectProvider = undefined
       }
       try {
         if (window.ethereum) {
           const chainId = await window.ethereum.request({
-            method: "eth_chainId",
-          });
+            method: 'eth_chainId',
+          })
 
           if (!supportedNetworkIds.includes(Number(chainId) as any)) {
             if (isTrustWalletEnabled) {
-              enqueueSnackbar("Please switch to Binance Network", {
-                variant: "error",
-              });
-              onClose();
-              return;
+              enqueueSnackbar('Please switch to Binance Network', {
+                variant: 'error',
+              })
+              onClose()
+              return
             }
-            const hasSetup = await setupNetwork();
+            const hasSetup = await setupNetwork()
 
             if (!hasSetup) {
-              onClose();
-              return;
+              onClose()
+              return
             }
           }
         }
-        context.activate(currentConnector);
-        localStorage.setItem(STORAGE_KEY_CONNECTOR, wallet);
-        onClose();
+        context.activate(currentConnector)
+        localStorage.setItem(STORAGE_KEY_CONNECTOR, wallet)
+        onClose()
       } catch (error) {
-        onClose();
+        onClose()
       }
     }
-  };
-
-  const isConnectingToWallet = !!activatingConnector;
-  let connectingText = `Connecting to wallet`;
-  const connectingToMetamask = activatingConnector === connectors.injected;
-
-  if (connectingToMetamask) {
-    connectingText = "Waiting for Approval on Metamask";
   }
 
-  const disableMetamask: boolean = !isMetamaskEnabled || false;
+  const isConnectingToWallet = !!activatingConnector
+  let connectingText = `Connecting to wallet`
+  const connectingToMetamask = activatingConnector === connectors.injected
+
+  if (connectingToMetamask) {
+    connectingText = 'Waiting for Approval on Metamask'
+  }
+
+  const disableMetamask: boolean = !isMetamaskEnabled || false
 
   const onClickCloseButton = () => {
     if (isConnectingToWallet) {
-      return;
+      return
     }
-    onClose();
-  };
+    onClose()
+  }
 
   return (
     <>
@@ -177,7 +177,7 @@ export const ConnectWalletModal = (props: IProps) => {
             </span>
           )}
           <Typography align="center" className={classes.title} component="h3">
-            {connectingToMetamask ? "Connecting..." : "Connect"}
+            {connectingToMetamask ? 'Connecting...' : 'Connect'}
           </Typography>
           <div className={classes.bottom}>
             {isConnectingToWallet ? (
@@ -193,7 +193,7 @@ export const ConnectWalletModal = (props: IProps) => {
                   disabled={disableMetamask}
                   icon={WALLET_ICONS[ConnectorNames.Injected]}
                   onClick={() => {
-                    onClick(ConnectorNames.Injected);
+                    onClick(ConnectorNames.Injected)
                   }}
                   text="Metamask"
                 />
@@ -201,7 +201,7 @@ export const ConnectWalletModal = (props: IProps) => {
                   disabled={disableMetamask}
                   icon={WALLET_ICONS[ConnectorNames.TrustWallet]}
                   onClick={() => {
-                    onClick(ConnectorNames.TrustWallet);
+                    onClick(ConnectorNames.TrustWallet)
                   }}
                   text="Trust Wallet"
                 />
@@ -209,7 +209,7 @@ export const ConnectWalletModal = (props: IProps) => {
                   disabled={disableMetamask}
                   icon={WALLET_ICONS[ConnectorNames.WalletConnect]}
                   onClick={() => {
-                    onClick(ConnectorNames.WalletConnect);
+                    onClick(ConnectorNames.WalletConnect)
                   }}
                   text="Wallet Connect"
                 />
@@ -219,5 +219,5 @@ export const ConnectWalletModal = (props: IProps) => {
         </div>
       </Modal>
     </>
-  );
-};
+  )
+}

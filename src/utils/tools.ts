@@ -1,4 +1,4 @@
-import { getAddress } from "ethers/lib/utils"
+import { getAddress } from 'ethers/lib/utils'
 
 export const isAddress = (address: string): boolean => {
   try {
@@ -9,7 +9,10 @@ export const isAddress = (address: string): boolean => {
   return true
 }
 
-export const isContract = async (provider: any, address: string): Promise<boolean> => {
+export const isContract = async (
+  provider: any,
+  address: string
+): Promise<boolean> => {
   const code = await provider.getCode(address)
-  return code && code !== "0x"
+  return code && code !== '0x'
 }

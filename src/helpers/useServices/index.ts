@@ -1,42 +1,42 @@
-import { DefaultReadonlyProvider, getContractAddress } from "config/networks";
-import { useConnectedWeb3Context } from "contexts";
-import { useMemo } from "react";
+import { DefaultReadonlyProvider, getContractAddress } from 'config/networks'
+import { useConnectedWeb3Context } from 'contexts'
+import { useMemo } from 'react'
 import {
   MulticallService,
   RewardEscrowService,
   UniPositionService,
   LMService,
-} from "services";
+} from 'services'
 
 export const useServices = () => {
-  const { account, library: provider, networkId } = useConnectedWeb3Context();
+  const { account, library: provider, networkId } = useConnectedWeb3Context()
 
   const services = useMemo(() => {
     const multicall = new MulticallService(
       provider || DefaultReadonlyProvider,
       account,
-      getContractAddress("multicall", networkId)
-    );
+      getContractAddress('multicall', networkId)
+    )
 
     const rewardEscrow = new RewardEscrowService(
       provider || DefaultReadonlyProvider,
       account,
-      getContractAddress("rewardEscrow", networkId)
-    );
+      getContractAddress('rewardEscrow', networkId)
+    )
 
     const lmService = new LMService(
       provider || DefaultReadonlyProvider,
       account,
-      getContractAddress("LM", networkId)
-    );
+      getContractAddress('LM', networkId)
+    )
     const uniPositionService = new UniPositionService(
       provider || DefaultReadonlyProvider,
       account,
-      getContractAddress("uniPositionManager", networkId)
-    );
+      getContractAddress('uniPositionManager', networkId)
+    )
 
-    return { multicall, rewardEscrow, lmService, uniPositionService };
-  }, [networkId]);
+    return { multicall, rewardEscrow, lmService, uniPositionService }
+  }, [networkId])
 
-  return services;
-};
+  return services
+}

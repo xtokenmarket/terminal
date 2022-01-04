@@ -1,48 +1,48 @@
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from '@material-ui/core'
 
-import { Sidebar, Header } from "./components";
-import { BottomBar } from "./components/BottomBar";
+import { Sidebar, Header } from './components'
+import { BottomBar } from './components/BottomBar'
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
-    backgroundImage: "url(/assets/imgs/bg.png)",
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "right",
-    backgroundSize: "contain",
+    backgroundImage: 'url(/assets/imgs/bg.png)',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'right',
+    backgroundSize: 'contain',
   },
   content: {
-    padding: "0 24px",
+    padding: '0 24px',
     paddingTop: theme.custom.appHeaderHeight * 1.2,
     paddingBottom: 16,
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down('xs')]: {
       paddingLeft: 0,
       paddingRight: 0,
       paddingBottom: 0,
       paddingTop: theme.custom.appHeaderHeight * 0.8,
     },
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up('sm')]: {
       paddingRight: 36,
       paddingLeft: `calc(${theme.custom.tabletNavbarWidth}px + 36px)`,
     },
-    [theme.breakpoints.up("lg")]: {
+    [theme.breakpoints.up('lg')]: {
       paddingRight: 48,
       paddingLeft: `calc(${theme.custom.desktopNavbarWidth}px + 48px)`,
     },
   },
   childrenWrapper: {
-    padding: "6px 0",
-    [theme.breakpoints.down("xs")]: {
+    padding: '6px 0',
+    [theme.breakpoints.down('xs')]: {
       padding: 0,
     },
   },
-}));
+}))
 
 interface IProps {
-  children?: React.ReactNode[] | React.ReactNode;
+  children?: React.ReactNode[] | React.ReactNode
 }
 
 export const MainLayout = (props: IProps) => {
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <div className={classes.root}>
@@ -53,5 +53,5 @@ export const MainLayout = (props: IProps) => {
       </div>
       <BottomBar />
     </div>
-  );
-};
+  )
+}

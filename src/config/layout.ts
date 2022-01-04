@@ -1,35 +1,35 @@
-import { SvgIcons } from "./constants";
+import { SvgIcons } from './constants'
 
 export const MENU_ITEMS = [
   // { id: "home", label: "home", icon: SvgIcons.home, href: "/home" },
-  { id: "market", label: "market", icon: SvgIcons.market, href: "/market" },
-  { id: "cafe", label: "cafe", icon: SvgIcons.cafe, href: "/cafe" },
-  { id: "vote", label: "vote", icon: SvgIcons.vote, href: "/vote" },
+  { id: 'market', label: 'market', icon: SvgIcons.market, href: '/market' },
+  { id: 'cafe', label: 'cafe', icon: SvgIcons.cafe, href: '/cafe' },
+  { id: 'vote', label: 'vote', icon: SvgIcons.vote, href: '/vote' },
   {
-    id: "terminal",
-    label: "terminal",
+    id: 'terminal',
+    label: 'terminal',
     icon: SvgIcons.terminal,
-    href: "/terminal",
+    href: '/terminal',
   },
-];
+]
 
 export const SOCIAL_ITEMS = [
   {
-    id: "github",
-    label: "github",
+    id: 'github',
+    label: 'github',
     icon: SvgIcons.github,
-    href: "https://github.com/",
+    href: 'https://github.com/',
   },
   {
-    id: "twitter",
-    label: "twitter",
+    id: 'twitter',
+    label: 'twitter',
     icon: SvgIcons.twitter,
-    href: "https://twitter.com/",
+    href: 'https://twitter.com/',
   },
   {
-    id: "discord",
-    label: "discord",
+    id: 'discord',
+    label: 'discord',
     icon: SvgIcons.discord,
-    href: "https://discord.com/",
+    href: 'https://discord.com/',
   },
-];
+]

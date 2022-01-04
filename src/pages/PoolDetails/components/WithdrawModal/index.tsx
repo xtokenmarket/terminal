@@ -1,65 +1,65 @@
-import clsx from "clsx";
-import { makeStyles, Modal } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
-import { EWithdrawStep } from "utils/enums";
-import { WithdrawSection, InputSection, SuccessSection } from "./components";
-import { ITerminalPool } from "types";
-import { BigNumber } from "@ethersproject/bignumber";
-import { ZERO } from "utils/number";
-import useCommonStyles from "style/common";
-import { useConnectedWeb3Context } from "contexts";
+import clsx from 'clsx'
+import { makeStyles, Modal } from '@material-ui/core'
+import React, { useEffect, useState } from 'react'
+import { EWithdrawStep } from 'utils/enums'
+import { WithdrawSection, InputSection, SuccessSection } from './components'
+import { ITerminalPool } from 'types'
+import { BigNumber } from '@ethersproject/bignumber'
+import { ZERO } from 'utils/number'
+import useCommonStyles from 'style/common'
+import { useConnectedWeb3Context } from 'contexts'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    position: "absolute",
-    width: "90vw",
+    position: 'absolute',
+    width: '90vw',
     maxWidth: 600,
     backgroundColor: theme.colors.primary500,
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    outline: "none",
-    maxHeight: "80vh",
-    userSelect: "none",
-    overflowY: "auto",
-    "&.transparent": {
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    outline: 'none',
+    maxHeight: '80vh',
+    userSelect: 'none',
+    overflowY: 'auto',
+    '&.transparent': {
       backgroundColor: theme.colors.transparent,
     },
   },
-}));
+}))
 
 interface IProps {
-  className?: string;
-  onClose: () => void;
-  poolData: ITerminalPool;
-  onSuccess: () => Promise<void>;
+  className?: string
+  onClose: () => void
+  poolData: ITerminalPool
+  onSuccess: () => Promise<void>
 }
 
 export interface IWithdrawState {
-  step: EWithdrawStep;
-  lpInput: BigNumber;
-  amount0Estimation: BigNumber;
-  amount1Estimation: BigNumber;
-  totalLiquidity: BigNumber;
+  step: EWithdrawStep
+  lpInput: BigNumber
+  amount0Estimation: BigNumber
+  amount1Estimation: BigNumber
+  totalLiquidity: BigNumber
   //
-  userLP: BigNumber;
+  userLP: BigNumber
   // used
-  amount0Withdrawn: BigNumber;
-  amount1Withdrawn: BigNumber;
-  liquidityWithdrawn: BigNumber;
-  claimedEarn: BigNumber[];
+  amount0Withdrawn: BigNumber
+  amount1Withdrawn: BigNumber
+  liquidityWithdrawn: BigNumber
+  claimedEarn: BigNumber[]
   //
-  earned: BigNumber[];
+  earned: BigNumber[]
   //
-  withdrawOnly: boolean;
+  withdrawOnly: boolean
 }
 
 export const WithdrawModal = (props: IProps) => {
-  const classes = useStyles();
-  const commonClasses = useCommonStyles();
-  const { account } = useConnectedWeb3Context();
+  const classes = useStyles()
+  const commonClasses = useCommonStyles()
+  const { account } = useConnectedWeb3Context()
 
-  const { onClose } = props;
+  const { onClose } = props
   const [state, setState] = useState<IWithdrawState>({
     step: EWithdrawStep.Input,
     lpInput: ZERO,
@@ -73,30 +73,30 @@ export const WithdrawModal = (props: IProps) => {
     earned: [],
     claimedEarn: [],
     withdrawOnly: false,
-  });
+  })
 
   useEffect(() => {
     if (!account) {
-      onClose();
+      onClose()
     }
-  }, [account]);
+  }, [account])
 
   const updateState = (e: any) => {
-    setState((prev) => ({ ...prev, ...e }));
-  };
+    setState((prev) => ({ ...prev, ...e }))
+  }
 
   const onNextStep = () => {
     switch (state.step) {
       case EWithdrawStep.Input:
-        setState((prev) => ({ ...prev, step: EWithdrawStep.Withdraw }));
-        break;
+        setState((prev) => ({ ...prev, step: EWithdrawStep.Withdraw }))
+        break
       case EWithdrawStep.Withdraw:
-        setState((prev) => ({ ...prev, step: EWithdrawStep.Success }));
-        break;
+        setState((prev) => ({ ...prev, step: EWithdrawStep.Success }))
+        break
       default:
-        onClose();
+        onClose()
     }
-  };
+  }
 
   const renderContent = () => {
     switch (state.step) {
@@ -109,7 +109,7 @@ export const WithdrawModal = (props: IProps) => {
             onClose={props.onClose}
             poolData={props.poolData}
           />
-        );
+        )
       case EWithdrawStep.Withdraw:
         return (
           <WithdrawSection
@@ -118,7 +118,7 @@ export const WithdrawModal = (props: IProps) => {
             poolData={props.poolData}
             updateState={updateState}
           />
-        );
+        )
       default:
         return (
           <SuccessSection
@@ -126,9 +126,9 @@ export const WithdrawModal = (props: IProps) => {
             withdrawState={state}
             poolData={props.poolData}
           />
-        );
+        )
     }
-  };
+  }
 
   return (
     <Modal open>
@@ -137,11 +137,11 @@ export const WithdrawModal = (props: IProps) => {
           classes.root,
           commonClasses.scroll,
           props.className,
-          state.step === EWithdrawStep.Success ? "transparent" : ""
+          state.step === EWithdrawStep.Success ? 'transparent' : ''
         )}
       >
         {renderContent()}
       </div>
     </Modal>
-  );
-};
+  )
+}

@@ -1,11 +1,11 @@
-import { Button, makeStyles, Typography } from "@material-ui/core";
-import { ITerminalPool } from "types";
+import { Button, makeStyles, Typography } from '@material-ui/core'
+import { ITerminalPool } from 'types'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: 24,
     backgroundColor: theme.colors.seventh,
-    padding: "16px 24px",
+    padding: '16px 24px',
     borderRadius: 4,
   },
   title: {
@@ -16,40 +16,40 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {},
   tableWrapper: {
-    "& table": {
-      width: "100%",
-      borderCollapse: "collapse",
-      "& th": {
+    '& table': {
+      width: '100%',
+      borderCollapse: 'collapse',
+      '& th': {
         color: theme.colors.purple0,
         fontSize: 11,
-        padding: "8px 0",
-        textAlign: "right",
-        "&:first-child": { textAlign: "left" },
-        [theme.breakpoints.down("xs")]: {
-          "&:nth-child(3)": {
-            display: "none",
+        padding: '8px 0',
+        textAlign: 'right',
+        '&:first-child': { textAlign: 'left' },
+        [theme.breakpoints.down('xs')]: {
+          '&:nth-child(3)': {
+            display: 'none',
           },
         },
-        "&+&": {
+        '&+&': {
           paddingLeft: 4,
         },
       },
-      "& td": {
-        padding: "11px 0",
+      '& td': {
+        padding: '11px 0',
         color: theme.colors.white,
         fontSize: 14,
         borderTop: `1px solid ${theme.colors.primary200}`,
-        textAlign: "right",
-        "&:first-child": { textAlign: "left" },
-        "& span": {
+        textAlign: 'right',
+        '&:first-child': { textAlign: 'left' },
+        '& span': {
           fontWeight: 700,
         },
-        [theme.breakpoints.down("xs")]: {
-          "&:nth-child(3)": {
-            display: "none",
+        [theme.breakpoints.down('xs')]: {
+          '&:nth-child(3)': {
+            display: 'none',
           },
         },
-        "&+&": {
+        '&+&': {
           paddingLeft: 4,
         },
       },
@@ -59,23 +59,23 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 12,
     height: 40,
   },
-}));
+}))
 
 const MOCK = [
-  { action: "Deposit", value: "34.4002", time: "11 mins ago", txId: "123" },
-  { action: "Deposit", value: "34.4002", time: "11 mins ago", txId: "234" },
-  { action: "Deposit", value: "34.4002", time: "11 mins ago", txId: "1234" },
-  { action: "Deposit", value: "34.4002", time: "11 mins ago", txId: "253" },
-  { action: "Deposit", value: "34.4002", time: "11 mins ago", txId: "222" },
-];
+  { action: 'Deposit', value: '34.4002', time: '11 mins ago', txId: '123' },
+  { action: 'Deposit', value: '34.4002', time: '11 mins ago', txId: '234' },
+  { action: 'Deposit', value: '34.4002', time: '11 mins ago', txId: '1234' },
+  { action: 'Deposit', value: '34.4002', time: '11 mins ago', txId: '253' },
+  { action: 'Deposit', value: '34.4002', time: '11 mins ago', txId: '222' },
+]
 
 interface IProps {
-  pool: ITerminalPool;
+  pool: ITerminalPool
 }
 
 export const HistorySection = (props: IProps) => {
-  const classes = useStyles();
-  const { pool } = props;
+  const classes = useStyles()
+  const { pool } = props
 
   return (
     <div className={classes.root}>
@@ -120,5 +120,5 @@ export const HistorySection = (props: IProps) => {
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}

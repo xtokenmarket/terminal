@@ -1,129 +1,127 @@
-import { BigNumber, utils } from "ethers";
+import { BigNumber, utils } from 'ethers'
 
-const { formatUnits } = utils;
+const { formatUnits } = utils
 
 export const shortenAddress = (address: string) => {
-  return `${address.substring(0, 6)}...${address.substring(
-    address.length - 4
-  )}`;
-};
+  return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`
+}
 
 export const formatBigNumber = (
   value: BigNumber,
   decimals: number,
   precision = 2
-): string => Number(formatUnits(value, decimals)).toFixed(precision);
+): string => Number(formatUnits(value, decimals)).toFixed(precision)
 
 export const numberWithCommas = (x: number | string) => {
-  const splits = x.toString().split(".");
-  const first = splits[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  if (splits.length === 1) return first;
-  return [first, splits[1]].join(".");
-};
+  const splits = x.toString().split('.')
+  const first = splits[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+  if (splits.length === 1) return first
+  return [first, splits[1]].join('.')
+}
 
 export const formatToShortNumber = (number: string, decimals = 2): string => {
   if (number.length < 1) {
-    return "0";
+    return '0'
   }
 
-  const units = ["", "K", "M", "B", "T"];
-  let unitIndex = 0;
-  let rNumber = parseFloat(number.split(",").join(""));
+  const units = ['', 'K', 'M', 'B', 'T']
+  let unitIndex = 0
+  let rNumber = parseFloat(number.split(',').join(''))
 
   while (rNumber >= 1000 && unitIndex < 4) {
-    unitIndex += 1;
-    rNumber = rNumber / 1000;
+    unitIndex += 1
+    rNumber = rNumber / 1000
   }
 
-  return `${parseFloat(rNumber.toFixed(decimals))}${units[unitIndex]}`;
-};
+  return `${parseFloat(rNumber.toFixed(decimals))}${units[unitIndex]}`
+}
 
 export const hideInsignificantZeros = (x: string) => {
-  const splits = x.toString().split(".");
+  const splits = x.toString().split('.')
   if (splits.length === 1) {
-    return x;
+    return x
   }
-  let right = splits[1];
+  let right = splits[1]
 
-  while (right.length > 0 && right.charAt(right.length - 1) === "0") {
-    right = right.substr(0, right.length - 1);
+  while (right.length > 0 && right.charAt(right.length - 1) === '0') {
+    right = right.substr(0, right.length - 1)
   }
   if (right.length === 0) {
-    return splits[0];
+    return splits[0]
   }
-  return [splits[0], right].join(".");
-};
+  return [splits[0], right].join('.')
+}
 
 export const getTimeDurationUnitInfo = (
   secs: number
 ): { unit: number; unitStr: string } => {
   if (secs < 60) {
-    return { unit: 1, unitStr: "sec" };
+    return { unit: 1, unitStr: 'sec' }
   }
-  const mins = Math.floor(secs / 60);
+  const mins = Math.floor(secs / 60)
   if (mins < 60) {
-    return { unit: 60, unitStr: "min" };
+    return { unit: 60, unitStr: 'min' }
   }
-  const hours = Math.floor(mins / 60);
+  const hours = Math.floor(mins / 60)
   if (hours < 24) {
-    return { unit: 3600, unitStr: "hour" };
+    return { unit: 3600, unitStr: 'hour' }
   }
-  const days = Math.floor(hours / 24);
+  const days = Math.floor(hours / 24)
 
   if (days < 7) {
-    return { unit: 86400, unitStr: "day" };
+    return { unit: 86400, unitStr: 'day' }
   }
 
-  const weeks = Math.floor(days / 7);
+  const weeks = Math.floor(days / 7)
   if (weeks < 5) {
-    return { unit: 604800, unitStr: "week" };
+    return { unit: 604800, unitStr: 'week' }
   }
 
-  return { unit: 2592000, unitStr: "month" };
-};
+  return { unit: 2592000, unitStr: 'month' }
+}
 
 export const getTimeDurationStr = (secs: number) => {
   if (secs < 60) {
-    return `${secs} secs`;
+    return `${secs} secs`
   }
-  const mins = Math.floor(secs / 60);
+  const mins = Math.floor(secs / 60)
   if (mins < 60) {
-    return `${mins} mins`;
+    return `${mins} mins`
   }
-  const hours = Math.floor(mins / 60);
+  const hours = Math.floor(mins / 60)
   if (hours < 24) {
-    return `${hours} hours`;
+    return `${hours} hours`
   }
-  const days = Math.floor(hours / 24);
+  const days = Math.floor(hours / 24)
 
   if (days < 7) {
-    return `${days} days`;
+    return `${days} days`
   }
 
-  const weeks = Math.floor(days / 7);
+  const weeks = Math.floor(days / 7)
   if (weeks < 5) {
-    return `${weeks} weeks`;
+    return `${weeks} weeks`
   }
 
-  const months = Math.floor(days / 30);
-  return `${months} months`;
-};
+  const months = Math.floor(days / 30)
+  return `${months} months`
+}
 
 export const getFloatDecimalNumber = (num: string, decimals: number) => {
-  const subs = num.split(".");
-  if (subs.length < 2) return num;
+  const subs = num.split('.')
+  if (subs.length < 2) return num
 
-  return [subs[0], subs[1].substr(0, decimals)].join(".");
-};
+  return [subs[0], subs[1].substr(0, decimals)].join('.')
+}
 
 // add 10%
 export function calculateGasMargin(value: BigNumber): BigNumber {
   return value
     .mul(BigNumber.from(10000).add(BigNumber.from(1000)))
-    .div(BigNumber.from(10000));
+    .div(BigNumber.from(10000))
 }
 
 export const waitSeconds = (sec?: number) =>
-  new Promise((resolve) => setTimeout(resolve, (sec || 1) * 1000));
+  new Promise((resolve) => setTimeout(resolve, (sec || 1) * 1000))
 
-export const getCurrentTimeStamp = () => Math.floor(Date.now() / 1000);
+export const getCurrentTimeStamp = () => Math.floor(Date.now() / 1000)

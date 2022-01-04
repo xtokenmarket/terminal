@@ -1,7 +1,7 @@
-import { Button, makeStyles, Typography } from "@material-ui/core";
-import { IToken } from "types";
+import { Button, makeStyles, Typography } from '@material-ui/core'
+import { IToken } from 'types'
 
-const ICON_SIZE = 150;
+const ICON_SIZE = 150
 
 const useStyles = makeStyles((theme) => ({
   root: { paddingTop: ICON_SIZE / 2 },
@@ -10,13 +10,13 @@ const useStyles = makeStyles((theme) => ({
     padding: 32,
     paddingBottom: 16,
     paddingTop: ICON_SIZE / 2,
-    textAlign: "center",
-    position: "relative",
+    textAlign: 'center',
+    position: 'relative',
   },
   img: {
     width: ICON_SIZE,
     height: ICON_SIZE,
-    position: "absolute",
+    position: 'absolute',
     top: -ICON_SIZE / 2,
     left: `calc(50% - ${ICON_SIZE / 2}px)`,
   },
@@ -38,20 +38,20 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.primary500,
   },
   logos: {
-    display: "flex",
-    justifyContent: "center",
+    display: 'flex',
+    justifyContent: 'center',
   },
-}));
+}))
 
 interface IProps {
-  onClose: () => void;
-  token0: IToken;
-  token1: IToken;
+  onClose: () => void
+  token0: IToken
+  token1: IToken
 }
 
 export const SuccessSection = (props: IProps) => {
-  const classes = useStyles();
-  const { token0, token1, onClose } = props;
+  const classes = useStyles()
+  const { token0, token1, onClose } = props
 
   return (
     <div className={classes.root}>
@@ -85,5 +85,5 @@ export const SuccessSection = (props: IProps) => {
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}

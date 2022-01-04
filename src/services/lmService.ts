@@ -1,30 +1,30 @@
-import { BigNumber, Contract, Wallet, ethers } from "ethers";
-import { Maybe } from "types";
-import abis from "abis";
-import { getSortedToken } from "utils/token";
-import { Interface } from "@ethersproject/abi";
-import { NULL_ADDRESS } from "config/constants";
+import { BigNumber, Contract, Wallet, ethers } from 'ethers'
+import { Maybe } from 'types'
+import Abi from 'abis'
+import { getSortedToken } from 'utils/token'
+import { Interface } from '@ethersproject/abi'
+import { NULL_ADDRESS } from 'config/constants'
 
-const lmAbi = abis.LM;
+const lmAbi = Abi.LMTerminal
 
 class LMService {
-  provider: any;
-  contract: Contract;
+  provider: any
+  contract: Contract
 
   constructor(provider: any, signerAddress: Maybe<string>, address: string) {
-    this.provider = provider;
+    this.provider = provider
     if (signerAddress) {
-      const signer: Wallet = provider.getSigner();
+      const signer: Wallet = provider.getSigner()
       this.contract = new ethers.Contract(address, lmAbi, provider).connect(
         signer
-      );
+      )
     } else {
-      this.contract = new ethers.Contract(address, lmAbi, provider);
+      this.contract = new ethers.Contract(address, lmAbi, provider)
     }
   }
 
   get address(): string {
-    return this.contract.address;
+    return this.contract.address
   }
 
   provideLiquidity = async (
@@ -36,11 +36,11 @@ class LMService {
       clrPool,
       inputAsset,
       amount
-    );
-    console.log(`provideLiquidity transaction hash: ${transactionObject.hash}`);
+    )
+    console.log(`provideLiquidity transaction hash: ${transactionObject.hash}`)
 
-    return transactionObject.hash;
-  };
+    return transactionObject.hash
+  }
 
   waitUntilProvideLiquidity = async (
     clrPool: string,
@@ -49,10 +49,10 @@ class LMService {
     account: string,
     txId: string
   ): Promise<string> => {
-    let resolved = false;
-    return new Promise(async (resolve) => {
+    let resolved = false
+    return new Promise((resolve) => {
       this.contract.on(
-        "ProvidedLiquidity",
+        'ProvidedLiquidity',
         (
           clrPoolAddress: string,
           sender: string,
@@ -67,45 +67,48 @@ class LMService {
             amount.eq(BigNumber.from(amountStr))
           ) {
             if (!resolved) {
-              resolved = true;
-              resolve(rest[0].transactionHash);
+              resolved = true
+              resolve(rest[0].transactionHash)
             }
           }
         }
-      );
+      )
 
-      await this.contract.provider.waitForTransaction(txId);
-      if (!resolved) {
-        resolved = true;
-        resolve(txId);
-      }
-    });
-  };
+      this.contract.provider.waitForTransaction(txId).then(() => {
+        if (!resolved) {
+          resolved = true
+          resolve(txId)
+        }
+      })
+    })
+  }
 
   parseProvideLiquidityTx = async (
     txId: string
   ): Promise<{
-    amount0: BigNumber;
-    amount1: BigNumber;
-    liquidity: BigNumber;
+    amount0: BigNumber
+    amount1: BigNumber
+    liquidity: BigNumber
   } | null> => {
-    const { logs } = await this.contract.provider.getTransactionReceipt(txId);
-    const uniPositionInterface = new Interface(abis.Univ3Position);
+    const { logs } = await this.contract.provider.getTransactionReceipt(txId)
+    const uniPositionInterface = new Interface(Abi.UniswapV3Position)
     for (let index = 0; index < logs.length; index++) {
-      const log = logs[index];
+      const log = logs[index]
       try {
-        const parsed = uniPositionInterface.parseLog(log);
-        if (parsed.name === "IncreaseLiquidity") {
+        const parsed = uniPositionInterface.parseLog(log)
+        if (parsed.name === 'IncreaseLiquidity') {
           return {
             amount0: parsed.args[2],
             amount1: parsed.args[3],
             liquidity: parsed.args[1],
-          };
+          }
         }
-      } catch (error) {}
+      } catch (error) {
+        console.error(error)
+      }
     }
-    return null;
-  };
+    return null
+  }
 
   removeLiquidity = async (
     clrPool: string,
@@ -114,11 +117,11 @@ class LMService {
     const transactionObject = await this.contract.removeLiquidity(
       clrPool,
       amount
-    );
-    console.log(`removeLiquidity transaction hash: ${transactionObject.hash}`);
+    )
+    console.log(`removeLiquidity transaction hash: ${transactionObject.hash}`)
 
-    return transactionObject.hash;
-  };
+    return transactionObject.hash
+  }
 
   removeLiquidityAndClaimReward = async (
     clrPool: string,
@@ -127,11 +130,11 @@ class LMService {
     const transactionObject = await this.contract.removeLiquidityAndClaimReward(
       clrPool,
       amount
-    );
-    console.log(`removeLiquidity transaction hash: ${transactionObject.hash}`);
+    )
+    console.log(`removeLiquidity transaction hash: ${transactionObject.hash}`)
 
-    return transactionObject.hash;
-  };
+    return transactionObject.hash
+  }
 
   waitUntilRemoveLiquidity = async (
     clrPool: string,
@@ -139,10 +142,10 @@ class LMService {
     account: string,
     txId: string
   ): Promise<string> => {
-    let resolved = false;
-    return new Promise(async (resolve) => {
+    let resolved = false
+    return new Promise((resolve) => {
       this.contract.on(
-        "RemovedLiquidity",
+        'RemovedLiquidity',
         (clrPoolAddress: string, sender: string, amountStr: any, ...rest) => {
           if (
             clrPool.toLowerCase() === clrPoolAddress.toLowerCase() &&
@@ -150,67 +153,72 @@ class LMService {
             amount.eq(BigNumber.from(amountStr))
           ) {
             if (!resolved) {
-              resolved = true;
-              resolve(rest[0].transactionHash);
+              resolved = true
+              resolve(rest[0].transactionHash)
             }
           }
         }
-      );
+      )
 
-      await this.contract.provider.waitForTransaction(txId);
-      if (!resolved) {
-        resolved = true;
-        resolve(txId);
-      }
-    });
-  };
+      this.contract.provider.waitForTransaction(txId).then(() => {
+        if (!resolved) {
+          resolved = true
+          resolve(txId)
+        }
+      })
+    })
+  }
 
   parseRemoveLiquidityTx = async (
     txId: string
   ): Promise<{
-    amount0: BigNumber;
-    amount1: BigNumber;
-    liquidity: BigNumber;
+    amount0: BigNumber
+    amount1: BigNumber
+    liquidity: BigNumber
   } | null> => {
-    const { logs } = await this.contract.provider.getTransactionReceipt(txId);
-    const uniPositionInterface = new Interface(abis.Univ3Position);
+    const { logs } = await this.contract.provider.getTransactionReceipt(txId)
+    const uniPositionInterface = new Interface(Abi.UniswapV3Position)
     for (let index = 0; index < logs.length; index++) {
-      const log = logs[index];
+      const log = logs[index]
       try {
-        const parsed = uniPositionInterface.parseLog(log);
-        if (parsed.name === "DecreaseLiquidity") {
+        const parsed = uniPositionInterface.parseLog(log)
+        if (parsed.name === 'DecreaseLiquidity') {
           return {
             amount0: parsed.args[2],
             amount1: parsed.args[3],
             liquidity: parsed.args[1],
-          };
+          }
         }
-      } catch (error) {}
+      } catch (error) {
+        console.error(error)
+      }
     }
-    return null;
-  };
+    return null
+  }
 
   parseClaimTx = async (
     txId: string
   ): Promise<{
-    [key: string]: BigNumber;
+    [key: string]: BigNumber
   }> => {
     const result: {
-      [key: string]: BigNumber;
-    } = {};
-    const { logs } = await this.contract.provider.getTransactionReceipt(txId);
-    const uniPositionInterface = new Interface(abis.xAssetCLR);
+      [key: string]: BigNumber
+    } = {}
+    const { logs } = await this.contract.provider.getTransactionReceipt(txId)
+    const uniPositionInterface = new Interface(Abi.xAssetCLR)
     for (let index = 0; index < logs.length; index++) {
-      const log = logs[index];
+      const log = logs[index]
       try {
-        const parsed = uniPositionInterface.parseLog(log);
-        if (parsed.name === "RewardClaimed") {
-          result[String(parsed.args[1]).toLowerCase()] = parsed.args[2];
+        const parsed = uniPositionInterface.parseLog(log)
+        if (parsed.name === 'RewardClaimed') {
+          result[String(parsed.args[1]).toLowerCase()] = parsed.args[2]
         }
-      } catch (error) {}
+      } catch (error) {
+        console.error(error)
+      }
     }
-    return result;
-  };
+    return result
+  }
 
   // initiate rewards program
   initiateNewRewardsProgram = async (
@@ -224,13 +232,13 @@ class LMService {
       amounts,
       duration,
       rewardsAreEscrowed
-    );
+    )
     console.log(
       `initiateNewRewardsProgram transaction hash: ${transactionObject.hash}`
-    );
+    )
 
-    return transactionObject.hash;
-  };
+    return transactionObject.hash
+  }
 
   waitUntilNewRewardsProgramInitiated = async (
     clrPool: string,
@@ -238,10 +246,10 @@ class LMService {
     duration: number,
     txId: string
   ): Promise<string> => {
-    let resolved = false;
-    return new Promise(async (resolve) => {
+    let resolved = false
+    return new Promise((resolve) => {
       this.contract.on(
-        "InitiatedRewardsProgram",
+        'InitiatedRewardsProgram',
         (
           clrPoolAddress: string,
           rewardTokens: string[],
@@ -254,28 +262,29 @@ class LMService {
             duration === BigNumber.from(durationStr).toNumber()
           ) {
             if (!resolved) {
-              resolved = true;
-              resolve(rest[0].transactionHash);
+              resolved = true
+              resolve(rest[0].transactionHash)
             }
           }
         }
-      );
+      )
 
-      await this.contract.provider.waitForTransaction(txId);
-      if (!resolved) {
-        resolved = true;
-        resolve(txId);
-      }
-    });
-  };
+      this.contract.provider.waitForTransaction(txId).then(() => {
+        if (!resolved) {
+          resolved = true
+          resolve(txId)
+        }
+      })
+    })
+  }
 
   getPool = async (
     token0: string,
     token1: string,
     tier: BigNumber
   ): Promise<string> => {
-    return this.contract.getPool(...getSortedToken(token0, token1), tier);
-  };
+    return this.contract.getPool(...getSortedToken(token0, token1), tier)
+  }
 
   deployUniswapPool = async (
     token0: string,
@@ -289,14 +298,12 @@ class LMService {
       tier,
       initPrice,
       {
-        value: "0x0",
+        value: '0x0',
       }
-    );
-    console.log(
-      `deployUniswapPool transaction hash: ${transactionObject.hash}`
-    );
-    return transactionObject.hash;
-  };
+    )
+    console.log(`deployUniswapPool transaction hash: ${transactionObject.hash}`)
+    return transactionObject.hash
+  }
 
   waitUntilPoolCreated = async (
     tokenA: string,
@@ -304,78 +311,82 @@ class LMService {
     tier: BigNumber,
     txId: string
   ): Promise<string> => {
-    const [token0, token1] = getSortedToken(tokenA, tokenB);
-    let resolved = false;
+    const [token0, token1] = getSortedToken(tokenA, tokenB)
+    let resolved = false
 
-    return new Promise(async (resolve) => {
-      this.contract.on("DeployedUniV3Pool", (pool, t0, t1, fee, ...rest) => {
+    return new Promise((resolve) => {
+      this.contract.on('DeployedUniV3Pool', (pool, t0, t1, fee, ...rest) => {
         if (
           t0.toLowerCase() === token0 &&
           t1.toLowerCase() === token1 &&
           tier.eq(BigNumber.from(fee))
         ) {
           if (!resolved) {
-            resolved = true;
-            resolve(rest[0].transactionHash);
+            resolved = true
+            resolve(rest[0].transactionHash)
           }
         }
-      });
+      })
 
-      await this.contract.provider.waitForTransaction(txId);
-      if (!resolved) {
-        resolved = true;
-        resolve(txId);
-      }
-    });
-  };
+      this.contract.provider.waitForTransaction(txId).then(() => {
+        if (!resolved) {
+          resolved = true
+          resolve(txId)
+        }
+      })
+    })
+  }
 
   parsePoolCreatedTx = async (txId: string): Promise<string> => {
-    const { logs } = await this.contract.provider.getTransactionReceipt(txId);
-    const uniPositionInterface = new Interface(abis.LM);
+    const { logs } = await this.contract.provider.getTransactionReceipt(txId)
+    const uniPositionInterface = new Interface(Abi.LMTerminal)
     for (let index = 0; index < logs.length; index++) {
-      const log = logs[index];
+      const log = logs[index]
       try {
-        const parsed = uniPositionInterface.parseLog(log);
-        if (parsed.name === "DeployedUniV3Pool") {
-          return parsed.args[0];
+        const parsed = uniPositionInterface.parseLog(log)
+        if (parsed.name === 'DeployedUniV3Pool') {
+          return parsed.args[0]
         }
-      } catch (error) {}
+      } catch (error) {
+        console.error(error)
+      }
     }
-    return NULL_ADDRESS;
-  };
+    return NULL_ADDRESS
+  }
 
   claimReward = async (clrPool: string): Promise<string> => {
-    const transactionObject = await this.contract.claimReward(clrPool);
-    console.log(`claimReward transaction hash: ${transactionObject.hash}`);
+    const transactionObject = await this.contract.claimReward(clrPool)
+    console.log(`claimReward transaction hash: ${transactionObject.hash}`)
 
-    return transactionObject.hash;
-  };
+    return transactionObject.hash
+  }
 
   waitUntilClaimReward = async (
     account: string,
     txId: string
   ): Promise<string> => {
-    let resolved = false;
-    return new Promise(async (resolve) => {
+    let resolved = false
+    return new Promise((resolve) => {
       this.contract.on(
-        "ClaimedReward",
+        'ClaimedReward',
         (clrPool: string, sender: any, ...rest) => {
           if (account.toLowerCase() === sender.toLowerCase()) {
             if (!resolved) {
-              resolved = true;
-              resolve(rest[0].transactionHash);
+              resolved = true
+              resolve(rest[0].transactionHash)
             }
           }
         }
-      );
+      )
 
-      await this.contract.provider.waitForTransaction(txId);
-      if (!resolved) {
-        resolved = true;
-        resolve(txId);
-      }
-    });
-  };
+      this.contract.provider.waitForTransaction(txId).then(() => {
+        if (!resolved) {
+          resolved = true
+          resolve(txId)
+        }
+      })
+    })
+  }
 }
 
-export { LMService };
+export { LMService }

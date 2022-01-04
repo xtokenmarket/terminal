@@ -1,10 +1,10 @@
-import { Button, makeStyles, Typography } from "@material-ui/core";
-import { IRewardState } from "pages/PoolDetails/components";
-import { ITerminalPool } from "types";
+import { Button, makeStyles, Typography } from '@material-ui/core'
+import { IRewardState } from 'pages/PoolDetails/components'
+import { ITerminalPool } from 'types'
 
-import { OutputEstimation } from "..";
+import { OutputEstimation } from '..'
 
-const ICON_SIZE = 150;
+const ICON_SIZE = 150
 
 const useStyles = makeStyles((theme) => ({
   root: { paddingTop: ICON_SIZE / 2 },
@@ -13,13 +13,13 @@ const useStyles = makeStyles((theme) => ({
     padding: 32,
     paddingBottom: 16,
     paddingTop: ICON_SIZE / 2,
-    textAlign: "center",
-    position: "relative",
+    textAlign: 'center',
+    position: 'relative',
   },
   img: {
     width: ICON_SIZE,
     height: ICON_SIZE,
-    position: "absolute",
+    position: 'absolute',
     top: -ICON_SIZE / 2,
     left: `calc(50% - ${ICON_SIZE / 2}px)`,
   },
@@ -40,17 +40,17 @@ const useStyles = makeStyles((theme) => ({
     padding: 32,
     backgroundColor: theme.colors.primary500,
   },
-}));
+}))
 
 interface IProps {
-  onClose: () => void;
-  rewardState: IRewardState;
-  poolData: ITerminalPool;
+  onClose: () => void
+  rewardState: IRewardState
+  poolData: ITerminalPool
 }
 
 export const SuccessSection = (props: IProps) => {
-  const classes = useStyles();
-  const { rewardState, poolData, onClose } = props;
+  const classes = useStyles()
+  const { rewardState, poolData, onClose } = props
 
   return (
     <div className={classes.root}>
@@ -85,5 +85,5 @@ export const SuccessSection = (props: IProps) => {
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}

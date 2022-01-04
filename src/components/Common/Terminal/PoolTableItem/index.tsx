@@ -1,44 +1,44 @@
-import { makeStyles, Typography } from "@material-ui/core";
-import { PoolTd, SimpleLoader } from "components";
-import { useTerminalPool } from "helpers";
+import { makeStyles, Typography } from '@material-ui/core'
+import { PoolTd, SimpleLoader } from 'components'
+import { useTerminalPool } from 'helpers'
 import {
   formatBigNumber,
   formatToShortNumber,
   getTimeDurationStr,
   getTimeDurationUnitInfo,
-} from "utils";
-import moment from "moment";
-import { NavLink } from "react-router-dom";
+} from 'utils'
+import moment from 'moment'
+import { NavLink } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.colors.primary400,
     borderRadius: 4,
 
-    "&+&": {
+    '&+&': {
       marginTop: 8,
     },
   },
-  loader: { padding: "20px 0" },
+  loader: { padding: '20px 0' },
   content: {
-    cursor: "pointer",
-    padding: "16px 0",
-    display: "flex",
-    alignItems: "center",
-    position: "relative",
-    textDecoration: "none",
-    "&::before": {
-      position: "absolute",
+    cursor: 'pointer',
+    padding: '16px 0',
+    display: 'flex',
+    alignItems: 'center',
+    position: 'relative',
+    textDecoration: 'none',
+    '&::before': {
+      position: 'absolute',
       left: 0,
       top: 0,
       bottom: 0,
       width: 4,
       zIndex: 1,
-      transition: "all 0.4s",
+      transition: 'all 0.4s',
       content: `""`,
     },
-    "&:hover": {
-      "&::before": {
+    '&:hover': {
+      '&::before': {
         backgroundColor: theme.colors.secondary,
       },
     },
@@ -46,55 +46,55 @@ const useStyles = makeStyles((theme) => ({
   item: {
     color: theme.colors.purple0,
     fontSize: 11,
-    display: "flex",
-    alignItems: "center",
+    display: 'flex',
+    alignItems: 'center',
   },
   tokenIcon: {
     width: 48,
     height: 48,
     border: `6px solid ${theme.colors.primary400}`,
-    position: "relative",
-    borderRadius: "50%",
-    "&+&": { left: -16 },
+    position: 'relative',
+    borderRadius: '50%',
+    '&+&': { left: -16 },
   },
   allocation: {
     color: theme.colors.white,
     fontWeight: 700,
-    "& span": {
+    '& span': {
       fontWeight: 400,
       color: theme.colors.primary100,
     },
   },
   label: {
     color: theme.colors.white,
-    textTransform: "capitalize",
+    textTransform: 'capitalize',
   },
   apr: {
     backgroundColor: theme.colors.primary200,
     color: theme.colors.white,
     height: 24,
-    display: "flex",
-    alignItems: "center",
+    display: 'flex',
+    alignItems: 'center',
     fontSize: 12,
     fontWeight: 700,
-    padding: "0 16px",
+    padding: '0 16px',
     borderRadius: 20,
   },
-}));
+}))
 
 interface IProps {
-  poolAddress: string;
-  className?: string;
+  poolAddress: string
+  className?: string
 }
 
 export const PoolTableItem = (props: IProps) => {
-  const classes = useStyles();
-  const { poolAddress } = props;
-  const { pool: poolData, loading } = useTerminalPool(poolAddress);
+  const classes = useStyles()
+  const { poolAddress } = props
+  const { pool: poolData, loading } = useTerminalPool(poolAddress)
 
   const renderContent = () => {
     if (!poolData) {
-      return null;
+      return null
     }
 
     return (
@@ -142,18 +142,18 @@ export const PoolTableItem = (props: IProps) => {
             {poolData.rewardTokens.map((rewardToken, index) => {
               const durationInfo = getTimeDurationUnitInfo(
                 poolData.rewardsDuration.toNumber()
-              );
+              )
               const uintAmount = poolData.rewardsPerToken[index]
                 .mul(durationInfo.unit)
-                .div(poolData.rewardsDuration);
+                .div(poolData.rewardsDuration)
               return (
                 <Typography className={classes.label} key={rewardToken.address}>
                   {formatToShortNumber(
                     formatBigNumber(uintAmount, rewardToken.decimals)
-                  )}{" "}
+                  )}{' '}
                   {rewardToken.symbol} / {durationInfo.unitStr}
                 </Typography>
-              );
+              )
             })}
           </div>
         </PoolTd>
@@ -161,7 +161,7 @@ export const PoolTableItem = (props: IProps) => {
           <div className={classes.item}>
             <Typography className={classes.label}>
               {moment(new Date(poolData.periodFinish.toNumber() * 1000)).format(
-                "MMM DD, YYYY"
+                'MMM DD, YYYY'
               )}
             </Typography>
           </div>
@@ -172,8 +172,8 @@ export const PoolTableItem = (props: IProps) => {
           </div>
         </PoolTd>
       </NavLink>
-    );
-  };
+    )
+  }
 
   return (
     <div className={classes.root}>
@@ -182,5 +182,5 @@ export const PoolTableItem = (props: IProps) => {
       ) : null}
       {poolData ? renderContent() : null}
     </div>
-  );
-};
+  )
+}

@@ -1,15 +1,15 @@
-import { Button, IconButton, makeStyles, Typography } from "@material-ui/core";
-import { IDepositState } from "pages/PoolDetails/components";
-import { ITerminalPool } from "types";
-import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
+import { Button, IconButton, makeStyles, Typography } from '@material-ui/core'
+import { IDepositState } from 'pages/PoolDetails/components'
+import { ITerminalPool } from 'types'
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 
-import { OutputEstimation, OutputEstimationInfo } from "..";
+import { OutputEstimation, OutputEstimationInfo } from '..'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
   header: {
     padding: 32,
-    position: "relative",
+    position: 'relative',
     paddingBottom: 16,
   },
   title: {
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
   },
   closeButton: {
-    position: "absolute",
+    position: 'absolute',
     right: 12,
     top: 12,
     padding: 12,
@@ -34,19 +34,19 @@ const useStyles = makeStyles((theme) => ({
   actions: {
     padding: 32,
   },
-}));
+}))
 
 interface IProps {
-  onClose: () => void;
+  onClose: () => void
 
-  onNext: () => void;
-  depositState: IDepositState;
-  poolData: ITerminalPool;
+  onNext: () => void
+  depositState: IDepositState
+  poolData: ITerminalPool
 }
 
 export const ConfirmSection = (props: IProps) => {
-  const classes = useStyles();
-  const { onNext, depositState, poolData, onClose } = props;
+  const classes = useStyles()
+  const { onNext, depositState, poolData, onClose } = props
 
   return (
     <div className={classes.root}>
@@ -80,5 +80,5 @@ export const ConfirmSection = (props: IProps) => {
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}

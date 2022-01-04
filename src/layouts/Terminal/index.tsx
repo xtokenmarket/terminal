@@ -1,5 +1,5 @@
-import { makeStyles } from "@material-ui/core";
-import { Tabs } from "./components";
+import { makeStyles } from '@material-ui/core'
+import { Tabs } from './components'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -10,18 +10,18 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.primary500,
     borderRadius: 4,
     padding: 24,
-    [theme.breakpoints.down("xs")]: {
+    [theme.breakpoints.down('xs')]: {
       backgroundColor: theme.colors.primary700,
     },
   },
-}));
+}))
 
 interface IProps {
-  children?: React.ReactNode[] | React.ReactNode;
+  children?: React.ReactNode[] | React.ReactNode
 }
 
 export const TerminalLayout = (props: IProps) => {
-  const classes = useStyles();
+  const classes = useStyles()
 
   return (
     <div className={classes.root}>
@@ -30,5 +30,5 @@ export const TerminalLayout = (props: IProps) => {
       </div>
       <div className={classes.content}>{props.children}</div>
     </div>
-  );
-};
+  )
+}

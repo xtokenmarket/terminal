@@ -1,91 +1,91 @@
-import { makeStyles } from "@material-ui/core";
-import { MENU_ITEMS } from "config/layout";
-import { NavLink, useHistory, matchPath } from "react-router-dom";
+import { makeStyles } from '@material-ui/core'
+import { MENU_ITEMS } from 'config/layout'
+import { NavLink, useHistory, matchPath } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.colors.primary500,
     boxShadow: theme.colors.elevation1,
-    position: "fixed",
+    position: 'fixed',
     bottom: 0,
     left: 0,
     right: 0,
-    transition: "all 0.5s",
+    transition: 'all 0.5s',
     zIndex: 99,
-    display: "none",
-    [theme.breakpoints.down("xs")]: {
-      display: "block",
+    display: 'none',
+    [theme.breakpoints.down('xs')]: {
+      display: 'block',
       height: 56,
     },
   },
   content: {
-    height: "100%",
-    display: "flex",
-    alignItems: "center",
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
   },
 
   item: {
     backgroundColor: theme.colors.primary500,
-    height: "100%",
+    height: '100%',
     flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    textDecoration: "none",
-    textAlign: "center",
-    "& svg": {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textDecoration: 'none',
+    textAlign: 'center',
+    '& svg': {
       marginBottom: 4,
       color: theme.colors.primary100,
       width: 16,
       height: 16,
-      "& g": { opacity: 0.6 },
+      '& g': { opacity: 0.6 },
     },
 
-    "& span": {
-      textTransform: "uppercase",
+    '& span': {
+      textTransform: 'uppercase',
       color: theme.colors.primary100,
-      transition: "all 0.4s",
+      transition: 'all 0.4s',
       fontSize: 12,
     },
 
-    "&:hover": {
+    '&:hover': {
       backgroundColor: theme.colors.primary,
 
-      "& svg": {
+      '& svg': {
         color: theme.colors.white,
-        "& g": { opacity: 1 },
+        '& g': { opacity: 1 },
       },
 
-      "& span": {
+      '& span': {
         color: theme.colors.white,
       },
     },
-    "&.active": {
+    '&.active': {
       backgroundColor: theme.colors.primary,
 
-      "& svg": {
+      '& svg': {
         color: theme.colors.white,
-        "& g": { opacity: 1 },
+        '& g': { opacity: 1 },
       },
 
-      "& span": {
+      '& span': {
         color: theme.colors.white,
       },
     },
   },
-}));
+}))
 
 export const BottomBar = () => {
-  const classes = useStyles();
-  const history = useHistory();
+  const classes = useStyles()
+  const history = useHistory()
 
   return (
     <>
       <div className={classes.root}>
         <div className={classes.content}>
           {MENU_ITEMS.map((item) => {
-            const Icon = item.icon;
+            const Icon = item.icon
 
             return (
               <NavLink
@@ -102,10 +102,10 @@ export const BottomBar = () => {
                 <Icon />
                 <span>{item.label}</span>
               </NavLink>
-            );
+            )
           })}
         </div>
       </div>
     </>
-  );
-};
+  )
+}

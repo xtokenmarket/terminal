@@ -1,13 +1,13 @@
-import { BigNumber } from "@ethersproject/bignumber";
-import { Button, Grid, makeStyles } from "@material-ui/core";
-import clsx from "clsx";
-import { useConnectedWeb3Context } from "contexts";
-import { useIsMountedRef } from "helpers";
-import { useEffect, useState } from "react";
-import { ERC20Service } from "services";
-import { ITerminalPool } from "types";
-import { formatToShortNumber, getCurrentTimeStamp } from "utils";
-import { ZERO } from "utils/number";
+import { BigNumber } from '@ethersproject/bignumber'
+import { Button, Grid, makeStyles } from '@material-ui/core'
+import clsx from 'clsx'
+import { useConnectedWeb3Context } from 'contexts'
+import { useIsMountedRef } from 'helpers'
+import { useEffect, useState } from 'react'
+import { ERC20Service } from 'services'
+import { ITerminalPool } from 'types'
+import { formatToShortNumber, getCurrentTimeStamp } from 'utils'
+import { ZERO } from 'utils/number'
 import {
   BalanceSection,
   DepositModal,
@@ -16,111 +16,111 @@ import {
   VestModal,
   WithdrawModal,
   RewardModal,
-} from "../index";
+} from '../index'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
   content: { paddingBottom: 32 },
   balance: {
-    position: "relative",
-    "&+&": {
-      "&::before": {
+    position: 'relative',
+    '&+&': {
+      '&::before': {
         content: `""`,
-        position: "absolute",
+        position: 'absolute',
         top: 0,
         bottom: 0,
         left: 0,
         borderLeft: `1px solid ${theme.colors.primary200}`,
       },
     },
-    [theme.breakpoints.down("sm")]: {
-      "&+&": {
-        "&::before": {
-          borderLeft: "none !important",
+    [theme.breakpoints.down('sm')]: {
+      '&+&': {
+        '&::before': {
+          borderLeft: 'none !important',
         },
       },
     },
   },
   info: {
-    position: "relative",
+    position: 'relative',
 
-    "&::before": {
+    '&::before': {
       content: `""`,
-      position: "absolute",
+      position: 'absolute',
       top: 0,
       bottom: 0,
       left: 0,
       right: 0,
       border: `1px solid ${theme.colors.primary200}`,
-      borderRight: "none",
+      borderRight: 'none',
     },
-    "&:first-child": {
-      "&::before": { borderLeft: "none" },
+    '&:first-child': {
+      '&::before': { borderLeft: 'none' },
     },
 
-    [theme.breakpoints.down("sm")]: {
-      "&:nth-child(4)": {
-        "&::before": {
-          borderLeft: "none",
-          borderTop: "none",
+    [theme.breakpoints.down('sm')]: {
+      '&:nth-child(4)': {
+        '&::before': {
+          borderLeft: 'none',
+          borderTop: 'none',
         },
       },
-      "&:nth-child(5)": {
-        "&::before": {
-          borderTop: "none",
+      '&:nth-child(5)': {
+        '&::before': {
+          borderTop: 'none',
         },
       },
-      "&:nth-child(6)": {
-        "&::before": {
-          borderTop: "none",
+      '&:nth-child(6)': {
+        '&::before': {
+          borderTop: 'none',
         },
       },
     },
-    [theme.breakpoints.down("xs")]: {
-      "&:nth-child(3)": {
-        "&::before": {
-          borderLeft: "none",
-          borderTop: "none",
+    [theme.breakpoints.down('xs')]: {
+      '&:nth-child(3)': {
+        '&::before': {
+          borderLeft: 'none',
+          borderTop: 'none',
         },
       },
-      "&:nth-child(4)": {
-        "&::before": {
+      '&:nth-child(4)': {
+        '&::before': {
           borderLeft: `1px solid ${theme.colors.primary200}`,
         },
       },
-      "&:nth-child(5)": {
-        "&::before": {
-          borderLeft: "none",
+      '&:nth-child(5)': {
+        '&::before': {
+          borderLeft: 'none',
         },
       },
     },
   },
   tag: {
-    padding: "2px 4px 3px",
+    padding: '2px 4px 3px',
     height: 19,
     borderRadius: 4,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     fontSize: 12,
-    lineHeight: "14.4px",
-    "&.positive": {
+    lineHeight: '14.4px',
+    '&.positive': {
       backgroundColor: theme.colors.positive1,
       color: theme.colors.positive,
     },
-    "&.negative": {
+    '&.negative': {
       backgroundColor: theme.colors.negative1,
       color: theme.colors.negative,
     },
   },
   buttons: {
     marginTop: 24,
-    display: "flex",
-    flexWrap: "wrap",
+    display: 'flex',
+    flexWrap: 'wrap',
     marginLeft: -9,
     marginRight: -9,
-    [theme.breakpoints.down("xs")]: {
-      flexDirection: "column",
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
     },
   },
   button: {
@@ -128,26 +128,26 @@ const useStyles = makeStyles((theme) => ({
     flex: 1,
     height: 40,
     margin: 9,
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down('sm')]: {
       maxWidth: 130,
     },
-    [theme.breakpoints.down("xs")]: {
-      maxWidth: "unset",
+    [theme.breakpoints.down('xs')]: {
+      maxWidth: 'unset',
     },
   },
-}));
+}))
 
 interface IProps {
-  poolData: ITerminalPool;
-  reloadTerminalPool: () => Promise<void>;
+  poolData: ITerminalPool
+  reloadTerminalPool: () => Promise<void>
 }
 
 interface IState {
-  stakedTokenBalance: BigNumber;
-  depositVisible: boolean;
-  withdrawVisible: boolean;
-  vestVisible: boolean;
-  rewardVisible: boolean;
+  stakedTokenBalance: BigNumber
+  depositVisible: boolean
+  withdrawVisible: boolean
+  vestVisible: boolean
+  rewardVisible: boolean
 }
 
 const initialState: IState = {
@@ -156,47 +156,47 @@ const initialState: IState = {
   withdrawVisible: false,
   vestVisible: false,
   rewardVisible: false,
-};
+}
 
 export const Content = (props: IProps) => {
-  const { poolData } = props;
-  const [state, setState] = useState<IState>(initialState);
-  const classes = useStyles();
+  const { poolData } = props
+  const [state, setState] = useState<IState>(initialState)
+  const classes = useStyles()
   const {
     account,
     library: provider,
     networkId,
     setWalletConnectModalOpened,
-  } = useConnectedWeb3Context();
-  const isMountedRef = useIsMountedRef();
+  } = useConnectedWeb3Context()
+  const isMountedRef = useIsMountedRef()
 
-  const timestamp = getCurrentTimeStamp();
+  const timestamp = getCurrentTimeStamp()
   const isManageable = [poolData.owner, poolData.manager]
     .map((e) => e.toLowerCase())
-    .includes((account || "").toLowerCase());
-  const isDeposited = !state.stakedTokenBalance.isZero();
-  const rewardPeriodFinished = poolData.periodFinish.toNumber() < timestamp;
+    .includes((account || '').toLowerCase())
+  const isDeposited = !state.stakedTokenBalance.isZero()
+  const rewardPeriodFinished = poolData.periodFinish.toNumber() < timestamp
 
   const setDepositModalVisible = (depositVisible: boolean) => {
-    setState((prev) => ({ ...prev, depositVisible }));
-  };
+    setState((prev) => ({ ...prev, depositVisible }))
+  }
 
   const setWithdrawModalVisible = (withdrawVisible: boolean) => {
-    setState((prev) => ({ ...prev, withdrawVisible }));
-  };
+    setState((prev) => ({ ...prev, withdrawVisible }))
+  }
 
   const setVestModalVisible = (vestVisible: boolean) => {
-    setState((prev) => ({ ...prev, vestVisible }));
-  };
+    setState((prev) => ({ ...prev, vestVisible }))
+  }
 
   const setRewardModalVisible = (rewardVisible: boolean) => {
-    setState((prev) => ({ ...prev, rewardVisible }));
-  };
+    setState((prev) => ({ ...prev, rewardVisible }))
+  }
 
   const loadPersonalInfo = async () => {
     if (!account || !provider) {
-      setState((prev) => ({ ...prev, stakedTokenBalance: ZERO }));
-      return;
+      setState((prev) => ({ ...prev, stakedTokenBalance: ZERO }))
+      return
     }
 
     try {
@@ -204,21 +204,21 @@ export const Content = (props: IProps) => {
         provider,
         account,
         poolData.stakedToken.address
-      );
-      const balance = await stakedToken.getBalanceOf(account);
+      )
+      const balance = await stakedToken.getBalanceOf(account)
       if (isMountedRef.current) {
-        setState((prev) => ({ ...prev, stakedTokenBalance: balance }));
+        setState((prev) => ({ ...prev, stakedTokenBalance: balance }))
       }
     } catch (error) {
       if (isMountedRef.current) {
-        setState((prev) => ({ ...prev, stakedTokenBalance: ZERO }));
+        setState((prev) => ({ ...prev, stakedTokenBalance: ZERO }))
       }
     }
-  };
+  }
 
   useEffect(() => {
-    loadPersonalInfo();
-  }, [account, networkId]);
+    loadPersonalInfo()
+  }, [account, networkId])
 
   return (
     <div className={classes.root}>
@@ -226,8 +226,8 @@ export const Content = (props: IProps) => {
         <DepositModal
           onClose={() => setDepositModalVisible(false)}
           onSuccess={async () => {
-            setDepositModalVisible(false);
-            await props.reloadTerminalPool();
+            setDepositModalVisible(false)
+            await props.reloadTerminalPool()
           }}
           poolData={poolData}
         />
@@ -237,8 +237,8 @@ export const Content = (props: IProps) => {
         <RewardModal
           onClose={() => setRewardModalVisible(false)}
           onSuccess={async () => {
-            setRewardModalVisible(false);
-            await props.reloadTerminalPool();
+            setRewardModalVisible(false)
+            await props.reloadTerminalPool()
           }}
           poolData={poolData}
         />
@@ -248,8 +248,8 @@ export const Content = (props: IProps) => {
         <WithdrawModal
           onClose={() => setWithdrawModalVisible(false)}
           onSuccess={async () => {
-            setWithdrawModalVisible(false);
-            await props.reloadTerminalPool();
+            setWithdrawModalVisible(false)
+            await props.reloadTerminalPool()
           }}
           poolData={poolData}
         />
@@ -259,8 +259,8 @@ export const Content = (props: IProps) => {
         <VestModal
           onClose={() => setVestModalVisible(false)}
           onSuccess={async () => {
-            setVestModalVisible(false);
-            await props.reloadTerminalPool();
+            setVestModalVisible(false)
+            await props.reloadTerminalPool()
           }}
           poolData={poolData}
         />
@@ -282,7 +282,7 @@ export const Content = (props: IProps) => {
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
               <InfoSection
                 label="TVL"
-                value={`$${formatToShortNumber("791,451")}`}
+                value={`$${formatToShortNumber('791,451')}`}
               />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
@@ -297,18 +297,18 @@ export const Content = (props: IProps) => {
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
               <InfoSection
                 label="VOLUME(24H)"
-                value={`$${formatToShortNumber("791")}`}
+                value={`$${formatToShortNumber('791')}`}
                 right={
-                  <span className={clsx(classes.tag, "positive")}>+17.38%</span>
+                  <span className={clsx(classes.tag, 'positive')}>+17.38%</span>
                 }
               />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
               <InfoSection
                 label="VOLUME(7D)"
-                value={`$${formatToShortNumber("91451")}`}
+                value={`$${formatToShortNumber('91451')}`}
                 right={
-                  <span className={clsx(classes.tag, "negative")}>-13.38%</span>
+                  <span className={clsx(classes.tag, 'negative')}>-13.38%</span>
                 }
               />
             </Grid>
@@ -387,5 +387,5 @@ export const Content = (props: IProps) => {
         <HistorySection pool={poolData} />
       </div>
     </div>
-  );
-};
+  )
+}
