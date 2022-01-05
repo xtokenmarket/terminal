@@ -17,6 +17,7 @@ import { IToken } from 'types'
 import { ZERO } from 'utils/number'
 import { getPriceInX96 } from 'utils/price'
 import { FeeTierSection } from '../'
+import { LoadingOverlay } from '../LoadingOverlay'
 import { PairCreateModal } from '../PairCreateModal'
 
 const useStyles = makeStyles((theme) => ({
@@ -33,30 +34,30 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.primary100,
     marginBottom: 8,
   },
-  progressWrapper: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    backgroundColor: transparentize(0.9, theme.colors.gray2),
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    zIndex: 5,
-  },
-  spinner: {
-    color: theme.colors.white,
-  },
-  progressTitle: {
-    color: theme.colors.white,
-    fontSize: 20,
-    fontWeight: 600,
-    marginTop: 16,
-    marginBottom: 16,
-  },
-  progressDescription: { color: theme.colors.white },
+  // progressWrapper: {
+  //   position: 'absolute',
+  //   left: 0,
+  //   right: 0,
+  //   top: 0,
+  //   bottom: 0,
+  //   backgroundColor: transparentize(0.9, theme.colors.gray2),
+  //   display: 'flex',
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   flexDirection: 'column',
+  //   zIndex: 5,
+  // },
+  // spinner: {
+  //   color: theme.colors.white,
+  // },
+  // progressTitle: {
+  //   color: theme.colors.white,
+  //   fontSize: 20,
+  //   fontWeight: 600,
+  //   marginTop: 16,
+  //   marginBottom: 16,
+  // },
+  // progressDescription: { color: theme.colors.white },
   warn: {
     marginTop: 24,
     padding: 24,
@@ -225,17 +226,7 @@ export const TokenPairStep = (props: IProps) => {
           token1={data.token1 as Required<IToken>}
         />
       )}
-      {state.loading && (
-        <div className={classes.progressWrapper}>
-          <CircularProgress className={classes.spinner} />
-          <Typography className={classes.progressTitle}>
-            Checking Pool Info
-          </Typography>
-          <Typography className={classes.progressDescription}>
-            Looking for the pool on Uniswap
-          </Typography>
-        </div>
-      )}
+      <LoadingOverlay visible={true} />
       <div>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
