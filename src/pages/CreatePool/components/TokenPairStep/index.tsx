@@ -34,30 +34,6 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.primary100,
     marginBottom: 8,
   },
-  // progressWrapper: {
-  //   position: 'absolute',
-  //   left: 0,
-  //   right: 0,
-  //   top: 0,
-  //   bottom: 0,
-  //   backgroundColor: transparentize(0.9, theme.colors.gray2),
-  //   display: 'flex',
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  //   flexDirection: 'column',
-  //   zIndex: 5,
-  // },
-  // spinner: {
-  //   color: theme.colors.white,
-  // },
-  // progressTitle: {
-  //   color: theme.colors.white,
-  //   fontSize: 20,
-  //   fontWeight: 600,
-  //   marginTop: 16,
-  //   marginBottom: 16,
-  // },
-  // progressDescription: { color: theme.colors.white },
   warn: {
     marginTop: 24,
     padding: 24,
@@ -100,7 +76,7 @@ const initialState: IState = {
   successVisible: false,
 }
 
-export const TokenPairStep = (props: IProps) => {
+export const TokenPairStep = ({ data, updateData, onNext }: IProps) => {
   const classes = useStyles()
   const { account, networkId, setWalletConnectModalOpened, setTxModalInfo } =
     useConnectedWeb3Context()
@@ -108,7 +84,8 @@ export const TokenPairStep = (props: IProps) => {
   const [state, setState] = useState<IState>(initialState)
 
   const mountedRef = useIsMountedRef()
-  const { data, updateData } = props
+
+  const isNewPool = state.poolChecked && !state.uniPoolExist
 
   const loadIfUniPoolExists = async () => {
     if (data.token0 && data.token1) {
@@ -227,9 +204,11 @@ export const TokenPairStep = (props: IProps) => {
         />
       )}
       <LoadingOverlay visible={state.loading} />
-        <Grid container spacing={3}>
+      <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
-          <Typography className={classes.label}>Select pair</Typography>
+          <Typography className={classes.label}>
+            Select pair
+          </Typography>
           <TokenSelect
             token={data.token0}
             onChange={(token0) => updateData({ token0 })}
@@ -242,39 +221,34 @@ export const TokenPairStep = (props: IProps) => {
 
         <Grid item xs={12} sm={6}>
           <div>
-            {state.poolChecked && !state.uniPoolExist && (
+            {isNewPool && data.token0 && data.token1 && (
               <>
-                {data.token0 && data.token1 && (
-                  <>
-                    <Typography className={classes.label}>
-                      Set starting price
-                    </Typography>
-                    <TextField
-                      InputProps={{
-                        disableUnderline: true,
-                        className: classes.priceInput,
-                      }}
-                      fullWidth
-                      placeholder="0"
-                      helperText={`1 ${data.token0.symbol}=${
-                        state.startPrice || '0'
-                      } ${data.token1.symbol}`}
-                      type="number"
-                      value={state.startPrice}
-                      onChange={(event) => {
-                        let newValue = event.target.value
-                        if (Number(newValue || '0') < 0) {
-                          newValue = '0'
-                        }
-                        setState((prev) => ({
-                          ...prev,
-                          startPrice: newValue,
-                        }))
-                      }}
-                    />
-                  </>
-                )}
-
+                <Typography className={classes.label}>
+                  Set starting price
+                </Typography>
+                <TextField
+                  InputProps={{
+                    disableUnderline: true,
+                    className: classes.priceInput,
+                  }}
+                  fullWidth
+                  placeholder="0"
+                  helperText={`1 ${data.token0.symbol}=${
+                    state.startPrice || '0'
+                  } ${data.token1.symbol}`}
+                  type="number"
+                  value={state.startPrice}
+                  onChange={(event) => {
+                    let newValue = event.target.value
+                    if (Number(newValue || '0') < 0) {
+                      newValue = '0'
+                    }
+                    setState((prev) => ({
+                      ...prev,
+                      startPrice: newValue,
+                    }))
+                  }}
+                />
                 <Typography className={classes.warn}>
                   This pool must be initialized before you can add liquidity.
                   To initialize plase set the starting price for the pool and
@@ -282,7 +256,9 @@ export const TokenPairStep = (props: IProps) => {
                 </Typography>
               </>
             )}
-            <Typography className={classes.label}>Select fee tier</Typography>
+            <Typography className={classes.label}>
+              Select fee tier
+            </Typography>
             <FeeTierSection
               tier={data.tier}
               onChange={(tier) => updateData({ tier })}
@@ -296,7 +272,7 @@ export const TokenPairStep = (props: IProps) => {
           </Typography>
         </Grid>
         <Grid item xs={12}>
-          {state.poolChecked && !state.uniPoolExist ? (
+          {isNewPool ? (
             <Button
               color="primary"
               fullWidth
@@ -311,7 +287,7 @@ export const TokenPairStep = (props: IProps) => {
               color="primary"
               fullWidth
               disabled={!state.uniPoolExist}
-              onClick={props.onNext}
+              onClick={onNext}
               variant="contained"
             >
               Next
