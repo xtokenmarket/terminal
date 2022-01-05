@@ -1,10 +1,16 @@
-import React, { useState } from 'react'
-import { Stepper, Step, StepLabel, makeStyles, Typography } from '@material-ui/core'
+import React from 'react'
+import { Stepper, Step, StepLabel, makeStyles, Typography, useMediaQuery } from '@material-ui/core'
+import { ECreatePoolStep } from 'utils/enums'
 
 const useStyles = makeStyles(theme => ({
   stepper: {
-    background: 'none',
-    width: '100%',
+    background: theme.colors.primary500,
+    [theme.breakpoints.up('md')]: {
+      width: '100%',
+    },
+    '& .MuiStepConnector-vertical': {
+      padding: '10px 4px',
+    },
   },
   step: {
     '& .MuiStepLabel-label': {
@@ -12,6 +18,8 @@ const useStyles = makeStyles(theme => ({
       '&.MuiStepLabel-active': {
         color: theme.colors.white,
       },
+      '&.MuiStepLabel-completed': {
+      }
     },
     '& .MuiStepIcon-root text': {
       fill: theme.colors.gray2,
@@ -28,33 +36,49 @@ const useStyles = makeStyles(theme => ({
         fill: theme.colors.gray2,
       },
     },
+    '& svg': {
+      fontSize: 36,
+    },
   },
 }))
 
-export const CreatePoolStepper: React.FC = () => {
+interface IProps {
+  step: ECreatePoolStep
+}
+
+const STEPS_DATA: Record<ECreatePoolStep, { index: number, label: string }> = {
+  [ECreatePoolStep.TokenPair]: {
+    index: 0,
+    label: 'Token Pair',
+  },
+  [ECreatePoolStep.PriceRange]: {
+    index: 1,
+    label: 'Price Range',
+  },
+  [ECreatePoolStep.Rewards]: {
+    index: 2,
+    label: 'Rewards (Optional)',
+  },
+  [ECreatePoolStep.Done]: {
+    index: 3,
+    label: 'Done',
+  },
+}
+
+export const CreatePoolStepper: React.FC<IProps> = ({ step }) => {
   const cl = useStyles()
-  const [step, setStep] = useState(0)
+  const stepNum = STEPS_DATA[step].index
+  const isSm = useMediaQuery('(max-width: 900px)')
+  const orientation = isSm ? 'vertical' : 'horizontal'
   return (
-    <>
-      <Stepper activeStep={step} className={cl.stepper}>
-        <Step key={0} className={cl.step}>
+    <Stepper activeStep={stepNum} className={cl.stepper} orientation={orientation}>
+      {Object.values(STEPS_DATA).map(({ index, label }) => (
+        <Step key={index} className={cl.step}>
           <StepLabel>
-            <Typography variant="body1">
-              step 0
-            </Typography>
+            <Typography variant="body1">{label}</Typography>
           </StepLabel>
         </Step>
-        <Step key={1} className={cl.step}>
-          <StepLabel>Step 1</StepLabel>
-        </Step>
-        <Step key={2} className={cl.step}>
-          <StepLabel>Step 2</StepLabel>
-        </Step>
-        <Step key={2} className={cl.step}>
-          <StepLabel>Step 3</StepLabel>
-        </Step>
-      </Stepper>
-      <button onClick={() => setStep(step + 1)}>btn</button>
-    </>
+      ))}
+    </Stepper>
   )
 }

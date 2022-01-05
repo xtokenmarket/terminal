@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Stepper, Step, makeStyles } from '@material-ui/core'
+import { Stepper, Step, makeStyles, Grid, Typography } from '@material-ui/core'
 import { ECreatePoolStep } from 'utils/enums'
 import clsx from 'clsx'
 
@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     alignItems: 'center',
-    flexWrap: 'wrap',
+    // flexWrap: 'wrap',
   },
   item: {
     marginRight: 40,
@@ -51,6 +51,25 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 600,
     cursor: 'pointer',
   },
+
+  headerTop: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    background: theme.colors.primary500,
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      justifyContent: 'center',
+      padding: theme.spacing(3, 0),
+      margin: theme.spacing(2),
+    },
+  },
+
+  title: {
+    fontSize: 18,
+    color: theme.colors.white,
+    fontWeight: 700,
+  },
 }))
 
 interface IProps {
@@ -60,25 +79,16 @@ interface IProps {
 
 export const HeaderStep = ({ step, onCancel }: IProps) => {
   const classes = useStyles()
-  const [testStep, setTestStep] = useState(0)
 
   return (
-    <div className={classes.root}>
-      {Object.values(ECreatePoolStep).map((step, index) => {
-        return (
-          <div
-            className={clsx(classes.item, step === step && 'active')}
-            key={step}
-          >
-            <span>{index + 1}</span>
-            <span>{step}</span>
-          </div>
-        )
-      })}
+    <div className={classes.headerTop}>
+      <Typography className={classes.title}>
+        Create New Pool
+      </Typography>
+      <CreatePoolStepper step={step} />
       <span className={classes.cancel} onClick={onCancel}>
         Cancel
       </span>
-      <CreatePoolStepper />
     </div>
   )
 }

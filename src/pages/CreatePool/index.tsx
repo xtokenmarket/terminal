@@ -88,12 +88,13 @@ const CreatePool = () => {
 
   return (
     <PageWrapper>
-      <PageHeader
+      {/* <PageHeader
         headerTitle="Create New pool"
         backVisible={false}
         onBack={onBack}
         headerComponent={<HeaderStep step={state.step} onCancel={onBack} />}
-      />
+      /> */}
+      <HeaderStep step={state.step} onCancel={onBack} />
       <PageContent>
         <div className={classes.content}>{renderContent()}</div>
       </PageContent>
