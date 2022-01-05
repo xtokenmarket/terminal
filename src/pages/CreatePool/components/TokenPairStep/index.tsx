@@ -226,97 +226,99 @@ export const TokenPairStep = (props: IProps) => {
           token1={data.token1 as Required<IToken>}
         />
       )}
-      <LoadingOverlay visible={true} />
-      <div>
+      <LoadingOverlay visible={state.loading} />
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6}>
-            <Typography className={classes.label}>Select pair</Typography>
-            <TokenSelect
-              token={data.token0}
-              onChange={(token0) => updateData({ token0 })}
-            />
-            <TokenSelect
-              token={data.token1}
-              onChange={(token1) => updateData({ token1 })}
-            />
-          </Grid>
-
-          <Grid item xs={12} sm={6}>
-            <div>
-              {state.poolChecked && !state.uniPoolExist && (
-                <>
-                  {data.token0 && data.token1 && (
-                    <>
-                      <Typography className={classes.label}>
-                        Set starting price
-                      </Typography>
-                      <TextField
-                        InputProps={{
-                          disableUnderline: true,
-                          className: classes.priceInput,
-                        }}
-                        fullWidth
-                        placeholder="0"
-                        helperText={`1 ${data.token0.symbol}=${
-                          state.startPrice || '0'
-                        } ${data.token1.symbol}`}
-                        type="number"
-                        value={state.startPrice}
-                        onChange={(event) => {
-                          let newValue = event.target.value
-                          if (Number(newValue || '0') < 0) {
-                            newValue = '0'
-                          }
-                          setState((prev) => ({
-                            ...prev,
-                            startPrice: newValue,
-                          }))
-                        }}
-                      />
-                    </>
-                  )}
-
-                  <Typography className={classes.warn}>
-                    This pool must be initialized before you can add liquidity.
-                    To initialize plase set the starting price for the pool and
-                    deploy the pool on Uniswap V3.
-                  </Typography>
-                </>
-              )}
-              <Typography className={classes.label}>Select fee tier</Typography>
-              <FeeTierSection
-                tier={data.tier}
-                onChange={(tier) => updateData({ tier })}
-              />
-            </div>
-          </Grid>
+        <Grid item xs={12} sm={6}>
+          <Typography className={classes.label}>Select pair</Typography>
+          <TokenSelect
+            token={data.token0}
+            onChange={(token0) => updateData({ token0 })}
+          />
+          <TokenSelect
+            token={data.token1}
+            onChange={(token1) => updateData({ token1 })}
+          />
         </Grid>
-      </div>
-      <Typography className={classes.fee}>
-        Pool Deployment fee is 0.1 ETH. Additional 1% fee on any rewards
-        distributed for this pool.
-      </Typography>
-      {state.poolChecked && !state.uniPoolExist ? (
-        <Button
-          color="primary"
-          fullWidth
-          disabled={Number(state.startPrice || '0') === 0}
-          onClick={onCreateUniPool}
-          variant="contained"
-        >
-          Deploy ON Uniswap v3
-        </Button>
-      ) : (
-        <Button
-          color="primary"
-          fullWidth
-          disabled={!state.uniPoolExist}
-          onClick={props.onNext}
-          variant="contained"
-        >
-          Next
-        </Button>
-      )}
+
+        <Grid item xs={12} sm={6}>
+          <div>
+            {state.poolChecked && !state.uniPoolExist && (
+              <>
+                {data.token0 && data.token1 && (
+                  <>
+                    <Typography className={classes.label}>
+                      Set starting price
+                    </Typography>
+                    <TextField
+                      InputProps={{
+                        disableUnderline: true,
+                        className: classes.priceInput,
+                      }}
+                      fullWidth
+                      placeholder="0"
+                      helperText={`1 ${data.token0.symbol}=${
+                        state.startPrice || '0'
+                      } ${data.token1.symbol}`}
+                      type="number"
+                      value={state.startPrice}
+                      onChange={(event) => {
+                        let newValue = event.target.value
+                        if (Number(newValue || '0') < 0) {
+                          newValue = '0'
+                        }
+                        setState((prev) => ({
+                          ...prev,
+                          startPrice: newValue,
+                        }))
+                      }}
+                    />
+                  </>
+                )}
+
+                <Typography className={classes.warn}>
+                  This pool must be initialized before you can add liquidity.
+                  To initialize plase set the starting price for the pool and
+                  deploy the pool on Uniswap V3.
+                </Typography>
+              </>
+            )}
+            <Typography className={classes.label}>Select fee tier</Typography>
+            <FeeTierSection
+              tier={data.tier}
+              onChange={(tier) => updateData({ tier })}
+            />
+          </div>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography className={classes.fee}>
+            Pool Deployment fee is 0.1 ETH. Additional 1% fee on any rewards
+            distributed for this pool.
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          {state.poolChecked && !state.uniPoolExist ? (
+            <Button
+              color="primary"
+              fullWidth
+              disabled={Number(state.startPrice || '0') === 0}
+              onClick={onCreateUniPool}
+              variant="contained"
+            >
+              Deploy ON Uniswap v3
+            </Button>
+          ) : (
+            <Button
+              color="primary"
+              fullWidth
+              disabled={!state.uniPoolExist}
+              onClick={props.onNext}
+              variant="contained"
+            >
+              Next
+            </Button>
+          )}
+        </Grid>
+      </Grid>
     </div>
   )
 }
