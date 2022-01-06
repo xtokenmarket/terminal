@@ -1,4 +1,4 @@
 export * from './FeeTierSection'
-export * from './HeaderStep'
+export * from './CreatePoolHeader'
 export * from './TokenPairStep'
 export * from './PriceRangeStep'

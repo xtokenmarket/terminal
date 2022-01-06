@@ -1,12 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { makeStyles } from '@material-ui/core'
-import { PageContent, PageHeader, PageWrapper } from 'components'
+import { PageContent, PageWrapper } from 'components'
 import { useState } from 'react'
 import { useHistory } from 'react-router'
 import { IToken } from 'types'
 import { ECreatePoolStep } from 'utils/enums'
 import { ZERO } from 'utils/number'
-import { HeaderStep, TokenPairStep, PriceRangeStep } from './components'
+import { CreatePoolHeader, TokenPairStep, PriceRangeStep } from './components'
 
 const useStyles = makeStyles((theme) => ({
   label: {
@@ -88,12 +88,7 @@ const CreatePool = () => {
 
   return (
     <PageWrapper>
-      <PageHeader
-        headerTitle="Create New pool"
-        backVisible={false}
-        onBack={onBack}
-        headerComponent={<HeaderStep step={state.step} onCancel={onBack} />}
-      />
+      <CreatePoolHeader step={state.step} onCancel={onBack} />
       <PageContent>
         <div className={classes.content}>{renderContent()}</div>
       </PageContent>
