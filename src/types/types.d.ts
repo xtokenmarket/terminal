@@ -80,6 +80,7 @@ export interface ITerminalPool {
   manager: string
   token0Percent: string
   token1Percent: string
+  tvl: string
 }
 
 // uni

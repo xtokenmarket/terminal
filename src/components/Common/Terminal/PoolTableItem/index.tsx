@@ -127,7 +127,7 @@ export const PoolTableItem = (props: IProps) => {
         </PoolTd>
         <PoolTd type="tvl">
           <div className={classes.item}>
-            <Typography className={classes.label}>$345,678</Typography>
+            <Typography className={classes.label}>{`$${poolData.tvl}`}</Typography>
           </div>
         </PoolTd>
         <PoolTd type="vesting">
