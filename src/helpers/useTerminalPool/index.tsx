@@ -8,6 +8,8 @@ import { ITerminalPool, IToken } from 'types'
 
 import { BigNumber as BigNumberEther } from '@ethersproject/bignumber'
 import { BigNumber } from 'bignumber.js'
+import { formatEther } from 'ethers/lib/utils'
+import { formatBigNumber } from 'utils'
 interface IState {
   pool?: ITerminalPool
   loading: boolean
@@ -115,6 +117,8 @@ export const useTerminalPool = (poolAddress: string) => {
 
       const token0Percent = getTokenPercent(token0Balance, token0Balance, token1Balance)
       const token1Percent = getTokenPercent(token1Balance, token0Balance, token1Balance)
+
+      const tvl = formatBigNumber(token0Balance.add(token1Balance), token0.decimals)
       
       // console.timeEnd(`loadInfo token details ${poolAddress}`)
 
@@ -174,7 +178,8 @@ export const useTerminalPool = (poolAddress: string) => {
           rewardsPerToken,
           manager,
           token0Percent,
-          token1Percent
+          token1Percent,
+          tvl
         },
       }))
     } catch (error) {
