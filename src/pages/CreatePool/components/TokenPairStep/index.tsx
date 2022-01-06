@@ -204,7 +204,7 @@ export const TokenPairStep = ({ data, updateData, onNext }: IProps) => {
       />
       <LoadingOverlay visible={state.loading} />
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} md={6}>
           <Typography className={classes.label}>
             Select pair
           </Typography>
@@ -218,8 +218,8 @@ export const TokenPairStep = ({ data, updateData, onNext }: IProps) => {
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
-          <div>
+        <Grid item xs={12} md={6}>
+          {/* <div> */}
             {isNewPool && data.token0 && data.token1 && (
               <>
                 <Typography className={classes.label}>
@@ -262,7 +262,7 @@ export const TokenPairStep = ({ data, updateData, onNext }: IProps) => {
               tier={data.tier}
               onChange={(tier) => updateData({ tier })}
             />
-          </div>
+          {/* </div> */}
         </Grid>
         <Grid item xs={12}>
           <Typography className={classes.fee}>
