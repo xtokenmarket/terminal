@@ -33,14 +33,20 @@ interface IProps {
   onClose: () => void
   token0: IToken
   token1: IToken
+  visible: boolean
 }
 
-export const PairCreateModal = (props: IProps) => {
+export const PairCreateModal: React.FC<IProps> = ({
+  className,
+  onClose,
+  token0,
+  token1,
+  visible,
+}) => {
   const classes = useStyles()
   const commonClasses = useCommonStyles()
   const { account } = useConnectedWeb3Context()
-
-  const { onClose } = props
+  console.log({ token0, token1 })
 
   useEffect(() => {
     if (!account) {
@@ -49,19 +55,19 @@ export const PairCreateModal = (props: IProps) => {
   }, [account])
 
   return (
-    <Modal open>
+    <Modal open={visible}>
       <div
         className={clsx(
           classes.root,
           commonClasses.scroll,
-          props.className,
+          className,
           'transparent'
         )}
       >
         <SuccessSection
-          onClose={props.onClose}
-          token0={props.token0}
-          token1={props.token1}
+          onClose={onClose}
+          token0={token0}
+          token1={token1}
         />
       </div>
     </Modal>

@@ -49,9 +49,12 @@ interface IProps {
   token1: IToken
 }
 
-export const SuccessSection = (props: IProps) => {
+export const SuccessSection: React.FC<IProps> = ({
+  onClose,
+  token0,
+  token1
+}) => {
   const classes = useStyles()
-  const { token0, token1, onClose } = props
 
   return (
     <div className={classes.root}>

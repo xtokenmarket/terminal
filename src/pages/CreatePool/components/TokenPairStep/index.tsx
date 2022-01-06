@@ -196,13 +196,12 @@ export const TokenPairStep = ({ data, updateData, onNext }: IProps) => {
 
   return (
     <div className={classes.root}>
-      {state.successVisible && (
-        <PairCreateModal
-          onClose={onCloseSuccess}
-          token0={data.token0 as Required<IToken>}
-          token1={data.token1 as Required<IToken>}
-        />
-      )}
+      <PairCreateModal
+        visible={state.successVisible}
+        onClose={onCloseSuccess}
+        token0={data.token0 as Required<IToken>}
+        token1={data.token1 as Required<IToken>}
+      />
       <LoadingOverlay visible={state.loading} />
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
