@@ -86,8 +86,6 @@ export const TokenPairStep: React.FC<IProps> = ({ data, updateData, onNext }) =>
 
   const isNewPool = state.poolChecked && !state.uniPoolExist
 
-  console.log('checked:', state.poolChecked, 'exists:', state.uniPoolExist)
-
   const loadIfUniPoolExists = async () => {
     if (data.token0 && data.token1) {
       try {
