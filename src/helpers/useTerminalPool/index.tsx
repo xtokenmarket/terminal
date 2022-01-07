@@ -124,8 +124,14 @@ export const useTerminalPool = (poolAddress: string) => {
       
       const MULTIPLY_PRECISION = 100
       let tvl = ""
+      let token0tvl: string | BigNumberEther = ""
+      let token1tvl: string | BigNumberEther  = ""
       if(rates) {
-        tvl = formatBigNumber(token0Balance.mul(rates[0]*MULTIPLY_PRECISION).div(MULTIPLY_PRECISION).add(token1Balance.mul(rates[1]*MULTIPLY_PRECISION).div(MULTIPLY_PRECISION)), token0.decimals)
+        token0tvl = token0Balance.mul(rates[0]*MULTIPLY_PRECISION).div(MULTIPLY_PRECISION)
+        token1tvl = token1Balance.mul(rates[1]*MULTIPLY_PRECISION).div(MULTIPLY_PRECISION)
+        tvl = formatBigNumber(token0tvl.add(token1tvl), token0.decimals)
+        token0tvl=formatBigNumber(token0tvl, token0.decimals)
+        token1tvl=formatBigNumber(token1tvl, token0.decimals)
       }
       
       // console.timeEnd(`loadInfo token details ${poolAddress}`)
@@ -187,7 +193,9 @@ export const useTerminalPool = (poolAddress: string) => {
           manager,
           token0Percent,
           token1Percent,
-          tvl
+          tvl,
+          token0tvl,
+          token1tvl
         },
       }))
     } catch (error) {
