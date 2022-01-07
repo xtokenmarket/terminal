@@ -14,6 +14,13 @@ const useStyles = makeStyles((theme: any) => ({
     display: 'flex',
     alignItems: 'center',
   },
+  itemAlignRight: {
+    color: theme.colors.purple0,
+    fontSize: 11,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end'
+  },
 }))
 
 export const PoolTableHeader = () => {
@@ -33,28 +40,28 @@ export const PoolTableHeader = () => {
         </div>
       </PoolTd>
       <PoolTd type="tvl">
-        <div className={classes.item}>
+        <div className={classes.itemAlignRight}>
           TVL
           <SortButton />
         </div>
       </PoolTd>
       <PoolTd type="vesting">
-        <div className={classes.item}>
+        <div className={classes.itemAlignRight}>
           VESTING
           <SortButton />
         </div>
       </PoolTd>
       <PoolTd type="program">
-        <div className={classes.item}>PROGRAM</div>
+        <div className={classes.itemAlignRight}>PROGRAM</div>
       </PoolTd>
       <PoolTd type="ending">
-        <div className={classes.item}>
+        <div className={classes.itemAlignRight}>
           ENDING
           <SortButton />
         </div>
       </PoolTd>
       <PoolTd type="apr">
-        <div className={classes.item}>
+        <div className={classes.itemAlignRight}>
           APR
           <SortButton />
         </div>
