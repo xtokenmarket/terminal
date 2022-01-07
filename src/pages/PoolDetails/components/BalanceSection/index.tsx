@@ -3,7 +3,7 @@ import { TokenIcon } from 'components'
 import { BigNumber } from 'ethers'
 import { useTokenBalance } from 'helpers'
 import { ITerminalPool, IToken } from 'types'
-import { formatBigNumber } from 'utils'
+import { formatBigNumber, numberWithCommas } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,7 +72,7 @@ export const BalanceSection = (props: IProps) => {
           <Typography className={classes.balance}>
             {formatBigNumber(balance, token.decimals)} <span>{percent}%</span>
           </Typography>
-          <Typography className={classes.dollar}>~ ${tokentvl}</Typography>
+          <Typography className={classes.dollar}>~ ${numberWithCommas(tokentvl as string)}</Typography>
         </div>
       </div>
     </div>

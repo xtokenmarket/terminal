@@ -7,7 +7,7 @@ import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { ERC20Service } from 'services'
 import { ITerminalPool } from 'types'
-import { formatToShortNumber, getCurrentTimeStamp, getTimeDurationStr } from 'utils'
+import { formatToShortNumber, getCurrentTimeStamp, getTimeDurationStr, numberWithCommas } from 'utils'
 import { ZERO } from 'utils/number'
 import {
   BalanceSection,
@@ -283,7 +283,7 @@ export const Content = (props: IProps) => {
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
               <InfoSection
                 label="TVL"
-                value={`${poolData.tvl}`}
+                value={`${numberWithCommas(poolData.tvl)}`}
               />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>

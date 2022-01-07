@@ -6,6 +6,7 @@ import {
   formatToShortNumber,
   getTimeDurationStr,
   getTimeDurationUnitInfo,
+  numberWithCommas,
 } from 'utils'
 import moment from 'moment'
 import { NavLink } from 'react-router-dom'
@@ -133,7 +134,7 @@ export const PoolTableItem = (props: IProps) => {
         </PoolTd>
         <PoolTd type="tvl">
           <div className={classes.itemAlignRight}>
-            <Typography className={classes.label}>{`$${poolData.tvl}`}</Typography>
+            <Typography className={classes.label}>{`$${numberWithCommas(poolData.tvl)}`}</Typography>
           </div>
         </PoolTd>
         <PoolTd type="vesting">
