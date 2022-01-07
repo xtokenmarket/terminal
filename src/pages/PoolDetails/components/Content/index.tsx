@@ -270,10 +270,10 @@ export const Content = (props: IProps) => {
         <div>
           <Grid container spacing={0}>
             <Grid item xs={12} md={6} className={classes.balance}>
-              <BalanceSection pool={poolData} token={poolData.token0} />
+              <BalanceSection pool={poolData} token={poolData.token0} percent={poolData.token0Percent}/>
             </Grid>
             <Grid item xs={12} md={6} className={classes.balance}>
-              <BalanceSection pool={poolData} token={poolData.token1} />
+              <BalanceSection pool={poolData} token={poolData.token1} percent={poolData.token1Percent}/>
             </Grid>
           </Grid>
         </div>

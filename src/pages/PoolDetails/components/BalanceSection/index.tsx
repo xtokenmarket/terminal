@@ -52,11 +52,12 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   token: IToken
   pool: ITerminalPool
+  percent: string
 }
 
 export const BalanceSection = (props: IProps) => {
   const classes = useStyles()
-  const { token, pool } = props
+  const { token, pool, percent } = props
 
   const { balance } = useTokenBalance(token.address, pool.uniswapPool)
 
@@ -67,7 +68,7 @@ export const BalanceSection = (props: IProps) => {
         <TokenIcon className={classes.icon} token={token} />
         <div className={classes.texts}>
           <Typography className={classes.balance}>
-            {formatBigNumber(balance, token.decimals)} <span>37.09%</span>
+            {formatBigNumber(balance, token.decimals)} <span>{percent}%</span>
           </Typography>
           <Typography className={classes.dollar}>~ $2374.04</Typography>
         </div>
