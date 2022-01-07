@@ -6,8 +6,7 @@ import { useEffect, useState } from 'react'
 import { ERC20Service } from 'services'
 import { ITerminalPool, IToken } from 'types'
 
-import { BigNumber as BigNumberEther } from '@ethersproject/bignumber'
-import { BigNumber } from 'bignumber.js'
+import { BigNumber } from '@ethersproject/bignumber'
 import { formatBigNumber } from 'utils'
 import { getCoinGeckoIDs, getTokenExchangeRate } from './helper'
 
@@ -15,6 +14,8 @@ interface IState {
   pool?: ITerminalPool
   loading: boolean
 }
+
+const MULTIPLY_PRECISION = 100
 
 export const useTerminalPool = (poolAddress: string) => {
   const [state, setState] = useState<IState>({ loading: true })
@@ -37,22 +38,25 @@ export const useTerminalPool = (poolAddress: string) => {
   }
 
   const getERC20TokenBalance = async(tokenAddress: string, uniswapPool: string) => {
-    if(!account) return BigNumberEther.from(0)
+    if(!account) return BigNumber.from(0)
     const erc20 = new ERC20Service(provider, uniswapPool, tokenAddress)
     const bal = await erc20.getBalanceOf(uniswapPool)
     return bal
   }
 
-  const getTokenPercent = (balance: BigNumberEther, token0Balance: BigNumberEther, token1Balance: BigNumberEther) => {
+  const getTokenPercent = (balance: BigNumber, token0Balance: BigNumber, token1Balance: BigNumber, token0Decimals: number, token1Decimals: number, tokenDecimals: number) => {
     const divisor = token0Balance.add(token1Balance)
-    const bigNumberBalance = new BigNumber(balance.toString())
-    const bigNumbertoken0Balance = new BigNumber(token0Balance.toString())
-    const bigNumbertoken1Balance = new BigNumber(token1Balance.toString())
-  
+    const getFormatNumber = (_balance: BigNumber, _tokenDecimals: number) => {
+      return Number(formatBigNumber(_balance, _tokenDecimals))*MULTIPLY_PRECISION
+    }
+
     if(Number(divisor.toString()) === 0) return ""
-  
-    const percent = bigNumberBalance.div(bigNumbertoken0Balance.plus(bigNumbertoken1Balance)).multipliedBy(100).decimalPlaces(2).toString()
-    return percent
+    const balanceNumber = getFormatNumber(balance, tokenDecimals)
+    const token0Number = getFormatNumber(token0Balance, token0Decimals)
+    const token1Number = getFormatNumber(token1Balance, token1Decimals)
+    const percent = (balanceNumber / (token0Number+token1Number)) * 100
+    
+    return JSON.stringify(percent) 
   }
 
   const loadInfo = async () => {
@@ -116,16 +120,15 @@ export const useTerminalPool = (poolAddress: string) => {
       const token0Balance = await getERC20TokenBalance(token0Address, uniswapPool)
       const token1Balance = await getERC20TokenBalance(token1Address, uniswapPool)
 
-      const token0Percent = getTokenPercent(token0Balance, token0Balance, token1Balance)
-      const token1Percent = getTokenPercent(token1Balance, token0Balance, token1Balance)
+      const token0Percent = getTokenPercent(token0Balance, token0Balance, token1Balance, token0.decimals, token1.decimals, token0.decimals)
+      const token1Percent = getTokenPercent(token1Balance, token0Balance, token1Balance, token0.decimals, token1.decimals, token1.decimals)
 
       const ids = await getCoinGeckoIDs([token0.symbol, token1.symbol])
       const rates = await getTokenExchangeRate(ids)
       
-      const MULTIPLY_PRECISION = 100
       let tvl = ""
-      let token0tvl: string | BigNumberEther = ""
-      let token1tvl: string | BigNumberEther  = ""
+      let token0tvl: string | BigNumber = ""
+      let token1tvl: string | BigNumber  = ""
       if(rates) {
         token0tvl = token0Balance.mul(rates[0]*MULTIPLY_PRECISION).div(MULTIPLY_PRECISION)
         token1tvl = token1Balance.mul(rates[1]*MULTIPLY_PRECISION).div(MULTIPLY_PRECISION)
