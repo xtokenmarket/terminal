@@ -13,7 +13,7 @@ export const getCoinGeckoIDs = async(tokens: string[]) => {
 	});
 }
 
-export const getTokenExchangeRate = async(ids: string[], address?: string): Promise<string[] | undefined> => {
+export const getTokenExchangeRate = async(ids: string[], address?: string): Promise<number[] | undefined> => {
 	try {
 		const url = `https://api.coingecko.com/api/v3/simple/price?ids=${ids[0]}%2C${ids[1]}&vs_currencies=usd`;
 		const response = await fetch(url);
