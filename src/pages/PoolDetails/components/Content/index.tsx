@@ -283,7 +283,7 @@ export const Content = (props: IProps) => {
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
               <InfoSection
                 label="TVL"
-                value={`${numberWithCommas(poolData.tvl)}`}
+                value={`$${numberWithCommas(poolData.tvl)}`}
               />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
