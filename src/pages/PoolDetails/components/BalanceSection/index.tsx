@@ -1,5 +1,6 @@
 import { makeStyles, Typography } from '@material-ui/core'
 import { TokenIcon } from 'components'
+import { BigNumber } from 'ethers'
 import { useTokenBalance } from 'helpers'
 import { ITerminalPool, IToken } from 'types'
 import { formatBigNumber } from 'utils'
@@ -53,11 +54,12 @@ interface IProps {
   token: IToken
   pool: ITerminalPool
   percent: string
+  tokentvl: string | BigNumber
 }
 
 export const BalanceSection = (props: IProps) => {
   const classes = useStyles()
-  const { token, pool, percent } = props
+  const { token, pool, percent, tokentvl } = props
 
   const { balance } = useTokenBalance(token.address, pool.uniswapPool)
 
@@ -70,7 +72,7 @@ export const BalanceSection = (props: IProps) => {
           <Typography className={classes.balance}>
             {formatBigNumber(balance, token.decimals)} <span>{percent}%</span>
           </Typography>
-          <Typography className={classes.dollar}>~ $2374.04</Typography>
+          <Typography className={classes.dollar}>~ ${tokentvl}</Typography>
         </div>
       </div>
     </div>

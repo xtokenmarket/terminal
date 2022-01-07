@@ -81,6 +81,8 @@ export interface ITerminalPool {
   token0Percent: string
   token1Percent: string
   tvl: string
+  token0tvl: string | BigNumber
+  token1tvl: string | BigNumber
 }
 
 // uni

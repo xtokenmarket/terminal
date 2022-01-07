@@ -270,10 +270,10 @@ export const Content = (props: IProps) => {
         <div>
           <Grid container spacing={0}>
             <Grid item xs={12} md={6} className={classes.balance}>
-              <BalanceSection pool={poolData} token={poolData.token0} percent={poolData.token0Percent}/>
+              <BalanceSection pool={poolData} token={poolData.token0} percent={poolData.token0Percent} tokentvl={poolData.token0tvl}/>
             </Grid>
             <Grid item xs={12} md={6} className={classes.balance}>
-              <BalanceSection pool={poolData} token={poolData.token1} percent={poolData.token1Percent}/>
+              <BalanceSection pool={poolData} token={poolData.token1} percent={poolData.token1Percent} tokentvl={poolData.token1tvl}/>
             </Grid>
           </Grid>
         </div>
@@ -282,7 +282,7 @@ export const Content = (props: IProps) => {
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
               <InfoSection
                 label="TVL"
-                value={`$${formatToShortNumber('791,451')}`}
+                value={`${poolData.tvl}`}
               />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
