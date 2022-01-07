@@ -15,7 +15,7 @@ interface IState {
   loading: boolean
 }
 
-const MULTIPLY_PRECISION = 100
+const MULTIPLY_PRECISION = 1000000
 
 export const useTerminalPool = (poolAddress: string) => {
   const [state, setState] = useState<IState>({ loading: true })
