@@ -3,10 +3,11 @@ import { Button, Grid, makeStyles } from '@material-ui/core'
 import clsx from 'clsx'
 import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef } from 'helpers'
+import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { ERC20Service } from 'services'
 import { ITerminalPool } from 'types'
-import { formatToShortNumber, getCurrentTimeStamp } from 'utils'
+import { formatToShortNumber, getCurrentTimeStamp, getTimeDurationStr } from 'utils'
 import { ZERO } from 'utils/number'
 import {
   BalanceSection,
@@ -286,10 +287,12 @@ export const Content = (props: IProps) => {
               />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
-              <InfoSection label="VESTING PERIOD" value="6 weeks" />
+              <InfoSection label="VESTING PERIOD" value={getTimeDurationStr(poolData.rewardsDuration.toNumber())} />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
-              <InfoSection label="ENDING" value="Dec 12, 2021" />
+              <InfoSection label="ENDING" value={moment(new Date(poolData.periodFinish.toNumber() * 1000)).format(
+                'MMM DD, YYYY'
+              )} />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
               <InfoSection label="APR" value="68%" />
