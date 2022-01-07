@@ -7,7 +7,12 @@ import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { ERC20Service } from 'services'
 import { ITerminalPool } from 'types'
-import { formatToShortNumber, getCurrentTimeStamp, getTimeDurationStr, numberWithCommas } from 'utils'
+import {
+  formatToShortNumber,
+  getCurrentTimeStamp,
+  getTimeDurationStr,
+  numberWithCommas,
+} from 'utils'
 import { ZERO } from 'utils/number'
 import {
   BalanceSection,
@@ -271,10 +276,20 @@ export const Content = (props: IProps) => {
         <div>
           <Grid container spacing={0}>
             <Grid item xs={12} md={6} className={classes.balance}>
-              <BalanceSection pool={poolData} token={poolData.token0} percent={poolData.token0Percent} tokentvl={poolData.token0tvl}/>
+              <BalanceSection
+                pool={poolData}
+                token={poolData.token0}
+                percent={poolData.token0Percent}
+                tokentvl={poolData.token0tvl}
+              />
             </Grid>
             <Grid item xs={12} md={6} className={classes.balance}>
-              <BalanceSection pool={poolData} token={poolData.token1} percent={poolData.token1Percent} tokentvl={poolData.token1tvl}/>
+              <BalanceSection
+                pool={poolData}
+                token={poolData.token1}
+                percent={poolData.token1Percent}
+                tokentvl={poolData.token1tvl}
+              />
             </Grid>
           </Grid>
         </div>
@@ -287,12 +302,18 @@ export const Content = (props: IProps) => {
               />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
-              <InfoSection label="VESTING PERIOD" value={getTimeDurationStr(poolData.rewardsDuration.toNumber())} />
+              <InfoSection
+                label="VESTING PERIOD"
+                value={getTimeDurationStr(poolData.rewardsDuration.toNumber())}
+              />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
-              <InfoSection label="ENDING" value={moment(new Date(poolData.periodFinish.toNumber() * 1000)).format(
-                'MMM DD, YYYY'
-              )} />
+              <InfoSection
+                label="ENDING"
+                value={moment(
+                  new Date(poolData.periodFinish.toNumber() * 1000)
+                ).format('MMM DD, YYYY')}
+              />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
               <InfoSection label="APR" value="68%" />

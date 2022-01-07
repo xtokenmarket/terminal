@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 11,
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
   tokenIcon: {
     width: 48,
@@ -127,14 +127,18 @@ export const PoolTableItem = (props: IProps) => {
         <PoolTd type="allocation">
           <div className={classes.item}>
             <Typography className={classes.allocation}>
-              {poolData.token0.symbol}&nbsp;<span>{`${poolData.token0Percent}%`}</span>&nbsp;&nbsp;
-              {poolData.token1.symbol}&nbsp;<span>{`${poolData.token1Percent}%`}</span>
+              {poolData.token0.symbol}&nbsp;
+              <span>{`${poolData.token0Percent}%`}</span>&nbsp;&nbsp;
+              {poolData.token1.symbol}&nbsp;
+              <span>{`${poolData.token1Percent}%`}</span>
             </Typography>
           </div>
         </PoolTd>
         <PoolTd type="tvl">
           <div className={classes.itemAlignRight}>
-            <Typography className={classes.label}>{`$${numberWithCommas(poolData.tvl)}`}</Typography>
+            <Typography className={classes.label}>{`$${numberWithCommas(
+              poolData.tvl
+            )}`}</Typography>
           </div>
         </PoolTd>
         <PoolTd type="vesting">

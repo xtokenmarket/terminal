@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: any) => ({
     fontSize: 11,
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'flex-end'
+    justifyContent: 'flex-end',
   },
 }))
 
