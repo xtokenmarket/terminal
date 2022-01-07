@@ -37,26 +37,38 @@ export const useTerminalPool = (poolAddress: string) => {
     }
   }
 
-  const getERC20TokenBalance = async(tokenAddress: string, uniswapPool: string) => {
-    if(!account) return BigNumber.from(0)
+  const getERC20TokenBalance = async (
+    tokenAddress: string,
+    uniswapPool: string
+  ) => {
+    if (!account) return BigNumber.from(0)
     const erc20 = new ERC20Service(provider, uniswapPool, tokenAddress)
     const bal = await erc20.getBalanceOf(uniswapPool)
     return bal
   }
 
-  const getTokenPercent = (balance: BigNumber, token0Balance: BigNumber, token1Balance: BigNumber, token0Decimals: number, token1Decimals: number, tokenDecimals: number) => {
+  const getTokenPercent = (
+    balance: BigNumber,
+    token0Balance: BigNumber,
+    token1Balance: BigNumber,
+    token0Decimals: number,
+    token1Decimals: number,
+    tokenDecimals: number
+  ) => {
     const divisor = token0Balance.add(token1Balance)
     const getFormatNumber = (_balance: BigNumber, _tokenDecimals: number) => {
-      return Number(formatBigNumber(_balance, _tokenDecimals))*MULTIPLY_PRECISION
+      return (
+        Number(formatBigNumber(_balance, _tokenDecimals)) * MULTIPLY_PRECISION
+      )
     }
 
-    if(Number(divisor.toString()) === 0) return ""
+    if (Number(divisor.toString()) === 0) return ''
     const balanceNumber = getFormatNumber(balance, tokenDecimals)
     const token0Number = getFormatNumber(token0Balance, token0Decimals)
     const token1Number = getFormatNumber(token1Balance, token1Decimals)
-    const percent = (balanceNumber / (token0Number+token1Number)) * 100
-    
-    return JSON.stringify(percent) 
+    const percent = (balanceNumber / (token0Number + token1Number)) * 100
+
+    return JSON.stringify(percent)
   }
 
   const loadInfo = async () => {
@@ -116,27 +128,51 @@ export const useTerminalPool = (poolAddress: string) => {
         getTokenDetails(token1Address),
         getTokenDetails(stakedTokenAddress),
       ])
-      
-      const token0Balance = await getERC20TokenBalance(token0Address, uniswapPool)
-      const token1Balance = await getERC20TokenBalance(token1Address, uniswapPool)
 
-      const token0Percent = getTokenPercent(token0Balance, token0Balance, token1Balance, token0.decimals, token1.decimals, token0.decimals)
-      const token1Percent = getTokenPercent(token1Balance, token0Balance, token1Balance, token0.decimals, token1.decimals, token1.decimals)
+      const token0Balance = await getERC20TokenBalance(
+        token0Address,
+        uniswapPool
+      )
+      const token1Balance = await getERC20TokenBalance(
+        token1Address,
+        uniswapPool
+      )
+
+      const token0Percent = getTokenPercent(
+        token0Balance,
+        token0Balance,
+        token1Balance,
+        token0.decimals,
+        token1.decimals,
+        token0.decimals
+      )
+      const token1Percent = getTokenPercent(
+        token1Balance,
+        token0Balance,
+        token1Balance,
+        token0.decimals,
+        token1.decimals,
+        token1.decimals
+      )
 
       const ids = await getCoinGeckoIDs([token0.symbol, token1.symbol])
       const rates = await getTokenExchangeRate(ids)
-      
-      let tvl = ""
-      let token0tvl: string | BigNumber = ""
-      let token1tvl: string | BigNumber  = ""
-      if(rates) {
-        token0tvl = token0Balance.mul(rates[0]*MULTIPLY_PRECISION).div(MULTIPLY_PRECISION)
-        token1tvl = token1Balance.mul(rates[1]*MULTIPLY_PRECISION).div(MULTIPLY_PRECISION)
+
+      let tvl = ''
+      let token0tvl: string | BigNumber = ''
+      let token1tvl: string | BigNumber = ''
+      if (rates) {
+        token0tvl = token0Balance
+          .mul(rates[0] * MULTIPLY_PRECISION)
+          .div(MULTIPLY_PRECISION)
+        token1tvl = token1Balance
+          .mul(rates[1] * MULTIPLY_PRECISION)
+          .div(MULTIPLY_PRECISION)
         tvl = formatBigNumber(token0tvl.add(token1tvl), token0.decimals)
-        token0tvl=formatBigNumber(token0tvl, token0.decimals)
-        token1tvl=formatBigNumber(token1tvl, token0.decimals)
+        token0tvl = formatBigNumber(token0tvl, token0.decimals)
+        token1tvl = formatBigNumber(token1tvl, token0.decimals)
       }
-      
+
       // console.timeEnd(`loadInfo token details ${poolAddress}`)
 
       // console.time(`loadInfo vesting period ${poolAddress}`)
@@ -198,7 +234,7 @@ export const useTerminalPool = (poolAddress: string) => {
           token1Percent,
           tvl,
           token0tvl,
-          token1tvl
+          token1tvl,
         },
       }))
     } catch (error) {
