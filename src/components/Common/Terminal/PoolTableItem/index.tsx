@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   loader: { padding: '20px 0' },
   content: {
     cursor: 'pointer',
-    padding: '16px 0',
+    padding: 16,
     display: 'flex',
     alignItems: 'center',
     position: 'relative',
@@ -111,7 +111,6 @@ export const PoolTableItem = (props: IProps) => {
       >
         <PoolTd type="pool">
           <div className={classes.item}>
-            &nbsp;&nbsp;&nbsp;
             <img
               alt="token0"
               className={classes.tokenIcon}
