@@ -49,6 +49,13 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
+  itemAlignRight: {
+    color: theme.colors.purple0,
+    fontSize: 11,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end'
+  },
   tokenIcon: {
     width: 48,
     height: 48,
@@ -126,19 +133,19 @@ export const PoolTableItem = (props: IProps) => {
           </div>
         </PoolTd>
         <PoolTd type="tvl">
-          <div className={classes.item}>
+          <div className={classes.itemAlignRight}>
             <Typography className={classes.label}>{`$${poolData.tvl}`}</Typography>
           </div>
         </PoolTd>
         <PoolTd type="vesting">
-          <div className={classes.item}>
+          <div className={classes.itemAlignRight}>
             <Typography className={classes.label}>
               {getTimeDurationStr(poolData.rewardsDuration.toNumber())}
             </Typography>
           </div>
         </PoolTd>
         <PoolTd type="program">
-          <div className={classes.item}>
+          <div className={classes.itemAlignRight}>
             {poolData.rewardTokens.map((rewardToken, index) => {
               const durationInfo = getTimeDurationUnitInfo(
                 poolData.rewardsDuration.toNumber()
@@ -158,7 +165,7 @@ export const PoolTableItem = (props: IProps) => {
           </div>
         </PoolTd>
         <PoolTd type="ending">
-          <div className={classes.item}>
+          <div className={classes.itemAlignRight}>
             <Typography className={classes.label}>
               {moment(new Date(poolData.periodFinish.toNumber() * 1000)).format(
                 'MMM DD, YYYY'
@@ -167,7 +174,7 @@ export const PoolTableItem = (props: IProps) => {
           </div>
         </PoolTd>
         <PoolTd type="apr">
-          <div className={classes.item}>
+          <div className={classes.itemAlignRight}>
             <Typography className={classes.apr}>99%</Typography>
           </div>
         </PoolTd>
