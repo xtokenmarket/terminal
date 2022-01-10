@@ -47,6 +47,7 @@ const CreatePool = () => {
   }
 
   const updateData = (e: any) => {
+    console.log('updateData', e)
     setState((prev) => ({ ...prev, ...e }))
   }
 
