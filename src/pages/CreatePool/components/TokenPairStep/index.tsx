@@ -26,22 +26,21 @@ const useStyles = makeStyles((theme) => ({
   },
   label: {
     color: theme.colors.white,
-    marginBottom: 16,
+    marginBottom: theme.spacing(2),
   },
   fee: {
-    marginTop: 40,
+    marginTop: theme.spacing(5),
     fontSize: 12,
     color: theme.colors.primary100,
-    marginBottom: 8,
+    marginBottom: theme.spacing(1),
   },
   warn: {
-    marginTop: 24,
-    padding: 24,
+    margin: theme.spacing(3, 0, 2, 0),
+    padding: theme.spacing(3),
     borderRadius: 4,
     color: theme.colors.white,
     border: `1px solid ${theme.colors.warn1}`,
     backgroundColor: transparentize(0.7, theme.colors.warn1),
-    marginBottom: 16,
   },
   priceInput: {
     border: `1px solid ${theme.colors.primary100}`,
@@ -76,7 +75,7 @@ const initialState: IState = {
   successVisible: false,
 }
 
-export const TokenPairStep = ({ data, updateData, onNext }: IProps) => {
+export const TokenPairStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
   const classes = useStyles()
   const { account, networkId, setWalletConnectModalOpened, setTxModalInfo } =
     useConnectedWeb3Context()
@@ -196,16 +195,15 @@ export const TokenPairStep = ({ data, updateData, onNext }: IProps) => {
 
   return (
     <div className={classes.root}>
-      {state.successVisible && (
-        <PairCreateModal
-          onClose={onCloseSuccess}
-          token0={data.token0 as Required<IToken>}
-          token1={data.token1 as Required<IToken>}
-        />
-      )}
+      <PairCreateModal
+        visible={state.successVisible}
+        onClose={onCloseSuccess}
+        token0={data.token0 as Required<IToken>}
+        token1={data.token1 as Required<IToken>}
+      />
       <LoadingOverlay visible={state.loading} />
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} md={6}>
           <Typography className={classes.label}>
             Select pair
           </Typography>
@@ -219,51 +217,49 @@ export const TokenPairStep = ({ data, updateData, onNext }: IProps) => {
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
-          <div>
-            {isNewPool && data.token0 && data.token1 && (
-              <>
-                <Typography className={classes.label}>
-                  Set starting price
-                </Typography>
-                <TextField
-                  InputProps={{
-                    disableUnderline: true,
-                    className: classes.priceInput,
-                  }}
-                  fullWidth
-                  placeholder="0"
-                  helperText={`1 ${data.token0.symbol}=${
-                    state.startPrice || '0'
-                  } ${data.token1.symbol}`}
-                  type="number"
-                  value={state.startPrice}
-                  onChange={(event) => {
-                    let newValue = event.target.value
-                    if (Number(newValue || '0') < 0) {
-                      newValue = '0'
-                    }
-                    setState((prev) => ({
-                      ...prev,
-                      startPrice: newValue,
-                    }))
-                  }}
-                />
-                <Typography className={classes.warn}>
-                  This pool must be initialized before you can add liquidity.
-                  To initialize plase set the starting price for the pool and
-                  deploy the pool on Uniswap V3.
-                </Typography>
-              </>
-            )}
-            <Typography className={classes.label}>
-              Select fee tier
-            </Typography>
-            <FeeTierSection
-              tier={data.tier}
-              onChange={(tier) => updateData({ tier })}
-            />
-          </div>
+        <Grid item xs={12} md={6}>
+          {isNewPool && data.token0 && data.token1 && (
+            <>
+              <Typography className={classes.label}>
+                Set starting price
+              </Typography>
+              <TextField
+                InputProps={{
+                  disableUnderline: true,
+                  className: classes.priceInput,
+                }}
+                fullWidth
+                placeholder="0"
+                helperText={`1 ${data.token0.symbol}=${
+                  state.startPrice || '0'
+                } ${data.token1.symbol}`}
+                type="number"
+                value={state.startPrice}
+                onChange={(event) => {
+                  let newValue = event.target.value
+                  if (Number(newValue || '0') < 0) {
+                    newValue = '0'
+                  }
+                  setState((prev) => ({
+                    ...prev,
+                    startPrice: newValue,
+                  }))
+                }}
+              />
+              <Typography className={classes.warn}>
+                This pool must be initialized before you can add liquidity.
+                To initialize plase set the starting price for the pool and
+                deploy the pool on Uniswap V3.
+              </Typography>
+            </>
+          )}
+          <Typography className={classes.label}>
+            Select fee tier
+          </Typography>
+          <FeeTierSection
+            tier={data.tier}
+            onChange={(tier) => updateData({ tier })}
+          />
         </Grid>
         <Grid item xs={12}>
           <Typography className={classes.fee}>

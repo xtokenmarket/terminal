@@ -1,57 +1,55 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { makeStyles, Typography } from '@material-ui/core'
+import { Grid, makeStyles, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import { transparentize } from 'polished'
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  tierInner: {
+    '&:hover:not(.active)': {
+      opacity: 0.7,
+    },
     display: 'flex',
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  tier: {
-    flex: 1,
+    flexDirection: 'column',
     border: `1px solid ${theme.colors.primary200}`,
     borderRadius: 4,
-    padding: 16,
+    padding: theme.spacing(2),
 
     position: 'relative',
     transition: 'all 0.4s',
     backgroundColor: theme.colors.transparent,
     cursor: 'pointer',
-    '&:hover': { opacity: 0.7 },
-    '& p': {
-      color: theme.colors.primary100,
-      margin: 0,
-      fontSize: 22,
-      fontWeight: 600,
-      transition: 'all 0.4s',
-    },
-    '& span': {
-      color: theme.colors.primary100,
-      fontSize: 14,
-      fontWeight: 600,
-      transition: 'all 0.4s',
-    },
-    '& img': {
-      position: 'absolute',
-      right: 12,
-      top: 12,
-      opacity: 0,
-      transition: 'all 0.4s',
-    },
     '&.active': {
       borderColor: theme.colors.secondary,
       backgroundColor: transparentize(0.85, theme.colors.secondary),
       color: theme.colors.white,
-      '& p': { color: theme.colors.white },
-      '& span': { color: theme.colors.white },
-      '& img': {
-        opacity: 1,
-      },
     },
-    '&+&': {
-      marginLeft: 12,
+  },
+  checkIcon: {
+    position: 'absolute',
+    right: 12,
+    top: 12,
+    opacity: 0,
+    transition: 'all 0.4s',
+    '&.active': {
+      opacity: 1,
+    },
+  },
+  percent: {
+    color: theme.colors.primary100,
+    fontSize: 22,
+    fontWeight: 600,
+    transition: 'all 0.4s',
+    '&.active': {
+      color: theme.colors.white,
+    },
+  },
+  label: {
+    color: theme.colors.primary100,
+    fontSize: 14,
+    fontWeight: 600,
+    transition: 'all 0.4s',
+    '&.active': {
+      color: theme.colors.white,
     },
   },
 }))
@@ -77,29 +75,40 @@ const TIERS = [
   },
 ]
 
-export const FeeTierSection = (props: IProps) => {
-  const classes = useStyles()
-  const { tier, onChange } = props
+export const FeeTierSection: React.FC<IProps> = ({
+  className,
+  tier,
+  onChange,
+}) => {
+  const cl = useStyles()
 
   return (
-    <div className={clsx(classes.root, props.className)}>
-      {TIERS.map((item) => {
-        const isActive = item.value.eq(tier)
-
+    <Grid container spacing={3}>
+      {TIERS.map(({ value, label }) => {
+        const active = value.eq(tier)
         return (
-          <div
-            className={clsx(classes.tier, isActive && 'active')}
-            key={item.label}
-            onClick={() => {
-              onChange(item.value)
-            }}
+          <Grid
+            item
+            xs={12}
+            sm={4}
+            key={label}
+            onClick={() => onChange(value)}
           >
-            <p>{item.value.toNumber() / 100}%</p>
-            <span>{item.label}</span>
-            <img src="/assets/icons/checked.svg" />
-          </div>
+            <div className={clsx(cl.tierInner, { active })}>
+              <Typography className={clsx(cl.percent, { active })}>
+                {value.toNumber() / 100}%
+              </Typography>
+              <Typography className={clsx(cl.label, { active })}>
+                {label}
+              </Typography>
+              <img
+                src="/assets/icons/checked.svg"
+                className={clsx(cl.checkIcon, { active })}
+              />
+            </div>
+          </Grid>
         )
       })}
-    </div>
+    </Grid>
   )
 }

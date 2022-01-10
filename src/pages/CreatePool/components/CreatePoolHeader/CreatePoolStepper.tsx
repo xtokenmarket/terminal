@@ -68,7 +68,7 @@ const STEPS_DATA: Record<ECreatePoolStep, { index: number, label: string }> = {
 export const CreatePoolStepper: React.FC<IProps> = ({ step }) => {
   const cl = useStyles()
   const stepNum = STEPS_DATA[step].index
-  const isSm = useMediaQuery('(max-width: 900px)')
+  const isSm = useMediaQuery('(max-width: 959px)')
   const orientation = isSm ? 'vertical' : 'horizontal'
   return (
     <Stepper activeStep={stepNum} className={cl.stepper} orientation={orientation}>
