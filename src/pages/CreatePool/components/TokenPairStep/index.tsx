@@ -75,7 +75,11 @@ const initialState: IState = {
   successVisible: false,
 }
 
-export const TokenPairStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
+export const TokenPairStep: React.FC<IProps> = ({
+  data,
+  updateData,
+  onNext,
+}) => {
   const classes = useStyles()
   const { account, networkId, setWalletConnectModalOpened, setTxModalInfo } =
     useConnectedWeb3Context()
@@ -204,9 +208,7 @@ export const TokenPairStep: React.FC<IProps> = ({ data, updateData, onNext }) =>
       <LoadingOverlay visible={state.loading} />
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
-          <Typography className={classes.label}>
-            Select pair
-          </Typography>
+          <Typography className={classes.label}>Select pair</Typography>
           <TokenSelect
             token={data.token0}
             onChange={(token0) => updateData({ token0 })}
@@ -247,15 +249,13 @@ export const TokenPairStep: React.FC<IProps> = ({ data, updateData, onNext }) =>
                 }}
               />
               <Typography className={classes.warn}>
-                This pool must be initialized before you can add liquidity.
-                To initialize plase set the starting price for the pool and
-                deploy the pool on Uniswap V3.
+                This pool must be initialized before you can add liquidity. To
+                initialize plase set the starting price for the pool and deploy
+                the pool on Uniswap V3.
               </Typography>
             </>
           )}
-          <Typography className={classes.label}>
-            Select fee tier
-          </Typography>
+          <Typography className={classes.label}>Select fee tier</Typography>
           <FeeTierSection
             tier={data.tier}
             onChange={(tier) => updateData({ tier })}

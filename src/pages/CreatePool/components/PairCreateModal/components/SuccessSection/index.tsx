@@ -52,7 +52,7 @@ interface IProps {
 export const SuccessSection: React.FC<IProps> = ({
   onClose,
   token0,
-  token1
+  token1,
 }) => {
   const classes = useStyles()
 

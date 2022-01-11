@@ -3,7 +3,7 @@ import { Stepper, Step, makeStyles, Grid, Typography } from '@material-ui/core'
 import { ECreatePoolStep } from 'utils/enums'
 import clsx from 'clsx'
 
-import { CreatePoolStepper  } from './CreatePoolStepper'
+import { CreatePoolStepper } from './CreatePoolStepper'
 
 const useStyles = makeStyles((theme) => ({
   headerTop: {
@@ -40,9 +40,7 @@ export const CreatePoolHeader = ({ step, onCancel }: IProps) => {
 
   return (
     <div className={classes.headerTop}>
-      <Typography className={classes.title}>
-        Create New Pool
-      </Typography>
+      <Typography className={classes.title}>Create New Pool</Typography>
       <CreatePoolStepper step={step} />
       <span className={classes.cancel} onClick={onCancel}>
         Cancel
