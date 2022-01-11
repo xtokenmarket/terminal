@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Button, Grid, makeStyles } from '@material-ui/core'
 import clsx from 'clsx'
 import { useConnectedWeb3Context } from 'contexts'
-import { useIsMountedRef } from 'helpers'
+import { useIsMountedRef, useServices } from 'helpers'
 import moment from 'moment'
 import { useEffect, useState } from 'react'
 import { ERC20Service } from 'services'
@@ -168,6 +168,7 @@ export const Content = (props: IProps) => {
   const { poolData } = props
   const [state, setState] = useState<IState>(initialState)
   const classes = useStyles()
+  const { lmService } = useServices()
   const {
     account,
     library: provider,
@@ -221,6 +222,17 @@ export const Content = (props: IProps) => {
       }
     }
   }
+
+  useEffect(() => {
+    const getHistory = async () => {
+      const history = await lmService.getHistory(poolData.address)
+      console.log('history', history)
+
+      setState((prev) => ({ ...prev, history }))
+    }
+
+    getHistory()
+  })
 
   useEffect(() => {
     loadPersonalInfo()

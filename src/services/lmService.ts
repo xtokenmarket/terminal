@@ -387,6 +387,36 @@ class LMService {
       })
     })
   }
+
+  getHistory = async (pool: string): Promise<{ [key: string]: string }[] | null> => {
+      try {
+        const depositFilter = this.contract.filters.ProvidedLiquidity(pool)
+        const withdrawFilter = this.contract.filters.RemovedLiquidity(pool)
+        const [depositHistory, withdrawHistory] = await Promise.all(
+          [depositFilter, withdrawFilter].map((filter) => {
+            return this.contract.queryFilter(filter)})
+        )
+
+        const events = [...depositHistory, ...withdrawHistory]
+        const blockDetails = await Promise.all(
+          events.map((history) => history.getBlock())
+        )  
+        const history = events.map((event, index) => {
+          return {
+            action: event.event,
+            tx: event.transactionHash,
+            value: event.args ? event.args[3] : "0",
+            time: blockDetails[index].timestamp
+          }
+        })
+
+      return history as { [key: string]: any }[]
+      } catch (error) {
+        console.log(error);
+        
+      }
+      return null
+  }
 }
 
 export { LMService }
