@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import React, { useCallback, useState } from 'react'
 import {
   makeStyles,
   Modal,
@@ -10,10 +10,11 @@ import {
 import { CloseOutlined } from '@material-ui/icons'
 import SearchIcon from '@material-ui/icons/Search'
 
-import React from 'react'
 import { IToken } from 'types'
 import { CommonTokens } from './CommonTokens'
 import { TokensList } from './TokensList'
+import { isAddress } from 'utils/tools'
+import useDebounce from 'hooks/useDebouce'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -90,6 +91,14 @@ export const TokenSelectModal: React.FC<IProps> = ({
   open,
 }) => {
   const cl = useStyles()
+  const [searchQuery, setSearchQuery] = useState('')
+  const debouncedQuery = useDebounce(searchQuery, 500)
+  const onSearchQueryChange = useCallback((event) => {
+    const input = event.target.value
+    const checksummedInput = isAddress(input)
+    setSearchQuery(checksummedInput || input)
+  }, [])
+  console.log('debounced query:', debouncedQuery)
   return (
     <Modal className={cl.modal} open={open} onClose={onClose}>
       <div className={cl.content}>
@@ -113,6 +122,8 @@ export const TokenSelectModal: React.FC<IProps> = ({
               variant="standard"
               color="primary"
               placeholder="Search by token name or paste address"
+              value={searchQuery}
+              onChange={onSearchQueryChange}
             />
             <Typography className={cl.commonLabel}>COMMON BASES</Typography>
             <CommonTokens onSelectToken={onSelect} />
