@@ -232,11 +232,7 @@ export const useTerminalPool = (poolAddress: string) => {
           },
           rewardsPerToken,
           manager,
-          token0Percent,
-          token1Percent,
           tvl,
-          token0tvl,
-          token1tvl,
         },
       }))
     } catch (error) {
