@@ -170,7 +170,7 @@ export const useTerminalPool = (poolAddress: string) => {
           .div(MULTIPLY_PRECISION)
         tvl = formatBigNumber(token0tvl.add(token1tvl), token0.decimals)
         token0.tvl = formatBigNumber(token0tvl, token0.decimals)
-        token1.tvl = formatBigNumber(token0tvl, token1.decimals)
+        token1.tvl = formatBigNumber(token1tvl, token1.decimals)
         token0.percent = token0Percent
         token1.percent = token1Percent
       }
