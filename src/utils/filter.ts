@@ -5,11 +5,6 @@ import { getAddress } from 'ethers/lib/utils'
 function _createTokenFilterFunction(search: string): (token: IToken) => boolean {
   const isSearchingAddress = isAddress(search)
 
-  console.log(
-    'isSearchingAddress:', isSearchingAddress,
-    'search query:', search,
-  )
-
   if (isSearchingAddress) {
     const searchAddress = getAddress(search)
     return ({ address }) => (address.toLowerCase() === searchAddress.toLowerCase())
