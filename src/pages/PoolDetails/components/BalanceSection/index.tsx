@@ -1,6 +1,5 @@
 import { makeStyles, Typography } from '@material-ui/core'
 import { TokenIcon } from 'components'
-import { BigNumber } from 'ethers'
 import { useTokenBalance } from 'helpers'
 import { ITerminalPool, IToken } from 'types'
 import { formatBigNumber, numberWithCommas } from 'utils'
@@ -53,13 +52,11 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   token: IToken
   pool: ITerminalPool
-  percent: string
-  tokentvl: string | BigNumber
 }
 
 export const BalanceSection = (props: IProps) => {
   const classes = useStyles()
-  const { token, pool, percent, tokentvl } = props
+  const { token, pool } = props
 
   const { balance } = useTokenBalance(token.address, pool.uniswapPool)
 
@@ -70,10 +67,11 @@ export const BalanceSection = (props: IProps) => {
         <TokenIcon className={classes.icon} token={token} />
         <div className={classes.texts}>
           <Typography className={classes.balance}>
-            {formatBigNumber(balance, token.decimals)} <span>{percent}%</span>
+            {formatBigNumber(balance, token.decimals)}{' '}
+            <span>{token.percent}%</span>
           </Typography>
           <Typography className={classes.dollar}>
-            ~ ${numberWithCommas(tokentvl as string)}
+            ~ ${numberWithCommas(token.tvl as string)}
           </Typography>
         </div>
       </div>
