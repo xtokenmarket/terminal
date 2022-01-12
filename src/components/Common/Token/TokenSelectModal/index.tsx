@@ -107,11 +107,13 @@ export const TokenSelectModal: React.FC<IProps> = ({
   const [searchQuery, setSearchQuery] = useState('')
   const onSearchQueryChange = useCallback((e) => {
     setSearchQuery(e.target.value)
+    setIsLoading(true)
   }, [])
 
   const debouncedQuery = useDebounce(searchQuery, 500)
   const allTokens = useAllTokens()
   const [tokensList, setTokensList] = useState<IToken[]>(allTokens)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     (async () => {
@@ -119,7 +121,6 @@ export const TokenSelectModal: React.FC<IProps> = ({
 
       if (filteredTokensList.length > 0) {
         setTokensList(filteredTokensList)
-        return
       } else if (isAddress(debouncedQuery)) {
         try {
           const contract = new Contract(debouncedQuery, Abi.ERC20, provider)
@@ -127,11 +128,19 @@ export const TokenSelectModal: React.FC<IProps> = ({
           const symbol = await contract.symbol()
           const decimals = await contract.decimals()
           const image = '/assets/tokens/unknown.png'
-          setTokensList([{ name, symbol, decimals, image, address: debouncedQuery }])
+          const unknownToken = {
+            name,
+            symbol,
+            address: debouncedQuery,
+            decimals,
+            image
+          }
+          setTokensList([unknownToken])
         } catch {}
       } else {
         setTokensList([])
       }
+      setIsLoading(false)
     })()
   }, [debouncedQuery])
 
@@ -168,6 +177,7 @@ export const TokenSelectModal: React.FC<IProps> = ({
         <TokensList
           onSelectToken={onSelect}
           tokens={tokensList}
+          isLoading={isLoading}
         />
       </div>
     </Modal>

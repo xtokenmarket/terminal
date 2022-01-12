@@ -1,5 +1,5 @@
 import React from 'react'
-import { makeStyles, Typography } from '@material-ui/core'
+import { makeStyles, Typography, CircularProgress } from '@material-ui/core'
 import { IToken } from 'types'
 
 const useStyles = makeStyles((theme) => ({
@@ -7,6 +7,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.seventh,
     width: '100%',
     flexGrow: 1,
+    display: 'flex',
+    flexDirection: 'column',
     padding: theme.spacing(3),
     [theme.breakpoints.down('xs')]: {
       padding: theme.spacing(2),
@@ -44,15 +46,40 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
     textAlign: 'center',
   },
+  spinnerBg: {
+    backgroundColor: theme.colors.seventh,
+    flexGrow: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  spinner: {
+    color: theme.colors.primary100,
+    alignSelf: 'center',
+    justifySelf: 'center',
+    marginTop: theme.spacing(6),
+  },
 }))
 
 interface IProps {
   onSelectToken: (_: IToken) => void
   tokens: IToken[]
+  isLoading: boolean
 }
 
-export const TokensList: React.FC<IProps> = ({ onSelectToken, tokens }) => {
+export const TokensList: React.FC<IProps> = ({
+  onSelectToken,
+  tokens,
+  isLoading,
+}) => {
   const cl = useStyles()
+  if (isLoading) {
+    return (
+      <div className={cl.tokensList}>
+        <CircularProgress size={100} className={cl.spinner} />
+      </div>
+    )
+  }
   if (tokens.length === 0) {
     return (
       <div className={cl.tokensList}>
