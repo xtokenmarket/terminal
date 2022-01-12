@@ -7,6 +7,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.seventh,
     padding: theme.spacing(3),
     width: '100%',
+    flexGrow: 1,
   },
   token: {
     display: 'flex',

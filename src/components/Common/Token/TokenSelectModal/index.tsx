@@ -16,8 +16,6 @@ import { TokensList } from './TokensList'
 import { isAddress } from 'utils/tools'
 import { useDebounce } from 'hooks/useDebouce'
 
-import { ETokenSearchType } from './types'
-import { knownTokens } from 'config/networks'
 import { useAllTokens } from 'hooks/useAllTokens'
 import { filterTokens } from 'utils/filter'
 
@@ -33,8 +31,10 @@ const useStyles = makeStyles((theme) => ({
     userSelect: 'none',
     width: 700,
     maxWidth: '90vw',
-    maxHeight: '80vh',
+    height: '80vh',
     backgroundColor: theme.colors.primary500,
+    display: 'flex',
+    flexDirection: 'column',
   },
   topSection: {
     padding: theme.spacing(3),
@@ -103,7 +103,6 @@ export const TokenSelectModal: React.FC<IProps> = ({
   }, [])
 
   const debouncedQuery = useDebounce(searchQuery, 500)
-  const searchType = isAddress(searchQuery) ? ETokenSearchType.Address : ETokenSearchType.Symbol
   const allTokens = useAllTokens()
   const tokensList = filterTokens(allTokens, debouncedQuery)
 
@@ -130,7 +129,7 @@ export const TokenSelectModal: React.FC<IProps> = ({
               variant="standard"
               color="primary"
               placeholder="Search by token name or paste address"
-              // value={searchQuery}
+              value={searchQuery}
               onChange={onSearchQueryChange}
             />
             <Typography className={cl.commonLabel}>COMMON BASES</Typography>
