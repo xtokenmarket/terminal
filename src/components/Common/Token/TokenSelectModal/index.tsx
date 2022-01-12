@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import {
   makeStyles,
   Modal,
@@ -17,6 +17,10 @@ import { useDebounce } from 'hooks/useDebouce'
 
 import { useAllTokens } from 'hooks/useAllTokens'
 import { filterTokens } from 'utils/filter'
+import { isAddress } from 'ethers/lib/utils'
+import { Contract } from 'ethers'
+import Abi from 'abis'
+import { useConnectedWeb3Context } from 'contexts'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -98,6 +102,7 @@ export const TokenSelectModal: React.FC<IProps> = ({
   open,
 }) => {
   const cl = useStyles()
+  const { library: provider } = useConnectedWeb3Context()
 
   const [searchQuery, setSearchQuery] = useState('')
   const onSearchQueryChange = useCallback((e) => {
@@ -106,7 +111,29 @@ export const TokenSelectModal: React.FC<IProps> = ({
 
   const debouncedQuery = useDebounce(searchQuery, 500)
   const allTokens = useAllTokens()
-  const tokensList = filterTokens(allTokens, debouncedQuery)
+  const [tokensList, setTokensList] = useState<IToken[]>(allTokens)
+
+  useEffect(() => {
+    (async () => {
+      const filteredTokensList = filterTokens(allTokens, debouncedQuery)
+
+      if (filteredTokensList.length > 0) {
+        setTokensList(filteredTokensList)
+        return
+      } else if (isAddress(debouncedQuery)) {
+        try {
+          const contract = new Contract(debouncedQuery, Abi.ERC20, provider)
+          const name = await contract.name()
+          const symbol = await contract.symbol()
+          const decimals = await contract.decimals()
+          const image = '/assets/tokens/unknown.png'
+          setTokensList([{ name, symbol, decimals, image, address: debouncedQuery }])
+        } catch {}
+      } else {
+        setTokensList([])
+      }
+    })()
+  }, [debouncedQuery])
 
   return (
     <Modal className={cl.modal} open={open} onClose={onClose}>
