@@ -307,25 +307,25 @@ export const Content = (props: IProps) => {
               />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
-              <InfoSection label="APR" value="68%" />
+              <InfoSection label="APR" value="N/A" />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
-              <InfoSection
+              {/* <InfoSection
                 label="VOLUME(24H)"
                 value={`$${formatToShortNumber('791')}`}
                 right={
                   <span className={clsx(classes.tag, 'positive')}>+17.38%</span>
                 }
-              />
+              /> */}
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
-              <InfoSection
+              {/* <InfoSection
                 label="VOLUME(7D)"
                 value={`$${formatToShortNumber('91451')}`}
                 right={
                   <span className={clsx(classes.tag, 'negative')}>-13.38%</span>
                 }
-              />
+              /> */}
             </Grid>
           </Grid>
         </div>
