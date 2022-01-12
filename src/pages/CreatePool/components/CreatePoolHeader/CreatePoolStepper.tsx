@@ -1,8 +1,15 @@
 import React from 'react'
-import { Stepper, Step, StepLabel, makeStyles, Typography, useMediaQuery } from '@material-ui/core'
+import {
+  Stepper,
+  Step,
+  StepLabel,
+  makeStyles,
+  Typography,
+  useMediaQuery,
+} from '@material-ui/core'
 import { ECreatePoolStep } from 'utils/enums'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   stepper: {
     background: theme.colors.primary500,
     [theme.breakpoints.up('md')]: {
@@ -18,8 +25,7 @@ const useStyles = makeStyles(theme => ({
       '&.MuiStepLabel-active': {
         color: theme.colors.white,
       },
-      '&.MuiStepLabel-completed': {
-      }
+      '&.MuiStepLabel-completed': {},
     },
     '& .MuiStepIcon-root text': {
       fill: theme.colors.gray2,
@@ -46,7 +52,7 @@ interface IProps {
   step: ECreatePoolStep
 }
 
-const STEPS_DATA: Record<ECreatePoolStep, { index: number, label: string }> = {
+const STEPS_DATA: Record<ECreatePoolStep, { index: number; label: string }> = {
   [ECreatePoolStep.TokenPair]: {
     index: 0,
     label: 'Token Pair',
@@ -71,7 +77,11 @@ export const CreatePoolStepper: React.FC<IProps> = ({ step }) => {
   const isSm = useMediaQuery('(max-width: 959px)')
   const orientation = isSm ? 'vertical' : 'horizontal'
   return (
-    <Stepper activeStep={stepNum} className={cl.stepper} orientation={orientation}>
+    <Stepper
+      activeStep={stepNum}
+      className={cl.stepper}
+      orientation={orientation}
+    >
       {Object.values(STEPS_DATA).map(({ index, label }) => (
         <Step key={index} className={cl.step}>
           <StepLabel>

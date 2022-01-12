@@ -87,13 +87,7 @@ export const FeeTierSection: React.FC<IProps> = ({
       {TIERS.map(({ value, label }) => {
         const active = value.eq(tier)
         return (
-          <Grid
-            item
-            xs={12}
-            sm={4}
-            key={label}
-            onClick={() => onChange(value)}
-          >
+          <Grid item xs={12} sm={4} key={label} onClick={() => onChange(value)}>
             <div className={clsx(cl.tierInner, { active })}>
               <Typography className={clsx(cl.percent, { active })}>
                 {value.toNumber() / 100}%
