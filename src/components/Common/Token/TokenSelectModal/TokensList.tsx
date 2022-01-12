@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { makeStyles, Typography, CircularProgress } from '@material-ui/core'
 import { IToken } from 'types'
 
@@ -67,45 +67,58 @@ interface IProps {
   isLoading: boolean
 }
 
+enum ETokensListDisplayState {
+  Loading,
+  FoundResults,
+  NoResults,
+}
+
 export const TokensList: React.FC<IProps> = ({
   onSelectToken,
   tokens,
   isLoading,
 }) => {
   const cl = useStyles()
-  if (isLoading) {
-    return (
-      <div className={cl.tokensList}>
-        <CircularProgress size={100} className={cl.spinner} />
-      </div>
-    )
-  }
-  if (tokens.length === 0) {
-    return (
-      <div className={cl.tokensList}>
-        <Typography variant="h5" className={cl.noResultsText}>
-          No results found.
-        </Typography>
-      </div>
-    )
-  }
-  return (
-    <div className={cl.tokensList}>
-      {tokens.map((token) => {
-        return (
-          <div
-            className={cl.token}
-            key={token.address}
-            onClick={() => onSelectToken(token)}
-          >
-            <img className={cl.image} alt="img" src={token.image || ''} />
-            <div>
-              <p className={cl.symbol}>{token.symbol}</p>
-              <span className={cl.name}>{token.name}</span>
+  const [displayState, setDisplayState] = useState(ETokensListDisplayState.FoundResults)
+  useEffect(() => {
+    if (isLoading) {
+      setDisplayState(ETokensListDisplayState.Loading)
+    } else if (tokens.length === 0) {
+      setDisplayState(ETokensListDisplayState.NoResults)
+    } else {
+      setDisplayState(ETokensListDisplayState.FoundResults)
+    }
+  }, [tokens, isLoading])
+
+  const content = {
+    [ETokensListDisplayState.Loading]: (
+      <CircularProgress size={100} className={cl.spinner} />
+    ),
+    [ETokensListDisplayState.NoResults]: (
+      <Typography variant="h5" className={cl.noResultsText}>
+        No results found.
+      </Typography>
+    ),
+    [ETokensListDisplayState.FoundResults]: (
+      <>
+        {tokens.map((token) => {
+          return (
+            <div
+              className={cl.token}
+              key={token.address}
+              onClick={() => onSelectToken(token)}
+            >
+              <img className={cl.image} alt="img" src={token.image || ''} />
+              <div>
+                <p className={cl.symbol}>{token.symbol}</p>
+                <span className={cl.name}>{token.name}</span>
+              </div>
             </div>
-          </div>
-        )
-      })}
-    </div>
-  )
+          )
+        })}
+      </>
+    ),
+  }[displayState]
+
+  return <div className={cl.tokensList}>{content}</div>
 }
