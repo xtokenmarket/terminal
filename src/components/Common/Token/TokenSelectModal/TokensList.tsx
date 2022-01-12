@@ -1,7 +1,5 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core'
-import { getToken, tokenSymbols } from 'config/networks'
-import { useConnectedWeb3Context } from 'contexts'
 import { IToken } from 'types'
 
 const useStyles = makeStyles((theme) => ({
@@ -42,15 +40,14 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   onSelectToken: (_: IToken) => void
+  tokens: IToken[]
 }
 
-export const TokensList: React.FC<IProps> = ({ onSelectToken }) => {
+export const TokensList: React.FC<IProps> = ({ onSelectToken, tokens }) => {
   const cl = useStyles()
-  const { networkId } = useConnectedWeb3Context()
   return (
     <div className={cl.tokensList}>
-      {tokenSymbols.map((tokenId) => {
-        const token = getToken(tokenId as any, networkId)
+      {tokens.map((token) => {
         return (
           <div
             className={cl.token}

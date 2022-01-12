@@ -60,7 +60,7 @@ const networks: { [K in NetworkId]: INetwork } = {
   },
 }
 
-const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
+export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
   xtk: {
     name: 'xToken',
     symbol: 'XTK',
@@ -140,7 +140,7 @@ export const supportedNetworkURLs = entries(networks).reduce<{
   {}
 )
 
-const validNetworkId = (networkId: number): networkId is NetworkId => {
+export const validNetworkId = (networkId: number): networkId is NetworkId => {
   return networks[networkId as NetworkId] !== undefined
 }
 
