@@ -159,8 +159,8 @@ export const useTerminalPool = (poolAddress: string) => {
       const rates = await getTokenExchangeRate(ids)
 
       let tvl = ''
-      let token0tvl: string | BigNumber = ''
-      let token1tvl: string | BigNumber = ''
+      let token0tvl = BigNumber.from('0')
+      let token1tvl = BigNumber.from('0')
       if (rates) {
         token0tvl = token0Balance
           .mul(rates[0] * MULTIPLY_PRECISION)
@@ -169,8 +169,10 @@ export const useTerminalPool = (poolAddress: string) => {
           .mul(rates[1] * MULTIPLY_PRECISION)
           .div(MULTIPLY_PRECISION)
         tvl = formatBigNumber(token0tvl.add(token1tvl), token0.decimals)
-        token0tvl = formatBigNumber(token0tvl, token0.decimals)
-        token1tvl = formatBigNumber(token1tvl, token0.decimals)
+        token0.tvl = formatBigNumber(token0tvl, token0.decimals)
+        token1.tvl = formatBigNumber(token0tvl, token1.decimals)
+        token0.percent = token0Percent
+        token1.percent = token1Percent
       }
 
       // console.timeEnd(`loadInfo token details ${poolAddress}`)

@@ -53,6 +53,8 @@ export interface IToken {
   symbol: string
   name: string
   image: string
+  percent?: string
+  tvl?: string
 }
 
 export type ITerminalPoolTableSortFactor = 'tvl' | 'vesting' | 'ending' | 'apr'
@@ -78,11 +80,7 @@ export interface ITerminalPool {
   vestingPeriod: BigNumber
   ticks: { tick0: BigNumber; tick1: BigNumber }
   manager: string
-  token0Percent: string
-  token1Percent: string
   tvl: string
-  token0tvl: string | BigNumber
-  token1tvl: string | BigNumber
 }
 
 // uni

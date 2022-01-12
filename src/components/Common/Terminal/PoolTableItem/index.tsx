@@ -128,9 +128,9 @@ export const PoolTableItem = (props: IProps) => {
           <div className={classes.item}>
             <Typography className={classes.allocation}>
               {poolData.token0.symbol}&nbsp;
-              <span>{`${poolData.token0Percent}%`}</span>&nbsp;&nbsp;
+              <span>{`${poolData.token0.percent}%`}</span>&nbsp;&nbsp;
               {poolData.token1.symbol}&nbsp;
-              <span>{`${poolData.token1Percent}%`}</span>
+              <span>{`${poolData.token1.percent}%`}</span>
             </Typography>
           </div>
         </PoolTd>

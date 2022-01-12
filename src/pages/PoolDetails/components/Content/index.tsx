@@ -166,6 +166,7 @@ const initialState: IState = {
 
 export const Content = (props: IProps) => {
   const { poolData } = props
+  const { token0, token1 } = poolData
   const [state, setState] = useState<IState>(initialState)
   const classes = useStyles()
   const {
@@ -278,17 +279,17 @@ export const Content = (props: IProps) => {
             <Grid item xs={12} md={6} className={classes.balance}>
               <BalanceSection
                 pool={poolData}
-                token={poolData.token0}
-                percent={poolData.token0Percent}
-                tokentvl={poolData.token0tvl}
+                token={token0}
+                percent={token0.percent ? token0.percent : '0'}
+                tokentvl={token0.tvl ? token0.tvl : '0'}
               />
             </Grid>
             <Grid item xs={12} md={6} className={classes.balance}>
               <BalanceSection
                 pool={poolData}
-                token={poolData.token1}
-                percent={poolData.token1Percent}
-                tokentvl={poolData.token1tvl}
+                token={token1}
+                percent={token1.percent ? token1.percent : '0'}
+                tokentvl={token1.tvl ? token1.tvl : '0'}
               />
             </Grid>
           </Grid>
