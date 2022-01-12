@@ -19,6 +19,7 @@ import { useDebounce } from 'hooks/useDebouce'
 import { ETokenSearchType } from './types'
 import { knownTokens } from 'config/networks'
 import { useAllTokens } from 'hooks/useAllTokens'
+import { filterTokens } from 'utils/filter'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -97,15 +98,14 @@ export const TokenSelectModal: React.FC<IProps> = ({
   const cl = useStyles()
 
   const [searchQuery, setSearchQuery] = useState('')
-  const onSearchQueryChange = useCallback((event) => {
-    const input = event.target.value
-    const checksummedInput = isAddress(input)
-    setSearchQuery(checksummedInput || input)
+  const onSearchQueryChange = useCallback((e) => {
+    setSearchQuery(e.target.value)
   }, [])
 
   const debouncedQuery = useDebounce(searchQuery, 500)
   const searchType = isAddress(searchQuery) ? ETokenSearchType.Address : ETokenSearchType.Symbol
   const allTokens = useAllTokens()
+  const tokensList = filterTokens(allTokens, debouncedQuery)
 
   return (
     <Modal className={cl.modal} open={open} onClose={onClose}>
@@ -130,7 +130,7 @@ export const TokenSelectModal: React.FC<IProps> = ({
               variant="standard"
               color="primary"
               placeholder="Search by token name or paste address"
-              value={searchQuery}
+              // value={searchQuery}
               onChange={onSearchQueryChange}
             />
             <Typography className={cl.commonLabel}>COMMON BASES</Typography>
@@ -139,7 +139,7 @@ export const TokenSelectModal: React.FC<IProps> = ({
         </div>
         <TokensList
           onSelectToken={onSelect}
-          tokens={allTokens}
+          tokens={tokensList}
         />
       </div>
     </Modal>
