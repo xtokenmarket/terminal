@@ -1,13 +1,16 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core'
+import { makeStyles, Typography } from '@material-ui/core'
 import { IToken } from 'types'
 
 const useStyles = makeStyles((theme) => ({
   tokensList: {
     backgroundColor: theme.colors.seventh,
-    padding: theme.spacing(3),
     width: '100%',
     flexGrow: 1,
+    padding: theme.spacing(3),
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(2),
+    },
   },
   token: {
     display: 'flex',
@@ -37,6 +40,10 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 12,
     fontWeight: 700,
   },
+  noResultsText: {
+    color: theme.colors.white,
+    textAlign: 'center',
+  },
 }))
 
 interface IProps {
@@ -46,6 +53,15 @@ interface IProps {
 
 export const TokensList: React.FC<IProps> = ({ onSelectToken, tokens }) => {
   const cl = useStyles()
+  if (tokens.length === 0) {
+    return (
+      <div className={cl.tokensList}>
+        <Typography variant="h5" className={cl.noResultsText}>
+          No results found.
+        </Typography>
+      </div>
+    )
+  }
   return (
     <div className={cl.tokensList}>
       {tokens.map((token) => {

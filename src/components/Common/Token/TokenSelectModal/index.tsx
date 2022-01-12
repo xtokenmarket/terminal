@@ -13,7 +13,6 @@ import SearchIcon from '@material-ui/icons/Search'
 import { IToken } from 'types'
 import { CommonTokens } from './CommonTokens'
 import { TokensList } from './TokensList'
-import { isAddress } from 'utils/tools'
 import { useDebounce } from 'hooks/useDebouce'
 
 import { useAllTokens } from 'hooks/useAllTokens'
@@ -38,6 +37,9 @@ const useStyles = makeStyles((theme) => ({
   },
   topSection: {
     padding: theme.spacing(3),
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(2),
+    },
   },
   title: {
     fontSize: 20,
