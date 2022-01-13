@@ -120,19 +120,12 @@ export const TokenSelectModal: React.FC<IProps> = ({
 
   useEffect(() => {
     (async () => {
-      const filteredTokensList = filterTokens(allTokens, debouncedQuery)
-
-      if (filteredTokensList.length > 0) {
-        setTokensList(filteredTokensList)
-        setIsLoading(false)
-        return
-      }
-
       const unknownToken = await fetchUnknownToken(provider, debouncedQuery)
       if (unknownToken) {
         setTokensList([unknownToken])
       } else {
-        setTokensList([])
+        const filteredTokensList = filterTokens(allTokens, debouncedQuery)
+        setTokensList(filteredTokensList.length > 0 ? filteredTokensList : [])
       }
       setIsLoading(false)
     })()
