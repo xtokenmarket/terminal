@@ -20,7 +20,7 @@ import {
 } from 'helpers/univ3/hooks'
 import { transparentize } from 'polished'
 import { useEffect, useState } from 'react'
-import { IToken, MintState } from 'types'
+import {ICreatePoolData, IToken, MintState} from 'types'
 import { Bound, Field } from 'utils/enums'
 import { ZERO } from 'utils/number'
 
@@ -46,14 +46,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  data: {
-    token0: IToken
-    token1: IToken
-    tier: BigNumber
-    uniPool: string
-    amount0: BigNumber
-    amount1: BigNumber
-  }
+  data: ICreatePoolData
   updateData: (_: any) => void
   onNext: () => void
 }
@@ -73,36 +66,39 @@ const initialState: IState = {
 }
 
 export const PriceRangeStep = (props: IProps) => {
-  const classes = useStyles()
-  const { account, networkId } = useConnectedWeb3Context()
-  const [state, setState] = useState<IState>(initialState)
-
   const { data, updateData } = props
+  const classes = useStyles()
+  const { networkId } = useConnectedWeb3Context()
+  const [state, setState] = useState<IState>({ ...initialState, leftRangeTypedValue: data.minPrice, rightRangeTypedValue: data.maxPrice })
+
+
+  const baseCurrency = new Token(
+      networkId || DEFAULT_NETWORK_ID,
+      data.token0.address,
+      data.token0.decimals,
+      data.token0.symbol,
+      data.token0.name
+  )
+  const currencyB = new Token(
+      networkId || DEFAULT_NETWORK_ID,
+      data.token1.address,
+      data.token1.decimals,
+      data.token1.symbol,
+      data.token1.name
+  )
   const feeAmount: FeeAmount = data.tier.toNumber()
+
+  // prevent an error if they input ETH/WETH
+  const quoteCurrency =
+      baseCurrency && currencyB && baseCurrency.equals(currencyB)
+          ? undefined
+          : currencyB
 
   const handleAmountsChange = (amount0: BigNumber, amount1: BigNumber) => {
     updateData({ amount0, amount1 })
   }
 
-  const baseCurrency = new Token(
-    networkId || DEFAULT_NETWORK_ID,
-    data.token0.address,
-    data.token0.decimals,
-    data.token0.symbol,
-    data.token0.name
-  )
-  const currencyB = new Token(
-    networkId || DEFAULT_NETWORK_ID,
-    data.token1.address,
-    data.token1.decimals,
-    data.token1.symbol,
-    data.token1.name
-  )
-  // prevent an error if they input ETH/WETH
-  const quoteCurrency =
-    baseCurrency && currencyB && baseCurrency.equals(currencyB)
-      ? undefined
-      : currencyB
+
 
   const [poolState, pool] = usePools([[baseCurrency, currencyB, feeAmount]])[0]
   console.log(poolState, pool)
@@ -216,6 +212,11 @@ export const PriceRangeStep = (props: IProps) => {
     }))
   }
 
+  const onClickNext = () => {
+    updateData({ minPrice: state.leftRangeTypedValue, maxPrice: state.rightRangeTypedValue })
+    props.onNext()
+  }
+
   return (
     <div className={classes.root}>
       <div>
@@ -288,7 +289,7 @@ export const PriceRangeStep = (props: IProps) => {
       <Button
         color="primary"
         fullWidth
-        onClick={props.onNext}
+        onClick={onClickNext}
         variant="contained"
       >
         Next

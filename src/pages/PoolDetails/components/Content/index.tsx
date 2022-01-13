@@ -14,6 +14,7 @@ import {
   numberWithCommas,
 } from 'utils'
 import { ZERO } from 'utils/number'
+import { RewardModal } from 'components'
 import {
   BalanceSection,
   DepositModal,
@@ -21,7 +22,6 @@ import {
   InfoSection,
   VestModal,
   WithdrawModal,
-  RewardModal,
 } from '../index'
 
 const useStyles = makeStyles((theme) => ({
@@ -247,7 +247,6 @@ export const Content = (props: IProps) => {
             setRewardModalVisible(false)
             await props.reloadTerminalPool()
           }}
-          poolData={poolData}
         />
       )}
 

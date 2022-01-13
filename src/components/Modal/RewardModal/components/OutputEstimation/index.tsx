@@ -1,12 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { makeStyles, Typography } from '@material-ui/core'
 import clsx from 'clsx'
-import { TokenIcon } from 'components'
-import { ETHER_DECIMAL } from 'config/constants'
-import { IRewardState } from 'pages/PoolDetails/components'
-import { ITerminalPool } from 'types'
+import { IRewardState, TokenIcon } from 'components'
+import { IToken } from 'types'
 import { formatBigNumber } from 'utils'
-import { ZERO } from 'utils/number'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -49,14 +46,13 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   className?: string
-  poolData: ITerminalPool
   rewardState: IRewardState
   amounts: BigNumber[]
 }
 
 export const OutputEstimation = (props: IProps) => {
   const classes = useStyles()
-  const { poolData, rewardState, amounts } = props
+  const { rewardState, amounts } = props
 
   return (
     <div className={clsx(classes.root, props.className)}>
@@ -67,7 +63,7 @@ export const OutputEstimation = (props: IProps) => {
         </Typography>
         <br />
         <Typography className={classes.label}>REWARDS AMOUNTS</Typography>
-        {poolData.rewardTokens.map((rewardToken, index) => {
+        {rewardState.tokens.map((rewardToken, index) => {
           return (
             <div className={classes.infoRow} key={rewardToken.address}>
               <div>

@@ -1,12 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { makeStyles, Typography } from '@material-ui/core'
 import clsx from 'clsx'
-import { TokenIcon } from 'components'
-import { ETHER_DECIMAL } from 'config/constants'
-import { IRewardState } from 'pages/PoolDetails/components'
+import { IRewardState, TokenIcon } from 'components'
 import { ITerminalPool } from 'types'
 import { formatBigNumber } from 'utils'
-import { ZERO } from 'utils/number'
 
 const useStyles = makeStyles((theme) => ({
   root: {},

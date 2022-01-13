@@ -1,5 +1,5 @@
 import { Button, makeStyles, Typography } from '@material-ui/core'
-import { IRewardState } from 'pages/PoolDetails/components'
+import { IRewardState } from 'components'
 import { ITerminalPool } from 'types'
 
 import { OutputEstimation } from '..'

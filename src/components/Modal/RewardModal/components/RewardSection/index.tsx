@@ -1,20 +1,13 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import { Button, makeStyles, Typography } from '@material-ui/core'
+import { makeStyles, Typography } from '@material-ui/core'
 import Abi from 'abis'
 import { ONE_WEEK_IN_TIME } from 'config/constants'
 import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef, useServices } from 'helpers'
-import { IRewardState } from 'pages/PoolDetails/components'
+import { IRewardState } from 'components'
 import { useEffect, useState } from 'react'
-import { ERC20Service, xAssetCLRService } from 'services'
+import { ERC20Service } from 'services'
 import { ITerminalPool } from 'types'
-import { ZERO } from 'utils/number'
-import {
-  ActionStepRow,
-  ViewTransaction,
-  WarningInfo,
-  OutputEstimation,
-} from '..'
+import { ActionStepRow, ViewTransaction, WarningInfo } from '../index'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -63,8 +56,8 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   onNext: () => void
+  poolAddress: string
   rewardState: IRewardState
-  poolData: ITerminalPool
   updateState: (e: any) => void
 }
 
@@ -80,14 +73,14 @@ interface IState {
 
 export const RewardSection = (props: IProps) => {
   const classes = useStyles()
-  const { onNext, rewardState, poolData, updateState } = props
+  const { onNext, rewardState, poolAddress, updateState } = props
   const [state, setState] = useState<IState>({
     inited: false,
     initing: false,
     initTx: '',
-    approved: poolData.rewardTokens.map((e) => false),
-    approving: poolData.rewardTokens.map((e) => false),
-    approveTx: poolData.rewardTokens.map((e) => ''),
+    approved: rewardState.tokens.map((e) => false),
+    approving: rewardState.tokens.map((e) => false),
+    approveTx: rewardState.tokens.map((e) => ''),
     step: 1,
   })
 
@@ -109,7 +102,7 @@ export const RewardSection = (props: IProps) => {
       return
     }
     try {
-      const calls = poolData.rewardTokens.map((token) => ({
+      const calls = rewardState.tokens.map((token) => ({
         name: 'allowance',
         address: token.address,
         params: [account, lmService.address],
@@ -149,13 +142,13 @@ export const RewardSection = (props: IProps) => {
         initing: true,
       }))
       const txId = await lmService.initiateNewRewardsProgram(
-        poolData.address,
+        poolAddress,
         rewardState.amounts,
         Number(rewardState.period) * ONE_WEEK_IN_TIME,
-        poolData.rewardsAreEscrowed
+        true // TODO: Move it to user input
       )
       const finalTxId = await lmService.waitUntilNewRewardsProgramInitiated(
-        poolData.address,
+        poolAddress,
         rewardState.amounts,
         Number(rewardState.period) * ONE_WEEK_IN_TIME,
         txId
@@ -181,7 +174,7 @@ export const RewardSection = (props: IProps) => {
       return
     }
     try {
-      const tokenInfo = poolData.rewardTokens[index]
+      const tokenInfo = rewardState.tokens[index]
       const token = new ERC20Service(provider, account, tokenInfo.address)
       setState((prev) => ({
         ...prev,
@@ -234,7 +227,7 @@ export const RewardSection = (props: IProps) => {
           description="Please, don’t close this window until the process is complete!"
         />
         <div className={classes.actions}>
-          {poolData.rewardTokens.map((token, index) => (
+          {rewardState.tokens.map((token, index) => (
             <ActionStepRow
               step={index + 1}
               isActiveStep={state.step === index + 1}
@@ -261,8 +254,8 @@ export const RewardSection = (props: IProps) => {
             />
           ))}
           <ActionStepRow
-            step={poolData.rewardTokens.length + 1}
-            isActiveStep={state.step === poolData.rewardTokens.length + 1}
+            step={rewardState.tokens.length + 1}
+            isActiveStep={state.step === rewardState.tokens.length + 1}
             comment="Complete"
             title="Initiate"
             actionLabel={state.inited ? 'Initiated' : 'Initiate'}

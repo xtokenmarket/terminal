@@ -93,5 +93,8 @@
     "lint-staged": "^12.1.5",
     "prettier": "^2.5.1",
     "typechain": "^6.1.0"
+  },
+  "resolutions": {
+    "react-error-overlay": "6.0.9"
   }
 }

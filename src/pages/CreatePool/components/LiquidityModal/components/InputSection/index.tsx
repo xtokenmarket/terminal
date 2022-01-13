@@ -1,20 +1,10 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { Button, IconButton, makeStyles, Typography } from '@material-ui/core'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
-import Abi from 'abis'
-import { TokenBalanceInput } from 'components'
+import { IRewardState, TokenBalanceInput } from 'components'
 import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef, useServices } from 'helpers'
-import { IRewardState } from 'pages/PoolDetails/components'
-import { useEffect } from 'react'
-import { ERC20Service, xAssetCLRService } from 'services'
 import { ITerminalPool } from 'types'
-import {
-  OutputEstimation,
-  OutputEstimationInfo,
-  RewardPeriodInput,
-  WarningInfo,
-} from '..'
+import { RewardPeriodInput } from '..'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
