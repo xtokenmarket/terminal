@@ -19,8 +19,11 @@ import { useAllTokens } from 'hooks/useAllTokens'
 import { filterTokens } from 'utils/filter'
 import { isAddress } from 'ethers/lib/utils'
 import { Contract } from 'ethers'
+
 import Abi from 'abis'
 import { useConnectedWeb3Context } from 'contexts'
+import { isContract } from 'utils/tools'
+import { fetchUnknownToken } from 'utils/token'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -121,22 +124,13 @@ export const TokenSelectModal: React.FC<IProps> = ({
 
       if (filteredTokensList.length > 0) {
         setTokensList(filteredTokensList)
-      } else if (isAddress(debouncedQuery)) {
-        try {
-          const contract = new Contract(debouncedQuery, Abi.ERC20, provider)
-          const name = await contract.name()
-          const symbol = await contract.symbol()
-          const decimals = await contract.decimals()
-          const image = '/assets/tokens/unknown.png'
-          const unknownToken = {
-            name,
-            symbol,
-            address: debouncedQuery,
-            decimals,
-            image
-          }
-          setTokensList([unknownToken])
-        } catch {}
+        setIsLoading(false)
+        return
+      }
+
+      const unknownToken = await fetchUnknownToken(provider, debouncedQuery)
+      if (unknownToken) {
+        setTokensList([unknownToken])
       } else {
         setTokensList([])
       }
