@@ -46,13 +46,6 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
     textAlign: 'center',
   },
-  spinnerBg: {
-    backgroundColor: theme.colors.seventh,
-    flexGrow: 1,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   spinner: {
     color: theme.colors.primary100,
     alignSelf: 'center',
