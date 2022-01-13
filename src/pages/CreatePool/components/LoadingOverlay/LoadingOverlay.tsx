@@ -1,8 +1,8 @@
 import React from 'react'
-import { Typography, makeStyles, CircularProgress, } from '@material-ui/core'
+import { Typography, makeStyles, CircularProgress } from '@material-ui/core'
 import { transparentize } from 'polished'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   spinnerOverlay: {
     position: 'absolute',
     left: 0,
@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
     zIndex: 5,
   },
   spinner: {
-   color: theme.colors.white,
+    color: theme.colors.white,
   },
   title: {
     color: theme.colors.white,
@@ -41,9 +41,7 @@ export const LoadingOverlay: React.FC<IProps> = ({ visible }) => {
   return (
     <div className={cl.spinnerOverlay}>
       <CircularProgress className={cl.spinner} />
-      <Typography className={cl.title}>
-        Checking Pool Info
-      </Typography>
+      <Typography className={cl.title}>Checking Pool Info</Typography>
       <Typography className={cl.description}>
         Looking for the pool on Uniswap
       </Typography>

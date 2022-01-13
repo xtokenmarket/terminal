@@ -63,11 +63,7 @@ export const PairCreateModal: React.FC<IProps> = ({
           'transparent'
         )}
       >
-        <SuccessSection
-          onClose={onClose}
-          token0={token0}
-          token1={token1}
-        />
+        <SuccessSection onClose={onClose} token0={token0} token1={token1} />
       </div>
     </Modal>
   )

@@ -6,6 +6,7 @@ import {
   formatToShortNumber,
   getTimeDurationStr,
   getTimeDurationUnitInfo,
+  numberWithCommas,
 } from 'utils'
 import moment from 'moment'
 import { NavLink } from 'react-router-dom'
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   loader: { padding: '20px 0' },
   content: {
     cursor: 'pointer',
-    padding: '16px 0',
+    padding: 16,
     display: 'flex',
     alignItems: 'center',
     position: 'relative',
@@ -48,6 +49,13 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 11,
     display: 'flex',
     alignItems: 'center',
+  },
+  itemAlignRight: {
+    color: theme.colors.purple0,
+    fontSize: 11,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
   },
   tokenIcon: {
     width: 48,
@@ -104,7 +112,6 @@ export const PoolTableItem = (props: IProps) => {
       >
         <PoolTd type="pool">
           <div className={classes.item}>
-            &nbsp;&nbsp;&nbsp;
             <img
               alt="token0"
               className={classes.tokenIcon}
@@ -120,25 +127,29 @@ export const PoolTableItem = (props: IProps) => {
         <PoolTd type="allocation">
           <div className={classes.item}>
             <Typography className={classes.allocation}>
-              {poolData.token0.symbol}&nbsp;<span>52%</span>&nbsp;&nbsp;
-              {poolData.token1.symbol}&nbsp;<span>48%</span>
+              {poolData.token0.symbol}&nbsp;
+              <span>{`${poolData.token0.percent}%`}</span>&nbsp;&nbsp;
+              {poolData.token1.symbol}&nbsp;
+              <span>{`${poolData.token1.percent}%`}</span>
             </Typography>
           </div>
         </PoolTd>
         <PoolTd type="tvl">
-          <div className={classes.item}>
-            <Typography className={classes.label}>$345,678</Typography>
+          <div className={classes.itemAlignRight}>
+            <Typography className={classes.label}>{`$${numberWithCommas(
+              poolData.tvl
+            )}`}</Typography>
           </div>
         </PoolTd>
         <PoolTd type="vesting">
-          <div className={classes.item}>
+          <div className={classes.itemAlignRight}>
             <Typography className={classes.label}>
               {getTimeDurationStr(poolData.rewardsDuration.toNumber())}
             </Typography>
           </div>
         </PoolTd>
         <PoolTd type="program">
-          <div className={classes.item}>
+          <div className={classes.itemAlignRight}>
             {poolData.rewardTokens.map((rewardToken, index) => {
               const durationInfo = getTimeDurationUnitInfo(
                 poolData.rewardsDuration.toNumber()
@@ -158,7 +169,7 @@ export const PoolTableItem = (props: IProps) => {
           </div>
         </PoolTd>
         <PoolTd type="ending">
-          <div className={classes.item}>
+          <div className={classes.itemAlignRight}>
             <Typography className={classes.label}>
               {moment(new Date(poolData.periodFinish.toNumber() * 1000)).format(
                 'MMM DD, YYYY'
@@ -167,7 +178,7 @@ export const PoolTableItem = (props: IProps) => {
           </div>
         </PoolTd>
         <PoolTd type="apr">
-          <div className={classes.item}>
+          <div className={classes.itemAlignRight}>
             <Typography className={classes.apr}>99%</Typography>
           </div>
         </PoolTd>

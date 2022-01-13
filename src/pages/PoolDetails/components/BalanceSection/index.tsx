@@ -2,7 +2,7 @@ import { makeStyles, Typography } from '@material-ui/core'
 import { TokenIcon } from 'components'
 import { useTokenBalance } from 'helpers'
 import { ITerminalPool, IToken } from 'types'
-import { formatBigNumber } from 'utils'
+import { formatBigNumber, numberWithCommas } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,9 +67,12 @@ export const BalanceSection = (props: IProps) => {
         <TokenIcon className={classes.icon} token={token} />
         <div className={classes.texts}>
           <Typography className={classes.balance}>
-            {formatBigNumber(balance, token.decimals)} <span>37.09%</span>
+            {formatBigNumber(balance, token.decimals)}{' '}
+            <span>{token.percent}%</span>
           </Typography>
-          <Typography className={classes.dollar}>~ $2374.04</Typography>
+          <Typography className={classes.dollar}>
+            ~ ${numberWithCommas(token.tvl as string)}
+          </Typography>
         </div>
       </div>
     </div>
