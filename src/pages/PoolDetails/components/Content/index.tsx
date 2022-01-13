@@ -451,10 +451,10 @@ export const Content = (props: IProps) => {
             </Button>
           )}
         </div>
-        <div className={classes.rewardVestWrapper}>
+        <Grid container spacing={2}>
           <RewardVestSection items={items} titles={titles} />
           <RewardVestSection items={items} titles={titles} />
-        </div>
+        </Grid>
 
         <HistorySection pool={poolData} />
       </div>

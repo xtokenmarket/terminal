@@ -1,14 +1,11 @@
-import { makeStyles, Typography } from '@material-ui/core'
+import { Box, Grid, makeStyles, Typography } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
   block: {
     background: theme.colors.primary400,
     padding: 24,
-    width: '45%',
-    boxSizing: 'border-box',
-
     [theme.breakpoints.down('sm')]: {
-      marginTop: 10,
+      // marginTop: 10,
       width: '100%',
     },
   },
@@ -90,18 +87,21 @@ export const RewardVestSection = (props: IProps) => {
   }
 
   return (
-    <div className={classes.block}>
-      <div className={classes.itemWrapper}>
-        <Typography className={classes.title}>
-          {titles[0].toUpperCase()}
-        </Typography>
-        <Typography className={classes.title}>
-          {titles[1].toUpperCase()}
-        </Typography>
+    <Grid item xs={12} md={6}>
+      <div className={classes.block}>
+        <div className={classes.itemWrapper}>
+          <Typography className={classes.title}>
+            {titles[0].toUpperCase()}
+          </Typography>
+          <Typography className={classes.title}>
+            {titles[1].toUpperCase()}
+          </Typography>
+        </div>
+
+        {items.map((item: Item) => {
+          return renderItem(item)
+        })}
       </div>
-      {items.map((item: Item) => {
-        return renderItem(item)
-      })}
-    </div>
+    </Grid>
   )
 }
