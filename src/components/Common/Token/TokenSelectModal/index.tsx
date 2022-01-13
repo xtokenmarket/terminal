@@ -143,6 +143,7 @@ export const TokenSelectModal: React.FC<IProps> = ({
             <TextField
               className={cl.search}
               fullWidth
+              autoFocus
               InputProps={{
                 disableUnderline: true,
                 startAdornment: (
