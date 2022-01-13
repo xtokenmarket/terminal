@@ -17,12 +17,8 @@ import { useDebounce } from 'hooks/useDebouce'
 
 import { useAllTokens } from 'hooks/useAllTokens'
 import { filterTokens } from 'utils/filter'
-import { isAddress } from 'ethers/lib/utils'
-import { Contract } from 'ethers'
 
-import Abi from 'abis'
 import { useConnectedWeb3Context } from 'contexts'
-import { isContract } from 'utils/tools'
 import { fetchUnknownToken } from 'utils/token'
 
 const useStyles = makeStyles((theme) => ({
