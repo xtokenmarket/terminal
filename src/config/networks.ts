@@ -60,7 +60,7 @@ const networks: { [K in NetworkId]: INetwork } = {
   },
 }
 
-const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
+export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
   xtk: {
     name: 'xToken',
     symbol: 'XTK',
@@ -76,7 +76,7 @@ const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     symbol: 'DAI',
     addresses: {
       [networkIds.MAINNET]: '0x6b175474e89094c44da98b954eedeac495271d0f',
-      [networkIds.KOVAN]: '0x2100A17644995438F58Da6e05322F122e254AC10',
+      [networkIds.KOVAN]: '0xff795577d9ac8bd7d90ee22b6c1703490b6512fd',
     },
     decimals: 18,
     image: '/assets/tokens/dai.png',
@@ -106,7 +106,7 @@ const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     symbol: 'USDT',
     addresses: {
       [networkIds.MAINNET]: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-      [networkIds.KOVAN]: '0x41E56694d09168947eEDD64CfF093ce4018B90bF',
+      [networkIds.KOVAN]: '0x13512979ade267ab5100878e2e0f485b568328a4',
     },
     decimals: 18,
     image: '/assets/tokens/usdt.png',
@@ -140,7 +140,7 @@ export const supportedNetworkURLs = entries(networks).reduce<{
   {}
 )
 
-const validNetworkId = (networkId: number): networkId is NetworkId => {
+export const validNetworkId = (networkId: number): networkId is NetworkId => {
   return networks[networkId as NetworkId] !== undefined
 }
 

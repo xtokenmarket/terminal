@@ -1,14 +1,16 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core'
-import { getToken, tokenSymbols } from 'config/networks'
-import { useConnectedWeb3Context } from 'contexts'
+import { makeStyles, Typography } from '@material-ui/core'
 import { IToken } from 'types'
 
 const useStyles = makeStyles((theme) => ({
   tokensList: {
     backgroundColor: theme.colors.seventh,
-    padding: theme.spacing(3),
     width: '100%',
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(2),
+    },
   },
   token: {
     display: 'flex',
@@ -38,19 +40,31 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 12,
     fontWeight: 700,
   },
+  noResultsText: {
+    color: theme.colors.white,
+    textAlign: 'center',
+  },
 }))
 
 interface IProps {
   onSelectToken: (_: IToken) => void
+  tokens: IToken[]
 }
 
-export const TokensList: React.FC<IProps> = ({ onSelectToken }) => {
+export const TokensList: React.FC<IProps> = ({ onSelectToken, tokens }) => {
   const cl = useStyles()
-  const { networkId } = useConnectedWeb3Context()
+  if (tokens.length === 0) {
+    return (
+      <div className={cl.tokensList}>
+        <Typography variant="h5" className={cl.noResultsText}>
+          No results found.
+        </Typography>
+      </div>
+    )
+  }
   return (
     <div className={cl.tokensList}>
-      {tokenSymbols.map((tokenId) => {
-        const token = getToken(tokenId as any, networkId)
+      {tokens.map((token) => {
         return (
           <div
             className={cl.token}

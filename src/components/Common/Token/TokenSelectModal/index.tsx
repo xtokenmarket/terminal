@@ -1,4 +1,4 @@
-import clsx from 'clsx'
+import React, { useCallback, useState } from 'react'
 import {
   makeStyles,
   Modal,
@@ -10,10 +10,13 @@ import {
 import { CloseOutlined } from '@material-ui/icons'
 import SearchIcon from '@material-ui/icons/Search'
 
-import React from 'react'
 import { IToken } from 'types'
 import { CommonTokens } from './CommonTokens'
 import { TokensList } from './TokensList'
+import { useDebounce } from 'hooks/useDebouce'
+
+import { useAllTokens } from 'hooks/useAllTokens'
+import { filterTokens } from 'utils/filter'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -27,11 +30,16 @@ const useStyles = makeStyles((theme) => ({
     userSelect: 'none',
     width: 700,
     maxWidth: '90vw',
-    maxHeight: '80vh',
+    height: '80vh',
     backgroundColor: theme.colors.primary500,
+    display: 'flex',
+    flexDirection: 'column',
   },
   topSection: {
     padding: theme.spacing(3),
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(2),
+    },
   },
   title: {
     fontSize: 20,
@@ -90,6 +98,16 @@ export const TokenSelectModal: React.FC<IProps> = ({
   open,
 }) => {
   const cl = useStyles()
+
+  const [searchQuery, setSearchQuery] = useState('')
+  const onSearchQueryChange = useCallback((e) => {
+    setSearchQuery(e.target.value)
+  }, [])
+
+  const debouncedQuery = useDebounce(searchQuery, 500)
+  const allTokens = useAllTokens()
+  const tokensList = filterTokens(allTokens, debouncedQuery)
+
   return (
     <Modal className={cl.modal} open={open} onClose={onClose}>
       <div className={cl.content}>
@@ -113,12 +131,17 @@ export const TokenSelectModal: React.FC<IProps> = ({
               variant="standard"
               color="primary"
               placeholder="Search by token name or paste address"
+              value={searchQuery}
+              onChange={onSearchQueryChange}
             />
             <Typography className={cl.commonLabel}>COMMON BASES</Typography>
             <CommonTokens onSelectToken={onSelect} />
           </div>
         </div>
-        <TokensList onSelectToken={onSelect} />
+        <TokensList
+          onSelectToken={onSelect}
+          tokens={tokensList}
+        />
       </div>
     </Modal>
   )
