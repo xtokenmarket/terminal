@@ -53,20 +53,16 @@ const rewardItems = [
     symbol: 'XTK',
     value: '247.3053',
     rate: '309,73',
-    period: '20 days',
-    time: '— 10 hours — 17 minutes',
   },
   {
     icon: '',
-    symbol: 'XTK',
-    value: '247.3053',
-    rate: '309,73',
-    period: '20 days',
-    time: '— 10 hours — 17 minutes',
+    symbol: 'WETH',
+    value: '0.3053',
+    rate: '1409,73',
   },
 ]
 
-const rewardTitles = ['Total Vesting', 'Remaining period']
+const rewardTitles = ['Claimable Rewards']
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -453,7 +449,7 @@ export const Content = (props: IProps) => {
         </div>
         <Grid container spacing={2}>
           <RewardVestSection items={items} titles={titles} />
-          <RewardVestSection items={items} titles={titles} />
+          <RewardVestSection items={rewardItems} titles={rewardTitles} />
         </Grid>
 
         <HistorySection pool={poolData} />

@@ -1,4 +1,4 @@
-import { Box, Grid, makeStyles, Typography } from '@material-ui/core'
+import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
   block: {
@@ -43,6 +43,13 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     marginTop: 10,
   },
+  button: {
+    width: 90,
+    flex: 1,
+    height: 20,
+    margin: '0 3px',
+    fontSize: 12,
+  },
 }))
 
 interface Item {
@@ -50,8 +57,8 @@ interface Item {
   symbol: string
   value: string
   rate: string
-  period: string
-  time: string
+  period?: string
+  time?: string
 }
 
 interface IProps {
@@ -76,12 +83,31 @@ export const RewardVestSection = (props: IProps) => {
             className={classes.lightPurpletext}
           >{`~ $ ${item.rate}`}</Typography>
         </div>
-        <div className={classes.wrapper}>
-          <Typography className={classes.whiteText}>{item.period}</Typography>
-          <Typography className={classes.lightPurpletext}>
-            {item.time}
-          </Typography>
-        </div>
+        {item.period ? (
+          <div className={classes.wrapper}>
+            <Typography className={classes.whiteText}>{item.period}</Typography>
+            <Typography className={classes.lightPurpletext}>
+              {item.time}
+            </Typography>
+          </div>
+        ) : (
+          <div>
+            <Button
+              className={classes.button}
+              color="secondary"
+              variant="contained"
+            >
+              CLAIM
+            </Button>
+            <Button
+              className={classes.button}
+              color="secondary"
+              variant="contained"
+            >
+              VEST
+            </Button>
+          </div>
+        )}
       </div>
     )
   }
@@ -93,9 +119,11 @@ export const RewardVestSection = (props: IProps) => {
           <Typography className={classes.title}>
             {titles[0].toUpperCase()}
           </Typography>
-          <Typography className={classes.title}>
-            {titles[1].toUpperCase()}
-          </Typography>
+          {titles[1] && (
+            <Typography className={classes.title}>
+              {titles[1].toUpperCase()}
+            </Typography>
+          )}
         </div>
 
         {items.map((item: Item) => {
