@@ -23,6 +23,50 @@ import {
   WithdrawModal,
   RewardModal,
 } from '../index'
+import { RewardVestSection } from '../RewardVestSection'
+
+// Mock data
+const items = [
+  {
+    icon: '',
+    symbol: 'XTK',
+    value: '247.3053',
+    rate: '309,73',
+    period: '20 days',
+    time: '— 10 hours — 17 minutes',
+  },
+  {
+    icon: '',
+    symbol: 'WETH',
+    value: '0.3053',
+    rate: '1409,73',
+    period: '4 days',
+    time: '— 10 hours — 17 minutes',
+  },
+]
+
+const titles = ['Total Vesting', 'Remaining period']
+
+const rewardItems = [
+  {
+    icon: '',
+    symbol: 'XTK',
+    value: '247.3053',
+    rate: '309,73',
+    period: '20 days',
+    time: '— 10 hours — 17 minutes',
+  },
+  {
+    icon: '',
+    symbol: 'XTK',
+    value: '247.3053',
+    rate: '309,73',
+    period: '20 days',
+    time: '— 10 hours — 17 minutes',
+  },
+]
+
+const rewardTitles = ['Total Vesting', 'Remaining period']
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -139,6 +183,14 @@ const useStyles = makeStyles((theme) => ({
     },
     [theme.breakpoints.down('xs')]: {
       maxWidth: 'unset',
+    },
+  },
+  rewardVestWrapper: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      flexDirection: 'column',
     },
   },
 }))
@@ -399,6 +451,11 @@ export const Content = (props: IProps) => {
             </Button>
           )}
         </div>
+        <div className={classes.rewardVestWrapper}>
+          <RewardVestSection items={items} titles={titles} />
+          <RewardVestSection items={items} titles={titles} />
+        </div>
+
         <HistorySection pool={poolData} />
       </div>
     </div>
