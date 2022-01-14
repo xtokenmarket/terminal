@@ -5,7 +5,7 @@ const useStyles = makeStyles((theme) => ({
     background: theme.colors.primary400,
     padding: 24,
     [theme.breakpoints.down('sm')]: {
-      // marginTop: 10,
+      marginTop: 10,
       width: '100%',
     },
   },
@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 10,
     fontWeight: 700,
     flex: 1,
+    marginBottom: 15,
   },
   symbol: {
     color: theme.colors.white,
@@ -34,17 +35,23 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
     fontSize: 12,
     fontWeight: 400,
+    merginRight: 10,
   },
   wrapper: {
     display: 'flex',
     flex: 1,
   },
+  vestingWrapper: {
+    display: 'flex',
+    flex: 1,
+    marginBottom: 10,
+  },
   itemWrapper: {
     display: 'flex',
     marginTop: 10,
+    alignItems: 'center',
   },
   button: {
-    width: 90,
     flex: 1,
     height: 20,
     margin: '0 3px',
@@ -53,9 +60,27 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     widows: 14,
     height: 14,
+    marginRight: 10,
   },
   symbolWrapper: {
     display: 'flex',
+    flex: 2,
+  },
+  valueWrapper: {
+    display: 'flex',
+    flex: 5,
+    marginLeft: 10,
+  },
+  rewardValueWrapper: {
+    display: 'flex',
+    flex: 8,
+    [theme.breakpoints.down('sm')]: {
+      flex: 3,
+    },
+  },
+  buttonWrapper: {
+    display: 'flex',
+    flex: 1,
   },
 }))
 
@@ -88,17 +113,18 @@ export const RewardVestSection = (props: IProps) => {
   const renderRewardsItem = (item: Item) => {
     return (
       <div key={item.symbol} className={classes.itemWrapper}>
-        <div className={classes.wrapper}>
-          <div className={classes.symbolWrapper}>
-            <img className={classes.icon} alt="token" src={item.icon} />
-            <Typography className={classes.symbol}>{item.symbol}</Typography>
-          </div>
+        <div className={classes.symbolWrapper}>
+          <img className={classes.icon} alt="token" src={item.icon} />
+          <Typography className={classes.symbol}>{item.symbol}</Typography>
+        </div>
+        <div className={classes.rewardValueWrapper}>
           <Typography className={classes.value}>{item.value}</Typography>
           <Typography
             className={classes.lightPurpletext}
           >{`~ $ ${item.rate}`}</Typography>
         </div>
-        <div>
+
+        <div className={classes.buttonWrapper}>
           <Button
             className={classes.button}
             color="secondary"
@@ -120,22 +146,24 @@ export const RewardVestSection = (props: IProps) => {
 
   const renderVestingItems = (item: Item) => {
     return (
-      <div className={classes.wrapper}>
+      <div className={classes.vestingWrapper}>
         <div className={classes.symbolWrapper}>
           <img className={classes.icon} alt="token" src={item.icon} />
           <Typography className={classes.symbol}>{item.symbol}</Typography>
         </div>
-        <Typography className={classes.value}>{item.value}</Typography>
-        <Typography
-          className={classes.lightPurpletext}
-        >{`~ $ ${item.rate}`}</Typography>
+        <div className={classes.valueWrapper}>
+          <Typography className={classes.value}>{item.value}</Typography>
+          <Typography
+            className={classes.lightPurpletext}
+          >{`~ $ ${item.rate}`}</Typography>
+        </div>
       </div>
     )
   }
 
   const renderRemainingItems = (item: RemainingPeriod) => {
     return (
-      <div className={classes.wrapper}>
+      <div className={classes.vestingWrapper}>
         <Typography className={classes.whiteText}>{item.period}</Typography>
         <Typography className={classes.lightPurpletext}>{item.time}</Typography>
       </div>
