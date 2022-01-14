@@ -13,8 +13,8 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.primary100,
     fontSize: 10,
     fontWeight: 700,
-    flex: 1,
     marginBottom: 15,
+    marginRight: 3,
   },
   symbol: {
     color: theme.colors.white,
@@ -81,6 +81,9 @@ const useStyles = makeStyles((theme) => ({
   buttonWrapper: {
     display: 'flex',
     flex: 1,
+  },
+  titleWrapper: {
+    display: 'flex',
   },
 }))
 
@@ -197,9 +200,16 @@ export const RewardVestSection = (props: IProps) => {
       </Grid>
       <Grid item xs={12} md={6}>
         <div className={classes.block}>
-          <Typography className={classes.title}>
-            {'Claimable Rewards'.toUpperCase()}
-          </Typography>
+          <div className={classes.titleWrapper}>
+            <Typography className={classes.title}>
+              {'Claimable Rewards'.toUpperCase()}
+            </Typography>
+            <img
+              className={classes.icon}
+              alt="token"
+              src={'/assets/imgs/star.svg'}
+            />
+          </div>
           {rewards.map((item: Item) => {
             return renderRewardsItem(item)
           })}
