@@ -26,43 +26,53 @@ import {
 import { RewardVestSection } from '../RewardVestSection'
 
 // Mock data
-const items = [
+
+const rewards = [
   {
     icon: '',
     symbol: 'XTK',
     value: '247.3053',
     rate: '309,73',
+  },
+  {
+    icon: '',
+    symbol: 'WETH',
+    value: '0.3053',
+    rate: '1409,73',
+  },
+]
+
+const vesting = [
+  {
+    icon: '',
+    symbol: 'XTK',
+    value: '247.3053',
+    rate: '309,73',
+  },
+  {
+    icon: '',
+    symbol: 'WETH',
+    value: '0.3053',
+    rate: '1409,73',
+  },
+]
+
+const remainingPeriod = [
+  {
     period: '20 days',
     time: '— 10 hours — 17 minutes',
   },
   {
-    icon: '',
-    symbol: 'WETH',
-    value: '0.3053',
-    rate: '1409,73',
-    period: '4 days',
+    period: '4 days ',
     time: '— 10 hours — 17 minutes',
   },
 ]
 
-const titles = ['Total Vesting', 'Remaining period']
-
-const rewardItems = [
-  {
-    icon: '',
-    symbol: 'XTK',
-    value: '247.3053',
-    rate: '309,73',
-  },
-  {
-    icon: '',
-    symbol: 'WETH',
-    value: '0.3053',
-    rate: '1409,73',
-  },
-]
-
-const rewardTitles = ['Claimable Rewards']
+const rewardVestData = {
+  remainingPeriod,
+  vesting,
+  rewards,
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -447,10 +457,8 @@ export const Content = (props: IProps) => {
             </Button>
           )}
         </div>
-        <Grid container spacing={2}>
-          <RewardVestSection items={items} titles={titles} />
-          <RewardVestSection items={rewardItems} titles={rewardTitles} />
-        </Grid>
+
+        <RewardVestSection data={rewardVestData} />
 
         <HistorySection pool={poolData} />
       </div>

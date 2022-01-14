@@ -57,20 +57,28 @@ interface Item {
   symbol: string
   value: string
   rate: string
-  period?: string
-  time?: string
+}
+
+interface RemainingPeriod {
+  period: string
+  time: string
 }
 
 interface IProps {
-  items: Item[]
-  titles: string[]
+  data: Data
+}
+
+interface Data {
+  remainingPeriod: RemainingPeriod[]
+  vesting: Item[]
+  rewards: Item[]
 }
 
 export const RewardVestSection = (props: IProps) => {
   const classes = useStyles()
-  const { items, titles } = props
+  const { remainingPeriod, vesting, rewards } = props.data
 
-  const renderItem = (item: Item) => {
+  const renderRewardsItem = (item: Item) => {
     return (
       <div key={item.symbol} className={classes.itemWrapper}>
         <div className={classes.wrapper}>
@@ -83,53 +91,85 @@ export const RewardVestSection = (props: IProps) => {
             className={classes.lightPurpletext}
           >{`~ $ ${item.rate}`}</Typography>
         </div>
-        {item.period ? (
-          <div className={classes.wrapper}>
-            <Typography className={classes.whiteText}>{item.period}</Typography>
-            <Typography className={classes.lightPurpletext}>
-              {item.time}
-            </Typography>
-          </div>
-        ) : (
-          <div>
-            <Button
-              className={classes.button}
-              color="secondary"
-              variant="contained"
-            >
-              CLAIM
-            </Button>
-            <Button
-              className={classes.button}
-              color="secondary"
-              variant="contained"
-            >
-              VEST
-            </Button>
-          </div>
-        )}
+        <div>
+          <Button
+            className={classes.button}
+            color="secondary"
+            variant="contained"
+          >
+            CLAIM
+          </Button>
+          <Button
+            className={classes.button}
+            color="secondary"
+            variant="contained"
+          >
+            VEST
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
+  const renderVestingItems = (item: Item) => {
+    return (
+      <div className={classes.wrapper}>
+        <div>
+          <div>{item.icon}</div>
+          <Typography className={classes.symbol}>{item.symbol}</Typography>
+        </div>
+        <Typography className={classes.value}>{item.value}</Typography>
+        <Typography
+          className={classes.lightPurpletext}
+        >{`~ $ ${item.rate}`}</Typography>
+      </div>
+    )
+  }
+
+  const renderRemainingItems = (item: RemainingPeriod) => {
+    return (
+      <div className={classes.wrapper}>
+        <Typography className={classes.whiteText}>{item.period}</Typography>
+        <Typography className={classes.lightPurpletext}>{item.time}</Typography>
       </div>
     )
   }
 
   return (
-    <Grid item xs={12} md={6}>
-      <div className={classes.block}>
-        <div className={classes.itemWrapper}>
-          <Typography className={classes.title}>
-            {titles[0].toUpperCase()}
-          </Typography>
-          {titles[1] && (
-            <Typography className={classes.title}>
-              {titles[1].toUpperCase()}
-            </Typography>
-          )}
-        </div>
+    <Grid container spacing={2}>
+      <Grid item xs={12} md={6}>
+        <div className={classes.block}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
+              <Typography className={classes.title}>
+                {'Total Vesting'.toUpperCase()}
+              </Typography>
+              {vesting.map((vest) => {
+                return renderVestingItems(vest)
+              })}
+            </Grid>
 
-        {items.map((item: Item) => {
-          return renderItem(item)
-        })}
-      </div>
+            <Grid item xs={12} md={6}>
+              <Typography className={classes.title}>
+                {'Remaining period'.toUpperCase()}
+              </Typography>
+              {remainingPeriod.map((remainingPeriod) => {
+                return renderRemainingItems(remainingPeriod)
+              })}
+            </Grid>
+          </Grid>
+        </div>
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <div className={classes.block}>
+          <Typography className={classes.title}>
+            {'Claimable Rewards'.toUpperCase()}
+          </Typography>
+          {rewards.map((item: Item) => {
+            return renderRewardsItem(item)
+          })}
+        </div>
+      </Grid>
     </Grid>
   )
 }
