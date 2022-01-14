@@ -7,6 +7,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('sm')]: {
       marginTop: 10,
       width: '100%',
+      padding: '24px 8px',
     },
   },
   title: {
