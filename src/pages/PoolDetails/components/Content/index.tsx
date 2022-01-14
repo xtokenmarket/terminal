@@ -23,6 +23,56 @@ import {
   VestModal,
   WithdrawModal,
 } from '../index'
+import { RewardVestSection } from '../RewardVestSection'
+
+// Mock data
+
+const rewards = [
+  {
+    icon: '/assets/tokens/xtk.png',
+    symbol: 'XTK',
+    value: '247.3053',
+    rate: '309,73',
+  },
+  {
+    icon: '/assets/tokens/weth.png',
+    symbol: 'WETH',
+    value: '0.3053',
+    rate: '1409,73',
+  },
+]
+
+const vesting = [
+  {
+    icon: '/assets/tokens/xtk.png',
+    symbol: 'XTK',
+    value: '247.3053',
+    rate: '309,73',
+  },
+  {
+    icon: '/assets/tokens/weth.png',
+    symbol: 'WETH',
+    value: '0.3053',
+    rate: '1409,73',
+  },
+]
+
+const remainingPeriod = [
+  {
+    period: '20 days',
+    time: '— 10 hours — 17 minutes',
+  },
+  {
+    period: '4 days ',
+    time: '— 10 hours — 17 minutes',
+  },
+]
+
+const rewardVestData = {
+  remainingPeriod,
+  vesting,
+  rewards,
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -139,6 +189,14 @@ const useStyles = makeStyles((theme) => ({
     },
     [theme.breakpoints.down('xs')]: {
       maxWidth: 'unset',
+    },
+  },
+  rewardVestWrapper: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+      flexDirection: 'column',
     },
   },
 }))
@@ -306,25 +364,25 @@ export const Content = (props: IProps) => {
               />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
-              <InfoSection label="APR" value="68%" />
+              <InfoSection label="APR" value="N/A" />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
-              <InfoSection
+              {/* <InfoSection
                 label="VOLUME(24H)"
                 value={`$${formatToShortNumber('791')}`}
                 right={
                   <span className={clsx(classes.tag, 'positive')}>+17.38%</span>
                 }
-              />
+              /> */}
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
-              <InfoSection
+              {/* <InfoSection
                 label="VOLUME(7D)"
                 value={`$${formatToShortNumber('91451')}`}
                 right={
                   <span className={clsx(classes.tag, 'negative')}>-13.38%</span>
                 }
-              />
+              /> */}
             </Grid>
           </Grid>
         </div>
@@ -398,6 +456,9 @@ export const Content = (props: IProps) => {
             </Button>
           )}
         </div>
+
+        <RewardVestSection data={rewardVestData} />
+
         <HistorySection pool={poolData} />
       </div>
     </div>
