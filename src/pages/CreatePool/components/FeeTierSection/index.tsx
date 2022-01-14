@@ -76,7 +76,7 @@ export const FeeTierSection: React.FC<IProps> = ({
           <Grid item xs={12} sm={4} key={label} onClick={() => onChange(value)}>
             <div className={clsx(cl.tierInner, { active })}>
               <Typography className={clsx(cl.percent, { active })}>
-                {value.toNumber() / 100}%
+                {value.toNumber() / 10000}%
               </Typography>
               <Typography className={clsx(cl.label, { active })}>
                 {label}
