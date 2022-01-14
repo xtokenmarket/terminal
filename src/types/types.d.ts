@@ -1,4 +1,5 @@
 import { BigNumber } from 'ethers'
+import {ECreatePoolStep} from "../utils/enums";
 
 declare global {
   interface Window {
@@ -42,7 +43,6 @@ export interface IKnownTokenData {
   name: string
   symbol: string
   addresses: { [key in NetworkId]: string }
-
   decimals: number
   image: string
 }
@@ -83,8 +83,18 @@ export interface ITerminalPool {
   tvl: string
 }
 
-// uni
+export interface ICreatePoolData {
+  amount0: BigNumber
+  amount1: BigNumber
+  maxPrice: string
+  minPrice: string
+  tier: BigNumber
+  token0: IToken
+  token1: IToken
+  uniPool: string
+}
 
+// UniswapV3
 interface MintState {
   independentField: Field
   typedValue: string

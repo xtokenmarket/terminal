@@ -1,11 +1,4 @@
-import {
-  Currency,
-  CurrencyAmount,
-  ETHER,
-  Token,
-  TokenAmount,
-} from '@uniswap/sdk-core'
-import { JSBI } from '@uniswap/v2-sdk'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import Abi from 'abis'
 import { useServices } from 'helpers'
 import { useEffect, useMemo, useState } from 'react'
@@ -13,9 +6,9 @@ import { isAddress } from 'utils/tools'
 
 const useETHBalances = (
   addresses?: (string | undefined)[]
-): { [address: string]: CurrencyAmount | undefined } => {
+): { [address: string]: CurrencyAmount<Currency> | undefined } => {
   const [state, setState] = useState<{
-    [address: string]: CurrencyAmount | undefined
+    [address: string]: CurrencyAmount<Currency> | undefined
   }>({})
 
   const { multicall } = useServices()
@@ -37,7 +30,7 @@ const useETHBalances = (
       try {
         const response = await multicall.multicallv2(Abi.Multicall, calls)
         const data: {
-          [address: string]: CurrencyAmount | undefined
+          [address: string]: CurrencyAmount<Currency> | undefined
         } = {}
         addrs.forEach((addr, index) => {
           data[addr || ''] = response[index][0]
@@ -58,19 +51,19 @@ const useETHBalances = (
 export function useTokenBalancesWithLoadingIndicator(
   address?: string,
   tokens?: (Token | undefined)[]
-): [{ [tokenAddress: string]: TokenAmount | undefined }, boolean] {
+): [{ [tokenAddress: string]: CurrencyAmount<Token> | undefined }, boolean] {
   const [state, setState] = useState<{
-    [address: string]: TokenAmount | undefined
+    [address: string]: CurrencyAmount<Token> | undefined
   }>({})
 
   const { multicall } = useServices()
+
   const validatedTokens: Token[] = useMemo(
     () =>
       tokens?.filter((t?: Token): t is Token => isAddress(t?.address || '')) ??
       [],
     [tokens]
   )
-
   const validatedTokenAddresses = useMemo(
     () => validatedTokens.map((vt) => vt.address),
     [validatedTokens]
@@ -78,6 +71,13 @@ export function useTokenBalancesWithLoadingIndicator(
 
   useEffect(() => {
     const loadData = async () => {
+      console.log(
+        'loadData',
+        address,
+        tokens,
+        validatedTokens,
+        validatedTokenAddresses
+      )
       if (!address || !tokens) {
         setState(() => ({}))
         return
@@ -91,8 +91,9 @@ export function useTokenBalancesWithLoadingIndicator(
 
       try {
         const response = await multicall.multicallv2(Abi.Multicall, calls)
+        console.log('useTokenBalances', response)
         const data: {
-          [address: string]: CurrencyAmount | undefined
+          [address: string]: CurrencyAmount<Currency> | undefined
         } = {}
         validatedTokenAddresses.forEach((addr, index) => {
           data[addr] = response[index][0]
@@ -110,14 +111,14 @@ export function useTokenBalancesWithLoadingIndicator(
 export function useTokenBalances(
   address?: string,
   tokens?: (Token | undefined)[]
-): { [tokenAddress: string]: TokenAmount | undefined } {
+): { [tokenAddress: string]: CurrencyAmount<Token> | undefined } {
   return useTokenBalancesWithLoadingIndicator(address, tokens)[0]
 }
 
 export function useCurrencyBalances(
   account?: string,
   currencies?: (Currency | undefined)[]
-): (CurrencyAmount | undefined)[] {
+): (CurrencyAmount<Currency> | undefined)[] {
   const tokens = useMemo(
     () =>
       currencies?.filter(
@@ -128,7 +129,7 @@ export function useCurrencyBalances(
 
   const tokenBalances = useTokenBalances(account, tokens)
   const containsETH: boolean = useMemo(
-    () => currencies?.some((currency) => currency === ETHER) ?? false,
+    () => currencies?.some((currency) => currency?.isNative) ?? false,
     [currencies]
   )
   const ethBalance = useETHBalances(containsETH ? [account] : [])
@@ -137,8 +138,8 @@ export function useCurrencyBalances(
     () =>
       currencies?.map((currency) => {
         if (!account || !currency) return undefined
-        if (currency instanceof Token) return tokenBalances[currency.address]
-        if (currency === ETHER) return ethBalance[account]
+        if (currency.isToken) return tokenBalances[currency.address]
+        if (currency.isNative) return ethBalance[account]
         return undefined
       }) ?? [],
     [account, currencies, ethBalance, tokenBalances]

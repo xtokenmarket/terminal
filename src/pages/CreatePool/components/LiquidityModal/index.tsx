@@ -9,10 +9,10 @@ import {
   ConfirmSection,
 } from './components'
 import { ITerminalPool } from 'types'
-import { BigNumber } from '@ethersproject/bignumber'
 import { ZERO } from 'utils/number'
 import useCommonStyles from 'style/common'
 import { useConnectedWeb3Context } from 'contexts'
+import { IRewardState } from 'components'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,12 +40,6 @@ interface IProps {
   onSuccess: () => Promise<void>
 }
 
-export interface IRewardState {
-  step: ERewardStep
-  period: string
-  amounts: BigNumber[]
-}
-
 export const LiquidityModal = (props: IProps) => {
   const classes = useStyles()
   const commonClasses = useCommonStyles()
@@ -55,7 +49,8 @@ export const LiquidityModal = (props: IProps) => {
   const [state, setState] = useState<IRewardState>({
     step: ERewardStep.Input,
     period: '',
-    amounts: props.poolData.rewardTokens.map((e) => ZERO),
+    amounts: [],
+    tokens: [],
   })
 
   useEffect(() => {

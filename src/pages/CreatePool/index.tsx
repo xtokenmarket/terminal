@@ -3,10 +3,10 @@ import { makeStyles } from '@material-ui/core'
 import { PageContent, PageWrapper } from 'components'
 import { useState } from 'react'
 import { useHistory } from 'react-router'
-import { IToken } from 'types'
+import {ICreatePoolData, IToken} from 'types'
 import { ECreatePoolStep } from 'utils/enums'
 import { ZERO } from 'utils/number'
-import { CreatePoolHeader, TokenPairStep, PriceRangeStep } from './components'
+import { CreatePoolHeader, TokenPairStep, PriceRangeStep, RewardsStep } from './components'
 
 const useStyles = makeStyles((theme) => ({
   label: {
@@ -18,22 +18,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-interface IState {
+interface IState extends Omit<ICreatePoolData, "token0" | "token1"> {
+  step: ECreatePoolStep
   token0?: IToken
   token1?: IToken
-  amount0: BigNumber
-  amount1: BigNumber
-  tier: BigNumber
-  uniPool: string
-  step: ECreatePoolStep
 }
 
 const initialState: IState = {
+  amount1: ZERO,
+  amount0: ZERO,
+  maxPrice: '',
+  minPrice: '',
+  step: ECreatePoolStep.TokenPair,
   tier: BigNumber.from(500),
   uniPool: '',
-  step: ECreatePoolStep.TokenPair,
-  amount0: ZERO,
-  amount1: ZERO,
 }
 
 const CreatePool = () => {
@@ -67,6 +65,17 @@ const CreatePool = () => {
     }
   }
 
+  const onPrev = () => {
+    switch (state.step) {
+      case ECreatePoolStep.Rewards:
+        setState((prev) => ({ ...prev, step: ECreatePoolStep.PriceRange }))
+        break
+      default:
+        onBack()
+        break
+    }
+  }
+
   const renderContent = () => {
     switch (state.step) {
       case ECreatePoolStep.TokenPair:
@@ -78,6 +87,15 @@ const CreatePool = () => {
           <PriceRangeStep
             data={state as Required<IState>}
             updateData={updateData}
+            onNext={onNext}
+          />
+        )
+      case ECreatePoolStep.Rewards:
+        return (
+          <RewardsStep
+            data={state as Required<IState>}
+            updateData={updateData}
+            onEdit={onPrev}
             onNext={onNext}
           />
         )

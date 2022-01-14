@@ -1,20 +1,13 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import { Button, makeStyles, Typography } from '@material-ui/core'
+import { makeStyles, Typography } from '@material-ui/core'
 import Abi from 'abis'
 import { ONE_WEEK_IN_TIME } from 'config/constants'
 import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef, useServices } from 'helpers'
-import { IRewardState } from 'pages/PoolDetails/components'
+import { IRewardState } from 'components'
 import { useEffect, useState } from 'react'
-import { ERC20Service, xAssetCLRService } from 'services'
+import { ERC20Service } from 'services'
 import { ITerminalPool } from 'types'
-import { ZERO } from 'utils/number'
-import {
-  ActionStepRow,
-  ViewTransaction,
-  WarningInfo,
-  OutputEstimation,
-} from '..'
+import { ActionStepRow, ViewTransaction, WarningInfo } from '..'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },

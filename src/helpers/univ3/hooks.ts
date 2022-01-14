@@ -2,7 +2,6 @@ import { DEFAULT_NETWORK_ID } from 'config/constants'
 import {
   Currency,
   CurrencyAmount,
-  ETHER,
   Price,
   Rounding,
   Token,
@@ -21,13 +20,14 @@ import { useConnectedWeb3Context } from 'contexts'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Bound, Field, PoolState } from 'utils/enums'
 import { getTickToPrice, tryParseAmount, tryParseTick } from 'utils/price'
-import { JSBI } from '@uniswap/v2-sdk'
-import { wrappedCurrency, wrappedCurrencyAmount } from 'utils/wrappedCurrency'
-import { useCurrencyBalances } from './wallet'
+import JSBI from 'jsbi'
 import { getContractAddress } from 'config/networks'
 import Abi from 'abis'
 import { useServices } from 'helpers'
 import { MintState } from 'types'
+import { BigNumber } from 'ethers'
+import { encodeSqrtRatioX96, nearestUsableTick } from '@uniswap/v3-sdk/dist/'
+import { useCurrencyBalances } from './wallet'
 
 export const BIG_INT_ZERO = JSBI.BigInt(0)
 
@@ -35,8 +35,8 @@ export const useMultipleContractSingleData = (
   addrs: (string | undefined)[],
   abi: any[],
   name: string
-): any[] => {
-  const [data, setData] = useState([])
+): never => {
+  const [data, setData] = useState(undefined)
   const { multicall } = useServices()
   const { networkId } = useConnectedWeb3Context()
 
@@ -51,15 +51,15 @@ export const useMultipleContractSingleData = (
         const response = await multicall.multicallv2(abi, calls, {
           requireSuccess: false,
         })
-        setData(() => response.map((e: any) => e[0]))
+        setData(() => response[0])
       } catch (error) {
-        setData(() => [])
+        setData(undefined)
       }
     }
     loadData()
   }, [networkId])
 
-  return data
+  return data as never
 }
 
 export function usePools(
@@ -68,7 +68,7 @@ export function usePools(
     Currency | undefined,
     FeeAmount | undefined
   ][]
-): [PoolState, Pool | null][] {
+): [PoolState, Pool | undefined][] {
   console.log('=usePools', poolKeys)
   const { networkId } = useConnectedWeb3Context()
   const chainId = networkId || DEFAULT_NETWORK_ID
@@ -77,8 +77,8 @@ export function usePools(
     return poolKeys.map(([currencyA, currencyB, feeAmount]) => {
       if (!chainId || !currencyA || !currencyB || !feeAmount) return null
 
-      const tokenA = wrappedCurrency(currencyA, chainId)
-      const tokenB = wrappedCurrency(currencyB, chainId)
+      const tokenA = currencyA?.wrapped
+      const tokenB = currencyB?.wrapped
       if (!tokenA || !tokenB || tokenA.equals(tokenB)) return null
       const [token0, token1] = tokenA.sortsBefore(tokenB)
         ? [tokenA, tokenB]
@@ -86,7 +86,6 @@ export function usePools(
       return [token0, token1, feeAmount]
     })
   }, [chainId, poolKeys])
-  console.log('transformed', transformed)
 
   const poolAddresses: (string | undefined)[] = useMemo(() => {
     const v3CoreFactoryAddress = getContractAddress('uniswapFactory', networkId)
@@ -101,48 +100,35 @@ export function usePools(
       })
     })
   }, [chainId, transformed])
-
   console.log('poolAddresses', poolAddresses)
 
-  const slot0s = useMultipleContractSingleData(
+  const slot0: {
+    sqrtPriceX96: BigNumber
+    tick: number
+    observationIndex: number
+    observationCardinality: number
+    observationCardinalityNext: number
+    feeProtocol: number
+    unlocked: boolean
+  } = useMultipleContractSingleData(
     poolAddresses,
     Abi.UniswapV3PoolState,
     'slot0'
   )
-  const liquidities = useMultipleContractSingleData(
+  const liquidity = useMultipleContractSingleData(
     poolAddresses,
     Abi.UniswapV3PoolState,
     'liquidity'
   )
 
-  console.log('slots0s', slot0s)
-  console.log('liquidities', liquidities)
-
   return useMemo(() => {
     return poolKeys.map((_key, index) => {
       const [token0, token1, fee] = transformed[index] ?? []
-      if (!token0 || !token1 || !fee) return [PoolState.INVALID, null]
-
-      console.log(slot0s, liquidities)
-
-      const {
-        result: slot0,
-        loading: slot0Loading,
-        valid: slot0Valid,
-      } = slot0s[index]
-      const {
-        result: liquidity,
-        loading: liquidityLoading,
-        valid: liquidityValid,
-      } = liquidities[index]
-
-      if (!slot0Valid || !liquidityValid) return [PoolState.INVALID, null]
-      if (slot0Loading || liquidityLoading) return [PoolState.LOADING, null]
-
-      if (!slot0 || !liquidity) return [PoolState.NOT_EXISTS, null]
-
-      if (!slot0.sqrtPriceX96 || slot0.sqrtPriceX96.eq(0))
-        return [PoolState.NOT_EXISTS, null]
+      if (!token0 || !token1 || !fee) return [PoolState.INVALID, undefined]
+      if (!slot0 || !liquidity) return [PoolState.NOT_EXISTS, undefined]
+      if (!slot0.sqrtPriceX96 || slot0.sqrtPriceX96.eq(0)) {
+        return [PoolState.NOT_EXISTS, undefined]
+      }
 
       try {
         return [
@@ -151,24 +137,24 @@ export function usePools(
             token0,
             token1,
             fee,
-            slot0.sqrtPriceX96,
+            slot0.sqrtPriceX96.toString(),
             liquidity[0],
             slot0.tick
           ),
         ]
       } catch (error) {
         console.error('Error when constructing the pool', error)
-        return [PoolState.NOT_EXISTS, null]
+        return [PoolState.NOT_EXISTS, undefined]
       }
     })
-  }, [liquidities, poolKeys, slot0s, transformed])
+  }, [liquidity, poolKeys, slot0, transformed])
 }
 
 export function usePool(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
   feeAmount: FeeAmount | undefined
-): [PoolState, Pool | null] {
+): [PoolState, Pool | undefined] {
   const poolKeys: [
     Currency | undefined,
     Currency | undefined,
@@ -188,19 +174,17 @@ export function useV3DerivedMintInfo(
   feeAmount?: FeeAmount,
   baseCurrency?: Currency,
   // override for existing position
-  existingPosition?: Position
+  existingPosition?: Position,
+  poolState?: PoolState,
+  pool?: Pool
 ): {
-  pool?: Pool | null
-  poolState: PoolState
   ticks: { [bound in Bound]?: number | undefined }
-  price?: Price
+  price?: Price<Token, Token>
   pricesAtTicks: {
-    [bound in Bound]?: Price | undefined
+    [bound in Bound]?: Price<Token, Token> | undefined
   }
   currencies: { [field in Field]?: Currency }
-  currencyBalances: { [field in Field]?: CurrencyAmount }
   dependentField: Field
-  parsedAmounts: { [field in Field]?: CurrencyAmount }
   position: Position | undefined
   noLiquidity?: boolean
   errorMessage?: string
@@ -210,6 +194,7 @@ export function useV3DerivedMintInfo(
   depositADisabled: boolean
   depositBDisabled: boolean
   invertPrice: boolean
+  ticksAtLimit: { [bound in Bound]?: boolean | undefined }
 } {
   const { account, networkId } = useConnectedWeb3Context()
   const chainId = networkId || DEFAULT_NETWORK_ID
@@ -236,12 +221,8 @@ export function useV3DerivedMintInfo(
 
   // formatted with tokens
   const [tokenA, tokenB, baseToken] = useMemo(
-    () => [
-      wrappedCurrency(currencyA, chainId),
-      wrappedCurrency(currencyB, chainId),
-      wrappedCurrency(baseCurrency, chainId),
-    ],
-    [chainId, currencyA, currencyB, baseCurrency]
+    () => [currencyA?.wrapped, currencyB?.wrapped, baseCurrency?.wrapped],
+    [currencyA, currencyB, baseCurrency]
   )
 
   const [token0, token1] = useMemo(
@@ -254,29 +235,23 @@ export function useV3DerivedMintInfo(
     [tokenA, tokenB]
   )
 
-  // balances
-  const balances = useCurrencyBalances(account ?? undefined, [
-    currencies[Field.CURRENCY_A],
-    currencies[Field.CURRENCY_B],
-  ])
-  const currencyBalances: { [field in Field]?: CurrencyAmount } = {
-    [Field.CURRENCY_A]: balances[0],
-    [Field.CURRENCY_B]: balances[1],
-  }
-
-  // pool
-  const [poolState, pool] = usePool(
-    currencies[Field.CURRENCY_A],
-    currencies[Field.CURRENCY_B],
-    feeAmount
-  )
   const noLiquidity = poolState === PoolState.NOT_EXISTS
+
+  // balances
+  // const balances = useCurrencyBalances(
+  //   account ?? undefined,
+  //   useMemo(() => [currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B]], [currencies])
+  // )
+  // const currencyBalances: { [field in Field]?: CurrencyAmount<Currency> } = {
+  //   [Field.CURRENCY_A]: balances[0],
+  //   [Field.CURRENCY_B]: balances[1],
+  // }
 
   // note to parse inputs in reverse
   const invertPrice = Boolean(baseToken && token0 && !baseToken.equals(token0))
 
   // always returns the price with 0 as base token
-  const price = useMemo(() => {
+  const price: Price<Token, Token> | undefined = useMemo(() => {
     // if no liquidity use typed value
     if (noLiquidity) {
       const parsedQuoteAmount = tryParseAmount(
@@ -290,8 +265,8 @@ export function useV3DerivedMintInfo(
             ? new Price(
                 baseAmount.currency,
                 parsedQuoteAmount.currency,
-                baseAmount.raw,
-                parsedQuoteAmount.raw
+                baseAmount.quotient,
+                parsedQuoteAmount.quotient
               )
             : undefined
         return (invertPrice ? price?.invert() : price) ?? undefined
@@ -303,9 +278,24 @@ export function useV3DerivedMintInfo(
     }
   }, [noLiquidity, startPriceTypedValue, invertPrice, token1, token0, pool])
 
+  // check for invalid price input (converts to invalid ratio)
+  const invalidPrice = useMemo(() => {
+    const sqrtRatioX96 = price
+      ? encodeSqrtRatioX96(price.numerator, price.denominator)
+      : undefined
+    return (
+      price &&
+      sqrtRatioX96 &&
+      !(
+        JSBI.greaterThanOrEqual(sqrtRatioX96, TickMath.MIN_SQRT_RATIO) &&
+        JSBI.lessThan(sqrtRatioX96, TickMath.MAX_SQRT_RATIO)
+      )
+    )
+  }, [price])
+
   // used for ratio calculation when pool not initialized
   const mockPool = useMemo(() => {
-    if (tokenA && tokenB && feeAmount && price) {
+    if (tokenA && tokenB && feeAmount && price && !invalidPrice) {
       const currentTick = priceToClosestTick(price)
       const currentSqrt = TickMath.getSqrtRatioAtTick(currentTick)
       return new Pool(
@@ -320,10 +310,25 @@ export function useV3DerivedMintInfo(
     } else {
       return undefined
     }
-  }, [feeAmount, price, tokenA, tokenB])
+  }, [feeAmount, invalidPrice, price, tokenA, tokenB])
 
   // if pool exists use it, if not use the mock pool
   const poolForPosition: Pool | undefined = pool ?? mockPool
+
+  // lower and upper limits in the tick space for `feeAmoun<Trans>
+  const tickSpaceLimits: {
+    [bound in Bound]: number | undefined
+  } = useMemo(
+    () => ({
+      [Bound.LOWER]: feeAmount
+        ? nearestUsableTick(TickMath.MIN_TICK, TICK_SPACINGS[feeAmount])
+        : undefined,
+      [Bound.UPPER]: feeAmount
+        ? nearestUsableTick(TickMath.MAX_TICK, TICK_SPACINGS[feeAmount])
+        : undefined,
+    }),
+    [feeAmount]
+  )
 
   // parse typed range values and determine closest ticks
   // lower should always be a smaller tick
@@ -334,15 +339,41 @@ export function useV3DerivedMintInfo(
       [Bound.LOWER]:
         typeof existingPosition?.tickLower === 'number'
           ? existingPosition.tickLower
+          : (invertPrice && typeof rightRangeTypedValue === 'boolean') ||
+            (!invertPrice && typeof leftRangeTypedValue === 'boolean')
+          ? tickSpaceLimits[Bound.LOWER]
           : invertPrice
-          ? tryParseTick(token1, token0, feeAmount, rightRangeTypedValue)
-          : tryParseTick(token0, token1, feeAmount, leftRangeTypedValue),
+          ? tryParseTick(
+              token1,
+              token0,
+              feeAmount,
+              rightRangeTypedValue.toString()
+            )
+          : tryParseTick(
+              token0,
+              token1,
+              feeAmount,
+              leftRangeTypedValue.toString()
+            ),
       [Bound.UPPER]:
         typeof existingPosition?.tickUpper === 'number'
           ? existingPosition.tickUpper
+          : (!invertPrice && typeof rightRangeTypedValue === 'boolean') ||
+            (invertPrice && typeof leftRangeTypedValue === 'boolean')
+          ? tickSpaceLimits[Bound.UPPER]
           : invertPrice
-          ? tryParseTick(token1, token0, feeAmount, leftRangeTypedValue)
-          : tryParseTick(token0, token1, feeAmount, rightRangeTypedValue),
+          ? tryParseTick(
+              token1,
+              token0,
+              feeAmount,
+              leftRangeTypedValue.toString()
+            )
+          : tryParseTick(
+              token0,
+              token1,
+              feeAmount,
+              rightRangeTypedValue.toString()
+            ),
     }
   }, [
     existingPosition,
@@ -352,9 +383,19 @@ export function useV3DerivedMintInfo(
     rightRangeTypedValue,
     token0,
     token1,
+    tickSpaceLimits,
   ])
 
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks || {}
+
+  // specifies whether the lower and upper ticks is at the exteme bounds
+  const ticksAtLimit = useMemo(
+    () => ({
+      [Bound.LOWER]: feeAmount && tickLower === tickSpaceLimits.LOWER,
+      [Bound.UPPER]: feeAmount && tickUpper === tickSpaceLimits.UPPER,
+    }),
+    [tickSpaceLimits, tickLower, tickUpper, feeAmount]
+  )
 
   // mark invalid range
   const invalidRange = Boolean(
@@ -382,17 +423,17 @@ export function useV3DerivedMintInfo(
   )
 
   // amounts
-  const independentAmount: CurrencyAmount | undefined = tryParseAmount(
-    typedValue,
-    (currencies as any)[independentField]
-  )
-
-  const dependentAmount: CurrencyAmount | undefined = useMemo(() => {
-    // we wrap the currencies just to get the price in terms of the other token
-    const wrappedIndependentAmount = wrappedCurrencyAmount(
-      independentAmount,
-      chainId
+  const independentAmount: CurrencyAmount<Currency> | undefined =
+    tryParseAmount(
+      typedValue,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      currencies[independentField]
     )
+
+  const dependentAmount: CurrencyAmount<Currency> | undefined = useMemo(() => {
+    // we wrap the currencies just to get the price in terms of the other token
+    const wrappedIndependentAmount = independentAmount?.wrapped
     const dependentCurrency =
       dependentField === Field.CURRENCY_B ? currencyB : currencyA
     if (
@@ -408,34 +449,38 @@ export function useV3DerivedMintInfo(
       }
 
       const position: Position | undefined =
-        wrappedIndependentAmount.token.equals(poolForPosition.token0)
+        wrappedIndependentAmount.currency.equals(poolForPosition.token0)
           ? Position.fromAmount0({
               pool: poolForPosition,
               tickLower,
               tickUpper,
-              amount0: independentAmount.raw,
+              amount0: independentAmount.quotient,
+              useFullPrecision: true, // we want full precision for the theoretical position
             })
           : Position.fromAmount1({
               pool: poolForPosition,
               tickLower,
               tickUpper,
-              amount1: independentAmount.raw,
+              amount1: independentAmount.quotient,
             })
 
-      const dependentTokenAmount = wrappedIndependentAmount.token.equals(
+      const dependentTokenAmount = wrappedIndependentAmount.currency.equals(
         poolForPosition.token0
       )
         ? position.amount1
         : position.amount0
-      return dependentCurrency === ETHER
-        ? CurrencyAmount.ether(dependentTokenAmount.raw)
-        : dependentTokenAmount
+      return (
+        dependentCurrency &&
+        CurrencyAmount.fromRawAmount(
+          dependentCurrency,
+          dependentTokenAmount.quotient
+        )
+      )
     }
 
     return undefined
   }, [
     independentAmount,
-    chainId,
     outOfRange,
     dependentField,
     currencyB,
@@ -446,19 +491,20 @@ export function useV3DerivedMintInfo(
     invalidRange,
   ])
 
-  const parsedAmounts: { [field in Field]: CurrencyAmount | undefined } =
-    useMemo(() => {
-      return {
-        [Field.CURRENCY_A]:
-          independentField === Field.CURRENCY_A
-            ? independentAmount
-            : dependentAmount,
-        [Field.CURRENCY_B]:
-          independentField === Field.CURRENCY_A
-            ? dependentAmount
-            : independentAmount,
-      }
-    }, [dependentAmount, independentAmount, independentField])
+  const parsedAmounts: {
+    [field in Field]: CurrencyAmount<Currency> | undefined
+  } = useMemo(() => {
+    return {
+      [Field.CURRENCY_A]:
+        independentField === Field.CURRENCY_A
+          ? independentAmount
+          : dependentAmount,
+      [Field.CURRENCY_B]:
+        independentField === Field.CURRENCY_A
+          ? dependentAmount
+          : independentAmount,
+    }
+  }, [dependentAmount, independentAmount, independentField])
 
   // single deposit only if price is out of range
   const deposit0Disabled = Boolean(
@@ -511,20 +557,20 @@ export function useV3DerivedMintInfo(
       return undefined
     }
 
-    // mark as 0 if disbaled because out of range
+    // mark as 0 if disabled because out of range
     const amount0 = !deposit0Disabled
       ? parsedAmounts?.[
           tokenA.equals(poolForPosition.token0)
             ? Field.CURRENCY_A
             : Field.CURRENCY_B
-        ]?.raw
+        ]?.quotient
       : BIG_INT_ZERO
     const amount1 = !deposit1Disabled
       ? parsedAmounts?.[
           tokenA.equals(poolForPosition.token0)
             ? Field.CURRENCY_B
             : Field.CURRENCY_A
-        ]?.raw
+        ]?.quotient
       : BIG_INT_ZERO
 
     if (amount0 !== undefined && amount1 !== undefined) {
@@ -534,6 +580,7 @@ export function useV3DerivedMintInfo(
         tickUpper,
         amount0,
         amount1,
+        useFullPrecision: true, // we want full precision for the theoretical position
       })
     } else {
       return undefined
@@ -559,43 +606,11 @@ export function useV3DerivedMintInfo(
     errorMessage = errorMessage ?? 'Invalid pair'
   }
 
-  if (
-    (!parsedAmounts[Field.CURRENCY_A] && !depositADisabled) ||
-    (!parsedAmounts[Field.CURRENCY_B] && !depositBDisabled)
-  ) {
-    errorMessage = errorMessage ?? 'Enter an amount'
-  }
-
-  const {
-    [Field.CURRENCY_A]: currencyAAmount,
-    [Field.CURRENCY_B]: currencyBAmount,
-  } = parsedAmounts
-
-  if (
-    currencyAAmount &&
-    currencyBalances?.[Field.CURRENCY_A]?.lessThan(currencyAAmount)
-  ) {
-    errorMessage =
-      'Insufficient ' + currencies[Field.CURRENCY_A]?.symbol + ' balance'
-  }
-
-  if (
-    currencyBAmount &&
-    currencyBalances?.[Field.CURRENCY_B]?.lessThan(currencyBAmount)
-  ) {
-    errorMessage =
-      'Insufficient ' + currencies[Field.CURRENCY_B]?.symbol + ' balance'
-  }
-
   const invalidPool = poolState === PoolState.INVALID
 
   return {
     dependentField,
     currencies,
-    pool,
-    poolState,
-    currencyBalances,
-    parsedAmounts,
     ticks,
     price,
     pricesAtTicks,
@@ -608,6 +623,7 @@ export function useV3DerivedMintInfo(
     depositADisabled,
     depositBDisabled,
     invertPrice,
+    ticksAtLimit,
   }
 }
 
@@ -619,16 +635,8 @@ export function useRangeHopCallbacks(
   tickUpper: number | undefined,
   pool?: Pool | undefined | null
 ) {
-  const { networkId } = useConnectedWeb3Context()
-  const chainId = networkId || DEFAULT_NETWORK_ID
-  const baseToken = useMemo(
-    () => wrappedCurrency(baseCurrency, chainId),
-    [baseCurrency, chainId]
-  )
-  const quoteToken = useMemo(
-    () => wrappedCurrency(quoteCurrency, chainId),
-    [quoteCurrency, chainId]
-  )
+  const baseToken = useMemo(() => baseCurrency?.wrapped, [baseCurrency])
+  const quoteToken = useMemo(() => quoteCurrency?.wrapped, [quoteCurrency])
 
   const getDecrementLower = useCallback(() => {
     if (baseToken && quoteToken && typeof tickLower === 'number' && feeAmount) {

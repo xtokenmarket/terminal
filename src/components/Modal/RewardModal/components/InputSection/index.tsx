@@ -1,20 +1,9 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { Button, IconButton, makeStyles, Typography } from '@material-ui/core'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
-import Abi from 'abis'
-import { TokenBalanceInput } from 'components'
+import { IRewardState, TokenBalanceInput } from 'components'
 import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef, useServices } from 'helpers'
-import { IRewardState } from 'pages/PoolDetails/components'
-import { useEffect } from 'react'
-import { ERC20Service, xAssetCLRService } from 'services'
-import { ITerminalPool } from 'types'
-import {
-  OutputEstimation,
-  OutputEstimationInfo,
-  RewardPeriodInput,
-  WarningInfo,
-} from '..'
+import { RewardPeriodInput } from '../index'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -51,12 +40,11 @@ interface IProps {
   onClose: () => void
   rewardState: IRewardState
   updateState: (e: any) => void
-  poolData: ITerminalPool
 }
 
 export const InputSection = (props: IProps) => {
   const classes = useStyles()
-  const { onNext, onClose, rewardState, updateState, poolData } = props
+  const { onNext, onClose, rewardState, updateState } = props
   const { account, library: provider, networkId } = useConnectedWeb3Context()
   const isMountedRef = useIsMountedRef()
   const { multicall } = useServices()
@@ -77,16 +65,17 @@ export const InputSection = (props: IProps) => {
     <div className={classes.root}>
       <div className={classes.header}>
         <Typography className={classes.title}>
-          Initialize rewards program
+          Create a rewards program
         </Typography>
         <Typography className={classes.description}>
-          You have a configured rewards program ready to be initialized.
+          Select a reward token and adjust the settings.
         </Typography>
         <IconButton className={classes.closeButton} onClick={onClose}>
           <CloseOutlinedIcon />
         </IconButton>
       </div>
       <div className={classes.content}>
+        {/* TODO: Add select token and update it to `rewardState.tokens` */}
         <RewardPeriodInput
           value={rewardState.period}
           onChange={(newValue) =>
@@ -95,19 +84,18 @@ export const InputSection = (props: IProps) => {
             })
           }
         />
-        {poolData.rewardTokens.map((rewardToken, index) => (
-          <TokenBalanceInput
-            token={rewardToken}
-            value={rewardState.amounts[index]}
-            onChange={(newValue) => {
-              updateState({
-                amounts: rewardState.amounts.map((e, ind) =>
-                  ind === index ? newValue : e
-                ),
-              })
-            }}
-          />
-        ))}
+        {/* TODO: Re-enable `TokenBalanceInput`, after user selects token */}
+        {/*<TokenBalanceInput
+          token={rewardState}
+          value={rewardState.amounts[index]}
+          onChange={(newValue) => {
+            updateState({
+              amounts: rewardState.amounts.map((e, ind) =>
+                ind === index ? newValue : e
+              ),
+            })
+          }}
+        />*/}
       </div>
       <div className={classes.actions}>
         <Button

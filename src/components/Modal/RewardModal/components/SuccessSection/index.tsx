@@ -1,8 +1,7 @@
 import { Button, makeStyles, Typography } from '@material-ui/core'
-import { IRewardState } from 'pages/PoolDetails/components'
-import { ITerminalPool } from 'types'
+import { IRewardState } from 'components'
 
-import { OutputEstimation } from '..'
+import { OutputEstimation } from '../index'
 
 const ICON_SIZE = 150
 
@@ -45,12 +44,11 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   onClose: () => void
   rewardState: IRewardState
-  poolData: ITerminalPool
 }
 
 export const SuccessSection = (props: IProps) => {
   const classes = useStyles()
-  const { rewardState, poolData, onClose } = props
+  const { rewardState, onClose } = props
 
   return (
     <div className={classes.root}>
@@ -69,7 +67,6 @@ export const SuccessSection = (props: IProps) => {
         </Typography>
       </div>
       <OutputEstimation
-        poolData={poolData}
         rewardState={rewardState}
         amounts={rewardState.amounts}
       />

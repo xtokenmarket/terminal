@@ -8,7 +8,7 @@ import {
   SuccessSection,
   ConfirmSection,
 } from './components'
-import { ITerminalPool } from 'types'
+import { ITerminalPool, IToken } from 'types'
 import { BigNumber } from '@ethersproject/bignumber'
 import { ZERO } from 'utils/number'
 import useCommonStyles from 'style/common'
@@ -36,14 +36,15 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   className?: string
   onClose: () => void
-  poolData: ITerminalPool
   onSuccess: () => Promise<void>
+  poolAddress?: string
 }
 
 export interface IRewardState {
   step: ERewardStep
   period: string
   amounts: BigNumber[]
+  tokens: IToken[]
 }
 
 export const RewardModal = (props: IProps) => {
@@ -51,11 +52,12 @@ export const RewardModal = (props: IProps) => {
   const commonClasses = useCommonStyles()
   const { account } = useConnectedWeb3Context()
 
-  const { onClose } = props
+  const { onClose, poolAddress } = props
   const [state, setState] = useState<IRewardState>({
     step: ERewardStep.Input,
     period: '',
-    amounts: props.poolData.rewardTokens.map((e) => ZERO),
+    amounts: [],
+    tokens: [],
   })
 
   useEffect(() => {
@@ -84,16 +86,16 @@ export const RewardModal = (props: IProps) => {
     }
   }
 
+  // TODO: In case of create pool, don't initiate rewards
   const renderContent = () => {
     switch (state.step) {
       case ERewardStep.Input:
         return (
           <InputSection
-            onNext={onNextStep}
+            onNext={onNextStep} // TODO: Refactor to skip initiate rewards step
             updateState={updateState}
             rewardState={state}
             onClose={props.onClose}
-            poolData={props.poolData}
           />
         )
       case ERewardStep.Confirm:
@@ -101,7 +103,6 @@ export const RewardModal = (props: IProps) => {
           <ConfirmSection
             onNext={onNextStep}
             rewardState={state}
-            poolData={props.poolData}
             updateState={updateState}
           />
         )
@@ -109,19 +110,13 @@ export const RewardModal = (props: IProps) => {
         return (
           <RewardSection
             onNext={onNextStep}
+            poolAddress={poolAddress as string}
             rewardState={state}
-            poolData={props.poolData}
             updateState={updateState}
           />
         )
       default:
-        return (
-          <SuccessSection
-            onClose={props.onSuccess}
-            rewardState={state}
-            poolData={props.poolData}
-          />
-        )
+        return <SuccessSection onClose={props.onSuccess} rewardState={state} />
     }
   }
 

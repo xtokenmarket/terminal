@@ -1,7 +1,6 @@
 import { Button, makeStyles, Typography } from '@material-ui/core'
-import { IRewardState } from 'pages/PoolDetails/components'
-import { ITerminalPool } from 'types'
-import { WarningInfo, OutputEstimation } from '..'
+import { IRewardState } from 'components'
+import { OutputEstimation } from '../index'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -48,14 +47,13 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   onNext: () => void
   rewardState: IRewardState
-  poolData: ITerminalPool
   updateState: (e: any) => void
 }
 
 export const ConfirmSection = (props: IProps) => {
   const classes = useStyles()
 
-  const { onNext, rewardState, poolData } = props
+  const { onNext, rewardState } = props
 
   return (
     <div className={classes.root}>
@@ -67,7 +65,6 @@ export const ConfirmSection = (props: IProps) => {
         </Typography>
       </div>
       <OutputEstimation
-        poolData={poolData}
         rewardState={rewardState}
         amounts={rewardState.amounts}
       />

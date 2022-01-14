@@ -2,6 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Grid, makeStyles, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import { transparentize } from 'polished'
+import { FEE_TIERS } from 'config/constants'
 
 const useStyles = makeStyles((theme) => ({
   tierInner: {
@@ -60,21 +61,6 @@ interface IProps {
   className?: string
 }
 
-const TIERS = [
-  {
-    value: BigNumber.from(500),
-    label: 'Best for stable pairs',
-  },
-  {
-    value: BigNumber.from(3000),
-    label: 'Best for most pairs',
-  },
-  {
-    value: BigNumber.from(10000),
-    label: 'Best for exact pairs',
-  },
-]
-
 export const FeeTierSection: React.FC<IProps> = ({
   className,
   tier,
@@ -84,7 +70,7 @@ export const FeeTierSection: React.FC<IProps> = ({
 
   return (
     <Grid container spacing={3}>
-      {TIERS.map(({ value, label }) => {
+      {FEE_TIERS.map(({ value, label }) => {
         const active = value.eq(tier)
         return (
           <Grid item xs={12} sm={4} key={label} onClick={() => onChange(value)}>
