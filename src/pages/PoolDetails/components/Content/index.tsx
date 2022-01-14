@@ -29,13 +29,13 @@ import { RewardVestSection } from '../RewardVestSection'
 
 const rewards = [
   {
-    icon: '',
+    icon: '/assets/tokens/xtk.png',
     symbol: 'XTK',
     value: '247.3053',
     rate: '309,73',
   },
   {
-    icon: '',
+    icon: '/assets/tokens/weth.png',
     symbol: 'WETH',
     value: '0.3053',
     rate: '1409,73',
@@ -44,13 +44,13 @@ const rewards = [
 
 const vesting = [
   {
-    icon: '',
+    icon: '/assets/tokens/xtk.png',
     symbol: 'XTK',
     value: '247.3053',
     rate: '309,73',
   },
   {
-    icon: '',
+    icon: '/assets/tokens/weth.png',
     symbol: 'WETH',
     value: '0.3053',
     rate: '1409,73',

@@ -50,6 +50,13 @@ const useStyles = makeStyles((theme) => ({
     margin: '0 3px',
     fontSize: 12,
   },
+  icon: {
+    widows: 14,
+    height: 14,
+  },
+  symbolWrapper: {
+    display: 'flex',
+  },
 }))
 
 interface Item {
@@ -82,8 +89,8 @@ export const RewardVestSection = (props: IProps) => {
     return (
       <div key={item.symbol} className={classes.itemWrapper}>
         <div className={classes.wrapper}>
-          <div>
-            <div>{item.icon}</div>
+          <div className={classes.symbolWrapper}>
+            <img className={classes.icon} alt="token" src={item.icon} />
             <Typography className={classes.symbol}>{item.symbol}</Typography>
           </div>
           <Typography className={classes.value}>{item.value}</Typography>
@@ -114,8 +121,8 @@ export const RewardVestSection = (props: IProps) => {
   const renderVestingItems = (item: Item) => {
     return (
       <div className={classes.wrapper}>
-        <div>
-          <div>{item.icon}</div>
+        <div className={classes.symbolWrapper}>
+          <img className={classes.icon} alt="token" src={item.icon} />
           <Typography className={classes.symbol}>{item.symbol}</Typography>
         </div>
         <Typography className={classes.value}>{item.value}</Typography>
