@@ -45,12 +45,13 @@ const useStyles = makeStyles((theme) => ({
   vestingWrapper: {
     display: 'flex',
     flex: 1,
-    marginBottom: 10,
+    minHeight: 35,
+    alignItems: 'center',
   },
   itemWrapper: {
     display: 'flex',
-    marginTop: 10,
     alignItems: 'center',
+    minHeight: 35,
   },
   button: {
     flex: 1,
