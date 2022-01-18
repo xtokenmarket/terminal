@@ -16,6 +16,7 @@ export async function fetchUnknownToken(provider: any, address: string): Promise
   
   try {
     const contract = new Contract(address, Abi.ERC20, provider)
+    // TODO: Add multicall
     const name = await contract.name()
     const symbol = await contract.symbol()
     const decimals = await contract.decimals()
