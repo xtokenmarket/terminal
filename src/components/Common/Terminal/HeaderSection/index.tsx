@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add'
 import SearchIcon from '@material-ui/icons/Search'
+import { useConnectedWeb3Context } from 'contexts'
 import { NavLink } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
@@ -74,6 +75,8 @@ const useStyles = makeStyles((theme) => ({
 
 export const HeaderSection = () => {
   const classes = useStyles()
+  const { account } = useConnectedWeb3Context()
+  const isConnected = !!account
 
   return (
     <div className={classes.root}>
@@ -103,10 +106,12 @@ export const HeaderSection = () => {
           label="Staked Ended"
         />
         <div className={classes.tmp} />
-        <NavLink to="/terminal/new-pool" className={classes.link}>
-          <AddIcon />
-          &nbsp; CREATE
-        </NavLink>
+        {isConnected && (
+          <NavLink to="/terminal/new-pool" className={classes.link}>
+            <AddIcon />
+            &nbsp; CREATE
+          </NavLink>
+        )}
       </div>
     </div>
   )
