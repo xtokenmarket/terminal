@@ -127,8 +127,13 @@ export const TokenSelectModal: React.FC<IProps> = ({
     })()
   }, [debouncedQuery])
 
+  const _onClose = () => {
+    setSearchQuery('')
+    onClose()
+  }
+
   return (
-    <Modal className={cl.modal} open={open} onClose={onClose}>
+    <Modal className={cl.modal} open={open} onClose={_onClose}>
       <div className={cl.content}>
         <div className={cl.topSection}>
           <Typography className={cl.title}>Select Token</Typography>
