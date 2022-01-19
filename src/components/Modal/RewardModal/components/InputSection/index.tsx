@@ -75,22 +75,12 @@ export const InputSection: React.FC<IProps> = ({
   const isMountedRef = useIsMountedRef()
   const { multicall } = useServices()
 
-  const { period, amounts, tokens } = rewardState
+  const { period, amounts } = rewardState
   const isDisabled = (
     amounts.some(amount => amount.isZero()) ||
     period === '' ||
     Number(period) === 0
   )
-
-  const [activeTokenIndex, setActiveTokenIndex] = useState(0)
-  const activeToken = tokens[activeTokenIndex]
-  // const activeAmount = amounts[activeTokenIndex]
-
-  const onSelectToken = (token: IToken) => {
-    const newTokens = tokens
-    newTokens.splice(activeTokenIndex, 1, token)
-    updateState({ tokens: newTokens })
-  }
 
   return (
     <div className={cl.root}>
@@ -106,10 +96,6 @@ export const InputSection: React.FC<IProps> = ({
         </IconButton>
       </div>
       <div className={cl.content}>
-        <TokenSelect
-          onChange={onSelectToken}
-          token={activeToken}
-        />
         <RewardPeriodInput
           value={rewardState.period}
           onChange={(newValue) =>
@@ -118,7 +104,15 @@ export const InputSection: React.FC<IProps> = ({
             })
           }
         />
-        {/* TODO: Re-enable `TokenBalanceInput`, after user selects token */}
+        {/*
+          TODO: Break out a RewardsToken component, which has a TokenSelect
+          and a TokenBalanceInput, and wire that up to the rewards state.
+          New designs exist for this component + how to add multiple
+        */}
+        {/* <TokenSelect
+          onChange={onSelectToken}
+          token={activeToken}
+        /> */}
         {/*<TokenBalanceInput
           token={rewardState}
           value={rewardState.amounts[index]}

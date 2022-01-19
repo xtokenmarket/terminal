@@ -55,17 +55,9 @@ interface IProps {
   className?: string
 }
 
-// interface IRewardTokenData {
-//   token: IToken
-//   amount: BigNumber
-// }
-
 export interface IRewardState {
   step: ERewardStep
   period: string
-  // TODO: these should be an array
-  // of objects (IRewardTokenData), not 2 arrays
-  // rewardTokens: IRewardTokenData[]
   amounts: BigNumber[]
   tokens: IToken[]
 }
