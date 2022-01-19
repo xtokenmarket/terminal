@@ -73,26 +73,25 @@ interface IProps {
   getIncrementUpper: () => string
   isMinPrice?: boolean
   label: string
-  onChange: (_: string) => void
+  onUserInput: (_: string) => void
   priceLower?: Price<Token, Token>
   priceUpper?: Price<Token, Token>
   ticksAtLimit: { [bound in Bound]?: boolean | undefined }
+  value: string
+  decrement: () => string
+  increment: () => string
 }
 
 export const TokenPriceInput = (props: IProps) => {
   const {
-    currencyA,
-    currencyB,
-    isMinPrice,
     label,
-    onChange,
     priceLower,
     priceUpper,
     ticksAtLimit,
-    getIncrementLower,
-    getDecrementUpper,
-    getDecrementLower,
-    getIncrementUpper,
+    value,
+    decrement,
+    increment,
+    onUserInput,
   } = props
   console.log('ticksAtLimit', ticksAtLimit)
 
@@ -105,35 +104,6 @@ export const TokenPriceInput = (props: IProps) => {
 
   const classes = useStyles()
   const commonClasses = useCommonStyles()
-
-  const tokenA = (currencyA ?? undefined)?.wrapped
-  const tokenB = (currencyB ?? undefined)?.wrapped
-  const isSorted = tokenA && tokenB && tokenA.sortsBefore(tokenB)
-
-  const leftPrice = isSorted ? priceLower : priceUpper?.invert()
-  const rightPrice = isSorted ? priceUpper : priceLower?.invert()
-
-  let value = ''
-  if (isMinPrice) {
-    value = ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]
-      ? '0'
-      : leftPrice?.toSignificant(5) ?? ''
-  } else {
-    value = ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]
-      ? '∞'
-      : rightPrice?.toSignificant(5) ?? ''
-  }
-
-  useEffect(() => {
-    if (localValue !== value && !useLocalValue) {
-      setTimeout(() => {
-        setLocalValue(value) // reset local value to match parent
-      }, 0)
-    }
-  }, [localValue, useLocalValue, value])
-
-  const decrement = isSorted ? getDecrementLower : getIncrementUpper
-  const increment = isSorted ? getIncrementLower : getDecrementUpper
 
   const handleOnFocus = () => {
     console.log('OnFocu')
@@ -150,11 +120,21 @@ export const TokenPriceInput = (props: IProps) => {
 
   const handleDecrement = useCallback(() => {
     setUseLocalValue(false)
+    onUserInput(decrement())
   }, [decrement])
 
   const handleIncrement = useCallback(() => {
     setUseLocalValue(false)
+    onUserInput(increment())
   }, [increment])
+
+  useEffect(() => {
+    if (localValue !== value && !useLocalValue) {
+      setTimeout(() => {
+        setLocalValue(value) // reset local value to match parent
+      }, 0)
+    }
+  }, [localValue, useLocalValue, value])
 
   return (
     <div className={clsx(classes.root, props.className)}>
@@ -185,7 +165,7 @@ export const TokenPriceInput = (props: IProps) => {
         value={localValue}
         onChange={(e) => {
           if (Number(e.target.value) < 0) return
-          onChange(e.target.value || '0')
+          setLocalValue(e.target.value || '0')
         }}
         variant="outlined"
         fullWidth
