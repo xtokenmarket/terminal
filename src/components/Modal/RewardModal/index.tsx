@@ -15,18 +15,32 @@ import useCommonStyles from 'style/common'
 import { useConnectedWeb3Context } from 'contexts'
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    position: 'absolute',
-    width: '90vw',
-    maxWidth: 600,
-    backgroundColor: theme.colors.primary500,
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  content: {
+    // position: 'absolute',
+    // width: '90vw',
+    // maxWidth: 600,
+    // backgroundColor: theme.colors.primary500,
+    // top: '50%',
+    // left: '50%',
+    // transform: 'translate(-50%, -50%)',
+    // outline: 'none',
+    // maxHeight: '80vh',
+    // userSelect: 'none',
+    // overflowY: 'auto',
+    position: 'relative',
     outline: 'none',
-    maxHeight: '80vh',
     userSelect: 'none',
-    overflowY: 'auto',
+    width: 700,
+    maxWidth: '90vw',
+    height: '80vh',
+    backgroundColor: theme.colors.primary500,
+    display: 'flex',
+    flexDirection: 'column',
     '&.transparent': {
       backgroundColor: theme.colors.transparent,
     },
@@ -136,10 +150,10 @@ export const RewardModal: React.FC<IProps> = ({
   }
 
   return (
-    <Modal open={open}>
+    <Modal open={open} className={cl.modal}>
       <div
         className={clsx(
-          cl.root,
+          cl.content,
           commonClasses.scroll,
           className,
           state.step === ERewardStep.Success ? 'transparent' : ''

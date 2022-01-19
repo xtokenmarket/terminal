@@ -13,8 +13,13 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
-  inputBox: { paddingRight: 60, fontWeight: 700 },
-  inputLabel: { color: `${theme.colors.white} !important` },
+  inputBox: {
+    paddingRight: 60,
+    fontWeight: 700,
+  },
+  inputLabel: {
+    color: `${theme.colors.white} !important`,
+  },
   notchedOutline: {
     borderColor: theme.colors.primary200,
   },

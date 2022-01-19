@@ -10,9 +10,11 @@ import { IToken } from 'types'
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
   header: {
-    padding: theme.spacing(4),
     position: 'relative',
-    paddingBottom: theme.spacing(2),
+    padding: theme.spacing(3),
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(2),
+    },
   },
   title: {
     color: theme.colors.white,
@@ -31,10 +33,16 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white1,
   },
   content: {
-    padding: theme.spacing(0, 4),
+    padding: theme.spacing(0, 3),
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(0, 2),
+    },
   },
   actions: {
-    padding: theme.spacing(4),
+    padding: theme.spacing(3),
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(2),
+    },
   },
   deposit: {},
 }))
