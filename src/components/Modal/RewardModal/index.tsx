@@ -55,12 +55,15 @@ export interface IRewardState {
   tokens: IToken[]
 }
 
-export const RewardModal = (props: IProps) => {
-  const classes = useStyles()
+export const RewardModal = ({
+  className,
+  onClose,
+  onSuccess,
+  poolAddress,
+}: IProps) => {
+  const cl = useStyles()
   const commonClasses = useCommonStyles()
   const { account } = useConnectedWeb3Context()
-
-  const { onClose, poolAddress } = props
 
   const [state, setState] = useState<IRewardState>({
     step: ERewardStep.Input,
@@ -105,7 +108,7 @@ export const RewardModal = (props: IProps) => {
             onNext={onNextStep} // TODO: Refactor to skip initiate rewards step
             updateState={updateState}
             rewardState={state}
-            onClose={props.onClose}
+            onClose={onClose}
           />
         )
       case ERewardStep.Confirm:
@@ -126,7 +129,7 @@ export const RewardModal = (props: IProps) => {
           />
         )
       default:
-        return <SuccessSection onClose={props.onSuccess} rewardState={state} />
+        return <SuccessSection onClose={onSuccess} rewardState={state} />
     }
   }
 
@@ -134,9 +137,9 @@ export const RewardModal = (props: IProps) => {
     <Modal open>
       <div
         className={clsx(
-          classes.root,
+          cl.root,
           commonClasses.scroll,
-          props.className,
+          className,
           state.step === ERewardStep.Success ? 'transparent' : ''
         )}
       >

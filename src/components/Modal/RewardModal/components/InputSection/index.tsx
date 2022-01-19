@@ -89,7 +89,6 @@ export const InputSection: React.FC<IProps> = ({
         </IconButton>
       </div>
       <div className={cl.content}>
-        {/* TODO: Add select token and update it to `rewardState.tokens` */}
         <TokenSelect
           onChange={onSelectToken}
           token={activeToken}
