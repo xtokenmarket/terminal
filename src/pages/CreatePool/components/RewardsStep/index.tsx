@@ -9,7 +9,7 @@ import {
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { FEE_TIERS } from 'config/constants'
 import { useConnectedWeb3Context } from 'contexts'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ICreatePoolData, IToken, MintState } from 'types'
 import { Bound, Field } from 'utils/enums'
 import { RewardModal } from '../../../../components'
@@ -20,18 +20,17 @@ const useStyles = makeStyles((theme) => ({
   },
   label: {
     color: theme.colors.white,
-    marginBottom: 16,
+    marginBottom: theme.spacing(2),
   },
   fee: {
-    marginTop: 16,
+    margin: theme.spacing(2),
     fontSize: 12,
     color: theme.colors.primary100,
-    marginBottom: 8,
   },
   editWrapper: {
     borderRadius: 4,
     backgroundColor: theme.colors.primary400,
-    padding: 24,
+    padding: theme.spacing(2),
   },
   logos: {
     display: 'flex',
@@ -44,7 +43,9 @@ const useStyles = makeStyles((theme) => ({
     border: `6px solid ${theme.colors.primary400}`,
     position: 'relative',
     borderRadius: '50%',
-    '&+&': { left: -16 },
+    '&+&': {
+      left: -16,
+    },
   },
   tokenSymbols: {
     color: theme.colors.white,
@@ -53,11 +54,9 @@ const useStyles = makeStyles((theme) => ({
     lineHeight: '48px',
   },
   detailsWrapper: {
-    margin: '32px 0',
+    margin: theme.spacing(4, 0),
   },
   section: {
-    padding: 12,
-
     '& .title': {
       color: theme.colors.primary100,
       margin: 0,
@@ -80,8 +79,10 @@ const useStyles = makeStyles((theme) => ({
     },
 
     '&+&': {
-      borderLeft: `1px solid ${theme.colors.primary200}`,
-      left: -16,
+      [theme.breakpoints.up('sm')]: {
+        borderLeft: `1px solid ${theme.colors.primary200}`,
+        left: -16,
+      },
     },
   },
   noRewardsWrapper: {
@@ -92,7 +93,7 @@ const useStyles = makeStyles((theme) => ({
   noRewardsText: {
     color: theme.colors.primary100,
     fontSize: 22,
-    margin: '48px 0',
+    margin: theme.spacing(5, 0),
   },
   createRewardsBtn: {
     fontSize: 12,
@@ -107,12 +108,16 @@ interface IProps {
   onNext: () => void
 }
 
-export const RewardsStep = (props: IProps) => {
-  const classes = useStyles()
+export const RewardsStep: React.FC<IProps> = ({
+  data,
+  updateData,
+  onEdit,
+  onNext,
+}) => {
+  const cl = useStyles()
   const { account, networkId } = useConnectedWeb3Context()
   const [isModalVisible, setIsModalVisible] = useState(false)
 
-  const { data, updateData } = props
   const feeAmount: FeeAmount = data.tier.toNumber()
   const feeLabel = FEE_TIERS.find((fee) => fee.value.eq(data.tier))?.label
   const priceLabel = `${data.token0.symbol.toUpperCase()} per ${data.token1.symbol.toUpperCase()}`
@@ -120,32 +125,32 @@ export const RewardsStep = (props: IProps) => {
   const toggleRewardsModal = () => setIsModalVisible((prevState) => !prevState)
 
   return (
-    <div className={classes.root}>
+    <div className={cl.root}>
       <div>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6}>
-            <div className={classes.editWrapper}>
+          <Grid item xs={12} md={6}>
+            <div className={cl.editWrapper}>
               <Grid item xs={12}>
-                <div className={classes.logos}>
+                <div className={cl.logos}>
                   {[data.token0.image, data.token1.image].map((img) => (
-                    <img className={classes.tokenIcon} src={img} key={img} />
+                    <img className={cl.tokenIcon} src={img} key={img} />
                   ))}
-                  <Typography className={classes.tokenSymbols}>
+                  <Typography className={cl.tokenSymbols}>
                     {`${data.token0.symbol.toUpperCase()}/${data.token1.symbol.toUpperCase()}`}
                   </Typography>
                 </div>
-                <Grid container spacing={4} className={classes.detailsWrapper}>
-                  <Grid item xs={4} className={classes.section}>
+                <Grid container spacing={3} className={cl.detailsWrapper}>
+                  <Grid item xs={12} sm={4} className={cl.section}>
                     <p className="title">Min Price</p>
                     <p className="data">{data.minPrice}</p>
                     <p className="description">{priceLabel}</p>
                   </Grid>
-                  <Grid item xs={4} className={classes.section}>
+                  <Grid item xs={12} sm={4} className={cl.section}>
                     <p className="title">Max Price</p>
                     <p className="data">{data.maxPrice}</p>
                     <p className="description">{priceLabel}</p>
                   </Grid>
-                  <Grid item xs={4} className={classes.section}>
+                  <Grid item xs={12} sm={4} className={cl.section}>
                     <p className="title">Fee tier</p>
                     <p className="data">{feeAmount / 10000}%</p>
                     <p className="description">{feeLabel}</p>
@@ -155,7 +160,7 @@ export const RewardsStep = (props: IProps) => {
                 <Button
                   color="secondary"
                   fullWidth
-                  onClick={props.onEdit}
+                  onClick={onEdit}
                   variant="contained"
                 >
                   EDIT
@@ -164,14 +169,14 @@ export const RewardsStep = (props: IProps) => {
             </div>
           </Grid>
 
-          <Grid item xs={12} sm={6}>
-            <Typography className={classes.label}>Rewards</Typography>
-            <div className={classes.noRewardsWrapper}>
-              <Typography className={classes.noRewardsText}>
+          <Grid item xs={12} md={6}>
+            <Typography className={cl.label}>Rewards</Typography>
+            <div className={cl.noRewardsWrapper}>
+              <Typography className={cl.noRewardsText}>
                 You have no rewards program for this pool.
               </Typography>
               <Button
-                className={classes.createRewardsBtn}
+                className={cl.createRewardsBtn}
                 color="secondary"
                 onClick={toggleRewardsModal}
                 variant="contained"
@@ -183,14 +188,14 @@ export const RewardsStep = (props: IProps) => {
         </Grid>
       </div>
 
-      <Typography className={classes.fee}>
+      <Typography className={cl.fee}>
         Pool Deployment fee is 0.1 ETH. Additional 1% fee on any rewards
         distributed for this pool.
       </Typography>
       <Button
         color="primary"
         fullWidth
-        onClick={props.onNext}
+        onClick={onNext}
         variant="contained"
       >
         Next
