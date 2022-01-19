@@ -13,24 +13,34 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     padding: theme.spacing(3),
     [theme.breakpoints.down('xs')]: {
-      padding: theme.spacing(2),
+      padding: theme.spacing(2, 5, 2, 2),
     },
   },
   title: {
     color: theme.colors.white,
     fontWeight: 600,
     fontSize: 22,
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 18,
+    },
   },
   description: {
     color: theme.colors.white,
     marginTop: theme.spacing(1),
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 14,
+    },
   },
   closeButton: {
-    position: 'absolute',
-    right: 12,
-    top: 12,
-    padding: 12,
+    padding: 0,
     color: theme.colors.white1,
+    position: 'absolute',
+    right: 24,
+    top: 24,
+    [theme.breakpoints.down('xs')]: {
+      top: 12,
+      right: 12,
+    },
   },
   content: {
     padding: theme.spacing(0, 3),
