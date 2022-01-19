@@ -298,15 +298,14 @@ export const Content = (props: IProps) => {
         />
       )}
 
-      {state.rewardVisible && (
-        <RewardModal
-          onClose={() => setRewardModalVisible(false)}
-          onSuccess={async () => {
-            setRewardModalVisible(false)
-            await props.reloadTerminalPool()
-          }}
-        />
-      )}
+      <RewardModal
+        open={state.rewardVisible}
+        onClose={() => setRewardModalVisible(false)}
+        onSuccess={async () => {
+          setRewardModalVisible(false)
+          await props.reloadTerminalPool()
+        }}
+      />
 
       {state.withdrawVisible && (
         <WithdrawModal

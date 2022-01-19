@@ -66,7 +66,6 @@ export const InputSection: React.FC<IProps> = ({
 
   const [activeTokenIndex, setActiveTokenIndex] = useState(0)
   const activeToken = tokens[activeTokenIndex]
-  console.log('activeToken:', activeToken)
   // const activeAmount = amounts[activeTokenIndex]
 
   const onSelectToken = (token: IToken) => {

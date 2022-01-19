@@ -197,6 +197,7 @@ export const RewardsStep = (props: IProps) => {
       </Button>
 
       <RewardModal
+        open={isModalVisible}
         onClose={toggleRewardsModal}
         onSuccess={async () => {
           toggleRewardsModal()

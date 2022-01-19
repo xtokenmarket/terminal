@@ -34,10 +34,11 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  className?: string
+  open: boolean
   onClose: () => void
   onSuccess: () => Promise<void>
   poolAddress?: string
+  className?: string
 }
 
 // interface IRewardTokenData {
@@ -55,12 +56,13 @@ export interface IRewardState {
   tokens: IToken[]
 }
 
-export const RewardModal = ({
+export const RewardModal: React.FC<IProps> = ({
+  open,
   className,
   onClose,
   onSuccess,
   poolAddress,
-}: IProps) => {
+}) => {
   const cl = useStyles()
   const commonClasses = useCommonStyles()
   const { account } = useConnectedWeb3Context()
@@ -134,7 +136,7 @@ export const RewardModal = ({
   }
 
   return (
-    <Modal open>
+    <Modal open={open}>
       <div
         className={clsx(
           cl.root,
