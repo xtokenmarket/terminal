@@ -1,16 +1,18 @@
+import { useState } from 'react'
 import { Button, IconButton, makeStyles, Typography } from '@material-ui/core'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
-import { IRewardState, TokenBalanceInput } from 'components'
+import { IRewardState, TokenBalanceInput, TokenSelect } from 'components'
 import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef, useServices } from 'helpers'
 import { RewardPeriodInput } from '../index'
+import { IToken } from 'types'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
   header: {
-    padding: 32,
+    padding: theme.spacing(4),
     position: 'relative',
-    paddingBottom: 16,
+    paddingBottom: theme.spacing(2),
   },
   title: {
     color: theme.colors.white,
@@ -19,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   },
   description: {
     color: theme.colors.white,
-    marginTop: 8,
+    marginTop: theme.spacing(1),
   },
   closeButton: {
     position: 'absolute',
@@ -28,9 +30,11 @@ const useStyles = makeStyles((theme) => ({
     padding: 12,
     color: theme.colors.white1,
   },
-  content: { padding: '0 32px' },
+  content: {
+    padding: theme.spacing(0, 4),
+  },
   actions: {
-    padding: 32,
+    padding: theme.spacing(4),
   },
   deposit: {},
 }))
@@ -42,40 +46,54 @@ interface IProps {
   updateState: (e: any) => void
 }
 
-export const InputSection = (props: IProps) => {
-  const classes = useStyles()
-  const { onNext, onClose, rewardState, updateState } = props
+export const InputSection: React.FC<IProps> = ({
+  onNext,
+  onClose,
+  rewardState,
+  updateState,
+}) => {
+  const cl = useStyles()
   const { account, library: provider, networkId } = useConnectedWeb3Context()
   const isMountedRef = useIsMountedRef()
   const { multicall } = useServices()
 
-  const isDisabled =
-    (() => {
-      for (let index = 0; index < rewardState.amounts.length; index++) {
-        if (rewardState.amounts[index].isZero()) {
-          return true
-        }
-      }
-      return false
-    })() ||
-    rewardState.period === '' ||
-    Number(rewardState.period) === 0
+  const { period, amounts, tokens } = rewardState
+  const isDisabled = (
+    amounts.some(amount => amount.isZero()) ||
+    period === '' ||
+    Number(period) === 0
+  )
+
+  const [activeTokenIndex, setActiveTokenIndex] = useState(0)
+  const activeToken = tokens[activeTokenIndex]
+  console.log('activeToken:', activeToken)
+  // const activeAmount = amounts[activeTokenIndex]
+
+  const onSelectToken = (token: IToken) => {
+    const newTokens = tokens
+    newTokens.splice(activeTokenIndex, 1, token)
+    updateState({ tokens: newTokens })
+  }
 
   return (
-    <div className={classes.root}>
-      <div className={classes.header}>
-        <Typography className={classes.title}>
+    <div className={cl.root}>
+      <div className={cl.header}>
+        <Typography className={cl.title}>
           Create a rewards program
         </Typography>
-        <Typography className={classes.description}>
+        <Typography className={cl.description}>
           Select a reward token and adjust the settings.
         </Typography>
-        <IconButton className={classes.closeButton} onClick={onClose}>
+        <IconButton className={cl.closeButton} onClick={onClose}>
           <CloseOutlinedIcon />
         </IconButton>
       </div>
-      <div className={classes.content}>
+      <div className={cl.content}>
         {/* TODO: Add select token and update it to `rewardState.tokens` */}
+        <TokenSelect
+          onChange={onSelectToken}
+          token={activeToken}
+        />
         <RewardPeriodInput
           value={rewardState.period}
           onChange={(newValue) =>
@@ -97,12 +115,12 @@ export const InputSection = (props: IProps) => {
           }}
         />*/}
       </div>
-      <div className={classes.actions}>
+      <div className={cl.actions}>
         <Button
           color="primary"
           variant="contained"
           fullWidth
-          className={classes.deposit}
+          className={cl.deposit}
           onClick={() => {
             onNext()
           }}

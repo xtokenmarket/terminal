@@ -40,9 +40,17 @@ interface IProps {
   poolAddress?: string
 }
 
+// interface IRewardTokenData {
+//   token: IToken
+//   amount: BigNumber
+// }
+
 export interface IRewardState {
   step: ERewardStep
   period: string
+  // TODO: these should be an array
+  // of objects (IRewardTokenData), not 2 arrays
+  // rewardTokens: IRewardTokenData[]
   amounts: BigNumber[]
   tokens: IToken[]
 }
@@ -53,11 +61,13 @@ export const RewardModal = (props: IProps) => {
   const { account } = useConnectedWeb3Context()
 
   const { onClose, poolAddress } = props
+
   const [state, setState] = useState<IRewardState>({
     step: ERewardStep.Input,
     period: '',
     amounts: [],
     tokens: [],
+    // rewardTokens: [],
   })
 
   useEffect(() => {
@@ -66,7 +76,7 @@ export const RewardModal = (props: IProps) => {
     }
   }, [account])
 
-  const updateState = (e: any) => {
+  const updateState = (e: Partial<IRewardState>) => {
     setState((prev) => ({ ...prev, ...e }))
   }
 

@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   className?: string
   token?: IToken
-  onChange: (_?: IToken) => void
+  onChange: (_: IToken) => void
 }
 
 export const TokenSelect: React.FC<IProps> = ({
