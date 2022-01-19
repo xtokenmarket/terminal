@@ -1,5 +1,5 @@
-import React from 'react'
-import { makeStyles, Typography } from '@material-ui/core'
+import React, { useState, useEffect } from 'react'
+import { makeStyles, Typography, CircularProgress } from '@material-ui/core'
 import { IToken } from 'types'
 
 const useStyles = makeStyles((theme) => ({
@@ -7,6 +7,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.seventh,
     width: '100%',
     flexGrow: 1,
+    display: 'flex',
+    flexDirection: 'column',
     padding: theme.spacing(3),
     [theme.breakpoints.down('xs')]: {
       padding: theme.spacing(2),
@@ -44,41 +46,72 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
     textAlign: 'center',
   },
+  spinner: {
+    color: theme.colors.primary100,
+    alignSelf: 'center',
+    justifySelf: 'center',
+    marginTop: theme.spacing(6),
+  },
 }))
 
 interface IProps {
   onSelectToken: (_: IToken) => void
   tokens: IToken[]
+  isLoading: boolean
 }
 
-export const TokensList: React.FC<IProps> = ({ onSelectToken, tokens }) => {
+enum ETokensListDisplayState {
+  Loading,
+  FoundResults,
+  NoResults,
+}
+
+export const TokensList: React.FC<IProps> = ({
+  onSelectToken,
+  tokens,
+  isLoading,
+}) => {
   const cl = useStyles()
-  if (tokens.length === 0) {
-    return (
-      <div className={cl.tokensList}>
-        <Typography variant="h5" className={cl.noResultsText}>
-          No results found.
-        </Typography>
-      </div>
-    )
-  }
-  return (
-    <div className={cl.tokensList}>
-      {tokens.map((token) => {
-        return (
-          <div
-            className={cl.token}
-            key={token.address}
-            onClick={() => onSelectToken(token)}
-          >
-            <img className={cl.image} alt="img" src={token.image || ''} />
-            <div>
-              <p className={cl.symbol}>{token.symbol}</p>
-              <span className={cl.name}>{token.name}</span>
+  const [displayState, setDisplayState] = useState(ETokensListDisplayState.FoundResults)
+  useEffect(() => {
+    if (isLoading) {
+      setDisplayState(ETokensListDisplayState.Loading)
+    } else if (tokens.length === 0) {
+      setDisplayState(ETokensListDisplayState.NoResults)
+    } else {
+      setDisplayState(ETokensListDisplayState.FoundResults)
+    }
+  }, [tokens, isLoading])
+
+  const content = {
+    [ETokensListDisplayState.Loading]: (
+      <CircularProgress size={100} className={cl.spinner} />
+    ),
+    [ETokensListDisplayState.NoResults]: (
+      <Typography variant="h5" className={cl.noResultsText}>
+        No results found.
+      </Typography>
+    ),
+    [ETokensListDisplayState.FoundResults]: (
+      <>
+        {tokens.map((token) => {
+          return (
+            <div
+              className={cl.token}
+              key={token.address}
+              onClick={() => onSelectToken(token)}
+            >
+              <img className={cl.image} alt="img" src={token.image || ''} />
+              <div>
+                <p className={cl.symbol}>{token.symbol}</p>
+                <span className={cl.name}>{token.name}</span>
+              </div>
             </div>
-          </div>
-        )
-      })}
-    </div>
-  )
+          )
+        })}
+      </>
+    ),
+  }[displayState]
+
+  return <div className={cl.tokensList}>{content}</div>
 }

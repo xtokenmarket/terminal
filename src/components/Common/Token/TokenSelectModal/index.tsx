@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import {
   makeStyles,
   Modal,
@@ -17,6 +17,9 @@ import { useDebounce } from 'hooks/useDebouce'
 
 import { useAllTokens } from 'hooks/useAllTokens'
 import { filterTokens } from 'utils/filter'
+
+import { useConnectedWeb3Context } from 'contexts'
+import { fetchUnknownToken } from 'utils/token'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -98,18 +101,39 @@ export const TokenSelectModal: React.FC<IProps> = ({
   open,
 }) => {
   const cl = useStyles()
+  const { library: provider } = useConnectedWeb3Context()
 
   const [searchQuery, setSearchQuery] = useState('')
   const onSearchQueryChange = useCallback((e) => {
     setSearchQuery(e.target.value)
+    setIsLoading(true)
   }, [])
 
   const debouncedQuery = useDebounce(searchQuery, 500)
   const allTokens = useAllTokens()
-  const tokensList = filterTokens(allTokens, debouncedQuery)
+  const [tokensList, setTokensList] = useState<IToken[]>(allTokens)
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    (async () => {
+      const unknownToken = await fetchUnknownToken(provider, debouncedQuery)
+      if (unknownToken) {
+        setTokensList([unknownToken])
+      } else {
+        const filteredTokensList = filterTokens(allTokens, debouncedQuery)
+        setTokensList(filteredTokensList.length > 0 ? filteredTokensList : [])
+      }
+      setIsLoading(false)
+    })()
+  }, [debouncedQuery])
+
+  const _onClose = () => {
+    setSearchQuery('')
+    onClose()
+  }
 
   return (
-    <Modal className={cl.modal} open={open} onClose={onClose}>
+    <Modal className={cl.modal} open={open} onClose={_onClose}>
       <div className={cl.content}>
         <div className={cl.topSection}>
           <Typography className={cl.title}>Select Token</Typography>
@@ -120,6 +144,7 @@ export const TokenSelectModal: React.FC<IProps> = ({
             <TextField
               className={cl.search}
               fullWidth
+              autoFocus
               InputProps={{
                 disableUnderline: true,
                 startAdornment: (
@@ -141,6 +166,7 @@ export const TokenSelectModal: React.FC<IProps> = ({
         <TokensList
           onSelectToken={onSelect}
           tokens={tokensList}
+          isLoading={isLoading}
         />
       </div>
     </Modal>

@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { makeStyles } from '@material-ui/core'
+import { Button, makeStyles } from '@material-ui/core'
 import { PageContent, PageWrapper } from 'components'
+import { useConnectedWeb3Context } from 'contexts'
 import { useState } from 'react'
 import { useHistory } from 'react-router'
 import {ICreatePoolData, IToken} from 'types'
@@ -15,6 +16,14 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     padding: theme.spacing(3, 0),
+  },
+  connectBtn: {
+    background: theme.colors.primary,
+    borderRadius: 4,
+    height: 40,
+    [theme.breakpoints.down(theme.custom.xsss)]: {
+      height: 36,
+    },
   },
 }))
 
@@ -37,6 +46,8 @@ const initialState: IState = {
 const CreatePool = () => {
   const history = useHistory()
   const classes = useStyles()
+  const { account, setWalletConnectModalOpened } = useConnectedWeb3Context()
+  const isConnected = !!account
 
   const [state, setState] = useState<IState>(initialState)
 
@@ -77,6 +88,20 @@ const CreatePool = () => {
   }
 
   const renderContent = () => {
+    if (!isConnected) {
+      return (
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <Button
+            color="primary"
+            variant="contained"
+            className={classes.connectBtn}
+            onClick={() => setWalletConnectModalOpened(true)}
+          >
+            CONNECT WALLET
+          </Button>
+        </div>
+      )
+    }
     switch (state.step) {
       case ECreatePoolStep.TokenPair:
         return (

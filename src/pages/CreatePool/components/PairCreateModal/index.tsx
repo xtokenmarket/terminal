@@ -46,7 +46,6 @@ export const PairCreateModal: React.FC<IProps> = ({
   const classes = useStyles()
   const commonClasses = useCommonStyles()
   const { account } = useConnectedWeb3Context()
-  console.log({ token0, token1 })
 
   useEffect(() => {
     if (!account) {
