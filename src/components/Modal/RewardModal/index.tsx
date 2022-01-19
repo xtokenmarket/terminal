@@ -21,17 +21,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
   },
   content: {
-    // position: 'absolute',
-    // width: '90vw',
-    // maxWidth: 600,
-    // backgroundColor: theme.colors.primary500,
-    // top: '50%',
-    // left: '50%',
-    // transform: 'translate(-50%, -50%)',
-    // outline: 'none',
-    // maxHeight: '80vh',
-    // userSelect: 'none',
-    // overflowY: 'auto',
     position: 'relative',
     outline: 'none',
     userSelect: 'none',
@@ -78,7 +67,6 @@ export const RewardModal: React.FC<IProps> = ({
     period: '',
     amounts: [],
     tokens: [],
-    // rewardTokens: [],
   })
 
   useEffect(() => {
