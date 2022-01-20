@@ -20,7 +20,7 @@ import {
 } from 'helpers/univ3/hooks'
 import { transparentize } from 'polished'
 import { useEffect, useState } from 'react'
-import {ICreatePoolData, IToken, MintState} from 'types'
+import { ICreatePoolData, IToken, MintState } from 'types'
 import { Bound, Field } from 'utils/enums'
 import { ZERO } from 'utils/number'
 
@@ -69,36 +69,37 @@ export const PriceRangeStep = (props: IProps) => {
   const { data, updateData } = props
   const classes = useStyles()
   const { networkId } = useConnectedWeb3Context()
-  const [state, setState] = useState<IState>({ ...initialState, leftRangeTypedValue: data.minPrice, rightRangeTypedValue: data.maxPrice })
-
+  const [state, setState] = useState<IState>({
+    ...initialState,
+    leftRangeTypedValue: data.minPrice,
+    rightRangeTypedValue: data.maxPrice,
+  })
 
   const baseCurrency = new Token(
-      networkId || DEFAULT_NETWORK_ID,
-      data.token0.address,
-      data.token0.decimals,
-      data.token0.symbol,
-      data.token0.name
+    networkId || DEFAULT_NETWORK_ID,
+    data.token0.address,
+    data.token0.decimals,
+    data.token0.symbol,
+    data.token0.name
   )
   const currencyB = new Token(
-      networkId || DEFAULT_NETWORK_ID,
-      data.token1.address,
-      data.token1.decimals,
-      data.token1.symbol,
-      data.token1.name
+    networkId || DEFAULT_NETWORK_ID,
+    data.token1.address,
+    data.token1.decimals,
+    data.token1.symbol,
+    data.token1.name
   )
   const feeAmount: FeeAmount = data.tier.toNumber()
 
   // prevent an error if they input ETH/WETH
   const quoteCurrency =
-      baseCurrency && currencyB && baseCurrency.equals(currencyB)
-          ? undefined
-          : currencyB
+    baseCurrency && currencyB && baseCurrency.equals(currencyB)
+      ? undefined
+      : currencyB
 
   const handleAmountsChange = (amount0: BigNumber, amount1: BigNumber) => {
     updateData({ amount0, amount1 })
   }
-
-
 
   const [poolState, pool] = usePools([[baseCurrency, currencyB, feeAmount]])[0]
   console.log(poolState, pool)
@@ -135,6 +136,13 @@ export const PriceRangeStep = (props: IProps) => {
   // get value and prices at ticks
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks
   const { [Bound.LOWER]: priceLower, [Bound.UPPER]: priceUpper } = pricesAtTicks
+
+  const tokenA = (baseCurrency ?? undefined)?.wrapped
+  const tokenB = (currencyB ?? undefined)?.wrapped
+  const isSorted = tokenA && tokenB && tokenA.sortsBefore(tokenB)
+
+  const leftPrice = isSorted ? priceLower : priceUpper?.invert()
+  const rightPrice = isSorted ? priceUpper : priceLower?.invert()
 
   const {
     getDecrementLower,
@@ -213,7 +221,10 @@ export const PriceRangeStep = (props: IProps) => {
   }
 
   const onClickNext = () => {
-    updateData({ minPrice: state.leftRangeTypedValue, maxPrice: state.rightRangeTypedValue })
+    updateData({
+      minPrice: state.leftRangeTypedValue,
+      maxPrice: state.rightRangeTypedValue,
+    })
     props.onNext()
   }
 
@@ -221,13 +232,18 @@ export const PriceRangeStep = (props: IProps) => {
     <div className={classes.root}>
       <div>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6}>
+          <Grid item sm={12} md={6}>
             <Typography className={classes.label}>Set price range</Typography>
             <div className={classes.rangeWrapper}>
               {/* TODO: Add price range graph */}
               <Grid container spacing={3}>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={6} sm={6}>
                   <TokenPriceInput
+                    value={
+                      ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]
+                        ? '0'
+                        : leftPrice?.toSignificant(5) ?? ''
+                    }
                     currencyA={baseCurrency}
                     currencyB={quoteCurrency}
                     feeAmount={feeAmount}
@@ -239,12 +255,19 @@ export const PriceRangeStep = (props: IProps) => {
                     priceLower={priceLower}
                     priceUpper={priceUpper}
                     label={'Min price'}
-                    onChange={(amount0) => onLeftRangeInput(amount0)}
+                    onUserInput={(amount0) => onLeftRangeInput(amount0)}
                     ticksAtLimit={ticksAtLimit}
+                    decrement={isSorted ? getDecrementLower : getIncrementUpper}
+                    increment={isSorted ? getIncrementLower : getDecrementUpper}
                   />
                 </Grid>
                 <Grid item xs={6} sm={6}>
                   <TokenPriceInput
+                    value={
+                      ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]
+                        ? '∞'
+                        : rightPrice?.toSignificant(5) ?? ''
+                    }
                     currencyA={baseCurrency}
                     currencyB={quoteCurrency}
                     feeAmount={feeAmount}
@@ -255,15 +278,17 @@ export const PriceRangeStep = (props: IProps) => {
                     priceLower={priceLower}
                     priceUpper={priceUpper}
                     label={'Max price'}
-                    onChange={(amount1) => onRightRangeInput(amount1)}
+                    onUserInput={(amount1) => onRightRangeInput(amount1)}
                     ticksAtLimit={ticksAtLimit}
+                    decrement={isSorted ? getDecrementUpper : getIncrementLower}
+                    increment={isSorted ? getIncrementUpper : getDecrementLower}
                   />
                 </Grid>
               </Grid>
             </div>
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={12} md={6}>
             <Typography className={classes.label}>Deposit amounts</Typography>
             <TokenBalanceInput
               value={data.amount0}

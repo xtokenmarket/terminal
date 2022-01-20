@@ -1,12 +1,14 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { makeStyles, TextField, Typography } from '@material-ui/core'
+import { Button, makeStyles, TextField, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import { ethers } from 'ethers'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import useCommonStyles from 'style/common'
 import { IToken } from 'types'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { Bound } from 'utils/enums'
+import { ReactComponent as IncreaseIcon } from 'assets/svgs/increase.svg'
+import { ReactComponent as DecreaseIcon } from 'assets/svgs/decrease.svg'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,7 +24,11 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
-  inputBox: { paddingRight: 60, fontWeight: 700 },
+  inputBox: {
+    paddingRight: 60,
+    fontWeight: 700,
+    paddingBottom: 50,
+  },
   inputLabel: { color: `${theme.colors.white} !important` },
   notchedOutline: {
     borderColor: theme.colors.primary200,
@@ -48,6 +54,32 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: 'underline',
     '& span': { fontWeight: 700 },
   },
+  button: {
+    width: 32,
+    height: 32,
+    background: theme.colors.primary200,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: '4px',
+    margin: 7,
+  },
+  border: {
+    height: 100,
+    display: 'flex',
+    alignItems: 'center',
+  },
+  buttonWrapper: {
+    position: 'absolute',
+    right: 2,
+  },
+  inputBottomText: {
+    position: 'absolute',
+    bottom: 28,
+    left: 15,
+    color: theme.colors.primary100,
+    fontSize: 14,
+  },
 }))
 
 interface IProps {
@@ -61,68 +93,111 @@ interface IProps {
   getIncrementUpper: () => string
   isMinPrice?: boolean
   label: string
-  onChange: (_: string) => void
+  onUserInput: (_: string) => void
   priceLower?: Price<Token, Token>
   priceUpper?: Price<Token, Token>
   ticksAtLimit: { [bound in Bound]?: boolean | undefined }
+  value: string
+  decrement: () => string
+  increment: () => string
 }
 
 export const TokenPriceInput = (props: IProps) => {
   const {
-    currencyA,
-    currencyB,
-    isMinPrice,
     label,
-    onChange,
     priceLower,
     priceUpper,
     ticksAtLimit,
+    value,
+    decrement,
+    increment,
+    onUserInput,
+    currencyA,
+    currencyB,
   } = props
+  //  for focus state, styled components doesnt let you select input parent container
+  const [active, setActive] = useState(false)
+
+  // let user type value and only update parent value on blur
+  const [localValue, setLocalValue] = useState('')
+  const [useLocalValue, setUseLocalValue] = useState(false)
+
   const classes = useStyles()
   const commonClasses = useCommonStyles()
 
-  const tokenA = (currencyA ?? undefined)?.wrapped
-  const tokenB = (currencyB ?? undefined)?.wrapped
-  const isSorted = tokenA && tokenB && tokenA.sortsBefore(tokenB)
-
-  const leftPrice = isSorted ? priceLower : priceUpper?.invert()
-  const rightPrice = isSorted ? priceUpper : priceLower?.invert()
-
-  let value = ''
-  if (isMinPrice) {
-    value = ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]
-      ? '0'
-      : leftPrice?.toSignificant(5) ?? ''
-  } else {
-    value = ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]
-      ? '∞'
-      : rightPrice?.toSignificant(5) ?? ''
+  const handleOnFocus = () => {
+    setUseLocalValue(true)
+    setActive(true)
   }
 
-  // TODO: Add increment and decrement symbols along with functionality
+  const handleOnBlur = useCallback(() => {
+    setUseLocalValue(false)
+    setActive(false)
+    onUserInput(localValue)
+  }, [localValue, onUserInput])
+
+  const handleDecrement = useCallback(() => {
+    setUseLocalValue(false)
+    onUserInput(decrement())
+  }, [decrement, onUserInput])
+
+  const handleIncrement = useCallback(() => {
+    setUseLocalValue(false)
+    onUserInput(increment())
+  }, [increment, onUserInput])
+
+  useEffect(() => {
+    if (localValue !== value && !useLocalValue) {
+      setTimeout(() => {
+        setLocalValue(value) // reset local value to match parent
+      }, 0)
+    }
+  }, [localValue, useLocalValue, value])
+
   return (
     <div className={clsx(classes.root, props.className)}>
-      <TextField
-        InputLabelProps={{
-          className: classes.inputLabel,
-        }}
-        InputProps={{
-          classes: {
-            notchedOutline: classes.notchedOutline,
-            input: clsx(commonClasses.hideInputArrow, classes.inputBox),
-          },
-        }}
-        className={classes.input}
-        value={value}
-        onChange={(e) => {
-          if (Number(e.target.value) < 0) return
-          onChange(e.target.value || '0')
-        }}
-        variant="outlined"
-        fullWidth
-        type="number"
-        label={label}
-      />
+      <div className={classes.border}>
+        <TextField
+          onBlur={handleOnBlur}
+          onFocus={handleOnFocus}
+          InputLabelProps={{
+            className: classes.inputLabel,
+          }}
+          InputProps={{
+            classes: {
+              notchedOutline: classes.notchedOutline,
+              input: clsx(commonClasses.hideInputArrow, classes.inputBox),
+            },
+          }}
+          className={classes.input}
+          value={localValue}
+          onChange={(e) => {
+            if (Number(e.target.value) < 0) return
+            setLocalValue(e.target.value || '0')
+          }}
+          variant="outlined"
+          fullWidth
+          type="number"
+          label={label}
+        />
+        <div className={classes.inputBottomText}>
+          {' '}
+          {currencyB?.symbol?.toUpperCase()} per{' '}
+          {currencyA?.symbol?.toUpperCase()}
+        </div>
+        <div className={classes.buttonWrapper}>
+          <div className={classes.button} onClick={handleIncrement}>
+            <Button>
+              <IncreaseIcon />{' '}
+            </Button>
+          </div>
+          <div className={classes.button} onClick={handleDecrement}>
+            <Button>
+              <DecreaseIcon />{' '}
+            </Button>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
