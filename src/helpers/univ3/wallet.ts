@@ -91,7 +91,6 @@ export function useTokenBalancesWithLoadingIndicator(
 
       try {
         const response = await multicall.multicallv2(Abi.Multicall, calls)
-        console.log('useTokenBalances', response)
         const data: {
           [address: string]: CurrencyAmount<Currency> | undefined
         } = {}

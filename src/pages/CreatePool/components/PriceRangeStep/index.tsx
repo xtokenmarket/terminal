@@ -1,28 +1,19 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import {
-  Button,
-  CircularProgress,
-  Grid,
-  makeStyles,
-  TextField,
-  Typography,
-} from '@material-ui/core'
+import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { TokenBalanceInput, TokenPriceInput } from 'components'
 import { DEFAULT_NETWORK_ID } from 'config/constants'
 import { useConnectedWeb3Context } from 'contexts'
-import { useIsMountedRef, useServices } from 'helpers'
 import {
   usePools,
   useRangeHopCallbacks,
   useV3DerivedMintInfo,
 } from 'helpers/univ3/hooks'
-import { transparentize } from 'polished'
-import { useEffect, useState } from 'react'
-import { ICreatePoolData, IToken, MintState } from 'types'
+import { useState } from 'react'
+import { ICreatePoolData, MintState } from 'types'
 import { Bound, Field } from 'utils/enums'
-import { ZERO } from 'utils/number'
+import { ApproveTokenModal } from '../ApproveTokenModal'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -69,8 +60,18 @@ export const PriceRangeStep = (props: IProps) => {
   const { data, updateData } = props
   const classes = useStyles()
   const { networkId } = useConnectedWeb3Context()
+
+  const [isApproveModalOpen, setIsApproveModalOpen] = useState(false)
   const [state, setState] = useState<IState>({
     ...initialState,
+    independentField: !data.amount1.isZero()
+      ? Field.CURRENCY_B
+      : Field.CURRENCY_A,
+    typedValue: !data.amount1.isZero()
+      ? data.amount1.toString()
+      : !data.amount0.isZero()
+      ? data.amount0.toString()
+      : '',
     leftRangeTypedValue: data.minPrice,
     rightRangeTypedValue: data.maxPrice,
   })
@@ -97,45 +98,29 @@ export const PriceRangeStep = (props: IProps) => {
       ? undefined
       : currencyB
 
-  const handleAmountsChange = (amount0: BigNumber, amount1: BigNumber) => {
-    updateData({ amount0, amount1 })
-  }
-
   const [poolState, pool] = usePools([[baseCurrency, currencyB, feeAmount]])[0]
-  console.log(poolState, pool)
 
-  const {
-    ticks,
-    dependentField,
-    price,
-    pricesAtTicks,
-    position,
-    noLiquidity,
-    currencies,
-    errorMessage,
-    invalidPool,
-    invalidRange,
-    outOfRange,
-    depositADisabled,
-    depositBDisabled,
-    invertPrice,
-    ticksAtLimit,
-  } = useV3DerivedMintInfo(
-    state,
-    baseCurrency ?? undefined,
-    currencyB ?? undefined,
-    feeAmount,
-    baseCurrency ?? undefined,
-    undefined,
-    poolState,
-    pool
-  )
-
-  console.log('ticks', ticks, pricesAtTicks)
+  const { ticks, dependentField, parsedAmounts, pricesAtTicks, ticksAtLimit } =
+    useV3DerivedMintInfo(
+      state,
+      baseCurrency ?? undefined,
+      currencyB ?? undefined,
+      feeAmount,
+      baseCurrency ?? undefined,
+      undefined,
+      poolState,
+      pool
+    )
 
   // get value and prices at ticks
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks
   const { [Bound.LOWER]: priceLower, [Bound.UPPER]: priceUpper } = pricesAtTicks
+
+  // get formatted amounts
+  const formattedAmounts = {
+    [state.independentField]: state.typedValue,
+    [dependentField]: parsedAmounts[dependentField]?.toSignificant(6) ?? '',
+  }
 
   const tokenA = (baseCurrency ?? undefined)?.wrapped
   const tokenB = (currencyB ?? undefined)?.wrapped
@@ -143,6 +128,9 @@ export const PriceRangeStep = (props: IProps) => {
 
   const leftPrice = isSorted ? priceLower : priceUpper?.invert()
   const rightPrice = isSorted ? priceUpper : priceLower?.invert()
+
+  const isTokenInputDisabled =
+    tickLower === undefined || tickUpper === undefined
 
   const {
     getDecrementLower,
@@ -159,51 +147,19 @@ export const PriceRangeStep = (props: IProps) => {
   )
 
   const onFieldAInput = (typedValue: string) => {
-    if (noLiquidity) {
-      if (state.independentField === Field.CURRENCY_A) {
-        setState((prev) => ({
-          ...prev,
-          independentField: Field.CURRENCY_A,
-          typedValue,
-        }))
-      } else {
-        setState((prev) => ({
-          ...prev,
-          independentField: Field.CURRENCY_A,
-          typedValue,
-        }))
-      }
-    } else {
-      setState((prev) => ({
-        ...prev,
-        independentField: Field.CURRENCY_A,
-        typedValue,
-      }))
-    }
+    setState((prev) => ({
+      ...prev,
+      independentField: Field.CURRENCY_A,
+      typedValue,
+    }))
   }
 
   const onFieldBInput = (typedValue: string) => {
-    if (noLiquidity) {
-      if (state.independentField === Field.CURRENCY_B) {
-        setState((prev) => ({
-          ...prev,
-          independentField: Field.CURRENCY_B,
-          typedValue,
-        }))
-      } else {
-        setState((prev) => ({
-          ...prev,
-          independentField: Field.CURRENCY_B,
-          typedValue,
-        }))
-      }
-    } else {
-      setState((prev) => ({
-        ...prev,
-        independentField: Field.CURRENCY_B,
-        typedValue,
-      }))
-    }
+    setState((prev) => ({
+      ...prev,
+      independentField: Field.CURRENCY_B,
+      typedValue,
+    }))
   }
 
   const onLeftRangeInput = (typedValue: string) => {
@@ -222,9 +178,27 @@ export const PriceRangeStep = (props: IProps) => {
 
   const onClickNext = () => {
     updateData({
+      amount0: BigNumber.from(
+        parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)
+      ),
+      amount1: BigNumber.from(
+        parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)
+      ),
       minPrice: state.leftRangeTypedValue,
       maxPrice: state.rightRangeTypedValue,
+      ticks: {
+        lowerTick: tickLower,
+        upperTick: tickUpper,
+      },
     })
+    toggleApproveModal()
+  }
+
+  const toggleApproveModal = () => {
+    setIsApproveModalOpen((prevState) => !prevState)
+  }
+
+  const onTokensApproved = () => {
     props.onNext()
   }
 
@@ -291,18 +265,20 @@ export const PriceRangeStep = (props: IProps) => {
           <Grid item xs={12} sm={12} md={6}>
             <Typography className={classes.label}>Deposit amounts</Typography>
             <TokenBalanceInput
-              value={data.amount0}
+              value={BigNumber.from(formattedAmounts[Field.CURRENCY_A] || '0')}
               onChange={(amount0) => {
-                handleAmountsChange(amount0, ZERO)
+                onFieldAInput(amount0.toString())
               }}
               token={data.token0}
+              isDisabled={isTokenInputDisabled}
             />
             <TokenBalanceInput
-              value={data.amount1}
+              value={BigNumber.from(formattedAmounts[Field.CURRENCY_B] || '0')}
               onChange={(amount1) => {
-                handleAmountsChange(ZERO, amount1)
+                onFieldBInput(amount1.toString())
               }}
               token={data.token1}
+              isDisabled={isTokenInputDisabled}
             />
           </Grid>
         </Grid>
@@ -319,6 +295,14 @@ export const PriceRangeStep = (props: IProps) => {
       >
         Next
       </Button>
+
+      {/* TODO: Skip token approval step, if tokens have been approved already */}
+      <ApproveTokenModal
+        isOpen={isApproveModalOpen}
+        onClose={toggleApproveModal}
+        onSuccess={onTokensApproved}
+        poolData={data}
+      />
     </div>
   )
 }

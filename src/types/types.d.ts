@@ -1,5 +1,6 @@
 import { BigNumber } from 'ethers'
-import {ECreatePoolStep} from "../utils/enums";
+import { ECreatePoolStep } from '../utils/enums'
+import { IRewardState } from '../components'
 
 declare global {
   interface Window {
@@ -57,6 +58,11 @@ export interface IToken {
   tvl?: string
 }
 
+export interface IPositionTicks {
+  lowerTick: number
+  upperTick: number
+}
+
 export type ITerminalPoolTableSortFactor = 'tvl' | 'vesting' | 'ending' | 'apr'
 
 export interface ITerminalPool {
@@ -88,6 +94,8 @@ export interface ICreatePoolData {
   amount1: BigNumber
   maxPrice: string
   minPrice: string
+  rewardState: IRewardState
+  ticks: IPositionTicks
   tier: BigNumber
   token0: IToken
   token1: IToken

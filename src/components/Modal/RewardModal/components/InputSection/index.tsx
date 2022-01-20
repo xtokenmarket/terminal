@@ -3,6 +3,7 @@ import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { IRewardState } from 'components'
 import { RewardPeriodInput } from '../index'
 import { RewardTokens } from '../RewardToken/RewardTokens'
+import { FeeInfo } from '../FeeInfo'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -51,7 +52,9 @@ const useStyles = makeStyles((theme) => ({
       padding: theme.spacing(2),
     },
   },
-  deposit: {},
+  deposit: {
+    marginTop: 16,
+  },
 }))
 
 interface IProps {
@@ -69,19 +72,14 @@ export const InputSection: React.FC<IProps> = ({
 }) => {
   const cl = useStyles()
 
-  const { period, errors } = rewardState
-  const isDisabled = (
-    errors.some(error => !!error) ||
-    period === '' ||
-    Number(period) === 0
-  )
+  const { duration, errors } = rewardState
+  const isDisabled =
+    errors.some((error) => !!error) || duration === '' || Number(duration) === 0
 
   return (
     <div className={cl.root}>
       <div className={cl.header}>
-        <Typography className={cl.title}>
-          Create a rewards program
-        </Typography>
+        <Typography className={cl.title}>Create a rewards program</Typography>
         <Typography className={cl.description}>
           Select a reward token and adjust the settings.
         </Typography>
@@ -91,30 +89,36 @@ export const InputSection: React.FC<IProps> = ({
       </div>
       <div className={cl.content}>
         <RewardPeriodInput
-          value={rewardState.period}
+          label={'Rewards period'}
+          value={rewardState.duration}
           onChange={(newValue) =>
             updateState({
-              period: newValue,
+              duration: newValue,
             })
           }
         />
-        <RewardTokens
-          rewardState={rewardState}
-          updateState={updateState}
+        <RewardPeriodInput
+          label={'Vesting period'}
+          value={rewardState.vesting}
+          onChange={(newValue) =>
+            updateState({
+              vesting: newValue,
+            })
+          }
         />
+        <RewardTokens rewardState={rewardState} updateState={updateState} />
       </div>
       <div className={cl.actions}>
+        <FeeInfo />
         <Button
           color="primary"
           variant="contained"
           fullWidth
           className={cl.deposit}
-          onClick={() => {
-            onNext()
-          }}
+          onClick={onNext}
           disabled={isDisabled}
         >
-          INITIALIZE
+          CREATE REWARDS
         </Button>
       </div>
     </div>

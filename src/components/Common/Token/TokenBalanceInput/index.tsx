@@ -3,13 +3,11 @@ import { makeStyles, TextField, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import { TokenIcon } from 'components'
 import { ethers } from 'ethers'
-import { formatEther, parseEther } from 'ethers/lib/utils'
 import { useTokenBalance } from 'helpers'
 import { useEffect, useState } from 'react'
 import useCommonStyles from 'style/common'
 import { IToken } from 'types'
 import { formatBigNumber } from 'utils'
-import { ZERO } from 'utils/number'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,9 +57,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-type Variant =
-  | 'normal'
-  | 'rewardToken'
+type Variant = 'normal' | 'rewardToken'
 
 interface IProps {
   className?: string
@@ -70,12 +66,14 @@ interface IProps {
   token: IToken
   value: BigNumber
   onChange: (_: BigNumber, balance: BigNumber) => void
+  isDisabled?: boolean
 }
 
 interface IState {
   amount: string
 }
 
+// TODO: Update color of input border and label in `disabled` state
 export const TokenBalanceInput: React.FC<IProps> = ({
   token,
   value,
@@ -83,6 +81,7 @@ export const TokenBalanceInput: React.FC<IProps> = ({
   variant = 'normal',
   rewardFeePercent,
   className,
+  isDisabled = false,
 }) => {
   const classes = useStyles()
   const commonClasses = useCommonStyles()
@@ -91,9 +90,7 @@ export const TokenBalanceInput: React.FC<IProps> = ({
   const [state, setState] = useState<IState>({ amount: '' })
   useEffect(() => {
     if (
-      !ethers.utils
-        .parseUnits(state.amount || '0', token.decimals)
-        .eq(value)
+      !ethers.utils.parseUnits(state.amount || '0', token.decimals).eq(value)
     ) {
       if (value.isZero()) {
         setState((prev) => ({ ...prev, amount: '' }))
@@ -132,6 +129,7 @@ export const TokenBalanceInput: React.FC<IProps> = ({
         fullWidth
         type="number"
         label={`${token.symbol.toUpperCase()} amount`}
+        disabled={isDisabled}
       />
       <div className={classes.token}>
         <TokenIcon token={token} className={classes.tokenIcon} />
@@ -146,10 +144,9 @@ export const TokenBalanceInput: React.FC<IProps> = ({
         </Typography>
         {variant === 'rewardToken' && rewardFeePercent && (
           <Typography className={classes.balance}>
-            Total rewards (incl. {(rewardFeePercent * 100)}% fee) -{' '}
+            Total rewards (incl. {rewardFeePercent * 100}% fee) -{' '}
             <b>
-              {Number(state.amount) * (1 + rewardFeePercent)}
-              {' '}{token.name}
+              {Number(state.amount) * (1 + rewardFeePercent)} {token.name}
             </b>
           </Typography>
         )}

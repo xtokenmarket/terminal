@@ -5,7 +5,11 @@ import React from 'react'
 import useCommonStyles from 'style/common'
 
 const useStyles = makeStyles((theme) => ({
-  root: {},
+  root: {
+    '& + &': {
+      marginTop: 32,
+    },
+  },
   input: {
     '& .Mui-focused': {
       '& .MuiOutlinedInput-notchedOutline': {
@@ -65,12 +69,14 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
+  label: string
   value: string
   onChange: (_: string) => void
   className?: string
 }
 
 export const RewardPeriodInput: React.FC<IProps> = ({
+  label,
   value,
   onChange,
   className,
@@ -105,6 +111,7 @@ export const RewardPeriodInput: React.FC<IProps> = ({
           },
           endAdornment: <InputAdornment position="end">Weeks</InputAdornment>,
         }}
+        label={label}
       />
       <div className={cl.buttons}>
         {[1, 3, 5, 8].map((week) => (

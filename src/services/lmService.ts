@@ -1,10 +1,10 @@
 import { BigNumber, Contract, Wallet, ethers } from 'ethers'
-import { Maybe } from 'types'
+import { ICreatePoolData, Maybe } from 'types'
 import Abi from 'abis'
+import { parseDuration } from 'utils/number'
 import { getSortedToken } from 'utils/token'
 import { Interface } from '@ethersproject/abi'
 import { NULL_ADDRESS } from 'config/constants'
-import { formatEther, parseEther, parseUnits } from 'ethers/lib/utils'
 
 const lmAbi = Abi.LMTerminal
 
@@ -28,9 +28,8 @@ class LMService {
     return this.contract.address
   }
 
-  getRewardFee = async(): Promise<BigNumber> => {
-    const rewardFee = await this.contract.rewardFee()
-    return rewardFee
+  getRewardFee = async (): Promise<BigNumber> => {
+    return this.contract.rewardFee()
   }
 
   provideLiquidity = async (
@@ -227,26 +226,38 @@ class LMService {
   }
 
   // initiate rewards program
+  initiateRewardsProgram = async (
+    clrPool: string,
+    amounts: BigNumber[]
+  ): Promise<string> => {
+    const transactionObject = await this.contract.initiateRewardsProgram(
+      clrPool,
+      amounts
+    )
+    console.log(
+      `initiateRewardsProgram transaction hash: ${transactionObject.hash}`
+    )
+    return transactionObject.hash
+  }
+
+  // initiate new rewards program
   initiateNewRewardsProgram = async (
     clrPool: string,
     amounts: BigNumber[],
-    duration: number,
-    rewardsAreEscrowed: boolean
+    duration: number
   ): Promise<string> => {
     const transactionObject = await this.contract.initiateNewRewardsProgram(
       clrPool,
       amounts,
-      duration,
-      rewardsAreEscrowed
+      duration
     )
     console.log(
       `initiateNewRewardsProgram transaction hash: ${transactionObject.hash}`
     )
-
     return transactionObject.hash
   }
 
-  waitUntilNewRewardsProgramInitiated = async (
+  waitUntilRewardsProgramInitiated = async (
     clrPool: string,
     amounts: BigNumber[],
     duration: number,
@@ -392,6 +403,93 @@ class LMService {
         }
       })
     })
+  }
+
+  deployIncentivizedPool = async (
+    poolData: ICreatePoolData
+  ): Promise<string> => {
+    const symbol = `${poolData.token0.symbol}-${poolData.token1.symbol}-CLR`
+    const deploymentFee = await this.contract.deploymentFee()
+
+    const rewardsProgram = {
+      duration: parseDuration(poolData.rewardState.duration),
+      rewardTokens: poolData.rewardState.tokens.map((token) => token.address),
+      vestingPeriod: parseDuration(poolData.rewardState.vesting),
+    }
+
+    const poolDetails = {
+      amount0: poolData.amount0,
+      amount1: poolData.amount1,
+      fee: poolData.tier,
+      token0: poolData.token0.address,
+      token1: poolData.token1.address,
+    }
+
+    const transactionObject = await this.contract.deployIncentivizedPool(
+      symbol,
+      poolData.ticks,
+      rewardsProgram,
+      poolDetails,
+      {
+        value: deploymentFee,
+      }
+    )
+    console.log(
+      `deployIncentivizedPool transaction hash: ${transactionObject.hash}`
+    )
+    return transactionObject.hash
+  }
+
+  waitUntilTerminalPoolCreated = async (
+    tokenA: string,
+    tokenB: string,
+    tier: BigNumber,
+    txId: string
+  ): Promise<string> => {
+    const [token0, token1] = getSortedToken(tokenA, tokenB)
+    let resolved = false
+
+    return new Promise((resolve) => {
+      this.contract.on(
+        'DeployedIncentivizedPool',
+        (poolAddress, t0, t1, fee, lowerTick, upperTick, ...rest) => {
+          if (
+            t0.toLowerCase() === token0 &&
+            t1.toLowerCase() === token1 &&
+            tier.eq(BigNumber.from(fee))
+          ) {
+            if (!resolved) {
+              resolved = true
+              resolve(rest[0].transactionHash)
+            }
+          }
+        }
+      )
+
+      this.contract.provider.waitForTransaction(txId).then(() => {
+        if (!resolved) {
+          resolved = true
+          resolve(txId)
+        }
+      })
+    })
+  }
+
+  parseTerminalPoolCreatedTx = async (txId: string): Promise<string> => {
+    const { logs } = await this.contract.provider.getTransactionReceipt(txId)
+    const uniPositionInterface = new Interface(Abi.LMTerminal)
+    for (let index = 0; index < logs.length; index++) {
+      const log = logs[index]
+      try {
+        const parsed = uniPositionInterface.parseLog(log)
+        if (parsed.name === 'DeployedIncentivizedPool') {
+          return parsed.args[0]
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    return NULL_ADDRESS
   }
 }
 

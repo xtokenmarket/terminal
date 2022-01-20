@@ -14,10 +14,8 @@ import { IToken } from 'types'
 import { formatEther } from 'ethers/lib/utils'
 import { useServices } from 'helpers'
 
-const useStyles = makeStyles(theme => ({
-  tableContainer: {
-
-  },
+const useStyles = makeStyles((theme) => ({
+  tableContainer: {},
   table: {
     '& th': {
       padding: theme.spacing(1),
@@ -36,29 +34,31 @@ const useStyles = makeStyles(theme => ({
     color: 'white',
     fontFamily: 'Gilmer',
     fontWeight: 700,
-  }
+  },
 }))
 
 interface IProps {
-  tokens: IToken[]
   amounts: BigNumber[]
-  period: string
+  duration: string
+  tokens: IToken[]
 }
 
 export const RewardTokensTable: React.FC<IProps> = ({
-  tokens,
   amounts,
-  period,
+  duration,
+  tokens,
 }) => {
   const cl = useStyles()
   const { lmService } = useServices()
   const [rewardFeePercent, setRewardFeePercent] = useState(0)
+
   useEffect(() => {
-    (async () => {
+    ;(async () => {
       const fee = await lmService.getRewardFee()
       setRewardFeePercent(fee.toNumber() / 10000)
     })()
   }, [lmService])
+
   return (
     <TableContainer>
       <Table className={cl.table}>
@@ -101,7 +101,7 @@ export const RewardTokensTable: React.FC<IProps> = ({
                 </TableCell>
                 <TableCell>
                   <Typography variant="h5" className={cl.bodyRowText}>
-                    {`${period} ${(period === '1' ? 'week' : 'weeks')}`}
+                    {`${duration} ${duration === '1' ? 'week' : 'weeks'}`}
                   </Typography>
                 </TableCell>
               </TableRow>

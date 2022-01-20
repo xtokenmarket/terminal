@@ -299,7 +299,8 @@ export const Content = (props: IProps) => {
       )}
 
       <RewardModal
-        open={state.rewardVisible}
+        isCreatePool={false}
+        isOpen={state.rewardVisible}
         onClose={() => setRewardModalVisible(false)}
         onSuccess={async () => {
           setRewardModalVisible(false)

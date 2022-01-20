@@ -83,7 +83,13 @@ export enum ECreatePoolStep {
   TokenPair = 'Token Pair',
   PriceRange = 'Price Range',
   Rewards = 'Rewards (Optional)',
-  Done = 'Done',
+  // Done = 'Done',
+}
+
+export enum ECreatePoolModalStep {
+  Init = 'Init',
+  Create = 'Create',
+  Success = 'Success',
 }
 
 // uni v3

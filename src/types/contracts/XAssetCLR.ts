@@ -12,239 +12,242 @@ import {
   PopulatedTransaction,
   Signer,
   utils,
-} from 'ethers'
-import { FunctionFragment, Result, EventFragment } from '@ethersproject/abi'
-import { Listener, Provider } from '@ethersproject/providers'
-import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from './common'
+} from "ethers";
+import { FunctionFragment, Result, EventFragment } from "@ethersproject/abi";
+import { Listener, Provider } from "@ethersproject/providers";
+import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from "./common";
 
 export type UniswapContractsStruct = {
-  router: string
-  quoter: string
-  positionManager: string
-}
+  router: string;
+  quoter: string;
+  positionManager: string;
+};
 
 export type UniswapContractsStructOutput = [string, string, string] & {
-  router: string
-  quoter: string
-  positionManager: string
-}
+  router: string;
+  quoter: string;
+  positionManager: string;
+};
 
 export type StakingDetailsStruct = {
-  rewardTokens: string[]
-  rewardEscrow: string
-  rewardsAreEscrowed: boolean
-}
+  rewardTokens: string[];
+  rewardEscrow: string;
+  rewardsAreEscrowed: boolean;
+};
 
 export type StakingDetailsStructOutput = [string[], string, boolean] & {
-  rewardTokens: string[]
-  rewardEscrow: string
-  rewardsAreEscrowed: boolean
-}
+  rewardTokens: string[];
+  rewardEscrow: string;
+  rewardsAreEscrowed: boolean;
+};
 
 export interface XAssetCLRInterface extends utils.Interface {
   functions: {
-    'addManager(address)': FunctionFragment
-    'adminStake(uint256,uint256)': FunctionFragment
-    'adminSwap(uint256,bool)': FunctionFragment
-    'allowance(address,address)': FunctionFragment
-    'approve(address,uint256)': FunctionFragment
-    'balanceOf(address)': FunctionFragment
-    'burn(uint256,address)': FunctionFragment
-    'calculateAmountsMintedSingleToken(uint8,uint256)': FunctionFragment
-    'calculateMintAmount(uint256,uint256)': FunctionFragment
-    'calculatePoolMintedAmounts(uint256,uint256)': FunctionFragment
-    'claimReward(address)': FunctionFragment
-    'collect()': FunctionFragment
-    'decimals()': FunctionFragment
-    'decreaseAllowance(address,uint256)': FunctionFragment
-    'earned(address,address)': FunctionFragment
-    'getAmountInAsset0Terms(uint256)': FunctionFragment
-    'getAmountInAsset1Terms(uint256)': FunctionFragment
-    'getAmountsForLiquidity(uint128)': FunctionFragment
-    'getAsset0Price()': FunctionFragment
-    'getAsset1Price()': FunctionFragment
-    'getBufferBalance()': FunctionFragment
-    'getBufferToken0Balance()': FunctionFragment
-    'getBufferToken1Balance()': FunctionFragment
-    'getBufferTokenBalance()': FunctionFragment
-    'getLiquidityForAmounts(uint256,uint256)': FunctionFragment
-    'getNav()': FunctionFragment
-    'getPositionLiquidity()': FunctionFragment
-    'getRewardForDuration(address)': FunctionFragment
-    'getRewardTokens()': FunctionFragment
-    'getRewardTokensCount()': FunctionFragment
-    'getStakedBalance()': FunctionFragment
-    'getStakedTokenBalance()': FunctionFragment
-    'getTicks()': FunctionFragment
-    'getTotalLiquidity()': FunctionFragment
-    'increaseAllowance(address,uint256)': FunctionFragment
-    'initialize(string,int24,int24,uint256,address,address,address,address,address,(address,address,address),(address[],address,bool))': FunctionFragment
-    'initializeReward(uint256,address)': FunctionFragment
-    'lastTimeRewardApplicable()': FunctionFragment
-    'lastUpdateTime(address)': FunctionFragment
-    'manager()': FunctionFragment
-    'mint(uint8,uint256,address)': FunctionFragment
-    'mintInitial(uint256,uint256,address)': FunctionFragment
-    'name()': FunctionFragment
-    'owner()': FunctionFragment
-    'pauseContract()': FunctionFragment
-    'paused()': FunctionFragment
-    'periodFinish()': FunctionFragment
-    'poolFee()': FunctionFragment
-    'rebalance()': FunctionFragment
-    'renounceOwnership()': FunctionFragment
-    'rewardEscrow()': FunctionFragment
-    'rewardInfo(address)': FunctionFragment
-    'rewardPerToken(address)': FunctionFragment
-    'rewardTokens(uint256)': FunctionFragment
-    'rewardsAreEscrowed()': FunctionFragment
-    'rewardsDuration()': FunctionFragment
-    'setRewardsAreEscrowed(bool)': FunctionFragment
-    'setRewardsDuration(uint256)': FunctionFragment
-    'stakedBalanceOf(address)': FunctionFragment
-    'stakedToken()': FunctionFragment
-    'stakedTotalSupply()': FunctionFragment
-    'symbol()': FunctionFragment
-    'token0()': FunctionFragment
-    'token0DecimalMultiplier()': FunctionFragment
-    'token0Decimals()': FunctionFragment
-    'token1()': FunctionFragment
-    'token1DecimalMultiplier()': FunctionFragment
-    'token1Decimals()': FunctionFragment
-    'tokenDiffDecimalMultiplier()': FunctionFragment
-    'tokenId()': FunctionFragment
-    'totalSupply()': FunctionFragment
-    'tradeFee()': FunctionFragment
-    'transfer(address,uint256)': FunctionFragment
-    'transferFrom(address,address,uint256)': FunctionFragment
-    'transferOwnership(address)': FunctionFragment
-    'uniContracts()': FunctionFragment
-    'uniswapPool()': FunctionFragment
-    'unpauseContract()': FunctionFragment
-    'withdrawToken(address,address)': FunctionFragment
-  }
+    "addManager(address)": FunctionFragment;
+    "adminStake(uint256,uint256)": FunctionFragment;
+    "adminSwap(uint256,bool)": FunctionFragment;
+    "allowance(address,address)": FunctionFragment;
+    "approve(address,uint256)": FunctionFragment;
+    "balanceOf(address)": FunctionFragment;
+    "calculateAmountsMintedSingleToken(uint8,uint256)": FunctionFragment;
+    "calculateMintAmount(uint256,uint256)": FunctionFragment;
+    "calculatePoolMintedAmounts(uint256,uint256)": FunctionFragment;
+    "claimReward()": FunctionFragment;
+    "collect()": FunctionFragment;
+    "decimals()": FunctionFragment;
+    "decreaseAllowance(address,uint256)": FunctionFragment;
+    "deposit(uint8,uint256)": FunctionFragment;
+    "earned(address,address)": FunctionFragment;
+    "getAmountInAsset0Terms(uint256)": FunctionFragment;
+    "getAmountInAsset1Terms(uint256)": FunctionFragment;
+    "getAmountsForLiquidity(uint128)": FunctionFragment;
+    "getAsset0Price()": FunctionFragment;
+    "getAsset1Price()": FunctionFragment;
+    "getBufferBalance()": FunctionFragment;
+    "getBufferToken0Balance()": FunctionFragment;
+    "getBufferToken1Balance()": FunctionFragment;
+    "getBufferTokenBalance()": FunctionFragment;
+    "getLiquidityForAmounts(uint256,uint256)": FunctionFragment;
+    "getNav()": FunctionFragment;
+    "getPositionLiquidity()": FunctionFragment;
+    "getRewardForDuration(address)": FunctionFragment;
+    "getRewardTokens()": FunctionFragment;
+    "getRewardTokensCount()": FunctionFragment;
+    "getStakedBalance()": FunctionFragment;
+    "getStakedTokenBalance()": FunctionFragment;
+    "getTicks()": FunctionFragment;
+    "getTotalLiquidity()": FunctionFragment;
+    "increaseAllowance(address,uint256)": FunctionFragment;
+    "initialize(string,int24,int24,uint256,address,address,address,address,address,(address,address,address),(address[],address,bool))": FunctionFragment;
+    "initializeReward(uint256,address)": FunctionFragment;
+    "lastTimeRewardApplicable()": FunctionFragment;
+    "lastUpdateTime(address)": FunctionFragment;
+    "manager()": FunctionFragment;
+    "mintInitial(uint256,uint256,address)": FunctionFragment;
+    "name()": FunctionFragment;
+    "owner()": FunctionFragment;
+    "pauseContract()": FunctionFragment;
+    "paused()": FunctionFragment;
+    "periodFinish()": FunctionFragment;
+    "poolFee()": FunctionFragment;
+    "rebalance()": FunctionFragment;
+    "renounceOwnership()": FunctionFragment;
+    "rewardEscrow()": FunctionFragment;
+    "rewardInfo(address)": FunctionFragment;
+    "rewardPerToken(address)": FunctionFragment;
+    "rewardTokens(uint256)": FunctionFragment;
+    "rewardsAreEscrowed()": FunctionFragment;
+    "rewardsDuration()": FunctionFragment;
+    "setRewardsDuration(uint256)": FunctionFragment;
+    "stakedBalanceOf(address)": FunctionFragment;
+    "stakedToken()": FunctionFragment;
+    "stakedTotalSupply()": FunctionFragment;
+    "symbol()": FunctionFragment;
+    "token0()": FunctionFragment;
+    "token0DecimalMultiplier()": FunctionFragment;
+    "token0Decimals()": FunctionFragment;
+    "token1()": FunctionFragment;
+    "token1DecimalMultiplier()": FunctionFragment;
+    "token1Decimals()": FunctionFragment;
+    "tokenDiffDecimalMultiplier()": FunctionFragment;
+    "tokenId()": FunctionFragment;
+    "totalSupply()": FunctionFragment;
+    "tradeFee()": FunctionFragment;
+    "transfer(address,uint256)": FunctionFragment;
+    "transferFrom(address,address,uint256)": FunctionFragment;
+    "transferOwnership(address)": FunctionFragment;
+    "uniContracts()": FunctionFragment;
+    "uniswapPool()": FunctionFragment;
+    "unpauseContract()": FunctionFragment;
+    "withdraw(uint256)": FunctionFragment;
+    "withdrawAndClaimReward(uint256)": FunctionFragment;
+    "withdrawToken(address,address)": FunctionFragment;
+  };
 
-  encodeFunctionData(functionFragment: 'addManager', values: [string]): string
+  encodeFunctionData(functionFragment: "addManager", values: [string]): string;
   encodeFunctionData(
-    functionFragment: 'adminStake',
+    functionFragment: "adminStake",
     values: [BigNumberish, BigNumberish]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'adminSwap',
+    functionFragment: "adminSwap",
     values: [BigNumberish, boolean]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'allowance',
+    functionFragment: "allowance",
     values: [string, string]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'approve',
+    functionFragment: "approve",
     values: [string, BigNumberish]
-  ): string
-  encodeFunctionData(functionFragment: 'balanceOf', values: [string]): string
+  ): string;
+  encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(
-    functionFragment: 'burn',
-    values: [BigNumberish, string]
-  ): string
-  encodeFunctionData(
-    functionFragment: 'calculateAmountsMintedSingleToken',
+    functionFragment: "calculateAmountsMintedSingleToken",
     values: [BigNumberish, BigNumberish]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'calculateMintAmount',
+    functionFragment: "calculateMintAmount",
     values: [BigNumberish, BigNumberish]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'calculatePoolMintedAmounts',
+    functionFragment: "calculatePoolMintedAmounts",
     values: [BigNumberish, BigNumberish]
-  ): string
-  encodeFunctionData(functionFragment: 'claimReward', values: [string]): string
-  encodeFunctionData(functionFragment: 'collect', values?: undefined): string
-  encodeFunctionData(functionFragment: 'decimals', values?: undefined): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'decreaseAllowance',
+    functionFragment: "claimReward",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "collect", values?: undefined): string;
+  encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "decreaseAllowance",
     values: [string, BigNumberish]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'earned',
+    functionFragment: "deposit",
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "earned",
     values: [string, string]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'getAmountInAsset0Terms',
+    functionFragment: "getAmountInAsset0Terms",
     values: [BigNumberish]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'getAmountInAsset1Terms',
+    functionFragment: "getAmountInAsset1Terms",
     values: [BigNumberish]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'getAmountsForLiquidity',
+    functionFragment: "getAmountsForLiquidity",
     values: [BigNumberish]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'getAsset0Price',
+    functionFragment: "getAsset0Price",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'getAsset1Price',
+    functionFragment: "getAsset1Price",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'getBufferBalance',
+    functionFragment: "getBufferBalance",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'getBufferToken0Balance',
+    functionFragment: "getBufferToken0Balance",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'getBufferToken1Balance',
+    functionFragment: "getBufferToken1Balance",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'getBufferTokenBalance',
+    functionFragment: "getBufferTokenBalance",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'getLiquidityForAmounts',
+    functionFragment: "getLiquidityForAmounts",
     values: [BigNumberish, BigNumberish]
-  ): string
-  encodeFunctionData(functionFragment: 'getNav', values?: undefined): string
+  ): string;
+  encodeFunctionData(functionFragment: "getNav", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: 'getPositionLiquidity',
+    functionFragment: "getPositionLiquidity",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'getRewardForDuration',
+    functionFragment: "getRewardForDuration",
     values: [string]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'getRewardTokens',
+    functionFragment: "getRewardTokens",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'getRewardTokensCount',
+    functionFragment: "getRewardTokensCount",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'getStakedBalance',
+    functionFragment: "getStakedBalance",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'getStakedTokenBalance',
+    functionFragment: "getStakedTokenBalance",
     values?: undefined
-  ): string
-  encodeFunctionData(functionFragment: 'getTicks', values?: undefined): string
+  ): string;
+  encodeFunctionData(functionFragment: "getTicks", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: 'getTotalLiquidity',
+    functionFragment: "getTotalLiquidity",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'increaseAllowance',
+    functionFragment: "increaseAllowance",
     values: [string, BigNumberish]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'initialize',
+    functionFragment: "initialize",
     values: [
       string,
       BigNumberish,
@@ -258,546 +261,573 @@ export interface XAssetCLRInterface extends utils.Interface {
       UniswapContractsStruct,
       StakingDetailsStruct
     ]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'initializeReward',
+    functionFragment: "initializeReward",
     values: [BigNumberish, string]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'lastTimeRewardApplicable',
+    functionFragment: "lastTimeRewardApplicable",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'lastUpdateTime',
+    functionFragment: "lastUpdateTime",
     values: [string]
-  ): string
-  encodeFunctionData(functionFragment: 'manager', values?: undefined): string
+  ): string;
+  encodeFunctionData(functionFragment: "manager", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: 'mint',
+    functionFragment: "mintInitial",
     values: [BigNumberish, BigNumberish, string]
-  ): string
+  ): string;
+  encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: 'mintInitial',
-    values: [BigNumberish, BigNumberish, string]
-  ): string
-  encodeFunctionData(functionFragment: 'name', values?: undefined): string
-  encodeFunctionData(functionFragment: 'owner', values?: undefined): string
-  encodeFunctionData(
-    functionFragment: 'pauseContract',
+    functionFragment: "pauseContract",
     values?: undefined
-  ): string
-  encodeFunctionData(functionFragment: 'paused', values?: undefined): string
+  ): string;
+  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: 'periodFinish',
+    functionFragment: "periodFinish",
     values?: undefined
-  ): string
-  encodeFunctionData(functionFragment: 'poolFee', values?: undefined): string
-  encodeFunctionData(functionFragment: 'rebalance', values?: undefined): string
+  ): string;
+  encodeFunctionData(functionFragment: "poolFee", values?: undefined): string;
+  encodeFunctionData(functionFragment: "rebalance", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: 'renounceOwnership',
+    functionFragment: "renounceOwnership",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'rewardEscrow',
+    functionFragment: "rewardEscrow",
     values?: undefined
-  ): string
-  encodeFunctionData(functionFragment: 'rewardInfo', values: [string]): string
+  ): string;
+  encodeFunctionData(functionFragment: "rewardInfo", values: [string]): string;
   encodeFunctionData(
-    functionFragment: 'rewardPerToken',
+    functionFragment: "rewardPerToken",
     values: [string]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'rewardTokens',
+    functionFragment: "rewardTokens",
     values: [BigNumberish]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'rewardsAreEscrowed',
+    functionFragment: "rewardsAreEscrowed",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'rewardsDuration',
+    functionFragment: "rewardsDuration",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'setRewardsAreEscrowed',
-    values: [boolean]
-  ): string
-  encodeFunctionData(
-    functionFragment: 'setRewardsDuration',
+    functionFragment: "setRewardsDuration",
     values: [BigNumberish]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'stakedBalanceOf',
+    functionFragment: "stakedBalanceOf",
     values: [string]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'stakedToken',
+    functionFragment: "stakedToken",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'stakedTotalSupply',
+    functionFragment: "stakedTotalSupply",
     values?: undefined
-  ): string
-  encodeFunctionData(functionFragment: 'symbol', values?: undefined): string
-  encodeFunctionData(functionFragment: 'token0', values?: undefined): string
+  ): string;
+  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
+  encodeFunctionData(functionFragment: "token0", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: 'token0DecimalMultiplier',
+    functionFragment: "token0DecimalMultiplier",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'token0Decimals',
+    functionFragment: "token0Decimals",
     values?: undefined
-  ): string
-  encodeFunctionData(functionFragment: 'token1', values?: undefined): string
+  ): string;
+  encodeFunctionData(functionFragment: "token1", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: 'token1DecimalMultiplier',
+    functionFragment: "token1DecimalMultiplier",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'token1Decimals',
+    functionFragment: "token1Decimals",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'tokenDiffDecimalMultiplier',
+    functionFragment: "tokenDiffDecimalMultiplier",
     values?: undefined
-  ): string
-  encodeFunctionData(functionFragment: 'tokenId', values?: undefined): string
+  ): string;
+  encodeFunctionData(functionFragment: "tokenId", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: 'totalSupply',
+    functionFragment: "totalSupply",
     values?: undefined
-  ): string
-  encodeFunctionData(functionFragment: 'tradeFee', values?: undefined): string
+  ): string;
+  encodeFunctionData(functionFragment: "tradeFee", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: 'transfer',
+    functionFragment: "transfer",
     values: [string, BigNumberish]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'transferFrom',
+    functionFragment: "transferFrom",
     values: [string, string, BigNumberish]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'transferOwnership',
+    functionFragment: "transferOwnership",
     values: [string]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'uniContracts',
+    functionFragment: "uniContracts",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'uniswapPool',
+    functionFragment: "uniswapPool",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'unpauseContract',
+    functionFragment: "unpauseContract",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'withdrawToken',
+    functionFragment: "withdraw",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "withdrawAndClaimReward",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "withdrawToken",
     values: [string, string]
-  ): string
+  ): string;
 
-  decodeFunctionResult(functionFragment: 'addManager', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'adminStake', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'adminSwap', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'allowance', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'approve', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'balanceOf', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'burn', data: BytesLike): Result
+  decodeFunctionResult(functionFragment: "addManager", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "adminStake", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "adminSwap", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'calculateAmountsMintedSingleToken',
+    functionFragment: "calculateAmountsMintedSingleToken",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'calculateMintAmount',
+    functionFragment: "calculateMintAmount",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'calculatePoolMintedAmounts',
+    functionFragment: "calculatePoolMintedAmounts",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'claimReward', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'collect', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'decimals', data: BytesLike): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'decreaseAllowance',
+    functionFragment: "claimReward",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'earned', data: BytesLike): Result
+  ): Result;
+  decodeFunctionResult(functionFragment: "collect", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'getAmountInAsset0Terms',
+    functionFragment: "decreaseAllowance",
     data: BytesLike
-  ): Result
+  ): Result;
+  decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "earned", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'getAmountInAsset1Terms',
+    functionFragment: "getAmountInAsset0Terms",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'getAmountsForLiquidity',
+    functionFragment: "getAmountInAsset1Terms",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'getAsset0Price',
+    functionFragment: "getAmountsForLiquidity",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'getAsset1Price',
+    functionFragment: "getAsset0Price",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'getBufferBalance',
+    functionFragment: "getAsset1Price",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'getBufferToken0Balance',
+    functionFragment: "getBufferBalance",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'getBufferToken1Balance',
+    functionFragment: "getBufferToken0Balance",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'getBufferTokenBalance',
+    functionFragment: "getBufferToken1Balance",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'getLiquidityForAmounts',
+    functionFragment: "getBufferTokenBalance",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'getNav', data: BytesLike): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'getPositionLiquidity',
+    functionFragment: "getLiquidityForAmounts",
     data: BytesLike
-  ): Result
+  ): Result;
+  decodeFunctionResult(functionFragment: "getNav", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'getRewardForDuration',
+    functionFragment: "getPositionLiquidity",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'getRewardTokens',
+    functionFragment: "getRewardForDuration",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'getRewardTokensCount',
+    functionFragment: "getRewardTokens",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'getStakedBalance',
+    functionFragment: "getRewardTokensCount",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'getStakedTokenBalance',
+    functionFragment: "getStakedBalance",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'getTicks', data: BytesLike): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'getTotalLiquidity',
+    functionFragment: "getStakedTokenBalance",
     data: BytesLike
-  ): Result
+  ): Result;
+  decodeFunctionResult(functionFragment: "getTicks", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'increaseAllowance',
+    functionFragment: "getTotalLiquidity",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'initialize', data: BytesLike): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'initializeReward',
+    functionFragment: "increaseAllowance",
     data: BytesLike
-  ): Result
+  ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'lastTimeRewardApplicable',
+    functionFragment: "initializeReward",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'lastUpdateTime',
+    functionFragment: "lastTimeRewardApplicable",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'manager', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'mint', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'mintInitial', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'name', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'owner', data: BytesLike): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'pauseContract',
+    functionFragment: "lastUpdateTime",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'paused', data: BytesLike): Result
+  ): Result;
+  decodeFunctionResult(functionFragment: "manager", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'periodFinish',
+    functionFragment: "mintInitial",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'poolFee', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'rebalance', data: BytesLike): Result
+  ): Result;
+  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'renounceOwnership',
+    functionFragment: "pauseContract",
     data: BytesLike
-  ): Result
+  ): Result;
+  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'rewardEscrow',
+    functionFragment: "periodFinish",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'rewardInfo', data: BytesLike): Result
+  ): Result;
+  decodeFunctionResult(functionFragment: "poolFee", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "rebalance", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'rewardPerToken',
+    functionFragment: "renounceOwnership",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'rewardTokens',
+    functionFragment: "rewardEscrow",
     data: BytesLike
-  ): Result
+  ): Result;
+  decodeFunctionResult(functionFragment: "rewardInfo", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'rewardsAreEscrowed',
+    functionFragment: "rewardPerToken",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'rewardsDuration',
+    functionFragment: "rewardTokens",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'setRewardsAreEscrowed',
+    functionFragment: "rewardsAreEscrowed",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'setRewardsDuration',
+    functionFragment: "rewardsDuration",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'stakedBalanceOf',
+    functionFragment: "setRewardsDuration",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'stakedToken', data: BytesLike): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'stakedTotalSupply',
+    functionFragment: "stakedBalanceOf",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'symbol', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'token0', data: BytesLike): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'token0DecimalMultiplier',
+    functionFragment: "stakedToken",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'token0Decimals',
+    functionFragment: "stakedTotalSupply",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'token1', data: BytesLike): Result
+  ): Result;
+  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "token0", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'token1DecimalMultiplier',
+    functionFragment: "token0DecimalMultiplier",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'token1Decimals',
+    functionFragment: "token0Decimals",
     data: BytesLike
-  ): Result
+  ): Result;
+  decodeFunctionResult(functionFragment: "token1", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'tokenDiffDecimalMultiplier',
+    functionFragment: "token1DecimalMultiplier",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'tokenId', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'totalSupply', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'tradeFee', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'transfer', data: BytesLike): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'transferFrom',
+    functionFragment: "token1Decimals",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'transferOwnership',
+    functionFragment: "tokenDiffDecimalMultiplier",
     data: BytesLike
-  ): Result
+  ): Result;
+  decodeFunctionResult(functionFragment: "tokenId", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'uniContracts',
+    functionFragment: "totalSupply",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'uniswapPool', data: BytesLike): Result
+  ): Result;
+  decodeFunctionResult(functionFragment: "tradeFee", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "transfer", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'unpauseContract',
+    functionFragment: "transferFrom",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'withdrawToken',
+    functionFragment: "transferOwnership",
     data: BytesLike
-  ): Result
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "uniContracts",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "uniswapPool",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "unpauseContract",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawAndClaimReward",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawToken",
+    data: BytesLike
+  ): Result;
 
   events: {
-    'Approval(address,address,uint256)': EventFragment
-    'FeeCollected(uint256,uint256)': EventFragment
-    'ManagerSet(address)': EventFragment
-    'OwnershipTransferred(address,address)': EventFragment
-    'Paused(address)': EventFragment
-    'Rebalance()': EventFragment
-    'Recovered(address,uint256)': EventFragment
-    'RewardAdded(uint256)': EventFragment
-    'RewardClaimed(address,address,uint256)': EventFragment
-    'RewardsDurationUpdated(uint256)': EventFragment
-    'Staked(address,uint256)': EventFragment
-    'Transfer(address,address,uint256)': EventFragment
-    'Unpaused(address)': EventFragment
-    'Withdrawn(address,uint256)': EventFragment
-  }
+    "Approval(address,address,uint256)": EventFragment;
+    "Deposit(address,uint256,uint256)": EventFragment;
+    "FeeCollected(uint256,uint256)": EventFragment;
+    "ManagerSet(address)": EventFragment;
+    "OwnershipTransferred(address,address)": EventFragment;
+    "Paused(address)": EventFragment;
+    "Rebalance()": EventFragment;
+    "Recovered(address,uint256)": EventFragment;
+    "RewardAdded(uint256)": EventFragment;
+    "RewardClaimed(address,address,uint256)": EventFragment;
+    "RewardsDurationUpdated(uint256)": EventFragment;
+    "Staked(address,uint256)": EventFragment;
+    "Transfer(address,address,uint256)": EventFragment;
+    "Unpaused(address)": EventFragment;
+    "Withdraw(address,uint256,uint256)": EventFragment;
+    "Withdrawn(address,uint256)": EventFragment;
+  };
 
-  getEvent(nameOrSignatureOrTopic: 'Approval'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'FeeCollected'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'ManagerSet'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'OwnershipTransferred'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'Paused'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'Rebalance'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'Recovered'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'RewardAdded'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'RewardClaimed'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'RewardsDurationUpdated'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'Staked'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'Transfer'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'Unpaused'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'Withdrawn'): EventFragment
+  getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Deposit"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "FeeCollected"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ManagerSet"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Rebalance"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Recovered"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RewardAdded"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RewardClaimed"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RewardsDurationUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Staked"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Withdraw"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Withdrawn"): EventFragment;
 }
 
 export type ApprovalEvent = TypedEvent<
   [string, string, BigNumber],
   { owner: string; spender: string; value: BigNumber }
->
+>;
 
-export type ApprovalEventFilter = TypedEventFilter<ApprovalEvent>
+export type ApprovalEventFilter = TypedEventFilter<ApprovalEvent>;
+
+export type DepositEvent = TypedEvent<
+  [string, BigNumber, BigNumber],
+  { user: string; amount0: BigNumber; amount1: BigNumber }
+>;
+
+export type DepositEventFilter = TypedEventFilter<DepositEvent>;
 
 export type FeeCollectedEvent = TypedEvent<
   [BigNumber, BigNumber],
   { token0Fee: BigNumber; token1Fee: BigNumber }
->
+>;
 
-export type FeeCollectedEventFilter = TypedEventFilter<FeeCollectedEvent>
+export type FeeCollectedEventFilter = TypedEventFilter<FeeCollectedEvent>;
 
-export type ManagerSetEvent = TypedEvent<[string], { manager: string }>
+export type ManagerSetEvent = TypedEvent<[string], { manager: string }>;
 
-export type ManagerSetEventFilter = TypedEventFilter<ManagerSetEvent>
+export type ManagerSetEventFilter = TypedEventFilter<ManagerSetEvent>;
 
 export type OwnershipTransferredEvent = TypedEvent<
   [string, string],
   { previousOwner: string; newOwner: string }
->
+>;
 
 export type OwnershipTransferredEventFilter =
-  TypedEventFilter<OwnershipTransferredEvent>
+  TypedEventFilter<OwnershipTransferredEvent>;
 
-export type PausedEvent = TypedEvent<[string], { account: string }>
+export type PausedEvent = TypedEvent<[string], { account: string }>;
 
-export type PausedEventFilter = TypedEventFilter<PausedEvent>
+export type PausedEventFilter = TypedEventFilter<PausedEvent>;
 
-export type RebalanceEvent = TypedEvent<[], {}>
+export type RebalanceEvent = TypedEvent<[], {}>;
 
-export type RebalanceEventFilter = TypedEventFilter<RebalanceEvent>
+export type RebalanceEventFilter = TypedEventFilter<RebalanceEvent>;
 
 export type RecoveredEvent = TypedEvent<
   [string, BigNumber],
   { token: string; amount: BigNumber }
->
+>;
 
-export type RecoveredEventFilter = TypedEventFilter<RecoveredEvent>
+export type RecoveredEventFilter = TypedEventFilter<RecoveredEvent>;
 
-export type RewardAddedEvent = TypedEvent<[BigNumber], { reward: BigNumber }>
+export type RewardAddedEvent = TypedEvent<[BigNumber], { reward: BigNumber }>;
 
-export type RewardAddedEventFilter = TypedEventFilter<RewardAddedEvent>
+export type RewardAddedEventFilter = TypedEventFilter<RewardAddedEvent>;
 
 export type RewardClaimedEvent = TypedEvent<
   [string, string, BigNumber],
   { user: string; token: string; rewardAmount: BigNumber }
->
+>;
 
-export type RewardClaimedEventFilter = TypedEventFilter<RewardClaimedEvent>
+export type RewardClaimedEventFilter = TypedEventFilter<RewardClaimedEvent>;
 
 export type RewardsDurationUpdatedEvent = TypedEvent<
   [BigNumber],
   { newDuration: BigNumber }
->
+>;
 
 export type RewardsDurationUpdatedEventFilter =
-  TypedEventFilter<RewardsDurationUpdatedEvent>
+  TypedEventFilter<RewardsDurationUpdatedEvent>;
 
 export type StakedEvent = TypedEvent<
   [string, BigNumber],
   { user: string; amount: BigNumber }
->
+>;
 
-export type StakedEventFilter = TypedEventFilter<StakedEvent>
+export type StakedEventFilter = TypedEventFilter<StakedEvent>;
 
 export type TransferEvent = TypedEvent<
   [string, string, BigNumber],
   { from: string; to: string; value: BigNumber }
->
+>;
 
-export type TransferEventFilter = TypedEventFilter<TransferEvent>
+export type TransferEventFilter = TypedEventFilter<TransferEvent>;
 
-export type UnpausedEvent = TypedEvent<[string], { account: string }>
+export type UnpausedEvent = TypedEvent<[string], { account: string }>;
 
-export type UnpausedEventFilter = TypedEventFilter<UnpausedEvent>
+export type UnpausedEventFilter = TypedEventFilter<UnpausedEvent>;
+
+export type WithdrawEvent = TypedEvent<
+  [string, BigNumber, BigNumber],
+  { user: string; amount0: BigNumber; amount1: BigNumber }
+>;
+
+export type WithdrawEventFilter = TypedEventFilter<WithdrawEvent>;
 
 export type WithdrawnEvent = TypedEvent<
   [string, BigNumber],
   { user: string; amount: BigNumber }
->
+>;
 
-export type WithdrawnEventFilter = TypedEventFilter<WithdrawnEvent>
+export type WithdrawnEventFilter = TypedEventFilter<WithdrawnEvent>;
 
 export interface XAssetCLR extends BaseContract {
-  connect(signerOrProvider: Signer | Provider | string): this
-  attach(addressOrName: string): this
-  deployed(): Promise<this>
+  connect(signerOrProvider: Signer | Provider | string): this;
+  attach(addressOrName: string): this;
+  deployed(): Promise<this>;
 
-  interface: XAssetCLRInterface
+  interface: XAssetCLRInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
     fromBlockOrBlockhash?: string | number | undefined,
     toBlock?: string | number | undefined
-  ): Promise<Array<TEvent>>
+  ): Promise<Array<TEvent>>;
 
   listeners<TEvent extends TypedEvent>(
     eventFilter?: TypedEventFilter<TEvent>
-  ): Array<TypedListener<TEvent>>
-  listeners(eventName?: string): Array<Listener>
+  ): Array<TypedListener<TEvent>>;
+  listeners(eventName?: string): Array<Listener>;
   removeAllListeners<TEvent extends TypedEvent>(
     eventFilter: TypedEventFilter<TEvent>
-  ): this
-  removeAllListeners(eventName?: string): this
-  off: OnEvent<this>
-  on: OnEvent<this>
-  once: OnEvent<this>
-  removeListener: OnEvent<this>
+  ): this;
+  removeAllListeners(eventName?: string): this;
+  off: OnEvent<this>;
+  on: OnEvent<this>;
+  once: OnEvent<this>;
+  removeListener: OnEvent<this>;
 
   functions: {
     addManager(
       _manager: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     adminStake(
       amount0: BigNumberish,
       amount1: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     adminSwap(
       amount: BigNumberish,
       _0for1: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     allowance(
       owner: string,
       spender: string,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>
+    ): Promise<[BigNumber]>;
 
     approve(
       spender: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
-    balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>
-
-    burn(
-      amount: BigNumberish,
-      sender: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
     calculateAmountsMintedSingleToken(
       inputAsset: BigNumberish,
@@ -805,16 +835,16 @@ export interface XAssetCLR extends BaseContract {
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber] & {
-        amount0Minted: BigNumber
-        amount1Minted: BigNumber
+        amount0Minted: BigNumber;
+        amount1Minted: BigNumber;
       }
-    >
+    >;
 
     calculateMintAmount(
       _amount: BigNumberish,
       totalSupply: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { mintAmount: BigNumber }>
+    ): Promise<[BigNumber] & { mintAmount: BigNumber }>;
 
     calculatePoolMintedAmounts(
       amount0: BigNumberish,
@@ -822,115 +852,120 @@ export interface XAssetCLR extends BaseContract {
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber] & {
-        amount0Minted: BigNumber
-        amount1Minted: BigNumber
+        amount0Minted: BigNumber;
+        amount1Minted: BigNumber;
       }
-    >
+    >;
 
     claimReward(
-      sender: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     collect(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
-    decimals(overrides?: CallOverrides): Promise<[number]>
+    decimals(overrides?: CallOverrides): Promise<[number]>;
 
     decreaseAllowance(
       spender: string,
       subtractedValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
+
+    deposit(
+      inputAsset: BigNumberish,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     earned(
       account: string,
       token: string,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>
+    ): Promise<[BigNumber]>;
 
     getAmountInAsset0Terms(
       amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>
+    ): Promise<[BigNumber]>;
 
     getAmountInAsset1Terms(
       amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>
+    ): Promise<[BigNumber]>;
 
     getAmountsForLiquidity(
       liquidity: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber] & { amount0: BigNumber; amount1: BigNumber }
-    >
+    >;
 
-    getAsset0Price(overrides?: CallOverrides): Promise<[BigNumber]>
+    getAsset0Price(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    getAsset1Price(overrides?: CallOverrides): Promise<[BigNumber]>
+    getAsset1Price(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    getBufferBalance(overrides?: CallOverrides): Promise<[BigNumber]>
+    getBufferBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getBufferToken0Balance(
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { amount0: BigNumber }>
+    ): Promise<[BigNumber] & { amount0: BigNumber }>;
 
     getBufferToken1Balance(
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { amount1: BigNumber }>
+    ): Promise<[BigNumber] & { amount1: BigNumber }>;
 
     getBufferTokenBalance(
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber] & { amount0: BigNumber; amount1: BigNumber }
-    >
+    >;
 
     getLiquidityForAmounts(
       amount0: BigNumberish,
       amount1: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { liquidity: BigNumber }>
+    ): Promise<[BigNumber] & { liquidity: BigNumber }>;
 
-    getNav(overrides?: CallOverrides): Promise<[BigNumber]>
+    getNav(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getPositionLiquidity(
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { liquidity: BigNumber }>
+    ): Promise<[BigNumber] & { liquidity: BigNumber }>;
 
     getRewardForDuration(
       token: string,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>
+    ): Promise<[BigNumber]>;
 
     getRewardTokens(
       overrides?: CallOverrides
-    ): Promise<[string[]] & { tokens: string[] }>
+    ): Promise<[string[]] & { tokens: string[] }>;
 
-    getRewardTokensCount(overrides?: CallOverrides): Promise<[BigNumber]>
+    getRewardTokensCount(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    getStakedBalance(overrides?: CallOverrides): Promise<[BigNumber]>
+    getStakedBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getStakedTokenBalance(
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber] & { amount0: BigNumber; amount1: BigNumber }
-    >
+    >;
 
     getTicks(
       overrides?: CallOverrides
-    ): Promise<[number, number] & { tick0: number; tick1: number }>
+    ): Promise<[number, number] & { tick0: number; tick1: number }>;
 
     getTotalLiquidity(
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { amount: BigNumber }>
+    ): Promise<[BigNumber] & { amount: BigNumber }>;
 
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     initialize(
       _symbol: string,
@@ -945,203 +980,197 @@ export interface XAssetCLR extends BaseContract {
       contracts: UniswapContractsStruct,
       stakingParams: StakingDetailsStruct,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     initializeReward(
       rewardAmount: BigNumberish,
       token: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
-    lastTimeRewardApplicable(overrides?: CallOverrides): Promise<[BigNumber]>
+    lastTimeRewardApplicable(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     lastUpdateTime(
       arg0: string,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>
+    ): Promise<[BigNumber]>;
 
-    manager(overrides?: CallOverrides): Promise<[string]>
-
-    mint(
-      inputAsset: BigNumberish,
-      amount: BigNumberish,
-      sender: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    manager(overrides?: CallOverrides): Promise<[string]>;
 
     mintInitial(
       amount0: BigNumberish,
       amount1: BigNumberish,
       sender: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
-    name(overrides?: CallOverrides): Promise<[string]>
+    name(overrides?: CallOverrides): Promise<[string]>;
 
-    owner(overrides?: CallOverrides): Promise<[string]>
+    owner(overrides?: CallOverrides): Promise<[string]>;
 
     pauseContract(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
-    paused(overrides?: CallOverrides): Promise<[boolean]>
+    paused(overrides?: CallOverrides): Promise<[boolean]>;
 
-    periodFinish(overrides?: CallOverrides): Promise<[BigNumber]>
+    periodFinish(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    poolFee(overrides?: CallOverrides): Promise<[number]>
+    poolFee(overrides?: CallOverrides): Promise<[number]>;
 
     rebalance(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
-    rewardEscrow(overrides?: CallOverrides): Promise<[string]>
+    rewardEscrow(overrides?: CallOverrides): Promise<[string]>;
 
     rewardInfo(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber, BigNumber, BigNumber] & {
-        rewardRate: BigNumber
-        rewardPerTokenStored: BigNumber
-        totalRewardAmount: BigNumber
-        remainingRewardAmount: BigNumber
+        rewardRate: BigNumber;
+        rewardPerTokenStored: BigNumber;
+        totalRewardAmount: BigNumber;
+        remainingRewardAmount: BigNumber;
       }
-    >
+    >;
 
     rewardPerToken(
       token: string,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>
+    ): Promise<[BigNumber]>;
 
     rewardTokens(
       arg0: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[string]>
+    ): Promise<[string]>;
 
-    rewardsAreEscrowed(overrides?: CallOverrides): Promise<[boolean]>
+    rewardsAreEscrowed(overrides?: CallOverrides): Promise<[boolean]>;
 
-    rewardsDuration(overrides?: CallOverrides): Promise<[BigNumber]>
-
-    setRewardsAreEscrowed(
-      _rewardsAreEscrowed: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    rewardsDuration(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     setRewardsDuration(
       _rewardsDuration: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     stakedBalanceOf(
       account: string,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>
+    ): Promise<[BigNumber]>;
 
-    stakedToken(overrides?: CallOverrides): Promise<[string]>
+    stakedToken(overrides?: CallOverrides): Promise<[string]>;
 
-    stakedTotalSupply(overrides?: CallOverrides): Promise<[BigNumber]>
+    stakedTotalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    symbol(overrides?: CallOverrides): Promise<[string]>
+    symbol(overrides?: CallOverrides): Promise<[string]>;
 
-    token0(overrides?: CallOverrides): Promise<[string]>
+    token0(overrides?: CallOverrides): Promise<[string]>;
 
-    token0DecimalMultiplier(overrides?: CallOverrides): Promise<[BigNumber]>
+    token0DecimalMultiplier(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    token0Decimals(overrides?: CallOverrides): Promise<[number]>
+    token0Decimals(overrides?: CallOverrides): Promise<[number]>;
 
-    token1(overrides?: CallOverrides): Promise<[string]>
+    token1(overrides?: CallOverrides): Promise<[string]>;
 
-    token1DecimalMultiplier(overrides?: CallOverrides): Promise<[BigNumber]>
+    token1DecimalMultiplier(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    token1Decimals(overrides?: CallOverrides): Promise<[number]>
+    token1Decimals(overrides?: CallOverrides): Promise<[number]>;
 
-    tokenDiffDecimalMultiplier(overrides?: CallOverrides): Promise<[BigNumber]>
+    tokenDiffDecimalMultiplier(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    tokenId(overrides?: CallOverrides): Promise<[BigNumber]>
+    tokenId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>
+    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    tradeFee(overrides?: CallOverrides): Promise<[BigNumber]>
+    tradeFee(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
-    uniContracts(overrides?: CallOverrides): Promise<
+    uniContracts(
+      overrides?: CallOverrides
+    ): Promise<
       [string, string, string] & {
-        router: string
-        quoter: string
-        positionManager: string
+        router: string;
+        quoter: string;
+        positionManager: string;
       }
-    >
+    >;
 
-    uniswapPool(overrides?: CallOverrides): Promise<[string]>
+    uniswapPool(overrides?: CallOverrides): Promise<[string]>;
 
     unpauseContract(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
+
+    withdraw(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    withdrawAndClaimReward(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     withdrawToken(
       token: string,
       receiver: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
-  }
+    ): Promise<ContractTransaction>;
+  };
 
   addManager(
     _manager: string,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   adminStake(
     amount0: BigNumberish,
     amount1: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   adminSwap(
     amount: BigNumberish,
     _0for1: boolean,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   allowance(
     owner: string,
     spender: string,
     overrides?: CallOverrides
-  ): Promise<BigNumber>
+  ): Promise<BigNumber>;
 
   approve(
     spender: string,
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
-  balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>
-
-  burn(
-    amount: BigNumberish,
-    sender: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
   calculateAmountsMintedSingleToken(
     inputAsset: BigNumberish,
@@ -1149,16 +1178,16 @@ export interface XAssetCLR extends BaseContract {
     overrides?: CallOverrides
   ): Promise<
     [BigNumber, BigNumber] & {
-      amount0Minted: BigNumber
-      amount1Minted: BigNumber
+      amount0Minted: BigNumber;
+      amount1Minted: BigNumber;
     }
-  >
+  >;
 
   calculateMintAmount(
     _amount: BigNumberish,
     totalSupply: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<BigNumber>
+  ): Promise<BigNumber>;
 
   calculatePoolMintedAmounts(
     amount0: BigNumberish,
@@ -1166,105 +1195,110 @@ export interface XAssetCLR extends BaseContract {
     overrides?: CallOverrides
   ): Promise<
     [BigNumber, BigNumber] & {
-      amount0Minted: BigNumber
-      amount1Minted: BigNumber
+      amount0Minted: BigNumber;
+      amount1Minted: BigNumber;
     }
-  >
+  >;
 
   claimReward(
-    sender: string,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   collect(
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
-  decimals(overrides?: CallOverrides): Promise<number>
+  decimals(overrides?: CallOverrides): Promise<number>;
 
   decreaseAllowance(
     spender: string,
     subtractedValue: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
+
+  deposit(
+    inputAsset: BigNumberish,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   earned(
     account: string,
     token: string,
     overrides?: CallOverrides
-  ): Promise<BigNumber>
+  ): Promise<BigNumber>;
 
   getAmountInAsset0Terms(
     amount: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<BigNumber>
+  ): Promise<BigNumber>;
 
   getAmountInAsset1Terms(
     amount: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<BigNumber>
+  ): Promise<BigNumber>;
 
   getAmountsForLiquidity(
     liquidity: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
     [BigNumber, BigNumber] & { amount0: BigNumber; amount1: BigNumber }
-  >
+  >;
 
-  getAsset0Price(overrides?: CallOverrides): Promise<BigNumber>
+  getAsset0Price(overrides?: CallOverrides): Promise<BigNumber>;
 
-  getAsset1Price(overrides?: CallOverrides): Promise<BigNumber>
+  getAsset1Price(overrides?: CallOverrides): Promise<BigNumber>;
 
-  getBufferBalance(overrides?: CallOverrides): Promise<BigNumber>
+  getBufferBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
-  getBufferToken0Balance(overrides?: CallOverrides): Promise<BigNumber>
+  getBufferToken0Balance(overrides?: CallOverrides): Promise<BigNumber>;
 
-  getBufferToken1Balance(overrides?: CallOverrides): Promise<BigNumber>
+  getBufferToken1Balance(overrides?: CallOverrides): Promise<BigNumber>;
 
   getBufferTokenBalance(
     overrides?: CallOverrides
   ): Promise<
     [BigNumber, BigNumber] & { amount0: BigNumber; amount1: BigNumber }
-  >
+  >;
 
   getLiquidityForAmounts(
     amount0: BigNumberish,
     amount1: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<BigNumber>
+  ): Promise<BigNumber>;
 
-  getNav(overrides?: CallOverrides): Promise<BigNumber>
+  getNav(overrides?: CallOverrides): Promise<BigNumber>;
 
-  getPositionLiquidity(overrides?: CallOverrides): Promise<BigNumber>
+  getPositionLiquidity(overrides?: CallOverrides): Promise<BigNumber>;
 
   getRewardForDuration(
     token: string,
     overrides?: CallOverrides
-  ): Promise<BigNumber>
+  ): Promise<BigNumber>;
 
-  getRewardTokens(overrides?: CallOverrides): Promise<string[]>
+  getRewardTokens(overrides?: CallOverrides): Promise<string[]>;
 
-  getRewardTokensCount(overrides?: CallOverrides): Promise<BigNumber>
+  getRewardTokensCount(overrides?: CallOverrides): Promise<BigNumber>;
 
-  getStakedBalance(overrides?: CallOverrides): Promise<BigNumber>
+  getStakedBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
   getStakedTokenBalance(
     overrides?: CallOverrides
   ): Promise<
     [BigNumber, BigNumber] & { amount0: BigNumber; amount1: BigNumber }
-  >
+  >;
 
   getTicks(
     overrides?: CallOverrides
-  ): Promise<[number, number] & { tick0: number; tick1: number }>
+  ): Promise<[number, number] & { tick0: number; tick1: number }>;
 
-  getTotalLiquidity(overrides?: CallOverrides): Promise<BigNumber>
+  getTotalLiquidity(overrides?: CallOverrides): Promise<BigNumber>;
 
   increaseAllowance(
     spender: string,
     addedValue: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   initialize(
     _symbol: string,
@@ -1279,191 +1313,185 @@ export interface XAssetCLR extends BaseContract {
     contracts: UniswapContractsStruct,
     stakingParams: StakingDetailsStruct,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   initializeReward(
     rewardAmount: BigNumberish,
     token: string,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
-  lastTimeRewardApplicable(overrides?: CallOverrides): Promise<BigNumber>
+  lastTimeRewardApplicable(overrides?: CallOverrides): Promise<BigNumber>;
 
-  lastUpdateTime(arg0: string, overrides?: CallOverrides): Promise<BigNumber>
+  lastUpdateTime(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  manager(overrides?: CallOverrides): Promise<string>
-
-  mint(
-    inputAsset: BigNumberish,
-    amount: BigNumberish,
-    sender: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  manager(overrides?: CallOverrides): Promise<string>;
 
   mintInitial(
     amount0: BigNumberish,
     amount1: BigNumberish,
     sender: string,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
-  name(overrides?: CallOverrides): Promise<string>
+  name(overrides?: CallOverrides): Promise<string>;
 
-  owner(overrides?: CallOverrides): Promise<string>
+  owner(overrides?: CallOverrides): Promise<string>;
 
   pauseContract(
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
-  paused(overrides?: CallOverrides): Promise<boolean>
+  paused(overrides?: CallOverrides): Promise<boolean>;
 
-  periodFinish(overrides?: CallOverrides): Promise<BigNumber>
+  periodFinish(overrides?: CallOverrides): Promise<BigNumber>;
 
-  poolFee(overrides?: CallOverrides): Promise<number>
+  poolFee(overrides?: CallOverrides): Promise<number>;
 
   rebalance(
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
-  rewardEscrow(overrides?: CallOverrides): Promise<string>
+  rewardEscrow(overrides?: CallOverrides): Promise<string>;
 
   rewardInfo(
     arg0: string,
     overrides?: CallOverrides
   ): Promise<
     [BigNumber, BigNumber, BigNumber, BigNumber] & {
-      rewardRate: BigNumber
-      rewardPerTokenStored: BigNumber
-      totalRewardAmount: BigNumber
-      remainingRewardAmount: BigNumber
+      rewardRate: BigNumber;
+      rewardPerTokenStored: BigNumber;
+      totalRewardAmount: BigNumber;
+      remainingRewardAmount: BigNumber;
     }
-  >
+  >;
 
-  rewardPerToken(token: string, overrides?: CallOverrides): Promise<BigNumber>
+  rewardPerToken(token: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  rewardTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>
+  rewardTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-  rewardsAreEscrowed(overrides?: CallOverrides): Promise<boolean>
+  rewardsAreEscrowed(overrides?: CallOverrides): Promise<boolean>;
 
-  rewardsDuration(overrides?: CallOverrides): Promise<BigNumber>
-
-  setRewardsAreEscrowed(
-    _rewardsAreEscrowed: boolean,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  rewardsDuration(overrides?: CallOverrides): Promise<BigNumber>;
 
   setRewardsDuration(
     _rewardsDuration: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   stakedBalanceOf(
     account: string,
     overrides?: CallOverrides
-  ): Promise<BigNumber>
+  ): Promise<BigNumber>;
 
-  stakedToken(overrides?: CallOverrides): Promise<string>
+  stakedToken(overrides?: CallOverrides): Promise<string>;
 
-  stakedTotalSupply(overrides?: CallOverrides): Promise<BigNumber>
+  stakedTotalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-  symbol(overrides?: CallOverrides): Promise<string>
+  symbol(overrides?: CallOverrides): Promise<string>;
 
-  token0(overrides?: CallOverrides): Promise<string>
+  token0(overrides?: CallOverrides): Promise<string>;
 
-  token0DecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>
+  token0DecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>;
 
-  token0Decimals(overrides?: CallOverrides): Promise<number>
+  token0Decimals(overrides?: CallOverrides): Promise<number>;
 
-  token1(overrides?: CallOverrides): Promise<string>
+  token1(overrides?: CallOverrides): Promise<string>;
 
-  token1DecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>
+  token1DecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>;
 
-  token1Decimals(overrides?: CallOverrides): Promise<number>
+  token1Decimals(overrides?: CallOverrides): Promise<number>;
 
-  tokenDiffDecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>
+  tokenDiffDecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>;
 
-  tokenId(overrides?: CallOverrides): Promise<BigNumber>
+  tokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
-  totalSupply(overrides?: CallOverrides): Promise<BigNumber>
+  totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-  tradeFee(overrides?: CallOverrides): Promise<BigNumber>
+  tradeFee(overrides?: CallOverrides): Promise<BigNumber>;
 
   transfer(
     recipient: string,
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   transferFrom(
     sender: string,
     recipient: string,
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   transferOwnership(
     newOwner: string,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
-  uniContracts(overrides?: CallOverrides): Promise<
+  uniContracts(
+    overrides?: CallOverrides
+  ): Promise<
     [string, string, string] & {
-      router: string
-      quoter: string
-      positionManager: string
+      router: string;
+      quoter: string;
+      positionManager: string;
     }
-  >
+  >;
 
-  uniswapPool(overrides?: CallOverrides): Promise<string>
+  uniswapPool(overrides?: CallOverrides): Promise<string>;
 
   unpauseContract(
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
+
+  withdraw(
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  withdrawAndClaimReward(
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   withdrawToken(
     token: string,
     receiver: string,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   callStatic: {
-    addManager(_manager: string, overrides?: CallOverrides): Promise<void>
+    addManager(_manager: string, overrides?: CallOverrides): Promise<void>;
 
     adminStake(
       amount0: BigNumberish,
       amount1: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<void>;
 
     adminSwap(
       amount: BigNumberish,
       _0for1: boolean,
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<void>;
 
     allowance(
       owner: string,
       spender: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     approve(
       spender: string,
       amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<boolean>
+    ): Promise<boolean>;
 
-    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>
-
-    burn(
-      amount: BigNumberish,
-      sender: string,
-      overrides?: CallOverrides
-    ): Promise<void>
+    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     calculateAmountsMintedSingleToken(
       inputAsset: BigNumberish,
@@ -1471,16 +1499,16 @@ export interface XAssetCLR extends BaseContract {
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber] & {
-        amount0Minted: BigNumber
-        amount1Minted: BigNumber
+        amount0Minted: BigNumber;
+        amount1Minted: BigNumber;
       }
-    >
+    >;
 
     calculateMintAmount(
       _amount: BigNumberish,
       totalSupply: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     calculatePoolMintedAmounts(
       amount0: BigNumberish,
@@ -1488,104 +1516,110 @@ export interface XAssetCLR extends BaseContract {
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber] & {
-        amount0Minted: BigNumber
-        amount1Minted: BigNumber
+        amount0Minted: BigNumber;
+        amount1Minted: BigNumber;
       }
-    >
+    >;
 
-    claimReward(sender: string, overrides?: CallOverrides): Promise<void>
+    claimReward(overrides?: CallOverrides): Promise<void>;
 
     collect(
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber] & { collected0: BigNumber; collected1: BigNumber }
-    >
+    >;
 
-    decimals(overrides?: CallOverrides): Promise<number>
+    decimals(overrides?: CallOverrides): Promise<number>;
 
     decreaseAllowance(
       spender: string,
       subtractedValue: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<boolean>
+    ): Promise<boolean>;
+
+    deposit(
+      inputAsset: BigNumberish,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     earned(
       account: string,
       token: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     getAmountInAsset0Terms(
       amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     getAmountInAsset1Terms(
       amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     getAmountsForLiquidity(
       liquidity: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber] & { amount0: BigNumber; amount1: BigNumber }
-    >
+    >;
 
-    getAsset0Price(overrides?: CallOverrides): Promise<BigNumber>
+    getAsset0Price(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getAsset1Price(overrides?: CallOverrides): Promise<BigNumber>
+    getAsset1Price(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getBufferBalance(overrides?: CallOverrides): Promise<BigNumber>
+    getBufferBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getBufferToken0Balance(overrides?: CallOverrides): Promise<BigNumber>
+    getBufferToken0Balance(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getBufferToken1Balance(overrides?: CallOverrides): Promise<BigNumber>
+    getBufferToken1Balance(overrides?: CallOverrides): Promise<BigNumber>;
 
     getBufferTokenBalance(
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber] & { amount0: BigNumber; amount1: BigNumber }
-    >
+    >;
 
     getLiquidityForAmounts(
       amount0: BigNumberish,
       amount1: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    getNav(overrides?: CallOverrides): Promise<BigNumber>
+    getNav(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getPositionLiquidity(overrides?: CallOverrides): Promise<BigNumber>
+    getPositionLiquidity(overrides?: CallOverrides): Promise<BigNumber>;
 
     getRewardForDuration(
       token: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    getRewardTokens(overrides?: CallOverrides): Promise<string[]>
+    getRewardTokens(overrides?: CallOverrides): Promise<string[]>;
 
-    getRewardTokensCount(overrides?: CallOverrides): Promise<BigNumber>
+    getRewardTokensCount(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getStakedBalance(overrides?: CallOverrides): Promise<BigNumber>
+    getStakedBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
     getStakedTokenBalance(
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber] & { amount0: BigNumber; amount1: BigNumber }
-    >
+    >;
 
     getTicks(
       overrides?: CallOverrides
-    ): Promise<[number, number] & { tick0: number; tick1: number }>
+    ): Promise<[number, number] & { tick0: number; tick1: number }>;
 
-    getTotalLiquidity(overrides?: CallOverrides): Promise<BigNumber>
+    getTotalLiquidity(overrides?: CallOverrides): Promise<BigNumber>;
 
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<boolean>
+    ): Promise<boolean>;
 
     initialize(
       _symbol: string,
@@ -1600,378 +1634,402 @@ export interface XAssetCLR extends BaseContract {
       contracts: UniswapContractsStruct,
       stakingParams: StakingDetailsStruct,
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<void>;
 
     initializeReward(
       rewardAmount: BigNumberish,
       token: string,
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<void>;
 
-    lastTimeRewardApplicable(overrides?: CallOverrides): Promise<BigNumber>
+    lastTimeRewardApplicable(overrides?: CallOverrides): Promise<BigNumber>;
 
-    lastUpdateTime(arg0: string, overrides?: CallOverrides): Promise<BigNumber>
+    lastUpdateTime(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    manager(overrides?: CallOverrides): Promise<string>
-
-    mint(
-      inputAsset: BigNumberish,
-      amount: BigNumberish,
-      sender: string,
-      overrides?: CallOverrides
-    ): Promise<void>
+    manager(overrides?: CallOverrides): Promise<string>;
 
     mintInitial(
       amount0: BigNumberish,
       amount1: BigNumberish,
       sender: string,
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<void>;
 
-    name(overrides?: CallOverrides): Promise<string>
+    name(overrides?: CallOverrides): Promise<string>;
 
-    owner(overrides?: CallOverrides): Promise<string>
+    owner(overrides?: CallOverrides): Promise<string>;
 
-    pauseContract(overrides?: CallOverrides): Promise<boolean>
+    pauseContract(overrides?: CallOverrides): Promise<boolean>;
 
-    paused(overrides?: CallOverrides): Promise<boolean>
+    paused(overrides?: CallOverrides): Promise<boolean>;
 
-    periodFinish(overrides?: CallOverrides): Promise<BigNumber>
+    periodFinish(overrides?: CallOverrides): Promise<BigNumber>;
 
-    poolFee(overrides?: CallOverrides): Promise<number>
+    poolFee(overrides?: CallOverrides): Promise<number>;
 
-    rebalance(overrides?: CallOverrides): Promise<void>
+    rebalance(overrides?: CallOverrides): Promise<void>;
 
-    renounceOwnership(overrides?: CallOverrides): Promise<void>
+    renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
-    rewardEscrow(overrides?: CallOverrides): Promise<string>
+    rewardEscrow(overrides?: CallOverrides): Promise<string>;
 
     rewardInfo(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber, BigNumber, BigNumber] & {
-        rewardRate: BigNumber
-        rewardPerTokenStored: BigNumber
-        totalRewardAmount: BigNumber
-        remainingRewardAmount: BigNumber
+        rewardRate: BigNumber;
+        rewardPerTokenStored: BigNumber;
+        totalRewardAmount: BigNumber;
+        remainingRewardAmount: BigNumber;
       }
-    >
+    >;
 
-    rewardPerToken(token: string, overrides?: CallOverrides): Promise<BigNumber>
-
-    rewardTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>
-
-    rewardsAreEscrowed(overrides?: CallOverrides): Promise<boolean>
-
-    rewardsDuration(overrides?: CallOverrides): Promise<BigNumber>
-
-    setRewardsAreEscrowed(
-      _rewardsAreEscrowed: boolean,
+    rewardPerToken(
+      token: string,
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<BigNumber>;
+
+    rewardTokens(
+      arg0: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    rewardsAreEscrowed(overrides?: CallOverrides): Promise<boolean>;
+
+    rewardsDuration(overrides?: CallOverrides): Promise<BigNumber>;
 
     setRewardsDuration(
       _rewardsDuration: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<void>;
 
     stakedBalanceOf(
       account: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    stakedToken(overrides?: CallOverrides): Promise<string>
+    stakedToken(overrides?: CallOverrides): Promise<string>;
 
-    stakedTotalSupply(overrides?: CallOverrides): Promise<BigNumber>
+    stakedTotalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-    symbol(overrides?: CallOverrides): Promise<string>
+    symbol(overrides?: CallOverrides): Promise<string>;
 
-    token0(overrides?: CallOverrides): Promise<string>
+    token0(overrides?: CallOverrides): Promise<string>;
 
-    token0DecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>
+    token0DecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>;
 
-    token0Decimals(overrides?: CallOverrides): Promise<number>
+    token0Decimals(overrides?: CallOverrides): Promise<number>;
 
-    token1(overrides?: CallOverrides): Promise<string>
+    token1(overrides?: CallOverrides): Promise<string>;
 
-    token1DecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>
+    token1DecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>;
 
-    token1Decimals(overrides?: CallOverrides): Promise<number>
+    token1Decimals(overrides?: CallOverrides): Promise<number>;
 
-    tokenDiffDecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>
+    tokenDiffDecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>;
 
-    tokenId(overrides?: CallOverrides): Promise<BigNumber>
+    tokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>
+    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-    tradeFee(overrides?: CallOverrides): Promise<BigNumber>
+    tradeFee(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<boolean>
+    ): Promise<boolean>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<boolean>
+    ): Promise<boolean>;
 
     transferOwnership(
       newOwner: string,
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<void>;
 
-    uniContracts(overrides?: CallOverrides): Promise<
+    uniContracts(
+      overrides?: CallOverrides
+    ): Promise<
       [string, string, string] & {
-        router: string
-        quoter: string
-        positionManager: string
+        router: string;
+        quoter: string;
+        positionManager: string;
       }
-    >
+    >;
 
-    uniswapPool(overrides?: CallOverrides): Promise<string>
+    uniswapPool(overrides?: CallOverrides): Promise<string>;
 
-    unpauseContract(overrides?: CallOverrides): Promise<boolean>
+    unpauseContract(overrides?: CallOverrides): Promise<boolean>;
+
+    withdraw(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
+
+    withdrawAndClaimReward(
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     withdrawToken(
       token: string,
       receiver: string,
       overrides?: CallOverrides
-    ): Promise<void>
-  }
+    ): Promise<void>;
+  };
 
   filters: {
-    'Approval(address,address,uint256)'(
+    "Approval(address,address,uint256)"(
       owner?: string | null,
       spender?: string | null,
       value?: null
-    ): ApprovalEventFilter
+    ): ApprovalEventFilter;
     Approval(
       owner?: string | null,
       spender?: string | null,
       value?: null
-    ): ApprovalEventFilter
+    ): ApprovalEventFilter;
 
-    'FeeCollected(uint256,uint256)'(
+    "Deposit(address,uint256,uint256)"(
+      user?: string | null,
+      amount0?: null,
+      amount1?: null
+    ): DepositEventFilter;
+    Deposit(
+      user?: string | null,
+      amount0?: null,
+      amount1?: null
+    ): DepositEventFilter;
+
+    "FeeCollected(uint256,uint256)"(
       token0Fee?: null,
       token1Fee?: null
-    ): FeeCollectedEventFilter
-    FeeCollected(token0Fee?: null, token1Fee?: null): FeeCollectedEventFilter
+    ): FeeCollectedEventFilter;
+    FeeCollected(token0Fee?: null, token1Fee?: null): FeeCollectedEventFilter;
 
-    'ManagerSet(address)'(manager?: string | null): ManagerSetEventFilter
-    ManagerSet(manager?: string | null): ManagerSetEventFilter
+    "ManagerSet(address)"(manager?: string | null): ManagerSetEventFilter;
+    ManagerSet(manager?: string | null): ManagerSetEventFilter;
 
-    'OwnershipTransferred(address,address)'(
+    "OwnershipTransferred(address,address)"(
       previousOwner?: string | null,
       newOwner?: string | null
-    ): OwnershipTransferredEventFilter
+    ): OwnershipTransferredEventFilter;
     OwnershipTransferred(
       previousOwner?: string | null,
       newOwner?: string | null
-    ): OwnershipTransferredEventFilter
+    ): OwnershipTransferredEventFilter;
 
-    'Paused(address)'(account?: null): PausedEventFilter
-    Paused(account?: null): PausedEventFilter
+    "Paused(address)"(account?: null): PausedEventFilter;
+    Paused(account?: null): PausedEventFilter;
 
-    'Rebalance()'(): RebalanceEventFilter
-    Rebalance(): RebalanceEventFilter
+    "Rebalance()"(): RebalanceEventFilter;
+    Rebalance(): RebalanceEventFilter;
 
-    'Recovered(address,uint256)'(
+    "Recovered(address,uint256)"(
       token?: null,
       amount?: null
-    ): RecoveredEventFilter
-    Recovered(token?: null, amount?: null): RecoveredEventFilter
+    ): RecoveredEventFilter;
+    Recovered(token?: null, amount?: null): RecoveredEventFilter;
 
-    'RewardAdded(uint256)'(reward?: null): RewardAddedEventFilter
-    RewardAdded(reward?: null): RewardAddedEventFilter
+    "RewardAdded(uint256)"(reward?: null): RewardAddedEventFilter;
+    RewardAdded(reward?: null): RewardAddedEventFilter;
 
-    'RewardClaimed(address,address,uint256)'(
+    "RewardClaimed(address,address,uint256)"(
       user?: string | null,
       token?: string | null,
       rewardAmount?: null
-    ): RewardClaimedEventFilter
+    ): RewardClaimedEventFilter;
     RewardClaimed(
       user?: string | null,
       token?: string | null,
       rewardAmount?: null
-    ): RewardClaimedEventFilter
+    ): RewardClaimedEventFilter;
 
-    'RewardsDurationUpdated(uint256)'(
+    "RewardsDurationUpdated(uint256)"(
       newDuration?: null
-    ): RewardsDurationUpdatedEventFilter
+    ): RewardsDurationUpdatedEventFilter;
     RewardsDurationUpdated(
       newDuration?: null
-    ): RewardsDurationUpdatedEventFilter
+    ): RewardsDurationUpdatedEventFilter;
 
-    'Staked(address,uint256)'(
+    "Staked(address,uint256)"(
       user?: string | null,
       amount?: null
-    ): StakedEventFilter
-    Staked(user?: string | null, amount?: null): StakedEventFilter
+    ): StakedEventFilter;
+    Staked(user?: string | null, amount?: null): StakedEventFilter;
 
-    'Transfer(address,address,uint256)'(
+    "Transfer(address,address,uint256)"(
       from?: string | null,
       to?: string | null,
       value?: null
-    ): TransferEventFilter
+    ): TransferEventFilter;
     Transfer(
       from?: string | null,
       to?: string | null,
       value?: null
-    ): TransferEventFilter
+    ): TransferEventFilter;
 
-    'Unpaused(address)'(account?: null): UnpausedEventFilter
-    Unpaused(account?: null): UnpausedEventFilter
+    "Unpaused(address)"(account?: null): UnpausedEventFilter;
+    Unpaused(account?: null): UnpausedEventFilter;
 
-    'Withdrawn(address,uint256)'(
+    "Withdraw(address,uint256,uint256)"(
+      user?: string | null,
+      amount0?: null,
+      amount1?: null
+    ): WithdrawEventFilter;
+    Withdraw(
+      user?: string | null,
+      amount0?: null,
+      amount1?: null
+    ): WithdrawEventFilter;
+
+    "Withdrawn(address,uint256)"(
       user?: string | null,
       amount?: null
-    ): WithdrawnEventFilter
-    Withdrawn(user?: string | null, amount?: null): WithdrawnEventFilter
-  }
+    ): WithdrawnEventFilter;
+    Withdrawn(user?: string | null, amount?: null): WithdrawnEventFilter;
+  };
 
   estimateGas: {
     addManager(
       _manager: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     adminStake(
       amount0: BigNumberish,
       amount1: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     adminSwap(
       amount: BigNumberish,
       _0for1: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     allowance(
       owner: string,
       spender: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     approve(
       spender: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>
-
-    burn(
-      amount: BigNumberish,
-      sender: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     calculateAmountsMintedSingleToken(
       inputAsset: BigNumberish,
       amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     calculateMintAmount(
       _amount: BigNumberish,
       totalSupply: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     calculatePoolMintedAmounts(
       amount0: BigNumberish,
       amount1: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     claimReward(
-      sender: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     collect(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    decimals(overrides?: CallOverrides): Promise<BigNumber>
+    decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
     decreaseAllowance(
       spender: string,
       subtractedValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
+
+    deposit(
+      inputAsset: BigNumberish,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     earned(
       account: string,
       token: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     getAmountInAsset0Terms(
       amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     getAmountInAsset1Terms(
       amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     getAmountsForLiquidity(
       liquidity: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    getAsset0Price(overrides?: CallOverrides): Promise<BigNumber>
+    getAsset0Price(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getAsset1Price(overrides?: CallOverrides): Promise<BigNumber>
+    getAsset1Price(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getBufferBalance(overrides?: CallOverrides): Promise<BigNumber>
+    getBufferBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getBufferToken0Balance(overrides?: CallOverrides): Promise<BigNumber>
+    getBufferToken0Balance(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getBufferToken1Balance(overrides?: CallOverrides): Promise<BigNumber>
+    getBufferToken1Balance(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getBufferTokenBalance(overrides?: CallOverrides): Promise<BigNumber>
+    getBufferTokenBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
     getLiquidityForAmounts(
       amount0: BigNumberish,
       amount1: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    getNav(overrides?: CallOverrides): Promise<BigNumber>
+    getNav(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getPositionLiquidity(overrides?: CallOverrides): Promise<BigNumber>
+    getPositionLiquidity(overrides?: CallOverrides): Promise<BigNumber>;
 
     getRewardForDuration(
       token: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    getRewardTokens(overrides?: CallOverrides): Promise<BigNumber>
+    getRewardTokens(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getRewardTokensCount(overrides?: CallOverrides): Promise<BigNumber>
+    getRewardTokensCount(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getStakedBalance(overrides?: CallOverrides): Promise<BigNumber>
+    getStakedBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getStakedTokenBalance(overrides?: CallOverrides): Promise<BigNumber>
+    getStakedTokenBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getTicks(overrides?: CallOverrides): Promise<BigNumber>
+    getTicks(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getTotalLiquidity(overrides?: CallOverrides): Promise<BigNumber>
+    getTotalLiquidity(overrides?: CallOverrides): Promise<BigNumber>;
 
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     initialize(
       _symbol: string,
@@ -1986,298 +2044,298 @@ export interface XAssetCLR extends BaseContract {
       contracts: UniswapContractsStruct,
       stakingParams: StakingDetailsStruct,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     initializeReward(
       rewardAmount: BigNumberish,
       token: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    lastTimeRewardApplicable(overrides?: CallOverrides): Promise<BigNumber>
+    lastTimeRewardApplicable(overrides?: CallOverrides): Promise<BigNumber>;
 
-    lastUpdateTime(arg0: string, overrides?: CallOverrides): Promise<BigNumber>
+    lastUpdateTime(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    manager(overrides?: CallOverrides): Promise<BigNumber>
-
-    mint(
-      inputAsset: BigNumberish,
-      amount: BigNumberish,
-      sender: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    manager(overrides?: CallOverrides): Promise<BigNumber>;
 
     mintInitial(
       amount0: BigNumberish,
       amount1: BigNumberish,
       sender: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    name(overrides?: CallOverrides): Promise<BigNumber>
+    name(overrides?: CallOverrides): Promise<BigNumber>;
 
-    owner(overrides?: CallOverrides): Promise<BigNumber>
+    owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     pauseContract(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    paused(overrides?: CallOverrides): Promise<BigNumber>
+    paused(overrides?: CallOverrides): Promise<BigNumber>;
 
-    periodFinish(overrides?: CallOverrides): Promise<BigNumber>
+    periodFinish(overrides?: CallOverrides): Promise<BigNumber>;
 
-    poolFee(overrides?: CallOverrides): Promise<BigNumber>
+    poolFee(overrides?: CallOverrides): Promise<BigNumber>;
 
     rebalance(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    rewardEscrow(overrides?: CallOverrides): Promise<BigNumber>
+    rewardEscrow(overrides?: CallOverrides): Promise<BigNumber>;
 
-    rewardInfo(arg0: string, overrides?: CallOverrides): Promise<BigNumber>
+    rewardInfo(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    rewardPerToken(token: string, overrides?: CallOverrides): Promise<BigNumber>
+    rewardPerToken(
+      token: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     rewardTokens(
       arg0: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    rewardsAreEscrowed(overrides?: CallOverrides): Promise<BigNumber>
+    rewardsAreEscrowed(overrides?: CallOverrides): Promise<BigNumber>;
 
-    rewardsDuration(overrides?: CallOverrides): Promise<BigNumber>
-
-    setRewardsAreEscrowed(
-      _rewardsAreEscrowed: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    rewardsDuration(overrides?: CallOverrides): Promise<BigNumber>;
 
     setRewardsDuration(
       _rewardsDuration: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     stakedBalanceOf(
       account: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    stakedToken(overrides?: CallOverrides): Promise<BigNumber>
+    stakedToken(overrides?: CallOverrides): Promise<BigNumber>;
 
-    stakedTotalSupply(overrides?: CallOverrides): Promise<BigNumber>
+    stakedTotalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-    symbol(overrides?: CallOverrides): Promise<BigNumber>
+    symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
-    token0(overrides?: CallOverrides): Promise<BigNumber>
+    token0(overrides?: CallOverrides): Promise<BigNumber>;
 
-    token0DecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>
+    token0DecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>;
 
-    token0Decimals(overrides?: CallOverrides): Promise<BigNumber>
+    token0Decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
-    token1(overrides?: CallOverrides): Promise<BigNumber>
+    token1(overrides?: CallOverrides): Promise<BigNumber>;
 
-    token1DecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>
+    token1DecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>;
 
-    token1Decimals(overrides?: CallOverrides): Promise<BigNumber>
+    token1Decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
-    tokenDiffDecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>
+    tokenDiffDecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>;
 
-    tokenId(overrides?: CallOverrides): Promise<BigNumber>
+    tokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>
+    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
-    tradeFee(overrides?: CallOverrides): Promise<BigNumber>
+    tradeFee(overrides?: CallOverrides): Promise<BigNumber>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    uniContracts(overrides?: CallOverrides): Promise<BigNumber>
+    uniContracts(overrides?: CallOverrides): Promise<BigNumber>;
 
-    uniswapPool(overrides?: CallOverrides): Promise<BigNumber>
+    uniswapPool(overrides?: CallOverrides): Promise<BigNumber>;
 
     unpauseContract(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
+
+    withdraw(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    withdrawAndClaimReward(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     withdrawToken(
       token: string,
       receiver: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
-  }
+    ): Promise<BigNumber>;
+  };
 
   populateTransaction: {
     addManager(
       _manager: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     adminStake(
       amount0: BigNumberish,
       amount1: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     adminSwap(
       amount: BigNumberish,
       _0for1: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     allowance(
       owner: string,
       spender: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     approve(
       spender: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     balanceOf(
       account: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
-
-    burn(
-      amount: BigNumberish,
-      sender: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     calculateAmountsMintedSingleToken(
       inputAsset: BigNumberish,
       amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     calculateMintAmount(
       _amount: BigNumberish,
       totalSupply: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     calculatePoolMintedAmounts(
       amount0: BigNumberish,
       amount1: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     claimReward(
-      sender: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     collect(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     decreaseAllowance(
       spender: string,
       subtractedValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
+
+    deposit(
+      inputAsset: BigNumberish,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
     earned(
       account: string,
       token: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     getAmountInAsset0Terms(
       amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     getAmountInAsset1Terms(
       amount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     getAmountsForLiquidity(
       liquidity: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    getAsset0Price(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    getAsset0Price(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getAsset1Price(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    getAsset1Price(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getBufferBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    getBufferBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getBufferToken0Balance(
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     getBufferToken1Balance(
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     getBufferTokenBalance(
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     getLiquidityForAmounts(
       amount0: BigNumberish,
       amount1: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    getNav(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    getNav(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getPositionLiquidity(
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     getRewardForDuration(
       token: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    getRewardTokens(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    getRewardTokens(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getRewardTokensCount(
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    getStakedBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    getStakedBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getStakedTokenBalance(
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    getTicks(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    getTicks(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getTotalLiquidity(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    getTotalLiquidity(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     initialize(
       _symbol: string,
@@ -2292,159 +2350,159 @@ export interface XAssetCLR extends BaseContract {
       contracts: UniswapContractsStruct,
       stakingParams: StakingDetailsStruct,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     initializeReward(
       rewardAmount: BigNumberish,
       token: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     lastTimeRewardApplicable(
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     lastUpdateTime(
       arg0: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    manager(overrides?: CallOverrides): Promise<PopulatedTransaction>
-
-    mint(
-      inputAsset: BigNumberish,
-      amount: BigNumberish,
-      sender: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    manager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     mintInitial(
       amount0: BigNumberish,
       amount1: BigNumberish,
       sender: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    name(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     pauseContract(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    paused(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    periodFinish(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    periodFinish(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    poolFee(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    poolFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     rebalance(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    rewardEscrow(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    rewardEscrow(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     rewardInfo(
       arg0: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     rewardPerToken(
       token: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     rewardTokens(
       arg0: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    rewardsAreEscrowed(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    rewardsAreEscrowed(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
-    rewardsDuration(overrides?: CallOverrides): Promise<PopulatedTransaction>
-
-    setRewardsAreEscrowed(
-      _rewardsAreEscrowed: boolean,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    rewardsDuration(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     setRewardsDuration(
       _rewardsDuration: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     stakedBalanceOf(
       account: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    stakedToken(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    stakedToken(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    stakedTotalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    stakedTotalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    token0(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    token0(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     token0DecimalMultiplier(
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    token0Decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    token0Decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    token1(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    token1(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     token1DecimalMultiplier(
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    token1Decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    token1Decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     tokenDiffDecimalMultiplier(
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    tokenId(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    tokenId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    tradeFee(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    tradeFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transfer(
       recipient: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     transferFrom(
       sender: string,
       recipient: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     transferOwnership(
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    uniContracts(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    uniContracts(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    uniswapPool(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    uniswapPool(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     unpauseContract(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
+
+    withdraw(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    withdrawAndClaimReward(
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
     withdrawToken(
       token: string,
       receiver: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
-  }
+    ): Promise<PopulatedTransaction>;
+  };
 }

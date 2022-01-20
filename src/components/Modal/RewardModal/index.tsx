@@ -8,12 +8,19 @@ import {
   SuccessSection,
   ConfirmSection,
 } from './components'
-import { ITerminalPool, IToken } from 'types'
+import { IToken } from 'types'
 import { BigNumber } from '@ethersproject/bignumber'
-import { ZERO } from 'utils/number'
 import useCommonStyles from 'style/common'
 import { useConnectedWeb3Context } from 'contexts'
-import { useTokenBalance } from 'helpers'
+
+export const DEFAULT_REWARD_STATE = {
+  amounts: [],
+  duration: '',
+  errors: [],
+  step: ERewardStep.Input,
+  tokens: [],
+  vesting: '',
+}
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -39,65 +46,45 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  open: boolean
+  className?: string
+  isCreatePool: boolean
+  isOpen: boolean
   onClose: () => void
+  onCreateReward?: (state: IRewardState) => void
   onSuccess: () => Promise<void>
   poolAddress?: string
-  className?: string
-  onChange?: (
-    amounts: BigNumber[],
-    tokens: IToken[],
-    errors: (string | null)[],
-    period: string,
-  ) => void
 }
 
 export interface IRewardState {
-  step: ERewardStep
-  period: string
   amounts: BigNumber[]
-  tokens: IToken[]
+  duration: string
   errors: (string | null)[]
+  step: ERewardStep
+  tokens: IToken[]
+  vesting: string
 }
 
 export const RewardModal: React.FC<IProps> = ({
-  open,
+  isCreatePool,
+  isOpen,
   className,
   onClose,
+  onCreateReward,
   onSuccess,
   poolAddress,
-  onChange,
-
 }) => {
   const cl = useStyles()
   const commonClasses = useCommonStyles()
   const { account } = useConnectedWeb3Context()
 
-  const [state, setState] = useState<IRewardState>({
-    step: ERewardStep.Input,
-    period: '',
-    amounts: [],
-    tokens: [],
-    errors: [],
-  })
+  const [state, setState] = useState<IRewardState>(DEFAULT_REWARD_STATE)
 
   const updateState = (e: Partial<IRewardState>) => {
     setState((prev) => ({ ...prev, ...e }))
   }
 
-  useEffect(() => {
-    if (onChange) {
-      onChange(state.amounts, state.tokens, state.errors, state.period)
-    }
-  }, [state])
-
   const _onClose = () => {
-    // updateState({
-    //   period: '',
-    //   amounts: [],
-    //   tokens: [],
-    //   errors: [],
-    // })
+    updateState(DEFAULT_REWARD_STATE)
     onClose()
   }
 
@@ -116,20 +103,23 @@ export const RewardModal: React.FC<IProps> = ({
         setState((prev) => ({ ...prev, step: ERewardStep.Initiate }))
         break
       case ERewardStep.Initiate:
-        setState((prev) => ({ ...prev, step: ERewardStep.Success }))
+        if (isCreatePool && onCreateReward) {
+          onCreateReward(state)
+        } else {
+          setState((prev) => ({ ...prev, step: ERewardStep.Success }))
+        }
         break
       default:
         _onClose()
     }
   }
 
-  // TODO: In case of create pool, don't initiate rewards
   const renderContent = () => {
     switch (state.step) {
       case ERewardStep.Input:
         return (
           <InputSection
-            onNext={onNextStep} // TODO: Refactor to skip initiate rewards step
+            onNext={onNextStep}
             updateState={updateState}
             rewardState={state}
             onClose={_onClose}
@@ -146,6 +136,7 @@ export const RewardModal: React.FC<IProps> = ({
       case ERewardStep.Initiate:
         return (
           <RewardSection
+            isCreatePool={isCreatePool}
             onNext={onNextStep}
             poolAddress={poolAddress as string}
             rewardState={state}
@@ -158,7 +149,7 @@ export const RewardModal: React.FC<IProps> = ({
   }
 
   return (
-    <Modal open={open} className={cl.modal}>
+    <Modal open={isOpen} className={cl.modal}>
       <div
         className={clsx(
           cl.content,

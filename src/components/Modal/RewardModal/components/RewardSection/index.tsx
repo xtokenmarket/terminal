@@ -1,13 +1,12 @@
 import { makeStyles, Typography } from '@material-ui/core'
 import Abi from 'abis'
-import { ONE_WEEK_IN_TIME } from 'config/constants'
 import { useConnectedWeb3Context } from 'contexts'
-import { useIsMountedRef, useServices } from 'helpers'
+import { useServices } from 'helpers'
 import { IRewardState } from 'components'
 import { useEffect, useState } from 'react'
 import { ERC20Service } from 'services'
-import { ITerminalPool } from 'types'
 import { ActionStepRow, ViewTransaction, WarningInfo } from '../index'
+import { parseDuration } from 'utils/number'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -55,6 +54,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
+  isCreatePool: boolean
   onNext: () => void
   poolAddress: string
   rewardState: IRewardState
@@ -73,7 +73,7 @@ interface IState {
 
 export const RewardSection = (props: IProps) => {
   const classes = useStyles()
-  const { onNext, rewardState, poolAddress, updateState } = props
+  const { isCreatePool, onNext, rewardState, poolAddress } = props
   const [state, setState] = useState<IState>({
     inited: false,
     initing: false,
@@ -85,9 +85,7 @@ export const RewardSection = (props: IProps) => {
   })
 
   const { multicall, lmService } = useServices()
-  const { account, networkId, library: provider } = useConnectedWeb3Context()
-
-  const isMountedRef = useIsMountedRef()
+  const { account, library: provider } = useConnectedWeb3Context()
 
   const getNextApproveIndex = (approved: boolean[]) => {
     let index = 0
@@ -125,12 +123,15 @@ export const RewardSection = (props: IProps) => {
   }, [])
 
   useEffect(() => {
-    if (state.inited) {
+    if (
+      state.inited ||
+      (isCreatePool && state.step === rewardState.tokens.length + 1)
+    ) {
       setTimeout(() => {
         onNext()
       }, 2000)
     }
-  }, [state.inited])
+  }, [state.inited, state.step])
 
   const onInitialize = async () => {
     if (!account || !provider) {
@@ -144,13 +145,12 @@ export const RewardSection = (props: IProps) => {
       const txId = await lmService.initiateNewRewardsProgram(
         poolAddress,
         rewardState.amounts,
-        Number(rewardState.period) * ONE_WEEK_IN_TIME,
-        true // TODO: Move it to user input
+        parseDuration(rewardState.duration)
       )
-      const finalTxId = await lmService.waitUntilNewRewardsProgramInitiated(
+      const finalTxId = await lmService.waitUntilRewardsProgramInitiated(
         poolAddress,
         rewardState.amounts,
-        Number(rewardState.period) * ONE_WEEK_IN_TIME,
+        parseDuration(rewardState.duration),
         txId
       )
 
@@ -207,6 +207,12 @@ export const RewardSection = (props: IProps) => {
       }))
     } catch (error) {
       console.error(error)
+      setState((prev) => ({
+        ...prev,
+        approving: prev.approving.map((element, eIndex) =>
+          eIndex === index ? false : element
+        ),
+      }))
     }
   }
 
@@ -214,7 +220,7 @@ export const RewardSection = (props: IProps) => {
     <div className={classes.root}>
       <div className={classes.header}>
         <Typography className={classes.title}>
-          Initiate Rewards Program
+          {isCreatePool ? 'Approve Reward Tokens' : 'Initiate Rewards Program'}
         </Typography>
         <Typography className={classes.description}>
           Please complete all transactions to complete the rewards program.
@@ -253,21 +259,23 @@ export const RewardSection = (props: IProps) => {
               }
             />
           ))}
-          <ActionStepRow
-            step={rewardState.tokens.length + 1}
-            isActiveStep={state.step === rewardState.tokens.length + 1}
-            comment="Complete"
-            title="Initiate"
-            actionLabel={state.inited ? 'Initiated' : 'Initiate'}
-            onConfirm={onInitialize}
-            actionPending={state.initing}
-            actionDone={state.inited}
-            rightComponent={
-              state.inited && state.initTx !== '' ? (
-                <ViewTransaction txId={state.initTx} />
-              ) : null
-            }
-          />
+          {!isCreatePool && (
+            <ActionStepRow
+              step={rewardState.tokens.length + 1}
+              isActiveStep={state.step === rewardState.tokens.length + 1}
+              comment="Complete"
+              title="Initiate"
+              actionLabel={state.inited ? 'Initiated' : 'Initiate'}
+              onConfirm={onInitialize}
+              actionPending={state.initing}
+              actionDone={state.inited}
+              rightComponent={
+                state.inited && state.initTx !== '' ? (
+                  <ViewTransaction txId={state.initTx} />
+                ) : null
+              }
+            />
+          )}
         </div>
       </div>
     </div>

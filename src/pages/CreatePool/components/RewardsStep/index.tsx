@@ -1,20 +1,11 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import {
-  Button,
-  Grid,
-  makeStyles,
-  TextField,
-  Typography,
-} from '@material-ui/core'
+import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { FEE_TIERS } from 'config/constants'
-import { useConnectedWeb3Context } from 'contexts'
-import { formatEther } from 'ethers/lib/utils'
-import React, { useEffect, useState } from 'react'
-import { ICreatePoolData, IToken, MintState } from 'types'
-import { Bound, Field } from 'utils/enums'
-import { RewardModal } from '../../../../components'
+import React, { useState } from 'react'
+import { ICreatePoolData } from 'types'
 import { RewardTokensTable } from './RewardTokensTable'
+import { IRewardState, RewardModal } from 'components'
+import { CreatePoolModal } from '../CreatePoolModal'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -122,32 +113,25 @@ export const RewardsStep: React.FC<IProps> = ({
   onNext,
 }) => {
   const cl = useStyles()
-  const { account, networkId } = useConnectedWeb3Context()
-  const [isModalVisible, setIsModalVisible] = useState(false)
+
+  const [isCreateModalVisible, setIsCreateModalVisible] = useState(false)
+  const [isRewardsModalVisible, setIsRewardsModalVisible] = useState(false)
 
   const feeAmount: FeeAmount = data.tier.toNumber()
   const feeLabel = FEE_TIERS.find((fee) => fee.value.eq(data.tier))?.label
   const priceLabel = `${data.token0.symbol.toUpperCase()} per ${data.token1.symbol.toUpperCase()}`
 
-  const toggleRewardsModal = () => setIsModalVisible((prevState) => !prevState)
+  const toggleCreateModal = () =>
+    setIsCreateModalVisible((prevState) => !prevState)
+  const toggleRewardsModal = () =>
+    setIsRewardsModalVisible((prevState) => !prevState)
 
-  const [tokens, setTokens] = useState<IToken[]>([])
-  const [amounts, setAmounts] = useState<BigNumber[]>([])
-  const [errors, setErrors] = useState<(string | null)[]>([])
-  const [period, setPeriod] = useState('')
-  const onRewardsChange = (
-    amounts: BigNumber[],
-    tokens: IToken[],
-    errors: (string | null)[],
-    period: string
-  ) => {
-    setAmounts(amounts)
-    setErrors(errors)
-    setTokens(tokens)
-    setPeriod(period)
+  const hasRewards = data.rewardState.tokens.length > 0
+
+  const onNextStep = (state: IRewardState) => {
+    updateData({ rewardState: state })
+    toggleRewardsModal()
   }
-
-  const hasRewards = tokens.length > 0
 
   return (
     <div className={cl.root}>
@@ -199,9 +183,9 @@ export const RewardsStep: React.FC<IProps> = ({
             <div className={cl.noRewardsWrapper}>
               {hasRewards ? (
                 <RewardTokensTable
-                  amounts={amounts}
-                  tokens={tokens}
-                  period={period}
+                  amounts={data.rewardState.amounts}
+                  duration={data.rewardState.duration}
+                  tokens={data.rewardState.tokens}
                 />
               ) : (
                 <Typography className={cl.noRewardsText}>
@@ -228,19 +212,28 @@ export const RewardsStep: React.FC<IProps> = ({
       <Button
         color="primary"
         fullWidth
-        onClick={onNext}
+        onClick={toggleCreateModal}
         variant="contained"
+        disabled={!data.rewardState}
       >
-        Next
+        CREATE POOL
       </Button>
 
       <RewardModal
-        open={isModalVisible}
+        isCreatePool
+        isOpen={isRewardsModalVisible}
         onClose={toggleRewardsModal}
+        onCreateReward={onNextStep}
         onSuccess={async () => {
           toggleRewardsModal()
         }}
-        onChange={onRewardsChange}
+      />
+
+      <CreatePoolModal
+        isOpen={isCreateModalVisible}
+        onClose={toggleCreateModal}
+        onSuccess={onNext}
+        poolData={data}
       />
     </div>
   )

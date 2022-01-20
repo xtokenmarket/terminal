@@ -69,7 +69,6 @@ export function usePools(
     FeeAmount | undefined
   ][]
 ): [PoolState, Pool | undefined][] {
-  console.log('=usePools', poolKeys)
   const { networkId } = useConnectedWeb3Context()
   const chainId = networkId || DEFAULT_NETWORK_ID
 
@@ -100,7 +99,6 @@ export function usePools(
       })
     })
   }, [chainId, transformed])
-  console.log('poolAddresses', poolAddresses)
 
   const slot0: {
     sqrtPriceX96: BigNumber
@@ -185,6 +183,7 @@ export function useV3DerivedMintInfo(
   }
   currencies: { [field in Field]?: Currency }
   dependentField: Field
+  parsedAmounts: { [field in Field]?: CurrencyAmount<Currency> }
   position: Position | undefined
   noLiquidity?: boolean
   errorMessage?: string
@@ -612,6 +611,7 @@ export function useV3DerivedMintInfo(
     dependentField,
     currencies,
     ticks,
+    parsedAmounts,
     price,
     pricesAtTicks,
     position,
