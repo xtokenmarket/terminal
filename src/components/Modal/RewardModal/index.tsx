@@ -15,18 +15,21 @@ import useCommonStyles from 'style/common'
 import { useConnectedWeb3Context } from 'contexts'
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    position: 'absolute',
-    width: '90vw',
-    maxWidth: 600,
-    backgroundColor: theme.colors.primary500,
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  content: {
+    position: 'relative',
     outline: 'none',
-    maxHeight: '80vh',
     userSelect: 'none',
-    overflowY: 'auto',
+    width: 700,
+    maxWidth: '90vw',
+    height: '80vh',
+    backgroundColor: theme.colors.primary500,
+    display: 'flex',
+    flexDirection: 'column',
     '&.transparent': {
       backgroundColor: theme.colors.transparent,
     },
@@ -34,10 +37,11 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  className?: string
+  open: boolean
   onClose: () => void
   onSuccess: () => Promise<void>
   poolAddress?: string
+  className?: string
 }
 
 export interface IRewardState {
@@ -47,12 +51,17 @@ export interface IRewardState {
   tokens: IToken[]
 }
 
-export const RewardModal = (props: IProps) => {
-  const classes = useStyles()
+export const RewardModal: React.FC<IProps> = ({
+  open,
+  className,
+  onClose,
+  onSuccess,
+  poolAddress,
+}) => {
+  const cl = useStyles()
   const commonClasses = useCommonStyles()
   const { account } = useConnectedWeb3Context()
 
-  const { onClose, poolAddress } = props
   const [state, setState] = useState<IRewardState>({
     step: ERewardStep.Input,
     period: '',
@@ -66,7 +75,7 @@ export const RewardModal = (props: IProps) => {
     }
   }, [account])
 
-  const updateState = (e: any) => {
+  const updateState = (e: Partial<IRewardState>) => {
     setState((prev) => ({ ...prev, ...e }))
   }
 
@@ -95,7 +104,7 @@ export const RewardModal = (props: IProps) => {
             onNext={onNextStep} // TODO: Refactor to skip initiate rewards step
             updateState={updateState}
             rewardState={state}
-            onClose={props.onClose}
+            onClose={onClose}
           />
         )
       case ERewardStep.Confirm:
@@ -116,17 +125,17 @@ export const RewardModal = (props: IProps) => {
           />
         )
       default:
-        return <SuccessSection onClose={props.onSuccess} rewardState={state} />
+        return <SuccessSection onClose={onSuccess} rewardState={state} />
     }
   }
 
   return (
-    <Modal open>
+    <Modal open={open} className={cl.modal}>
       <div
         className={clsx(
-          classes.root,
+          cl.content,
           commonClasses.scroll,
-          props.className,
+          className,
           state.step === ERewardStep.Success ? 'transparent' : ''
         )}
       >

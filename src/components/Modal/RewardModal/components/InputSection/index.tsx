@@ -1,36 +1,58 @@
+import { useState } from 'react'
 import { Button, IconButton, makeStyles, Typography } from '@material-ui/core'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
-import { IRewardState, TokenBalanceInput } from 'components'
+import { IRewardState, TokenBalanceInput, TokenSelect } from 'components'
 import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef, useServices } from 'helpers'
 import { RewardPeriodInput } from '../index'
+import { IToken } from 'types'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
   header: {
-    padding: 32,
     position: 'relative',
-    paddingBottom: 16,
+    padding: theme.spacing(3),
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(2, 5, 2, 2),
+    },
   },
   title: {
     color: theme.colors.white,
     fontWeight: 600,
     fontSize: 22,
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 18,
+    },
   },
   description: {
     color: theme.colors.white,
-    marginTop: 8,
+    marginTop: theme.spacing(1),
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 14,
+    },
   },
   closeButton: {
-    position: 'absolute',
-    right: 12,
-    top: 12,
-    padding: 12,
+    padding: 0,
     color: theme.colors.white1,
+    position: 'absolute',
+    right: 24,
+    top: 24,
+    [theme.breakpoints.down('xs')]: {
+      top: 12,
+      right: 12,
+    },
   },
-  content: { padding: '0 32px' },
+  content: {
+    padding: theme.spacing(0, 3),
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(0, 2),
+    },
+  },
   actions: {
-    padding: 32,
+    padding: theme.spacing(3),
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(2),
+    },
   },
   deposit: {},
 }))
@@ -42,40 +64,38 @@ interface IProps {
   updateState: (e: any) => void
 }
 
-export const InputSection = (props: IProps) => {
-  const classes = useStyles()
-  const { onNext, onClose, rewardState, updateState } = props
+export const InputSection: React.FC<IProps> = ({
+  onNext,
+  onClose,
+  rewardState,
+  updateState,
+}) => {
+  const cl = useStyles()
   const { account, library: provider, networkId } = useConnectedWeb3Context()
   const isMountedRef = useIsMountedRef()
   const { multicall } = useServices()
 
-  const isDisabled =
-    (() => {
-      for (let index = 0; index < rewardState.amounts.length; index++) {
-        if (rewardState.amounts[index].isZero()) {
-          return true
-        }
-      }
-      return false
-    })() ||
-    rewardState.period === '' ||
-    Number(rewardState.period) === 0
+  const { period, amounts } = rewardState
+  const isDisabled = (
+    amounts.some(amount => amount.isZero()) ||
+    period === '' ||
+    Number(period) === 0
+  )
 
   return (
-    <div className={classes.root}>
-      <div className={classes.header}>
-        <Typography className={classes.title}>
+    <div className={cl.root}>
+      <div className={cl.header}>
+        <Typography className={cl.title}>
           Create a rewards program
         </Typography>
-        <Typography className={classes.description}>
+        <Typography className={cl.description}>
           Select a reward token and adjust the settings.
         </Typography>
-        <IconButton className={classes.closeButton} onClick={onClose}>
+        <IconButton className={cl.closeButton} onClick={onClose}>
           <CloseOutlinedIcon />
         </IconButton>
       </div>
-      <div className={classes.content}>
-        {/* TODO: Add select token and update it to `rewardState.tokens` */}
+      <div className={cl.content}>
         <RewardPeriodInput
           value={rewardState.period}
           onChange={(newValue) =>
@@ -84,7 +104,15 @@ export const InputSection = (props: IProps) => {
             })
           }
         />
-        {/* TODO: Re-enable `TokenBalanceInput`, after user selects token */}
+        {/*
+          TODO: Break out a RewardsToken component, which has a TokenSelect
+          and a TokenBalanceInput, and wire that up to the rewards state.
+          New designs exist for this component + how to add multiple
+        */}
+        {/* <TokenSelect
+          onChange={onSelectToken}
+          token={activeToken}
+        /> */}
         {/*<TokenBalanceInput
           token={rewardState}
           value={rewardState.amounts[index]}
@@ -97,12 +125,12 @@ export const InputSection = (props: IProps) => {
           }}
         />*/}
       </div>
-      <div className={classes.actions}>
+      <div className={cl.actions}>
         <Button
           color="primary"
           variant="contained"
           fullWidth
-          className={classes.deposit}
+          className={cl.deposit}
           onClick={() => {
             onNext()
           }}

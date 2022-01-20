@@ -1,6 +1,7 @@
 import { InputAdornment, makeStyles, TextField } from '@material-ui/core'
 import clsx from 'clsx'
 import { transparentize } from 'polished'
+import React from 'react'
 import useCommonStyles from 'style/common'
 
 const useStyles = makeStyles((theme) => ({
@@ -13,20 +14,34 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
-  inputBox: { paddingRight: 60, fontWeight: 700 },
-  inputLabel: { color: `${theme.colors.white} !important` },
+  inputBox: {
+    paddingRight: theme.spacing(2),
+    [theme.breakpoints.down('xs')]: {
+      paddingRight: theme.spacing(1),
+    },
+    fontWeight: 700,
+  },
+  inputLabel: {
+    color: `${theme.colors.white} !important`,
+  },
   notchedOutline: {
     borderColor: theme.colors.primary200,
   },
   buttons: {
     display: 'flex',
     alignItems: 'center',
-    margin: '4px -4px',
+    margin: theme.spacing(1, 0, 2, 0),
   },
   button: {
-    margin: 4,
+    marginRight: theme.spacing(1),
     height: 32,
     width: 54,
+    fontSize: 12,
+    [theme.breakpoints.down('xs')]: {
+      fontSize: 10,
+      height: 28,
+      width: 40,
+    },
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -35,7 +50,6 @@ const useStyles = makeStyles((theme) => ({
     border: `1px solid ${theme.colors.eighth}`,
     transition: 'all 0.4s',
     borderRadius: 4,
-    fontSize: 12,
     cursor: 'pointer',
     '&:hover': {
       backgroundColor: transparentize(0.8, theme.colors.secondary),
@@ -56,46 +70,51 @@ interface IProps {
   className?: string
 }
 
-export const RewardPeriodInput = (props: IProps) => {
-  const classes = useStyles()
+export const RewardPeriodInput: React.FC<IProps> = ({
+  value,
+  onChange,
+  className,
+}) => {
+  const cl = useStyles()
   const commonClasses = useCommonStyles()
+  const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let newValue = e.target.value
+    if (newValue !== '') {
+      newValue = Math.floor(Number(e.target.value)).toString()
+    }
+    onChange(newValue)
+  }
 
   return (
-    <div className={classes.root}>
+    <div className={cl.root}>
       <TextField
         type="number"
-        value={props.value}
         variant="outlined"
+        fullWidth
+        value={value}
+        onChange={onChangeInput}
+        className={cl.input}
         InputLabelProps={{
           shrink: true,
-          className: classes.inputLabel,
-        }}
-        fullWidth
-        onChange={(event) => {
-          let newValue = event.target.value
-          if (newValue !== '') {
-            newValue = Math.floor(Number(event.target.value)).toString()
-          }
-          props.onChange(newValue)
+          className: cl.inputLabel,
         }}
         InputProps={{
           classes: {
-            notchedOutline: classes.notchedOutline,
-            input: clsx(commonClasses.hideInputArrow, classes.inputBox),
+            notchedOutline: cl.notchedOutline,
+            input: clsx(commonClasses.hideInputArrow, cl.inputBox),
           },
           endAdornment: <InputAdornment position="end">Weeks</InputAdornment>,
         }}
-        className={classes.input}
       />
-      <div className={classes.buttons}>
+      <div className={cl.buttons}>
         {[1, 3, 5, 8].map((week) => (
           <span
             key={`${week}`}
             className={clsx(
-              classes.button,
-              week === Number(props.value || '0') && 'active'
+              cl.button,
+              week === Number(value || '0') && 'active'
             )}
-            onClick={() => props.onChange(week.toString())}
+            onClick={() => onChange(week.toString())}
           >
             {week}&nbsp;W
           </span>
