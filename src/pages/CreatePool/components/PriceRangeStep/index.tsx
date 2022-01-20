@@ -101,8 +101,6 @@ export const PriceRangeStep = (props: IProps) => {
     updateData({ amount0, amount1 })
   }
 
-
-
   const [poolState, pool] = usePools([[baseCurrency, currencyB, feeAmount]])[0]
   console.log(poolState, pool)
 
@@ -234,12 +232,12 @@ export const PriceRangeStep = (props: IProps) => {
     <div className={classes.root}>
       <div>
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6}>
+          <Grid item sm={12} md={6}>
             <Typography className={classes.label}>Set price range</Typography>
             <div className={classes.rangeWrapper}>
               {/* TODO: Add price range graph */}
               <Grid container spacing={3}>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={6} sm={6}>
                   <TokenPriceInput
                     value={
                       ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]
@@ -290,7 +288,7 @@ export const PriceRangeStep = (props: IProps) => {
             </div>
           </Grid>
 
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={12} md={6}>
             <Typography className={classes.label}>Deposit amounts</Typography>
             <TokenBalanceInput
               value={data.amount0}

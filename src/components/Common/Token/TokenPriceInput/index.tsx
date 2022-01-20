@@ -24,7 +24,11 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
-  inputBox: { paddingRight: 60, fontWeight: 700 },
+  inputBox: {
+    paddingRight: 60,
+    fontWeight: 700,
+    paddingBottom: 50,
+  },
   inputLabel: { color: `${theme.colors.white} !important` },
   notchedOutline: {
     borderColor: theme.colors.primary200,
@@ -58,7 +62,23 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: '4px',
-    margin: '5px',
+    margin: 7,
+  },
+  border: {
+    height: 100,
+    display: 'flex',
+    alignItems: 'center',
+  },
+  buttonWrapper: {
+    position: 'absolute',
+    right: 2,
+  },
+  inputBottomText: {
+    position: 'absolute',
+    bottom: 28,
+    left: 15,
+    color: theme.colors.primary100,
+    fontSize: 14,
   },
 }))
 
@@ -139,40 +159,44 @@ export const TokenPriceInput = (props: IProps) => {
 
   return (
     <div className={clsx(classes.root, props.className)}>
-      <div className={classes.button} onClick={handleIncrement}>
-        <Button>
-          <IncreaseIcon />{' '}
-        </Button>
+      <div className={classes.border}>
+        <TextField
+          onBlur={handleOnBlur}
+          onFocus={handleOnFocus}
+          InputLabelProps={{
+            className: classes.inputLabel,
+          }}
+          InputProps={{
+            classes: {
+              notchedOutline: classes.notchedOutline,
+              input: clsx(commonClasses.hideInputArrow, classes.inputBox),
+            },
+          }}
+          className={classes.input}
+          value={localValue}
+          onChange={(e) => {
+            if (Number(e.target.value) < 0) return
+            setLocalValue(e.target.value || '0')
+          }}
+          variant="outlined"
+          fullWidth
+          type="number"
+          label={label}
+        />
+        <div className={classes.inputBottomText}> XTK per WETH</div>
+        <div className={classes.buttonWrapper}>
+          <div className={classes.button} onClick={handleIncrement}>
+            <Button>
+              <IncreaseIcon />{' '}
+            </Button>
+          </div>
+          <div className={classes.button} onClick={handleDecrement}>
+            <Button>
+              <DecreaseIcon />{' '}
+            </Button>
+          </div>
+        </div>
       </div>
-      <div className={classes.button} onClick={handleDecrement}>
-        <Button>
-          <DecreaseIcon />{' '}
-        </Button>
-      </div>
-
-      <TextField
-        onBlur={handleOnBlur}
-        onFocus={handleOnFocus}
-        InputLabelProps={{
-          className: classes.inputLabel,
-        }}
-        InputProps={{
-          classes: {
-            notchedOutline: classes.notchedOutline,
-            input: clsx(commonClasses.hideInputArrow, classes.inputBox),
-          },
-        }}
-        className={classes.input}
-        value={localValue}
-        onChange={(e) => {
-          if (Number(e.target.value) < 0) return
-          setLocalValue(e.target.value || '0')
-        }}
-        variant="outlined"
-        fullWidth
-        type="number"
-        label={label}
-      />
     </div>
   )
 }
