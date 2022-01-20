@@ -9,7 +9,7 @@ const useStyles = makeStyles(theme => ({
   rewardToken: {
     display: 'flex',
     flexDirection: 'column',
-    padding: theme.spacing(1),
+    marginBottom: theme.spacing(2),
   },
   removeTextBtn: {
     fontSize: 12,
