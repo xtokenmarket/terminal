@@ -6,6 +6,7 @@ import { BigNumber } from 'ethers'
 import { ZERO } from 'utils/number'
 import { RewardToken } from '.'
 import { IRewardState } from '../..'
+import { useIsMountedRef, useServices } from 'helpers'
 
 const useStyles = makeStyles(theme => ({
   rewardTokens: {
@@ -30,6 +31,14 @@ export const RewardTokens: React.FC<IProps> = ({
   const cl = useStyles()
 
   const { tokens, amounts } = rewardState
+  const { lmService } = useServices()
+  const [rewardFeePercent, setRewardFeePercent] = useState(0)
+  useEffect(() => {
+    (async () => {
+      const fee = await lmService.getRewardFee()
+      setRewardFeePercent(fee / 100)
+    })()
+  }, [lmService])
 
   const onSelectToken = (token: IToken, i: number) => {
     if (tokens.includes(token)) return
@@ -68,7 +77,7 @@ export const RewardTokens: React.FC<IProps> = ({
   if (tokens.length === 0) {
     return (
       <RewardToken
-        rewardFeePercent={0.01}
+        rewardFeePercent={rewardFeePercent}
         balance={ZERO}
         onSelectToken={token => onSelectToken(token, 0)}
         onChangeBalance={balance => onChangeBalance(balance, 0)}
@@ -84,7 +93,7 @@ export const RewardTokens: React.FC<IProps> = ({
           <RewardToken
             token={tokens[i]}
             balance={amount}
-            rewardFeePercent={0.01}
+            rewardFeePercent={rewardFeePercent}
             onSelectToken={token => onSelectToken(token, i)}
             onChangeBalance={balance => onChangeBalance(balance, i)}
             onRemove={() => onClickRemove(i)}

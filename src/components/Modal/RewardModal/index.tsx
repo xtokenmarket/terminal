@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
     width: 700,
     maxWidth: '90vw',
     height: '80vh',
+    overflowY: 'scroll',
     backgroundColor: theme.colors.primary500,
     display: 'flex',
     flexDirection: 'column',
