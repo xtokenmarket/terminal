@@ -113,8 +113,6 @@ export const TokenPriceInput = (props: IProps) => {
     increment,
     onUserInput,
   } = props
-  console.log('ticksAtLimit', ticksAtLimit)
-
   //  for focus state, styled components doesnt let you select input parent container
   const [active, setActive] = useState(false)
 
@@ -126,14 +124,11 @@ export const TokenPriceInput = (props: IProps) => {
   const commonClasses = useCommonStyles()
 
   const handleOnFocus = () => {
-    console.log('OnFocu')
-
     setUseLocalValue(true)
     setActive(true)
   }
 
   const handleOnBlur = useCallback(() => {
-    console.log('OnBlur')
     setUseLocalValue(false)
     setActive(false)
     onUserInput(localValue)
