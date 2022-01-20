@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { makeStyles } from '@material-ui/core'
+import { Button, makeStyles, Typography } from '@material-ui/core'
 import { TokenBalanceInput, TokenSelect } from 'components'
 import { IToken } from 'types'
 import { BigNumber } from 'ethers'
@@ -7,8 +7,18 @@ import { ZERO } from 'utils/number'
 
 const useStyles = makeStyles(theme => ({
   rewardToken: {
+    display: 'flex',
+    flexDirection: 'column',
     padding: theme.spacing(1),
-    // background: 'red',
+  },
+  removeTextBtn: {
+    fontSize: 12,
+    color: theme.colors.primary100,
+    marginTop: 8,
+    alignSelf: 'flex-end',
+    '&:hover': {
+      textDecoration: 'underline',
+    }
   },
 }))
 
@@ -18,6 +28,7 @@ interface IProps {
   rewardFeePercent: number,
   onSelectToken: (token: IToken) => void
   onChangeBalance: (balance: BigNumber) => void
+  onRemove?: () => void
 }
 
 export const RewardToken: React.FC<IProps> = ({
@@ -26,10 +37,19 @@ export const RewardToken: React.FC<IProps> = ({
   rewardFeePercent,
   onSelectToken,
   onChangeBalance,
+  onRemove,
 }) => {
   const cl = useStyles()
   return (
     <div className={cl.rewardToken}>
+      <Button
+        disableRipple
+        variant="text"
+        className={cl.removeTextBtn}
+        onClick={onRemove}
+      >
+        Remove Token
+      </Button>
       <TokenSelect onChange={onSelectToken} token={token} />
       {token && balance && (
         <TokenBalanceInput

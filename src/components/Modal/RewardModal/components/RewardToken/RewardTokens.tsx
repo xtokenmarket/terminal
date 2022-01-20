@@ -50,6 +50,10 @@ export const RewardTokens: React.FC<IProps> = ({
     console.log('add')
   }
 
+  const onClickRemove = () => {
+    console.log('remove')
+  }
+
   if (tokens.length === 0) {
     return (
       <RewardToken
@@ -57,6 +61,7 @@ export const RewardTokens: React.FC<IProps> = ({
         balance={ZERO}
         onSelectToken={token => onSelectToken(token, 0)}
         onChangeBalance={balance => onChangeBalance(balance, 0)}
+        onRemove={onClickRemove}
       />
     )
   }
@@ -71,6 +76,7 @@ export const RewardTokens: React.FC<IProps> = ({
             rewardFeePercent={0.01}
             onSelectToken={token => onSelectToken(token, i)}
             onChangeBalance={balance => onChangeBalance(balance, i)}
+            onRemove={onClickRemove}
           />
         </div>
       ))}
