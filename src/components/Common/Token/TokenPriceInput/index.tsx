@@ -112,6 +112,8 @@ export const TokenPriceInput = (props: IProps) => {
     decrement,
     increment,
     onUserInput,
+    currencyA,
+    currencyB,
   } = props
   //  for focus state, styled components doesnt let you select input parent container
   const [active, setActive] = useState(false)
@@ -178,7 +180,11 @@ export const TokenPriceInput = (props: IProps) => {
           type="number"
           label={label}
         />
-        <div className={classes.inputBottomText}> XTK per WETH</div>
+        <div className={classes.inputBottomText}>
+          {' '}
+          {currencyB?.symbol?.toUpperCase()} per{' '}
+          {currencyA?.symbol?.toUpperCase()}
+        </div>
         <div className={classes.buttonWrapper}>
           <div className={classes.button} onClick={handleIncrement}>
             <Button>
