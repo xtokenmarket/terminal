@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, IconButton, makeStyles, Typography } from '@material-ui/core'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { IRewardState, TokenBalanceInput, TokenSelect } from 'components'
@@ -78,11 +78,14 @@ export const InputSection: React.FC<IProps> = ({
   const { multicall } = useServices()
 
   const { period, amounts, tokens } = rewardState
-  const isDisabled = (
-    amounts.some(amount => amount.isZero()) ||
-    period === '' ||
-    Number(period) === 0
-  )
+  const [isDisabled, setIsDisabled] = useState(false)
+  useEffect(() => {
+    setIsDisabled((
+      amounts.some(amount => amount.isZero()) ||
+      period === '' ||
+      Number(period) === 0
+    ))
+  }, [amounts, period])
 
   return (
     <div className={cl.root}>
