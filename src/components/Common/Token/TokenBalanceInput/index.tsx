@@ -3,7 +3,7 @@ import { makeStyles, TextField, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import { TokenIcon } from 'components'
 import { ethers } from 'ethers'
-import { formatEther } from 'ethers/lib/utils'
+import { formatEther, parseEther } from 'ethers/lib/utils'
 import { useTokenBalance } from 'helpers'
 import { useEffect, useState } from 'react'
 import useCommonStyles from 'style/common'
@@ -131,8 +131,9 @@ export const TokenBalanceInput: React.FC<IProps> = ({
 
           const precision = value.split('.')[1]?.length || 0
           let amount = ethers.utils.parseUnits(value || '0', token.decimals)
-          if (amount.gt(balance)) amount = balance
-
+          if (amount.gt(balance)) {
+            amount = balance
+          }
           const newValue = Number(formatEther(amount)).toFixed(precision)
           setState((prev) => ({ ...prev, amount: newValue }))
           onChange(
