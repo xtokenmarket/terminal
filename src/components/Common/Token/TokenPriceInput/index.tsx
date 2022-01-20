@@ -116,17 +116,18 @@ export const TokenPriceInput = (props: IProps) => {
     console.log('OnBlur')
     setUseLocalValue(false)
     setActive(false)
-  }, [localValue])
+    onUserInput(localValue)
+  }, [localValue, onUserInput])
 
   const handleDecrement = useCallback(() => {
     setUseLocalValue(false)
     onUserInput(decrement())
-  }, [decrement])
+  }, [decrement, onUserInput])
 
   const handleIncrement = useCallback(() => {
     setUseLocalValue(false)
     onUserInput(increment())
-  }, [increment])
+  }, [increment, onUserInput])
 
   useEffect(() => {
     if (localValue !== value && !useLocalValue) {
