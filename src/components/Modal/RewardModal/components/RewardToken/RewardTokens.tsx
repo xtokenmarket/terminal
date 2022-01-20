@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { makeStyles } from '@material-ui/core'
+import { Button, makeStyles } from '@material-ui/core'
 import { TokenBalanceInput, TokenSelect } from 'components'
 import { IToken } from 'types'
 import { BigNumber } from 'ethers'
@@ -11,6 +11,11 @@ const useStyles = makeStyles(theme => ({
   rewardTokens: {
 
   },
+  buttonRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  }
 }))
 
 interface IProps {
@@ -27,9 +32,12 @@ export const RewardTokens: React.FC<IProps> = ({
   const { tokens, amounts } = rewardState
 
   const onSelectToken = (token: IToken, i: number) => {
+    if (tokens.includes(token)) return
+    
     const newTokens = tokens
     newTokens.splice(i, 1, token)
     updateState({ tokens: newTokens })
+    onChangeBalance(ZERO, i)
   }
 
   const onChangeBalance = (balance: BigNumber, i: number) => {
@@ -38,10 +46,15 @@ export const RewardTokens: React.FC<IProps> = ({
     updateState({ amounts: newAmounts })
   }
 
+  const onClickAdd = () => {
+    console.log('add')
+  }
+
   if (tokens.length === 0) {
     return (
       <RewardToken
         rewardFeePercent={0.01}
+        balance={ZERO}
         onSelectToken={token => onSelectToken(token, 0)}
         onChangeBalance={balance => onChangeBalance(balance, 0)}
       />
@@ -61,6 +74,18 @@ export const RewardTokens: React.FC<IProps> = ({
           />
         </div>
       ))}
+      <div className={cl.buttonRow}>
+        <Button
+          fullWidth
+          disableRipple
+          color="secondary"
+          variant="contained"
+          onClick={onClickAdd}
+          disabled={!tokens[0] || !amounts[0] || amounts[0].isZero()}
+        >
+          ADD ANOTHER
+        </Button>
+      </div>
     </>
   )
 }

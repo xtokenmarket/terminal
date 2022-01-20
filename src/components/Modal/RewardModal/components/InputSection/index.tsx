@@ -110,26 +110,6 @@ export const InputSection: React.FC<IProps> = ({
           rewardState={rewardState}
           updateState={updateState}
         />
-        {/*
-          TODO: Break out a RewardsToken component, which has a TokenSelect
-          and a TokenBalanceInput, and wire that up to the rewards state.
-          New designs exist for this component + how to add multiple
-        */}
-        {/* <TokenSelect
-          onChange={onSelectToken}
-          token={activeToken}
-        /> */}
-        {/*<TokenBalanceInput
-          token={rewardState}
-          value={rewardState.amounts[index]}
-          onChange={(newValue) => {
-            updateState({
-              amounts: rewardState.amounts.map((e, ind) =>
-                ind === index ? newValue : e
-              ),
-            })
-          }}
-        />*/}
       </div>
       <div className={cl.actions}>
         <Button
