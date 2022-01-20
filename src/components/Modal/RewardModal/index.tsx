@@ -70,15 +70,24 @@ export const RewardModal: React.FC<IProps> = ({
     tokens: [],
   })
 
-  useEffect(() => {
-    if (!account) {
-      onClose()
-    }
-  }, [account])
-
   const updateState = (e: Partial<IRewardState>) => {
     setState((prev) => ({ ...prev, ...e }))
   }
+
+  const _onClose = () => {
+    updateState({
+      period: '',
+      amounts: [],
+      tokens: [],
+    })
+    onClose()
+  }
+
+  useEffect(() => {
+    if (!account) {
+      _onClose()
+    }
+  }, [account])
 
   const onNextStep = () => {
     switch (state.step) {
@@ -92,7 +101,7 @@ export const RewardModal: React.FC<IProps> = ({
         setState((prev) => ({ ...prev, step: ERewardStep.Success }))
         break
       default:
-        onClose()
+        _onClose()
     }
   }
 
@@ -105,7 +114,7 @@ export const RewardModal: React.FC<IProps> = ({
             onNext={onNextStep} // TODO: Refactor to skip initiate rewards step
             updateState={updateState}
             rewardState={state}
-            onClose={onClose}
+            onClose={_onClose}
           />
         )
       case ERewardStep.Confirm:
