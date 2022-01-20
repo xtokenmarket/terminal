@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react'
 import useCommonStyles from 'style/common'
 import { IToken } from 'types'
 import { formatBigNumber } from 'utils'
+import { ZERO } from 'utils/number'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -122,6 +123,11 @@ export const TokenBalanceInput: React.FC<IProps> = ({
         onChange={(e) => {
           const { value } = e.target
           if (Number(value) < 0) return
+          if (value === '') {
+            setState((prev) => ({ ...prev, amount: '' }))
+            onChange(ZERO)
+            return
+          }
 
           const precision = value.split('.')[1]?.length || 0
           let amount = ethers.utils.parseUnits(value || '0', token.decimals)

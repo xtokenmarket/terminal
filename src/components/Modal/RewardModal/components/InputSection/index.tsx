@@ -78,14 +78,11 @@ export const InputSection: React.FC<IProps> = ({
   const { multicall } = useServices()
 
   const { period, amounts, tokens } = rewardState
-  const [isDisabled, setIsDisabled] = useState(false)
-  useEffect(() => {
-    setIsDisabled((
-      amounts.some(amount => amount.isZero()) ||
-      period === '' ||
-      Number(period) === 0
-    ))
-  }, [amounts, period])
+  const isDisabled = (
+    amounts.some(amount => amount.isZero()) ||
+    period === '' ||
+    Number(period) === 0
+  )
 
   return (
     <div className={cl.root}>
