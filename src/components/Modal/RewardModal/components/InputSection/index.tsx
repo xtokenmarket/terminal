@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, IconButton, makeStyles, Typography } from '@material-ui/core'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { IRewardState, TokenBalanceInput, TokenSelect } from 'components'
@@ -6,6 +6,8 @@ import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef, useServices } from 'helpers'
 import { RewardPeriodInput } from '../index'
 import { IToken } from 'types'
+import { RewardToken } from '../RewardToken'
+import { RewardTokens } from '../RewardToken/RewardTokens'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -75,7 +77,7 @@ export const InputSection: React.FC<IProps> = ({
   const isMountedRef = useIsMountedRef()
   const { multicall } = useServices()
 
-  const { period, amounts } = rewardState
+  const { period, amounts, tokens } = rewardState
   const isDisabled = (
     amounts.some(amount => amount.isZero()) ||
     period === '' ||
@@ -104,26 +106,10 @@ export const InputSection: React.FC<IProps> = ({
             })
           }
         />
-        {/*
-          TODO: Break out a RewardsToken component, which has a TokenSelect
-          and a TokenBalanceInput, and wire that up to the rewards state.
-          New designs exist for this component + how to add multiple
-        */}
-        {/* <TokenSelect
-          onChange={onSelectToken}
-          token={activeToken}
-        /> */}
-        {/*<TokenBalanceInput
-          token={rewardState}
-          value={rewardState.amounts[index]}
-          onChange={(newValue) => {
-            updateState({
-              amounts: rewardState.amounts.map((e, ind) =>
-                ind === index ? newValue : e
-              ),
-            })
-          }}
-        />*/}
+        <RewardTokens
+          rewardState={rewardState}
+          updateState={updateState}
+        />
       </div>
       <div className={cl.actions}>
         <Button

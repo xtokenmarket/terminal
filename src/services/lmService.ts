@@ -4,6 +4,7 @@ import Abi from 'abis'
 import { getSortedToken } from 'utils/token'
 import { Interface } from '@ethersproject/abi'
 import { NULL_ADDRESS } from 'config/constants'
+import { formatEther, parseEther, parseUnits } from 'ethers/lib/utils'
 
 const lmAbi = Abi.LMTerminal
 
@@ -25,6 +26,11 @@ class LMService {
 
   get address(): string {
     return this.contract.address
+  }
+
+  getRewardFee = async(): Promise<number> => {
+    const fee: BigNumber = await this.contract.rewardFee()
+    return fee.toNumber() / 100
   }
 
   provideLiquidity = async (

@@ -106,7 +106,7 @@ export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     symbol: 'USDT',
     addresses: {
       [networkIds.MAINNET]: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-      [networkIds.KOVAN]: '0x13512979ade267ab5100878e2e0f485b568328a4',
+      [networkIds.KOVAN]: '0x016750ac630f711882812f24dba6c95b9d35856d',
     },
     decimals: 18,
     image: '/assets/tokens/usdt.png',

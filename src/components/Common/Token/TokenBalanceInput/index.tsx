@@ -3,11 +3,13 @@ import { makeStyles, TextField, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import { TokenIcon } from 'components'
 import { ethers } from 'ethers'
+import { formatEther, parseEther } from 'ethers/lib/utils'
 import { useTokenBalance } from 'helpers'
 import { useEffect, useState } from 'react'
 import useCommonStyles from 'style/common'
 import { IToken } from 'types'
 import { formatBigNumber } from 'utils'
+import { ZERO } from 'utils/number'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,10 +52,21 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: 'underline',
     '& span': { fontWeight: 700 },
   },
+  bottomRow: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
 }))
+
+type Variant =
+  | 'normal'
+  | 'rewardToken'
 
 interface IProps {
   className?: string
+  variant?: Variant
+  rewardFeePercent?: number
   token: IToken
   value: BigNumber
   onChange: (_: BigNumber) => void
@@ -63,8 +76,14 @@ interface IState {
   amount: string
 }
 
-export const TokenBalanceInput = (props: IProps) => {
-  const { token, value, onChange } = props
+export const TokenBalanceInput: React.FC<IProps> = ({
+  token,
+  value,
+  onChange,
+  variant = 'normal',
+  rewardFeePercent,
+  className,
+}) => {
   const classes = useStyles()
   const commonClasses = useCommonStyles()
   const { balance } = useTokenBalance(token.address)
@@ -74,21 +93,21 @@ export const TokenBalanceInput = (props: IProps) => {
     if (
       !ethers.utils
         .parseUnits(state.amount || '0', token.decimals)
-        .eq(props.value)
+        .eq(value)
     ) {
-      if (props.value.isZero()) {
+      if (value.isZero()) {
         setState((prev) => ({ ...prev, amount: '' }))
       } else {
         setState((prev) => ({
           ...prev,
-          amount: ethers.utils.formatUnits(props.value || '0', token.decimals),
+          amount: ethers.utils.formatUnits(value || '0', token.decimals),
         }))
       }
     }
-  }, [props.value, state.amount, token.decimals])
+  }, [value, state.amount, token.decimals])
 
   return (
-    <div className={clsx(classes.root, props.className)}>
+    <div className={clsx(classes.root, className)}>
       <TextField
         InputLabelProps={{
           className: classes.inputLabel,
@@ -102,10 +121,23 @@ export const TokenBalanceInput = (props: IProps) => {
         className={classes.input}
         value={state.amount}
         onChange={(e) => {
-          if (Number(e.target.value) < 0) return
-          setState((prev) => ({ ...prev, amount: e.target.value }))
+          const { value } = e.target
+          if (Number(value) < 0) return
+          if (value === '') {
+            setState((prev) => ({ ...prev, amount: '' }))
+            onChange(ZERO)
+            return
+          }
+
+          const precision = value.split('.')[1]?.length || 0
+          let amount = ethers.utils.parseUnits(value || '0', token.decimals)
+          if (amount.gt(balance)) {
+            amount = balance
+          }
+          const newValue = Number(formatEther(amount)).toFixed(precision)
+          setState((prev) => ({ ...prev, amount: newValue }))
           onChange(
-            ethers.utils.parseUnits(e.target.value || '0', token.decimals)
+            ethers.utils.parseUnits(newValue || '0', token.decimals)
           )
         }}
         variant="outlined"
@@ -117,12 +149,23 @@ export const TokenBalanceInput = (props: IProps) => {
         <TokenIcon token={token} className={classes.tokenIcon} />
         <span className={classes.tokenLabel}>{token.symbol}</span>
       </div>
-      <Typography className={classes.balance}>
-        Available -{' '}
-        <span>
-          {formatBigNumber(balance, token.decimals, 4)} {token.symbol}
-        </span>
-      </Typography>
+      <div className={classes.bottomRow}>
+        <Typography className={classes.balance}>
+          Available -{' '}
+          <b>
+            {formatBigNumber(balance, token.decimals, 4)} {token.symbol}
+          </b>
+        </Typography>
+        {variant === 'rewardToken' && rewardFeePercent && (
+          <Typography className={classes.balance}>
+            Total rewards (incl. {(rewardFeePercent * 100)}% fee) -{' '}
+            <b>
+              {Number(state.amount) * (1 + rewardFeePercent)}
+              {' '}{token.name}
+            </b>
+          </Typography>
+        )}
+      </div>
     </div>
   )
 }
