@@ -6,7 +6,6 @@ import { ZERO } from 'utils/number'
 import { RewardToken } from '.'
 import { IRewardState } from '../..'
 import { useServices } from 'helpers'
-import { formatEther } from 'ethers/lib/utils'
 
 const useStyles = makeStyles(theme => ({
   rewardTokens: {
@@ -30,7 +29,7 @@ export const RewardTokens: React.FC<IProps> = ({
 }) => {
   const cl = useStyles()
 
-  const { tokens, amounts } = rewardState
+  const { tokens, amounts, errors } = rewardState
   const { lmService } = useServices()
   const [rewardFeePercent, setRewardFeePercent] = useState(0)
   useEffect(() => {
@@ -48,9 +47,21 @@ export const RewardTokens: React.FC<IProps> = ({
     updateState({ tokens: newTokens })
     onChangeAmount(ZERO, ZERO, i)
   }
-
+  console.log('errors:', errors)
   const onChangeAmount = (amount: BigNumber, userBalance: BigNumber, i: number) => {
-    console.log('balance:', formatEther(userBalance))
+    const excceedsBalance = amount.gt(userBalance)
+    const isZero = amount.isZero()
+    if (excceedsBalance || isZero) {
+      const newErrors = errors
+      const errorMsg = isZero ? 'Amount is 0' : 'Amount exceed user balance'
+      newErrors.splice(i, 1, errorMsg)
+      updateState({ errors: newErrors })
+    } else {
+      if (errors[i]) {
+        const newErrors = errors
+        newErrors.splice(i, 1, null)
+      }
+    }
     const newAmounts = amounts
     newAmounts.splice(i, 1, amount)
     updateState({ amounts: newAmounts })
@@ -59,7 +70,14 @@ export const RewardTokens: React.FC<IProps> = ({
   const onClickAdd = () => {
     const newAmounts = amounts
     newAmounts.push(ZERO)
-    updateState({ amounts: newAmounts })
+
+    const newErrors = errors
+    newErrors.push(null)
+
+    updateState({
+      amounts: newAmounts,
+      errors: newErrors,
+    })
   }
 
   const onClickRemove = (i: number) => {
@@ -69,9 +87,13 @@ export const RewardTokens: React.FC<IProps> = ({
     const newTokens = tokens
     newTokens.splice(i, 1)
 
+    const newErrors = errors
+    newErrors.splice(i, 1)
+
     updateState({
       amounts: newAmounts,
       tokens: newTokens,
+      errors: newErrors,
     })
   }
 
@@ -86,6 +108,12 @@ export const RewardTokens: React.FC<IProps> = ({
       />
     )
   }
+
+  const isAddDisabled = (
+    !tokens[tokens.length - 1] ||
+    !amounts[amounts.length - 1] ||
+    errors.some(error => !!error)
+  )
 
   return (
     <>
@@ -108,7 +136,7 @@ export const RewardTokens: React.FC<IProps> = ({
           color="secondary"
           variant="contained"
           onClick={onClickAdd}
-          disabled={!tokens[0] || !amounts[0] || amounts[0].isZero()}
+          disabled={isAddDisabled}
         >
           ADD ANOTHER
         </Button>
