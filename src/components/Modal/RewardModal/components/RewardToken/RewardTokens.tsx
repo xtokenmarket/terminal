@@ -40,14 +40,15 @@ export const RewardTokens: React.FC<IProps> = ({
   }, [lmService])
 
   const onSelectToken = (token: IToken, i: number) => {
-    if (tokens.includes(token)) return
+    if (tokens.some(t => t.address.toLowerCase() === token.address.toLowerCase()))
+      return
     
     const newTokens = tokens
     newTokens.splice(i, 1, token)
     updateState({ tokens: newTokens })
     onChangeAmount(ZERO, ZERO, i)
   }
-  console.log('errors:', errors)
+  
   const onChangeAmount = (amount: BigNumber, userBalance: BigNumber, i: number) => {
     const excceedsBalance = amount.gt(userBalance)
     const isZero = amount.isZero()
