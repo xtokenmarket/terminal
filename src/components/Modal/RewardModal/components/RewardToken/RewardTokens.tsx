@@ -7,6 +7,7 @@ import { ZERO } from 'utils/number'
 import { RewardToken } from '.'
 import { IRewardState } from '../..'
 import { useIsMountedRef, useServices } from 'helpers'
+import { parseUnits } from 'ethers/lib/utils'
 
 const useStyles = makeStyles(theme => ({
   rewardTokens: {
@@ -36,7 +37,7 @@ export const RewardTokens: React.FC<IProps> = ({
   useEffect(() => {
     (async () => {
       const fee = await lmService.getRewardFee()
-      setRewardFeePercent(fee / 100)
+      setRewardFeePercent(fee.toNumber() / 10000)
     })()
   }, [lmService])
 

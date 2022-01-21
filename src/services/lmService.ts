@@ -28,9 +28,9 @@ class LMService {
     return this.contract.address
   }
 
-  getRewardFee = async(): Promise<number> => {
-    const fee: BigNumber = await this.contract.rewardFee()
-    return fee.toNumber() / 100
+  getRewardFee = async(): Promise<BigNumber> => {
+    const rewardFee = await this.contract.rewardFee()
+    return rewardFee
   }
 
   provideLiquidity = async (
