@@ -27,7 +27,7 @@ interface IProps {
   balance?: BigNumber
   rewardFeePercent: number,
   onSelectToken: (token: IToken) => void
-  onChangeBalance: (balance: BigNumber) => void
+  onChangeAmount: (amount: BigNumber, balance: BigNumber) => void
   onRemove?: () => void
 }
 
@@ -36,7 +36,7 @@ export const RewardToken: React.FC<IProps> = ({
   balance,
   rewardFeePercent,
   onSelectToken,
-  onChangeBalance,
+  onChangeAmount,
   onRemove,
 }) => {
   const cl = useStyles()
@@ -57,7 +57,7 @@ export const RewardToken: React.FC<IProps> = ({
           rewardFeePercent={rewardFeePercent}
           token={token}
           value={balance}
-          onChange={onChangeBalance}
+          onChange={onChangeAmount}
         />
       )}
     </div>

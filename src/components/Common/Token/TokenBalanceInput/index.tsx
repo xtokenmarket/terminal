@@ -69,7 +69,7 @@ interface IProps {
   rewardFeePercent?: number
   token: IToken
   value: BigNumber
-  onChange: (_: BigNumber) => void
+  onChange: (_: BigNumber, balance: BigNumber) => void
 }
 
 interface IState {
@@ -124,7 +124,8 @@ export const TokenBalanceInput: React.FC<IProps> = ({
           if (Number(e.target.value) < 0) return
           setState((prev) => ({ ...prev, amount: e.target.value }))
           onChange(
-            ethers.utils.parseUnits(e.target.value || '0', token.decimals)
+            ethers.utils.parseUnits(e.target.value || '0', token.decimals),
+            balance
           )
         }}
         variant="outlined"
