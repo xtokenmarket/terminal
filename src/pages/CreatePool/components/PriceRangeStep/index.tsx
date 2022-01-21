@@ -12,6 +12,7 @@ import { FeeAmount } from '@uniswap/v3-sdk'
 import { TokenBalanceInput, TokenPriceInput } from 'components'
 import { DEFAULT_NETWORK_ID } from 'config/constants'
 import { useConnectedWeb3Context } from 'contexts'
+import { ethers } from 'ethers'
 import { useIsMountedRef, useServices } from 'helpers'
 import {
   usePools,
@@ -20,6 +21,7 @@ import {
 } from 'helpers/univ3/hooks'
 import { transparentize } from 'polished'
 import { useEffect, useState } from 'react'
+import { xAssetCLRService } from 'services'
 import { ICreatePoolData, IToken, MintState } from 'types'
 import { Bound, Field } from 'utils/enums'
 import { ZERO } from 'utils/number'
@@ -68,7 +70,7 @@ const initialState: IState = {
 export const PriceRangeStep = (props: IProps) => {
   const { data, updateData } = props
   const classes = useStyles()
-  const { networkId } = useConnectedWeb3Context()
+  const { networkId, library: provider, account } = useConnectedWeb3Context()
   const [state, setState] = useState<IState>({
     ...initialState,
     leftRangeTypedValue: data.minPrice,
@@ -91,14 +93,47 @@ export const PriceRangeStep = (props: IProps) => {
   )
   const feeAmount: FeeAmount = data.tier.toNumber()
 
+  const xAssetCLR = new xAssetCLRService(
+    provider,
+    account,
+    '0x1be9fe7b8113598642deedf1f05f2085d9968c87'
+  )
+
   // prevent an error if they input ETH/WETH
   const quoteCurrency =
     baseCurrency && currencyB && baseCurrency.equals(currencyB)
       ? undefined
       : currencyB
 
-  const handleAmountsChange = (amount0: BigNumber, amount1: BigNumber) => {
-    updateData({ amount0, amount1 })
+  const handleAmountsChange = async (
+    amount0: BigNumber,
+    amount1: BigNumber
+  ) => {
+    if (amount0.isZero()) {
+      updateData({ amount1 })
+      updateAmount(ZERO, amount1)
+    } else {
+      updateData({ amount0 })
+      updateAmount(amount0, ZERO)
+    }
+  }
+
+  const updateAmount = async (amount0: any, amount1: any) => {
+    try {
+      const [amount0Estimation, amount1Estimation] =
+        await xAssetCLR.calculateAmountsMintedSingleToken(
+          amount0.isZero() ? 1 : 0,
+          amount0.isZero() ? amount1 : amount0
+        )
+
+      if (amount0.isZero()) {
+        updateData({ amount0: amount0Estimation })
+      } else {
+        updateData({ amount1: amount1Estimation })
+      }
+    } catch (error) {
+      console.log('PriceRangeStep > updateAmount error:', error)
+    }
   }
 
   const [poolState, pool] = usePools([[baseCurrency, currencyB, feeAmount]])[0]
@@ -130,8 +165,6 @@ export const PriceRangeStep = (props: IProps) => {
     poolState,
     pool
   )
-
-  console.log('ticks', ticks, pricesAtTicks)
 
   // get value and prices at ticks
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks
