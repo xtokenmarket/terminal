@@ -1,12 +1,7 @@
-import { useEffect, useState } from 'react'
 import { Button, IconButton, makeStyles, Typography } from '@material-ui/core'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
-import { IRewardState, TokenBalanceInput, TokenSelect } from 'components'
-import { useConnectedWeb3Context } from 'contexts'
-import { useIsMountedRef, useServices } from 'helpers'
+import { IRewardState } from 'components'
 import { RewardPeriodInput } from '../index'
-import { IToken } from 'types'
-import { RewardToken } from '../RewardToken'
 import { RewardTokens } from '../RewardToken/RewardTokens'
 
 const useStyles = makeStyles((theme) => ({
@@ -73,13 +68,10 @@ export const InputSection: React.FC<IProps> = ({
   updateState,
 }) => {
   const cl = useStyles()
-  const { account, library: provider, networkId } = useConnectedWeb3Context()
-  const isMountedRef = useIsMountedRef()
-  const { multicall } = useServices()
 
-  const { period, amounts, tokens } = rewardState
+  const { period, errors } = rewardState
   const isDisabled = (
-    amounts.some(amount => amount.isZero()) ||
+    errors.some(error => !!error) ||
     period === '' ||
     Number(period) === 0
   )
