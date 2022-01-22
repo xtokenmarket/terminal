@@ -44,10 +44,11 @@ interface IProps {
   onSuccess: () => Promise<void>
   poolAddress?: string
   className?: string
-  onTokensChanged?: (
+  onChange?: (
     amounts: BigNumber[],
     tokens: IToken[],
     errors: (string | null)[],
+    period: string,
   ) => void
 }
 
@@ -65,7 +66,7 @@ export const RewardModal: React.FC<IProps> = ({
   onClose,
   onSuccess,
   poolAddress,
-  onTokensChanged,
+  onChange,
 
 }) => {
   const cl = useStyles()
@@ -85,8 +86,8 @@ export const RewardModal: React.FC<IProps> = ({
   }
 
   useEffect(() => {
-    if (onTokensChanged) {
-      onTokensChanged(state.amounts, state.tokens, state.errors)
+    if (onChange) {
+      onChange(state.amounts, state.tokens, state.errors, state.period)
     }
   }, [state])
 

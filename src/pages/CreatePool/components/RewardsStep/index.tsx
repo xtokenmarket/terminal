@@ -14,6 +14,7 @@ import React, { useEffect, useState } from 'react'
 import { ICreatePoolData, IToken, MintState } from 'types'
 import { Bound, Field } from 'utils/enums'
 import { RewardModal } from '../../../../components'
+import { RewardTokensTable } from './RewardTokensTable'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -99,6 +100,7 @@ const useStyles = makeStyles((theme) => ({
   createRewardsBtn: {
     fontSize: 12,
     fontWeight: 'bold',
+    marginTop: theme.spacing(2),
   },
   rewardTokenRow: {
     display: 'flex',
@@ -132,11 +134,20 @@ export const RewardsStep: React.FC<IProps> = ({
   const [tokens, setTokens] = useState<IToken[]>([])
   const [amounts, setAmounts] = useState<BigNumber[]>([])
   const [errors, setErrors] = useState<(string | null)[]>([])
-  const onTokensChanged = (amounts: BigNumber[], tokens: IToken[], errors: (string | null)[]) => {
+  const [period, setPeriod] = useState('')
+  const onRewardsChange = (
+    amounts: BigNumber[],
+    tokens: IToken[],
+    errors: (string | null)[],
+    period: string
+  ) => {
     setAmounts(amounts)
     setErrors(errors)
     setTokens(tokens)
+    setPeriod(period)
   }
+
+  const hasRewards = tokens.length > 0
 
   return (
     <div className={cl.root}>
@@ -186,19 +197,12 @@ export const RewardsStep: React.FC<IProps> = ({
           <Grid item xs={12} md={6}>
             <Typography className={cl.label}>Rewards</Typography>
             <div className={cl.noRewardsWrapper}>
-              {tokens.length > 0 ? (
-                <>
-                  {tokens.map((token, i) => {
-                    const amount = formatEther(amounts[i])
-                    return (
-                      <div className={cl.rewardTokenRow}>
-                        <img src={token.image} />
-                        <p>{token.name}</p>
-                        <p>{amount}</p>
-                      </div>
-                    )
-                  })}
-                </>
+              {hasRewards ? (
+                <RewardTokensTable
+                  amounts={amounts}
+                  tokens={tokens}
+                  period={period}
+                />
               ) : (
                 <Typography className={cl.noRewardsText}>
                   You have no rewards program for this pool.
@@ -210,7 +214,7 @@ export const RewardsStep: React.FC<IProps> = ({
                 onClick={toggleRewardsModal}
                 variant="contained"
               >
-                CREATE A REWARDS PROGRAM
+                {hasRewards ? 'EDIT REWARDS' : 'CREATE A REWARDS PROGRAM'}
               </Button>
             </div>
           </Grid>
@@ -236,7 +240,7 @@ export const RewardsStep: React.FC<IProps> = ({
         onSuccess={async () => {
           toggleRewardsModal()
         }}
-        onTokensChanged={onTokensChanged}
+        onChange={onRewardsChange}
       />
     </div>
   )
