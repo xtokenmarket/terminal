@@ -86,11 +86,13 @@ export const RewardTokensTable: React.FC<IProps> = ({
             const amount = formatEther(amounts[i])
             return (
               <TableRow>
-                <TableCell style={{ display: 'flex', alignItems: 'center' }}>
-                  <img src={token.image} style={{ marginRight: 8 }} />
-                  <Typography variant="h3" className={cl.bodyRowText}>
-                    {amount}
-                  </Typography>
+                <TableCell>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <img src={token.image} style={{ marginRight: 8 }} />
+                    <Typography variant="h3" className={cl.bodyRowText}>
+                      {amount}
+                    </Typography>
+                  </div>
                 </TableCell>
                 <TableCell>
                   <Typography variant="h5" className={cl.bodyRowText}>
