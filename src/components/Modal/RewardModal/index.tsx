@@ -13,6 +13,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { ZERO } from 'utils/number'
 import useCommonStyles from 'style/common'
 import { useConnectedWeb3Context } from 'contexts'
+import { useTokenBalance } from 'helpers'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -50,6 +51,7 @@ export interface IRewardState {
   period: string
   amounts: BigNumber[]
   tokens: IToken[]
+  errors: (string | null)[]
 }
 
 export const RewardModal: React.FC<IProps> = ({
@@ -68,6 +70,7 @@ export const RewardModal: React.FC<IProps> = ({
     period: '',
     amounts: [],
     tokens: [],
+    errors: [],
   })
 
   const updateState = (e: Partial<IRewardState>) => {
@@ -79,6 +82,7 @@ export const RewardModal: React.FC<IProps> = ({
       period: '',
       amounts: [],
       tokens: [],
+      errors: [],
     })
     onClose()
   }
