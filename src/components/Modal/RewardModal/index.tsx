@@ -44,6 +44,12 @@ interface IProps {
   onSuccess: () => Promise<void>
   poolAddress?: string
   className?: string
+  onChange?: (
+    amounts: BigNumber[],
+    tokens: IToken[],
+    errors: (string | null)[],
+    period: string,
+  ) => void
 }
 
 export interface IRewardState {
@@ -60,6 +66,8 @@ export const RewardModal: React.FC<IProps> = ({
   onClose,
   onSuccess,
   poolAddress,
+  onChange,
+
 }) => {
   const cl = useStyles()
   const commonClasses = useCommonStyles()
@@ -77,13 +85,19 @@ export const RewardModal: React.FC<IProps> = ({
     setState((prev) => ({ ...prev, ...e }))
   }
 
+  useEffect(() => {
+    if (onChange) {
+      onChange(state.amounts, state.tokens, state.errors, state.period)
+    }
+  }, [state])
+
   const _onClose = () => {
-    updateState({
-      period: '',
-      amounts: [],
-      tokens: [],
-      errors: [],
-    })
+    // updateState({
+    //   period: '',
+    //   amounts: [],
+    //   tokens: [],
+    //   errors: [],
+    // })
     onClose()
   }
 
