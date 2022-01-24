@@ -5,6 +5,8 @@ import { FeeAmount } from '@uniswap/v3-sdk'
 import { TokenBalanceInput, TokenPriceInput } from 'components'
 import { DEFAULT_NETWORK_ID } from 'config/constants'
 import { useConnectedWeb3Context } from 'contexts'
+import { ethers } from 'ethers'
+import { useTokenBalance } from 'helpers'
 import {
   usePools,
   useRangeHopCallbacks,
@@ -76,6 +78,8 @@ export const PriceRangeStep = (props: IProps) => {
   const { data, updateData } = props
   const classes = useStyles()
   const { networkId } = useConnectedWeb3Context()
+  const { balance: balance0 } = useTokenBalance(data.token0.address)
+  const { balance: balance1 } = useTokenBalance(data.token1.address)
 
   const [isApproveModalOpen, setIsApproveModalOpen] = useState(false)
   const [state, setState] = useState<IState>({
@@ -224,6 +228,54 @@ export const PriceRangeStep = (props: IProps) => {
     props.onNext()
   }
 
+  const renderErrorMessage = () => {
+    const getWarningInfo = (text: string) => {
+      return (
+        <WarningInfo
+          className={classes.warning}
+          title="Warning"
+          description={text}
+        />
+      )
+    }
+
+    if (invalidRange) {
+      const text =
+        'Invalid range selected. The min price must be lower than the max'
+      return getWarningInfo(text)
+    }
+
+    if (
+      formattedAmounts[Field.CURRENCY_A] &&
+      Number(ethers.utils.formatEther(balance0)) <
+        Number(ethers.utils.formatEther(formattedAmounts[Field.CURRENCY_A]))
+    ) {
+      const text = `Insufficient ${data.token0.symbol} balance`
+      return getWarningInfo(text)
+    }
+
+    if (
+      formattedAmounts[Field.CURRENCY_B] &&
+      Number(ethers.utils.formatEther(balance1)) <
+        Number(ethers.utils.formatEther(formattedAmounts[Field.CURRENCY_B]))
+    ) {
+      const text = `Insufficient ${data.token1.symbol} balance`
+      return getWarningInfo(text)
+    }
+    return null
+  }
+
+  const getIsDisabled = () => {
+    return !(
+      state.leftRangeTypedValue &&
+      state.rightRangeTypedValue &&
+      parsedAmounts.CURRENCY_A &&
+      parsedAmounts.CURRENCY_B &&
+      !invalidRange &&
+      !renderErrorMessage()
+    )
+  }
+
   return (
     <div className={classes.root}>
       <div>
@@ -309,27 +361,13 @@ export const PriceRangeStep = (props: IProps) => {
         Pool Deployment fee is 0.1 ETH. Additional 1% fee on any rewards
         distributed for this pool.
       </Typography>
-      {invalidRange && (
-        <WarningInfo
-          className={classes.warning}
-          title="Warning"
-          description="Invalid range selected. The min price must be lower than the max"
-        />
-      )}
+      {renderErrorMessage()}
       <Button
         color="primary"
         fullWidth
         onClick={onClickNext}
         variant="contained"
-        disabled={
-          !(
-            state.leftRangeTypedValue &&
-            state.rightRangeTypedValue &&
-            parsedAmounts.CURRENCY_A &&
-            parsedAmounts.CURRENCY_B &&
-            invalidRange
-          )
-        }
+        disabled={getIsDisabled()}
       >
         Next
       </Button>
