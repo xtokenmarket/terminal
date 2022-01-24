@@ -34,6 +34,7 @@ interface IProps {
   token0: IToken
   token1: IToken
   visible: boolean
+  tier: BigNumber
 }
 
 export const PairCreateModal: React.FC<IProps> = ({
@@ -42,6 +43,7 @@ export const PairCreateModal: React.FC<IProps> = ({
   token0,
   token1,
   visible,
+  tier,
 }) => {
   const classes = useStyles()
   const commonClasses = useCommonStyles()
@@ -63,7 +65,12 @@ export const PairCreateModal: React.FC<IProps> = ({
           'transparent'
         )}
       >
-        <SuccessSection onClose={onClose} token0={token0} token1={token1} />
+        <SuccessSection
+          tier={tier}
+          onClose={onClose}
+          token0={token0}
+          token1={token1}
+        />
       </div>
     </Modal>
   )

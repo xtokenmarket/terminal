@@ -1,4 +1,5 @@
 import { Button, makeStyles, Typography } from '@material-ui/core'
+import { BigNumber } from 'ethers'
 import { IToken } from 'types'
 
 const ICON_SIZE = 150
@@ -47,12 +48,14 @@ interface IProps {
   onClose: () => void
   token0: IToken
   token1: IToken
+  tier: BigNumber
 }
 
 export const SuccessSection: React.FC<IProps> = ({
   onClose,
   token0,
   token1,
+  tier,
 }) => {
   const classes = useStyles()
 
@@ -70,10 +73,13 @@ export const SuccessSection: React.FC<IProps> = ({
           ))}
         </div>
         <Typography className={classes.title}>
-          UNK/DAI pool deployed!
+          {`${token0.symbol.toUpperCase()}/${token1.symbol.toUpperCase()}`}{' '}
+          {tier.toNumber() / 10000}% pool deployed!
         </Typography>
         <Typography className={classes.description}>
-          You have successfully deployed UNK/DAI pool on Uniswap V3.
+          You have successfully deployed{' '}
+          {`${token0.symbol.toUpperCase()}/${token1.symbol.toUpperCase()}`} pool
+          on Uniswap V3.
         </Typography>
       </div>
       <div className={classes.actions}>

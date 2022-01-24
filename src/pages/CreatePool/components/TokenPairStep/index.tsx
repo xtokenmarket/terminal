@@ -204,6 +204,7 @@ export const TokenPairStep: React.FC<IProps> = ({
         onClose={onCloseSuccess}
         token0={data.token0 as Required<IToken>}
         token1={data.token1 as Required<IToken>}
+        tier={data.tier}
       />
       <LoadingOverlay visible={state.loading} />
       <Grid container spacing={3}>
