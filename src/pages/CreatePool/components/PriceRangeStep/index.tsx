@@ -239,6 +239,18 @@ export const PriceRangeStep = (props: IProps) => {
       )
     }
 
+    const getIsInsufficientBalance = (
+      amount: string,
+      balance: BigNumber,
+      decimal: number
+    ) => {
+      return (
+        amount &&
+        Number(ethers.utils.formatUnits(balance, decimal)) <
+          Number(ethers.utils.formatUnits(amount, decimal))
+      )
+    }
+
     if (invalidRange) {
       const text =
         'Invalid range selected. The min price must be lower than the max'
@@ -246,18 +258,22 @@ export const PriceRangeStep = (props: IProps) => {
     }
 
     if (
-      formattedAmounts[Field.CURRENCY_A] &&
-      Number(ethers.utils.formatEther(balance0)) <
-        Number(ethers.utils.formatEther(formattedAmounts[Field.CURRENCY_A]))
+      getIsInsufficientBalance(
+        formattedAmounts[Field.CURRENCY_A],
+        balance0,
+        data.token0.decimals
+      )
     ) {
       const text = `Insufficient ${data.token0.symbol} balance`
       return getWarningInfo(text)
     }
 
     if (
-      formattedAmounts[Field.CURRENCY_B] &&
-      Number(ethers.utils.formatEther(balance1)) <
-        Number(ethers.utils.formatEther(formattedAmounts[Field.CURRENCY_B]))
+      getIsInsufficientBalance(
+        formattedAmounts[Field.CURRENCY_B],
+        balance1,
+        data.token1.decimals
+      )
     ) {
       const text = `Insufficient ${data.token1.symbol} balance`
       return getWarningInfo(text)
