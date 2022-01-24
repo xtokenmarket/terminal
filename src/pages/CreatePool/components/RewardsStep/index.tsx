@@ -133,19 +133,13 @@ export const RewardsStep: React.FC<IProps> = ({
     vesting !== ''
   )
   const isDisabled = (() => {
-    if (!hasRewards) return false
+    if (tokens.length === 0) return true
+    const hasDuration = duration !== '' || Number(duration) !== 0
+    const hasVesting = vesting !== '' || Number(vesting) !== 0
+    if (!hasDuration || !hasVesting) return true
 
-    return (
-      Number(duration) !== 0 ||
-      Number(vesting) !== 0 ||
-      errors.some((error) => !!error)
-    )
+    return errors.some((error) => !!error)
   })()
-  // const isDisabled = hasRewards ? errors.some((error) => !!error) : false
-  console.log({
-    isDisabled,
-    hasRewards,
-  })
 
   const onNextStep = (state: IRewardState) => {
     updateData({ rewardState: state })
