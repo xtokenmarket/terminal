@@ -14,6 +14,7 @@ import { useState } from 'react'
 import { ICreatePoolData, MintState } from 'types'
 import { Bound, Field } from 'utils/enums'
 import { ApproveTokenModal } from '../ApproveTokenModal'
+import { WarningInfo } from '../ApproveTokenModal/components'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,6 +34,21 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 4,
     backgroundColor: theme.colors.seventh,
     padding: 8,
+  },
+  warning: {
+    margin: '20px 0',
+    padding: '16px !important',
+    '& div': {
+      '&:first-child': {
+        marginTop: 0,
+        marginRight: 16,
+      },
+      '& p': {
+        fontSize: 14,
+        marginTop: 3,
+        '&:first-child': { fontSize: 16, marginTop: 0 },
+      },
+    },
   },
 }))
 
@@ -100,17 +116,23 @@ export const PriceRangeStep = (props: IProps) => {
 
   const [poolState, pool] = usePools([[baseCurrency, currencyB, feeAmount]])[0]
 
-  const { ticks, dependentField, parsedAmounts, pricesAtTicks, ticksAtLimit } =
-    useV3DerivedMintInfo(
-      state,
-      baseCurrency ?? undefined,
-      currencyB ?? undefined,
-      feeAmount,
-      baseCurrency ?? undefined,
-      undefined,
-      poolState,
-      pool
-    )
+  const {
+    ticks,
+    dependentField,
+    parsedAmounts,
+    pricesAtTicks,
+    ticksAtLimit,
+    invalidRange,
+  } = useV3DerivedMintInfo(
+    state,
+    baseCurrency ?? undefined,
+    currencyB ?? undefined,
+    feeAmount,
+    baseCurrency ?? undefined,
+    undefined,
+    poolState,
+    pool
+  )
 
   // get value and prices at ticks
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks
@@ -287,6 +309,13 @@ export const PriceRangeStep = (props: IProps) => {
         Pool Deployment fee is 0.1 ETH. Additional 1% fee on any rewards
         distributed for this pool.
       </Typography>
+      {invalidRange && (
+        <WarningInfo
+          className={classes.warning}
+          title="Warning"
+          description="Invalid range selected. The min price must be lower than the max"
+        />
+      )}
       <Button
         color="primary"
         fullWidth
@@ -297,7 +326,8 @@ export const PriceRangeStep = (props: IProps) => {
             state.leftRangeTypedValue &&
             state.rightRangeTypedValue &&
             parsedAmounts.CURRENCY_A &&
-            parsedAmounts.CURRENCY_B
+            parsedAmounts.CURRENCY_B &&
+            invalidRange
           )
         }
       >
