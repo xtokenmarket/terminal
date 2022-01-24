@@ -152,7 +152,7 @@ export const PriceRangeStep = (props: IProps) => {
   const rightPrice = isSorted ? priceUpper : priceLower?.invert()
 
   const isTokenInputDisabled =
-    tickLower === undefined || tickUpper === undefined
+    tickLower === undefined || tickUpper === undefined || invalidRange
 
   const {
     getDecrementLower,
