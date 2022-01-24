@@ -63,7 +63,6 @@ export const LP_TOKEN_BASIC: IToken = {
 }
 
 export const MINT_BURN_SLIPPAGE = BigNumber.from(100)
-export const ONE_WEEK_IN_TIME = 7 * 24 * 3600
 
 export const FEE_TIERS = [
   {

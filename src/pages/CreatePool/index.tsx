@@ -1,13 +1,18 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Button, makeStyles } from '@material-ui/core'
-import { PageContent, PageWrapper } from 'components'
+import { DEFAULT_REWARD_STATE, PageContent, PageWrapper } from 'components'
 import { useConnectedWeb3Context } from 'contexts'
 import { useState } from 'react'
 import { useHistory } from 'react-router'
-import {ICreatePoolData, IToken} from 'types'
+import { ICreatePoolData, IToken } from 'types'
 import { ECreatePoolStep } from 'utils/enums'
 import { ZERO } from 'utils/number'
-import { CreatePoolHeader, TokenPairStep, PriceRangeStep, RewardsStep } from './components'
+import {
+  CreatePoolHeader,
+  TokenPairStep,
+  PriceRangeStep,
+  RewardsStep,
+} from './components'
 
 const useStyles = makeStyles((theme) => ({
   label: {
@@ -27,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-interface IState extends Omit<ICreatePoolData, "token0" | "token1"> {
+interface IState extends Omit<ICreatePoolData, 'token0' | 'token1'> {
   step: ECreatePoolStep
   token0?: IToken
   token1?: IToken
@@ -38,7 +43,12 @@ const initialState: IState = {
   amount0: ZERO,
   maxPrice: '',
   minPrice: '',
+  rewardState: DEFAULT_REWARD_STATE,
   step: ECreatePoolStep.TokenPair,
+  ticks: {
+    lowerTick: 0,
+    upperTick: 0,
+  },
   tier: BigNumber.from(500),
   uniPool: '',
 }
@@ -68,7 +78,8 @@ const CreatePool = () => {
         setState((prev) => ({ ...prev, step: ECreatePoolStep.Rewards }))
         break
       case ECreatePoolStep.Rewards:
-        setState((prev) => ({ ...prev, step: ECreatePoolStep.Done }))
+        // TODO: Redirect user to `/terminal/pools/${poolAddress}`
+        // setState((prev) => ({ ...prev, step: ECreatePoolStep.Done }))
         break
       default:
         onBack()

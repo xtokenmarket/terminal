@@ -65,10 +65,10 @@ const STEPS_DATA: Record<ECreatePoolStep, { index: number; label: string }> = {
     index: 2,
     label: 'Rewards (Optional)',
   },
-  [ECreatePoolStep.Done]: {
-    index: 3,
-    label: 'Done',
-  },
+  // [ECreatePoolStep.Done]: {
+  //   index: 3,
+  //   label: 'Done',
+  // },
 }
 
 export const CreatePoolStepper: React.FC<IProps> = ({ step }) => {

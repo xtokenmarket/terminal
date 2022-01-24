@@ -59,7 +59,7 @@ export const OutputEstimation = (props: IProps) => {
       <div className={classes.estimation}>
         <Typography className={classes.label}>REWARDS PERIOD</Typography>
         <Typography className={classes.amount}>
-          {rewardState.period} weeks
+          {rewardState.duration} weeks
         </Typography>
         <br />
         <Typography className={classes.label}>REWARDS AMOUNTS</Typography>

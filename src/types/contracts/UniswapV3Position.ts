@@ -13,17 +13,17 @@ import {
   PopulatedTransaction,
   Signer,
   utils,
-} from 'ethers'
-import { FunctionFragment, Result, EventFragment } from '@ethersproject/abi'
-import { Listener, Provider } from '@ethersproject/providers'
-import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from './common'
+} from "ethers";
+import { FunctionFragment, Result, EventFragment } from "@ethersproject/abi";
+import { Listener, Provider } from "@ethersproject/providers";
+import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from "./common";
 
 export type CollectParamsStruct = {
-  tokenId: BigNumberish
-  recipient: string
-  amount0Max: BigNumberish
-  amount1Max: BigNumberish
-}
+  tokenId: BigNumberish;
+  recipient: string;
+  amount0Max: BigNumberish;
+  amount1Max: BigNumberish;
+};
 
 export type CollectParamsStructOutput = [
   BigNumber,
@@ -31,19 +31,19 @@ export type CollectParamsStructOutput = [
   BigNumber,
   BigNumber
 ] & {
-  tokenId: BigNumber
-  recipient: string
-  amount0Max: BigNumber
-  amount1Max: BigNumber
-}
+  tokenId: BigNumber;
+  recipient: string;
+  amount0Max: BigNumber;
+  amount1Max: BigNumber;
+};
 
 export type DecreaseLiquidityParamsStruct = {
-  tokenId: BigNumberish
-  liquidity: BigNumberish
-  amount0Min: BigNumberish
-  amount1Min: BigNumberish
-  deadline: BigNumberish
-}
+  tokenId: BigNumberish;
+  liquidity: BigNumberish;
+  amount0Min: BigNumberish;
+  amount1Min: BigNumberish;
+  deadline: BigNumberish;
+};
 
 export type DecreaseLiquidityParamsStructOutput = [
   BigNumber,
@@ -52,21 +52,21 @@ export type DecreaseLiquidityParamsStructOutput = [
   BigNumber,
   BigNumber
 ] & {
-  tokenId: BigNumber
-  liquidity: BigNumber
-  amount0Min: BigNumber
-  amount1Min: BigNumber
-  deadline: BigNumber
-}
+  tokenId: BigNumber;
+  liquidity: BigNumber;
+  amount0Min: BigNumber;
+  amount1Min: BigNumber;
+  deadline: BigNumber;
+};
 
 export type IncreaseLiquidityParamsStruct = {
-  tokenId: BigNumberish
-  amount0Desired: BigNumberish
-  amount1Desired: BigNumberish
-  amount0Min: BigNumberish
-  amount1Min: BigNumberish
-  deadline: BigNumberish
-}
+  tokenId: BigNumberish;
+  amount0Desired: BigNumberish;
+  amount1Desired: BigNumberish;
+  amount0Min: BigNumberish;
+  amount1Min: BigNumberish;
+  deadline: BigNumberish;
+};
 
 export type IncreaseLiquidityParamsStructOutput = [
   BigNumber,
@@ -76,27 +76,27 @@ export type IncreaseLiquidityParamsStructOutput = [
   BigNumber,
   BigNumber
 ] & {
-  tokenId: BigNumber
-  amount0Desired: BigNumber
-  amount1Desired: BigNumber
-  amount0Min: BigNumber
-  amount1Min: BigNumber
-  deadline: BigNumber
-}
+  tokenId: BigNumber;
+  amount0Desired: BigNumber;
+  amount1Desired: BigNumber;
+  amount0Min: BigNumber;
+  amount1Min: BigNumber;
+  deadline: BigNumber;
+};
 
 export type MintParamsStruct = {
-  token0: string
-  token1: string
-  fee: BigNumberish
-  tickLower: BigNumberish
-  tickUpper: BigNumberish
-  amount0Desired: BigNumberish
-  amount1Desired: BigNumberish
-  amount0Min: BigNumberish
-  amount1Min: BigNumberish
-  recipient: string
-  deadline: BigNumberish
-}
+  token0: string;
+  token1: string;
+  fee: BigNumberish;
+  tickLower: BigNumberish;
+  tickUpper: BigNumberish;
+  amount0Desired: BigNumberish;
+  amount1Desired: BigNumberish;
+  amount0Min: BigNumberish;
+  amount1Min: BigNumberish;
+  recipient: string;
+  deadline: BigNumberish;
+};
 
 export type MintParamsStructOutput = [
   string,
@@ -111,116 +111,116 @@ export type MintParamsStructOutput = [
   string,
   BigNumber
 ] & {
-  token0: string
-  token1: string
-  fee: number
-  tickLower: number
-  tickUpper: number
-  amount0Desired: BigNumber
-  amount1Desired: BigNumber
-  amount0Min: BigNumber
-  amount1Min: BigNumber
-  recipient: string
-  deadline: BigNumber
-}
+  token0: string;
+  token1: string;
+  fee: number;
+  tickLower: number;
+  tickUpper: number;
+  amount0Desired: BigNumber;
+  amount1Desired: BigNumber;
+  amount0Min: BigNumber;
+  amount1Min: BigNumber;
+  recipient: string;
+  deadline: BigNumber;
+};
 
 export interface UniswapV3PositionInterface extends utils.Interface {
   functions: {
-    'DOMAIN_SEPARATOR()': FunctionFragment
-    'PERMIT_TYPEHASH()': FunctionFragment
-    'WETH9()': FunctionFragment
-    'approve(address,uint256)': FunctionFragment
-    'balanceOf(address)': FunctionFragment
-    'baseURI()': FunctionFragment
-    'burn(uint256)': FunctionFragment
-    'collect((uint256,address,uint128,uint128))': FunctionFragment
-    'createAndInitializePoolIfNecessary(address,address,uint24,uint160)': FunctionFragment
-    'decreaseLiquidity((uint256,uint128,uint256,uint256,uint256))': FunctionFragment
-    'factory()': FunctionFragment
-    'getApproved(uint256)': FunctionFragment
-    'increaseLiquidity((uint256,uint256,uint256,uint256,uint256,uint256))': FunctionFragment
-    'isApprovedForAll(address,address)': FunctionFragment
-    'mint((address,address,uint24,int24,int24,uint256,uint256,uint256,uint256,address,uint256))': FunctionFragment
-    'multicall(bytes[])': FunctionFragment
-    'name()': FunctionFragment
-    'ownerOf(uint256)': FunctionFragment
-    'permit(address,uint256,uint256,uint8,bytes32,bytes32)': FunctionFragment
-    'positions(uint256)': FunctionFragment
-    'refundETH()': FunctionFragment
-    'safeTransferFrom(address,address,uint256)': FunctionFragment
-    'selfPermit(address,uint256,uint256,uint8,bytes32,bytes32)': FunctionFragment
-    'selfPermitAllowed(address,uint256,uint256,uint8,bytes32,bytes32)': FunctionFragment
-    'selfPermitAllowedIfNecessary(address,uint256,uint256,uint8,bytes32,bytes32)': FunctionFragment
-    'selfPermitIfNecessary(address,uint256,uint256,uint8,bytes32,bytes32)': FunctionFragment
-    'setApprovalForAll(address,bool)': FunctionFragment
-    'supportsInterface(bytes4)': FunctionFragment
-    'sweepToken(address,uint256,address)': FunctionFragment
-    'symbol()': FunctionFragment
-    'tokenByIndex(uint256)': FunctionFragment
-    'tokenOfOwnerByIndex(address,uint256)': FunctionFragment
-    'tokenURI(uint256)': FunctionFragment
-    'totalSupply()': FunctionFragment
-    'transferFrom(address,address,uint256)': FunctionFragment
-    'uniswapV3MintCallback(uint256,uint256,bytes)': FunctionFragment
-    'unwrapWETH9(uint256,address)': FunctionFragment
-  }
+    "DOMAIN_SEPARATOR()": FunctionFragment;
+    "PERMIT_TYPEHASH()": FunctionFragment;
+    "WETH9()": FunctionFragment;
+    "approve(address,uint256)": FunctionFragment;
+    "balanceOf(address)": FunctionFragment;
+    "baseURI()": FunctionFragment;
+    "burn(uint256)": FunctionFragment;
+    "collect((uint256,address,uint128,uint128))": FunctionFragment;
+    "createAndInitializePoolIfNecessary(address,address,uint24,uint160)": FunctionFragment;
+    "decreaseLiquidity((uint256,uint128,uint256,uint256,uint256))": FunctionFragment;
+    "factory()": FunctionFragment;
+    "getApproved(uint256)": FunctionFragment;
+    "increaseLiquidity((uint256,uint256,uint256,uint256,uint256,uint256))": FunctionFragment;
+    "isApprovedForAll(address,address)": FunctionFragment;
+    "mint((address,address,uint24,int24,int24,uint256,uint256,uint256,uint256,address,uint256))": FunctionFragment;
+    "multicall(bytes[])": FunctionFragment;
+    "name()": FunctionFragment;
+    "ownerOf(uint256)": FunctionFragment;
+    "permit(address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
+    "positions(uint256)": FunctionFragment;
+    "refundETH()": FunctionFragment;
+    "safeTransferFrom(address,address,uint256)": FunctionFragment;
+    "selfPermit(address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
+    "selfPermitAllowed(address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
+    "selfPermitAllowedIfNecessary(address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
+    "selfPermitIfNecessary(address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
+    "setApprovalForAll(address,bool)": FunctionFragment;
+    "supportsInterface(bytes4)": FunctionFragment;
+    "sweepToken(address,uint256,address)": FunctionFragment;
+    "symbol()": FunctionFragment;
+    "tokenByIndex(uint256)": FunctionFragment;
+    "tokenOfOwnerByIndex(address,uint256)": FunctionFragment;
+    "tokenURI(uint256)": FunctionFragment;
+    "totalSupply()": FunctionFragment;
+    "transferFrom(address,address,uint256)": FunctionFragment;
+    "uniswapV3MintCallback(uint256,uint256,bytes)": FunctionFragment;
+    "unwrapWETH9(uint256,address)": FunctionFragment;
+  };
 
   encodeFunctionData(
-    functionFragment: 'DOMAIN_SEPARATOR',
+    functionFragment: "DOMAIN_SEPARATOR",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'PERMIT_TYPEHASH',
+    functionFragment: "PERMIT_TYPEHASH",
     values?: undefined
-  ): string
-  encodeFunctionData(functionFragment: 'WETH9', values?: undefined): string
+  ): string;
+  encodeFunctionData(functionFragment: "WETH9", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: 'approve',
+    functionFragment: "approve",
     values: [string, BigNumberish]
-  ): string
-  encodeFunctionData(functionFragment: 'balanceOf', values: [string]): string
-  encodeFunctionData(functionFragment: 'baseURI', values?: undefined): string
-  encodeFunctionData(functionFragment: 'burn', values: [BigNumberish]): string
+  ): string;
+  encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
+  encodeFunctionData(functionFragment: "baseURI", values?: undefined): string;
+  encodeFunctionData(functionFragment: "burn", values: [BigNumberish]): string;
   encodeFunctionData(
-    functionFragment: 'collect',
+    functionFragment: "collect",
     values: [CollectParamsStruct]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'createAndInitializePoolIfNecessary',
+    functionFragment: "createAndInitializePoolIfNecessary",
     values: [string, string, BigNumberish, BigNumberish]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'decreaseLiquidity',
+    functionFragment: "decreaseLiquidity",
     values: [DecreaseLiquidityParamsStruct]
-  ): string
-  encodeFunctionData(functionFragment: 'factory', values?: undefined): string
+  ): string;
+  encodeFunctionData(functionFragment: "factory", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: 'getApproved',
+    functionFragment: "getApproved",
     values: [BigNumberish]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'increaseLiquidity',
+    functionFragment: "increaseLiquidity",
     values: [IncreaseLiquidityParamsStruct]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'isApprovedForAll',
+    functionFragment: "isApprovedForAll",
     values: [string, string]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'mint',
+    functionFragment: "mint",
     values: [MintParamsStruct]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'multicall',
+    functionFragment: "multicall",
     values: [BytesLike[]]
-  ): string
-  encodeFunctionData(functionFragment: 'name', values?: undefined): string
+  ): string;
+  encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: 'ownerOf',
+    functionFragment: "ownerOf",
     values: [BigNumberish]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'permit',
+    functionFragment: "permit",
     values: [
       string,
       BigNumberish,
@@ -229,18 +229,18 @@ export interface UniswapV3PositionInterface extends utils.Interface {
       BytesLike,
       BytesLike
     ]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'positions',
+    functionFragment: "positions",
     values: [BigNumberish]
-  ): string
-  encodeFunctionData(functionFragment: 'refundETH', values?: undefined): string
+  ): string;
+  encodeFunctionData(functionFragment: "refundETH", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: 'safeTransferFrom',
+    functionFragment: "safeTransferFrom",
     values: [string, string, BigNumberish]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'selfPermit',
+    functionFragment: "selfPermit",
     values: [
       string,
       BigNumberish,
@@ -249,9 +249,9 @@ export interface UniswapV3PositionInterface extends utils.Interface {
       BytesLike,
       BytesLike
     ]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'selfPermitAllowed',
+    functionFragment: "selfPermitAllowed",
     values: [
       string,
       BigNumberish,
@@ -260,9 +260,9 @@ export interface UniswapV3PositionInterface extends utils.Interface {
       BytesLike,
       BytesLike
     ]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'selfPermitAllowedIfNecessary',
+    functionFragment: "selfPermitAllowedIfNecessary",
     values: [
       string,
       BigNumberish,
@@ -271,9 +271,9 @@ export interface UniswapV3PositionInterface extends utils.Interface {
       BytesLike,
       BytesLike
     ]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'selfPermitIfNecessary',
+    functionFragment: "selfPermitIfNecessary",
     values: [
       string,
       BigNumberish,
@@ -282,263 +282,272 @@ export interface UniswapV3PositionInterface extends utils.Interface {
       BytesLike,
       BytesLike
     ]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'setApprovalForAll',
+    functionFragment: "setApprovalForAll",
     values: [string, boolean]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'supportsInterface',
+    functionFragment: "supportsInterface",
     values: [BytesLike]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'sweepToken',
+    functionFragment: "sweepToken",
     values: [string, BigNumberish, string]
-  ): string
-  encodeFunctionData(functionFragment: 'symbol', values?: undefined): string
+  ): string;
+  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: 'tokenByIndex',
+    functionFragment: "tokenByIndex",
     values: [BigNumberish]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'tokenOfOwnerByIndex',
+    functionFragment: "tokenOfOwnerByIndex",
     values: [string, BigNumberish]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'tokenURI',
+    functionFragment: "tokenURI",
     values: [BigNumberish]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'totalSupply',
+    functionFragment: "totalSupply",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'transferFrom',
+    functionFragment: "transferFrom",
     values: [string, string, BigNumberish]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'uniswapV3MintCallback',
+    functionFragment: "uniswapV3MintCallback",
     values: [BigNumberish, BigNumberish, BytesLike]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'unwrapWETH9',
+    functionFragment: "unwrapWETH9",
     values: [BigNumberish, string]
-  ): string
+  ): string;
 
   decodeFunctionResult(
-    functionFragment: 'DOMAIN_SEPARATOR',
+    functionFragment: "DOMAIN_SEPARATOR",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'PERMIT_TYPEHASH',
+    functionFragment: "PERMIT_TYPEHASH",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'WETH9', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'approve', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'balanceOf', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'baseURI', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'burn', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'collect', data: BytesLike): Result
+  ): Result;
+  decodeFunctionResult(functionFragment: "WETH9", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "baseURI", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "collect", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'createAndInitializePoolIfNecessary',
+    functionFragment: "createAndInitializePoolIfNecessary",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'decreaseLiquidity',
+    functionFragment: "decreaseLiquidity",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'factory', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'getApproved', data: BytesLike): Result
+  ): Result;
+  decodeFunctionResult(functionFragment: "factory", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'increaseLiquidity',
+    functionFragment: "getApproved",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'isApprovedForAll',
+    functionFragment: "increaseLiquidity",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'mint', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'multicall', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'name', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'ownerOf', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'permit', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'positions', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'refundETH', data: BytesLike): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'safeTransferFrom',
+    functionFragment: "isApprovedForAll",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'selfPermit', data: BytesLike): Result
+  ): Result;
+  decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "multicall", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "permit", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "positions", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "refundETH", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'selfPermitAllowed',
+    functionFragment: "safeTransferFrom",
     data: BytesLike
-  ): Result
+  ): Result;
+  decodeFunctionResult(functionFragment: "selfPermit", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'selfPermitAllowedIfNecessary',
+    functionFragment: "selfPermitAllowed",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'selfPermitIfNecessary',
+    functionFragment: "selfPermitAllowedIfNecessary",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'setApprovalForAll',
+    functionFragment: "selfPermitIfNecessary",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'supportsInterface',
+    functionFragment: "setApprovalForAll",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'sweepToken', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'symbol', data: BytesLike): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'tokenByIndex',
+    functionFragment: "supportsInterface",
     data: BytesLike
-  ): Result
+  ): Result;
+  decodeFunctionResult(functionFragment: "sweepToken", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'tokenOfOwnerByIndex',
+    functionFragment: "tokenByIndex",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'tokenURI', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'totalSupply', data: BytesLike): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'transferFrom',
+    functionFragment: "tokenOfOwnerByIndex",
     data: BytesLike
-  ): Result
+  ): Result;
+  decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'uniswapV3MintCallback',
+    functionFragment: "totalSupply",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'unwrapWETH9', data: BytesLike): Result
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferFrom",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "uniswapV3MintCallback",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "unwrapWETH9",
+    data: BytesLike
+  ): Result;
 
   events: {
-    'Approval(address,address,uint256)': EventFragment
-    'ApprovalForAll(address,address,bool)': EventFragment
-    'Collect(uint256,address,uint256,uint256)': EventFragment
-    'DecreaseLiquidity(uint256,uint128,uint256,uint256)': EventFragment
-    'IncreaseLiquidity(uint256,uint128,uint256,uint256)': EventFragment
-    'Transfer(address,address,uint256)': EventFragment
-  }
+    "Approval(address,address,uint256)": EventFragment;
+    "ApprovalForAll(address,address,bool)": EventFragment;
+    "Collect(uint256,address,uint256,uint256)": EventFragment;
+    "DecreaseLiquidity(uint256,uint128,uint256,uint256)": EventFragment;
+    "IncreaseLiquidity(uint256,uint128,uint256,uint256)": EventFragment;
+    "Transfer(address,address,uint256)": EventFragment;
+  };
 
-  getEvent(nameOrSignatureOrTopic: 'Approval'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'ApprovalForAll'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'Collect'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'DecreaseLiquidity'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'IncreaseLiquidity'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'Transfer'): EventFragment
+  getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Collect"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "DecreaseLiquidity"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "IncreaseLiquidity"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
 export type ApprovalEvent = TypedEvent<
   [string, string, BigNumber],
   { owner: string; approved: string; tokenId: BigNumber }
->
+>;
 
-export type ApprovalEventFilter = TypedEventFilter<ApprovalEvent>
+export type ApprovalEventFilter = TypedEventFilter<ApprovalEvent>;
 
 export type ApprovalForAllEvent = TypedEvent<
   [string, string, boolean],
   { owner: string; operator: string; approved: boolean }
->
+>;
 
-export type ApprovalForAllEventFilter = TypedEventFilter<ApprovalForAllEvent>
+export type ApprovalForAllEventFilter = TypedEventFilter<ApprovalForAllEvent>;
 
 export type CollectEvent = TypedEvent<
   [BigNumber, string, BigNumber, BigNumber],
   {
-    tokenId: BigNumber
-    recipient: string
-    amount0: BigNumber
-    amount1: BigNumber
+    tokenId: BigNumber;
+    recipient: string;
+    amount0: BigNumber;
+    amount1: BigNumber;
   }
->
+>;
 
-export type CollectEventFilter = TypedEventFilter<CollectEvent>
+export type CollectEventFilter = TypedEventFilter<CollectEvent>;
 
 export type DecreaseLiquidityEvent = TypedEvent<
   [BigNumber, BigNumber, BigNumber, BigNumber],
   {
-    tokenId: BigNumber
-    liquidity: BigNumber
-    amount0: BigNumber
-    amount1: BigNumber
+    tokenId: BigNumber;
+    liquidity: BigNumber;
+    amount0: BigNumber;
+    amount1: BigNumber;
   }
->
+>;
 
 export type DecreaseLiquidityEventFilter =
-  TypedEventFilter<DecreaseLiquidityEvent>
+  TypedEventFilter<DecreaseLiquidityEvent>;
 
 export type IncreaseLiquidityEvent = TypedEvent<
   [BigNumber, BigNumber, BigNumber, BigNumber],
   {
-    tokenId: BigNumber
-    liquidity: BigNumber
-    amount0: BigNumber
-    amount1: BigNumber
+    tokenId: BigNumber;
+    liquidity: BigNumber;
+    amount0: BigNumber;
+    amount1: BigNumber;
   }
->
+>;
 
 export type IncreaseLiquidityEventFilter =
-  TypedEventFilter<IncreaseLiquidityEvent>
+  TypedEventFilter<IncreaseLiquidityEvent>;
 
 export type TransferEvent = TypedEvent<
   [string, string, BigNumber],
   { from: string; to: string; tokenId: BigNumber }
->
+>;
 
-export type TransferEventFilter = TypedEventFilter<TransferEvent>
+export type TransferEventFilter = TypedEventFilter<TransferEvent>;
 
 export interface UniswapV3Position extends BaseContract {
-  connect(signerOrProvider: Signer | Provider | string): this
-  attach(addressOrName: string): this
-  deployed(): Promise<this>
+  connect(signerOrProvider: Signer | Provider | string): this;
+  attach(addressOrName: string): this;
+  deployed(): Promise<this>;
 
-  interface: UniswapV3PositionInterface
+  interface: UniswapV3PositionInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
     fromBlockOrBlockhash?: string | number | undefined,
     toBlock?: string | number | undefined
-  ): Promise<Array<TEvent>>
+  ): Promise<Array<TEvent>>;
 
   listeners<TEvent extends TypedEvent>(
     eventFilter?: TypedEventFilter<TEvent>
-  ): Array<TypedListener<TEvent>>
-  listeners(eventName?: string): Array<Listener>
+  ): Array<TypedListener<TEvent>>;
+  listeners(eventName?: string): Array<Listener>;
   removeAllListeners<TEvent extends TypedEvent>(
     eventFilter: TypedEventFilter<TEvent>
-  ): this
-  removeAllListeners(eventName?: string): this
-  off: OnEvent<this>
-  on: OnEvent<this>
-  once: OnEvent<this>
-  removeListener: OnEvent<this>
+  ): this;
+  removeAllListeners(eventName?: string): this;
+  off: OnEvent<this>;
+  on: OnEvent<this>;
+  once: OnEvent<this>;
+  removeListener: OnEvent<this>;
 
   functions: {
-    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<[string]>
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<[string]>;
 
-    PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<[string]>
+    PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<[string]>;
 
-    WETH9(overrides?: CallOverrides): Promise<[string]>
+    WETH9(overrides?: CallOverrides): Promise<[string]>;
 
     approve(
       to: string,
       tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
-    balanceOf(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>
+    balanceOf(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    baseURI(overrides?: CallOverrides): Promise<[string]>
+    baseURI(overrides?: CallOverrides): Promise<[string]>;
 
     burn(
       tokenId: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     collect(
       params: CollectParamsStruct,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     createAndInitializePoolIfNecessary(
       token0: string,
@@ -546,44 +555,47 @@ export interface UniswapV3Position extends BaseContract {
       fee: BigNumberish,
       sqrtPriceX96: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     decreaseLiquidity(
       params: DecreaseLiquidityParamsStruct,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
-    factory(overrides?: CallOverrides): Promise<[string]>
+    factory(overrides?: CallOverrides): Promise<[string]>;
 
     getApproved(
       tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[string]>
+    ): Promise<[string]>;
 
     increaseLiquidity(
       params: IncreaseLiquidityParamsStruct,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     isApprovedForAll(
       owner: string,
       operator: string,
       overrides?: CallOverrides
-    ): Promise<[boolean]>
+    ): Promise<[boolean]>;
 
     mint(
       params: MintParamsStruct,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     multicall(
       data: BytesLike[],
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
-    name(overrides?: CallOverrides): Promise<[string]>
+    name(overrides?: CallOverrides): Promise<[string]>;
 
-    ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<[string]>
+    ownerOf(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
     permit(
       spender: string,
@@ -593,7 +605,7 @@ export interface UniswapV3Position extends BaseContract {
       r: BytesLike,
       s: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     positions(
       tokenId: BigNumberish,
@@ -613,39 +625,39 @@ export interface UniswapV3Position extends BaseContract {
         BigNumber,
         BigNumber
       ] & {
-        nonce: BigNumber
-        operator: string
-        token0: string
-        token1: string
-        fee: number
-        tickLower: number
-        tickUpper: number
-        liquidity: BigNumber
-        feeGrowthInside0LastX128: BigNumber
-        feeGrowthInside1LastX128: BigNumber
-        tokensOwed0: BigNumber
-        tokensOwed1: BigNumber
+        nonce: BigNumber;
+        operator: string;
+        token0: string;
+        token1: string;
+        fee: number;
+        tickLower: number;
+        tickUpper: number;
+        liquidity: BigNumber;
+        feeGrowthInside0LastX128: BigNumber;
+        feeGrowthInside1LastX128: BigNumber;
+        tokensOwed0: BigNumber;
+        tokensOwed1: BigNumber;
       }
-    >
+    >;
 
     refundETH(
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
-    'safeTransferFrom(address,address,uint256)'(
+    "safeTransferFrom(address,address,uint256)"(
       from: string,
       to: string,
       tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
-    'safeTransferFrom(address,address,uint256,bytes)'(
+    "safeTransferFrom(address,address,uint256,bytes)"(
       from: string,
       to: string,
       tokenId: BigNumberish,
       _data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     selfPermit(
       token: string,
@@ -655,7 +667,7 @@ export interface UniswapV3Position extends BaseContract {
       r: BytesLike,
       s: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     selfPermitAllowed(
       token: string,
@@ -665,7 +677,7 @@ export interface UniswapV3Position extends BaseContract {
       r: BytesLike,
       s: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     selfPermitAllowedIfNecessary(
       token: string,
@@ -675,7 +687,7 @@ export interface UniswapV3Position extends BaseContract {
       r: BytesLike,
       s: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     selfPermitIfNecessary(
       token: string,
@@ -685,92 +697,92 @@ export interface UniswapV3Position extends BaseContract {
       r: BytesLike,
       s: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     setApprovalForAll(
       operator: string,
       approved: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
-    ): Promise<[boolean]>
+    ): Promise<[boolean]>;
 
     sweepToken(
       token: string,
       amountMinimum: BigNumberish,
       recipient: string,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
-    symbol(overrides?: CallOverrides): Promise<[string]>
+    symbol(overrides?: CallOverrides): Promise<[string]>;
 
     tokenByIndex(
       index: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>
+    ): Promise<[BigNumber]>;
 
     tokenOfOwnerByIndex(
       owner: string,
       index: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>
+    ): Promise<[BigNumber]>;
 
     tokenURI(
       tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[string]>
+    ): Promise<[string]>;
 
-    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>
+    totalSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     transferFrom(
       from: string,
       to: string,
       tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     uniswapV3MintCallback(
       amount0Owed: BigNumberish,
       amount1Owed: BigNumberish,
       data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     unwrapWETH9(
       amountMinimum: BigNumberish,
       recipient: string,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
-  }
+    ): Promise<ContractTransaction>;
+  };
 
-  DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>
+  DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
 
-  PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<string>
+  PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<string>;
 
-  WETH9(overrides?: CallOverrides): Promise<string>
+  WETH9(overrides?: CallOverrides): Promise<string>;
 
   approve(
     to: string,
     tokenId: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
-  balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>
+  balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  baseURI(overrides?: CallOverrides): Promise<string>
+  baseURI(overrides?: CallOverrides): Promise<string>;
 
   burn(
     tokenId: BigNumberish,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   collect(
     params: CollectParamsStruct,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   createAndInitializePoolIfNecessary(
     token0: string,
@@ -778,41 +790,44 @@ export interface UniswapV3Position extends BaseContract {
     fee: BigNumberish,
     sqrtPriceX96: BigNumberish,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   decreaseLiquidity(
     params: DecreaseLiquidityParamsStruct,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
-  factory(overrides?: CallOverrides): Promise<string>
+  factory(overrides?: CallOverrides): Promise<string>;
 
-  getApproved(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>
+  getApproved(
+    tokenId: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   increaseLiquidity(
     params: IncreaseLiquidityParamsStruct,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   isApprovedForAll(
     owner: string,
     operator: string,
     overrides?: CallOverrides
-  ): Promise<boolean>
+  ): Promise<boolean>;
 
   mint(
     params: MintParamsStruct,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   multicall(
     data: BytesLike[],
     overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
-  name(overrides?: CallOverrides): Promise<string>
+  name(overrides?: CallOverrides): Promise<string>;
 
-  ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>
+  ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   permit(
     spender: string,
@@ -822,7 +837,7 @@ export interface UniswapV3Position extends BaseContract {
     r: BytesLike,
     s: BytesLike,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   positions(
     tokenId: BigNumberish,
@@ -842,39 +857,39 @@ export interface UniswapV3Position extends BaseContract {
       BigNumber,
       BigNumber
     ] & {
-      nonce: BigNumber
-      operator: string
-      token0: string
-      token1: string
-      fee: number
-      tickLower: number
-      tickUpper: number
-      liquidity: BigNumber
-      feeGrowthInside0LastX128: BigNumber
-      feeGrowthInside1LastX128: BigNumber
-      tokensOwed0: BigNumber
-      tokensOwed1: BigNumber
+      nonce: BigNumber;
+      operator: string;
+      token0: string;
+      token1: string;
+      fee: number;
+      tickLower: number;
+      tickUpper: number;
+      liquidity: BigNumber;
+      feeGrowthInside0LastX128: BigNumber;
+      feeGrowthInside1LastX128: BigNumber;
+      tokensOwed0: BigNumber;
+      tokensOwed1: BigNumber;
     }
-  >
+  >;
 
   refundETH(
     overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
-  'safeTransferFrom(address,address,uint256)'(
+  "safeTransferFrom(address,address,uint256)"(
     from: string,
     to: string,
     tokenId: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
-  'safeTransferFrom(address,address,uint256,bytes)'(
+  "safeTransferFrom(address,address,uint256,bytes)"(
     from: string,
     to: string,
     tokenId: BigNumberish,
     _data: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   selfPermit(
     token: string,
@@ -884,7 +899,7 @@ export interface UniswapV3Position extends BaseContract {
     r: BytesLike,
     s: BytesLike,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   selfPermitAllowed(
     token: string,
@@ -894,7 +909,7 @@ export interface UniswapV3Position extends BaseContract {
     r: BytesLike,
     s: BytesLike,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   selfPermitAllowedIfNecessary(
     token: string,
@@ -904,7 +919,7 @@ export interface UniswapV3Position extends BaseContract {
     r: BytesLike,
     s: BytesLike,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   selfPermitIfNecessary(
     token: string,
@@ -914,88 +929,88 @@ export interface UniswapV3Position extends BaseContract {
     r: BytesLike,
     s: BytesLike,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   setApprovalForAll(
     operator: string,
     approved: boolean,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   supportsInterface(
     interfaceId: BytesLike,
     overrides?: CallOverrides
-  ): Promise<boolean>
+  ): Promise<boolean>;
 
   sweepToken(
     token: string,
     amountMinimum: BigNumberish,
     recipient: string,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
-  symbol(overrides?: CallOverrides): Promise<string>
+  symbol(overrides?: CallOverrides): Promise<string>;
 
   tokenByIndex(
     index: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<BigNumber>
+  ): Promise<BigNumber>;
 
   tokenOfOwnerByIndex(
     owner: string,
     index: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<BigNumber>
+  ): Promise<BigNumber>;
 
-  tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>
+  tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-  totalSupply(overrides?: CallOverrides): Promise<BigNumber>
+  totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
   transferFrom(
     from: string,
     to: string,
     tokenId: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   uniswapV3MintCallback(
     amount0Owed: BigNumberish,
     amount1Owed: BigNumberish,
     data: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   unwrapWETH9(
     amountMinimum: BigNumberish,
     recipient: string,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   callStatic: {
-    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
 
-    PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<string>
+    PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<string>;
 
-    WETH9(overrides?: CallOverrides): Promise<string>
+    WETH9(overrides?: CallOverrides): Promise<string>;
 
     approve(
       to: string,
       tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<void>;
 
-    balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>
+    balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    baseURI(overrides?: CallOverrides): Promise<string>
+    baseURI(overrides?: CallOverrides): Promise<string>;
 
-    burn(tokenId: BigNumberish, overrides?: CallOverrides): Promise<void>
+    burn(tokenId: BigNumberish, overrides?: CallOverrides): Promise<void>;
 
     collect(
       params: CollectParamsStruct,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber] & { amount0: BigNumber; amount1: BigNumber }
-    >
+    >;
 
     createAndInitializePoolIfNecessary(
       token0: string,
@@ -1003,56 +1018,56 @@ export interface UniswapV3Position extends BaseContract {
       fee: BigNumberish,
       sqrtPriceX96: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<string>
+    ): Promise<string>;
 
     decreaseLiquidity(
       params: DecreaseLiquidityParamsStruct,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber] & { amount0: BigNumber; amount1: BigNumber }
-    >
+    >;
 
-    factory(overrides?: CallOverrides): Promise<string>
+    factory(overrides?: CallOverrides): Promise<string>;
 
     getApproved(
       tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<string>
+    ): Promise<string>;
 
     increaseLiquidity(
       params: IncreaseLiquidityParamsStruct,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber, BigNumber] & {
-        liquidity: BigNumber
-        amount0: BigNumber
-        amount1: BigNumber
+        liquidity: BigNumber;
+        amount0: BigNumber;
+        amount1: BigNumber;
       }
-    >
+    >;
 
     isApprovedForAll(
       owner: string,
       operator: string,
       overrides?: CallOverrides
-    ): Promise<boolean>
+    ): Promise<boolean>;
 
     mint(
       params: MintParamsStruct,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber, BigNumber, BigNumber] & {
-        tokenId: BigNumber
-        liquidity: BigNumber
-        amount0: BigNumber
-        amount1: BigNumber
+        tokenId: BigNumber;
+        liquidity: BigNumber;
+        amount0: BigNumber;
+        amount1: BigNumber;
       }
-    >
+    >;
 
-    multicall(data: BytesLike[], overrides?: CallOverrides): Promise<string[]>
+    multicall(data: BytesLike[], overrides?: CallOverrides): Promise<string[]>;
 
-    name(overrides?: CallOverrides): Promise<string>
+    name(overrides?: CallOverrides): Promise<string>;
 
-    ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>
+    ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
     permit(
       spender: string,
@@ -1062,7 +1077,7 @@ export interface UniswapV3Position extends BaseContract {
       r: BytesLike,
       s: BytesLike,
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<void>;
 
     positions(
       tokenId: BigNumberish,
@@ -1082,37 +1097,37 @@ export interface UniswapV3Position extends BaseContract {
         BigNumber,
         BigNumber
       ] & {
-        nonce: BigNumber
-        operator: string
-        token0: string
-        token1: string
-        fee: number
-        tickLower: number
-        tickUpper: number
-        liquidity: BigNumber
-        feeGrowthInside0LastX128: BigNumber
-        feeGrowthInside1LastX128: BigNumber
-        tokensOwed0: BigNumber
-        tokensOwed1: BigNumber
+        nonce: BigNumber;
+        operator: string;
+        token0: string;
+        token1: string;
+        fee: number;
+        tickLower: number;
+        tickUpper: number;
+        liquidity: BigNumber;
+        feeGrowthInside0LastX128: BigNumber;
+        feeGrowthInside1LastX128: BigNumber;
+        tokensOwed0: BigNumber;
+        tokensOwed1: BigNumber;
       }
-    >
+    >;
 
-    refundETH(overrides?: CallOverrides): Promise<void>
+    refundETH(overrides?: CallOverrides): Promise<void>;
 
-    'safeTransferFrom(address,address,uint256)'(
+    "safeTransferFrom(address,address,uint256)"(
       from: string,
       to: string,
       tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<void>;
 
-    'safeTransferFrom(address,address,uint256,bytes)'(
+    "safeTransferFrom(address,address,uint256,bytes)"(
       from: string,
       to: string,
       tokenId: BigNumberish,
       _data: BytesLike,
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<void>;
 
     selfPermit(
       token: string,
@@ -1122,7 +1137,7 @@ export interface UniswapV3Position extends BaseContract {
       r: BytesLike,
       s: BytesLike,
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<void>;
 
     selfPermitAllowed(
       token: string,
@@ -1132,7 +1147,7 @@ export interface UniswapV3Position extends BaseContract {
       r: BytesLike,
       s: BytesLike,
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<void>;
 
     selfPermitAllowedIfNecessary(
       token: string,
@@ -1142,7 +1157,7 @@ export interface UniswapV3Position extends BaseContract {
       r: BytesLike,
       s: BytesLike,
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<void>;
 
     selfPermitIfNecessary(
       token: string,
@@ -1152,164 +1167,164 @@ export interface UniswapV3Position extends BaseContract {
       r: BytesLike,
       s: BytesLike,
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<void>;
 
     setApprovalForAll(
       operator: string,
       approved: boolean,
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<void>;
 
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
-    ): Promise<boolean>
+    ): Promise<boolean>;
 
     sweepToken(
       token: string,
       amountMinimum: BigNumberish,
       recipient: string,
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<void>;
 
-    symbol(overrides?: CallOverrides): Promise<string>
+    symbol(overrides?: CallOverrides): Promise<string>;
 
     tokenByIndex(
       index: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     tokenOfOwnerByIndex(
       owner: string,
       index: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>
+    tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>
+    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferFrom(
       from: string,
       to: string,
       tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<void>;
 
     uniswapV3MintCallback(
       amount0Owed: BigNumberish,
       amount1Owed: BigNumberish,
       data: BytesLike,
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<void>;
 
     unwrapWETH9(
       amountMinimum: BigNumberish,
       recipient: string,
       overrides?: CallOverrides
-    ): Promise<void>
-  }
+    ): Promise<void>;
+  };
 
   filters: {
-    'Approval(address,address,uint256)'(
+    "Approval(address,address,uint256)"(
       owner?: string | null,
       approved?: string | null,
       tokenId?: BigNumberish | null
-    ): ApprovalEventFilter
+    ): ApprovalEventFilter;
     Approval(
       owner?: string | null,
       approved?: string | null,
       tokenId?: BigNumberish | null
-    ): ApprovalEventFilter
+    ): ApprovalEventFilter;
 
-    'ApprovalForAll(address,address,bool)'(
+    "ApprovalForAll(address,address,bool)"(
       owner?: string | null,
       operator?: string | null,
       approved?: null
-    ): ApprovalForAllEventFilter
+    ): ApprovalForAllEventFilter;
     ApprovalForAll(
       owner?: string | null,
       operator?: string | null,
       approved?: null
-    ): ApprovalForAllEventFilter
+    ): ApprovalForAllEventFilter;
 
-    'Collect(uint256,address,uint256,uint256)'(
+    "Collect(uint256,address,uint256,uint256)"(
       tokenId?: BigNumberish | null,
       recipient?: null,
       amount0?: null,
       amount1?: null
-    ): CollectEventFilter
+    ): CollectEventFilter;
     Collect(
       tokenId?: BigNumberish | null,
       recipient?: null,
       amount0?: null,
       amount1?: null
-    ): CollectEventFilter
+    ): CollectEventFilter;
 
-    'DecreaseLiquidity(uint256,uint128,uint256,uint256)'(
+    "DecreaseLiquidity(uint256,uint128,uint256,uint256)"(
       tokenId?: BigNumberish | null,
       liquidity?: null,
       amount0?: null,
       amount1?: null
-    ): DecreaseLiquidityEventFilter
+    ): DecreaseLiquidityEventFilter;
     DecreaseLiquidity(
       tokenId?: BigNumberish | null,
       liquidity?: null,
       amount0?: null,
       amount1?: null
-    ): DecreaseLiquidityEventFilter
+    ): DecreaseLiquidityEventFilter;
 
-    'IncreaseLiquidity(uint256,uint128,uint256,uint256)'(
+    "IncreaseLiquidity(uint256,uint128,uint256,uint256)"(
       tokenId?: BigNumberish | null,
       liquidity?: null,
       amount0?: null,
       amount1?: null
-    ): IncreaseLiquidityEventFilter
+    ): IncreaseLiquidityEventFilter;
     IncreaseLiquidity(
       tokenId?: BigNumberish | null,
       liquidity?: null,
       amount0?: null,
       amount1?: null
-    ): IncreaseLiquidityEventFilter
+    ): IncreaseLiquidityEventFilter;
 
-    'Transfer(address,address,uint256)'(
+    "Transfer(address,address,uint256)"(
       from?: string | null,
       to?: string | null,
       tokenId?: BigNumberish | null
-    ): TransferEventFilter
+    ): TransferEventFilter;
     Transfer(
       from?: string | null,
       to?: string | null,
       tokenId?: BigNumberish | null
-    ): TransferEventFilter
-  }
+    ): TransferEventFilter;
+  };
 
   estimateGas: {
-    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<BigNumber>
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<BigNumber>;
 
-    PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<BigNumber>
+    PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<BigNumber>;
 
-    WETH9(overrides?: CallOverrides): Promise<BigNumber>
+    WETH9(overrides?: CallOverrides): Promise<BigNumber>;
 
     approve(
       to: string,
       tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>
+    balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    baseURI(overrides?: CallOverrides): Promise<BigNumber>
+    baseURI(overrides?: CallOverrides): Promise<BigNumber>;
 
     burn(
       tokenId: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     collect(
       params: CollectParamsStruct,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     createAndInitializePoolIfNecessary(
       token0: string,
@@ -1317,47 +1332,47 @@ export interface UniswapV3Position extends BaseContract {
       fee: BigNumberish,
       sqrtPriceX96: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     decreaseLiquidity(
       params: DecreaseLiquidityParamsStruct,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    factory(overrides?: CallOverrides): Promise<BigNumber>
+    factory(overrides?: CallOverrides): Promise<BigNumber>;
 
     getApproved(
       tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     increaseLiquidity(
       params: IncreaseLiquidityParamsStruct,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     isApprovedForAll(
       owner: string,
       operator: string,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     mint(
       params: MintParamsStruct,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     multicall(
       data: BytesLike[],
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    name(overrides?: CallOverrides): Promise<BigNumber>
+    name(overrides?: CallOverrides): Promise<BigNumber>;
 
     ownerOf(
       tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     permit(
       spender: string,
@@ -1367,31 +1382,31 @@ export interface UniswapV3Position extends BaseContract {
       r: BytesLike,
       s: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     positions(
       tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     refundETH(
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    'safeTransferFrom(address,address,uint256)'(
+    "safeTransferFrom(address,address,uint256)"(
       from: string,
       to: string,
       tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    'safeTransferFrom(address,address,uint256,bytes)'(
+    "safeTransferFrom(address,address,uint256,bytes)"(
       from: string,
       to: string,
       tokenId: BigNumberish,
       _data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     selfPermit(
       token: string,
@@ -1401,7 +1416,7 @@ export interface UniswapV3Position extends BaseContract {
       r: BytesLike,
       s: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     selfPermitAllowed(
       token: string,
@@ -1411,7 +1426,7 @@ export interface UniswapV3Position extends BaseContract {
       r: BytesLike,
       s: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     selfPermitAllowedIfNecessary(
       token: string,
@@ -1421,7 +1436,7 @@ export interface UniswapV3Position extends BaseContract {
       r: BytesLike,
       s: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     selfPermitIfNecessary(
       token: string,
@@ -1431,96 +1446,96 @@ export interface UniswapV3Position extends BaseContract {
       r: BytesLike,
       s: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     setApprovalForAll(
       operator: string,
       approved: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     sweepToken(
       token: string,
       amountMinimum: BigNumberish,
       recipient: string,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    symbol(overrides?: CallOverrides): Promise<BigNumber>
+    symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
     tokenByIndex(
       index: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     tokenOfOwnerByIndex(
       owner: string,
       index: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     tokenURI(
       tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    totalSupply(overrides?: CallOverrides): Promise<BigNumber>
+    totalSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
     transferFrom(
       from: string,
       to: string,
       tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     uniswapV3MintCallback(
       amount0Owed: BigNumberish,
       amount1Owed: BigNumberish,
       data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     unwrapWETH9(
       amountMinimum: BigNumberish,
       recipient: string,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
-  }
+    ): Promise<BigNumber>;
+  };
 
   populateTransaction: {
-    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    PERMIT_TYPEHASH(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    WETH9(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    WETH9(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     approve(
       to: string,
       tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     balanceOf(
       owner: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    baseURI(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    baseURI(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     burn(
       tokenId: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     collect(
       params: CollectParamsStruct,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     createAndInitializePoolIfNecessary(
       token0: string,
@@ -1528,47 +1543,47 @@ export interface UniswapV3Position extends BaseContract {
       fee: BigNumberish,
       sqrtPriceX96: BigNumberish,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     decreaseLiquidity(
       params: DecreaseLiquidityParamsStruct,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    factory(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    factory(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getApproved(
       tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     increaseLiquidity(
       params: IncreaseLiquidityParamsStruct,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     isApprovedForAll(
       owner: string,
       operator: string,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     mint(
       params: MintParamsStruct,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     multicall(
       data: BytesLike[],
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    name(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     ownerOf(
       tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     permit(
       spender: string,
@@ -1578,31 +1593,31 @@ export interface UniswapV3Position extends BaseContract {
       r: BytesLike,
       s: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     positions(
       tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     refundETH(
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    'safeTransferFrom(address,address,uint256)'(
+    "safeTransferFrom(address,address,uint256)"(
       from: string,
       to: string,
       tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    'safeTransferFrom(address,address,uint256,bytes)'(
+    "safeTransferFrom(address,address,uint256,bytes)"(
       from: string,
       to: string,
       tokenId: BigNumberish,
       _data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     selfPermit(
       token: string,
@@ -1612,7 +1627,7 @@ export interface UniswapV3Position extends BaseContract {
       r: BytesLike,
       s: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     selfPermitAllowed(
       token: string,
@@ -1622,7 +1637,7 @@ export interface UniswapV3Position extends BaseContract {
       r: BytesLike,
       s: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     selfPermitAllowedIfNecessary(
       token: string,
@@ -1632,7 +1647,7 @@ export interface UniswapV3Position extends BaseContract {
       r: BytesLike,
       s: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     selfPermitIfNecessary(
       token: string,
@@ -1642,64 +1657,64 @@ export interface UniswapV3Position extends BaseContract {
       r: BytesLike,
       s: BytesLike,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     setApprovalForAll(
       operator: string,
       approved: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     supportsInterface(
       interfaceId: BytesLike,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     sweepToken(
       token: string,
       amountMinimum: BigNumberish,
       recipient: string,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     tokenByIndex(
       index: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     tokenOfOwnerByIndex(
       owner: string,
       index: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     tokenURI(
       tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    totalSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     transferFrom(
       from: string,
       to: string,
       tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     uniswapV3MintCallback(
       amount0Owed: BigNumberish,
       amount1Owed: BigNumberish,
       data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     unwrapWETH9(
       amountMinimum: BigNumberish,
       recipient: string,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
-  }
+    ): Promise<PopulatedTransaction>;
+  };
 }

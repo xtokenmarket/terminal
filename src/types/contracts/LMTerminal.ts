@@ -13,40 +13,40 @@ import {
   PopulatedTransaction,
   Signer,
   utils,
-} from 'ethers'
-import { FunctionFragment, Result, EventFragment } from '@ethersproject/abi'
-import { Listener, Provider } from '@ethersproject/providers'
-import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from './common'
+} from "ethers";
+import { FunctionFragment, Result, EventFragment } from "@ethersproject/abi";
+import { Listener, Provider } from "@ethersproject/providers";
+import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from "./common";
 
 export type PositionTicksStruct = {
-  lowerTick: BigNumberish
-  upperTick: BigNumberish
-}
+  lowerTick: BigNumberish;
+  upperTick: BigNumberish;
+};
 
 export type PositionTicksStructOutput = [number, number] & {
-  lowerTick: number
-  upperTick: number
-}
+  lowerTick: number;
+  upperTick: number;
+};
 
 export type RewardsProgramStruct = {
-  rewardTokens: string[]
-  duration: BigNumberish
-  vestingPeriod: BigNumberish
-}
+  rewardTokens: string[];
+  duration: BigNumberish;
+  vestingPeriod: BigNumberish;
+};
 
 export type RewardsProgramStructOutput = [string[], BigNumber, BigNumber] & {
-  rewardTokens: string[]
-  duration: BigNumber
-  vestingPeriod: BigNumber
-}
+  rewardTokens: string[];
+  duration: BigNumber;
+  vestingPeriod: BigNumber;
+};
 
 export type PoolDetailsStruct = {
-  fee: BigNumberish
-  token0: string
-  token1: string
-  amount0: BigNumberish
-  amount1: BigNumberish
-}
+  fee: BigNumberish;
+  token0: string;
+  token1: string;
+  amount0: BigNumberish;
+  amount1: BigNumberish;
+};
 
 export type PoolDetailsStructOutput = [
   number,
@@ -55,86 +55,80 @@ export type PoolDetailsStructOutput = [
   BigNumber,
   BigNumber
 ] & {
-  fee: number
-  token0: string
-  token1: string
-  amount0: BigNumber
-  amount1: BigNumber
-}
+  fee: number;
+  token0: string;
+  token1: string;
+  amount0: BigNumber;
+  amount1: BigNumber;
+};
 
 export type UniswapContractsStruct = {
-  router: string
-  quoter: string
-  positionManager: string
-}
+  router: string;
+  quoter: string;
+  positionManager: string;
+};
 
 export type UniswapContractsStructOutput = [string, string, string] & {
-  router: string
-  quoter: string
-  positionManager: string
-}
+  router: string;
+  quoter: string;
+  positionManager: string;
+};
 
 export interface LMTerminalInterface extends utils.Interface {
   functions: {
-    'claimReward(address)': FunctionFragment
-    'clrDeployer()': FunctionFragment
-    'deployIncentivizedPool(string,(int24,int24),(address[],uint256,uint256),(uint24,address,address,uint256,uint256),address)': FunctionFragment
-    'deployUniswapPool(address,address,uint24,uint160)': FunctionFragment
-    'deployedCLRPools(uint256)': FunctionFragment
-    'deploymentFee()': FunctionFragment
-    'getPool(address,address,uint24)': FunctionFragment
-    'initialize(address,address,address,address,(address,address,address),uint256,uint256,uint256)': FunctionFragment
-    'initiateNewRewardsProgram(address,uint256[],uint256,bool)': FunctionFragment
-    'initiateRewardsProgram(address,uint256[])': FunctionFragment
-    'positionManager()': FunctionFragment
-    'provideLiquidity(address,uint8,uint256)': FunctionFragment
-    'removeLiquidity(address,uint256)': FunctionFragment
-    'removeLiquidityAndClaimReward(address,uint256)': FunctionFragment
-    'rewardEscrow()': FunctionFragment
-    'rewardFee()': FunctionFragment
-    'rewardFeesTotal(address)': FunctionFragment
-    'tradeFee()': FunctionFragment
-    'uniContracts()': FunctionFragment
-    'uniswapFactory()': FunctionFragment
-    'withdrawClaimFees(address)': FunctionFragment
-    'withdrawFees()': FunctionFragment
-    'xTokenManager()': FunctionFragment
-  }
+    "clrDeployer()": FunctionFragment;
+    "deployIncentivizedPool(string,(int24,int24),(address[],uint256,uint256),(uint24,address,address,uint256,uint256))": FunctionFragment;
+    "deployUniswapPool(address,address,uint24,uint160)": FunctionFragment;
+    "deployedCLRPools(uint256)": FunctionFragment;
+    "deploymentFee()": FunctionFragment;
+    "getPool(address,address,uint24)": FunctionFragment;
+    "initialize(address,address,address,address,address,(address,address,address),uint256,uint256,uint256)": FunctionFragment;
+    "initiateNewRewardsProgram(address,uint256[],uint256)": FunctionFragment;
+    "initiateRewardsProgram(address,uint256[])": FunctionFragment;
+    "positionManager()": FunctionFragment;
+    "proxyAdmin()": FunctionFragment;
+    "rewardEscrow()": FunctionFragment;
+    "rewardFee()": FunctionFragment;
+    "tradeFee()": FunctionFragment;
+    "uniContracts()": FunctionFragment;
+    "uniswapFactory()": FunctionFragment;
+    "withdrawFees(address)": FunctionFragment;
+    "xTokenManager()": FunctionFragment;
+  };
 
-  encodeFunctionData(functionFragment: 'claimReward', values: [string]): string
   encodeFunctionData(
-    functionFragment: 'clrDeployer',
+    functionFragment: "clrDeployer",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'deployIncentivizedPool',
+    functionFragment: "deployIncentivizedPool",
     values: [
       string,
       PositionTicksStruct,
       RewardsProgramStruct,
-      PoolDetailsStruct,
-      string
+      PoolDetailsStruct
     ]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'deployUniswapPool',
+    functionFragment: "deployUniswapPool",
     values: [string, string, BigNumberish, BigNumberish]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'deployedCLRPools',
+    functionFragment: "deployedCLRPools",
     values: [BigNumberish]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'deploymentFee',
+    functionFragment: "deploymentFee",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'getPool',
+    functionFragment: "getPool",
     values: [string, string, BigNumberish]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'initialize',
+    functionFragment: "initialize",
     values: [
+      string,
       string,
       string,
       string,
@@ -144,277 +138,206 @@ export interface LMTerminalInterface extends utils.Interface {
       BigNumberish,
       BigNumberish
     ]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'initiateNewRewardsProgram',
-    values: [string, BigNumberish[], BigNumberish, boolean]
-  ): string
+    functionFragment: "initiateNewRewardsProgram",
+    values: [string, BigNumberish[], BigNumberish]
+  ): string;
   encodeFunctionData(
-    functionFragment: 'initiateRewardsProgram',
+    functionFragment: "initiateRewardsProgram",
     values: [string, BigNumberish[]]
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'positionManager',
+    functionFragment: "positionManager",
     values?: undefined
-  ): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'provideLiquidity',
-    values: [string, BigNumberish, BigNumberish]
-  ): string
-  encodeFunctionData(
-    functionFragment: 'removeLiquidity',
-    values: [string, BigNumberish]
-  ): string
-  encodeFunctionData(
-    functionFragment: 'removeLiquidityAndClaimReward',
-    values: [string, BigNumberish]
-  ): string
-  encodeFunctionData(
-    functionFragment: 'rewardEscrow',
+    functionFragment: "proxyAdmin",
     values?: undefined
-  ): string
-  encodeFunctionData(functionFragment: 'rewardFee', values?: undefined): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'rewardFeesTotal',
+    functionFragment: "rewardEscrow",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "rewardFee", values?: undefined): string;
+  encodeFunctionData(functionFragment: "tradeFee", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "uniContracts",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "uniswapFactory",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "withdrawFees",
     values: [string]
-  ): string
-  encodeFunctionData(functionFragment: 'tradeFee', values?: undefined): string
+  ): string;
   encodeFunctionData(
-    functionFragment: 'uniContracts',
+    functionFragment: "xTokenManager",
     values?: undefined
-  ): string
-  encodeFunctionData(
-    functionFragment: 'uniswapFactory',
-    values?: undefined
-  ): string
-  encodeFunctionData(
-    functionFragment: 'withdrawClaimFees',
-    values: [string]
-  ): string
-  encodeFunctionData(
-    functionFragment: 'withdrawFees',
-    values?: undefined
-  ): string
-  encodeFunctionData(
-    functionFragment: 'xTokenManager',
-    values?: undefined
-  ): string
+  ): string;
 
-  decodeFunctionResult(functionFragment: 'claimReward', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'clrDeployer', data: BytesLike): Result
   decodeFunctionResult(
-    functionFragment: 'deployIncentivizedPool',
+    functionFragment: "clrDeployer",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'deployUniswapPool',
+    functionFragment: "deployIncentivizedPool",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'deployedCLRPools',
+    functionFragment: "deployUniswapPool",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'deploymentFee',
+    functionFragment: "deployedCLRPools",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'getPool', data: BytesLike): Result
-  decodeFunctionResult(functionFragment: 'initialize', data: BytesLike): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'initiateNewRewardsProgram',
+    functionFragment: "deploymentFee",
     data: BytesLike
-  ): Result
+  ): Result;
+  decodeFunctionResult(functionFragment: "getPool", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'initiateRewardsProgram',
+    functionFragment: "initiateNewRewardsProgram",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'positionManager',
+    functionFragment: "initiateRewardsProgram",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'provideLiquidity',
+    functionFragment: "positionManager",
     data: BytesLike
-  ): Result
+  ): Result;
+  decodeFunctionResult(functionFragment: "proxyAdmin", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'removeLiquidity',
+    functionFragment: "rewardEscrow",
     data: BytesLike
-  ): Result
+  ): Result;
+  decodeFunctionResult(functionFragment: "rewardFee", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "tradeFee", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'removeLiquidityAndClaimReward',
+    functionFragment: "uniContracts",
     data: BytesLike
-  ): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'rewardEscrow',
+    functionFragment: "uniswapFactory",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'rewardFee', data: BytesLike): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'rewardFeesTotal',
+    functionFragment: "withdrawFees",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(functionFragment: 'tradeFee', data: BytesLike): Result
+  ): Result;
   decodeFunctionResult(
-    functionFragment: 'uniContracts',
+    functionFragment: "xTokenManager",
     data: BytesLike
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'uniswapFactory',
-    data: BytesLike
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'withdrawClaimFees',
-    data: BytesLike
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'withdrawFees',
-    data: BytesLike
-  ): Result
-  decodeFunctionResult(
-    functionFragment: 'xTokenManager',
-    data: BytesLike
-  ): Result
+  ): Result;
 
   events: {
-    'ClaimFeeWithdraw(address,uint256,uint256)': EventFragment
-    'ClaimedReward(address,address)': EventFragment
-    'DeployedIncentivizedPool(address)': EventFragment
-    'DeployedUniV3Pool(address)': EventFragment
-    'EthFeeWithdraw(uint256)': EventFragment
-    'InitiatedRewardsProgram(address,address[],uint256[],uint256)': EventFragment
-    'ManagerSet(address)': EventFragment
-    'ProvidedLiquidity(address,address,uint8,uint256)': EventFragment
-    'RemovedLiquidity(address,address,uint256)': EventFragment
-    'TokenFeeWithdraw(address,uint256)': EventFragment
-  }
+    "DeployedIncentivizedPool(address,address,address,uint24,int24,int24)": EventFragment;
+    "DeployedUniV3Pool(address,address,address,uint24)": EventFragment;
+    "EthFeeWithdraw(uint256)": EventFragment;
+    "InitiatedRewardsProgram(address,address[],uint256[],uint256)": EventFragment;
+    "TokenFeeWithdraw(address,uint256)": EventFragment;
+  };
 
-  getEvent(nameOrSignatureOrTopic: 'ClaimFeeWithdraw'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'ClaimedReward'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'DeployedIncentivizedPool'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'DeployedUniV3Pool'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'EthFeeWithdraw'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'InitiatedRewardsProgram'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'ManagerSet'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'ProvidedLiquidity'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'RemovedLiquidity'): EventFragment
-  getEvent(nameOrSignatureOrTopic: 'TokenFeeWithdraw'): EventFragment
+  getEvent(nameOrSignatureOrTopic: "DeployedIncentivizedPool"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "DeployedUniV3Pool"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "EthFeeWithdraw"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "InitiatedRewardsProgram"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "TokenFeeWithdraw"): EventFragment;
 }
 
-export type ClaimFeeWithdrawEvent = TypedEvent<
-  [string, BigNumber, BigNumber],
-  { pool: string; amount0: BigNumber; amount1: BigNumber }
->
-
-export type ClaimFeeWithdrawEventFilter =
-  TypedEventFilter<ClaimFeeWithdrawEvent>
-
-export type ClaimedRewardEvent = TypedEvent<
-  [string, string],
-  { pool: string; sender: string }
->
-
-export type ClaimedRewardEventFilter = TypedEventFilter<ClaimedRewardEvent>
-
 export type DeployedIncentivizedPoolEvent = TypedEvent<
-  [string],
-  { clrInstance: string }
->
+  [string, string, string, number, number, number],
+  {
+    clrInstance: string;
+    token0: string;
+    token1: string;
+    fee: number;
+    lowerTick: number;
+    upperTick: number;
+  }
+>;
 
 export type DeployedIncentivizedPoolEventFilter =
-  TypedEventFilter<DeployedIncentivizedPoolEvent>
+  TypedEventFilter<DeployedIncentivizedPoolEvent>;
 
-export type DeployedUniV3PoolEvent = TypedEvent<[string], { pool: string }>
+export type DeployedUniV3PoolEvent = TypedEvent<
+  [string, string, string, number],
+  { pool: string; token0: string; token1: string; fee: number }
+>;
 
 export type DeployedUniV3PoolEventFilter =
-  TypedEventFilter<DeployedUniV3PoolEvent>
+  TypedEventFilter<DeployedUniV3PoolEvent>;
 
-export type EthFeeWithdrawEvent = TypedEvent<[BigNumber], { amount: BigNumber }>
+export type EthFeeWithdrawEvent = TypedEvent<
+  [BigNumber],
+  { amount: BigNumber }
+>;
 
-export type EthFeeWithdrawEventFilter = TypedEventFilter<EthFeeWithdrawEvent>
+export type EthFeeWithdrawEventFilter = TypedEventFilter<EthFeeWithdrawEvent>;
 
 export type InitiatedRewardsProgramEvent = TypedEvent<
   [string, string[], BigNumber[], BigNumber],
   {
-    clrInstance: string
-    rewardTokens: string[]
-    totalRewardAmounts: BigNumber[]
-    rewardsDuration: BigNumber
+    clrInstance: string;
+    rewardTokens: string[];
+    totalRewardAmounts: BigNumber[];
+    rewardsDuration: BigNumber;
   }
->
+>;
 
 export type InitiatedRewardsProgramEventFilter =
-  TypedEventFilter<InitiatedRewardsProgramEvent>
-
-export type ManagerSetEvent = TypedEvent<[string], { manager: string }>
-
-export type ManagerSetEventFilter = TypedEventFilter<ManagerSetEvent>
-
-export type ProvidedLiquidityEvent = TypedEvent<
-  [string, string, number, BigNumber],
-  { pool: string; sender: string; asset: number; amount: BigNumber }
->
-
-export type ProvidedLiquidityEventFilter =
-  TypedEventFilter<ProvidedLiquidityEvent>
-
-export type RemovedLiquidityEvent = TypedEvent<
-  [string, string, BigNumber],
-  { pool: string; sender: string; amount: BigNumber }
->
-
-export type RemovedLiquidityEventFilter =
-  TypedEventFilter<RemovedLiquidityEvent>
+  TypedEventFilter<InitiatedRewardsProgramEvent>;
 
 export type TokenFeeWithdrawEvent = TypedEvent<
   [string, BigNumber],
   { token: string; amount: BigNumber }
->
+>;
 
 export type TokenFeeWithdrawEventFilter =
-  TypedEventFilter<TokenFeeWithdrawEvent>
+  TypedEventFilter<TokenFeeWithdrawEvent>;
 
 export interface LMTerminal extends BaseContract {
-  connect(signerOrProvider: Signer | Provider | string): this
-  attach(addressOrName: string): this
-  deployed(): Promise<this>
+  connect(signerOrProvider: Signer | Provider | string): this;
+  attach(addressOrName: string): this;
+  deployed(): Promise<this>;
 
-  interface: LMTerminalInterface
+  interface: LMTerminalInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
     fromBlockOrBlockhash?: string | number | undefined,
     toBlock?: string | number | undefined
-  ): Promise<Array<TEvent>>
+  ): Promise<Array<TEvent>>;
 
   listeners<TEvent extends TypedEvent>(
     eventFilter?: TypedEventFilter<TEvent>
-  ): Array<TypedListener<TEvent>>
-  listeners(eventName?: string): Array<Listener>
+  ): Array<TypedListener<TEvent>>;
+  listeners(eventName?: string): Array<Listener>;
   removeAllListeners<TEvent extends TypedEvent>(
     eventFilter: TypedEventFilter<TEvent>
-  ): this
-  removeAllListeners(eventName?: string): this
-  off: OnEvent<this>
-  on: OnEvent<this>
-  once: OnEvent<this>
-  removeListener: OnEvent<this>
+  ): this;
+  removeAllListeners(eventName?: string): this;
+  off: OnEvent<this>;
+  on: OnEvent<this>;
+  once: OnEvent<this>;
+  removeListener: OnEvent<this>;
 
   functions: {
-    claimReward(
-      clrPool: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
-
-    clrDeployer(overrides?: CallOverrides): Promise<[string]>
+    clrDeployer(overrides?: CallOverrides): Promise<[string]>;
 
     deployIncentivizedPool(
       symbol: string,
       ticks: PositionTicksStruct,
       rewardsProgram: RewardsProgramStruct,
       pool: PoolDetailsStruct,
-      proxyAdmin: string,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     deployUniswapPool(
       token0: string,
@@ -422,25 +345,26 @@ export interface LMTerminal extends BaseContract {
       fee: BigNumberish,
       initPrice: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     deployedCLRPools(
       arg0: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[string]>
+    ): Promise<[string]>;
 
-    deploymentFee(overrides?: CallOverrides): Promise<[BigNumber]>
+    deploymentFee(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getPool(
       token0: string,
       token1: string,
       fee: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[string] & { pool: string }>
+    ): Promise<[string] & { pool: string }>;
 
     initialize(
       _xTokenManager: string,
       _rewardEscrow: string,
+      _proxyAdmin: string,
       _clrDeployer: string,
       _uniswapFactory: string,
       _uniContracts: UniswapContractsStruct,
@@ -448,91 +372,60 @@ export interface LMTerminal extends BaseContract {
       _rewardFee: BigNumberish,
       _tradeFee: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     initiateNewRewardsProgram(
       clrPool: string,
       totalRewardAmounts: BigNumberish[],
       rewardsDuration: BigNumberish,
-      rewardsAreEscrowed: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
     initiateRewardsProgram(
       clrPool: string,
       totalRewardAmounts: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
-    positionManager(overrides?: CallOverrides): Promise<[string]>
+    positionManager(overrides?: CallOverrides): Promise<[string]>;
 
-    provideLiquidity(
-      clrPool: string,
-      inputAsset: BigNumberish,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    proxyAdmin(overrides?: CallOverrides): Promise<[string]>;
 
-    removeLiquidity(
-      clrPool: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    rewardEscrow(overrides?: CallOverrides): Promise<[string]>;
 
-    removeLiquidityAndClaimReward(
-      clrPool: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    rewardFee(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    rewardEscrow(overrides?: CallOverrides): Promise<[string]>
+    tradeFee(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    rewardFee(overrides?: CallOverrides): Promise<[BigNumber]>
-
-    rewardFeesTotal(
-      arg0: string,
+    uniContracts(
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>
-
-    tradeFee(overrides?: CallOverrides): Promise<[BigNumber]>
-
-    uniContracts(overrides?: CallOverrides): Promise<
+    ): Promise<
       [string, string, string] & {
-        router: string
-        quoter: string
-        positionManager: string
+        router: string;
+        quoter: string;
+        positionManager: string;
       }
-    >
+    >;
 
-    uniswapFactory(overrides?: CallOverrides): Promise<[string]>
-
-    withdrawClaimFees(
-      pool: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    uniswapFactory(overrides?: CallOverrides): Promise<[string]>;
 
     withdrawFees(
+      token: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>
+    ): Promise<ContractTransaction>;
 
-    xTokenManager(overrides?: CallOverrides): Promise<[string]>
-  }
+    xTokenManager(overrides?: CallOverrides): Promise<[string]>;
+  };
 
-  claimReward(
-    clrPool: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
-
-  clrDeployer(overrides?: CallOverrides): Promise<string>
+  clrDeployer(overrides?: CallOverrides): Promise<string>;
 
   deployIncentivizedPool(
     symbol: string,
     ticks: PositionTicksStruct,
     rewardsProgram: RewardsProgramStruct,
     pool: PoolDetailsStruct,
-    proxyAdmin: string,
     overrides?: PayableOverrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   deployUniswapPool(
     token0: string,
@@ -540,25 +433,26 @@ export interface LMTerminal extends BaseContract {
     fee: BigNumberish,
     initPrice: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   deployedCLRPools(
     arg0: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<string>
+  ): Promise<string>;
 
-  deploymentFee(overrides?: CallOverrides): Promise<BigNumber>
+  deploymentFee(overrides?: CallOverrides): Promise<BigNumber>;
 
   getPool(
     token0: string,
     token1: string,
     fee: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<string>
+  ): Promise<string>;
 
   initialize(
     _xTokenManager: string,
     _rewardEscrow: string,
+    _proxyAdmin: string,
     _clrDeployer: string,
     _uniswapFactory: string,
     _uniContracts: UniswapContractsStruct,
@@ -566,85 +460,60 @@ export interface LMTerminal extends BaseContract {
     _rewardFee: BigNumberish,
     _tradeFee: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   initiateNewRewardsProgram(
     clrPool: string,
     totalRewardAmounts: BigNumberish[],
     rewardsDuration: BigNumberish,
-    rewardsAreEscrowed: boolean,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
   initiateRewardsProgram(
     clrPool: string,
     totalRewardAmounts: BigNumberish[],
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
-  positionManager(overrides?: CallOverrides): Promise<string>
+  positionManager(overrides?: CallOverrides): Promise<string>;
 
-  provideLiquidity(
-    clrPool: string,
-    inputAsset: BigNumberish,
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  proxyAdmin(overrides?: CallOverrides): Promise<string>;
 
-  removeLiquidity(
-    clrPool: string,
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  rewardEscrow(overrides?: CallOverrides): Promise<string>;
 
-  removeLiquidityAndClaimReward(
-    clrPool: string,
-    amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  rewardFee(overrides?: CallOverrides): Promise<BigNumber>;
 
-  rewardEscrow(overrides?: CallOverrides): Promise<string>
+  tradeFee(overrides?: CallOverrides): Promise<BigNumber>;
 
-  rewardFee(overrides?: CallOverrides): Promise<BigNumber>
-
-  rewardFeesTotal(arg0: string, overrides?: CallOverrides): Promise<BigNumber>
-
-  tradeFee(overrides?: CallOverrides): Promise<BigNumber>
-
-  uniContracts(overrides?: CallOverrides): Promise<
+  uniContracts(
+    overrides?: CallOverrides
+  ): Promise<
     [string, string, string] & {
-      router: string
-      quoter: string
-      positionManager: string
+      router: string;
+      quoter: string;
+      positionManager: string;
     }
-  >
+  >;
 
-  uniswapFactory(overrides?: CallOverrides): Promise<string>
-
-  withdrawClaimFees(
-    pool: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  uniswapFactory(overrides?: CallOverrides): Promise<string>;
 
   withdrawFees(
+    token: string,
     overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>
+  ): Promise<ContractTransaction>;
 
-  xTokenManager(overrides?: CallOverrides): Promise<string>
+  xTokenManager(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
-    claimReward(clrPool: string, overrides?: CallOverrides): Promise<void>
-
-    clrDeployer(overrides?: CallOverrides): Promise<string>
+    clrDeployer(overrides?: CallOverrides): Promise<string>;
 
     deployIncentivizedPool(
       symbol: string,
       ticks: PositionTicksStruct,
       rewardsProgram: RewardsProgramStruct,
       pool: PoolDetailsStruct,
-      proxyAdmin: string,
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<void>;
 
     deployUniswapPool(
       token0: string,
@@ -652,25 +521,26 @@ export interface LMTerminal extends BaseContract {
       fee: BigNumberish,
       initPrice: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<string>
+    ): Promise<string>;
 
     deployedCLRPools(
       arg0: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<string>
+    ): Promise<string>;
 
-    deploymentFee(overrides?: CallOverrides): Promise<BigNumber>
+    deploymentFee(overrides?: CallOverrides): Promise<BigNumber>;
 
     getPool(
       token0: string,
       token1: string,
       fee: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<string>
+    ): Promise<string>;
 
     initialize(
       _xTokenManager: string,
       _rewardEscrow: string,
+      _proxyAdmin: string,
       _clrDeployer: string,
       _uniswapFactory: string,
       _uniContracts: UniswapContractsStruct,
@@ -678,170 +548,115 @@ export interface LMTerminal extends BaseContract {
       _rewardFee: BigNumberish,
       _tradeFee: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<void>;
 
     initiateNewRewardsProgram(
       clrPool: string,
       totalRewardAmounts: BigNumberish[],
       rewardsDuration: BigNumberish,
-      rewardsAreEscrowed: boolean,
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<void>;
 
     initiateRewardsProgram(
       clrPool: string,
       totalRewardAmounts: BigNumberish[],
       overrides?: CallOverrides
-    ): Promise<void>
+    ): Promise<void>;
 
-    positionManager(overrides?: CallOverrides): Promise<string>
+    positionManager(overrides?: CallOverrides): Promise<string>;
 
-    provideLiquidity(
-      clrPool: string,
-      inputAsset: BigNumberish,
-      amount: BigNumberish,
+    proxyAdmin(overrides?: CallOverrides): Promise<string>;
+
+    rewardEscrow(overrides?: CallOverrides): Promise<string>;
+
+    rewardFee(overrides?: CallOverrides): Promise<BigNumber>;
+
+    tradeFee(overrides?: CallOverrides): Promise<BigNumber>;
+
+    uniContracts(
       overrides?: CallOverrides
-    ): Promise<void>
-
-    removeLiquidity(
-      clrPool: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>
-
-    removeLiquidityAndClaimReward(
-      clrPool: string,
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>
-
-    rewardEscrow(overrides?: CallOverrides): Promise<string>
-
-    rewardFee(overrides?: CallOverrides): Promise<BigNumber>
-
-    rewardFeesTotal(arg0: string, overrides?: CallOverrides): Promise<BigNumber>
-
-    tradeFee(overrides?: CallOverrides): Promise<BigNumber>
-
-    uniContracts(overrides?: CallOverrides): Promise<
+    ): Promise<
       [string, string, string] & {
-        router: string
-        quoter: string
-        positionManager: string
+        router: string;
+        quoter: string;
+        positionManager: string;
       }
-    >
+    >;
 
-    uniswapFactory(overrides?: CallOverrides): Promise<string>
+    uniswapFactory(overrides?: CallOverrides): Promise<string>;
 
-    withdrawClaimFees(pool: string, overrides?: CallOverrides): Promise<void>
+    withdrawFees(token: string, overrides?: CallOverrides): Promise<void>;
 
-    withdrawFees(overrides?: CallOverrides): Promise<void>
-
-    xTokenManager(overrides?: CallOverrides): Promise<string>
-  }
+    xTokenManager(overrides?: CallOverrides): Promise<string>;
+  };
 
   filters: {
-    'ClaimFeeWithdraw(address,uint256,uint256)'(
-      pool?: string | null,
-      amount0?: null,
-      amount1?: null
-    ): ClaimFeeWithdrawEventFilter
-    ClaimFeeWithdraw(
-      pool?: string | null,
-      amount0?: null,
-      amount1?: null
-    ): ClaimFeeWithdrawEventFilter
-
-    'ClaimedReward(address,address)'(
-      pool?: string | null,
-      sender?: string | null
-    ): ClaimedRewardEventFilter
-    ClaimedReward(
-      pool?: string | null,
-      sender?: string | null
-    ): ClaimedRewardEventFilter
-
-    'DeployedIncentivizedPool(address)'(
-      clrInstance?: string | null
-    ): DeployedIncentivizedPoolEventFilter
+    "DeployedIncentivizedPool(address,address,address,uint24,int24,int24)"(
+      clrInstance?: string | null,
+      token0?: string | null,
+      token1?: string | null,
+      fee?: null,
+      lowerTick?: null,
+      upperTick?: null
+    ): DeployedIncentivizedPoolEventFilter;
     DeployedIncentivizedPool(
-      clrInstance?: string | null
-    ): DeployedIncentivizedPoolEventFilter
+      clrInstance?: string | null,
+      token0?: string | null,
+      token1?: string | null,
+      fee?: null,
+      lowerTick?: null,
+      upperTick?: null
+    ): DeployedIncentivizedPoolEventFilter;
 
-    'DeployedUniV3Pool(address)'(
-      pool?: string | null
-    ): DeployedUniV3PoolEventFilter
-    DeployedUniV3Pool(pool?: string | null): DeployedUniV3PoolEventFilter
+    "DeployedUniV3Pool(address,address,address,uint24)"(
+      pool?: string | null,
+      token0?: string | null,
+      token1?: string | null,
+      fee?: null
+    ): DeployedUniV3PoolEventFilter;
+    DeployedUniV3Pool(
+      pool?: string | null,
+      token0?: string | null,
+      token1?: string | null,
+      fee?: null
+    ): DeployedUniV3PoolEventFilter;
 
-    'EthFeeWithdraw(uint256)'(amount?: null): EthFeeWithdrawEventFilter
-    EthFeeWithdraw(amount?: null): EthFeeWithdrawEventFilter
+    "EthFeeWithdraw(uint256)"(amount?: null): EthFeeWithdrawEventFilter;
+    EthFeeWithdraw(amount?: null): EthFeeWithdrawEventFilter;
 
-    'InitiatedRewardsProgram(address,address[],uint256[],uint256)'(
+    "InitiatedRewardsProgram(address,address[],uint256[],uint256)"(
       clrInstance?: string | null,
       rewardTokens?: null,
       totalRewardAmounts?: null,
       rewardsDuration?: null
-    ): InitiatedRewardsProgramEventFilter
+    ): InitiatedRewardsProgramEventFilter;
     InitiatedRewardsProgram(
       clrInstance?: string | null,
       rewardTokens?: null,
       totalRewardAmounts?: null,
       rewardsDuration?: null
-    ): InitiatedRewardsProgramEventFilter
+    ): InitiatedRewardsProgramEventFilter;
 
-    'ManagerSet(address)'(manager?: string | null): ManagerSetEventFilter
-    ManagerSet(manager?: string | null): ManagerSetEventFilter
-
-    'ProvidedLiquidity(address,address,uint8,uint256)'(
-      pool?: string | null,
-      sender?: string | null,
-      asset?: null,
-      amount?: null
-    ): ProvidedLiquidityEventFilter
-    ProvidedLiquidity(
-      pool?: string | null,
-      sender?: string | null,
-      asset?: null,
-      amount?: null
-    ): ProvidedLiquidityEventFilter
-
-    'RemovedLiquidity(address,address,uint256)'(
-      pool?: string | null,
-      sender?: string | null,
-      amount?: null
-    ): RemovedLiquidityEventFilter
-    RemovedLiquidity(
-      pool?: string | null,
-      sender?: string | null,
-      amount?: null
-    ): RemovedLiquidityEventFilter
-
-    'TokenFeeWithdraw(address,uint256)'(
+    "TokenFeeWithdraw(address,uint256)"(
       token?: string | null,
       amount?: null
-    ): TokenFeeWithdrawEventFilter
+    ): TokenFeeWithdrawEventFilter;
     TokenFeeWithdraw(
       token?: string | null,
       amount?: null
-    ): TokenFeeWithdrawEventFilter
-  }
+    ): TokenFeeWithdrawEventFilter;
+  };
 
   estimateGas: {
-    claimReward(
-      clrPool: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
-
-    clrDeployer(overrides?: CallOverrides): Promise<BigNumber>
+    clrDeployer(overrides?: CallOverrides): Promise<BigNumber>;
 
     deployIncentivizedPool(
       symbol: string,
       ticks: PositionTicksStruct,
       rewardsProgram: RewardsProgramStruct,
       pool: PoolDetailsStruct,
-      proxyAdmin: string,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     deployUniswapPool(
       token0: string,
@@ -849,25 +664,26 @@ export interface LMTerminal extends BaseContract {
       fee: BigNumberish,
       initPrice: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     deployedCLRPools(
       arg0: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    deploymentFee(overrides?: CallOverrides): Promise<BigNumber>
+    deploymentFee(overrides?: CallOverrides): Promise<BigNumber>;
 
     getPool(
       token0: string,
       token1: string,
       fee: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     initialize(
       _xTokenManager: string,
       _rewardEscrow: string,
+      _proxyAdmin: string,
       _clrDeployer: string,
       _uniswapFactory: string,
       _uniContracts: UniswapContractsStruct,
@@ -875,83 +691,53 @@ export interface LMTerminal extends BaseContract {
       _rewardFee: BigNumberish,
       _tradeFee: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     initiateNewRewardsProgram(
       clrPool: string,
       totalRewardAmounts: BigNumberish[],
       rewardsDuration: BigNumberish,
-      rewardsAreEscrowed: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
     initiateRewardsProgram(
       clrPool: string,
       totalRewardAmounts: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    positionManager(overrides?: CallOverrides): Promise<BigNumber>
+    positionManager(overrides?: CallOverrides): Promise<BigNumber>;
 
-    provideLiquidity(
-      clrPool: string,
-      inputAsset: BigNumberish,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    proxyAdmin(overrides?: CallOverrides): Promise<BigNumber>;
 
-    removeLiquidity(
-      clrPool: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    rewardEscrow(overrides?: CallOverrides): Promise<BigNumber>;
 
-    removeLiquidityAndClaimReward(
-      clrPool: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    rewardFee(overrides?: CallOverrides): Promise<BigNumber>;
 
-    rewardEscrow(overrides?: CallOverrides): Promise<BigNumber>
+    tradeFee(overrides?: CallOverrides): Promise<BigNumber>;
 
-    rewardFee(overrides?: CallOverrides): Promise<BigNumber>
+    uniContracts(overrides?: CallOverrides): Promise<BigNumber>;
 
-    rewardFeesTotal(arg0: string, overrides?: CallOverrides): Promise<BigNumber>
-
-    tradeFee(overrides?: CallOverrides): Promise<BigNumber>
-
-    uniContracts(overrides?: CallOverrides): Promise<BigNumber>
-
-    uniswapFactory(overrides?: CallOverrides): Promise<BigNumber>
-
-    withdrawClaimFees(
-      pool: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    uniswapFactory(overrides?: CallOverrides): Promise<BigNumber>;
 
     withdrawFees(
+      token: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>
+    ): Promise<BigNumber>;
 
-    xTokenManager(overrides?: CallOverrides): Promise<BigNumber>
-  }
+    xTokenManager(overrides?: CallOverrides): Promise<BigNumber>;
+  };
 
   populateTransaction: {
-    claimReward(
-      clrPool: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
-
-    clrDeployer(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    clrDeployer(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     deployIncentivizedPool(
       symbol: string,
       ticks: PositionTicksStruct,
       rewardsProgram: RewardsProgramStruct,
       pool: PoolDetailsStruct,
-      proxyAdmin: string,
       overrides?: PayableOverrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     deployUniswapPool(
       token0: string,
@@ -959,25 +745,26 @@ export interface LMTerminal extends BaseContract {
       fee: BigNumberish,
       initPrice: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     deployedCLRPools(
       arg0: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    deploymentFee(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    deploymentFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getPool(
       token0: string,
       token1: string,
       fee: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     initialize(
       _xTokenManager: string,
       _rewardEscrow: string,
+      _proxyAdmin: string,
       _clrDeployer: string,
       _uniswapFactory: string,
       _uniContracts: UniswapContractsStruct,
@@ -985,67 +772,40 @@ export interface LMTerminal extends BaseContract {
       _rewardFee: BigNumberish,
       _tradeFee: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     initiateNewRewardsProgram(
       clrPool: string,
       totalRewardAmounts: BigNumberish[],
       rewardsDuration: BigNumberish,
-      rewardsAreEscrowed: boolean,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
     initiateRewardsProgram(
       clrPool: string,
       totalRewardAmounts: BigNumberish[],
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    positionManager(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    positionManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    provideLiquidity(
-      clrPool: string,
-      inputAsset: BigNumberish,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    proxyAdmin(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    removeLiquidity(
-      clrPool: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    rewardEscrow(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    removeLiquidityAndClaimReward(
-      clrPool: string,
-      amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    rewardFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    rewardEscrow(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    tradeFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    rewardFee(overrides?: CallOverrides): Promise<PopulatedTransaction>
+    uniContracts(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    rewardFeesTotal(
-      arg0: string,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>
-
-    tradeFee(overrides?: CallOverrides): Promise<PopulatedTransaction>
-
-    uniContracts(overrides?: CallOverrides): Promise<PopulatedTransaction>
-
-    uniswapFactory(overrides?: CallOverrides): Promise<PopulatedTransaction>
-
-    withdrawClaimFees(
-      pool: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    uniswapFactory(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     withdrawFees(
+      token: string,
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>
+    ): Promise<PopulatedTransaction>;
 
-    xTokenManager(overrides?: CallOverrides): Promise<PopulatedTransaction>
-  }
+    xTokenManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+  };
 }
