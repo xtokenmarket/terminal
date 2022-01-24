@@ -292,6 +292,14 @@ export const PriceRangeStep = (props: IProps) => {
         fullWidth
         onClick={onClickNext}
         variant="contained"
+        disabled={
+          !(
+            state.leftRangeTypedValue &&
+            state.rightRangeTypedValue &&
+            parsedAmounts.CURRENCY_A &&
+            parsedAmounts.CURRENCY_B
+          )
+        }
       >
         Next
       </Button>
