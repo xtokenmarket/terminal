@@ -1,7 +1,7 @@
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { FEE_TIERS } from 'config/constants'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ICreatePoolData } from 'types'
 import { RewardTokensTable } from './RewardTokensTable'
 import { IRewardState, RewardModal } from 'components'
@@ -126,7 +126,26 @@ export const RewardsStep: React.FC<IProps> = ({
   const toggleRewardsModal = () =>
     setIsRewardsModalVisible((prevState) => !prevState)
 
-  const hasRewards = data.rewardState.tokens.length > 0
+  const { duration, vesting, errors, tokens } = data.rewardState
+  const hasRewards = (
+    tokens.length > 0 ||
+    duration !== '' ||
+    vesting !== ''
+  )
+  const isDisabled = (() => {
+    if (!hasRewards) return false
+
+    return (
+      Number(duration) !== 0 ||
+      Number(vesting) !== 0 ||
+      errors.some((error) => !!error)
+    )
+  })()
+  // const isDisabled = hasRewards ? errors.some((error) => !!error) : false
+  console.log({
+    isDisabled,
+    hasRewards,
+  })
 
   const onNextStep = (state: IRewardState) => {
     updateData({ rewardState: state })
@@ -214,7 +233,7 @@ export const RewardsStep: React.FC<IProps> = ({
         fullWidth
         onClick={toggleCreateModal}
         variant="contained"
-        disabled={!data.rewardState}
+        disabled={isDisabled}
       >
         CREATE POOL
       </Button>

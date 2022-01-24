@@ -72,9 +72,16 @@ export const InputSection: React.FC<IProps> = ({
 }) => {
   const cl = useStyles()
 
-  const { duration, errors } = rewardState
-  const isDisabled =
-    errors.some((error) => !!error) || duration === '' || Number(duration) === 0
+  const { duration, errors, vesting, tokens } = rewardState
+
+  const isDisabled = (() => {
+    if (tokens.length === 0) return true
+    const hasDuration = duration !== '' || Number(duration) !== 0
+    const hasVesting = vesting !== '' || Number(vesting) !== 0
+    if (!hasDuration || !hasVesting) return true
+
+    return errors.some((error) => !!error)
+  })()
 
   return (
     <div className={cl.root}>
