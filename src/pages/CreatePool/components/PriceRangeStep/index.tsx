@@ -5,6 +5,7 @@ import { FeeAmount } from '@uniswap/v3-sdk'
 import { TokenBalanceInput, TokenPriceInput } from 'components'
 import { DEFAULT_NETWORK_ID } from 'config/constants'
 import { useConnectedWeb3Context } from 'contexts'
+import { errors } from 'ethers'
 import {
   usePools,
   useRangeHopCallbacks,
@@ -60,6 +61,7 @@ interface IProps {
 
 interface IState extends MintState {
   successVisible: boolean
+  inputErrors: (string | null)[]
 }
 
 const initialState: IState = {
@@ -70,6 +72,7 @@ const initialState: IState = {
   leftRangeTypedValue: '',
   rightRangeTypedValue: '',
   successVisible: false,
+  inputErrors: [],
 }
 
 export const PriceRangeStep = (props: IProps) => {
@@ -169,22 +172,6 @@ export const PriceRangeStep = (props: IProps) => {
     pool
   )
 
-  const onFieldAInput = (typedValue: string) => {
-    setState((prev) => ({
-      ...prev,
-      independentField: Field.CURRENCY_A,
-      typedValue,
-    }))
-  }
-
-  const onFieldBInput = (typedValue: string) => {
-    setState((prev) => ({
-      ...prev,
-      independentField: Field.CURRENCY_B,
-      typedValue,
-    }))
-  }
-
   const onLeftRangeInput = (typedValue: string) => {
     setState((prev) => ({
       ...prev,
@@ -225,13 +212,34 @@ export const PriceRangeStep = (props: IProps) => {
     props.onNext()
   }
 
+  const totalErrors = [...state.inputErrors]
+  if (errorMessage) totalErrors.push(errorMessage)
+  console.log('totalErrors', totalErrors)
+
+  const onTokenInputChange = (amount: BigNumber, balance: BigNumber, field: Field) => {
+    const newErrors = state.inputErrors
+    const i = field === Field.CURRENCY_A ? 0 : 1
+    if (amount.gt(balance)) {
+      newErrors.splice(i, 1, `Token ${(i + 1)} exceeds balance`)
+    } else {
+      newErrors.splice(i, 1)
+    }
+    setState(prev => ({
+      ...prev,
+      independentField: field,
+      typedValue: amount.toString(),
+      inputErrors: newErrors,
+    }))
+  }
+
   const isNextBtnDisabled = !(
     state.leftRangeTypedValue &&
     state.rightRangeTypedValue &&
     parsedAmounts.CURRENCY_A &&
     parsedAmounts.CURRENCY_B &&
     !invalidRange &&
-    !errorMessage
+    !errorMessage &&
+    !state.inputErrors.some(e => !!e)
   )
 
   return (
@@ -298,17 +306,13 @@ export const PriceRangeStep = (props: IProps) => {
             <Typography className={classes.label}>Deposit amounts</Typography>
             <TokenBalanceInput
               value={BigNumber.from(formattedAmounts[Field.CURRENCY_A] || '0')}
-              onChange={(amount0) => {
-                onFieldAInput(amount0.toString())
-              }}
+              onChange={(amount, balance) => onTokenInputChange(amount, balance, Field.CURRENCY_A)}
               token={data.token0}
               isDisabled={isTokenInputDisabled}
             />
             <TokenBalanceInput
               value={BigNumber.from(formattedAmounts[Field.CURRENCY_B] || '0')}
-              onChange={(amount1) => {
-                onFieldBInput(amount1.toString())
-              }}
+              onChange={(amount, balance) => onTokenInputChange(amount, balance, Field.CURRENCY_B)}
               token={data.token1}
               isDisabled={isTokenInputDisabled}
             />
@@ -319,11 +323,11 @@ export const PriceRangeStep = (props: IProps) => {
         Pool Deployment fee is 0.1 ETH. Additional 1% fee on any rewards
         distributed for this pool.
       </Typography>
-      {errorMessage && (
+      {totalErrors.length > 0 && (
         <WarningInfo
           className={classes.warning}
           title="Warning"
-          description={errorMessage}
+          description={totalErrors.join('; ')}
         />
       )}
       <Button
