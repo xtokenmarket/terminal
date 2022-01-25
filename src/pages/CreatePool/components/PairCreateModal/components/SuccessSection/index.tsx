@@ -59,6 +59,8 @@ export const SuccessSection: React.FC<IProps> = ({
 }) => {
   const classes = useStyles()
 
+  const parseFee = (tier: BigNumber) => `${tier.toNumber() / 10000}%`
+
   return (
     <div className={classes.root}>
       <div className={classes.header}>
@@ -73,13 +75,11 @@ export const SuccessSection: React.FC<IProps> = ({
           ))}
         </div>
         <Typography className={classes.title}>
-          {`${token0.symbol.toUpperCase()}/${token1.symbol.toUpperCase()}`}{' '}
-          {tier.toNumber() / 10000}% pool deployed!
+          {`${token0.symbol}/${token1.symbol}`} {parseFee(tier)} pool deployed!
         </Typography>
         <Typography className={classes.description}>
-          You have successfully deployed{' '}
-          {`${token0.symbol.toUpperCase()}/${token1.symbol.toUpperCase()}`} pool
-          on Uniswap V3.
+          You have successfully deployed {`${token0.symbol}/${token1.symbol}`}{' '}
+          pool on Uniswap V3.
         </Typography>
       </div>
       <div className={classes.actions}>
