@@ -605,6 +605,10 @@ export function useV3DerivedMintInfo(
     errorMessage = errorMessage ?? 'Invalid pair'
   }
 
+  if (invalidRange) {
+    errorMessage = 'Invalid range selected. The min price must be lower than the max'
+  }
+
   const invalidPool = poolState === PoolState.INVALID
 
   return {
