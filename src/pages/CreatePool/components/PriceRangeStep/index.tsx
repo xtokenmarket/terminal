@@ -5,7 +5,6 @@ import { FeeAmount } from '@uniswap/v3-sdk'
 import { TokenBalanceInput, TokenPriceInput } from 'components'
 import { DEFAULT_NETWORK_ID } from 'config/constants'
 import { useConnectedWeb3Context } from 'contexts'
-import { errors } from 'ethers'
 import {
   usePools,
   useRangeHopCallbacks,
