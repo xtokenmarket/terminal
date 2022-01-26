@@ -5,14 +5,19 @@ import { FeeAmount } from '@uniswap/v3-sdk'
 import { TokenBalanceInput, TokenPriceInput } from 'components'
 import { DEFAULT_NETWORK_ID } from 'config/constants'
 import { useConnectedWeb3Context } from 'contexts'
+import { ethers } from 'ethers'
+import { formatEther, parseEther } from 'ethers/lib/utils'
+import { useTokenBalance } from 'helpers'
 import {
   usePools,
   useRangeHopCallbacks,
   useV3DerivedMintInfo,
 } from 'helpers/univ3/hooks'
-import { useState } from 'react'
+import _ from 'lodash'
+import { useEffect, useState } from 'react'
 import { ICreatePoolData, MintState } from 'types'
 import { Bound, Field } from 'utils/enums'
+import { ZERO } from 'utils/number'
 import { ApproveTokenModal } from '../ApproveTokenModal'
 import { WarningInfo } from '../ApproveTokenModal/components'
 
@@ -60,7 +65,7 @@ interface IProps {
 
 interface IState extends MintState {
   successVisible: boolean
-  inputErrors: (string | null)[]
+  balanceErrors: (string | null)[]
 }
 
 const initialState: IState = {
@@ -71,13 +76,13 @@ const initialState: IState = {
   leftRangeTypedValue: '',
   rightRangeTypedValue: '',
   successVisible: false,
-  inputErrors: [],
+  balanceErrors: [],
 }
 
 export const PriceRangeStep = (props: IProps) => {
   const { data, updateData } = props
   const classes = useStyles()
-  const { networkId } = useConnectedWeb3Context()
+  const { networkId, account } = useConnectedWeb3Context()
 
   const [isApproveModalOpen, setIsApproveModalOpen] = useState(false)
   const [state, setState] = useState<IState>({
@@ -211,25 +216,34 @@ export const PriceRangeStep = (props: IProps) => {
     props.onNext()
   }
 
-  const totalErrors = [...state.inputErrors]
-  if (errorMessage) totalErrors.push(errorMessage)
-  console.log('totalErrors', totalErrors)
-
-  const onTokenInputChange = (amount: BigNumber, balance: BigNumber, field: Field) => {
-    const newErrors = state.inputErrors
-    const i = field === Field.CURRENCY_A ? 0 : 1
-    if (amount.gt(balance)) {
-      newErrors.splice(i, 1, `Token ${(i + 1)} exceeds balance`)
-    } else {
-      newErrors.splice(i, 1)
-    }
+  const onTokenInputChange = (field: Field, amount: BigNumber) => {
     setState(prev => ({
       ...prev,
       independentField: field,
       typedValue: amount.toString(),
-      inputErrors: newErrors,
     }))
   }
+
+  const { balance: balanceA } = useTokenBalance(data.token0.address)
+  const { balance: balanceB } = useTokenBalance(data.token1.address)
+  useEffect(() => {
+    const amountA = Number(ethers.utils.formatEther(formattedAmounts[Field.CURRENCY_A] || '0'))
+    const amountB = Number(ethers.utils.formatEther(formattedAmounts[Field.CURRENCY_B] || '0'))
+
+    const newErrors = [...state.balanceErrors]
+    const newErrorA = amountA > Number(formatEther(balanceA)) ? `${data.token0.name} input exceeds balance` : null
+    newErrors.splice(0, 1, newErrorA)
+
+    const newErrorB = amountB > Number(formatEther(balanceB)) ? `${data.token1.name} input exceeds balance` : null
+    newErrors.splice(1, 1, newErrorB)
+
+    if (!_.isEqual(state.balanceErrors, newErrors)) {
+      setState(prev => ({
+        ...prev,
+        balanceErrors: newErrors,
+      }))
+    }
+  }, [balanceA, balanceB, formattedAmounts, data, state.balanceErrors])
 
   const isNextBtnDisabled = !(
     state.leftRangeTypedValue &&
@@ -238,9 +252,12 @@ export const PriceRangeStep = (props: IProps) => {
     parsedAmounts.CURRENCY_B &&
     !invalidRange &&
     !errorMessage &&
-    !state.inputErrors.some(e => !!e)
+    !state.balanceErrors.some(e => !!e)
   )
 
+  const totalErrors = [...state.balanceErrors].filter(e => !!e)
+  if (errorMessage) totalErrors.push(errorMessage)
+  
   return (
     <div className={classes.root}>
       <div>
@@ -304,14 +321,16 @@ export const PriceRangeStep = (props: IProps) => {
           <Grid item xs={12} sm={12} md={6}>
             <Typography className={classes.label}>Deposit amounts</Typography>
             <TokenBalanceInput
+              className="token0-balance-input"
               value={BigNumber.from(formattedAmounts[Field.CURRENCY_A] || '0')}
-              onChange={(amount, balance) => onTokenInputChange(amount, balance, Field.CURRENCY_A)}
+              onChange={(amount) => onTokenInputChange(Field.CURRENCY_A, amount)}
               token={data.token0}
               isDisabled={isTokenInputDisabled}
             />
             <TokenBalanceInput
+              className="token1-balance-input"
               value={BigNumber.from(formattedAmounts[Field.CURRENCY_B] || '0')}
-              onChange={(amount, balance) => onTokenInputChange(amount, balance, Field.CURRENCY_B)}
+              onChange={(amount) => onTokenInputChange(Field.CURRENCY_B, amount)}
               token={data.token1}
               isDisabled={isTokenInputDisabled}
             />
