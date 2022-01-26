@@ -175,7 +175,8 @@ export const TokenPriceInput = (props: IProps) => {
           }}
           variant="outlined"
           fullWidth
-          type="text"
+          // for ∞ to be shown
+          type={localValue === '∞' ? 'text' : 'number'}
           label={label}
         />
         <div className={classes.inputBottomText}>
