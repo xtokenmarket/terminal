@@ -175,7 +175,7 @@ export const TokenPriceInput = (props: IProps) => {
           }}
           variant="outlined"
           fullWidth
-          type="number"
+          type="text"
           label={label}
         />
         <div className={classes.inputBottomText}>

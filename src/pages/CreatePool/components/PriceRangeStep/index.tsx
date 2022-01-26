@@ -242,7 +242,11 @@ export const PriceRangeStep = (props: IProps) => {
     !errorMessage
   )
   const onFullRangeClick = () => {
-    console.log('onFullRangeClick')
+    setState((prev) => ({
+      ...prev,
+      leftRangeTypedValue: true,
+      rightRangeTypedValue: true,
+    }))
   }
 
   return (
