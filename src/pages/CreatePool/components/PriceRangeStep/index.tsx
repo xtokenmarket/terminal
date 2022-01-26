@@ -6,7 +6,7 @@ import { TokenBalanceInput, TokenPriceInput } from 'components'
 import { DEFAULT_NETWORK_ID } from 'config/constants'
 import { useConnectedWeb3Context } from 'contexts'
 import { ethers } from 'ethers'
-import { formatEther, parseEther } from 'ethers/lib/utils'
+import { formatEther } from 'ethers/lib/utils'
 import { useTokenBalance } from 'helpers'
 import {
   usePools,
@@ -17,7 +17,6 @@ import _ from 'lodash'
 import { useEffect, useState } from 'react'
 import { ICreatePoolData, MintState } from 'types'
 import { Bound, Field } from 'utils/enums'
-import { ZERO } from 'utils/number'
 import { ApproveTokenModal } from '../ApproveTokenModal'
 import { WarningInfo } from '../ApproveTokenModal/components'
 
@@ -82,7 +81,7 @@ const initialState: IState = {
 export const PriceRangeStep = (props: IProps) => {
   const { data, updateData } = props
   const classes = useStyles()
-  const { networkId, account } = useConnectedWeb3Context()
+  const { networkId } = useConnectedWeb3Context()
 
   const [isApproveModalOpen, setIsApproveModalOpen] = useState(false)
   const [state, setState] = useState<IState>({
