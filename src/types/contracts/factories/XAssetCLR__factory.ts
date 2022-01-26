@@ -944,6 +944,11 @@ const _abi = [
         type: "int24",
       },
       {
+        internalType: "uint24",
+        name: "_poolFee",
+        type: "uint24",
+      },
+      {
         internalType: "uint256",
         name: "_tradeFee",
         type: "uint256",
@@ -1650,24 +1655,6 @@ const _abi = [
       },
     ],
     name: "withdrawAndClaimReward",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "token",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "receiver",
-        type: "address",
-      },
-    ],
-    name: "withdrawToken",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
