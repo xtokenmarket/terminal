@@ -50,6 +50,14 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  fullRangeButtonText: {
+    color: 'white',
+    fontFamily: 'Gilmer',
+    fontWeight: 700,
+  },
+  fullRangeButton: {
+    margin: '0px 12px 30px 12px',
+  },
 }))
 
 interface IProps {
@@ -233,6 +241,9 @@ export const PriceRangeStep = (props: IProps) => {
     !invalidRange &&
     !errorMessage
   )
+  const onFullRangeClick = () => {
+    console.log('onFullRangeClick')
+  }
 
   return (
     <div className={classes.root}>
@@ -290,6 +301,18 @@ export const PriceRangeStep = (props: IProps) => {
                     increment={isSorted ? getIncrementUpper : getDecrementLower}
                   />
                 </Grid>
+
+                <Button
+                  color="secondary"
+                  fullWidth
+                  onClick={onFullRangeClick}
+                  variant="contained"
+                  className={classes.fullRangeButton}
+                >
+                  <span className={classes.fullRangeButtonText}>
+                    FULL RANGE
+                  </span>
+                </Button>
               </Grid>
             </div>
           </Grid>

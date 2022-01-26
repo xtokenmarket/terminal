@@ -12,9 +12,7 @@ import { ReactComponent as DecreaseIcon } from 'assets/svgs/decrease.svg'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginBottom: 16,
     position: 'relative',
-    paddingTop: 10,
   },
   input: {
     '& .Mui-focused': {
