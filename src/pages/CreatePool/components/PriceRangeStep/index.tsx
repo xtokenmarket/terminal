@@ -280,6 +280,12 @@ export const PriceRangeStep = (props: IProps) => {
                     ticksAtLimit={ticksAtLimit}
                     decrement={isSorted ? getDecrementLower : getIncrementUpper}
                     increment={isSorted ? getIncrementLower : getDecrementUpper}
+                    decrementDisabled={
+                      ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]
+                    }
+                    incrementDisabled={
+                      ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]
+                    }
                   />
                 </Grid>
                 <Grid item xs={6} sm={6}>
@@ -303,6 +309,12 @@ export const PriceRangeStep = (props: IProps) => {
                     ticksAtLimit={ticksAtLimit}
                     decrement={isSorted ? getDecrementUpper : getIncrementLower}
                     increment={isSorted ? getIncrementUpper : getDecrementLower}
+                    decrementDisabled={
+                      ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]
+                    }
+                    incrementDisabled={
+                      ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]
+                    }
                   />
                 </Grid>
 

@@ -98,6 +98,8 @@ interface IProps {
   value: string
   decrement: () => string
   increment: () => string
+  decrementDisabled: boolean | undefined
+  incrementDisabled: boolean | undefined
 }
 
 export const TokenPriceInput = (props: IProps) => {
@@ -112,6 +114,8 @@ export const TokenPriceInput = (props: IProps) => {
     onUserInput,
     currencyA,
     currencyB,
+    decrementDisabled,
+    incrementDisabled,
   } = props
   //  for focus state, styled components doesnt let you select input parent container
   const [active, setActive] = useState(false)
@@ -185,13 +189,13 @@ export const TokenPriceInput = (props: IProps) => {
           {currencyA?.symbol?.toUpperCase()}
         </div>
         <div className={classes.buttonWrapper}>
-          <div className={classes.button} onClick={handleIncrement}>
-            <Button>
+          <div className={classes.button}>
+            <Button disabled={incrementDisabled} onClick={handleIncrement}>
               <IncreaseIcon />{' '}
             </Button>
           </div>
-          <div className={classes.button} onClick={handleDecrement}>
-            <Button>
+          <div className={classes.button}>
+            <Button disabled={decrementDisabled} onClick={handleDecrement}>
               <DecreaseIcon />{' '}
             </Button>
           </div>
