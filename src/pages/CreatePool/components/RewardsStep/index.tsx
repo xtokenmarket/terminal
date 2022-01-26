@@ -103,15 +103,9 @@ interface IProps {
   data: ICreatePoolData
   updateData: (_: any) => void
   onEdit: () => void
-  onNext: () => void
 }
 
-export const RewardsStep: React.FC<IProps> = ({
-  data,
-  updateData,
-  onEdit,
-  onNext,
-}) => {
+export const RewardsStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
   const cl = useStyles()
 
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false)
@@ -232,7 +226,6 @@ export const RewardsStep: React.FC<IProps> = ({
       <CreatePoolModal
         isOpen={isCreateModalVisible}
         onClose={toggleCreateModal}
-        onSuccess={onNext}
         poolData={data}
       />
     </div>

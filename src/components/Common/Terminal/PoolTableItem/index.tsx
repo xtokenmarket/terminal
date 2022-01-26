@@ -4,6 +4,7 @@ import { useTerminalPool } from 'helpers'
 import {
   formatBigNumber,
   formatToShortNumber,
+  getFloatDecimalNumber,
   getTimeDurationStr,
   getTimeDurationUnitInfo,
   numberWithCommas,
@@ -128,9 +129,16 @@ export const PoolTableItem = (props: IProps) => {
           <div className={classes.item}>
             <Typography className={classes.allocation}>
               {poolData.token0.symbol}&nbsp;
-              <span>{`${poolData.token0.percent}%`}</span>&nbsp;&nbsp;
+              <span>{`${getFloatDecimalNumber(
+                poolData.token0.percent as string,
+                2
+              )}%`}</span>
+              &nbsp;&nbsp;
               {poolData.token1.symbol}&nbsp;
-              <span>{`${poolData.token1.percent}%`}</span>
+              <span>{`${getFloatDecimalNumber(
+                poolData.token1.percent as string,
+                2
+              )}%`}</span>
             </Typography>
           </div>
         </PoolTd>
