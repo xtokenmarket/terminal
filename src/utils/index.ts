@@ -107,11 +107,11 @@ export const getTimeDurationStr = (secs: number) => {
   return `${months} months`
 }
 
-export const getFloatDecimalNumber = (num: string, decimals: number) => {
+export const getFloatDecimalNumber = (num: string, decimals = 2) => {
   const subs = num.split('.')
   if (subs.length < 2) return num
 
-  return [subs[0], subs[1].substr(0, decimals)].join('.')
+  return [subs[0], subs[1].substring(0, decimals)].join('.')
 }
 
 // add 10%

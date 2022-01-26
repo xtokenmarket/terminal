@@ -77,10 +77,6 @@ const CreatePool = () => {
       case ECreatePoolStep.PriceRange:
         setState((prev) => ({ ...prev, step: ECreatePoolStep.Rewards }))
         break
-      case ECreatePoolStep.Rewards:
-        // TODO: Redirect user to `/terminal/pools/${poolAddress}`
-        // setState((prev) => ({ ...prev, step: ECreatePoolStep.Done }))
-        break
       default:
         onBack()
         break
@@ -132,7 +128,6 @@ const CreatePool = () => {
             data={state as Required<IState>}
             updateData={updateData}
             onEdit={onPrev}
-            onNext={onNext}
           />
         )
       default:

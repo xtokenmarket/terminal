@@ -78,7 +78,7 @@ export interface XAssetCLRInterface extends utils.Interface {
     "getTicks()": FunctionFragment;
     "getTotalLiquidity()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
-    "initialize(string,int24,int24,uint256,address,address,address,address,address,(address,address,address),(address[],address,bool))": FunctionFragment;
+    "initialize(string,int24,int24,uint24,uint256,address,address,address,address,address,(address,address,address),(address[],address,bool))": FunctionFragment;
     "initializeReward(uint256,address)": FunctionFragment;
     "lastTimeRewardApplicable()": FunctionFragment;
     "lastUpdateTime(address)": FunctionFragment;
@@ -121,7 +121,6 @@ export interface XAssetCLRInterface extends utils.Interface {
     "unpauseContract()": FunctionFragment;
     "withdraw(uint256)": FunctionFragment;
     "withdrawAndClaimReward(uint256)": FunctionFragment;
-    "withdrawToken(address,address)": FunctionFragment;
   };
 
   encodeFunctionData(functionFragment: "addManager", values: [string]): string;
@@ -250,6 +249,7 @@ export interface XAssetCLRInterface extends utils.Interface {
     functionFragment: "initialize",
     values: [
       string,
+      BigNumberish,
       BigNumberish,
       BigNumberish,
       BigNumberish,
@@ -393,10 +393,6 @@ export interface XAssetCLRInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "withdrawAndClaimReward",
     values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "withdrawToken",
-    values: [string, string]
   ): string;
 
   decodeFunctionResult(functionFragment: "addManager", data: BytesLike): Result;
@@ -628,10 +624,6 @@ export interface XAssetCLRInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "withdrawAndClaimReward",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "withdrawToken",
     data: BytesLike
   ): Result;
 
@@ -971,6 +963,7 @@ export interface XAssetCLR extends BaseContract {
       _symbol: string,
       _tickLower: BigNumberish,
       _tickUpper: BigNumberish,
+      _poolFee: BigNumberish,
       _tradeFee: BigNumberish,
       _token0: string,
       _token1: string,
@@ -1131,12 +1124,6 @@ export interface XAssetCLR extends BaseContract {
 
     withdrawAndClaimReward(
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
-    withdrawToken(
-      token: string,
-      receiver: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
@@ -1304,6 +1291,7 @@ export interface XAssetCLR extends BaseContract {
     _symbol: string,
     _tickLower: BigNumberish,
     _tickUpper: BigNumberish,
+    _poolFee: BigNumberish,
     _tradeFee: BigNumberish,
     _token0: string,
     _token1: string,
@@ -1455,12 +1443,6 @@ export interface XAssetCLR extends BaseContract {
 
   withdrawAndClaimReward(
     amount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
-  withdrawToken(
-    token: string,
-    receiver: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -1625,6 +1607,7 @@ export interface XAssetCLR extends BaseContract {
       _symbol: string,
       _tickLower: BigNumberish,
       _tickUpper: BigNumberish,
+      _poolFee: BigNumberish,
       _tradeFee: BigNumberish,
       _token0: string,
       _token1: string,
@@ -1771,12 +1754,6 @@ export interface XAssetCLR extends BaseContract {
 
     withdrawAndClaimReward(
       amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    withdrawToken(
-      token: string,
-      receiver: string,
       overrides?: CallOverrides
     ): Promise<void>;
   };
@@ -2035,6 +2012,7 @@ export interface XAssetCLR extends BaseContract {
       _symbol: string,
       _tickLower: BigNumberish,
       _tickUpper: BigNumberish,
+      _poolFee: BigNumberish,
       _tradeFee: BigNumberish,
       _token0: string,
       _token1: string,
@@ -2174,12 +2152,6 @@ export interface XAssetCLR extends BaseContract {
 
     withdrawAndClaimReward(
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    withdrawToken(
-      token: string,
-      receiver: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
@@ -2341,6 +2313,7 @@ export interface XAssetCLR extends BaseContract {
       _symbol: string,
       _tickLower: BigNumberish,
       _tickUpper: BigNumberish,
+      _poolFee: BigNumberish,
       _tradeFee: BigNumberish,
       _token0: string,
       _token1: string,
@@ -2496,12 +2469,6 @@ export interface XAssetCLR extends BaseContract {
 
     withdrawAndClaimReward(
       amount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    withdrawToken(
-      token: string,
-      receiver: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };

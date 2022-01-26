@@ -115,7 +115,7 @@ export const ApproveTokenSection = (props: IProps) => {
       if (isMountedRef.current) {
         let step = 1
         if (token0Approved) step = 2
-        if (token1Approved) step = 3
+        if (token0Approved && token1Approved) step = 3
         setState((prev) => ({ ...prev, token0Approved, token1Approved, step }))
       }
     } catch (error) {

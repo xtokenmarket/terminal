@@ -6,6 +6,7 @@ import { CreatePoolSection, InitSection, SuccessSection } from './components'
 import { ICreatePoolData } from 'types'
 import useCommonStyles from 'style/common'
 import { useConnectedWeb3Context } from 'contexts'
+import { useHistory } from 'react-router'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,11 +31,11 @@ interface IProps {
   className?: string
   isOpen: boolean
   onClose: () => void
-  onSuccess: (poolAddress: string) => void
   poolData: ICreatePoolData
 }
 
 export const CreatePoolModal = (props: IProps) => {
+  const history = useHistory()
   const classes = useStyles()
   const commonClasses = useCommonStyles()
   const { account } = useConnectedWeb3Context()
@@ -65,7 +66,7 @@ export const CreatePoolModal = (props: IProps) => {
   }
 
   const onSuccessClose = () => {
-    props.onSuccess(poolAddress)
+    history.push(`/terminal/pools/${poolAddress}`)
   }
 
   const renderContent = () => {

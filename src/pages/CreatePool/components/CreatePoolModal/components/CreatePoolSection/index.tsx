@@ -119,6 +119,7 @@ export const CreatePoolSection = (props: IProps) => {
         createPoolTx: txId,
         isCreatingPool: false,
         poolAddress,
+        step: 2,
       }))
     } catch (error) {
       console.error('Error when deploying terminal pool', error)
@@ -136,7 +137,7 @@ export const CreatePoolSection = (props: IProps) => {
     try {
       setState((prev) => ({
         ...prev,
-        initing: true,
+        isInitiatingRewards: true,
       }))
       const txId = await lmService.initiateRewardsProgram(
         state.poolAddress,
@@ -154,6 +155,7 @@ export const CreatePoolSection = (props: IProps) => {
         isInitiatingRewards: false,
         initiateRewardsTx: txId,
         isCompleted: true,
+        step: 3,
       }))
     } catch (error) {
       console.error('Error while initiating rewards', error)

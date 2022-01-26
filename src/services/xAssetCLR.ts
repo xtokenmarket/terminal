@@ -1,7 +1,6 @@
 import { BigNumber, Contract, Wallet, ethers } from 'ethers'
 import { Maybe } from 'types'
 import Abi from 'abis'
-import { Interface } from '@ethersproject/abi'
 
 const xAssetCLRAbi = Abi.xAssetCLR
 
