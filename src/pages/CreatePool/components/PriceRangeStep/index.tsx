@@ -5,12 +5,15 @@ import { FeeAmount } from '@uniswap/v3-sdk'
 import { TokenBalanceInput, TokenPriceInput } from 'components'
 import { DEFAULT_NETWORK_ID } from 'config/constants'
 import { useConnectedWeb3Context } from 'contexts'
+import { formatUnits } from 'ethers/lib/utils'
+import { useTokenBalance } from 'helpers'
 import {
   usePools,
   useRangeHopCallbacks,
   useV3DerivedMintInfo,
 } from 'helpers/univ3/hooks'
-import { useState } from 'react'
+import _ from 'lodash'
+import { useEffect, useState } from 'react'
 import { ICreatePoolData, MintState } from 'types'
 import { Bound, Field } from 'utils/enums'
 import { ApproveTokenModal } from '../ApproveTokenModal'
@@ -60,6 +63,7 @@ interface IProps {
 
 interface IState extends MintState {
   successVisible: boolean
+  balanceErrors: (string | null)[]
 }
 
 const initialState: IState = {
@@ -70,6 +74,7 @@ const initialState: IState = {
   leftRangeTypedValue: '',
   rightRangeTypedValue: '',
   successVisible: false,
+  balanceErrors: [],
 }
 
 export const PriceRangeStep = (props: IProps) => {
@@ -169,22 +174,6 @@ export const PriceRangeStep = (props: IProps) => {
     pool
   )
 
-  const onFieldAInput = (typedValue: string) => {
-    setState((prev) => ({
-      ...prev,
-      independentField: Field.CURRENCY_A,
-      typedValue,
-    }))
-  }
-
-  const onFieldBInput = (typedValue: string) => {
-    setState((prev) => ({
-      ...prev,
-      independentField: Field.CURRENCY_B,
-      typedValue,
-    }))
-  }
-
   const onLeftRangeInput = (typedValue: string) => {
     setState((prev) => ({
       ...prev,
@@ -225,15 +214,48 @@ export const PriceRangeStep = (props: IProps) => {
     props.onNext()
   }
 
+  const onTokenInputChange = (field: Field, amount: BigNumber) => {
+    setState(prev => ({
+      ...prev,
+      independentField: field,
+      typedValue: amount.toString(),
+    }))
+  }
+
+  const { balance: balanceA } = useTokenBalance(data.token0.address)
+  const { balance: balanceB } = useTokenBalance(data.token1.address)
+  useEffect(() => {
+    const amountA = Number(formatUnits(formattedAmounts[Field.CURRENCY_A] || '0', data.token0.decimals))
+    const amountB = Number(formatUnits(formattedAmounts[Field.CURRENCY_B] || '0', data.token1.decimals))
+
+    const newErrors = [...state.balanceErrors]
+    const newErrorA = amountA > Number(formatUnits(balanceA, data.token0.decimals)) ? `${data.token0.name} input exceeds balance` : null
+    newErrors.splice(0, 1, newErrorA)
+
+    const newErrorB = amountB > Number(formatUnits(balanceB, data.token1.decimals)) ? `${data.token1.name} input exceeds balance` : null
+    newErrors.splice(1, 1, newErrorB)
+
+    if (!_.isEqual(state.balanceErrors, newErrors)) {
+      setState(prev => ({
+        ...prev,
+        balanceErrors: newErrors,
+      }))
+    }
+  }, [balanceA, balanceB, formattedAmounts, data, state.balanceErrors])
+
   const isNextBtnDisabled = !(
     state.leftRangeTypedValue &&
     state.rightRangeTypedValue &&
     parsedAmounts.CURRENCY_A &&
     parsedAmounts.CURRENCY_B &&
     !invalidRange &&
-    !errorMessage
+    !errorMessage &&
+    !state.balanceErrors.some(e => !!e)
   )
 
+  const totalErrors = [...state.balanceErrors].filter(e => !!e)
+  if (errorMessage) totalErrors.push(errorMessage)
+  
   return (
     <div className={classes.root}>
       <div>
@@ -297,18 +319,16 @@ export const PriceRangeStep = (props: IProps) => {
           <Grid item xs={12} sm={12} md={6}>
             <Typography className={classes.label}>Deposit amounts</Typography>
             <TokenBalanceInput
+              className="token0-balance-input"
               value={BigNumber.from(formattedAmounts[Field.CURRENCY_A] || '0')}
-              onChange={(amount0) => {
-                onFieldAInput(amount0.toString())
-              }}
+              onChange={(amount) => onTokenInputChange(Field.CURRENCY_A, amount)}
               token={data.token0}
               isDisabled={isTokenInputDisabled}
             />
             <TokenBalanceInput
+              className="token1-balance-input"
               value={BigNumber.from(formattedAmounts[Field.CURRENCY_B] || '0')}
-              onChange={(amount1) => {
-                onFieldBInput(amount1.toString())
-              }}
+              onChange={(amount) => onTokenInputChange(Field.CURRENCY_B, amount)}
               token={data.token1}
               isDisabled={isTokenInputDisabled}
             />
@@ -319,11 +339,11 @@ export const PriceRangeStep = (props: IProps) => {
         Pool Deployment fee is 0.1 ETH. Additional 1% fee on any rewards
         distributed for this pool.
       </Typography>
-      {errorMessage && (
+      {totalErrors.length > 0 && (
         <WarningInfo
           className={classes.warning}
           title="Warning"
-          description={errorMessage}
+          description={totalErrors.join('; ')}
         />
       )}
       <Button
