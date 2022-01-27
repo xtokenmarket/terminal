@@ -5,8 +5,7 @@ import { FeeAmount } from '@uniswap/v3-sdk'
 import { TokenBalanceInput, TokenPriceInput } from 'components'
 import { DEFAULT_NETWORK_ID } from 'config/constants'
 import { useConnectedWeb3Context } from 'contexts'
-import { ethers } from 'ethers'
-import { formatEther } from 'ethers/lib/utils'
+import { formatUnits } from 'ethers/lib/utils'
 import { useTokenBalance } from 'helpers'
 import {
   usePools,
@@ -226,14 +225,14 @@ export const PriceRangeStep = (props: IProps) => {
   const { balance: balanceA } = useTokenBalance(data.token0.address)
   const { balance: balanceB } = useTokenBalance(data.token1.address)
   useEffect(() => {
-    const amountA = Number(ethers.utils.formatEther(formattedAmounts[Field.CURRENCY_A] || '0'))
-    const amountB = Number(ethers.utils.formatEther(formattedAmounts[Field.CURRENCY_B] || '0'))
+    const amountA = Number(formatUnits(formattedAmounts[Field.CURRENCY_A] || '0', data.token0.decimals))
+    const amountB = Number(formatUnits(formattedAmounts[Field.CURRENCY_B] || '0', data.token1.decimals))
 
     const newErrors = [...state.balanceErrors]
-    const newErrorA = amountA > Number(formatEther(balanceA)) ? `${data.token0.name} input exceeds balance` : null
+    const newErrorA = amountA > Number(formatUnits(balanceA, data.token0.decimals)) ? `${data.token0.name} input exceeds balance` : null
     newErrors.splice(0, 1, newErrorA)
 
-    const newErrorB = amountB > Number(formatEther(balanceB)) ? `${data.token1.name} input exceeds balance` : null
+    const newErrorB = amountB > Number(formatUnits(balanceB, data.token1.decimals)) ? `${data.token1.name} input exceeds balance` : null
     newErrors.splice(1, 1, newErrorB)
 
     if (!_.isEqual(state.balanceErrors, newErrors)) {
