@@ -1,6 +1,7 @@
 import { Button, makeStyles, Typography } from '@material-ui/core'
 import { IRewardState } from 'components'
 import { OutputEstimation } from '../index'
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -8,6 +9,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 32,
     position: 'relative',
     paddingBottom: 16,
+    display: 'flex',
   },
   title: {
     color: theme.colors.white,
@@ -42,27 +44,42 @@ const useStyles = makeStyles((theme) => ({
     height: 24,
     borderRadius: '50%',
   },
+  arrowBackIosStyle: {
+    color: theme.colors.white,
+    cursor: 'pointer',
+    marginTop: 5,
+    marginRight: 20,
+  },
 }))
 
 interface IProps {
   onNext: () => void
   rewardState: IRewardState
   updateState: (e: any) => void
+  goBack: () => void
 }
 
 export const ConfirmSection = (props: IProps) => {
   const classes = useStyles()
 
-  const { onNext, rewardState } = props
+  const { onNext, rewardState, goBack } = props
 
   return (
     <div className={classes.root}>
       <div className={classes.header}>
-        <Typography className={classes.title}>Confirm rewards data</Typography>
-        <Typography className={classes.description}>
-          Please confirm rewards data to proceed with rewards initialization
-          process.
-        </Typography>
+        <ArrowBackIosIcon
+          className={classes.arrowBackIosStyle}
+          onClick={goBack}
+        />
+        <div>
+          <Typography className={classes.title}>
+            Confirm rewards data
+          </Typography>
+          <Typography className={classes.description}>
+            Please confirm rewards data to proceed with rewards initialization
+            process.
+          </Typography>
+        </div>
       </div>
       <OutputEstimation
         rewardState={rewardState}
