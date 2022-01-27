@@ -135,6 +135,7 @@ export const RewardModal: React.FC<IProps> = ({
             rewardState={state}
             updateState={updateState}
             goBack={goBack}
+            onClose={_onClose}
           />
         )
       case ERewardStep.Initiate:

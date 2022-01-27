@@ -1,7 +1,8 @@
-import { Button, makeStyles, Typography } from '@material-ui/core'
+import { Button, makeStyles, Typography, IconButton } from '@material-ui/core'
 import { IRewardState } from 'components'
 import { OutputEstimation } from '../index'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -50,6 +51,17 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 5,
     marginRight: 20,
   },
+  closeButton: {
+    padding: 0,
+    color: theme.colors.white1,
+    position: 'absolute',
+    right: 24,
+    top: 24,
+    [theme.breakpoints.down('xs')]: {
+      top: 12,
+      right: 12,
+    },
+  },
 }))
 
 interface IProps {
@@ -57,12 +69,13 @@ interface IProps {
   rewardState: IRewardState
   updateState: (e: any) => void
   goBack: () => void
+  onClose: () => void
 }
 
 export const ConfirmSection = (props: IProps) => {
   const classes = useStyles()
 
-  const { onNext, rewardState, goBack } = props
+  const { onNext, rewardState, goBack, onClose } = props
 
   return (
     <div className={classes.root}>
@@ -80,6 +93,9 @@ export const ConfirmSection = (props: IProps) => {
             process.
           </Typography>
         </div>
+        <IconButton className={classes.closeButton} onClick={onClose}>
+          <CloseOutlinedIcon />
+        </IconButton>
       </div>
       <OutputEstimation
         rewardState={rewardState}
