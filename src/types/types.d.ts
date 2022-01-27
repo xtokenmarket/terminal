@@ -102,12 +102,14 @@ export interface ICreatePoolData {
   uniPool: string
 }
 
+export type FullRange = true
+
 // UniswapV3
 interface MintState {
   independentField: Field
   typedValue: string
   otherTypedValue: string // for the case when there's no liquidity
   startPriceTypedValue: string // for the case when there's no liquidity
-  leftRangeTypedValue: string
-  rightRangeTypedValue: string
+  leftRangeTypedValue: string | FullRange
+  rightRangeTypedValue: string | FullRange
 }

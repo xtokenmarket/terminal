@@ -53,6 +53,14 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  fullRangeButtonText: {
+    color: 'white',
+    fontFamily: 'Gilmer',
+    fontWeight: 700,
+  },
+  fullRangeButton: {
+    margin: '0px 12px 30px 12px',
+  },
 }))
 
 interface IProps {
@@ -252,6 +260,13 @@ export const PriceRangeStep = (props: IProps) => {
     !errorMessage &&
     !state.balanceErrors.some(e => !!e)
   )
+  const onFullRangeClick = () => {
+    setState((prev) => ({
+      ...prev,
+      leftRangeTypedValue: true,
+      rightRangeTypedValue: true,
+    }))
+  }
 
   const totalErrors = [...state.balanceErrors].filter(e => !!e)
   if (errorMessage) totalErrors.push(errorMessage)
@@ -287,6 +302,12 @@ export const PriceRangeStep = (props: IProps) => {
                     ticksAtLimit={ticksAtLimit}
                     decrement={isSorted ? getDecrementLower : getIncrementUpper}
                     increment={isSorted ? getIncrementLower : getDecrementUpper}
+                    decrementDisabled={
+                      ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]
+                    }
+                    incrementDisabled={
+                      ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]
+                    }
                   />
                 </Grid>
                 <Grid item xs={6} sm={6}>
@@ -310,8 +331,26 @@ export const PriceRangeStep = (props: IProps) => {
                     ticksAtLimit={ticksAtLimit}
                     decrement={isSorted ? getDecrementUpper : getIncrementLower}
                     increment={isSorted ? getIncrementUpper : getDecrementLower}
+                    decrementDisabled={
+                      ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]
+                    }
+                    incrementDisabled={
+                      ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]
+                    }
                   />
                 </Grid>
+
+                <Button
+                  color="secondary"
+                  fullWidth
+                  onClick={onFullRangeClick}
+                  variant="contained"
+                  className={classes.fullRangeButton}
+                >
+                  <span className={classes.fullRangeButtonText}>
+                    FULL RANGE
+                  </span>
+                </Button>
               </Grid>
             </div>
           </Grid>
