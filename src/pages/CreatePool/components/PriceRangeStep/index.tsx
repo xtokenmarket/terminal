@@ -310,10 +310,10 @@ export const PriceRangeStep = (props: IProps) => {
                     decrement={isSorted ? getDecrementUpper : getIncrementLower}
                     increment={isSorted ? getIncrementUpper : getDecrementLower}
                     decrementDisabled={
-                      ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]
+                      ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]
                     }
                     incrementDisabled={
-                      ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]
+                      ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]
                     }
                   />
                 </Grid>
