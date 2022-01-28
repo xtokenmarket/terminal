@@ -1,10 +1,11 @@
-import { makeStyles, Typography } from '@material-ui/core'
+import { makeStyles, Typography, IconButton } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
 import { useServices } from 'helpers'
 import { useEffect, useState } from 'react'
 import { ICreatePoolData } from 'types'
 import { ActionStepRow, ViewTransaction, WarningInfo } from '..'
 import { parseDuration } from '../../../../../../utils/number'
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -49,12 +50,24 @@ const useStyles = makeStyles((theme) => ({
     height: 24,
     borderRadius: '50%',
   },
+  closeButton: {
+    padding: 0,
+    color: theme.colors.white1,
+    position: 'absolute',
+    right: 24,
+    top: 24,
+    [theme.breakpoints.down('xs')]: {
+      top: 12,
+      right: 12,
+    },
+  },
 }))
 
 interface IProps {
   onNext: () => void
   poolData: ICreatePoolData
   setPoolAddress: (poolAddress: string) => void
+  onClose: () => void
 }
 
 interface IState {
@@ -78,7 +91,7 @@ export const CreatePoolSection = (props: IProps) => {
     poolAddress: '',
     step: 1,
   })
-  const { onNext, poolData, setPoolAddress } = props
+  const { onNext, poolData, setPoolAddress, onClose } = props
   const { lmService } = useServices()
   const { account, library: provider } = useConnectedWeb3Context()
 
@@ -169,6 +182,11 @@ export const CreatePoolSection = (props: IProps) => {
   return (
     <div className={classes.root}>
       <div className={classes.header}>
+        {!isPoolCreated && (
+          <IconButton className={classes.closeButton} onClick={onClose}>
+            <CloseOutlinedIcon />
+          </IconButton>
+        )}
         <Typography className={classes.title}>Create Pool</Typography>
         <Typography className={classes.description}>
           Please complete the transaction to finish pool creation.

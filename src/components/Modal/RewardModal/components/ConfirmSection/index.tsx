@@ -1,6 +1,8 @@
-import { Button, makeStyles, Typography } from '@material-ui/core'
+import { Button, makeStyles, Typography, IconButton } from '@material-ui/core'
 import { IRewardState } from 'components'
 import { OutputEstimation } from '../index'
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -8,6 +10,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 32,
     position: 'relative',
     paddingBottom: 16,
+    display: 'flex',
   },
   title: {
     color: theme.colors.white,
@@ -42,27 +45,57 @@ const useStyles = makeStyles((theme) => ({
     height: 24,
     borderRadius: '50%',
   },
+  arrowBackIosStyle: {
+    color: theme.colors.white,
+    cursor: 'pointer',
+    marginTop: 5,
+    marginRight: 20,
+  },
+  closeButton: {
+    padding: 0,
+    color: theme.colors.white1,
+    position: 'absolute',
+    right: 24,
+    top: 24,
+    [theme.breakpoints.down('xs')]: {
+      top: 12,
+      right: 12,
+    },
+  },
 }))
 
 interface IProps {
   onNext: () => void
   rewardState: IRewardState
   updateState: (e: any) => void
+  goBack: () => void
+  onClose: () => void
 }
 
 export const ConfirmSection = (props: IProps) => {
   const classes = useStyles()
 
-  const { onNext, rewardState } = props
+  const { onNext, rewardState, goBack, onClose } = props
 
   return (
     <div className={classes.root}>
       <div className={classes.header}>
-        <Typography className={classes.title}>Confirm rewards data</Typography>
-        <Typography className={classes.description}>
-          Please confirm rewards data to proceed with rewards initialization
-          process.
-        </Typography>
+        <ArrowBackIosIcon
+          className={classes.arrowBackIosStyle}
+          onClick={goBack}
+        />
+        <div>
+          <Typography className={classes.title}>
+            Confirm rewards data
+          </Typography>
+          <Typography className={classes.description}>
+            Please confirm rewards data to proceed with rewards initialization
+            process.
+          </Typography>
+        </div>
+        <IconButton className={classes.closeButton} onClick={onClose}>
+          <CloseOutlinedIcon />
+        </IconButton>
       </div>
       <OutputEstimation
         rewardState={rewardState}

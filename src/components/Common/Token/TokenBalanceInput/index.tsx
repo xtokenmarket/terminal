@@ -24,7 +24,13 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   inputBox: { paddingRight: 60, fontWeight: 700 },
+  inputBoxDisabled: {
+    paddingRight: 60,
+    fontWeight: 700,
+    color: theme.colors.gray2,
+  },
   inputLabel: { color: `${theme.colors.white} !important` },
+  inputLabelDisabled: { color: `${theme.colors.gray2} !important` },
   notchedOutline: {
     borderColor: theme.colors.primary200,
   },
@@ -73,7 +79,6 @@ interface IState {
   amount: string
 }
 
-// TODO: Update color of input border and label in `disabled` state
 export const TokenBalanceInput: React.FC<IProps> = ({
   token,
   value,
@@ -107,12 +112,17 @@ export const TokenBalanceInput: React.FC<IProps> = ({
     <div className={clsx(classes.root, className)}>
       <TextField
         InputLabelProps={{
-          className: classes.inputLabel,
+          className: isDisabled
+            ? classes.inputLabelDisabled
+            : classes.inputLabel,
         }}
         InputProps={{
           classes: {
             notchedOutline: classes.notchedOutline,
-            input: clsx(commonClasses.hideInputArrow, classes.inputBox),
+            input: clsx(
+              commonClasses.hideInputArrow,
+              isDisabled ? classes.inputLabelDisabled : classes.inputBox
+            ),
           },
         }}
         className={classes.input}

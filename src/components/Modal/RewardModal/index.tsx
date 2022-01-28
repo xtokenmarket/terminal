@@ -114,6 +114,9 @@ export const RewardModal: React.FC<IProps> = ({
     }
   }
 
+  const goBack = () =>
+    setState((prev) => ({ ...prev, step: ERewardStep.Input }))
+
   const renderContent = () => {
     switch (state.step) {
       case ERewardStep.Input:
@@ -131,6 +134,8 @@ export const RewardModal: React.FC<IProps> = ({
             onNext={onNextStep}
             rewardState={state}
             updateState={updateState}
+            goBack={goBack}
+            onClose={_onClose}
           />
         )
       case ERewardStep.Initiate:
