@@ -137,6 +137,7 @@ export const PriceRangeStep = (props: IProps) => {
     ticksAtLimit,
     invalidRange,
     errorMessage,
+    outOfRange
   } = useV3DerivedMintInfo(
     state,
     baseCurrency ?? undefined,
@@ -166,7 +167,7 @@ export const PriceRangeStep = (props: IProps) => {
   const rightPrice = isSorted ? priceUpper : priceLower?.invert()
 
   const isTokenInputDisabled =
-    tickLower === undefined || tickUpper === undefined || invalidRange
+    tickLower === undefined || tickUpper === undefined || invalidRange || outOfRange
 
   const {
     getDecrementLower,
@@ -258,7 +259,8 @@ export const PriceRangeStep = (props: IProps) => {
     parsedAmounts.CURRENCY_B &&
     !invalidRange &&
     !errorMessage &&
-    !state.balanceErrors.some(e => !!e)
+    !state.balanceErrors.some(e => !!e) &&
+    !outOfRange
   )
   const onFullRangeClick = () => {
     setState((prev) => ({
