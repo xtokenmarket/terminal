@@ -79,6 +79,7 @@ export const CreatePoolModal = (props: IProps) => {
             onNext={onNextStep}
             poolData={props.poolData}
             setPoolAddress={setPoolAddress}
+            onClose={onClose}
           />
         )
       default:
