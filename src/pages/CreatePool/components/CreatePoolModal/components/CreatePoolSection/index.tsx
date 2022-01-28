@@ -182,9 +182,11 @@ export const CreatePoolSection = (props: IProps) => {
   return (
     <div className={classes.root}>
       <div className={classes.header}>
-        <IconButton className={classes.closeButton} onClick={onClose}>
-          <CloseOutlinedIcon />
-        </IconButton>
+        {!isPoolCreated && (
+          <IconButton className={classes.closeButton} onClick={onClose}>
+            <CloseOutlinedIcon />
+          </IconButton>
+        )}
         <Typography className={classes.title}>Create Pool</Typography>
         <Typography className={classes.description}>
           Please complete the transaction to finish pool creation.
