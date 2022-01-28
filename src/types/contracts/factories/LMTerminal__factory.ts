@@ -190,11 +190,6 @@ const _abi = [
           },
           {
             internalType: "uint256",
-            name: "duration",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
             name: "vestingPeriod",
             type: "uint256",
           },
@@ -440,6 +435,11 @@ const _abi = [
         internalType: "uint256[]",
         name: "totalRewardAmounts",
         type: "uint256[]",
+      },
+      {
+        internalType: "uint256",
+        name: "rewardsDuration",
+        type: "uint256",
       },
     ],
     name: "initiateRewardsProgram",

@@ -58,6 +58,8 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
+  isCreatePool: boolean
+  isInitiateRewardsPending: boolean
   onNext: () => void
   onClose: () => void
   rewardState: IRewardState
@@ -65,6 +67,8 @@ interface IProps {
 }
 
 export const InputSection: React.FC<IProps> = ({
+  isCreatePool,
+  isInitiateRewardsPending,
   onNext,
   onClose,
   rewardState,
@@ -73,8 +77,9 @@ export const InputSection: React.FC<IProps> = ({
   const cl = useStyles()
 
   const { duration, errors } = rewardState
-  const isDisabled =
-    errors.some((error) => !!error) || duration === '' || Number(duration) === 0
+  const isDurationInvalid =
+    !isCreatePool && (duration === '' || Number(duration) === 0)
+  const isDisabled = errors.some((error) => !!error) || isDurationInvalid
 
   return (
     <div className={cl.root}>
@@ -88,16 +93,19 @@ export const InputSection: React.FC<IProps> = ({
         </IconButton>
       </div>
       <div className={cl.content}>
+        {!isCreatePool && (
+          <RewardPeriodInput
+            label={'Rewards period'}
+            value={rewardState.duration}
+            onChange={(newValue) =>
+              updateState({
+                duration: newValue,
+              })
+            }
+          />
+        )}
         <RewardPeriodInput
-          label={'Rewards period'}
-          value={rewardState.duration}
-          onChange={(newValue) =>
-            updateState({
-              duration: newValue,
-            })
-          }
-        />
-        <RewardPeriodInput
+          isDisabled={isInitiateRewardsPending}
           label={'Vesting period'}
           value={rewardState.vesting}
           onChange={(newValue) =>
@@ -106,7 +114,12 @@ export const InputSection: React.FC<IProps> = ({
             })
           }
         />
-        <RewardTokens rewardState={rewardState} updateState={updateState} />
+        <RewardTokens
+          isCreatePool={isCreatePool}
+          isInitiateRewardsPending={isInitiateRewardsPending}
+          rewardState={rewardState}
+          updateState={updateState}
+        />
       </div>
       <div className={cl.actions}>
         <FeeInfo />

@@ -18,6 +18,9 @@ const useStyles = makeStyles((theme) => ({
     '&:hover': {
       backgroundColor: theme.colors.primary200,
     },
+    '&.disabled': {
+      cursor: 'default',
+    },
   },
   icon: {},
   text: {
@@ -31,17 +34,20 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   className?: string
+  isDisabled?: boolean
   token?: IToken
   onChange: (_: IToken) => void
 }
 
 export const TokenSelect: React.FC<IProps> = ({
   token,
+  isDisabled = false,
   onChange,
   className,
 }) => {
   const classes = useStyles()
   const [modalVisible, setModalVisible] = useState(false)
+
   return (
     <div>
       <TokenSelectModal
@@ -54,17 +60,19 @@ export const TokenSelect: React.FC<IProps> = ({
       />
       <div
         className={clsx(classes.root, className)}
-        onClick={() => setModalVisible(true)}
+        onClick={() => (!isDisabled ? setModalVisible(true) : undefined)}
       >
         <TokenIcon token={token} />
         <Typography className={classes.text}>
           {token ? token.symbol : 'Select token'}
         </Typography>
-        <img
-          alt="down"
-          className={classes.downArrow}
-          src="/assets/icons/down-arrow.svg"
-        />
+        {!isDisabled && (
+          <img
+            alt="down"
+            className={classes.downArrow}
+            src="/assets/icons/down-arrow.svg"
+          />
+        )}
       </div>
     </div>
   )

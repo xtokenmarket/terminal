@@ -78,9 +78,9 @@ export const RewardSection = (props: IProps) => {
     inited: false,
     initing: false,
     initTx: '',
-    approved: rewardState.tokens.map((e) => false),
-    approving: rewardState.tokens.map((e) => false),
-    approveTx: rewardState.tokens.map((e) => ''),
+    approved: rewardState.tokens.map(() => false),
+    approving: rewardState.tokens.map(() => false),
+    approveTx: rewardState.tokens.map(() => ''),
     step: 1,
   })
 
@@ -190,13 +190,16 @@ export const RewardSection = (props: IProps) => {
       )
       const stepNumber =
         getNextApproveIndex(
-          state.approving.map((element, eIndex) =>
-            eIndex === index ? false : element
+          state.approved.map((element, eIndex) =>
+            eIndex === index ? true : element
           )
         ) + 1
 
       setState((prev) => ({
         ...prev,
+        approved: prev.approved.map((element, eIndex) =>
+          eIndex === index ? true : element
+        ),
         approving: prev.approving.map((element, eIndex) =>
           eIndex === index ? false : element
         ),

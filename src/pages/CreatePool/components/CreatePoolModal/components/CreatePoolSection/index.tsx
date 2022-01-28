@@ -73,9 +73,9 @@ interface IProps {
 interface IState {
   isCompleted: boolean
   isCreatingPool: boolean
-  isInitiatingRewards: boolean
+  // isInitiatingRewards: boolean
   createPoolTx: string
-  initiateRewardsTx: string
+  // initiateRewardsTx: string
   poolAddress: string
   step: number
 }
@@ -85,9 +85,9 @@ export const CreatePoolSection = (props: IProps) => {
   const [state, setState] = useState<IState>({
     isCompleted: false,
     isCreatingPool: false,
-    isInitiatingRewards: false,
+    // isInitiatingRewards: false,
     createPoolTx: '',
-    initiateRewardsTx: '',
+    // initiateRewardsTx: '',
     poolAddress: '',
     step: 1,
   })
@@ -132,7 +132,8 @@ export const CreatePoolSection = (props: IProps) => {
         createPoolTx: txId,
         isCreatingPool: false,
         poolAddress,
-        step: 2,
+        isCompleted: true,
+        // step: 2,
       }))
     } catch (error) {
       console.error('Error when deploying terminal pool', error)
@@ -143,7 +144,7 @@ export const CreatePoolSection = (props: IProps) => {
     }
   }
 
-  const onInitiateRewards = async () => {
+  /* const onInitiateRewards = async () => {
     if (!account || !provider) {
       return
     }
@@ -154,7 +155,8 @@ export const CreatePoolSection = (props: IProps) => {
       }))
       const txId = await lmService.initiateRewardsProgram(
         state.poolAddress,
-        poolData.rewardState.amounts
+        poolData.rewardState.amounts,
+        parseDuration(poolData.rewardState.duration)
       )
       const finalTxId = await lmService.waitUntilRewardsProgramInitiated(
         state.poolAddress,
@@ -177,7 +179,7 @@ export const CreatePoolSection = (props: IProps) => {
         isInitiatingRewards: false,
       }))
     }
-  }
+  } */
 
   return (
     <div className={classes.root}>
@@ -214,7 +216,7 @@ export const CreatePoolSection = (props: IProps) => {
               ) : null
             }
           />
-          <ActionStepRow
+          {/*<ActionStepRow
             step={2}
             isActiveStep={state.step === 2}
             comment="Complete"
@@ -228,7 +230,7 @@ export const CreatePoolSection = (props: IProps) => {
                 <ViewTransaction txId={state.initiateRewardsTx} />
               ) : null
             }
-          />
+          />*/}
         </div>
       </div>
     </div>

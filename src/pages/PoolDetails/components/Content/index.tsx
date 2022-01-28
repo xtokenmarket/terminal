@@ -240,6 +240,7 @@ export const Content = (props: IProps) => {
     .map((e) => e.toLowerCase())
     .includes((account || '').toLowerCase())
   const isDeposited = !state.stakedTokenBalance.isZero()
+  const isInitiateRewardsPending = poolData.periodFinish.isZero()
   const rewardPeriodFinished = poolData.periodFinish.toNumber() < timestamp
 
   const setDepositModalVisible = (depositVisible: boolean) => {
@@ -300,12 +301,14 @@ export const Content = (props: IProps) => {
 
       <RewardModal
         isCreatePool={false}
+        isInitiateRewardsPending={isInitiateRewardsPending}
         isOpen={state.rewardVisible}
         onClose={() => setRewardModalVisible(false)}
         onSuccess={async () => {
           setRewardModalVisible(false)
           await props.reloadTerminalPool()
         }}
+        poolData={poolData}
       />
 
       {state.withdrawVisible && (

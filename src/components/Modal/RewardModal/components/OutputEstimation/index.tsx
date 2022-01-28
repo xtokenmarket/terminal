@@ -47,12 +47,11 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   className?: string
   rewardState: IRewardState
-  amounts: BigNumber[]
 }
 
 export const OutputEstimation = (props: IProps) => {
   const classes = useStyles()
-  const { rewardState, amounts } = props
+  const { rewardState } = props
 
   return (
     <div className={clsx(classes.root, props.className)}>
@@ -71,7 +70,11 @@ export const OutputEstimation = (props: IProps) => {
               </div>
               &nbsp;&nbsp;
               <Typography className={classes.amount}>
-                {formatBigNumber(amounts[index], rewardToken.decimals, 4)}
+                {formatBigNumber(
+                  rewardState.amounts[index],
+                  rewardToken.decimals,
+                  4
+                )}
                 &nbsp;
                 <span>~ $13.009</span>
               </Typography>

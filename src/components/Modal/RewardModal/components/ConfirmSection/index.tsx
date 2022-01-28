@@ -65,6 +65,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
+  isCreatePool: boolean
   onNext: () => void
   rewardState: IRewardState
   updateState: (e: any) => void
@@ -97,10 +98,7 @@ export const ConfirmSection = (props: IProps) => {
           <CloseOutlinedIcon />
         </IconButton>
       </div>
-      <OutputEstimation
-        rewardState={rewardState}
-        amounts={rewardState.amounts}
-      />
+      <OutputEstimation rewardState={rewardState} />
       <div className={classes.content}>
         <div className={classes.actions}>
           <Button

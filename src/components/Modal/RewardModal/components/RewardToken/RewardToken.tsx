@@ -5,7 +5,7 @@ import { IToken } from 'types'
 import { BigNumber } from 'ethers'
 import { ZERO } from 'utils/number'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   rewardToken: {
     display: 'flex',
     flexDirection: 'column',
@@ -18,20 +18,24 @@ const useStyles = makeStyles(theme => ({
     alignSelf: 'flex-end',
     '&:hover': {
       textDecoration: 'underline',
-    }
+    },
   },
 }))
 
 interface IProps {
+  isCreatePool: boolean
+  isInitiateRewardsPending: boolean
   token?: IToken
   balance?: BigNumber
-  rewardFeePercent: number,
+  rewardFeePercent: number
   onSelectToken: (token: IToken) => void
   onChangeAmount: (amount: BigNumber, balance: BigNumber) => void
   onRemove?: () => void
 }
 
 export const RewardToken: React.FC<IProps> = ({
+  isCreatePool,
+  isInitiateRewardsPending,
   token,
   balance,
   rewardFeePercent,
@@ -42,16 +46,23 @@ export const RewardToken: React.FC<IProps> = ({
   const cl = useStyles()
   return (
     <div className={cl.rewardToken}>
-      <Button
-        disableRipple
-        variant="text"
-        className={cl.removeTextBtn}
-        onClick={onRemove}
-      >
-        Remove Token
-      </Button>
-      <TokenSelect onChange={onSelectToken} token={token} />
-      {token && balance && (
+      {!isInitiateRewardsPending && (
+        <Button
+          disableRipple
+          variant="text"
+          className={cl.removeTextBtn}
+          onClick={onRemove}
+        >
+          Remove Token
+        </Button>
+      )}
+      <TokenSelect
+        className={isInitiateRewardsPending ? 'disabled' : ''}
+        isDisabled={isInitiateRewardsPending}
+        onChange={onSelectToken}
+        token={token}
+      />
+      {token && balance && !isCreatePool && (
         <TokenBalanceInput
           variant="rewardToken"
           rewardFeePercent={rewardFeePercent}
