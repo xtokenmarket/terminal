@@ -53,7 +53,11 @@ export const ApproveTokenModal = ({
   return (
     <Modal open={isOpen}>
       <div className={clsx(classes.root, commonClasses.scroll, className)}>
-        <ApproveTokenSection onNext={onSuccess} poolData={poolData} />
+        <ApproveTokenSection
+          onClose={onClose}
+          onNext={onSuccess}
+          poolData={poolData}
+        />
       </div>
     </Modal>
   )

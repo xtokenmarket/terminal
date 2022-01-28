@@ -1,4 +1,4 @@
-import { makeStyles, Typography } from '@material-ui/core'
+import { makeStyles, Typography, IconButton } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef } from 'helpers'
 import { useEffect, useState } from 'react'
@@ -6,6 +6,7 @@ import { ERC20Service } from 'services'
 import { ICreatePoolData } from 'types'
 import { ActionStepRow, ViewTransaction, WarningInfo } from '..'
 import { getContractAddress } from 'config/networks'
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -50,11 +51,23 @@ const useStyles = makeStyles((theme) => ({
     height: 24,
     borderRadius: '50%',
   },
+  closeButton: {
+    padding: 0,
+    color: theme.colors.white1,
+    position: 'absolute',
+    right: 24,
+    top: 24,
+    [theme.breakpoints.down('xs')]: {
+      top: 12,
+      right: 12,
+    },
+  },
 }))
 
 interface IProps {
   onNext: () => void
   poolData: ICreatePoolData
+  onClose: () => void
 }
 
 interface IState {
@@ -78,7 +91,7 @@ export const ApproveTokenSection = (props: IProps) => {
     token1Approving: false,
     step: 1,
   })
-  const { onNext, poolData } = props
+  const { onNext, poolData, onClose } = props
   const { account, library: provider, networkId } = useConnectedWeb3Context()
 
   const isMountedRef = useIsMountedRef()
@@ -204,6 +217,11 @@ export const ApproveTokenSection = (props: IProps) => {
   return (
     <div className={classes.root}>
       <div className={classes.header}>
+        {!state.token0Approving && !state.token1Approving && (
+          <IconButton className={classes.closeButton} onClick={onClose}>
+            <CloseOutlinedIcon />
+          </IconButton>
+        )}
         <Typography className={classes.title}>Approve tokens</Typography>
         <Typography className={classes.description}>
           Please complete all transactions to proceed with pool creation.
