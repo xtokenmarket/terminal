@@ -65,6 +65,11 @@ export const CreatePoolModal = (props: IProps) => {
     }
   }
 
+  const onCreatePoolSectionClose = () => {
+    setStep(ECreatePoolModalStep.Init)
+    onClose()
+  }
+
   const onSuccessClose = () => {
     history.push(`/terminal/pools/${poolAddress}`)
   }
@@ -79,7 +84,7 @@ export const CreatePoolModal = (props: IProps) => {
             onNext={onNextStep}
             poolData={props.poolData}
             setPoolAddress={setPoolAddress}
-            onClose={onClose}
+            onClose={onCreatePoolSectionClose}
           />
         )
       default:
