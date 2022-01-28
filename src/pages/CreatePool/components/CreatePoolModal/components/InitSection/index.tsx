@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   onNext: () => void
+  onClose: () => void
 }
 
 export const InitSection = (props: IProps) => {
@@ -30,6 +31,15 @@ export const InitSection = (props: IProps) => {
         variant="contained"
       >
         CREATE POOL
+      </Button>
+      <Button
+        className={classes.button}
+        color="secondary"
+        fullWidth
+        onClick={props.onClose}
+        variant="contained"
+      >
+        CANCEL
       </Button>
     </div>
   )

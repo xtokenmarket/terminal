@@ -72,7 +72,7 @@ export const CreatePoolModal = (props: IProps) => {
   const renderContent = () => {
     switch (step) {
       case ECreatePoolModalStep.Init:
-        return <InitSection onNext={onNextStep} />
+        return <InitSection onNext={onNextStep} onClose={onClose} />
       case ECreatePoolModalStep.Create:
         return (
           <CreatePoolSection
