@@ -63,7 +63,7 @@ const STEPS_DATA: Record<ECreatePoolStep, { index: number; label: string }> = {
   },
   [ECreatePoolStep.Rewards]: {
     index: 2,
-    label: 'Rewards (Optional)',
+    label: 'Rewards',
   },
   // [ECreatePoolStep.Done]: {
   //   index: 3,
