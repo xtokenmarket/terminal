@@ -2,7 +2,7 @@ import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { FEE_TIERS } from 'config/constants'
 import React, { useState } from 'react'
-import { ICreatePoolData } from 'types'
+import { ICreatePoolData, ITerminalPool } from 'types'
 import { RewardTokensTable } from './RewardTokensTable'
 import { IRewardState, RewardModal } from 'components'
 import { CreatePoolModal } from '../CreatePoolModal'
@@ -176,11 +176,7 @@ export const RewardsStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
             <Typography className={cl.label}>Rewards</Typography>
             <div className={cl.noRewardsWrapper}>
               {hasRewards ? (
-                <RewardTokensTable
-                  amounts={data.rewardState.amounts}
-                  duration={data.rewardState.duration}
-                  tokens={data.rewardState.tokens}
-                />
+                <RewardTokensTable rewardState={data.rewardState} />
               ) : (
                 <Typography className={cl.noRewardsText}>
                   You have no rewards program for this pool.
@@ -221,6 +217,7 @@ export const RewardsStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
         onSuccess={async () => {
           toggleRewardsModal()
         }}
+        poolData={data}
       />
 
       <CreatePoolModal

@@ -91,7 +91,7 @@ export const OutputEstimation = (props: IProps) => {
         <Typography className={classes.label}>
           {isEstimation ? 'REWARDS YOU WILL EARN' : 'REWARDS YOU EARNED'}
         </Typography>
-        {poolData.rewardTokens.map((rewardToken, index) => {
+        {poolData.rewardState.tokens.map((rewardToken, index) => {
           return (
             <div className={classes.infoRow} key={rewardToken.address}>
               <div>

@@ -152,19 +152,19 @@ export const PoolTableItem = (props: IProps) => {
         <PoolTd type="vesting">
           <div className={classes.itemAlignRight}>
             <Typography className={classes.label}>
-              {getTimeDurationStr(poolData.rewardsDuration.toNumber())}
+              {getTimeDurationStr(Number(poolData.rewardState.duration))}
             </Typography>
           </div>
         </PoolTd>
         <PoolTd type="program">
           <div className={classes.itemAlignRight}>
-            {poolData.rewardTokens.map((rewardToken, index) => {
+            {poolData.rewardState.tokens.map((rewardToken, index) => {
               const durationInfo = getTimeDurationUnitInfo(
-                poolData.rewardsDuration.toNumber()
+                Number(poolData.rewardState.duration)
               )
-              const uintAmount = poolData.rewardsPerToken[index]
+              const uintAmount = poolData.rewardState.amounts[index]
                 .mul(durationInfo.unit)
-                .div(poolData.rewardsDuration)
+                .div(Number(poolData.rewardState.duration))
               return (
                 <Typography className={classes.label} key={rewardToken.address}>
                   {formatToShortNumber(

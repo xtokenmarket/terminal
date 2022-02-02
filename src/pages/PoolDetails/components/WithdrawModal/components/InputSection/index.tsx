@@ -75,7 +75,7 @@ export const InputSection = (props: IProps) => {
         stakingToken.getBalanceOf(account),
       ])
 
-      const earnedCall = poolData.rewardTokens.map((rewardToken) => ({
+      const earnedCall = poolData.rewardState.tokens.map((rewardToken) => ({
         name: 'earned',
         address: poolData.address,
         params: [account, rewardToken.address],

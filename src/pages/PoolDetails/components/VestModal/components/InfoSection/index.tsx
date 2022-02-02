@@ -75,7 +75,7 @@ export const InfoSection = (props: IProps) => {
         stakingToken.getBalanceOf(account),
       ])
 
-      const earnedCall = poolData.rewardTokens.map((rewardToken) => ({
+      const earnedCall = poolData.rewardState.tokens.map((rewardToken) => ({
         name: 'earned',
         address: poolData.address,
         params: [account, rewardToken.address],
@@ -87,7 +87,7 @@ export const InfoSection = (props: IProps) => {
 
       const escrowAddress = getContractAddress('rewardEscrow', networkId)
 
-      const numVestingEntriesCalls = poolData.rewardTokens.map(
+      const numVestingEntriesCalls = poolData.rewardState.tokens.map(
         (rewardToken) => ({
           name: 'numVestingEntries',
           address: escrowAddress,
@@ -105,7 +105,8 @@ export const InfoSection = (props: IProps) => {
       for (let index = 0; index < numVestingEntriesResponse.length; index++) {
         const vestingCount = numVestingEntriesResponse[index][0].toNumber()
         const subCalls = []
-        const rewardToken = poolData.rewardTokens[index]
+        const rewardToken = poolData.rewardState.tokens[index]
+
         for (let i = 0; i < vestingCount; i++) {
           subCalls.push({
             name: 'getVestingScheduleEntry',
@@ -113,6 +114,7 @@ export const InfoSection = (props: IProps) => {
             params: [poolData.address, rewardToken.address, account, i],
           })
         }
+
         const entryResponse = await multicall.multicallv2(
           Abi.RewardEscrow,
           subCalls,

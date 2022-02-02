@@ -240,7 +240,6 @@ export const Content = (props: IProps) => {
     .map((e) => e.toLowerCase())
     .includes((account || '').toLowerCase())
   const isDeposited = !state.stakedTokenBalance.isZero()
-  const isInitiateRewardsPending = poolData.periodFinish.isZero()
   const rewardPeriodFinished = poolData.periodFinish.toNumber() < timestamp
 
   const setDepositModalVisible = (depositVisible: boolean) => {
@@ -301,7 +300,6 @@ export const Content = (props: IProps) => {
 
       <RewardModal
         isCreatePool={false}
-        isInitiateRewardsPending={isInitiateRewardsPending}
         isOpen={state.rewardVisible}
         onClose={() => setRewardModalVisible(false)}
         onSuccess={async () => {
@@ -355,7 +353,9 @@ export const Content = (props: IProps) => {
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
               <InfoSection
                 label="VESTING PERIOD"
-                value={getTimeDurationStr(poolData.rewardsDuration.toNumber())}
+                value={getTimeDurationStr(
+                  Number(poolData.rewardState.duration)
+                )}
               />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>

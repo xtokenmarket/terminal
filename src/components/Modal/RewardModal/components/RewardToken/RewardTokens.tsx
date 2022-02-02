@@ -18,14 +18,12 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   isCreatePool: boolean
-  isInitiateRewardsPending: boolean
   rewardState: IRewardState
   updateState: (_: Partial<IRewardState>) => void
 }
 
 export const RewardTokens: React.FC<IProps> = ({
   isCreatePool,
-  isInitiateRewardsPending,
   rewardState,
   updateState,
 }) => {
@@ -115,7 +113,6 @@ export const RewardTokens: React.FC<IProps> = ({
     return (
       <RewardToken
         isCreatePool={isCreatePool}
-        isInitiateRewardsPending={isInitiateRewardsPending}
         rewardFeePercent={rewardFeePercent}
         balance={ZERO}
         onSelectToken={(token) => onSelectToken(token, 0)}
@@ -136,7 +133,6 @@ export const RewardTokens: React.FC<IProps> = ({
         <div key={i}>
           <RewardToken
             isCreatePool={isCreatePool}
-            isInitiateRewardsPending={isInitiateRewardsPending}
             token={tokens[i]}
             balance={amount}
             rewardFeePercent={rewardFeePercent}
@@ -148,7 +144,7 @@ export const RewardTokens: React.FC<IProps> = ({
           />
         </div>
       ))}
-      {!isInitiateRewardsPending && (
+      {isCreatePool && (
         <div className={cl.buttonRow}>
           <Button
             fullWidth

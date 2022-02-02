@@ -76,7 +76,7 @@ interface IProps {
 export const ConfirmSection = (props: IProps) => {
   const classes = useStyles()
 
-  const { onNext, rewardState, goBack, onClose } = props
+  const { isCreatePool, onNext, rewardState, goBack, onClose } = props
 
   return (
     <div className={classes.root}>
@@ -98,7 +98,7 @@ export const ConfirmSection = (props: IProps) => {
           <CloseOutlinedIcon />
         </IconButton>
       </div>
-      <OutputEstimation rewardState={rewardState} />
+      <OutputEstimation isCreatePool={isCreatePool} rewardState={rewardState} />
       <div className={classes.content}>
         <div className={classes.actions}>
           <Button

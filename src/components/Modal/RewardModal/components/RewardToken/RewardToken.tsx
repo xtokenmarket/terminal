@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
-import { Button, makeStyles, Typography } from '@material-ui/core'
+import React from 'react'
+import { Button, makeStyles } from '@material-ui/core'
 import { TokenBalanceInput, TokenSelect } from 'components'
 import { IToken } from 'types'
 import { BigNumber } from 'ethers'
-import { ZERO } from 'utils/number'
 
 const useStyles = makeStyles((theme) => ({
   rewardToken: {
@@ -24,7 +23,6 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   isCreatePool: boolean
-  isInitiateRewardsPending: boolean
   token?: IToken
   balance?: BigNumber
   rewardFeePercent: number
@@ -35,7 +33,6 @@ interface IProps {
 
 export const RewardToken: React.FC<IProps> = ({
   isCreatePool,
-  isInitiateRewardsPending,
   token,
   balance,
   rewardFeePercent,
@@ -44,9 +41,10 @@ export const RewardToken: React.FC<IProps> = ({
   onRemove,
 }) => {
   const cl = useStyles()
+
   return (
     <div className={cl.rewardToken}>
-      {!isInitiateRewardsPending && (
+      {isCreatePool && (
         <Button
           disableRipple
           variant="text"
@@ -57,8 +55,8 @@ export const RewardToken: React.FC<IProps> = ({
         </Button>
       )}
       <TokenSelect
-        className={isInitiateRewardsPending ? 'disabled' : ''}
-        isDisabled={isInitiateRewardsPending}
+        className={!isCreatePool ? 'disabled' : ''}
+        isDisabled={!isCreatePool}
         onChange={onSelectToken}
         token={token}
       />

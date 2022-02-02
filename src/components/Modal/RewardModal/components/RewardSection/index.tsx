@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { ERC20Service } from 'services'
 import { ActionStepRow, ViewTransaction, WarningInfo } from '../index'
 import { parseDuration } from 'utils/number'
+import { ITerminalPool } from 'types'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -56,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   isCreatePool: boolean
   onNext: () => void
-  poolAddress: string
+  poolData: ITerminalPool
   rewardState: IRewardState
   updateState: (e: any) => void
 }
@@ -73,7 +74,8 @@ interface IState {
 
 export const RewardSection = (props: IProps) => {
   const classes = useStyles()
-  const { isCreatePool, onNext, rewardState, poolAddress } = props
+  const { isCreatePool, onNext, poolData, rewardState } = props
+
   const [state, setState] = useState<IState>({
     inited: false,
     initing: false,
@@ -142,13 +144,17 @@ export const RewardSection = (props: IProps) => {
         ...prev,
         initing: true,
       }))
-      const txId = await lmService.initiateNewRewardsProgram(
-        poolAddress,
+
+      const initiateRewardsMethod = poolData.periodFinish.isZero()
+        ? lmService.initiateRewardsProgram
+        : lmService.initiateNewRewardsProgram
+      const txId = await initiateRewardsMethod(
+        poolData.address,
         rewardState.amounts,
         parseDuration(rewardState.duration)
       )
       const finalTxId = await lmService.waitUntilRewardsProgramInitiated(
-        poolAddress,
+        poolData.address,
         rewardState.amounts,
         parseDuration(rewardState.duration),
         txId

@@ -8,7 +8,7 @@ import {
   SuccessSection,
   ConfirmSection,
 } from './components'
-import { ITerminalPool, IToken } from 'types'
+import { ICreatePoolData, ITerminalPool, IToken } from 'types'
 import { BigNumber } from '@ethersproject/bignumber'
 import useCommonStyles from 'style/common'
 import { useConnectedWeb3Context } from 'contexts'
@@ -49,12 +49,11 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   className?: string
   isCreatePool: boolean
-  isInitiateRewardsPending?: boolean
   isOpen: boolean
   onClose: () => void
   onCreateReward?: (state: IRewardState) => void
   onSuccess: () => Promise<void>
-  poolData?: ITerminalPool
+  poolData?: ICreatePoolData | ITerminalPool
 }
 
 export interface IRewardState {
@@ -68,7 +67,6 @@ export interface IRewardState {
 
 export const RewardModal: React.FC<IProps> = ({
   isCreatePool,
-  isInitiateRewardsPending = false,
   isOpen,
   className,
   onClose,
@@ -80,20 +78,26 @@ export const RewardModal: React.FC<IProps> = ({
   const commonClasses = useCommonStyles()
   const { account } = useConnectedWeb3Context()
 
-  const [state, setState] = useState<IRewardState>({
-    ...DEFAULT_REWARD_STATE,
-    amounts: poolData?.rewardTokens.map(() => ZERO) || [],
-    errors: poolData?.rewardTokens.map(() => 'Amount is 0') || [],
-    tokens: poolData?.rewardTokens || [],
-    vesting: poolData?.vestingPeriod.toString() || '',
-  })
+  const initialRewardState = {
+    amounts: poolData?.rewardState.tokens.map(() => ZERO) || [],
+    duration: '',
+    errors:
+      (!isCreatePool &&
+        poolData?.rewardState.tokens.map(() => 'Amount is 0')) ||
+      [],
+    step: ERewardStep.Input,
+    tokens: poolData?.rewardState.tokens || [],
+    vesting: poolData?.rewardState.vesting.toString() || '',
+  }
+
+  const [state, setState] = useState<IRewardState>(initialRewardState)
 
   const updateState = (e: Partial<IRewardState>) => {
     setState((prev) => ({ ...prev, ...e }))
   }
 
   const _onClose = () => {
-    updateState(DEFAULT_REWARD_STATE)
+    updateState(initialRewardState)
     onClose()
   }
 
@@ -133,7 +137,6 @@ export const RewardModal: React.FC<IProps> = ({
         return (
           <InputSection
             isCreatePool={isCreatePool}
-            isInitiateRewardsPending={isInitiateRewardsPending}
             onNext={onNextStep}
             updateState={updateState}
             rewardState={state}
@@ -156,7 +159,7 @@ export const RewardModal: React.FC<IProps> = ({
           <RewardSection
             isCreatePool={isCreatePool}
             onNext={onNextStep}
-            poolAddress={poolData?.address as string}
+            poolData={poolData as ITerminalPool}
             rewardState={state}
             updateState={updateState}
           />

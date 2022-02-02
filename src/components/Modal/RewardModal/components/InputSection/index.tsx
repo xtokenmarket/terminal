@@ -59,7 +59,6 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   isCreatePool: boolean
-  isInitiateRewardsPending: boolean
   onNext: () => void
   onClose: () => void
   rewardState: IRewardState
@@ -68,7 +67,6 @@ interface IProps {
 
 export const InputSection: React.FC<IProps> = ({
   isCreatePool,
-  isInitiateRewardsPending,
   onNext,
   onClose,
   rewardState,
@@ -76,17 +74,22 @@ export const InputSection: React.FC<IProps> = ({
 }) => {
   const cl = useStyles()
 
-  const { duration, errors } = rewardState
+  const { duration, errors, tokens } = rewardState
   const isDurationInvalid =
     !isCreatePool && (duration === '' || Number(duration) === 0)
-  const isDisabled = errors.some((error) => !!error) || isDurationInvalid
+  const isDisabled =
+    tokens.length === 0 || errors.some((error) => !!error) || isDurationInvalid
 
   return (
     <div className={cl.root}>
       <div className={cl.header}>
-        <Typography className={cl.title}>Create a rewards program</Typography>
+        <Typography className={cl.title}>
+          {isCreatePool ? 'Create a' : 'Initiate'} rewards program
+        </Typography>
         <Typography className={cl.description}>
-          Select a reward token and adjust the settings.
+          {isCreatePool
+            ? 'Select a reward token and adjust the settings.'
+            : 'Configure rewards period and token amounts'}
         </Typography>
         <IconButton className={cl.closeButton} onClick={onClose}>
           <CloseOutlinedIcon />
@@ -105,7 +108,7 @@ export const InputSection: React.FC<IProps> = ({
           />
         )}
         <RewardPeriodInput
-          isDisabled={isInitiateRewardsPending}
+          isDisabled={!isCreatePool}
           label={'Vesting period'}
           value={rewardState.vesting}
           onChange={(newValue) =>
@@ -116,7 +119,6 @@ export const InputSection: React.FC<IProps> = ({
         />
         <RewardTokens
           isCreatePool={isCreatePool}
-          isInitiateRewardsPending={isInitiateRewardsPending}
           rewardState={rewardState}
           updateState={updateState}
         />
@@ -131,7 +133,7 @@ export const InputSection: React.FC<IProps> = ({
           onClick={onNext}
           disabled={isDisabled}
         >
-          CREATE REWARDS
+          {isCreatePool ? 'CREATE' : 'INITIATE'} REWARDS
         </Button>
       </div>
     </div>
