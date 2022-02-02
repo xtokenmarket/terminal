@@ -1,5 +1,4 @@
 import { makeStyles, Tooltip } from '@material-ui/core'
-import clsx from 'clsx'
 import { SortButton } from 'components'
 import { PoolTd } from '..'
 
@@ -52,7 +51,9 @@ export const PoolTableHeader = () => {
         </div>
       </PoolTd>
       <PoolTd type="program">
-        <div className={classes.itemAlignRight}>PROGRAM</div>
+        <div className={classes.itemAlignRight}>
+          PROGRAM
+        </div>
       </PoolTd>
       <PoolTd type="ending">
         <div className={classes.itemAlignRight}>

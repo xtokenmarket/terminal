@@ -21,7 +21,9 @@ const useStyles = makeStyles((theme) => ({
       marginTop: 8,
     },
   },
-  loader: { padding: '20px 0' },
+  loader: {
+    padding: '20px 0',
+  },
   content: {
     cursor: 'pointer',
     padding: 16,

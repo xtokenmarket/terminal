@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme: any) => ({
     '&.allocation': { flex: 1 },
     '&.tvl': { width: '10%' },
     '&.vesting': { width: '10%' },
-    '&.program': { width: '15%' },
+    '&.program': { width: '18%' },
     '&.ending': { width: '15%' },
     '&.apr': { width: '10%' },
     '&+&': { paddingLeft: 16 },
@@ -22,8 +22,11 @@ interface IProps {
   children: React.ReactNode | React.ReactNode[]
 }
 
-export const PoolTd = (props: IProps) => {
-  const classes = useStyles()
+export const PoolTd: React.FC<IProps> = ({
+  type,
+  children
+}) => {
+  const cl = useStyles()
 
-  return <div className={clsx(classes.root, props.type)}>{props.children}</div>
+  return <div className={clsx(cl.root, type)}>{children}</div>
 }
