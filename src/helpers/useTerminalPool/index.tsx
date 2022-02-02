@@ -5,10 +5,10 @@ import { useServices } from 'helpers'
 import { useEffect, useState } from 'react'
 import { ERC20Service } from 'services'
 import { ITerminalPool, IToken } from 'types'
-
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatBigNumber } from 'utils'
 import { getCoinGeckoIDs, getTokenExchangeRate } from './helper'
+import { ERewardStep } from 'utils/enums'
 
 interface IState {
   pool?: ITerminalPool
@@ -220,17 +220,21 @@ export const useTerminalPool = (poolAddress: string) => {
           tradeFee,
           poolFee,
           uniswapPool,
-          rewardTokens,
-          rewardsDuration,
+          rewardState: {
+            amounts: rewardsPerToken,
+            duration: String(rewardsDuration),
+            errors: [],
+            step: ERewardStep.Input,
+            tokens: rewardTokens,
+            vesting: vestingPeriod.toString(),
+          },
           rewardsAreEscrowed,
           owner: owner.toLowerCase(),
           periodFinish,
-          vestingPeriod,
           ticks: {
             tick0: ticks[0],
             tick1: ticks[1],
           },
-          rewardsPerToken,
           manager,
           tvl,
         },

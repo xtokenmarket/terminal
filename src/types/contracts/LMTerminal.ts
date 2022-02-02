@@ -30,13 +30,11 @@ export type PositionTicksStructOutput = [number, number] & {
 
 export type RewardsProgramStruct = {
   rewardTokens: string[];
-  duration: BigNumberish;
   vestingPeriod: BigNumberish;
 };
 
-export type RewardsProgramStructOutput = [string[], BigNumber, BigNumber] & {
+export type RewardsProgramStructOutput = [string[], BigNumber] & {
   rewardTokens: string[];
-  duration: BigNumber;
   vestingPeriod: BigNumber;
 };
 
@@ -77,14 +75,14 @@ export type UniswapContractsStructOutput = [string, string, string] & {
 export interface LMTerminalInterface extends utils.Interface {
   functions: {
     "clrDeployer()": FunctionFragment;
-    "deployIncentivizedPool(string,(int24,int24),(address[],uint256,uint256),(uint24,address,address,uint256,uint256))": FunctionFragment;
+    "deployIncentivizedPool(string,(int24,int24),(address[],uint256),(uint24,address,address,uint256,uint256))": FunctionFragment;
     "deployUniswapPool(address,address,uint24,uint160)": FunctionFragment;
     "deployedCLRPools(uint256)": FunctionFragment;
     "deploymentFee()": FunctionFragment;
     "getPool(address,address,uint24)": FunctionFragment;
     "initialize(address,address,address,address,address,(address,address,address),uint256,uint256,uint256)": FunctionFragment;
     "initiateNewRewardsProgram(address,uint256[],uint256)": FunctionFragment;
-    "initiateRewardsProgram(address,uint256[])": FunctionFragment;
+    "initiateRewardsProgram(address,uint256[],uint256)": FunctionFragment;
     "positionManager()": FunctionFragment;
     "proxyAdmin()": FunctionFragment;
     "rewardEscrow()": FunctionFragment;
@@ -145,7 +143,7 @@ export interface LMTerminalInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "initiateRewardsProgram",
-    values: [string, BigNumberish[]]
+    values: [string, BigNumberish[], BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "positionManager",
@@ -384,6 +382,7 @@ export interface LMTerminal extends BaseContract {
     initiateRewardsProgram(
       clrPool: string,
       totalRewardAmounts: BigNumberish[],
+      rewardsDuration: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -472,6 +471,7 @@ export interface LMTerminal extends BaseContract {
   initiateRewardsProgram(
     clrPool: string,
     totalRewardAmounts: BigNumberish[],
+    rewardsDuration: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -560,6 +560,7 @@ export interface LMTerminal extends BaseContract {
     initiateRewardsProgram(
       clrPool: string,
       totalRewardAmounts: BigNumberish[],
+      rewardsDuration: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -703,6 +704,7 @@ export interface LMTerminal extends BaseContract {
     initiateRewardsProgram(
       clrPool: string,
       totalRewardAmounts: BigNumberish[],
+      rewardsDuration: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -784,6 +786,7 @@ export interface LMTerminal extends BaseContract {
     initiateRewardsProgram(
       clrPool: string,
       totalRewardAmounts: BigNumberish[],
+      rewardsDuration: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

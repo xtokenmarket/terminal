@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
-import { Button, makeStyles, Typography } from '@material-ui/core'
+import React from 'react'
+import { Button, makeStyles } from '@material-ui/core'
 import { TokenBalanceInput, TokenSelect } from 'components'
 import { IToken } from 'types'
 import { BigNumber } from 'ethers'
-import { ZERO } from 'utils/number'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   rewardToken: {
     display: 'flex',
     flexDirection: 'column',
@@ -18,20 +17,22 @@ const useStyles = makeStyles(theme => ({
     alignSelf: 'flex-end',
     '&:hover': {
       textDecoration: 'underline',
-    }
+    },
   },
 }))
 
 interface IProps {
+  isCreatePool: boolean
   token?: IToken
   balance?: BigNumber
-  rewardFeePercent: number,
+  rewardFeePercent: number
   onSelectToken: (token: IToken) => void
   onChangeAmount: (amount: BigNumber, balance: BigNumber) => void
   onRemove?: () => void
 }
 
 export const RewardToken: React.FC<IProps> = ({
+  isCreatePool,
   token,
   balance,
   rewardFeePercent,
@@ -40,18 +41,26 @@ export const RewardToken: React.FC<IProps> = ({
   onRemove,
 }) => {
   const cl = useStyles()
+
   return (
     <div className={cl.rewardToken}>
-      <Button
-        disableRipple
-        variant="text"
-        className={cl.removeTextBtn}
-        onClick={onRemove}
-      >
-        Remove Token
-      </Button>
-      <TokenSelect onChange={onSelectToken} token={token} />
-      {token && balance && (
+      {isCreatePool && (
+        <Button
+          disableRipple
+          variant="text"
+          className={cl.removeTextBtn}
+          onClick={onRemove}
+        >
+          Remove Token
+        </Button>
+      )}
+      <TokenSelect
+        className={!isCreatePool ? 'disabled' : ''}
+        isDisabled={!isCreatePool}
+        onChange={onSelectToken}
+        token={token}
+      />
+      {token && balance && !isCreatePool && (
         <TokenBalanceInput
           variant="rewardToken"
           rewardFeePercent={rewardFeePercent}

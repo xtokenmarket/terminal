@@ -228,11 +228,13 @@ class LMService {
   // initiate rewards program
   initiateRewardsProgram = async (
     clrPool: string,
-    amounts: BigNumber[]
+    amounts: BigNumber[],
+    duration: number
   ): Promise<string> => {
     const transactionObject = await this.contract.initiateRewardsProgram(
       clrPool,
-      amounts
+      amounts,
+      duration
     )
     console.log(
       `initiateRewardsProgram transaction hash: ${transactionObject.hash}`

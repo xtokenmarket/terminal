@@ -66,10 +66,7 @@ export const SuccessSection = (props: IProps) => {
           you can see details of your initialization.
         </Typography>
       </div>
-      <OutputEstimation
-        rewardState={rewardState}
-        amounts={rewardState.amounts}
-      />
+      <OutputEstimation rewardState={rewardState} />
       <div className={classes.actions}>
         <Button
           color="primary"

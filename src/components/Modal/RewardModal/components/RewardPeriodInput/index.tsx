@@ -9,6 +9,9 @@ const useStyles = makeStyles((theme) => ({
     '& + &': {
       marginTop: 32,
     },
+    '& .MuiInputBase-root.Mui-disabled': {
+      marginBottom: 26,
+    },
   },
   input: {
     '& .Mui-focused': {
@@ -69,6 +72,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
+  isDisabled?: boolean
   label: string
   value: string
   onChange: (_: string) => void
@@ -76,6 +80,7 @@ interface IProps {
 }
 
 export const RewardPeriodInput: React.FC<IProps> = ({
+  isDisabled = false,
   label,
   value,
   onChange,
@@ -112,21 +117,24 @@ export const RewardPeriodInput: React.FC<IProps> = ({
           endAdornment: <InputAdornment position="end">Weeks</InputAdornment>,
         }}
         label={label}
+        disabled={isDisabled}
       />
-      <div className={cl.buttons}>
-        {[1, 3, 5, 8].map((week) => (
-          <span
-            key={`${week}`}
-            className={clsx(
-              cl.button,
-              week === Number(value || '0') && 'active'
-            )}
-            onClick={() => onChange(week.toString())}
-          >
-            {week}&nbsp;W
-          </span>
-        ))}
-      </div>
+      {!isDisabled && (
+        <div className={cl.buttons}>
+          {[1, 3, 5, 8].map((week) => (
+            <span
+              key={`${week}`}
+              className={clsx(
+                cl.button,
+                week === Number(value || '0') && 'active'
+              )}
+              onClick={() => onChange(week.toString())}
+            >
+              {week}&nbsp;W
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

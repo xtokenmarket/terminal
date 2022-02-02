@@ -124,7 +124,7 @@ export const WithdrawSection = (props: IProps) => {
 
       if (!withdrawState.withdrawOnly) {
         const claimInfo = await lmService.parseClaimTx(finalTxId)
-        poolData.rewardTokens.forEach((rewardToken) => {
+        poolData.rewardState.tokens.forEach((rewardToken) => {
           const rewardAmount =
             claimInfo[rewardToken.address.toLowerCase()] || ZERO
           claimedEarn.push(rewardAmount)
