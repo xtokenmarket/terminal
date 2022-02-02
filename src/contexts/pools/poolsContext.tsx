@@ -1,18 +1,23 @@
-import React, { useState } from 'react'
+import { useConnectedWeb3Context } from 'contexts'
+import { useTerminalPools } from 'helpers'
+import React from 'react'
 
 import { createContextWithDefault } from 'utils/reactContext'
 
 interface PoolsContextType {
-  pools: any[]
+  pools: string[]
+  loading: boolean
 }
 
 const [PoolsContext, usePoolsContext] = createContextWithDefault<PoolsContextType>()
 
 const PoolsContextProvider: React.FC = ({ children }) => {
-  const [pools, setPools] = useState([])
+  const { account } = useConnectedWeb3Context()
+  const { pools, loading } = useTerminalPools()
 
   const value = {
-    pools
+    loading,
+    pools,
   }
   return (
     <PoolsContext.Provider value={value}>

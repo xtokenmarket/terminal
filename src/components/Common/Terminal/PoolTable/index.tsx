@@ -25,7 +25,7 @@ interface IProps {
 
 export const PoolTable = (props: IProps) => {
   const classes = useStyles()
-  console.log(props.poolAddresses)
+  // console.log(props.poolAddresses)
 
   return (
     <div className={classes.root}>

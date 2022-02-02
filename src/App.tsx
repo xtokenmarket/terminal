@@ -10,6 +10,7 @@ import { ETHEME } from 'utils/enums'
 import React from 'react'
 import './App.scss'
 import { ConnectedWeb3 } from 'contexts'
+import { PoolsContextProvider } from 'contexts/pools'
 
 function getLibrary(provider: any): Web3Provider {
   const library = new Web3Provider(provider)
@@ -32,7 +33,11 @@ function App() {
           maxSnack={3}
         >
           <ConnectedWeb3>
-            <BrowserRouter>{renderRoutes(routes as never)}</BrowserRouter>
+            <PoolsContextProvider>
+              <BrowserRouter>
+                {renderRoutes(routes as never)}
+              </BrowserRouter>
+            </PoolsContextProvider>
           </ConnectedWeb3>
         </SnackbarProvider>
       </Web3ReactProvider>
