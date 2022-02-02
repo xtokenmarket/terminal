@@ -4,6 +4,7 @@ import clsx from 'clsx'
 import { IRewardState, TokenIcon } from 'components'
 import { IToken } from 'types'
 import { formatBigNumber } from 'utils'
+import React from 'react'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -22,15 +23,21 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     marginBottom: 8,
   },
+  token: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   tokenIcon: {
     width: 36,
     height: 36,
     border: `4px solid ${theme.colors.transparent}`,
-    '&+&': {
-      borderColor: theme.colors.primary500,
-      position: 'relative',
-      left: -12,
-    },
+  },
+  tokenLabel: {
+    fontSize: 18,
+    fontWeight: 700,
+    color: 'white',
+    marginLeft: 4,
   },
   amount: {
     fontSize: 24,
@@ -46,35 +53,55 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   className?: string
+  isCreatePool?: boolean
   rewardState: IRewardState
-  amounts: BigNumber[]
 }
 
-export const OutputEstimation = (props: IProps) => {
+export const OutputEstimation: React.FC<IProps> = ({
+  className,
+  isCreatePool = false,
+  rewardState,
+}) => {
   const classes = useStyles()
-  const { rewardState, amounts } = props
 
   return (
-    <div className={clsx(classes.root, props.className)}>
+    <div className={clsx(classes.root, className)}>
       <div className={classes.estimation}>
-        <Typography className={classes.label}>REWARDS PERIOD</Typography>
+        <Typography className={classes.label}>
+          {isCreatePool ? 'VESTING' : 'REWARDS'} PERIOD
+        </Typography>
         <Typography className={classes.amount}>
-          {rewardState.duration} weeks
+          {isCreatePool ? rewardState.vesting || '0' : rewardState.duration}{' '}
+          weeks
         </Typography>
         <br />
-        <Typography className={classes.label}>REWARDS AMOUNTS</Typography>
+        <Typography className={classes.label}>
+          REWARD {isCreatePool ? 'TOKENS' : 'AMOUNTS'}
+        </Typography>
         {rewardState.tokens.map((rewardToken, index) => {
           return (
             <div className={classes.infoRow} key={rewardToken.address}>
-              <div>
+              <div className={classes.token}>
                 <TokenIcon token={rewardToken} className={classes.tokenIcon} />
+                {isCreatePool && (
+                  <span className={classes.tokenLabel}>
+                    {rewardToken.symbol}
+                  </span>
+                )}
               </div>
               &nbsp;&nbsp;
-              <Typography className={classes.amount}>
-                {formatBigNumber(amounts[index], rewardToken.decimals, 4)}
-                &nbsp;
-                <span>~ $13.009</span>
-              </Typography>
+              {!isCreatePool && (
+                <Typography className={classes.amount}>
+                  {formatBigNumber(
+                    rewardState.amounts[index],
+                    rewardToken.decimals,
+                    4
+                  )}
+                  &nbsp;
+                  {/* TODO: Display estimated token value */}
+                  <span>~ $13.009</span>
+                </Typography>
+              )}
             </div>
           )
         })}

@@ -306,6 +306,7 @@ export const Content = (props: IProps) => {
           setRewardModalVisible(false)
           await props.reloadTerminalPool()
         }}
+        poolData={poolData}
       />
 
       {state.withdrawVisible && (
@@ -352,7 +353,9 @@ export const Content = (props: IProps) => {
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
               <InfoSection
                 label="VESTING PERIOD"
-                value={getTimeDurationStr(poolData.rewardsDuration.toNumber())}
+                value={getTimeDurationStr(
+                  Number(poolData.rewardState.duration)
+                )}
               />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>

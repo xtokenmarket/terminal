@@ -65,7 +65,7 @@ export const OutputEstimation = (props: IProps) => {
         <Typography className={classes.label}>
           {isEstimation ? 'AVAILABLE TO VEST' : 'YOU VESTED'}
         </Typography>
-        {poolData.rewardTokens.map((rewardToken, index) => {
+        {poolData.rewardState.tokens.map((rewardToken, index) => {
           return (
             <div className={classes.infoRow} key={rewardToken.address}>
               <div>
@@ -88,7 +88,7 @@ export const OutputEstimation = (props: IProps) => {
           <>
             <Typography className={classes.label}>VESTING PERIOD</Typography>
             <Typography className={classes.amount}>
-              {getTimeDurationStr(poolData.rewardsDuration.toNumber())}
+              {getTimeDurationStr(Number(poolData.rewardState.duration))}
             </Typography>
           </>
         )}

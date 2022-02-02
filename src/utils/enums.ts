@@ -82,7 +82,7 @@ export enum ERewardStep {
 export enum ECreatePoolStep {
   TokenPair = 'Token Pair',
   PriceRange = 'Price Range',
-  Rewards = 'Rewards (Optional)',
+  Rewards = 'Rewards',
   // Done = 'Done',
 }
 

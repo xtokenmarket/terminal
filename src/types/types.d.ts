@@ -77,13 +77,10 @@ export interface ITerminalPool {
   tradeFee: BigNumber // xToken Trade Fee as a divisor (100 = 1%)
   poolFee: BigNumber
   uniswapPool: string
-  rewardTokens: IToken[]
-  rewardsPerToken: BigNumber[]
-  rewardsDuration: BigNumber
+  rewardState: IRewardState
   rewardsAreEscrowed: boolean
   owner: string
   periodFinish: BigNumber
-  vestingPeriod: BigNumber
   ticks: { tick0: BigNumber; tick1: BigNumber }
   manager: string
   tvl: string

@@ -9,10 +9,8 @@ import {
   TableBody,
   TableCell,
 } from '@material-ui/core'
-import { BigNumber } from 'ethers'
-import { IToken } from 'types'
-import { formatEther } from 'ethers/lib/utils'
 import { useServices } from 'helpers'
+import { IRewardState } from 'components'
 
 const useStyles = makeStyles((theme) => ({
   tableContainer: {},
@@ -38,15 +36,11 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  amounts: BigNumber[]
-  duration: string
-  tokens: IToken[]
+  rewardState: IRewardState
 }
 
 export const RewardTokensTable: React.FC<IProps> = ({
-  amounts,
-  duration,
-  tokens,
+  rewardState: { tokens, vesting },
 }) => {
   const cl = useStyles()
   const { lmService } = useServices()
@@ -66,42 +60,31 @@ export const RewardTokensTable: React.FC<IProps> = ({
           <TableRow>
             <TableCell>
               <Typography variant="h6" className={cl.rowHeader}>
-                REWARDS AMOUNT
+                REWARD TOKENS
               </Typography>
             </TableCell>
             <TableCell>
               <Typography variant="h6" className={cl.rowHeader}>
-                TOTAL REWARDS
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h6" className={cl.rowHeader}>
-                REWARDS PERIOD
+                VESTING PERIOD
               </Typography>
             </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {tokens.map((token, i) => {
-            const amount = formatEther(amounts[i])
             return (
               <TableRow>
                 <TableCell>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <img src={token.image} style={{ marginRight: 8 }} />
                     <Typography variant="h3" className={cl.bodyRowText}>
-                      {amount}
+                      {token.symbol}
                     </Typography>
                   </div>
                 </TableCell>
                 <TableCell>
                   <Typography variant="h5" className={cl.bodyRowText}>
-                    {(Number(amount) * (1 + rewardFeePercent)).toFixed(4)}
-                  </Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="h5" className={cl.bodyRowText}>
-                    {`${duration} ${duration === '1' ? 'week' : 'weeks'}`}
+                    {vesting ? `${vesting} week(s)` : '-'}
                   </Typography>
                 </TableCell>
               </TableRow>

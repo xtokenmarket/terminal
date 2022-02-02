@@ -106,7 +106,7 @@ export const VestSection = (props: IProps) => {
 
       const claimedEarn: BigNumber[] = []
 
-      poolData.rewardTokens.forEach((rewardToken) => {
+      poolData.rewardState.tokens.forEach((rewardToken) => {
         const rewardAmount =
           claimInfo[rewardToken.address.toLowerCase()] || ZERO
         claimedEarn.push(rewardAmount)
