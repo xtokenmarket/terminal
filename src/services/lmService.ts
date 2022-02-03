@@ -410,11 +410,11 @@ class LMService {
   deployIncentivizedPool = async (
     poolData: ICreatePoolData
   ): Promise<string> => {
+    // TODO: Standardize symbol for different fee tiers
     const symbol = `${poolData.token0.symbol}-${poolData.token1.symbol}-CLR`
     const deploymentFee = await this.contract.deploymentFee()
 
     const rewardsProgram = {
-      duration: parseDuration(poolData.rewardState.duration),
       rewardTokens: poolData.rewardState.tokens.map((token) => token.address),
       vestingPeriod: parseDuration(poolData.rewardState.vesting),
     }

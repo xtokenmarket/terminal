@@ -84,26 +84,35 @@ export const getTimeDurationStr = (secs: number) => {
   if (secs < 60) {
     return `${secs} secs`
   }
+
   const mins = Math.floor(secs / 60)
   if (mins < 60) {
     return `${mins} mins`
   }
+
   const hours = Math.floor(mins / 60)
   if (hours < 24) {
     return `${hours} hours`
   }
-  const days = Math.floor(hours / 24)
 
-  if (days < 7) {
+  const days = Math.floor(hours / 24)
+  if (days === 1) {
+    return `${days} day`
+  } else if (days < 7) {
     return `${days} days`
   }
 
   const weeks = Math.floor(days / 7)
-  if (weeks < 5) {
+  if (weeks === 1) {
+    return `${weeks} week`
+  } else if (weeks < 5) {
     return `${weeks} weeks`
   }
 
   const months = Math.floor(days / 30)
+  if (months === 1) {
+    return `${months} month`
+  }
   return `${months} months`
 }
 
