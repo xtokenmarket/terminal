@@ -21,7 +21,9 @@ const useStyles = makeStyles((theme) => ({
       marginTop: 8,
     },
   },
-  loader: { padding: '20px 0' },
+  loader: {
+    padding: '20px 0',
+  },
   content: {
     cursor: 'pointer',
     padding: 16,
@@ -96,9 +98,11 @@ interface IProps {
   className?: string
 }
 
-export const PoolTableItem = (props: IProps) => {
-  const classes = useStyles()
-  const { poolAddress } = props
+export const PoolTableItem: React.FC<IProps> = ({
+  poolAddress,
+  className,
+}) => {
+  const cl = useStyles()
   const { pool: poolData, loading } = useTerminalPool(poolAddress)
 
   const renderContent = () => {
@@ -108,26 +112,26 @@ export const PoolTableItem = (props: IProps) => {
 
     return (
       <NavLink
-        className={classes.content}
+        className={cl.content}
         to={`/terminal/pools/${poolData.address}`}
       >
         <PoolTd type="pool">
-          <div className={classes.item}>
+          <div className={cl.item}>
             <img
               alt="token0"
-              className={classes.tokenIcon}
+              className={cl.tokenIcon}
               src={poolData.token0.image}
             />
             <img
               alt="token1"
-              className={classes.tokenIcon}
+              className={cl.tokenIcon}
               src={poolData.token1.image}
             />
           </div>
         </PoolTd>
         <PoolTd type="allocation">
-          <div className={classes.item}>
-            <Typography className={classes.allocation}>
+          <div className={cl.item}>
+            <Typography className={cl.allocation}>
               {poolData.token0.symbol}&nbsp;
               <span>{`${getFloatDecimalNumber(
                 poolData.token0.percent as string,
@@ -143,21 +147,21 @@ export const PoolTableItem = (props: IProps) => {
           </div>
         </PoolTd>
         <PoolTd type="tvl">
-          <div className={classes.itemAlignRight}>
-            <Typography className={classes.label}>{`$${numberWithCommas(
+          <div className={cl.itemAlignRight}>
+            <Typography className={cl.label}>{`$${numberWithCommas(
               poolData.tvl
             )}`}</Typography>
           </div>
         </PoolTd>
         <PoolTd type="vesting">
-          <div className={classes.itemAlignRight}>
-            <Typography className={classes.label}>
+          <div className={cl.itemAlignRight}>
+            <Typography className={cl.label}>
               {getTimeDurationStr(Number(poolData.rewardState.duration))}
             </Typography>
           </div>
         </PoolTd>
         <PoolTd type="program">
-          <div className={classes.itemAlignRight}>
+          <div className={cl.itemAlignRight}>
             {poolData.rewardState.tokens.map((rewardToken, index) => {
               const durationInfo = getTimeDurationUnitInfo(
                 Number(poolData.rewardState.duration)
@@ -166,7 +170,7 @@ export const PoolTableItem = (props: IProps) => {
                 .mul(durationInfo.unit)
                 .div(Number(poolData.rewardState.duration))
               return (
-                <Typography className={classes.label} key={rewardToken.address}>
+                <Typography className={cl.label} key={rewardToken.address}>
                   {formatToShortNumber(
                     formatBigNumber(uintAmount, rewardToken.decimals)
                   )}{' '}
@@ -177,8 +181,8 @@ export const PoolTableItem = (props: IProps) => {
           </div>
         </PoolTd>
         <PoolTd type="ending">
-          <div className={classes.itemAlignRight}>
-            <Typography className={classes.label}>
+          <div className={cl.itemAlignRight}>
+            <Typography className={cl.label}>
               {moment(new Date(poolData.periodFinish.toNumber() * 1000)).format(
                 'MMM DD, YYYY'
               )}
@@ -186,8 +190,8 @@ export const PoolTableItem = (props: IProps) => {
           </div>
         </PoolTd>
         <PoolTd type="apr">
-          <div className={classes.itemAlignRight}>
-            <Typography className={classes.apr}>99%</Typography>
+          <div className={cl.itemAlignRight}>
+            <Typography className={cl.apr}>99%</Typography>
           </div>
         </PoolTd>
       </NavLink>
@@ -195,11 +199,8 @@ export const PoolTableItem = (props: IProps) => {
   }
 
   return (
-    <div className={classes.root}>
-      {!poolData && loading ? (
-        <SimpleLoader className={classes.loader} />
-      ) : null}
-      {poolData ? renderContent() : null}
+    <div className={cl.root}>
+      {loading ? <SimpleLoader className={cl.loader} /> : renderContent()}
     </div>
   )
 }

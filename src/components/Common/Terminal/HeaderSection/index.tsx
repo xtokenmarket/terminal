@@ -12,81 +12,68 @@ import { NavLink } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: 36,
-    [theme.breakpoints.down('md')]: {
-      flexDirection: 'column',
-    },
-  },
-  right: {
-    flex: 1,
-    display: 'flex',
-    alignItems: 'center',
-    margin: '0 -4px',
-    [theme.breakpoints.down('md')]: {
-      flex: 'unset',
-      width: '100%',
-    },
-    [theme.breakpoints.down('xs')]: {
-      flexWrap: 'wrap',
-    },
-  },
-  tmp: { flex: 1 },
-  link: {
-    height: 40,
-    backgroundColor: theme.colors.secondary,
-    margin: 4,
-    fontSize: 14,
-    color: theme.colors.primary700,
-    fontWeight: 600,
-    textDecoration: 'none',
-    display: 'inline-flex',
-    alignItems: 'center',
-    borderRadius: 4,
-    justifyContent: 'center',
-    padding: '0 20px',
+    marginBottom: theme.spacing(4),
   },
   input: {
     width: '100%',
     border: `1px solid ${theme.colors.purple0} `,
     borderRadius: 4,
-    padding: '8px 12px ',
+    marginBottom: theme.spacing(1),
+    padding: theme.spacing(1, 2),
     '& input': {
       color: theme.colors.white,
     },
-    flex: 1,
-    marginRight: 16,
-    [theme.breakpoints.down('md')]: {
-      flex: 'unset',
-      width: '100%',
-      marginBottom: 16,
-      marginRight: 0,
+  },
+  bottomSection: {
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+    },
+  },
+  createBtn: {
+    padding: '8px 20px',
+    backgroundColor: theme.colors.secondary,
+    fontSize: 14,
+    color: theme.colors.primary700,
+    fontWeight: 600,
+    textDecoration: 'none',
+    borderRadius: 4,
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: 'auto',
+    [theme.breakpoints.down('xs')]: {
+      margin: theme.spacing(1, 0, 0, 2),
     },
   },
   checkLabel: {
     margin: 4,
     color: theme.colors.purple0,
-    '& span': { fontSize: 14 },
+    '& span': {
+      fontSize: 14,
+    },
   },
-  checkIcon: { padding: 4 },
-  searchIcon: { color: theme.colors.eighth },
+  searchIcon: {
+    color: theme.colors.eighth,
+  },
 }))
 
-export const HeaderSection = () => {
-  const classes = useStyles()
+export const HeaderSection: React.FC = () => {
+  const cl = useStyles()
   const { account } = useConnectedWeb3Context()
   const isConnected = !!account
 
   return (
-    <div className={classes.root}>
+    <div className={cl.root}>
       <TextField
-        className={classes.input}
+        className={cl.input}
         InputProps={{
           disableUnderline: true,
           startAdornment: (
             <InputAdornment position="start">
-              <SearchIcon className={classes.searchIcon} />
+              <SearchIcon className={cl.searchIcon} />
             </InputAdornment>
           ),
         }}
@@ -94,20 +81,19 @@ export const HeaderSection = () => {
         color="primary"
         placeholder="Search by token name, symbol, or address"
       />
-      <div className={classes.right}>
+      <div className={cl.bottomSection}>
         <FormControlLabel
-          className={classes.checkLabel}
+          className={cl.checkLabel}
           control={<Checkbox />}
           label="Staked Only"
         />
         <FormControlLabel
-          className={classes.checkLabel}
-          control={<Checkbox className={classes.checkIcon} />}
+          className={cl.checkLabel}
+          control={<Checkbox />}
           label="Staked Ended"
         />
-        <div className={classes.tmp} />
         {isConnected && (
-          <NavLink to="/terminal/new-pool" className={classes.link}>
+          <NavLink to="/terminal/new-pool" className={cl.createBtn}>
             <AddIcon />
             &nbsp; CREATE
           </NavLink>

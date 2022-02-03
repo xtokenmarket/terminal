@@ -2,12 +2,13 @@ import { SimpleLoader, HeaderSection, PoolTable } from 'components'
 import { useMyTerminalPools } from 'helpers'
 
 const MyPools = () => {
-  const { pools: poolAddresses, loading } = useMyTerminalPools()
+  const { pools, loading } = useMyTerminalPools()
+
+  const isLoading = loading && pools.length === 0
   return (
     <div>
       <HeaderSection />
-      <PoolTable poolAddresses={poolAddresses} />
-      {loading && poolAddresses.length === 0 && <SimpleLoader />}
+      {isLoading ? <SimpleLoader /> : <PoolTable addresses={pools} />}
     </div>
   )
 }
