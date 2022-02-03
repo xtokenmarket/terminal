@@ -2,12 +2,12 @@ import { SimpleLoader, HeaderSection, PoolTable } from 'components'
 import { usePoolsContext } from 'contexts/pools'
 
 const Discover = () => {
-  const { poolsLoading, pools } = usePoolsContext()
-  const isLoading = poolsLoading && pools.length === 0
+  const { isLoading, pools } = usePoolsContext()
+  const loading = isLoading && pools.length === 0
   return (
     <div>
       <HeaderSection />
-      {isLoading ? <SimpleLoader /> : <PoolTable addresses={pools} />}
+      {loading ? <SimpleLoader /> : <PoolTable addresses={pools} />}
     </div>
   )
 }
