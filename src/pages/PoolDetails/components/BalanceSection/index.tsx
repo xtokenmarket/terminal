@@ -68,7 +68,7 @@ export const BalanceSection = (props: IProps) => {
         <div className={classes.texts}>
           <Typography className={classes.balance}>
             {numberWithCommas(formatBigNumber(balance, token.decimals))}{' '}
-            <span>{token.percent}%</span>
+            <span>{Number(token.percent).toFixed(2)}%</span>
           </Typography>
           <Typography className={classes.dollar}>
             ~ ${numberWithCommas(token.tvl as string)}

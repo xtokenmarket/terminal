@@ -188,7 +188,7 @@ export const RewardsStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
                 onClick={toggleRewardsModal}
                 variant="contained"
               >
-                {hasRewards ? 'EDIT REWARDS' : 'CREATE A REWARDS PROGRAM'}
+                {hasRewards ? 'EDIT REWARDS' : 'CONFIGURE REWARDS'}
               </Button>
             </div>
           </Grid>

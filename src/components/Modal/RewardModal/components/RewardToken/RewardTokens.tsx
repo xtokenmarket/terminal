@@ -6,6 +6,7 @@ import { ZERO } from 'utils/number'
 import { RewardToken } from '.'
 import { IRewardState } from '../..'
 import { useServices } from 'helpers'
+import { formatEther } from 'ethers/lib/utils'
 
 const useStyles = makeStyles((theme) => ({
   rewardTokens: {},
@@ -50,7 +51,11 @@ export const RewardTokens: React.FC<IProps> = ({
 
     const newTokens = tokens
     newTokens.splice(i, 1, token)
-    updateState({ tokens: newTokens })
+
+    const newErrors = errors
+    newErrors.splice(i, 1, null)
+
+    updateState({ tokens: newTokens, errors: newErrors })
     onChangeAmount(ZERO, ZERO, i)
   }
 
@@ -59,7 +64,9 @@ export const RewardTokens: React.FC<IProps> = ({
     userBalance: BigNumber,
     i: number
   ) => {
-    const exceedsBalance = amount.gt(userBalance)
+    const numAmount = Number(formatEther(amount))
+    const numBalance = Number(formatEther(userBalance))
+    const exceedsBalance = numBalance < ((1 + rewardFeePercent) * numAmount)
     const isZero = amount.isZero()
     const newErrors = errors
 
@@ -84,7 +91,7 @@ export const RewardTokens: React.FC<IProps> = ({
     newAmounts.push(ZERO)
 
     const newErrors = errors
-    newErrors.push(null)
+    newErrors.push('New token is not selected')
 
     updateState({
       amounts: newAmounts,
