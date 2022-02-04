@@ -6,6 +6,7 @@ import { ZERO } from 'utils/number'
 import { RewardToken } from '.'
 import { IRewardState } from '../..'
 import { useServices } from 'helpers'
+import { formatEther } from 'ethers/lib/utils'
 
 const useStyles = makeStyles((theme) => ({
   rewardTokens: {},
@@ -63,7 +64,9 @@ export const RewardTokens: React.FC<IProps> = ({
     userBalance: BigNumber,
     i: number
   ) => {
-    const exceedsBalance = amount.gt(userBalance)
+    const numAmount = Number(formatEther(amount))
+    const numBalance = Number(formatEther(userBalance))
+    const exceedsBalance = numBalance < ((1 + rewardFeePercent) * numAmount)
     const isZero = amount.isZero()
     const newErrors = errors
 

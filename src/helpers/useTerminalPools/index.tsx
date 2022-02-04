@@ -22,6 +22,7 @@ export const useTerminalPools = () => {
           pools: [
             '0x1bE9Fe7B8113598642DEedF1F05F2085d9968C87',
             '0xFe12bDEF490b5B55DF51df1854c09cdCa24045ee',
+            '0xEe89Eaf18A27F2480d91aDc064c7150f3Acab370',
           ],
           loading: false,
         }))
