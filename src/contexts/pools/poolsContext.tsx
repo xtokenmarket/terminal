@@ -1,8 +1,9 @@
 import { useConnectedWeb3Context } from 'contexts'
 import { useMyTerminalPools, useTerminalPools } from 'helpers'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { createContextWithDefault } from 'utils/reactContext'
+import { PoolsApi } from './api'
 
 interface PoolsContextType {
   pools: string[]
@@ -16,6 +17,10 @@ const PoolsContextProvider: React.FC = ({ children }) => {
   // all of this will be replaced. for now it is used
   // to make sure everything works in the meantime
   const { pools, loading: isLoading } = useTerminalPools()
+
+  useEffect(() => {
+    PoolsApi.fetchAllPools().then(r => console.log('r:', r))
+  }, [])
 
   const value = {
     pools,
