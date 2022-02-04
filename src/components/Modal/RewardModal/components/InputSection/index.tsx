@@ -133,7 +133,7 @@ export const InputSection: React.FC<IProps> = ({
           onClick={onNext}
           disabled={isDisabled}
         >
-          {isCreatePool ? 'CREATE' : 'INITIATE'} REWARDS
+          {isCreatePool ? 'CONFIRM REWARDS CONFIGURATION' : 'INITIATE REWARDS'}
         </Button>
       </div>
     </div>
