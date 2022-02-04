@@ -50,7 +50,11 @@ export const RewardTokens: React.FC<IProps> = ({
 
     const newTokens = tokens
     newTokens.splice(i, 1, token)
-    updateState({ tokens: newTokens })
+
+    const newErrors = errors
+    newErrors.splice(i, 1, null)
+
+    updateState({ tokens: newTokens, errors: newErrors })
     onChangeAmount(ZERO, ZERO, i)
   }
 
@@ -84,7 +88,7 @@ export const RewardTokens: React.FC<IProps> = ({
     newAmounts.push(ZERO)
 
     const newErrors = errors
-    newErrors.push(null)
+    newErrors.push('New token is not selected')
 
     updateState({
       amounts: newAmounts,
