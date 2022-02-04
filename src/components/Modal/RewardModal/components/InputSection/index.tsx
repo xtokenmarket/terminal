@@ -124,7 +124,7 @@ export const InputSection: React.FC<IProps> = ({
         />
       </div>
       <div className={cl.actions}>
-        <FeeInfo />
+        {!isCreatePool && <FeeInfo />}
         <Button
           color="primary"
           variant="contained"
