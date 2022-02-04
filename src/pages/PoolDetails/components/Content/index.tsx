@@ -13,7 +13,7 @@ import {
   getTimeDurationStr,
   numberWithCommas,
 } from 'utils'
-import { ZERO } from 'utils/number'
+import { parseDuration, ZERO } from 'utils/number'
 import { RewardModal } from 'components'
 import {
   BalanceSection,
@@ -235,6 +235,8 @@ export const Content = (props: IProps) => {
   } = useConnectedWeb3Context()
   const isMountedRef = useIsMountedRef()
 
+  console.log('poolData', poolData)
+
   const timestamp = getCurrentTimeStamp()
   const isManageable = [poolData.owner, poolData.manager]
     .map((e) => e.toLowerCase())
@@ -354,16 +356,20 @@ export const Content = (props: IProps) => {
               <InfoSection
                 label="VESTING PERIOD"
                 value={getTimeDurationStr(
-                  Number(poolData.rewardState.duration)
+                  parseDuration(poolData.rewardState.vesting)
                 )}
               />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
               <InfoSection
                 label="ENDING"
-                value={moment(
-                  new Date(poolData.periodFinish.toNumber() * 1000)
-                ).format('MMM DD, YYYY')}
+                value={
+                  poolData.periodFinish.isZero()
+                    ? 'N/A'
+                    : moment(
+                        new Date(poolData.periodFinish.toNumber() * 1000)
+                      ).format('MMM DD, YYYY')
+                }
               />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>

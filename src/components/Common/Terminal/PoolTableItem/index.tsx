@@ -98,10 +98,7 @@ interface IProps {
   className?: string
 }
 
-export const PoolTableItem: React.FC<IProps> = ({
-  poolAddress,
-  className,
-}) => {
+export const PoolTableItem: React.FC<IProps> = ({ poolAddress, className }) => {
   const cl = useStyles()
   const { pool: poolData, loading } = useTerminalPool(poolAddress)
 
@@ -109,6 +106,11 @@ export const PoolTableItem: React.FC<IProps> = ({
     if (!poolData) {
       return null
     }
+
+    const {
+      rewardState: { amounts, duration, tokens },
+    } = poolData
+    const isInitiateRewardsPending = duration === '0'
 
     return (
       <NavLink
@@ -156,36 +158,47 @@ export const PoolTableItem: React.FC<IProps> = ({
         <PoolTd type="vesting">
           <div className={cl.itemAlignRight}>
             <Typography className={cl.label}>
-              {getTimeDurationStr(Number(poolData.rewardState.duration))}
+              {isInitiateRewardsPending
+                ? 'N/A'
+                : getTimeDurationStr(Number(duration))}
             </Typography>
           </div>
         </PoolTd>
         <PoolTd type="program">
           <div className={cl.itemAlignRight}>
-            {poolData.rewardState.tokens.map((rewardToken, index) => {
-              const durationInfo = getTimeDurationUnitInfo(
-                Number(poolData.rewardState.duration)
-              )
-              const uintAmount = poolData.rewardState.amounts[index]
-                .mul(durationInfo.unit)
-                .div(Number(poolData.rewardState.duration))
-              return (
-                <Typography className={cl.label} key={rewardToken.address}>
-                  {formatToShortNumber(
-                    formatBigNumber(uintAmount, rewardToken.decimals)
-                  )}{' '}
-                  {rewardToken.symbol} / {durationInfo.unitStr}
-                </Typography>
-              )
+            {/* TODO: Display token logo? */}
+            {tokens.map((rewardToken, index) => {
+              if (isInitiateRewardsPending) {
+                return (
+                  <Typography className={cl.label} key={rewardToken.address}>
+                    {rewardToken.symbol}
+                  </Typography>
+                )
+              } else {
+                const durationInfo = getTimeDurationUnitInfo(Number(duration))
+                const uintAmount = amounts[index]
+                  .mul(durationInfo.unit)
+                  .div(Number(duration))
+                return (
+                  <Typography className={cl.label} key={rewardToken.address}>
+                    {formatToShortNumber(
+                      formatBigNumber(uintAmount, rewardToken.decimals)
+                    )}{' '}
+                    {rewardToken.symbol} / {durationInfo.unitStr}
+                  </Typography>
+                )
+              }
             })}
           </div>
         </PoolTd>
         <PoolTd type="ending">
           <div className={cl.itemAlignRight}>
             <Typography className={cl.label}>
-              {moment(new Date(poolData.periodFinish.toNumber() * 1000)).format(
-                'MMM DD, YYYY'
-              )}
+              {poolData.periodFinish.isZero()
+                ? 'N/A'
+                : moment(
+                    new Date(poolData.periodFinish.toNumber() * 1000)
+                  ).format('MMM DD, YYYY')}
             </Typography>
           </div>
         </PoolTd>

@@ -9,6 +9,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { formatBigNumber } from 'utils'
 import { getCoinGeckoIDs, getTokenExchangeRate } from './helper'
 import { ERewardStep } from 'utils/enums'
+import { formatDuration } from 'utils/number'
 
 interface IState {
   pool?: ITerminalPool
@@ -226,7 +227,7 @@ export const useTerminalPool = (poolAddress: string) => {
             errors: [],
             step: ERewardStep.Input,
             tokens: rewardTokens,
-            vesting: vestingPeriod.toString(),
+            vesting: formatDuration(vestingPeriod.toString()),
           },
           rewardsAreEscrowed,
           owner: owner.toLowerCase(),
