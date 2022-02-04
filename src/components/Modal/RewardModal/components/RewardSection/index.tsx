@@ -244,6 +244,7 @@ export const RewardSection = (props: IProps) => {
         <div className={classes.actions}>
           {rewardState.tokens.map((token, index) => (
             <ActionStepRow
+              key={index}
               step={index + 1}
               isActiveStep={state.step === index + 1}
               comment="Approve"
