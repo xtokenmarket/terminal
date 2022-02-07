@@ -16,8 +16,7 @@ import _ from 'lodash'
 import { useEffect, useState } from 'react'
 import { ICreatePoolData, MintState } from 'types'
 import { Bound, Field } from 'utils/enums'
-import { ApproveTokenModal } from '../ApproveTokenModal'
-import { WarningInfo } from '../ApproveTokenModal/components'
+import { WarningInfo } from '../CreatePoolModal/components'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -90,7 +89,6 @@ export const PriceRangeStep = (props: IProps) => {
   const classes = useStyles()
   const { networkId } = useConnectedWeb3Context()
 
-  const [isApproveModalOpen, setIsApproveModalOpen] = useState(false)
   const [state, setState] = useState<IState>({
     ...initialState,
     independentField: !data.amount1.isZero()
@@ -137,7 +135,7 @@ export const PriceRangeStep = (props: IProps) => {
     ticksAtLimit,
     invalidRange,
     errorMessage,
-    outOfRange
+    outOfRange,
   } = useV3DerivedMintInfo(
     state,
     baseCurrency ?? undefined,
@@ -167,7 +165,10 @@ export const PriceRangeStep = (props: IProps) => {
   const rightPrice = isSorted ? priceUpper : priceLower?.invert()
 
   const isTokenInputDisabled =
-    tickLower === undefined || tickUpper === undefined || invalidRange || outOfRange
+    tickLower === undefined ||
+    tickUpper === undefined ||
+    invalidRange ||
+    outOfRange
 
   const {
     getDecrementLower,
@@ -212,19 +213,11 @@ export const PriceRangeStep = (props: IProps) => {
         upperTick: tickUpper,
       },
     })
-    toggleApproveModal()
-  }
-
-  const toggleApproveModal = () => {
-    setIsApproveModalOpen((prevState) => !prevState)
-  }
-
-  const onTokensApproved = () => {
     props.onNext()
   }
 
   const onTokenInputChange = (field: Field, amount: BigNumber) => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       independentField: field,
       typedValue: amount.toString(),
@@ -234,18 +227,34 @@ export const PriceRangeStep = (props: IProps) => {
   const { balance: balanceA } = useTokenBalance(data.token0.address)
   const { balance: balanceB } = useTokenBalance(data.token1.address)
   useEffect(() => {
-    const amountA = Number(formatUnits(formattedAmounts[Field.CURRENCY_A] || '0', data.token0.decimals))
-    const amountB = Number(formatUnits(formattedAmounts[Field.CURRENCY_B] || '0', data.token1.decimals))
+    const amountA = Number(
+      formatUnits(
+        formattedAmounts[Field.CURRENCY_A] || '0',
+        data.token0.decimals
+      )
+    )
+    const amountB = Number(
+      formatUnits(
+        formattedAmounts[Field.CURRENCY_B] || '0',
+        data.token1.decimals
+      )
+    )
 
     const newErrors = [...state.balanceErrors]
-    const newErrorA = amountA > Number(formatUnits(balanceA, data.token0.decimals)) ? `${data.token0.name} input exceeds balance` : null
+    const newErrorA =
+      amountA > Number(formatUnits(balanceA, data.token0.decimals))
+        ? `${data.token0.name} input exceeds balance`
+        : null
     newErrors.splice(0, 1, newErrorA)
 
-    const newErrorB = amountB > Number(formatUnits(balanceB, data.token1.decimals)) ? `${data.token1.name} input exceeds balance` : null
+    const newErrorB =
+      amountB > Number(formatUnits(balanceB, data.token1.decimals))
+        ? `${data.token1.name} input exceeds balance`
+        : null
     newErrors.splice(1, 1, newErrorB)
 
     if (!_.isEqual(state.balanceErrors, newErrors)) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         balanceErrors: newErrors,
       }))
@@ -259,7 +268,7 @@ export const PriceRangeStep = (props: IProps) => {
     parsedAmounts.CURRENCY_B &&
     !invalidRange &&
     !errorMessage &&
-    !state.balanceErrors.some(e => !!e) &&
+    !state.balanceErrors.some((e) => !!e) &&
     !outOfRange
   )
   const onFullRangeClick = () => {
@@ -270,9 +279,9 @@ export const PriceRangeStep = (props: IProps) => {
     }))
   }
 
-  const totalErrors = [...state.balanceErrors].filter(e => !!e)
+  const totalErrors = [...state.balanceErrors].filter((e) => !!e)
   if (errorMessage) totalErrors.push(errorMessage)
-  
+
   return (
     <div className={classes.root}>
       <div>
@@ -362,14 +371,18 @@ export const PriceRangeStep = (props: IProps) => {
             <TokenBalanceInput
               className="token0-balance-input"
               value={BigNumber.from(formattedAmounts[Field.CURRENCY_A] || '0')}
-              onChange={(amount) => onTokenInputChange(Field.CURRENCY_A, amount)}
+              onChange={(amount) =>
+                onTokenInputChange(Field.CURRENCY_A, amount)
+              }
               token={data.token0}
               isDisabled={isTokenInputDisabled}
             />
             <TokenBalanceInput
               className="token1-balance-input"
               value={BigNumber.from(formattedAmounts[Field.CURRENCY_B] || '0')}
-              onChange={(amount) => onTokenInputChange(Field.CURRENCY_B, amount)}
+              onChange={(amount) =>
+                onTokenInputChange(Field.CURRENCY_B, amount)
+              }
               token={data.token1}
               isDisabled={isTokenInputDisabled}
             />
@@ -396,14 +409,6 @@ export const PriceRangeStep = (props: IProps) => {
       >
         Next
       </Button>
-
-      {/* TODO: Skip token approval step, if tokens have been approved already */}
-      <ApproveTokenModal
-        isOpen={isApproveModalOpen}
-        onClose={toggleApproveModal}
-        onSuccess={onTokensApproved}
-        poolData={data}
-      />
     </div>
   )
 }

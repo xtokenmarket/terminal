@@ -204,7 +204,7 @@ export const RewardsStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
         fullWidth
         onClick={toggleCreateModal}
         variant="contained"
-        disabled={!data.rewardState}
+        disabled={!hasRewards}
       >
         CREATE POOL
       </Button>
