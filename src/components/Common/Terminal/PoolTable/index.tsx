@@ -20,12 +20,11 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  addresses: string[]
+  addresses: string[] // TODO: Remove passing in `addresses`
+  pools?: any[]
 }
 
-export const PoolTable: React.FC<IProps> = ({
-  addresses
-}) => {
+export const PoolTable: React.FC<IProps> = ({ addresses, pools }) => {
   const cl = useStyles()
 
   return (
@@ -33,9 +32,17 @@ export const PoolTable: React.FC<IProps> = ({
       <div className={cl.content}>
         <PoolTableHeader />
         <div>
-          {addresses.map((address) => (
-            <PoolTableItem poolAddress={address} key={address} />
-          ))}
+          {!pools || pools.length === 0
+            ? addresses.map((address) => (
+                <PoolTableItem poolAddress={address} key={address} />
+              ))
+            : pools.map((pool) => (
+                <PoolTableItem
+                  poolAddress={pool.poolAddress}
+                  key={pool.poolAddress}
+                  pool={pool}
+                />
+              ))}
         </div>
       </div>
     </div>

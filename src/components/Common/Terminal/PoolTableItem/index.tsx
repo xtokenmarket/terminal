@@ -1,6 +1,6 @@
 import { makeStyles, Typography } from '@material-ui/core'
 import { PoolTd, SimpleLoader } from 'components'
-import { useTerminalPool } from 'helpers'
+import { useTerminalPool, useTerminalPoolV2 } from 'helpers'
 import {
   formatBigNumber,
   formatToShortNumber,
@@ -95,15 +95,25 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   poolAddress: string
+  pool?: any
   className?: string
 }
 
-export const PoolTableItem: React.FC<IProps> = ({ poolAddress, className }) => {
+export const PoolTableItem: React.FC<IProps> = ({
+  poolAddress,
+  pool,
+  className,
+}) => {
   const cl = useStyles()
-  const { pool: poolData, loading } = useTerminalPool(poolAddress)
+
+  // eslint-disable-next-line prefer-const
+  let { pool: poolData, loading } = useTerminalPool(poolAddress)
+  const { pool: poolDataV2 } = useTerminalPoolV2(pool)
 
   const renderContent = () => {
-    if (!poolData) {
+    if (pool && poolDataV2) {
+      poolData = poolDataV2
+    } else if (!poolData) {
       return null
     }
 

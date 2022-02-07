@@ -1,4 +1,6 @@
 import Abi from 'abis'
+import axios from 'axios'
+import { TERMINAL_API_URL } from 'config/constants'
 import { DefaultReadonlyProvider, getTokenFromAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import { useServices } from 'helpers'
@@ -7,7 +9,10 @@ import { ERC20Service } from 'services'
 import { ITerminalPool, IToken } from 'types'
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatBigNumber } from 'utils'
-import { getCoinGeckoIDs, getTokenExchangeRate } from './helper'
+import {
+  getCoinGeckoIDs,
+  getTokenExchangeRate,
+} from '../useTerminalPool/helper'
 import { ERewardStep } from 'utils/enums'
 import { formatDuration } from 'utils/number'
 
@@ -18,23 +23,21 @@ interface IState {
 
 const MULTIPLY_PRECISION = 1000000
 
-export const useTerminalPool = (poolAddress: string) => {
+export const useTerminalPoolV2 = (pool?: any, poolAddress?: string) => {
   const [state, setState] = useState<IState>({ loading: true })
   const { account, library: provider, networkId } = useConnectedWeb3Context()
   const { multicall, rewardEscrow } = useServices()
 
   const getTokenDetails = async (addr: string) => {
     try {
-      const token = getTokenFromAddress(addr, networkId)
-      return token
+      return getTokenFromAddress(addr, networkId)
     } catch (error) {
       const erc20 = new ERC20Service(
         provider || DefaultReadonlyProvider,
         account,
         addr
       )
-      const token = await erc20.getDetails()
-      return token
+      return erc20.getDetails()
     }
   }
 
@@ -44,8 +47,7 @@ export const useTerminalPool = (poolAddress: string) => {
   ) => {
     if (!account) return BigNumber.from(0)
     const erc20 = new ERC20Service(provider, uniswapPool, tokenAddress)
-    const bal = await erc20.getBalanceOf(uniswapPool)
-    return bal
+    return erc20.getBalanceOf(uniswapPool)
   }
 
   const getTokenPercent = (
@@ -72,72 +74,32 @@ export const useTerminalPool = (poolAddress: string) => {
     return JSON.stringify(percent)
   }
 
-  const loadInfo = async () => {
-    console.log('loadInfo', poolAddress)
-    setState((prev) => ({ ...prev, loading: true }))
-    // console.time(`loadInfo ${poolAddress}`)
-    try {
-      // console.time(`loadInfo multicall ${poolAddress}`)
-      const calls = [
-        'token0',
-        'token1',
-        'stakedToken',
-        'tokenId',
-        'token0DecimalMultiplier',
-        'token1DecimalMultiplier',
-        'tokenDiffDecimalMultiplier',
-        'tradeFee',
-        'poolFee',
-        'uniswapPool',
-        'getRewardTokens',
-        'rewardsDuration',
-        'rewardsAreEscrowed',
-        'owner',
-        'periodFinish',
-        'getTicks',
-        'manager',
-      ].map((method) => ({
-        name: method,
-        address: poolAddress,
-        params: [],
-      }))
-      const [
-        [token0Address],
-        [token1Address],
-        [stakedTokenAddress],
-        [tokenId],
-        [token0DecimalMultiplier],
-        [token1DecimalMultiplier],
-        [tokenDiffDecimalMultiplier],
-        [tradeFee],
-        [poolFee],
-        [uniswapPool],
-        [rewardTokenAddresses],
-        [rewardsDuration],
-        [rewardsAreEscrowed],
-        [owner],
-        [periodFinish],
-        ticks,
-        [manager],
-      ] = await multicall.multicallv2(Abi.xAssetCLR, calls, {
-        requireSuccess: false,
-      })
-      // console.timeEnd(`loadInfo multicall ${poolAddress}`)
+  const loadInfo = async (isReloadPool = false) => {
+    console.log('loadInfoV2', pool, poolAddress)
+    if (!pool && !poolAddress) return
 
-      // console.time(`loadInfo token details ${poolAddress}`)
+    setState((prev) => ({ ...prev, loading: true }))
+    // console.time(`loadInfo ${pool.poolAddress}`)
+
+    if ((!pool && poolAddress) || isReloadPool) {
+      pool = (await axios.get(`${TERMINAL_API_URL}/pool/${poolAddress}`)).data
+    }
+
+    try {
+      // console.time(`loadInfo token details ${pool.poolAddress}`)
       const [token0, token1, stakedToken] = await Promise.all([
-        getTokenDetails(token0Address),
-        getTokenDetails(token1Address),
-        getTokenDetails(stakedTokenAddress),
+        getTokenDetails(pool.token0),
+        getTokenDetails(pool.token1),
+        getTokenDetails(pool.stakedToken),
       ])
 
       const token0Balance = await getERC20TokenBalance(
-        token0Address,
-        uniswapPool
+        pool.token0,
+        pool.uniswapPool
       )
       const token1Balance = await getERC20TokenBalance(
-        token1Address,
-        uniswapPool
+        pool.token1,
+        pool.uniswapPool
       )
 
       const token0Percent = getTokenPercent(
@@ -163,6 +125,7 @@ export const useTerminalPool = (poolAddress: string) => {
       let tvl = ''
       let token0tvl = BigNumber.from('0')
       let token1tvl = BigNumber.from('0')
+
       if (rates) {
         token0tvl = token0Balance
           .mul(rates[0] * MULTIPLY_PRECISION)
@@ -180,18 +143,20 @@ export const useTerminalPool = (poolAddress: string) => {
       // console.timeEnd(`loadInfo token details ${poolAddress}`)
 
       // console.time(`loadInfo vesting period ${poolAddress}`)
-      const vestingPeriod = await rewardEscrow.clrPoolVestingPeriod(poolAddress)
+      const vestingPeriod = await rewardEscrow.clrPoolVestingPeriod(
+        pool.poolAddress
+      )
       // console.timeEnd(`loadInfo vesting period ${poolAddress}`)
 
       // console.time(`loadInfo reward tokens ${poolAddress}`)
       const rewardTokens = (await Promise.all(
-        rewardTokenAddresses.map((addr: string) => getTokenDetails(addr))
+        pool.rewardTokens.map((addr: string) => getTokenDetails(addr))
       )) as IToken[]
       // console.timeEnd(`loadInfo reward tokens ${poolAddress}`)
 
       const rewardCalls = rewardTokens.map((token) => ({
         name: 'rewardPerToken',
-        address: poolAddress,
+        address: pool.poolAddress,
         params: [token.address],
       }))
 
@@ -211,33 +176,30 @@ export const useTerminalPool = (poolAddress: string) => {
         ...prev,
         loading: false,
         pool: {
-          address: poolAddress,
+          address: pool.poolAddress,
           token0,
           token1,
           stakedToken,
-          tokenId,
-          token0DecimalMultiplier,
-          token1DecimalMultiplier,
-          tokenDiffDecimalMultiplier,
-          tradeFee,
-          poolFee,
-          uniswapPool,
+          tokenId: pool.tokenId,
+          token0DecimalMultiplier: pool.token0DecimalMultiplier,
+          token1DecimalMultiplier: pool.token1DecimalMultiplier,
+          tokenDiffDecimalMultiplier: pool.tokenDiffDecimalMultiplier,
+          tradeFee: pool.tradeFee,
+          poolFee: pool.poolFee,
+          uniswapPool: pool.uniswapPool,
           rewardState: {
             amounts: rewardsPerToken,
-            duration: String(rewardsDuration),
+            duration: pool.rewardProgramDuration,
             errors: [],
             step: ERewardStep.Input,
             tokens: rewardTokens,
             vesting: formatDuration(vestingPeriod.toString()),
           },
-          rewardsAreEscrowed,
-          owner: owner.toLowerCase(),
-          periodFinish,
-          ticks: {
-            tick0: ticks[0],
-            tick1: ticks[1],
-          },
-          manager,
+          rewardsAreEscrowed: pool.rewardsAreEscrowed,
+          owner: pool.owner.toLowerCase(),
+          periodFinish: BigNumber.from(pool.periodFinish),
+          ticks: pool.ticks,
+          manager: pool.manager.toLowerCase(),
           tvl,
         },
       }))
@@ -255,7 +217,7 @@ export const useTerminalPool = (poolAddress: string) => {
     return () => {
       clearInterval(interval)
     }
-  }, [networkId, poolAddress])
+  }, [networkId, pool, poolAddress])
 
   return { ...state, loadInfo }
 }
