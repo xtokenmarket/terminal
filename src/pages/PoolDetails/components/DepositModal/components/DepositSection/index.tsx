@@ -4,6 +4,7 @@ import { useIsMountedRef, useServices } from 'helpers'
 import { IDepositState } from 'pages/PoolDetails/components'
 import { useEffect, useState } from 'react'
 import { ERC20Service, xAssetCLRService } from 'services'
+import { CLRService } from 'services/CLRService'
 import { ITerminalPool } from 'types'
 import { ActionStepRow, ViewTransaction, WarningInfo } from '..'
 
@@ -217,12 +218,11 @@ export const DepositSection = (props: IProps) => {
         ? depositState.amount1
         : depositState.amount0
 
-      const txId = await lmService.provideLiquidity(
-        poolData.address,
-        inputAsset,
-        inputAmount
-      )
-      const finalTxId = await lmService.waitUntilProvideLiquidity(
+      const clrService = new CLRService(provider, account, poolData.address)
+
+      const txId = await clrService.deposit(inputAsset, inputAmount)
+
+      const finalTxId = await clrService.waitUntilDeposit(
         poolData.address,
         inputAsset,
         inputAmount,
@@ -230,21 +230,21 @@ export const DepositSection = (props: IProps) => {
         txId
       )
 
-      const data = await lmService.parseProvideLiquidityTx(finalTxId)
-      const xAssetCLR = new xAssetCLRService(
-        provider,
-        account,
-        poolData.address
-      )
-      const totalLiquidity = await xAssetCLR.getTotalLiquidity()
-      if (data) {
-        updateState({
-          amount0Used: data.amount0,
-          amount1Used: data.amount1,
-          liquidityAdded: data.liquidity,
-          totalLiquidity,
-        })
-      }
+      // const data = await clrService.parseProvideLiquidityTx(finalTxId)
+      // const xAssetCLR = new xAssetCLRService(
+      //   provider,
+      //   account,
+      //   poolData.address
+      // )
+      // const totalLiquidity = await xAssetCLR.getTotalLiquidity()
+      // if (data) {
+      //   updateState({
+      //     amount0Used: data.amount0,
+      //     amount1Used: data.amount1,
+      //     liquidityAdded: data.liquidity,
+      //     totalLiquidity,
+      //   })
+      // }
 
       setState((prev) => ({
         ...prev,
