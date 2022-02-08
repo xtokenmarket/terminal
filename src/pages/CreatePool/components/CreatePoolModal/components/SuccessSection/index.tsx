@@ -60,7 +60,7 @@ export const SuccessSection = (props: IProps) => {
         />
         <Typography className={classes.title}>{pool} pool created!</Typography>
         <Typography className={classes.description}>
-          You have successfully created {pool} pool and initiated rewards
+          You have successfully created {pool} pool.
         </Typography>
       </div>
       <div className={classes.actions}>

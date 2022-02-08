@@ -73,7 +73,7 @@ export const RewardTokensTable: React.FC<IProps> = ({
         <TableBody>
           {tokens.map((token, i) => {
             return (
-              <TableRow>
+              <TableRow key={i}>
                 <TableCell>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <img src={token.image} style={{ marginRight: 8 }} />

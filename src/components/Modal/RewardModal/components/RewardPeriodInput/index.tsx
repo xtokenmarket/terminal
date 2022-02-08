@@ -114,7 +114,7 @@ export const RewardPeriodInput: React.FC<IProps> = ({
             notchedOutline: cl.notchedOutline,
             input: clsx(commonClasses.hideInputArrow, cl.inputBox),
           },
-          endAdornment: <InputAdornment position="end">Weeks</InputAdornment>,
+          endAdornment: <InputAdornment position="end">Week(s)</InputAdornment>,
         }}
         label={label}
         disabled={isDisabled}

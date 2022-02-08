@@ -124,7 +124,7 @@ export const InputSection: React.FC<IProps> = ({
         />
       </div>
       <div className={cl.actions}>
-        <FeeInfo />
+        {!isCreatePool && <FeeInfo />}
         <Button
           color="primary"
           variant="contained"
@@ -133,7 +133,7 @@ export const InputSection: React.FC<IProps> = ({
           onClick={onNext}
           disabled={isDisabled}
         >
-          {isCreatePool ? 'CREATE' : 'INITIATE'} REWARDS
+          {isCreatePool ? 'CONFIRM REWARDS CONFIGURATION' : 'INITIATE REWARDS'}
         </Button>
       </div>
     </div>
