@@ -390,7 +390,7 @@ export const PriceRangeStep = (props: IProps) => {
         </Grid>
       </div>
       <Typography className={classes.fee}>
-        Pool Deployment fee is 0.1 ETH. Additional 1% fee on any rewards
+        Pool Deployment fee is 0.2 ETH. Additional 1% fee on any rewards
         distributed for this pool.
       </Typography>
       {totalErrors.length > 0 && (
