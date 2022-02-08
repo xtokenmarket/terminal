@@ -89,8 +89,8 @@ export interface ITerminalPool {
 export interface ICreatePoolData {
   amount0: BigNumber
   amount1: BigNumber
-  maxPrice: string
-  minPrice: string
+  maxPrice: string | IFullRange
+  minPrice: string | IFullRange
   rewardState: IRewardState
   ticks: IPositionTicks
   tier: BigNumber
@@ -99,7 +99,7 @@ export interface ICreatePoolData {
   uniPool: string
 }
 
-export type FullRange = true
+export type IFullRange = true
 
 // UniswapV3
 interface MintState {
@@ -107,6 +107,6 @@ interface MintState {
   typedValue: string
   otherTypedValue: string // for the case when there's no liquidity
   startPriceTypedValue: string // for the case when there's no liquidity
-  leftRangeTypedValue: string | FullRange
-  rightRangeTypedValue: string | FullRange
+  leftRangeTypedValue: string | IFullRange
+  rightRangeTypedValue: string | IFullRange
 }
