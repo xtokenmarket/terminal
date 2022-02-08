@@ -95,14 +95,11 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  // poolAddress: string
   pool: ITerminalPool
   className?: string
 }
 
 export const PoolTableItem: React.FC<IProps> = ({
-  // poolAddress,
-  // className,
   pool,
 }) => {
   const cl = useStyles()

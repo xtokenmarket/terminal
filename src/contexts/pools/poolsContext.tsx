@@ -28,6 +28,7 @@ const PoolsContextProvider: React.FC = ({ children }) => {
   useEffect(() => {
     poolsApi.fetchAllPools().then(pools => {
       console.log('new pool:', pools[0])
+      // TODO: This is commented to prevent runtime errors temporarily
       // setIsLoading(false)
       // setPools(pools)
     })

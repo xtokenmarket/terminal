@@ -8,6 +8,7 @@ const MyPools = () => {
   return (
     <div>
       <HeaderSection />
+      {/* TODO: this is commented out to stop runtime errors temporarily */}
       {/* {isLoading ? <SimpleLoader /> : <PoolTable addresses={pools} />} */}
     </div>
   )
