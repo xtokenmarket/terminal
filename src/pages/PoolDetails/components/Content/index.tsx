@@ -461,7 +461,7 @@ export const Content = (props: IProps) => {
               color="secondary"
               variant="contained"
             >
-              REBALANCE
+              REINVEST
             </Button>
           )}
         </div>
