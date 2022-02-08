@@ -7,7 +7,7 @@ const Discover = () => {
   return (
     <div>
       <HeaderSection />
-      {loading ? <SimpleLoader /> : <PoolTable addresses={pools} />}
+      {loading ? <SimpleLoader /> : <PoolTable pools={pools} />}
     </div>
   )
 }

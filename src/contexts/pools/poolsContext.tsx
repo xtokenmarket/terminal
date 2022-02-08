@@ -1,12 +1,13 @@
 import { useConnectedWeb3Context } from 'contexts'
-import { useMyTerminalPools, useTerminalPools } from 'helpers'
-import React, { useEffect } from 'react'
+import { useTerminalPool } from 'helpers'
+import React, { useEffect, useState } from 'react'
+import { ITerminalPool } from 'types'
 
 import { createContextWithDefault } from 'utils/reactContext'
-import { PoolsApi } from './api'
+import { usePoolsApi } from './api'
 
 interface PoolsContextType {
-  pools: string[]
+  pools: ITerminalPool[]
   isLoading: boolean
 }
 
@@ -14,12 +15,22 @@ const [PoolsContext, usePoolsContext] = createContextWithDefault<PoolsContextTyp
 
 const PoolsContextProvider: React.FC = ({ children }) => {
   const { account } = useConnectedWeb3Context()
-  // all of this will be replaced. for now it is used
-  // to make sure everything works in the meantime
-  const { pools, loading: isLoading } = useTerminalPools()
+  const [isLoading, setIsLoading] = useState(true)
+  const [pools, setPools] = useState<ITerminalPool[]>([])
 
+  const testPool = useTerminalPool('0x85c5000b1e3cA99278edE665585b0d3e9f0bC6BD')
+  const { pool } = testPool
+  if (pool) {
+    console.log('old pool:', pool)
+  }
+
+  const poolsApi = usePoolsApi()
   useEffect(() => {
-    PoolsApi.fetchAllPools().then(r => console.log('r:', r))
+    poolsApi.fetchAllPools().then(pools => {
+      console.log('new pool:', pools[0])
+      // setIsLoading(false)
+      // setPools(pools)
+    })
   }, [])
 
   const value = {

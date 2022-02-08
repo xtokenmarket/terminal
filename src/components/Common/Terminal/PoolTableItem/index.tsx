@@ -11,6 +11,7 @@ import {
 } from 'utils'
 import moment from 'moment'
 import { NavLink } from 'react-router-dom'
+import { ITerminalPool } from 'types'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -94,55 +95,57 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  poolAddress: string
+  // poolAddress: string
+  pool: ITerminalPool
   className?: string
 }
 
-export const PoolTableItem: React.FC<IProps> = ({ poolAddress, className }) => {
+export const PoolTableItem: React.FC<IProps> = ({
+  // poolAddress,
+  // className,
+  pool,
+}) => {
   const cl = useStyles()
-  const { pool: poolData, loading } = useTerminalPool(poolAddress)
 
   const renderContent = () => {
-    if (!poolData) {
-      return null
-    }
+    if (!pool) return null
 
     const {
       rewardState: { amounts, duration, tokens },
-    } = poolData
+    } = pool
     const isInitiateRewardsPending = duration === '0'
 
     return (
       <NavLink
         className={cl.content}
-        to={`/terminal/pools/${poolData.address}`}
+        to={`/terminal/pools/${pool.address}`}
       >
         <PoolTd type="pool">
           <div className={cl.item}>
             <img
               alt="token0"
               className={cl.tokenIcon}
-              src={poolData.token0.image}
+              src={pool.token0.image}
             />
             <img
               alt="token1"
               className={cl.tokenIcon}
-              src={poolData.token1.image}
+              src={pool.token1.image}
             />
           </div>
         </PoolTd>
         <PoolTd type="allocation">
           <div className={cl.item}>
             <Typography className={cl.allocation}>
-              {poolData.token0.symbol}&nbsp;
+              {pool.token0.symbol}&nbsp;
               <span>{`${getFloatDecimalNumber(
-                poolData.token0.percent as string,
+                pool.token0.percent as string,
                 2
               )}%`}</span>
               &nbsp;&nbsp;
-              {poolData.token1.symbol}&nbsp;
+              {pool.token1.symbol}&nbsp;
               <span>{`${getFloatDecimalNumber(
-                poolData.token1.percent as string,
+                pool.token1.percent as string,
                 2
               )}%`}</span>
             </Typography>
@@ -151,7 +154,7 @@ export const PoolTableItem: React.FC<IProps> = ({ poolAddress, className }) => {
         <PoolTd type="tvl">
           <div className={cl.itemAlignRight}>
             <Typography className={cl.label}>{`$${numberWithCommas(
-              poolData.tvl
+              pool.tvl
             )}`}</Typography>
           </div>
         </PoolTd>
@@ -194,10 +197,10 @@ export const PoolTableItem: React.FC<IProps> = ({ poolAddress, className }) => {
         <PoolTd type="ending">
           <div className={cl.itemAlignRight}>
             <Typography className={cl.label}>
-              {poolData.periodFinish.isZero()
+              {pool.periodFinish.isZero()
                 ? 'N/A'
                 : moment(
-                    new Date(poolData.periodFinish.toNumber() * 1000)
+                    new Date(pool.periodFinish.toNumber() * 1000)
                   ).format('MMM DD, YYYY')}
             </Typography>
           </div>
@@ -213,7 +216,7 @@ export const PoolTableItem: React.FC<IProps> = ({ poolAddress, className }) => {
 
   return (
     <div className={cl.root}>
-      {loading ? <SimpleLoader className={cl.loader} /> : renderContent()}
+      {renderContent()}
     </div>
   )
 }

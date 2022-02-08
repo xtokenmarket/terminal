@@ -8,7 +8,7 @@ const MyPools = () => {
   return (
     <div>
       <HeaderSection />
-      {isLoading ? <SimpleLoader /> : <PoolTable addresses={pools} />}
+      {/* {isLoading ? <SimpleLoader /> : <PoolTable addresses={pools} />} */}
     </div>
   )
 }

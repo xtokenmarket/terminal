@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/core'
 import { transparentize } from 'polished'
+import { ITerminalPool } from 'types'
 import { PoolTableHeader, PoolTableItem } from '..'
 
 const useStyles = makeStyles((theme) => ({
@@ -20,11 +21,11 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  addresses: string[]
+  pools: ITerminalPool[]
 }
 
 export const PoolTable: React.FC<IProps> = ({
-  addresses
+  pools
 }) => {
   const cl = useStyles()
 
@@ -33,8 +34,8 @@ export const PoolTable: React.FC<IProps> = ({
       <div className={cl.content}>
         <PoolTableHeader />
         <div>
-          {addresses.map((address) => (
-            <PoolTableItem poolAddress={address} key={address} />
+          {pools.map(pool => (
+            <PoolTableItem pool={pool} key={pool.address} />
           ))}
         </div>
       </div>
