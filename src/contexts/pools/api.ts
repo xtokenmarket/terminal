@@ -1,8 +1,13 @@
 import axios from 'axios'
 
+const URL = 'http://3.8.192.52:3000/api'
+
 export const PoolsApi = {
   fetchAllPools: () => {
-    // return axios.get('https://terminal.xtokenapi.link/api/pools')
-    return axios.get('https://terminal.xtokenapi.link/api/pools?offset=0&limit=10&userAddress=it ')
+    return axios.get(URL + '/pools', {
+      params: {
+       limit: 10,
+      },
+    })
   },
 }
