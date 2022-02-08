@@ -1,11 +1,12 @@
 import { makeStyles, Typography, IconButton } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
-import { useServices } from 'helpers'
+import { useIsMountedRef, useServices } from 'helpers'
 import { useEffect, useState } from 'react'
 import { ICreatePoolData } from 'types'
 import { ActionStepRow, ViewTransaction, WarningInfo } from '..'
-import { parseDuration } from '../../../../../../utils/number'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
+import { getContractAddress } from 'config/networks'
+import { ERC20Service } from 'services'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -73,11 +74,15 @@ interface IProps {
 interface IState {
   isCompleted: boolean
   isCreatingPool: boolean
-  // isInitiatingRewards: boolean
   createPoolTx: string
-  // initiateRewardsTx: string
   poolAddress: string
   step: number
+  token0Approved: boolean
+  token0ApproveTx: string
+  token1Approved: boolean
+  token1ApproveTx: string
+  token0Approving: boolean
+  token1Approving: boolean
 }
 
 export const CreatePoolSection = (props: IProps) => {
@@ -85,17 +90,66 @@ export const CreatePoolSection = (props: IProps) => {
   const [state, setState] = useState<IState>({
     isCompleted: false,
     isCreatingPool: false,
-    // isInitiatingRewards: false,
     createPoolTx: '',
-    // initiateRewardsTx: '',
     poolAddress: '',
     step: 1,
+    token0Approved: false,
+    token0ApproveTx: '',
+    token0Approving: false,
+    token1ApproveTx: '',
+    token1Approved: false,
+    token1Approving: false,
   })
   const { onNext, poolData, setPoolAddress, onClose } = props
   const { lmService } = useServices()
-  const { account, library: provider } = useConnectedWeb3Context()
+  const { account, library: provider, networkId } = useConnectedWeb3Context()
+  const isMountedRef = useIsMountedRef()
 
   const isPoolCreated = state.createPoolTx !== ''
+
+  const terminalAddress = getContractAddress('LM', networkId)
+
+  const loadInitialInfo = async () => {
+    if (!account || !provider) {
+      return
+    }
+
+    try {
+      const token0 = new ERC20Service(
+        provider,
+        account,
+        poolData.token0.address
+      )
+      const token0Approved = await token0.hasEnoughAllowance(
+        account,
+        terminalAddress,
+        poolData.amount0
+      )
+      const token1 = new ERC20Service(
+        provider,
+        account,
+        poolData.token1.address
+      )
+      const token1Approved = await token1.hasEnoughAllowance(
+        account,
+        terminalAddress,
+        poolData.amount1
+      )
+
+      if (isMountedRef.current) {
+        let step = 1
+        if (token0Approved) step = 2
+        if (token0Approved && token1Approved) step = 3
+        setState((prev) => ({ ...prev, token0Approved, token1Approved, step }))
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  useEffect(() => {
+    loadInitialInfo()
+  }, [])
 
   useEffect(() => {
     if (state.isCompleted) {
@@ -104,6 +158,72 @@ export const CreatePoolSection = (props: IProps) => {
       }, 2000)
     }
   }, [state.isCompleted])
+
+  const onApprove0 = async () => {
+    if (!account || !provider) {
+      return
+    }
+
+    try {
+      setState((prev) => ({
+        ...prev,
+        token0Approving: true,
+      }))
+      const token0 = new ERC20Service(
+        provider,
+        account,
+        poolData.token0.address
+      )
+      const txHash = await token0.approveUnlimited(terminalAddress)
+
+      await token0.waitUntilApproved(account, terminalAddress, txHash)
+
+      setState((prev) => ({
+        ...prev,
+        token0Approving: false,
+        token0Approved: true,
+        step: 2,
+      }))
+    } catch (error) {
+      setState((prev) => ({
+        ...prev,
+        token0Approving: false,
+      }))
+    }
+  }
+
+  const onApprove1 = async () => {
+    if (!account || !provider) {
+      return
+    }
+
+    try {
+      setState((prev) => ({
+        ...prev,
+        token1Approving: true,
+      }))
+      const token1 = new ERC20Service(
+        provider,
+        account,
+        poolData.token1.address
+      )
+      const txHash = await token1.approveUnlimited(terminalAddress)
+
+      await token1.waitUntilApproved(account, terminalAddress, txHash)
+
+      setState((prev) => ({
+        ...prev,
+        token1Approving: false,
+        token1Approved: true,
+        step: 3,
+      }))
+    } catch (error) {
+      setState((prev) => ({
+        ...prev,
+        token1Approving: false,
+      }))
+    }
+  }
 
   const onCreatePool = async () => {
     if (!account || !provider) {
@@ -133,7 +253,6 @@ export const CreatePoolSection = (props: IProps) => {
         isCreatingPool: false,
         poolAddress,
         isCompleted: true,
-        // step: 2,
       }))
     } catch (error) {
       console.error('Error when deploying terminal pool', error)
@@ -143,43 +262,6 @@ export const CreatePoolSection = (props: IProps) => {
       }))
     }
   }
-
-  /* const onInitiateRewards = async () => {
-    if (!account || !provider) {
-      return
-    }
-    try {
-      setState((prev) => ({
-        ...prev,
-        isInitiatingRewards: true,
-      }))
-      const txId = await lmService.initiateRewardsProgram(
-        state.poolAddress,
-        poolData.rewardState.amounts,
-        parseDuration(poolData.rewardState.duration)
-      )
-      const finalTxId = await lmService.waitUntilRewardsProgramInitiated(
-        state.poolAddress,
-        poolData.rewardState.amounts,
-        parseDuration(poolData.rewardState.duration),
-        txId
-      )
-
-      setState((prev) => ({
-        ...prev,
-        isInitiatingRewards: false,
-        initiateRewardsTx: txId,
-        isCompleted: true,
-        step: 3,
-      }))
-    } catch (error) {
-      console.error('Error while initiating rewards', error)
-      setState((prev) => ({
-        ...prev,
-        isInitiatingRewards: false,
-      }))
-    }
-  } */
 
   return (
     <div className={classes.root}>
@@ -191,7 +273,7 @@ export const CreatePoolSection = (props: IProps) => {
         )}
         <Typography className={classes.title}>Create Pool</Typography>
         <Typography className={classes.description}>
-          Please complete the transaction to finish pool creation.
+          Please complete all transactions to finish pool creation.
         </Typography>
       </div>
       <div className={classes.content}>
@@ -204,7 +286,51 @@ export const CreatePoolSection = (props: IProps) => {
           <ActionStepRow
             step={1}
             isActiveStep={state.step === 1}
-            comment="Deploy"
+            comment="Approve"
+            title={poolData.token0.symbol}
+            actionLabel={state.token0Approved ? 'APPROVED' : 'APPROVE'}
+            onConfirm={onApprove0}
+            actionPending={state.token0Approving}
+            actionDone={state.token0Approved}
+            titleIcon={
+              <img
+                alt="token"
+                className={classes.tokenIcon}
+                src={poolData.token0.image}
+              />
+            }
+            rightComponent={
+              state.token0Approved && state.token0ApproveTx !== '' ? (
+                <ViewTransaction txId={state.token0ApproveTx} />
+              ) : null
+            }
+          />
+          <ActionStepRow
+            step={2}
+            isActiveStep={state.step === 2}
+            comment="Approve"
+            title={poolData.token1.symbol}
+            actionLabel={state.token1Approved ? 'APPROVED' : 'APPROVE'}
+            onConfirm={onApprove1}
+            actionPending={state.token1Approving}
+            actionDone={state.token1Approved}
+            titleIcon={
+              <img
+                alt="token"
+                className={classes.tokenIcon}
+                src={poolData.token1.image}
+              />
+            }
+            rightComponent={
+              state.token1Approved && state.token1ApproveTx !== '' ? (
+                <ViewTransaction txId={state.token1ApproveTx} />
+              ) : null
+            }
+          />
+          <ActionStepRow
+            step={3}
+            isActiveStep={state.step === 3}
+            comment="Complete"
             title="Create Pool"
             actionLabel={isPoolCreated ? 'POOL CREATED' : 'CREATE POOL'}
             onConfirm={onCreatePool}
@@ -216,21 +342,6 @@ export const CreatePoolSection = (props: IProps) => {
               ) : null
             }
           />
-          {/*<ActionStepRow
-            step={2}
-            isActiveStep={state.step === 2}
-            comment="Complete"
-            title="Initiate Rewards"
-            actionLabel={state.isCompleted ? 'DONE' : 'INITIATE'}
-            onConfirm={onInitiateRewards}
-            actionPending={state.isInitiatingRewards}
-            actionDone={state.isCompleted}
-            rightComponent={
-              state.isCompleted && state.initiateRewardsTx !== '' ? (
-                <ViewTransaction txId={state.initiateRewardsTx} />
-              ) : null
-            }
-          />*/}
         </div>
       </div>
     </div>

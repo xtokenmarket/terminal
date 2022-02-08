@@ -114,15 +114,15 @@ export const RewardModal: React.FC<IProps> = ({
         setState((prev) => ({ ...prev, step: ERewardStep.Confirm }))
         break
       case ERewardStep.Confirm:
-        setState((prev) => ({ ...prev, step: ERewardStep.Initiate }))
-        break
-      case ERewardStep.Initiate:
         if (isCreatePool && onCreateReward) {
           onCreateReward(state)
           setState((prev) => ({ ...prev, step: ERewardStep.Input }))
         } else {
-          setState((prev) => ({ ...prev, step: ERewardStep.Success }))
+          setState((prev) => ({ ...prev, step: ERewardStep.Initiate }))
         }
+        break
+      case ERewardStep.Initiate:
+        setState((prev) => ({ ...prev, step: ERewardStep.Success }))
         break
       default:
         _onClose()
