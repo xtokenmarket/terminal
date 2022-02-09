@@ -75,6 +75,6 @@ export const FEE_TIERS = [
   },
   {
     value: BigNumber.from(10000),
-    label: 'Best for exact pairs',
+    label: 'Best for exotic pairs',
   },
 ]

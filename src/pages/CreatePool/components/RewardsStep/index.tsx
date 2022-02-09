@@ -200,7 +200,7 @@ export const RewardsStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
       </div>
 
       <Typography className={cl.fee}>
-        Pool Deployment fee is 0.1 ETH. Additional 1% fee on any rewards
+        Pool Deployment fee is 0.2 ETH. Additional 1% fee on any rewards
         distributed for this pool.
       </Typography>
       <Button

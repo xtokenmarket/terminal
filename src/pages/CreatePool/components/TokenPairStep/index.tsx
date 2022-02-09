@@ -264,7 +264,7 @@ export const TokenPairStep: React.FC<IProps> = ({
         </Grid>
         <Grid item xs={12}>
           <Typography className={classes.fee}>
-            Pool Deployment fee is 0.1 ETH. Additional 1% fee on any rewards
+            Pool Deployment fee is 0.2 ETH. Additional 1% fee on any rewards
             distributed for this pool.
           </Typography>
         </Grid>
