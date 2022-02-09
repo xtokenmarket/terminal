@@ -227,24 +227,20 @@ export const DepositSection = (props: IProps) => {
         inputAsset,
         inputAmount,
         account,
-        txId
+        txId.hash
       )
 
-      // const data = await clrService.parseProvideLiquidityTx(finalTxId)
-      // const xAssetCLR = new xAssetCLRService(
-      //   provider,
-      //   account,
-      //   poolData.address
-      // )
-      // const totalLiquidity = await xAssetCLR.getTotalLiquidity()
-      // if (data) {
-      //   updateState({
-      //     amount0Used: data.amount0,
-      //     amount1Used: data.amount1,
-      //     liquidityAdded: data.liquidity,
-      //     totalLiquidity,
-      //   })
-      // }
+      const data = await clrService.parseProvideLiquidityTx(finalTxId)
+
+      const totalLiquidity = await clrService.getTotalLiquidity()
+      if (data) {
+        updateState({
+          amount0Used: data.amount0,
+          amount1Used: data.amount1,
+          liquidityAdded: data.liquidity,
+          totalLiquidity,
+        })
+      }
 
       setState((prev) => ({
         ...prev,

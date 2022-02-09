@@ -46,7 +46,7 @@ class CLRService {
     let resolved = false
     return new Promise((resolve) => {
       this.contract.on(
-        'deposit',
+        'Deposit',
         (
           clrPoolAddress: string,
           sender: string,
@@ -102,6 +102,10 @@ class CLRService {
       }
     }
     return null
+  }
+
+  getTotalLiquidity = async () => {
+    return this.contract.getTotalLiquidity()
   }
 }
 
