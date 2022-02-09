@@ -3,7 +3,7 @@ import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef, useServices } from 'helpers'
 import { IDepositState } from 'pages/PoolDetails/components'
 import { useEffect, useState } from 'react'
-import { ERC20Service, xAssetCLRService } from 'services'
+import { ERC20Service, CLRService } from 'services'
 import { ITerminalPool } from 'types'
 import { ActionStepRow, ViewTransaction, WarningInfo } from '..'
 
@@ -217,26 +217,21 @@ export const DepositSection = (props: IProps) => {
         ? depositState.amount1
         : depositState.amount0
 
-      const txId = await lmService.provideLiquidity(
-        poolData.address,
-        inputAsset,
-        inputAmount
-      )
-      const finalTxId = await lmService.waitUntilProvideLiquidity(
+      const clr = new CLRService(provider, account, poolData.address)
+
+      const txId = await clr.deposit(inputAsset, inputAmount)
+
+      const finalTxId = await clr.waitUntilDeposit(
         poolData.address,
         inputAsset,
         inputAmount,
         account,
-        txId
+        txId.hash
       )
 
-      const data = await lmService.parseProvideLiquidityTx(finalTxId)
-      const xAssetCLR = new xAssetCLRService(
-        provider,
-        account,
-        poolData.address
-      )
-      const totalLiquidity = await xAssetCLR.getTotalLiquidity()
+      const data = await clr.parseProvideLiquidityTx(finalTxId)
+
+      const totalLiquidity = await clr.getTotalLiquidity()
       if (data) {
         updateState({
           amount0Used: data.amount0,
