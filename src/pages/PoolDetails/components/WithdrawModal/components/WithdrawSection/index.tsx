@@ -100,26 +100,27 @@ export const WithdrawSection = (props: IProps) => {
         withdrawing: true,
       }))
 
-      const txId = await lmService[
-        withdrawState.withdrawOnly
-          ? 'removeLiquidity'
-          : 'removeLiquidityAndClaimReward'
-      ](poolData.address, withdrawState.lpInput)
-      const finalTxId = await lmService.waitUntilRemoveLiquidity(
+      const clr = new CLRService(provider, account, poolData.address)
+
+      const txId = await clr[
+        withdrawState.withdrawOnly ? 'withdraw' : 'withdrawAndClaimReward'
+      ](withdrawState.lpInput)
+
+      const finalTxId = await clr.waitUntilWithdraw(
         poolData.address,
         withdrawState.lpInput,
         account,
         txId
       )
 
-      const data = await lmService.parseRemoveLiquidityTx(finalTxId)
-      const clr = new CLRService(provider, account, poolData.address)
+      const data = await clr.parseWithdrawTx(finalTxId)
+
       const totalLiquidity = await clr.getTotalLiquidity()
 
       const claimedEarn: BigNumber[] = []
 
       if (!withdrawState.withdrawOnly) {
-        const claimInfo = await lmService.parseClaimTx(finalTxId)
+        const claimInfo = await clr.parseClaimTx(finalTxId)
         poolData.rewardState.tokens.forEach((rewardToken) => {
           const rewardAmount =
             claimInfo[rewardToken.address.toLowerCase()] || ZERO
