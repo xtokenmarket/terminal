@@ -6,7 +6,7 @@ import { DefaultReadonlyProvider } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef, useTokenBalance } from 'helpers'
 import { IDepositState } from 'pages/PoolDetails/components'
-import { xAssetCLRService } from 'services'
+import { CLRService } from 'services'
 import { ITerminalPool } from 'types'
 import { ZERO } from 'utils/number'
 import { OutputEstimation, OutputEstimationInfo } from '..'
@@ -69,19 +69,19 @@ export const InputSection = (props: IProps) => {
         })
         return
       }
-      const xAssetCLR = new xAssetCLRService(
+      const clr = new CLRService(
         provider || DefaultReadonlyProvider,
         account,
         poolData.address
       )
       const [amount0Estimation, amount1Estimation] =
-        await xAssetCLR.calculateAmountsMintedSingleToken(
+        await clr.calculateAmountsMintedSingleToken(
           amount0.isZero() ? 1 : 0,
           amount0.isZero() ? amount1 : amount0
         )
       const [lpEstimation, totalLiquidity] = await Promise.all([
-        xAssetCLR.getLiquidityForAmounts(amount0Estimation, amount1Estimation),
-        xAssetCLR.getTotalLiquidity(),
+        clr.getLiquidityForAmounts(amount0Estimation, amount1Estimation),
+        clr.getTotalLiquidity(),
       ])
       if (isMountedRef.current === true) {
         updateState({

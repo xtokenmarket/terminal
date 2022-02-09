@@ -5,7 +5,7 @@ import { Interface } from '@ethersproject/abi'
 
 const xAssetCLRAbi = Abi.xAssetCLR
 
-class xAssetCLRService {
+class CLRService {
   provider: any
   contract: Contract
 
@@ -124,4 +124,4 @@ class xAssetCLRService {
   }
 }
 
-export { xAssetCLRService }
+export { CLRService }

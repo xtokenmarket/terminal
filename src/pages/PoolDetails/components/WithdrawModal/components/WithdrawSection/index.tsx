@@ -4,7 +4,7 @@ import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef, useServices } from 'helpers'
 import { IWithdrawState } from 'pages/PoolDetails/components'
 import { useEffect, useState } from 'react'
-import { ERC20Service, xAssetCLRService } from 'services'
+import { ERC20Service, CLRService } from 'services'
 import { ITerminalPool } from 'types'
 import { ZERO } from 'utils/number'
 import { ActionStepRow, ViewTransaction, WarningInfo } from '..'
@@ -113,12 +113,8 @@ export const WithdrawSection = (props: IProps) => {
       )
 
       const data = await lmService.parseRemoveLiquidityTx(finalTxId)
-      const xAssetCLR = new xAssetCLRService(
-        provider,
-        account,
-        poolData.address
-      )
-      const totalLiquidity = await xAssetCLR.getTotalLiquidity()
+      const clr = new CLRService(provider, account, poolData.address)
+      const totalLiquidity = await clr.getTotalLiquidity()
 
       const claimedEarn: BigNumber[] = []
 
