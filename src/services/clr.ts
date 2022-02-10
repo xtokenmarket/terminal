@@ -224,6 +224,40 @@ class CLRService {
       })
     })
   }
+
+  claimReward = async (clrPool: string): Promise<string> => {
+    const transactionObject = await this.contract.claimReward(clrPool)
+    console.log(`claimReward transaction hash: ${transactionObject.hash}`)
+
+    return transactionObject.hash
+  }
+
+  waitUntilClaimReward = async (
+    account: string,
+    txId: string
+  ): Promise<string> => {
+    let resolved = false
+    return new Promise((resolve) => {
+      this.contract.on(
+        'ClaimedReward',
+        (clrPool: string, sender: any, ...rest) => {
+          if (account.toLowerCase() === sender.toLowerCase()) {
+            if (!resolved) {
+              resolved = true
+              resolve(rest[0].transactionHash)
+            }
+          }
+        }
+      )
+
+      this.contract.provider.waitForTransaction(txId).then(() => {
+        if (!resolved) {
+          resolved = true
+          resolve(txId)
+        }
+      })
+    })
+  }
 }
 
 export { CLRService }
