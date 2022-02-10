@@ -89,7 +89,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-interface Item {
+interface RewardVestingItem {
   icon: string
   symbol: string
   value: string
@@ -102,43 +102,47 @@ interface RemainingPeriod {
 }
 
 interface IProps {
-  data: Data
+  data: {
+    remainingPeriod: RemainingPeriod[]
+    vesting: RewardVestingItem[]
+    rewards: RewardVestingItem[]
+  }
 }
 
-interface Data {
-  remainingPeriod: RemainingPeriod[]
-  vesting: Item[]
-  rewards: Item[]
-}
+export const RewardVestSection: React.FC<IProps> = ({
+  data,
+}) => {
+  const cl = useStyles()
+  const { remainingPeriod, vesting, rewards } = data
 
-export const RewardVestSection = (props: IProps) => {
-  const classes = useStyles()
-  const { remainingPeriod, vesting, rewards } = props.data
-
-  const renderRewardsItem = (item: Item) => {
+  const renderRewardsItem = ({ icon, symbol, value, rate }: RewardVestingItem) => {
     return (
-      <div key={item.symbol} className={classes.itemWrapper}>
-        <div className={classes.symbolWrapper}>
-          <img className={classes.icon} alt="token" src={item.icon} />
-          <Typography className={classes.symbol}>{item.symbol}</Typography>
+      <div key={symbol} className={cl.itemWrapper}>
+        <div className={cl.symbolWrapper}>
+          <img className={cl.icon} alt="token" src={icon} />
+          <Typography className={cl.symbol}>
+            {symbol}
+          </Typography>
         </div>
-        <div className={classes.rewardValueWrapper}>
-          <Typography className={classes.value}>{item.value}</Typography>
-          <Typography
-            className={classes.lightPurpletext}
-          >{`~ $ ${item.rate}`}</Typography>
+        <div className={cl.rewardValueWrapper}>
+          <Typography className={cl.value}>
+            {value}
+          </Typography>
+          <Typography className={cl.lightPurpletext}>
+            {`~ $ ${rate}`}
+          </Typography>
         </div>
 
-        <div className={classes.buttonWrapper}>
+        <div className={cl.buttonWrapper}>
           <Button
-            className={classes.button}
+            className={cl.button}
             color="secondary"
             variant="contained"
           >
             CLAIM
           </Button>
           <Button
-            className={classes.button}
+            className={cl.button}
             color="secondary"
             variant="contained"
           >
@@ -149,28 +153,32 @@ export const RewardVestSection = (props: IProps) => {
     )
   }
 
-  const renderVestingItems = (item: Item) => {
+  const renderVestingItems = ({ icon, symbol, value, rate }: RewardVestingItem) => {
     return (
-      <div className={classes.vestingWrapper}>
-        <div className={classes.symbolWrapper}>
-          <img className={classes.icon} alt="token" src={item.icon} />
-          <Typography className={classes.symbol}>{item.symbol}</Typography>
+      <div className={cl.vestingWrapper}>
+        <div className={cl.symbolWrapper}>
+          <img className={cl.icon} alt="token" src={icon} />
+          <Typography className={cl.symbol}>
+            {symbol}
+          </Typography>
         </div>
-        <div className={classes.valueWrapper}>
-          <Typography className={classes.value}>{item.value}</Typography>
-          <Typography
-            className={classes.lightPurpletext}
-          >{`~ $ ${item.rate}`}</Typography>
+        <div className={cl.valueWrapper}>
+          <Typography className={cl.value}>
+            {value}
+          </Typography>
+          <Typography className={cl.lightPurpletext}>
+            {`~ $ ${rate}`}
+          </Typography>
         </div>
       </div>
     )
   }
 
-  const renderRemainingItems = (item: RemainingPeriod) => {
+  const renderRemainingItems = ({ period, time }: RemainingPeriod) => {
     return (
-      <div className={classes.vestingWrapper}>
-        <Typography className={classes.whiteText}>{item.period}</Typography>
-        <Typography className={classes.lightPurpletext}>{item.time}</Typography>
+      <div className={cl.vestingWrapper}>
+        <Typography className={cl.whiteText}>{period}</Typography>
+        <Typography className={cl.lightPurpletext}>{time}</Typography>
       </div>
     )
   }
@@ -178,43 +186,37 @@ export const RewardVestSection = (props: IProps) => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} md={6}>
-        <div className={classes.block}>
+        <div className={cl.block}>
           <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
-              <Typography className={classes.title}>
-                {'Total Vesting'.toUpperCase()}
+              <Typography className={cl.title}>
+                TOTAL VESTING
               </Typography>
-              {vesting.map((vest) => {
-                return renderVestingItems(vest)
-              })}
+              {vesting.map(renderVestingItems)}
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <Typography className={classes.title}>
+              <Typography className={cl.title}>
                 {'Remaining period'.toUpperCase()}
               </Typography>
-              {remainingPeriod.map((remainingPeriod) => {
-                return renderRemainingItems(remainingPeriod)
-              })}
+              {remainingPeriod.map(renderRemainingItems)}
             </Grid>
           </Grid>
         </div>
       </Grid>
       <Grid item xs={12} md={6}>
-        <div className={classes.block}>
-          <div className={classes.titleWrapper}>
-            <Typography className={classes.title}>
-              {'Claimable Rewards'.toUpperCase()}
+        <div className={cl.block}>
+          <div className={cl.titleWrapper}>
+            <Typography className={cl.title}>
+              CLAIMABLE REWARDS
             </Typography>
             <img
-              className={classes.icon}
+              className={cl.icon}
               alt="token"
               src={'/assets/imgs/star.svg'}
             />
           </div>
-          {rewards.map((item: Item) => {
-            return renderRewardsItem(item)
-          })}
+          {rewards.map(renderRewardsItem)}
         </div>
       </Grid>
     </Grid>
