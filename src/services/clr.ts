@@ -225,8 +225,8 @@ class CLRService {
     })
   }
 
-  claimReward = async (clrPool: string): Promise<string> => {
-    const transactionObject = await this.contract.claimReward(clrPool)
+  claimReward = async (): Promise<string> => {
+    const transactionObject = await this.contract.claimReward()
     console.log(`claimReward transaction hash: ${transactionObject.hash}`)
 
     return transactionObject.hash

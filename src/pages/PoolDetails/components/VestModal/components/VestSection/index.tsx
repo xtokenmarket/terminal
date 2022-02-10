@@ -98,7 +98,7 @@ export const VestSection = (props: IProps) => {
       }))
 
       const clr = new CLRService(provider, account, poolData.address)
-      const txId = await clr.claimReward(poolData.address)
+      const txId = await clr.claimReward()
 
       const finalTxId = await clr.waitUntilClaimReward(account, txId)
 
