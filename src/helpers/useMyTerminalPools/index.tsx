@@ -5,8 +5,8 @@ import { waitSeconds } from 'utils'
 import { TERMINAL_API_URL } from 'config/constants'
 
 interface IState {
-  pools: any[]
   loading: boolean
+  pools: any[]
 }
 
 export const useMyTerminalPools = () => {

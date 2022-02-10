@@ -1,13 +1,14 @@
 import { SimpleLoader, HeaderSection, PoolTable } from 'components'
-import { usePoolsContext } from 'contexts/pools'
+import { useTerminalPools } from 'helpers'
 
 const Discover = () => {
-  const { isLoading, pools } = usePoolsContext()
+  const { isLoading, pools } = useTerminalPools()
   const loading = isLoading && pools.length === 0
+
   return (
     <div>
       <HeaderSection />
-      {loading ? <SimpleLoader /> : <PoolTable addresses={pools} />}
+      {loading ? <SimpleLoader /> : <PoolTable pools={pools} />}
     </div>
   )
 }

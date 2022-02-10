@@ -203,7 +203,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   poolData: ITerminalPool
-  reloadTerminalPool: () => Promise<void>
+  reloadTerminalPool: (isReloadPool: boolean) => Promise<void>
 }
 
 interface IState {
@@ -235,7 +235,7 @@ export const Content = (props: IProps) => {
   } = useConnectedWeb3Context()
   const isMountedRef = useIsMountedRef()
 
-  console.log('poolData', poolData)
+  // console.log('poolData', poolData)
 
   const timestamp = getCurrentTimeStamp()
   const isManageable = [poolData.owner, poolData.manager]
@@ -294,7 +294,7 @@ export const Content = (props: IProps) => {
           onClose={() => setDepositModalVisible(false)}
           onSuccess={async () => {
             setDepositModalVisible(false)
-            await props.reloadTerminalPool()
+            await props.reloadTerminalPool(true)
           }}
           poolData={poolData}
         />
@@ -306,7 +306,7 @@ export const Content = (props: IProps) => {
         onClose={() => setRewardModalVisible(false)}
         onSuccess={async () => {
           setRewardModalVisible(false)
-          await props.reloadTerminalPool()
+          await props.reloadTerminalPool(true)
         }}
         poolData={poolData}
       />
@@ -316,7 +316,7 @@ export const Content = (props: IProps) => {
           onClose={() => setWithdrawModalVisible(false)}
           onSuccess={async () => {
             setWithdrawModalVisible(false)
-            await props.reloadTerminalPool()
+            await props.reloadTerminalPool(true)
           }}
           poolData={poolData}
         />
@@ -327,7 +327,7 @@ export const Content = (props: IProps) => {
           onClose={() => setVestModalVisible(false)}
           onSuccess={async () => {
             setVestModalVisible(false)
-            await props.reloadTerminalPool()
+            await props.reloadTerminalPool(true)
           }}
           poolData={poolData}
         />

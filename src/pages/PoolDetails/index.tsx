@@ -1,5 +1,5 @@
 import { PageWrapper, PageHeader, PageContent, SimpleLoader } from 'components'
-import { useTerminalPool, useTerminalPoolV2 } from 'helpers'
+import { useTerminalPool } from 'helpers'
 import { useEffect } from 'react'
 import { useHistory, useParams } from 'react-router'
 import { isAddress } from 'utils/tools'
@@ -8,13 +8,15 @@ import { Content } from './components'
 const PoolDetails = () => {
   const history = useHistory()
   const params = useParams()
+  const { id: poolAddress } = params as any
 
-  const poolAddress = (params as any).id
+  // TODO: Add `network` check before displaying pool details
 
-  const { pool: poolData, loading, loadInfo } = useTerminalPool(poolAddress)
-
-  // TODO: Replace `poolData` and `loadInfo`
-  const { pool: poolDataV2 } = useTerminalPoolV2(undefined, poolAddress)
+  const {
+    loadInfo,
+    loading,
+    pool: poolData,
+  } = useTerminalPool(undefined, poolAddress)
 
   const onBack = () => {
     history.push('/terminal/discover')

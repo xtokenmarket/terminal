@@ -1,6 +1,6 @@
 import { makeStyles, Typography } from '@material-ui/core'
 import { PoolTd, SimpleLoader } from 'components'
-import { useTerminalPool, useTerminalPoolV2 } from 'helpers'
+import { useTerminalPool } from 'helpers'
 import {
   formatBigNumber,
   formatToShortNumber,
@@ -94,26 +94,17 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  poolAddress: string
-  pool?: any
+  pool: any
   className?: string
 }
 
-export const PoolTableItem: React.FC<IProps> = ({
-  poolAddress,
-  pool,
-  className,
-}) => {
+export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
   const cl = useStyles()
 
-  // eslint-disable-next-line prefer-const
-  let { pool: poolData, loading } = useTerminalPool(poolAddress)
-  const { pool: poolDataV2 } = useTerminalPoolV2(pool)
+  const { loading, pool: poolData } = useTerminalPool(pool)
 
   const renderContent = () => {
-    if (pool && poolDataV2) {
-      poolData = poolDataV2
-    } else if (!poolData) {
+    if (!poolData) {
       return null
     }
 
@@ -125,7 +116,7 @@ export const PoolTableItem: React.FC<IProps> = ({
     return (
       <NavLink
         className={cl.content}
-        to={`/terminal/pools/${poolData.address}`}
+        to={`/terminal/pools/${poolData.network}/${poolData.address}`}
       >
         <PoolTd type="pool">
           <div className={cl.item}>
