@@ -13,6 +13,7 @@ export const formatBigNumber = (
 ): string => Number(formatUnits(value, decimals)).toFixed(precision)
 
 export const numberWithCommas = (x: number | string) => {
+  if (!x) return '0'
   const splits = x.toString().split('.')
   const first = splits[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
   if (splits.length === 1) return first
@@ -117,6 +118,7 @@ export const getTimeDurationStr = (secs: number) => {
 }
 
 export const getFloatDecimalNumber = (num: string, decimals = 2) => {
+  if (!num) return '0'
   const subs = num.split('.')
   if (subs.length < 2) return num
 

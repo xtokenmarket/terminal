@@ -2,6 +2,7 @@ import { Button, CircularProgress, Grid, makeStyles, Typography } from '@materia
 import { SimpleLoader } from 'components'
 import { getTokenFromAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
+import { useTerminalPool } from 'helpers'
 import { useInterval } from 'hooks/useInterval'
 import { useEffect, useState } from 'react'
 import { CLRService, ERC20Service, RewardEscrowService } from 'services'
@@ -122,9 +123,11 @@ export const RewardVestSection: React.FC<IProps> = ({
 }) => {
   const cl = useStyles()
   const { remainingPeriod, vesting, rewards } = data
-
   const { account, library: provider } = useConnectedWeb3Context()
   const [isLoading, setIsLoading] = useState(true)
+
+  const { loading, pool } = useTerminalPool(undefined, poolAddress)
+  // console.log({ loading, pool })
   useInterval(stop => {
     if (!account || !provider || !poolAddress) return
     // const clr = new CLRService(provider, account, poolAddress)
@@ -144,11 +147,11 @@ export const RewardVestSection: React.FC<IProps> = ({
     //     })
     //   }
     // })
-    const rewardsEscrow = new RewardEscrowService(provider, account, poolAddress)
+    // const rewardsEscrow = new RewardEscrowService(provider, account, poolAddress)
     // rewardsEscrow.contract.getVestingScheduleEntry().then((x: any) => {
     //   console.log(x)
     // })
-    rewardsEscrow.contract.getNextVestingIndex()
+    // rewardsEscrow.contract.getNextVestingIndex()
     setIsLoading(false)
     stop()
   }, 500)
@@ -212,15 +215,6 @@ export const RewardVestSection: React.FC<IProps> = ({
     )
   }
 
-  const renderRemainingItems = ({ period, time }: RemainingPeriod) => {
-    return (
-      <div className={cl.vestingWrapper}>
-        <Typography className={cl.whiteText}>{period}</Typography>
-        <Typography className={cl.lightPurpletext}>{time}</Typography>
-      </div>
-    )
-  }
-
   if (isLoading) {
     return (
       <Grid container spacing={2}>
@@ -247,9 +241,14 @@ export const RewardVestSection: React.FC<IProps> = ({
 
             <Grid item xs={12} md={6}>
               <Typography className={cl.title}>
-                {'Remaining period'.toUpperCase()}
+                REMAINING PERIOD
               </Typography>
-              {remainingPeriod.map(renderRemainingItems)}
+              {remainingPeriod.map(({ period, time }, i) => (
+                <div key={i} className={cl.vestingWrapper}>
+                  <Typography className={cl.whiteText}>{period}</Typography>
+                  <Typography className={cl.lightPurpletext}>{time}</Typography>
+                </div>
+              ))}
             </Grid>
           </Grid>
         </div>

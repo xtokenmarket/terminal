@@ -8,15 +8,17 @@ import { useEffect, useState } from 'react'
 import { ERC20Service } from 'services'
 import { ITerminalPool, IToken } from 'types'
 import { BigNumber } from '@ethersproject/bignumber'
-import { formatBigNumber } from 'utils'
+import { formatBigNumber, getCurrentTimeStamp, getTimeDurationStr, getTimeDurationUnitInfo } from 'utils'
 import { ERewardStep, Network } from 'utils/enums'
-import { formatDuration } from 'utils/number'
+import { formatDuration, ONE_WEEK_IN_TIME } from 'utils/number'
 
 import {
   getCoinGeckoIDs,
   getPoolDataMulticall,
   getTokenExchangeRate,
 } from './helper'
+import { formatEther } from 'ethers/lib/utils'
+import moment from 'moment'
 
 interface IState {
   pool?: ITerminalPool
@@ -125,8 +127,10 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
         token1.decimals
       )
 
-      const ids = await getCoinGeckoIDs([token0.symbol, token1.symbol])
-      const rates = await getTokenExchangeRate(ids)
+      // const ids = await getCoinGeckoIDs([token0.symbol, token1.symbol])
+      // const ids: any[] = []
+      // const rates = await getTokenExchangeRate(ids)
+      const rates = false
 
       let tvl = ''
       let token0tvl = BigNumber.from('0')
@@ -165,6 +169,79 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
         address: pool.poolAddress,
         params: [token.address],
       }))
+
+      let vestingInfo = []
+      if (!vestingPeriod.isZero()) {
+        vestingInfo = await Promise.all(
+          rewardTokens.map(async (token: any) => {
+            const [timestamp, amount] = await rewardEscrow.contract.getNextVestingEntry(
+              poolAddress,
+              token.address,
+              account,
+            )
+            const now = getCurrentTimeStamp()
+            const timeRemaining = getTimeDurationStr(timestamp - now)
+            return {
+              amount: formatEther(amount),
+              timeRemaining,
+              ...token,
+            }
+          })
+        )
+      }
+
+      console.log(vestingInfo.length ? vestingInfo[0] : 'NO VESTING PERIOD')
+
+      // const entry = await rewardEscrow.contract.getNextVestingEntry(
+      //   poolAddress,
+      //   pool.rewardTokens[0].address,
+      //   account,
+      // )
+      // const now = getCurrentTimeStamp()
+      // // const now = Date.now() / 1000
+      // const vestTimestamp = entry[0].toNumber()
+      // const timeTil = (vestTimestamp - now)
+      // // const amt = entry[1].toString()
+      // const m = moment(new Date(vestTimestamp)).format('MMM DD, YYYY')
+      // const a = getTimeDurationStr(timeTil)
+      // const b = getTimeDurationUnitInfo(timeTil)
+      // const weeksTil = timeTil / ONE_WEEK_IN_TIME
+      // console.log({
+      //   vestTimestamp,
+      //   timeTil,
+      //   weeksTil,
+      //   a,
+      //   // m,
+      //   // a,
+      //   // b
+      // })
+
+      // console.log('----', { entry: entry.map((i: any) => i.toString()) })
+
+      // const vestingIndex = await rewardEscrow.contract.getNextVestingIndex(
+      //   poolAddress,
+      //   rewardTokens[0].address,
+      //   account,
+      // )
+      // console.log({
+      //   poolAddress,
+      //   token: pool.rewardTokens[0].address,
+      //   token2: rewardTokens[0].address,
+      //   account,
+        // vestingIndex,
+      // })
+      // const entry = await rewardEscrow.contract.getVestingScheduleEntry(
+      //   poolAddress,
+      //   // rewardTokens[0].address,
+      //   pool.rewardTokens[0].address,
+      //   account,
+      //   vestingIndex
+      // )
+
+      // console.log('---------', { vestingIndex })
+      // console.log('---------', { vestingIndex, entry })
+
+
 
       // console.time(`loadInfo rewards response ${poolAddress}`)
       const rewardsResponse = await multicall.multicallv2(
