@@ -424,7 +424,7 @@ export const Content = (props: IProps) => {
             WITHDRAW
           </Button>
 
-          {isDeposited && (
+          {isDeposited && Number(poolData.rewardState.vesting) > 0 && (
             <Button
               className={classes.button}
               color="secondary"
