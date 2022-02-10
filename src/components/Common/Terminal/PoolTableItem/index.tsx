@@ -94,13 +94,14 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  poolAddress: string
+  pool: any
   className?: string
 }
 
-export const PoolTableItem: React.FC<IProps> = ({ poolAddress, className }) => {
+export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
   const cl = useStyles()
-  const { pool: poolData, loading } = useTerminalPool(poolAddress)
+
+  const { loading, pool: poolData } = useTerminalPool(pool)
 
   const renderContent = () => {
     if (!poolData) {
@@ -115,7 +116,7 @@ export const PoolTableItem: React.FC<IProps> = ({ poolAddress, className }) => {
     return (
       <NavLink
         className={cl.content}
-        to={`/terminal/pools/${poolData.address}`}
+        to={`/terminal/pools/${poolData.network}/${poolData.address}`}
       >
         <PoolTd type="pool">
           <div className={cl.item}>

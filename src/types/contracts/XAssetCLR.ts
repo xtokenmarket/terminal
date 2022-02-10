@@ -58,22 +58,15 @@ export interface XAssetCLRInterface extends utils.Interface {
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "deposit(uint8,uint256)": FunctionFragment;
     "earned(address,address)": FunctionFragment;
-    "getAmountInAsset0Terms(uint256)": FunctionFragment;
-    "getAmountInAsset1Terms(uint256)": FunctionFragment;
     "getAmountsForLiquidity(uint128)": FunctionFragment;
-    "getAsset0Price()": FunctionFragment;
-    "getAsset1Price()": FunctionFragment;
-    "getBufferBalance()": FunctionFragment;
     "getBufferToken0Balance()": FunctionFragment;
     "getBufferToken1Balance()": FunctionFragment;
     "getBufferTokenBalance()": FunctionFragment;
     "getLiquidityForAmounts(uint256,uint256)": FunctionFragment;
-    "getNav()": FunctionFragment;
     "getPositionLiquidity()": FunctionFragment;
     "getRewardForDuration(address)": FunctionFragment;
     "getRewardTokens()": FunctionFragment;
     "getRewardTokensCount()": FunctionFragment;
-    "getStakedBalance()": FunctionFragment;
     "getStakedTokenBalance()": FunctionFragment;
     "getTicks()": FunctionFragment;
     "getTotalLiquidity()": FunctionFragment;
@@ -172,28 +165,8 @@ export interface XAssetCLRInterface extends utils.Interface {
     values: [string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "getAmountInAsset0Terms",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getAmountInAsset1Terms",
-    values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
     functionFragment: "getAmountsForLiquidity",
     values: [BigNumberish]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getAsset0Price",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getAsset1Price",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getBufferBalance",
-    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getBufferToken0Balance",
@@ -211,7 +184,6 @@ export interface XAssetCLRInterface extends utils.Interface {
     functionFragment: "getLiquidityForAmounts",
     values: [BigNumberish, BigNumberish]
   ): string;
-  encodeFunctionData(functionFragment: "getNav", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "getPositionLiquidity",
     values?: undefined
@@ -226,10 +198,6 @@ export interface XAssetCLRInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getRewardTokensCount",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getStakedBalance",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -426,27 +394,7 @@ export interface XAssetCLRInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "earned", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getAmountInAsset0Terms",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getAmountInAsset1Terms",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "getAmountsForLiquidity",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getAsset0Price",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getAsset1Price",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getBufferBalance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -465,7 +413,6 @@ export interface XAssetCLRInterface extends utils.Interface {
     functionFragment: "getLiquidityForAmounts",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "getNav", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getPositionLiquidity",
     data: BytesLike
@@ -480,10 +427,6 @@ export interface XAssetCLRInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getRewardTokensCount",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getStakedBalance",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -877,28 +820,12 @@ export interface XAssetCLR extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    getAmountInAsset0Terms(
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    getAmountInAsset1Terms(
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
     getAmountsForLiquidity(
       liquidity: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber] & { amount0: BigNumber; amount1: BigNumber }
     >;
-
-    getAsset0Price(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    getAsset1Price(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    getBufferBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getBufferToken0Balance(
       overrides?: CallOverrides
@@ -920,8 +847,6 @@ export interface XAssetCLR extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { liquidity: BigNumber }>;
 
-    getNav(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     getPositionLiquidity(
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { liquidity: BigNumber }>;
@@ -936,8 +861,6 @@ export interface XAssetCLR extends BaseContract {
     ): Promise<[string[]] & { tokens: string[] }>;
 
     getRewardTokensCount(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    getStakedBalance(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getStakedTokenBalance(
       overrides?: CallOverrides
@@ -1215,28 +1138,12 @@ export interface XAssetCLR extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  getAmountInAsset0Terms(
-    amount: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  getAmountInAsset1Terms(
-    amount: BigNumberish,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
   getAmountsForLiquidity(
     liquidity: BigNumberish,
     overrides?: CallOverrides
   ): Promise<
     [BigNumber, BigNumber] & { amount0: BigNumber; amount1: BigNumber }
   >;
-
-  getAsset0Price(overrides?: CallOverrides): Promise<BigNumber>;
-
-  getAsset1Price(overrides?: CallOverrides): Promise<BigNumber>;
-
-  getBufferBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
   getBufferToken0Balance(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1254,8 +1161,6 @@ export interface XAssetCLR extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  getNav(overrides?: CallOverrides): Promise<BigNumber>;
-
   getPositionLiquidity(overrides?: CallOverrides): Promise<BigNumber>;
 
   getRewardForDuration(
@@ -1266,8 +1171,6 @@ export interface XAssetCLR extends BaseContract {
   getRewardTokens(overrides?: CallOverrides): Promise<string[]>;
 
   getRewardTokensCount(overrides?: CallOverrides): Promise<BigNumber>;
-
-  getStakedBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
   getStakedTokenBalance(
     overrides?: CallOverrides
@@ -1531,28 +1434,12 @@ export interface XAssetCLR extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getAmountInAsset0Terms(
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getAmountInAsset1Terms(
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     getAmountsForLiquidity(
       liquidity: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [BigNumber, BigNumber] & { amount0: BigNumber; amount1: BigNumber }
     >;
-
-    getAsset0Price(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getAsset1Price(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getBufferBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
     getBufferToken0Balance(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1570,8 +1457,6 @@ export interface XAssetCLR extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getNav(overrides?: CallOverrides): Promise<BigNumber>;
-
     getPositionLiquidity(overrides?: CallOverrides): Promise<BigNumber>;
 
     getRewardForDuration(
@@ -1582,8 +1467,6 @@ export interface XAssetCLR extends BaseContract {
     getRewardTokens(overrides?: CallOverrides): Promise<string[]>;
 
     getRewardTokensCount(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getStakedBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
     getStakedTokenBalance(
       overrides?: CallOverrides
@@ -1948,26 +1831,10 @@ export interface XAssetCLR extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getAmountInAsset0Terms(
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getAmountInAsset1Terms(
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     getAmountsForLiquidity(
       liquidity: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
-
-    getAsset0Price(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getAsset1Price(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getBufferBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
     getBufferToken0Balance(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1981,8 +1848,6 @@ export interface XAssetCLR extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getNav(overrides?: CallOverrides): Promise<BigNumber>;
-
     getPositionLiquidity(overrides?: CallOverrides): Promise<BigNumber>;
 
     getRewardForDuration(
@@ -1993,8 +1858,6 @@ export interface XAssetCLR extends BaseContract {
     getRewardTokens(overrides?: CallOverrides): Promise<BigNumber>;
 
     getRewardTokensCount(overrides?: CallOverrides): Promise<BigNumber>;
-
-    getStakedBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
     getStakedTokenBalance(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -2237,26 +2100,10 @@ export interface XAssetCLR extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getAmountInAsset0Terms(
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getAmountInAsset1Terms(
-      amount: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     getAmountsForLiquidity(
       liquidity: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
-
-    getAsset0Price(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getAsset1Price(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    getBufferBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getBufferToken0Balance(
       overrides?: CallOverrides
@@ -2276,8 +2123,6 @@ export interface XAssetCLR extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getNav(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     getPositionLiquidity(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -2292,8 +2137,6 @@ export interface XAssetCLR extends BaseContract {
     getRewardTokensCount(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
-
-    getStakedBalance(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getStakedTokenBalance(
       overrides?: CallOverrides

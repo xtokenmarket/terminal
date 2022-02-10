@@ -3,10 +3,11 @@ import { makeStyles, Modal } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import { ECreatePoolModalStep } from 'utils/enums'
 import { CreatePoolSection, InitSection, SuccessSection } from './components'
-import { ICreatePoolData } from 'types'
+import { ICreatePoolData, NetworkId } from 'types'
 import useCommonStyles from 'style/common'
 import { useConnectedWeb3Context } from 'contexts'
 import { useHistory } from 'react-router'
+import { getNetworkFromId } from 'utils/network'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,7 +39,7 @@ export const CreatePoolModal = (props: IProps) => {
   const history = useHistory()
   const classes = useStyles()
   const commonClasses = useCommonStyles()
-  const { account } = useConnectedWeb3Context()
+  const { account, networkId } = useConnectedWeb3Context()
 
   const { onClose } = props
   const [step, setStep] = useState<ECreatePoolModalStep>(
@@ -71,7 +72,11 @@ export const CreatePoolModal = (props: IProps) => {
   }
 
   const onSuccessClose = () => {
-    history.push(`/terminal/pools/${poolAddress}`)
+    history.push(
+      `/terminal/pools/${getNetworkFromId(
+        (networkId || 42) as NetworkId
+      )}/${poolAddress}`
+    )
   }
 
   const renderContent = () => {

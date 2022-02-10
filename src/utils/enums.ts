@@ -92,6 +92,11 @@ export enum ECreatePoolModalStep {
   Success = 'Success',
 }
 
+export enum Network {
+  KOVAN = 'kovan',
+  MAINNET = 'mainnet',
+}
+
 // uni v3
 export enum PoolState {
   LOADING,
