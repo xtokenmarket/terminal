@@ -75,8 +75,7 @@ export const OutputEstimation = (props: IProps) => {
           </div>
           &nbsp;&nbsp;
           <Typography className={classes.amount}>
-            {formatBigNumber(lpValue, ETHER_DECIMAL, 4)}&nbsp;
-            <span>~ $13.009</span>
+            {formatBigNumber(lpValue, ETHER_DECIMAL, 4)}
           </Typography>
         </div>
         <Typography className={classes.label}>
