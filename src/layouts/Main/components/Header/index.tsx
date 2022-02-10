@@ -122,7 +122,6 @@ export const Header = () => {
           className={classes.networkWrapper}
           network={ENetwork.Ethereum}
         />
-
         <Button
           className={classes.connect}
           color="primary"

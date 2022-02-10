@@ -42,6 +42,7 @@ export const MIN_START_TIME_DIFF = 10 * 60 // 10 mins
 export const LIQUIDITY_LOCK_MIN_DURATION = 30 * 24 * 60 * 60 // 1 month
 
 export const FLEEK_STORAGE_START_URL = 'https://storageapi.fleek.co/'
+export const TERMINAL_API_URL = 'http://3.8.192.52:3000/api'
 
 export const SvgIcons = {
   home: HomeIcon,

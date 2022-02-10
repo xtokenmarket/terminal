@@ -35,7 +35,7 @@ const routes = [
       },
       {
         exact: true,
-        path: '/terminal/pools/:id',
+        path: '/terminal/pools/:network/:id',
         component: lazy(() => import('pages/PoolDetails')),
       },
       {

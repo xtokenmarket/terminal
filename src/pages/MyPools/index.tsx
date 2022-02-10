@@ -5,10 +5,12 @@ const MyPools = () => {
   const { pools, loading } = useMyTerminalPools()
 
   const isLoading = loading && pools.length === 0
+
+  // TODO: Display `Connect Wallet` button, if not logged in
   return (
     <div>
       <HeaderSection />
-      {isLoading ? <SimpleLoader /> : <PoolTable addresses={pools} />}
+      {isLoading ? <SimpleLoader /> : <PoolTable pools={pools} />}
     </div>
   )
 }
