@@ -466,7 +466,7 @@ export const Content = (props: IProps) => {
           )}
         </div>
 
-        <RewardVestSection data={rewardVestData} />
+        <RewardVestSection data={rewardVestData} poolAddress={props.poolData.address} />
 
         <HistorySection pool={poolData} />
       </div>

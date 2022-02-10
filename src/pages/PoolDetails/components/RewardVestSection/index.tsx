@@ -1,4 +1,10 @@
-import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
+import { Button, CircularProgress, Grid, makeStyles, Typography } from '@material-ui/core'
+import { SimpleLoader } from 'components'
+import { getTokenFromAddress } from 'config/networks'
+import { useConnectedWeb3Context } from 'contexts'
+import { useInterval } from 'hooks/useInterval'
+import { useEffect, useState } from 'react'
+import { CLRService, ERC20Service, RewardEscrowService } from 'services'
 
 const useStyles = makeStyles((theme) => ({
   block: {
@@ -107,13 +113,45 @@ interface IProps {
     vesting: RewardVestingItem[]
     rewards: RewardVestingItem[]
   }
+  poolAddress: string
 }
 
 export const RewardVestSection: React.FC<IProps> = ({
   data,
+  poolAddress,
 }) => {
   const cl = useStyles()
   const { remainingPeriod, vesting, rewards } = data
+
+  const { account, library: provider } = useConnectedWeb3Context()
+  const [isLoading, setIsLoading] = useState(true)
+  useInterval(stop => {
+    if (!account || !provider || !poolAddress) return
+    // const clr = new CLRService(provider, account, poolAddress)
+    // clr.contract.getRewardTokens().then((tokens: any) => {
+    //   const t = tokens[0]
+    //   try {
+    //     const tInfo = getTokenFromAddress(t)
+    //     console.log(tInfo)
+    //   } catch {
+    //     const erc20 = new ERC20Service(
+    //       provider,
+    //       account,
+    //       t,
+    //     )
+    //     erc20.getDetails().then((tInfo: any) => {
+    //       console.log(tInfo)
+    //     })
+    //   }
+    // })
+    const rewardsEscrow = new RewardEscrowService(provider, account, poolAddress)
+    // rewardsEscrow.contract.getVestingScheduleEntry().then((x: any) => {
+    //   console.log(x)
+    // })
+    rewardsEscrow.contract.getNextVestingIndex()
+    setIsLoading(false)
+    stop()
+  }, 500)
 
   const renderRewardsItem = ({ icon, symbol, value, rate }: RewardVestingItem) => {
     return (
@@ -155,7 +193,7 @@ export const RewardVestSection: React.FC<IProps> = ({
 
   const renderVestingItems = ({ icon, symbol, value, rate }: RewardVestingItem) => {
     return (
-      <div className={cl.vestingWrapper}>
+      <div key={symbol} className={cl.vestingWrapper}>
         <div className={cl.symbolWrapper}>
           <img className={cl.icon} alt="token" src={icon} />
           <Typography className={cl.symbol}>
@@ -180,6 +218,18 @@ export const RewardVestSection: React.FC<IProps> = ({
         <Typography className={cl.whiteText}>{period}</Typography>
         <Typography className={cl.lightPurpletext}>{time}</Typography>
       </div>
+    )
+  }
+
+  if (isLoading) {
+    return (
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <div className={cl.block}>
+            <SimpleLoader />
+          </div>
+        </Grid>
+      </Grid>
     )
   }
 
