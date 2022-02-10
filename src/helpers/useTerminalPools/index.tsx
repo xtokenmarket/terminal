@@ -1,41 +1,40 @@
+import axios from 'axios'
+import { TERMINAL_API_URL } from 'config/constants'
 import { networkIds } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import { useEffect, useState } from 'react'
 import { waitSeconds } from 'utils'
 
 interface IState {
-  pools: string[]
-  loading: boolean
+  isLoading: boolean
+  pools: any[]
 }
 
 export const useTerminalPools = () => {
-  const [state, setState] = useState<IState>({ pools: [], loading: true })
+  const [state, setState] = useState<IState>({ pools: [], isLoading: true })
   const { networkId } = useConnectedWeb3Context()
 
   const loadPools = async () => {
-    setState((prev) => ({ ...prev, loading: true }))
+    setState((prev) => ({ ...prev, isLoading: true }))
     try {
       await waitSeconds(1)
       if (!networkId || networkId === networkIds.KOVAN) {
+        const pools = (await axios.get(`${TERMINAL_API_URL}/pools`)).data
         setState((prev) => ({
           ...prev,
-          pools: [
-            '0x1bE9Fe7B8113598642DEedF1F05F2085d9968C87',
-            '0xFe12bDEF490b5B55DF51df1854c09cdCa24045ee',
-            '0xEe89Eaf18A27F2480d91aDc064c7150f3Acab370',
-          ],
-          loading: false,
+          pools,
+          isLoading: false,
         }))
       } else {
-        setState((prev) => ({ ...prev, loading: false }))
+        setState((prev) => ({ ...prev, isLoading: false }))
       }
     } catch (error) {
-      setState((prev) => ({ ...prev, loading: false }))
+      setState((prev) => ({ ...prev, isLoading: false }))
     }
   }
 
   useEffect(() => {
-    setState((prev) => ({ ...prev, pools: [], loading: true }))
+    setState((prev) => ({ ...prev, pools: [], isLoading: true }))
     loadPools()
   }, [networkId])
 

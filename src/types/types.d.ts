@@ -1,6 +1,6 @@
 import { BigNumber } from 'ethers'
-import { ECreatePoolStep } from '../utils/enums'
-import { IRewardState } from '../components'
+import { IRewardState } from 'components'
+import { Network } from '../utils/enums'
 
 declare global {
   interface Window {
@@ -67,30 +67,28 @@ export type ITerminalPoolTableSortFactor = 'tvl' | 'vesting' | 'ending' | 'apr'
 
 export interface ITerminalPool {
   address: string
-  token0: IToken
-  token1: IToken
-  stakedToken: IToken
-  tokenId: BigNumber // token id representing this uniswap position
-  token0DecimalMultiplier: BigNumber // 10 ** (18 - token0 decimals)
-  token1DecimalMultiplier: BigNumber // 10 ** (18 - token1 decimals)
-  tokenDiffDecimalMultiplier: BigNumber // 10 ** (token0 decimals - token1 decimals)
-  tradeFee: BigNumber // xToken Trade Fee as a divisor (100 = 1%)
-  poolFee: BigNumber
-  uniswapPool: string
-  rewardState: IRewardState
-  rewardsAreEscrowed: boolean
+  manager: string
+  network?: Network
   owner: string
   periodFinish: BigNumber
+  poolFee: BigNumber
+  rewardsAreEscrowed: boolean
+  rewardState: IRewardState
+  stakedToken: IToken
   ticks: { tick0: BigNumber; tick1: BigNumber }
-  manager: string
+  token1: IToken
+  token0: IToken
+  tokenId: BigNumber // token id representing this uniswap position
+  tradeFee: BigNumber // xToken Trade Fee as a divisor (100 = 1%)
   tvl: string
+  uniswapPool: string
 }
 
 export interface ICreatePoolData {
   amount0: BigNumber
   amount1: BigNumber
-  maxPrice: string
-  minPrice: string
+  maxPrice: string | IFullRange
+  minPrice: string | IFullRange
   rewardState: IRewardState
   ticks: IPositionTicks
   tier: BigNumber
@@ -99,7 +97,7 @@ export interface ICreatePoolData {
   uniPool: string
 }
 
-export type FullRange = true
+export type IFullRange = true
 
 // UniswapV3
 interface MintState {
@@ -107,6 +105,6 @@ interface MintState {
   typedValue: string
   otherTypedValue: string // for the case when there's no liquidity
   startPriceTypedValue: string // for the case when there's no liquidity
-  leftRangeTypedValue: string | FullRange
-  rightRangeTypedValue: string | FullRange
+  leftRangeTypedValue: string | IFullRange
+  rightRangeTypedValue: string | IFullRange
 }

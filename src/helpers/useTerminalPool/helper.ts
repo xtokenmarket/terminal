@@ -1,3 +1,7 @@
+import Abi from 'abis'
+import { MulticallService } from 'services'
+import { BigNumber } from 'ethers'
+
 export const getCoinGeckoIDs = async (tokens: string[]) => {
   const url = 'https://api.coingecko.com/api/v3/coins/list'
   const response = await fetch(url)
@@ -34,5 +38,79 @@ export const getTokenExchangeRate = async (
     return rate
   } catch (error) {
     console.log(error)
+  }
+}
+
+export const getPoolDataMulticall = async (
+  poolAddress: string,
+  multicall: MulticallService
+) => {
+  try {
+    // console.time(`loadInfo multicall ${poolAddress}`)
+    const calls = [
+      'token0',
+      'token1',
+      'stakedToken',
+      'tokenId',
+      'tradeFee',
+      'poolFee',
+      'uniswapPool',
+      'getRewardTokens',
+      'rewardsDuration',
+      'rewardsAreEscrowed',
+      'owner',
+      'periodFinish',
+      'getTicks',
+      'manager',
+    ].map((method) => ({
+      name: method,
+      address: poolAddress,
+      params: [],
+    }))
+    const [
+      [token0Address],
+      [token1Address],
+      [stakedTokenAddress],
+      [tokenId],
+      [tradeFee],
+      [poolFee],
+      [uniswapPool],
+      [rewardTokenAddresses],
+      [rewardsDuration],
+      [rewardsAreEscrowed],
+      [owner],
+      [periodFinish],
+      ticks,
+      [manager],
+    ] = await multicall.multicallv2(Abi.xAssetCLR, calls, {
+      requireSuccess: false,
+    })
+    return {
+      manager,
+      owner,
+      periodFinish: periodFinish.toString(),
+      poolAddress,
+      poolFee,
+      rewardsAreEscrowed,
+      rewardProgramDuration: rewardsDuration.toString(),
+      rewardTokens: rewardTokenAddresses.map((address: string) => ({
+        address,
+      })),
+      stakedToken: {
+        address: stakedTokenAddress,
+      },
+      ticks: { tick0: ticks.tick0, tick1: ticks.tick1 },
+      token0: {
+        address: token0Address,
+      },
+      token1: {
+        address: token1Address,
+      },
+      tokenId,
+      tradeFee,
+      uniswapPool,
+    }
+  } catch (error) {
+    console.error(error)
   }
 }

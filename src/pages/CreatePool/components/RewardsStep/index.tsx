@@ -145,12 +145,16 @@ export const RewardsStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
                 <Grid container spacing={3} className={cl.detailsWrapper}>
                   <Grid item xs={12} sm={4} className={cl.section}>
                     <p className="title">Min Price</p>
-                    <p className="data">{data.minPrice}</p>
+                    <p className="data">
+                      {data.minPrice === true ? '0' : data.minPrice}
+                    </p>
                     <p className="description">{priceLabel}</p>
                   </Grid>
                   <Grid item xs={12} sm={4} className={cl.section}>
                     <p className="title">Max Price</p>
-                    <p className="data">{data.maxPrice}</p>
+                    <p className="data">
+                      {data.maxPrice === true ? '∞' : data.maxPrice}
+                    </p>
                     <p className="description">{priceLabel}</p>
                   </Grid>
                   <Grid item xs={12} sm={4} className={cl.section}>
@@ -196,7 +200,7 @@ export const RewardsStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
       </div>
 
       <Typography className={cl.fee}>
-        Pool Deployment fee is 0.1 ETH. Additional 1% fee on any rewards
+        Pool Deployment fee is 0.2 ETH. Additional 1% fee on any rewards
         distributed for this pool.
       </Typography>
       <Button
@@ -204,7 +208,7 @@ export const RewardsStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
         fullWidth
         onClick={toggleCreateModal}
         variant="contained"
-        disabled={!data.rewardState}
+        disabled={!hasRewards}
       >
         CREATE POOL
       </Button>
