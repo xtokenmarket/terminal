@@ -79,6 +79,7 @@ const useStyles = makeStyles((theme) => ({
   },
   rewardValueWrapper: {
     display: 'flex',
+    alignItems: 'center',
     flex: 8,
     [theme.breakpoints.down('sm')]: {
       flex: 3,
@@ -114,44 +115,6 @@ export const RewardVestSection: React.FC<IProps> = ({
   const cl = useStyles()
   const { rewards } = data
   const { loading, pool } = useTerminalPool(undefined, poolAddress)
-
-  const renderRewardsItem = ({ icon, symbol, value, rate }: RewardVestingItem) => {
-    return (
-      <div key={symbol} className={cl.itemWrapper}>
-        <div className={cl.symbolWrapper}>
-          <img className={cl.icon} alt="token" src={icon} />
-          <Typography className={cl.symbol}>
-            {symbol}
-          </Typography>
-        </div>
-        <div className={cl.rewardValueWrapper}>
-          <Typography className={cl.value}>
-            {value}
-          </Typography>
-          <Typography className={cl.lightPurpletext}>
-            {`~ $ ${rate}`}
-          </Typography>
-        </div>
-
-        <div className={cl.buttonWrapper}>
-          <Button
-            className={cl.button}
-            color="secondary"
-            variant="contained"
-          >
-            CLAIM
-          </Button>
-          <Button
-            className={cl.button}
-            color="secondary"
-            variant="contained"
-          >
-            VEST
-          </Button>
-        </div>
-      </div>
-    )
-  }
 
   const renderVestingTokens = () => {
     if (!pool || !pool.vestingInfo) {
@@ -210,6 +173,48 @@ export const RewardVestSection: React.FC<IProps> = ({
     )
   }
 
+  const renderRewardsItems = () => (
+    <div>
+      {pool && pool.earnedInfo.map(({ symbol, image, amount}, i) => (
+        <div key={i} className={cl.itemWrapper}>
+          <div className={cl.symbolWrapper}>
+            <img className={cl.icon} alt="token" src={image} />
+            <Typography className={cl.symbol}>
+              {symbol}
+            </Typography>
+          </div>
+          <div className={cl.rewardValueWrapper}>
+            <Typography className={cl.value}>
+              {Number(formatEther(amount)).toFixed(4)}
+            </Typography>
+            {/* <Typography className={cl.lightPurpletext}>
+              {`~ $ ${rate}`}
+            </Typography> */}
+            <div style={{flex: 8}} />
+            {i === 0 && (
+              <div className={cl.buttonWrapper}>
+                <Button
+                  className={cl.button}
+                  color="secondary"
+                  variant="contained"
+                >
+                  CLAIM
+                </Button>
+                <Button
+                  className={cl.button}
+                  color="secondary"
+                  variant="contained"
+                >
+                  VEST
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+
   if (loading || !pool) {
     return (
       <Grid container spacing={2}>
@@ -239,22 +244,6 @@ export const RewardVestSection: React.FC<IProps> = ({
                 REMAINING PERIOD
               </Typography>
               {renderVestingPeriods()}
-              {/* {remainingPeriod.map(({ period, time }, i) => (
-                <div key={i} className={cl.vestingWrapper}>
-                  <Typography className={cl.whiteText}>{period}</Typography>
-                  <Typography className={cl.lightPurpletext}>{time}</Typography>
-                </div>
-              ))} */}
-              {/* {pool.vestingInfo?.map((data, i) => (
-                <div key={i} className={cl.vestingWrapper}>
-                  <Typography className={cl.whiteText}>
-                    {data.durationRemaining[0] || ''}
-                  </Typography>
-                  <Typography className={cl.lightPurpletext}>
-                    {data.durationRemaining.slice(1, data.durationRemaining.length).join(' - ')}
-                  </Typography>
-                </div>
-              ))} */}
             </Grid>
           </Grid>
         </div>
@@ -271,7 +260,7 @@ export const RewardVestSection: React.FC<IProps> = ({
               src={'/assets/imgs/star.svg'}
             />
           </div>
-          {rewards.map(renderRewardsItem)}
+          {renderRewardsItems()}
         </div>
       </Grid>
     </Grid>

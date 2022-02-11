@@ -5,7 +5,7 @@ import { DefaultReadonlyProvider, getTokenFromAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import { useServices } from 'helpers'
 import { useEffect, useState } from 'react'
-import { ERC20Service } from 'services'
+import { CLRService, ERC20Service } from 'services'
 import { ITerminalPool, IToken } from 'types'
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatBigNumber, getCurrentTimeStamp, getTimeDurationStr, getTimeDurationUnitInfo, getTimeRemainingUnits } from 'utils'
@@ -179,8 +179,7 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
               token.address,
               account,
             )
-            const now = getCurrentTimeStamp()
-            const timeRemaining = getTimeDurationStr(timestamp - now)
+            // const timeRemaining = getTimeDurationStr(timestamp - getCurrentTimeStamp())
             const durationRemaining = getTimeRemainingUnits(timestamp)
             return {
               amount,
@@ -190,7 +189,18 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
           })
         )
       }
-      console.log(vestingInfo.length ? vestingInfo[0] : 'NO VESTING PERIOD')
+
+      const earnedInfo = await Promise.all(
+        rewardTokens.map(async (token: any) => {
+          const clr = new CLRService(provider, account, pool.poolAddress)
+          const earned = await clr.contract.earned(account, token.address)
+          console.log('token:', token)
+          return {
+            ...token,
+            amount: earned,
+          }
+        })
+      )
 
       // console.time(`loadInfo rewards response ${poolAddress}`)
       const rewardsResponse = await multicall.multicallv2(
@@ -231,6 +241,7 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
           tvl,
           uniswapPool: pool.uniswapPool,
           vestingInfo: vestingInfo.length ? vestingInfo : undefined,
+          earnedInfo,
         },
       })
     } catch (error) {

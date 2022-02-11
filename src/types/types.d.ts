@@ -70,6 +70,10 @@ interface VestingInfoDatum extends IToken {
   durationRemaining: string[]
 }
 
+interface EarnedInfoDatum extends IToken {
+  amount: BigNumber
+}
+
 export interface ITerminalPool {
   address: string
   manager: string
@@ -88,6 +92,7 @@ export interface ITerminalPool {
   tvl: string
   uniswapPool: string
   vestingInfo?: VestingInfoDatum[]
+  earnedInfo: EarnedInfoDatum[]
 }
 
 export interface ICreatePoolData {
