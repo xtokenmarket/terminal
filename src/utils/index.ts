@@ -121,7 +121,7 @@ export const getTimeDurationStr = (secs: number) => {
 export const getTimeRemainingUnits = (time: number, unitPrecision = 3) => {
   const duration = moment.duration(time)
   
-  const units = [
+  return [
     { years: duration.years() },
     { months: duration.months() },
     { weeks: duration.weeks() },
@@ -134,13 +134,7 @@ export const getTimeRemainingUnits = (time: number, unitPrecision = 3) => {
     const [key, value] = Object.entries(unit)[0]
     return value.toString() + ' ' + (value === 1 ? key.slice(0, -1) : key)
   })
-
-  if (units.length > unitPrecision) {
-    const diff = units.length - unitPrecision
-    units.splice(units.length - diff, diff)
-  }
-
-  return units
+  .filter((_, i) => i < unitPrecision)
 }
 
 export const getFloatDecimalNumber = (num: string, decimals = 2) => {
