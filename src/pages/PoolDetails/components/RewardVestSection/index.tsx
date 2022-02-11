@@ -5,6 +5,7 @@ import { useTerminalPool } from 'helpers'
 
 const useStyles = makeStyles((theme) => ({
   block: {
+    height: '100%',
     background: theme.colors.primary400,
     padding: 24,
     [theme.breakpoints.down('sm')]: {
@@ -34,12 +35,12 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.primary100,
     fontSize: 12,
     fontWeight: 400,
+    margin: theme.spacing(0, 1),
   },
   whiteText: {
     color: theme.colors.white,
     fontSize: 12,
     fontWeight: 400,
-    merginRight: 10,
   },
   wrapper: {
     display: 'flex',
