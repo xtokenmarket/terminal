@@ -42,35 +42,7 @@ const rewards = [
   },
 ]
 
-const vesting = [
-  {
-    icon: '/assets/tokens/xtk.png',
-    symbol: 'XTK',
-    value: '247.3053',
-    rate: '309,73',
-  },
-  {
-    icon: '/assets/tokens/weth.png',
-    symbol: 'WETH',
-    value: '0.3053',
-    rate: '1409,73',
-  },
-]
-
-const remainingPeriod = [
-  {
-    period: '20 days',
-    time: '— 10 hours — 17 minutes',
-  },
-  {
-    period: '4 days ',
-    time: '— 10 hours — 17 minutes',
-  },
-]
-
 const rewardVestData = {
-  remainingPeriod,
-  vesting,
   rewards,
 }
 

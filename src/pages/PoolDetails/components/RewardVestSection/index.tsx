@@ -1,12 +1,7 @@
-import { Button, CircularProgress, Grid, makeStyles, Typography } from '@material-ui/core'
+import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { SimpleLoader } from 'components'
-import { getTokenFromAddress } from 'config/networks'
-import { useConnectedWeb3Context } from 'contexts'
 import { formatEther } from 'ethers/lib/utils'
 import { useTerminalPool } from 'helpers'
-import { useInterval } from 'hooks/useInterval'
-import { useEffect, useState } from 'react'
-import { CLRService, ERC20Service, RewardEscrowService } from 'services'
 
 const useStyles = makeStyles((theme) => ({
   block: {
@@ -104,15 +99,8 @@ interface RewardVestingItem {
   rate: string
 }
 
-interface RemainingPeriod {
-  period: string
-  time: string
-}
-
 interface IProps {
   data: {
-    remainingPeriod: RemainingPeriod[]
-    vesting: RewardVestingItem[]
     rewards: RewardVestingItem[]
   }
   poolAddress: string
@@ -123,7 +111,7 @@ export const RewardVestSection: React.FC<IProps> = ({
   poolAddress,
 }) => {
   const cl = useStyles()
-  const { remainingPeriod, vesting, rewards } = data
+  const { rewards } = data
   const { loading, pool } = useTerminalPool(undefined, poolAddress)
 
   const renderRewardsItem = ({ icon, symbol, value, rate }: RewardVestingItem) => {
