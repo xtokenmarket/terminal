@@ -128,8 +128,10 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
       )
 
       // const ids = await getCoinGeckoIDs([token0.symbol, token1.symbol])
-      // const ids: any[] = []
       // const rates = await getTokenExchangeRate(ids)
+
+      // TODO: this is a temporary workaround to stop the coingecko api
+      // from rate limiting
       const rates = false
 
       let tvl = ''

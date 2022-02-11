@@ -94,26 +94,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-interface RewardVestingItem {
-  icon: string
-  symbol: string
-  value: string
-  rate: string
-}
-
 interface IProps {
-  data: {
-    rewards: RewardVestingItem[]
-  }
   poolAddress: string
 }
 
 export const RewardVestSection: React.FC<IProps> = ({
-  data,
   poolAddress,
 }) => {
   const cl = useStyles()
-  const { rewards } = data
   const { loading, pool } = useTerminalPool(undefined, poolAddress)
 
   const renderVestingTokens = () => {

@@ -1,6 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Button, Grid, makeStyles } from '@material-ui/core'
-import clsx from 'clsx'
 import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef } from 'helpers'
 import moment from 'moment'
@@ -8,7 +7,6 @@ import { useEffect, useState } from 'react'
 import { ERC20Service } from 'services'
 import { ITerminalPool } from 'types'
 import {
-  formatToShortNumber,
   getCurrentTimeStamp,
   getTimeDurationStr,
   numberWithCommas,
@@ -24,27 +22,6 @@ import {
   WithdrawModal,
 } from '../index'
 import { RewardVestSection } from '../RewardVestSection'
-
-// Mock data
-
-const rewards = [
-  {
-    icon: '/assets/tokens/xtk.png',
-    symbol: 'XTK',
-    value: '247.3053',
-    rate: '309,73',
-  },
-  {
-    icon: '/assets/tokens/weth.png',
-    symbol: 'WETH',
-    value: '0.3053',
-    rate: '1409,73',
-  },
-]
-
-const rewardVestData = {
-  rewards,
-}
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -436,7 +413,7 @@ export const Content = (props: IProps) => {
           )}
         </div>
 
-        <RewardVestSection data={rewardVestData} poolAddress={props.poolData.address} />
+        <RewardVestSection poolAddress={props.poolData.address} />
 
         <HistorySection pool={poolData} />
       </div>
