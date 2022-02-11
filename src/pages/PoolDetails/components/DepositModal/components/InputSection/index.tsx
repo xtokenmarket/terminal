@@ -89,6 +89,8 @@ export const InputSection = (props: IProps) => {
           amount1Estimation,
           lpEstimation,
           totalLiquidity,
+          amount0: amount0.isZero() ? amount0Estimation : amount0,
+          amount1: amount0.isZero() ? amount1 : amount1Estimation,
         })
       }
     } catch (error) {
