@@ -1,5 +1,6 @@
 import Abi from 'abis'
 import axios from 'axios'
+import https from 'https'
 import { POLL_API_DATA, TERMINAL_API_URL } from 'config/constants'
 import { DefaultReadonlyProvider, getTokenFromAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
@@ -86,7 +87,10 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
     setState((prev) => ({ ...prev, loading: true }))
 
     if ((!pool && poolAddress) || isReloadPool) {
-      pool = (await axios.get(`${TERMINAL_API_URL}/pool/${poolAddress}`)).data
+      pool = (await axios.get(
+        `${TERMINAL_API_URL}/pool/${poolAddress}`,
+        // { httpsAgent: new https.Agent({ rejectUnauthorized: false }) }
+      )).data
 
       // Fallback in case the pool is recently deployed
       if (!pool) {

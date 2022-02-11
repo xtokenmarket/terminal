@@ -57,12 +57,6 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     minHeight: 35,
   },
-  button: {
-    flex: 1,
-    height: 20,
-    margin: '0 3px',
-    fontSize: 12,
-  },
   icon: {
     widows: 14,
     height: 14,
@@ -85,9 +79,10 @@ const useStyles = makeStyles((theme) => ({
       flex: 3,
     },
   },
-  buttonWrapper: {
-    display: 'flex',
-    flex: 1,
+  button: {
+    height: 20,
+    margin: '0 3px',
+    fontSize: 12,
   },
   titleWrapper: {
     display: 'flex',
@@ -180,22 +175,13 @@ export const RewardVestSection: React.FC<IProps> = ({
             </Typography> */}
             <div style={{flex: 8}} />
             {i === 0 && (
-              <div className={cl.buttonWrapper}>
-                <Button
-                  className={cl.button}
-                  color="secondary"
-                  variant="contained"
-                >
-                  CLAIM
-                </Button>
-                <Button
-                  className={cl.button}
-                  color="secondary"
-                  variant="contained"
-                >
-                  VEST
-                </Button>
-              </div>
+              <Button
+                className={cl.button}
+                color="secondary"
+                variant="contained"
+              >
+                CLAIM ALL REWARDS
+              </Button>
             )}
           </div>
         </div>
