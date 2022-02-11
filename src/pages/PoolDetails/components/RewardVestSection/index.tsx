@@ -2,6 +2,7 @@ import { Button, CircularProgress, Grid, makeStyles, Typography } from '@materia
 import { SimpleLoader } from 'components'
 import { getTokenFromAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
+import { formatEther } from 'ethers/lib/utils'
 import { useTerminalPool } from 'helpers'
 import { useInterval } from 'hooks/useInterval'
 import { useEffect, useState } from 'react'
@@ -123,38 +124,7 @@ export const RewardVestSection: React.FC<IProps> = ({
 }) => {
   const cl = useStyles()
   const { remainingPeriod, vesting, rewards } = data
-  const { account, library: provider } = useConnectedWeb3Context()
-  const [isLoading, setIsLoading] = useState(true)
-
   const { loading, pool } = useTerminalPool(undefined, poolAddress)
-  // console.log({ loading, pool })
-  useInterval(stop => {
-    if (!account || !provider || !poolAddress) return
-    // const clr = new CLRService(provider, account, poolAddress)
-    // clr.contract.getRewardTokens().then((tokens: any) => {
-    //   const t = tokens[0]
-    //   try {
-    //     const tInfo = getTokenFromAddress(t)
-    //     console.log(tInfo)
-    //   } catch {
-    //     const erc20 = new ERC20Service(
-    //       provider,
-    //       account,
-    //       t,
-    //     )
-    //     erc20.getDetails().then((tInfo: any) => {
-    //       console.log(tInfo)
-    //     })
-    //   }
-    // })
-    // const rewardsEscrow = new RewardEscrowService(provider, account, poolAddress)
-    // rewardsEscrow.contract.getVestingScheduleEntry().then((x: any) => {
-    //   console.log(x)
-    // })
-    // rewardsEscrow.contract.getNextVestingIndex()
-    setIsLoading(false)
-    stop()
-  }, 500)
 
   const renderRewardsItem = ({ icon, symbol, value, rate }: RewardVestingItem) => {
     return (
@@ -194,28 +164,64 @@ export const RewardVestSection: React.FC<IProps> = ({
     )
   }
 
-  const renderVestingItems = ({ icon, symbol, value, rate }: RewardVestingItem) => {
+  const renderVestingTokens = () => {
+    if (!pool || !pool.vestingInfo) {
+      return <Typography variant="h5" className={cl.whiteText}>N/A</Typography>
+    }
     return (
-      <div key={symbol} className={cl.vestingWrapper}>
-        <div className={cl.symbolWrapper}>
-          <img className={cl.icon} alt="token" src={icon} />
-          <Typography className={cl.symbol}>
-            {symbol}
-          </Typography>
-        </div>
-        <div className={cl.valueWrapper}>
-          <Typography className={cl.value}>
-            {value}
-          </Typography>
-          <Typography className={cl.lightPurpletext}>
-            {`~ $ ${rate}`}
-          </Typography>
-        </div>
-      </div>
+      <>
+        {pool.vestingInfo.map(data => (
+          <div key={data.symbol} className={cl.vestingWrapper}>
+            <div className={cl.symbolWrapper}>
+              <img className={cl.icon} alt="token" src={data.image} />
+              <Typography className={cl.symbol}>
+                {data.symbol}
+              </Typography>
+            </div>
+            <div className={cl.valueWrapper}>
+              <Typography className={cl.value}>
+                {Number(formatEther(data.amount)).toFixed(4)}
+              </Typography>
+              {/* <Typography className={cl.lightPurpletext}>
+                {`~ $ ${rate}`}
+              </Typography> */}
+            </div>
+          </div>
+        ))}
+      </>
     )
   }
 
-  if (isLoading) {
+  const renderVestingPeriods = () => {
+    if (!pool || !pool.vestingInfo) {
+      return <Typography variant="h5" className={cl.whiteText}>N/A</Typography>
+    }
+    const formatDurationUnits = (duration: string[]) => {
+      const primary = duration[0] || ''
+      const rest = duration.slice(1, duration.length)
+      rest.splice(0, 0, '')
+      return { primary, rest: rest.join(' — ')}
+    }
+    return (
+      <>
+        {pool.vestingInfo.map((data, i) => {
+          const { primary, rest } = formatDurationUnits(data.durationRemaining)
+          return (
+            <div key={i} className={cl.vestingWrapper}>
+              <Typography className={cl.whiteText}>
+                {primary}
+              </Typography>
+              <Typography className={cl.lightPurpletext}>
+                {rest}
+              </Typography>
+            </div>
+          )
+        })}
+      </>
+    )
+  }
+
+  if (loading || !pool) {
     return (
       <Grid container spacing={2}>
         <Grid item xs={12}>
@@ -236,19 +242,30 @@ export const RewardVestSection: React.FC<IProps> = ({
               <Typography className={cl.title}>
                 TOTAL VESTING
               </Typography>
-              {vesting.map(renderVestingItems)}
+              {renderVestingTokens()}
             </Grid>
 
             <Grid item xs={12} md={6}>
               <Typography className={cl.title}>
                 REMAINING PERIOD
               </Typography>
-              {remainingPeriod.map(({ period, time }, i) => (
+              {renderVestingPeriods()}
+              {/* {remainingPeriod.map(({ period, time }, i) => (
                 <div key={i} className={cl.vestingWrapper}>
                   <Typography className={cl.whiteText}>{period}</Typography>
                   <Typography className={cl.lightPurpletext}>{time}</Typography>
                 </div>
-              ))}
+              ))} */}
+              {/* {pool.vestingInfo?.map((data, i) => (
+                <div key={i} className={cl.vestingWrapper}>
+                  <Typography className={cl.whiteText}>
+                    {data.durationRemaining[0] || ''}
+                  </Typography>
+                  <Typography className={cl.lightPurpletext}>
+                    {data.durationRemaining.slice(1, data.durationRemaining.length).join(' - ')}
+                  </Typography>
+                </div>
+              ))} */}
             </Grid>
           </Grid>
         </div>

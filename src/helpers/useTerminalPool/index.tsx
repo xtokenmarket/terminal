@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 import { ERC20Service } from 'services'
 import { ITerminalPool, IToken } from 'types'
 import { BigNumber } from '@ethersproject/bignumber'
-import { formatBigNumber, getCurrentTimeStamp, getTimeDurationStr, getTimeDurationUnitInfo } from 'utils'
+import { formatBigNumber, getCurrentTimeStamp, getTimeDurationStr, getTimeDurationUnitInfo, getTimeRemainingUnits } from 'utils'
 import { ERewardStep, Network } from 'utils/enums'
 import { formatDuration, ONE_WEEK_IN_TIME } from 'utils/number'
 
@@ -181,67 +181,16 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
             )
             const now = getCurrentTimeStamp()
             const timeRemaining = getTimeDurationStr(timestamp - now)
+            const durationRemaining = getTimeRemainingUnits(timestamp)
             return {
-              amount: formatEther(amount),
-              timeRemaining,
+              amount,
+              durationRemaining,
               ...token,
             }
           })
         )
       }
-
       console.log(vestingInfo.length ? vestingInfo[0] : 'NO VESTING PERIOD')
-
-      // const entry = await rewardEscrow.contract.getNextVestingEntry(
-      //   poolAddress,
-      //   pool.rewardTokens[0].address,
-      //   account,
-      // )
-      // const now = getCurrentTimeStamp()
-      // // const now = Date.now() / 1000
-      // const vestTimestamp = entry[0].toNumber()
-      // const timeTil = (vestTimestamp - now)
-      // // const amt = entry[1].toString()
-      // const m = moment(new Date(vestTimestamp)).format('MMM DD, YYYY')
-      // const a = getTimeDurationStr(timeTil)
-      // const b = getTimeDurationUnitInfo(timeTil)
-      // const weeksTil = timeTil / ONE_WEEK_IN_TIME
-      // console.log({
-      //   vestTimestamp,
-      //   timeTil,
-      //   weeksTil,
-      //   a,
-      //   // m,
-      //   // a,
-      //   // b
-      // })
-
-      // console.log('----', { entry: entry.map((i: any) => i.toString()) })
-
-      // const vestingIndex = await rewardEscrow.contract.getNextVestingIndex(
-      //   poolAddress,
-      //   rewardTokens[0].address,
-      //   account,
-      // )
-      // console.log({
-      //   poolAddress,
-      //   token: pool.rewardTokens[0].address,
-      //   token2: rewardTokens[0].address,
-      //   account,
-        // vestingIndex,
-      // })
-      // const entry = await rewardEscrow.contract.getVestingScheduleEntry(
-      //   poolAddress,
-      //   // rewardTokens[0].address,
-      //   pool.rewardTokens[0].address,
-      //   account,
-      //   vestingIndex
-      // )
-
-      // console.log('---------', { vestingIndex })
-      // console.log('---------', { vestingIndex, entry })
-
-
 
       // console.time(`loadInfo rewards response ${poolAddress}`)
       const rewardsResponse = await multicall.multicallv2(
@@ -281,6 +230,7 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
           tradeFee: pool.tradeFee,
           tvl,
           uniswapPool: pool.uniswapPool,
+          vestingInfo: vestingInfo.length ? vestingInfo : undefined,
         },
       })
     } catch (error) {

@@ -235,8 +235,6 @@ export const Content = (props: IProps) => {
   } = useConnectedWeb3Context()
   const isMountedRef = useIsMountedRef()
 
-  // console.log('poolData', poolData)
-
   const timestamp = getCurrentTimeStamp()
   const isManageable = [poolData.owner, poolData.manager]
     .map((e) => e.toLowerCase())

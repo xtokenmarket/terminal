@@ -1,4 +1,5 @@
 import { BigNumber, utils } from 'ethers'
+import moment from 'moment'
 
 const { formatUnits } = utils
 
@@ -115,6 +116,30 @@ export const getTimeDurationStr = (secs: number) => {
     return `${months} month`
   }
   return `${months} months`
+}
+
+export const getTimeRemainingUnits = (time: number, unitPrecision = 3) => {
+  const duration = moment.duration(time)
+  const units = []
+  const years = duration.years()
+  const months = duration.months()
+  const weeks = duration.weeks()
+  const days = duration.days()
+  const hours = duration.hours()
+  const minutes = duration.minutes()
+  if (years > 0) units.push({ years })
+  if (months > 0) units.push({ months })
+  if (weeks > 0) units.push({ weeks })
+  if (days > 0) units.push({ days })
+  if (hours > 0) units.push({ hours })
+  if (minutes > 0) units.push({ minutes })
+
+  if (units.length > unitPrecision) {
+    const diff = units.length - unitPrecision
+    units.splice(units.length - diff, diff)
+  }
+
+  return units.map(unit => Object.values(unit)[0] + ' ' + Object.keys(unit)[0])
 }
 
 export const getFloatDecimalNumber = (num: string, decimals = 2) => {
