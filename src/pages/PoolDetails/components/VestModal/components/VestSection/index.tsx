@@ -4,6 +4,7 @@ import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef, useServices } from 'helpers'
 import { IVestState } from 'pages/PoolDetails/components'
 import { useEffect, useState } from 'react'
+import { CLRService } from 'services'
 import { ITerminalPool } from 'types'
 import { ZERO } from 'utils/number'
 import { ActionStepRow, ViewTransaction, WarningInfo } from '..'
@@ -76,10 +77,7 @@ export const VestSection = (props: IProps) => {
     step: 1,
   })
   const { onNext, vestState, poolData, updateState } = props
-  const { multicall, lmService } = useServices()
   const { account, networkId, library: provider } = useConnectedWeb3Context()
-
-  const isMountedRef = useIsMountedRef()
 
   useEffect(() => {
     if (state.vestDone) {
@@ -99,10 +97,12 @@ export const VestSection = (props: IProps) => {
         vesting: true,
       }))
 
-      const txId = await lmService.claimReward(poolData.address)
-      const finalTxId = await lmService.waitUntilClaimReward(account, txId)
+      const clr = new CLRService(provider, account, poolData.address)
+      const txId = await clr.claimReward()
 
-      const claimInfo = await lmService.parseClaimTx(finalTxId)
+      const finalTxId = await clr.waitUntilClaimReward(account, txId)
+
+      const claimInfo = await clr.parseClaimTx(finalTxId)
 
       const claimedEarn: BigNumber[] = []
 

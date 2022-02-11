@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 
 const tabs = [
   { id: 'discover', href: '/terminal/discover', label: 'Discover' },
-  { id: 'my-pool', href: '/terminal/my-pool', label: 'My Pool' },
+  { id: 'my-pool', href: '/terminal/my-pool', label: 'My Pools' },
   { id: 'about', href: '/terminal/about', label: 'About' },
 ]
 

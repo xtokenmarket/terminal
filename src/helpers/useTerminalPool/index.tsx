@@ -1,6 +1,6 @@
 import Abi from 'abis'
 import axios from 'axios'
-import { TERMINAL_API_URL } from 'config/constants'
+import { POLL_API_DATA, TERMINAL_API_URL } from 'config/constants'
 import { DefaultReadonlyProvider, getTokenFromAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import { useServices } from 'helpers'
@@ -215,7 +215,7 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
 
   useEffect(() => {
     loadInfo()
-    const interval = setInterval(loadInfo, 30000)
+    const interval = setInterval(loadInfo, POLL_API_DATA)
 
     return () => {
       clearInterval(interval)
