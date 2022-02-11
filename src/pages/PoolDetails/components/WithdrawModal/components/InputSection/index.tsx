@@ -8,7 +8,7 @@ import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef, useServices } from 'helpers'
 import { IWithdrawState } from 'pages/PoolDetails/components'
 import { useEffect } from 'react'
-import { ERC20Service, xAssetCLRService } from 'services'
+import { ERC20Service, CLRService } from 'services'
 import { ITerminalPool } from 'types'
 import { OutputEstimation, OutputEstimationInfo, WarningInfo } from '..'
 
@@ -63,7 +63,7 @@ export const InputSection = (props: IProps) => {
       return
     }
     try {
-      const xCLR = new xAssetCLRService(provider, account, poolData.address)
+      const clr = new CLRService(provider, account, poolData.address)
       const stakingToken = new ERC20Service(
         provider,
         account,
@@ -71,7 +71,7 @@ export const InputSection = (props: IProps) => {
       )
 
       const [totalLiquidity, userLP] = await Promise.all([
-        xCLR.getTotalLiquidity(),
+        clr.getTotalLiquidity(),
         stakingToken.getBalanceOf(account),
       ])
 
