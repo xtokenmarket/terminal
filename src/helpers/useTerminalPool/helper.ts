@@ -1,6 +1,5 @@
 import Abi from 'abis'
 import { MulticallService } from 'services'
-import { BigNumber } from 'ethers'
 
 export const getCoinGeckoIDs = async (tokens: string[]) => {
   const url = 'https://api.coingecko.com/api/v3/coins/list'

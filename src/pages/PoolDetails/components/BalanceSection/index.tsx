@@ -58,6 +58,8 @@ export const BalanceSection = (props: IProps) => {
   const classes = useStyles()
   const { token, pool } = props
 
+  // TODO: Remove fetching token balance via `useTokenBalance()` hook
+  // Replace with `token0Balance` and `token1Balance` from `useTerminalPool()` hook
   const { balance } = useTokenBalance(token.address, pool.uniswapPool)
 
   return (
