@@ -6,7 +6,7 @@ import { useConnectedWeb3Context } from 'contexts'
 import { parseEther } from 'ethers/lib/utils'
 import { useServices } from 'helpers'
 import { useEffect, useState } from 'react'
-import { ERC20Service } from 'services'
+import { CLRService, ERC20Service } from 'services'
 import { ITerminalPool, IToken } from 'types'
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatBigNumber } from 'utils'
@@ -179,6 +179,38 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
         (response: any) => response[0]
       )
 
+      const clr = new CLRService(provider, account, pool.poolAddress)
+
+      const depositFilter = clr.contract.filters.Deposit()
+      const withdrawFilter = clr.contract.filters.Withdraw()
+
+      const [depositHistory, withdrawHistory] = await Promise.all([
+        clr.contract.queryFilter(depositFilter),
+        clr.contract.queryFilter(withdrawFilter),
+      ])
+
+      const blockInfos = await Promise.all(
+        [...depositHistory, ...withdrawHistory].map((x) => x.getBlock())
+      )
+
+      console.log('blockInfos', blockInfos)
+
+      const history = [...depositHistory, ...withdrawHistory].map(
+        (x, index) => {
+          const timestamp = blockInfos[index].timestamp
+
+          return {
+            action: x.event,
+            amount: x.args,
+
+            time: timestamp,
+            tx: x.transactionHash,
+          }
+        }
+      )
+
+      console.log('history', history)
+
       setState({
         loading: false,
         pool: {
@@ -205,6 +237,7 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
           tradeFee: pool.tradeFee,
           tvl,
           uniswapPool: pool.uniswapPool,
+          // history,
         },
       })
     } catch (error) {
