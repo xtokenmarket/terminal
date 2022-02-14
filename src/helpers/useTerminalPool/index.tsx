@@ -147,7 +147,10 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
       const token1tvl = token1Balance
         .mul(parseEther(pool.token1.price))
         .div(ONE_ETHER)
-      const tvl = formatBigNumber(BigNumber.from(pool.tvl), 18)
+      // const tvl = formatBigNumber(BigNumber.from(pool.tvl), 18)
+      const tvl = pool.tvl
+        ? formatBigNumber(BigNumber.from(pool.tvl), 18)
+        : formatBigNumber(token0tvl.add(token1tvl), token0.decimals)
 
       token0.tvl = formatBigNumber(token0tvl, token0.decimals)
       token1.tvl = formatBigNumber(token1tvl, token1.decimals)
@@ -184,6 +187,7 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
             )
             // const timeRemaining = getTimeDurationStr(timestamp - getCurrentTimeStamp())
             const durationRemaining = getTimeRemainingUnits(timestamp)
+            console.log('duration remaining:', durationRemaining)
             return {
               amount,
               durationRemaining,
