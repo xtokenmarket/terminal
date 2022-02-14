@@ -131,7 +131,25 @@ export const VestSection: React.FC<IProps> = ({
   const { rewardEscrow } = useServices()
 
   const onVest2 = async () => {
-    console.log('test')
+    if (!account || !provider) return
+    setState((prev) => ({
+      ...prev,
+      vesting: true,
+    }))
+    const { address, rewardState } = poolData
+    const rewardTokenAddresses = rewardState.tokens.map(t => t.address)
+
+    const txId = await rewardEscrow.vestAll(address, rewardTokenAddresses)
+    console.log('tx Id:', txId)
+    const finalTxId = await rewardEscrow.waitUntilVestAll(account, txId)
+    console.log('final tx id:', finalTxId)
+
+    setState((prev) => ({
+      ...prev,
+      vesting: false,
+      vestTx: txId,
+      vestDone: true,
+    }))
   }
 
   return (

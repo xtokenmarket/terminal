@@ -1,6 +1,7 @@
 import { BigNumber, Contract, Wallet, ethers } from 'ethers'
 import { Maybe } from 'types'
 import Abi from 'abis'
+import { Interface } from '@ethersproject/abi'
 
 const rewardEscrowAbi = Abi.RewardEscrow
 
@@ -42,6 +43,59 @@ class RewardEscrowService {
     )
 
     return { timestamp, amount }
+  }
+
+  vestAll = async (
+    poolAddress: string,
+    tokenAddresses: string[],
+  ) => {
+    const txObj = await this.contract.vestAll(poolAddress, tokenAddresses)
+    return txObj.hash
+  }
+
+  waitUntilVestAll = async (
+    account: string,
+    txId: string,
+  ): Promise<string> => {
+    let resolved = false
+    return new Promise(resolve => {
+      // TODO: Is there no event for VestAll?
+      // this.contract.on('VestAll', (clrPool: string, sender: any, ...rest) => {
+      //   if (account.toLowerCase() === sender.toLowerCase()) {
+      //     if (!resolved) {
+      //       resolved = true
+      //       resolve(rest[0].transactionHash)
+      //     }
+      //   }
+      // })
+
+      this.contract.provider.waitForTransaction(txId).then(() => {
+        if (!resolved) {
+          resolved = true
+          resolve(txId)
+        }
+      })
+    })
+  }
+
+  parseVestAllTx = async (txId: string) => {
+    const result: Record<string, BigNumber> = {}
+    const { logs } = await this.contract.provider.getTransactionReceipt(txId)
+    const uniPositionInterface = new Interface(Abi.RewardEscrow)
+    console.log({ logs, uniPositionInterface })
+  //   for (let i = 0; i < logs.length; i++) {
+  //     const log = logs[i]
+  //     try {
+  //       const parsed = uniPositionInterface.parseLog(log)
+  //       console.log('parsed:', parsed)
+  //       // if (parsed.name === 'RewardClaimed') {
+  //       //   result[String(parsed.args[1]).toLowerCase()] = parsed.args[2]
+  //       // }
+  //     } catch (error) {
+  //       console.error(error)
+  //     }
+  //   }
+  //   return result
   }
 }
 
