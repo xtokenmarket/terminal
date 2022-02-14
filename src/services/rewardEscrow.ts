@@ -29,6 +29,20 @@ class RewardEscrowService {
   clrPoolVestingPeriod = async (addr: string): Promise<BigNumber> => {
     return this.contract.clrPoolVestingPeriod(addr)
   }
+
+  getNextVestingEntry = async (
+    address: string,
+    tokenAddress: string,
+    account: string
+  ) => {
+    const [timestamp, amount] = await this.contract.getNextVestingEntry(
+      address,
+      tokenAddress,
+      account,
+    )
+
+    return { timestamp, amount }
+  }
 }
 
 export { RewardEscrowService }

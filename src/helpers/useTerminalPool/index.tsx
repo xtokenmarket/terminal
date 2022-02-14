@@ -177,15 +177,14 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
       }))
 
       let vestingInfo = []
-      if (!vestingPeriod.isZero()) {
+      if (!vestingPeriod.isZero() && !!poolAddress && !!account) {
         vestingInfo = await Promise.all(
           rewardTokens.map(async (token: any) => {
-            const [timestamp, amount] = await rewardEscrow.contract.getNextVestingEntry(
+            const { timestamp, amount } = await rewardEscrow.getNextVestingEntry(
               poolAddress,
               token.address,
               account,
             )
-            // const timeRemaining = getTimeDurationStr(timestamp - getCurrentTimeStamp())
             const durationRemaining = getTimeRemainingUnits(timestamp)
             console.log('duration remaining:', durationRemaining)
             return {
@@ -200,11 +199,10 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
       const earnedInfo = await Promise.all(
         rewardTokens.map(async (token: any) => {
           const clr = new CLRService(provider, account, pool.poolAddress)
-          const earned = await clr.contract.earned(account, token.address)
-          console.log('token:', token)
+          const amount = await clr.earned(account, token.address)
           return {
             ...token,
-            amount: earned,
+            amount,
           }
         })
       )
