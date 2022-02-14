@@ -53,41 +53,43 @@ interface IProps {
   earned: BigNumber[]
 }
 
-export const OutputEstimation = (props: IProps) => {
-  const classes = useStyles()
-  const { poolData, earned } = props
-  const isEstimation =
-    props.isEstimation !== undefined ? props.isEstimation : true
+export const OutputEstimation: React.FC<IProps> = ({
+  poolData,
+  earned,
+  isEstimation,
+  className,
+}) => {
+  const cl = useStyles()
 
   return (
-    <div className={clsx(classes.root, props.className)}>
-      <div className={classes.estimation}>
-        <Typography className={classes.label}>
+    <div className={clsx(cl.root, className)}>
+      <div className={cl.estimation}>
+        <Typography className={cl.label}>
           {isEstimation ? 'AVAILABLE TO VEST' : 'YOU VESTED'}
         </Typography>
         {poolData.rewardState.tokens.map((rewardToken, index) => {
           return (
-            <div className={classes.infoRow} key={rewardToken.address}>
+            <div className={cl.infoRow} key={rewardToken.address}>
               <div>
-                <TokenIcon token={rewardToken} className={classes.tokenIcon} />
+                <TokenIcon token={rewardToken} className={cl.tokenIcon} />
               </div>
               &nbsp;&nbsp;
-              <Typography className={classes.amount}>
+              <Typography className={cl.amount}>
                 {formatBigNumber(
                   earned[index] || ZERO,
                   rewardToken.decimals,
                   4
                 )}
                 &nbsp;
-                <span>~ $13.009</span>
+                {/* <span>~ $13.009</span> */}
               </Typography>
             </div>
           )
         })}
         {isEstimation && (
           <>
-            <Typography className={classes.label}>VESTING PERIOD</Typography>
-            <Typography className={classes.amount}>
+            <Typography className={cl.label}>VESTING PERIOD</Typography>
+            <Typography className={cl.amount}>
               {getTimeDurationStr(Number(poolData.rewardState.duration))}
             </Typography>
           </>

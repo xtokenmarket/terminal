@@ -39,7 +39,6 @@ export interface IVestState {
   step: EVestStep
   claimedEarn: BigNumber[]
   vestings: { amount: BigNumber; timestamp: BigNumber }[][]
-  //
   earned: BigNumber[]
 }
 
@@ -62,7 +61,7 @@ export const VestModal = (props: IProps) => {
     }
   }, [account])
 
-  const updateState = (e: any) => {
+  const updateState = (e: Partial<IVestState>) => {
     setState((prev) => ({ ...prev, ...e }))
   }
 

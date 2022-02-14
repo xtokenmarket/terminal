@@ -68,7 +68,12 @@ interface IState {
   step: number
 }
 
-export const VestSection = (props: IProps) => {
+export const VestSection: React.FC<IProps> = ({
+  onNext,
+  vestState,
+  poolData,
+  updateState,
+}) => {
   const classes = useStyles()
   const [state, setState] = useState<IState>({
     vestDone: false,
@@ -76,7 +81,6 @@ export const VestSection = (props: IProps) => {
     vestTx: '',
     step: 1,
   })
-  const { onNext, vestState, poolData, updateState } = props
   const { account, networkId, library: provider } = useConnectedWeb3Context()
 
   useEffect(() => {
@@ -88,9 +92,7 @@ export const VestSection = (props: IProps) => {
   }, [state.vestDone])
 
   const onVest = async () => {
-    if (!account || !provider) {
-      return
-    }
+    if (!account || !provider) return
     try {
       setState((prev) => ({
         ...prev,
@@ -98,17 +100,15 @@ export const VestSection = (props: IProps) => {
       }))
 
       const clr = new CLRService(provider, account, poolData.address)
+
       const txId = await clr.claimReward()
-
       const finalTxId = await clr.waitUntilClaimReward(account, txId)
-
       const claimInfo = await clr.parseClaimTx(finalTxId)
 
       const claimedEarn: BigNumber[] = []
 
       poolData.rewardState.tokens.forEach((rewardToken) => {
-        const rewardAmount =
-          claimInfo[rewardToken.address.toLowerCase()] || ZERO
+        const rewardAmount = claimInfo[rewardToken.address.toLowerCase()] || ZERO
         claimedEarn.push(rewardAmount)
       })
 
@@ -128,6 +128,12 @@ export const VestSection = (props: IProps) => {
     }
   }
 
+  const { rewardEscrow } = useServices()
+
+  const onVest2 = async () => {
+    console.log('test')
+  }
+
   return (
     <div className={classes.root}>
       <div className={classes.header}>
@@ -140,7 +146,7 @@ export const VestSection = (props: IProps) => {
         <WarningInfo
           className={classes.warning}
           title="Warning"
-          description="Please, don’t close this window until the process is complete!"
+          description="Please, don't close this window until the process is complete!"
         />
         <div className={classes.actions}>
           <ActionStepRow
@@ -158,6 +164,7 @@ export const VestSection = (props: IProps) => {
               ) : null
             }
           />
+          <button onClick={onVest2}>test</button>
         </div>
       </div>
     </div>
