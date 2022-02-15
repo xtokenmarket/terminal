@@ -185,6 +185,7 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
               token.address,
               account,
             )
+            // console.log('stuff', timestamp, formatEther(amount))
             const durationRemaining = getTimeRemainingUnits(timestamp)
             console.log('duration remaining:', durationRemaining)
             return {

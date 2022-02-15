@@ -1,7 +1,10 @@
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { SimpleLoader } from 'components'
+import { useConnectedWeb3Context } from 'contexts'
+import { BigNumber } from 'ethers'
 import { formatEther } from 'ethers/lib/utils'
 import { useTerminalPool } from 'helpers'
+import { CLRService } from 'services'
 
 const useStyles = makeStyles((theme) => ({
   block: {
@@ -156,6 +159,46 @@ export const RewardVestSection: React.FC<IProps> = ({
     )
   }
 
+  const { account, networkId, library: provider } = useConnectedWeb3Context()
+  const onClickClaim = async () => {
+    if (!account || !provider || loading || !pool) return
+    try {
+      // setState((prev) => ({
+      //   ...prev,
+      //   vesting: true,
+      // }))
+      const clr = new CLRService(provider, account, poolAddress)
+
+      const txId = await clr.claimReward()
+      console.log('tx id:', txId)
+      const finalTxId = await clr.waitUntilClaimReward(account, txId)
+      console.log('final tx id:', finalTxId)
+      const claimInfo = await clr.parseClaimTx(finalTxId)
+      console.log('claim info:', claimInfo)
+
+      const claimedEarn: BigNumber[] = []
+
+      // poolData.rewardState.tokens.forEach((rewardToken) => {
+      //   const rewardAmount = claimInfo[rewardToken.address.toLowerCase()] || ZERO
+      //   claimedEarn.push(rewardAmount)
+      // })
+
+      // setState((prev) => ({
+      //   ...prev,
+      //   vesting: false,
+      //   vestTx: txId,
+      //   vestDone: true,
+      //   claimedEarn,
+      // }))
+    } catch (error) {
+      console.error(error)
+      // setState((prev) => ({
+      //   ...prev,
+      //   vesting: false,
+      // }))
+    }
+  }
+
   const renderRewardsItems = () => (
     <div>
       {pool && pool.earnedInfo.map(({ symbol, image, amount}, i) => (
@@ -179,6 +222,7 @@ export const RewardVestSection: React.FC<IProps> = ({
                 className={cl.button}
                 color="secondary"
                 variant="contained"
+                onClick={onClickClaim}
               >
                 CLAIM ALL REWARDS
               </Button>

@@ -91,46 +91,47 @@ export const VestSection: React.FC<IProps> = ({
     }
   }, [state.vestDone])
 
-  const onVest = async () => {
-    if (!account || !provider) return
-    try {
-      setState((prev) => ({
-        ...prev,
-        vesting: true,
-      }))
+  // const onVest = async () => {
+  //   if (!account || !provider) return
+  //   try {
+  //     setState((prev) => ({
+  //       ...prev,
+  //       vesting: true,
+  //     }))
 
-      const clr = new CLRService(provider, account, poolData.address)
+  //     const clr = new CLRService(provider, account, poolData.address)
 
-      const txId = await clr.claimReward()
-      const finalTxId = await clr.waitUntilClaimReward(account, txId)
-      const claimInfo = await clr.parseClaimTx(finalTxId)
+  //     const txId = await clr.claimReward()
+  //     const finalTxId = await clr.waitUntilClaimReward(account, txId)
+  //     const claimInfo = await clr.parseClaimTx(finalTxId)
 
-      const claimedEarn: BigNumber[] = []
+  //     const claimedEarn: BigNumber[] = []
 
-      poolData.rewardState.tokens.forEach((rewardToken) => {
-        const rewardAmount = claimInfo[rewardToken.address.toLowerCase()] || ZERO
-        claimedEarn.push(rewardAmount)
-      })
+  //     poolData.rewardState.tokens.forEach((rewardToken) => {
+  //       const rewardAmount = claimInfo[rewardToken.address.toLowerCase()] || ZERO
+  //       claimedEarn.push(rewardAmount)
+  //     })
 
-      setState((prev) => ({
-        ...prev,
-        vesting: false,
-        vestTx: txId,
-        vestDone: true,
-        claimedEarn,
-      }))
-    } catch (error) {
-      console.error(error)
-      setState((prev) => ({
-        ...prev,
-        vesting: false,
-      }))
-    }
-  }
+  //     setState((prev) => ({
+  //       ...prev,
+  //       vesting: false,
+  //       vestTx: txId,
+  //       vestDone: true,
+  //       claimedEarn,
+  //     }))
+  //   } catch (error) {
+  //     console.error(error)
+  //     setState((prev) => ({
+  //       ...prev,
+  //       vesting: false,
+  //     }))
+  //   }
+  // }
 
   const { rewardEscrow } = useServices()
+  // console.log('pool', poolData)
 
-  const onVest2 = async () => {
+  const onVest = async () => {
     if (!account || !provider) return
     setState((prev) => ({
       ...prev,
@@ -182,7 +183,6 @@ export const VestSection: React.FC<IProps> = ({
               ) : null
             }
           />
-          <button onClick={onVest2}>test</button>
         </div>
       </div>
     </div>
