@@ -200,7 +200,7 @@ export const useTerminalPool = (
       let vestingTokens = []
       if (!vestingPeriod.isZero() && !!poolAddress && !!account) {
         vestingTokens = await Promise.all(
-          rewardTokens.map(async (token: any) => {
+          pool.rewardTokens.map(async (token: any) => {
             const { timestamp, amount } = await rewardEscrow.getNextVestingEntry(
               poolAddress,
               token.address,
@@ -218,7 +218,7 @@ export const useTerminalPool = (
       }
 
       const earnedTokens = await Promise.all(
-        rewardTokens.map(async (token: any) => {
+        pool.rewardTokens.map(async (token: any) => {
           const clr = new CLRService(provider, account, pool.poolAddress)
           const amount = await clr.earned(account, token.address)
           return {
