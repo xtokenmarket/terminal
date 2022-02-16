@@ -70,9 +70,13 @@ interface VestingInfoDatum extends IToken {
   durationRemaining: string[]
 }
 
+export type VestingInfo = VestingInfoDatum[]
+
 interface EarnedInfoDatum extends IToken {
   amount: BigNumber
 }
+
+export type EarnedInfo = EarnedInfoDatum[]
 
 export interface ITerminalPool {
   address: string
@@ -91,8 +95,8 @@ export interface ITerminalPool {
   tradeFee: BigNumber // xToken Trade Fee as a divisor (100 = 1%)
   tvl: string
   uniswapPool: string
-  vestingInfo?: VestingInfoDatum[]
-  earnedInfo: EarnedInfoDatum[]
+  vestingInfo?: VestingInfo
+  earnedInfo: EarnedInfo
 }
 
 export interface ICreatePoolData {

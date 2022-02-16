@@ -4,7 +4,9 @@ import { useConnectedWeb3Context } from 'contexts'
 import { BigNumber } from 'ethers'
 import { formatEther } from 'ethers/lib/utils'
 import { useTerminalPool } from 'helpers'
+import { useState } from 'react'
 import { CLRService } from 'services'
+import { ClaimRewardsModal } from './ClaimRewardsModal'
 
 const useStyles = makeStyles((theme) => ({
   block: {
@@ -101,6 +103,7 @@ export const RewardVestSection: React.FC<IProps> = ({
 }) => {
   const cl = useStyles()
   const { loading, pool } = useTerminalPool(undefined, poolAddress)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const renderVestingTokens = () => {
     if (!pool || !pool.vestingInfo) {
@@ -168,7 +171,6 @@ export const RewardVestSection: React.FC<IProps> = ({
       //   vesting: true,
       // }))
       const clr = new CLRService(provider, account, poolAddress)
-
       const txId = await clr.claimReward()
       console.log('tx id:', txId)
       const finalTxId = await clr.waitUntilClaimReward(account, txId)
@@ -222,7 +224,7 @@ export const RewardVestSection: React.FC<IProps> = ({
                 className={cl.button}
                 color="secondary"
                 variant="contained"
-                onClick={onClickClaim}
+                onClick={() => setIsModalOpen(true)}
               >
                 CLAIM ALL REWARDS
               </Button>
@@ -246,41 +248,49 @@ export const RewardVestSection: React.FC<IProps> = ({
   }
 
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12} md={6}>
-        <div className={cl.block}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
-              <Typography className={cl.title}>
-                TOTAL VESTING
-              </Typography>
-              {renderVestingTokens()}
-            </Grid>
+    <>
+      <ClaimRewardsModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        poolAddress={poolAddress}
+        earnedInfo={pool.earnedInfo}
+      />
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
+          <div className={cl.block}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={6}>
+                <Typography className={cl.title}>
+                  TOTAL VESTING
+                </Typography>
+                {renderVestingTokens()}
+              </Grid>
 
-            <Grid item xs={12} md={6}>
-              <Typography className={cl.title}>
-                REMAINING PERIOD
-              </Typography>
-              {renderVestingPeriods()}
+              <Grid item xs={12} md={6}>
+                <Typography className={cl.title}>
+                  REMAINING PERIOD
+                </Typography>
+                {renderVestingPeriods()}
+              </Grid>
             </Grid>
-          </Grid>
-        </div>
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <div className={cl.block}>
-          <div className={cl.titleWrapper}>
-            <Typography className={cl.title}>
-              CLAIMABLE REWARDS
-            </Typography>
-            <img
-              className={cl.icon}
-              alt="token"
-              src={'/assets/imgs/star.svg'}
-            />
           </div>
-          {renderRewardsItems()}
-        </div>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <div className={cl.block}>
+            <div className={cl.titleWrapper}>
+              <Typography className={cl.title}>
+                CLAIMABLE REWARDS
+              </Typography>
+              <img
+                className={cl.icon}
+                alt="token"
+                src={'/assets/imgs/star.svg'}
+              />
+            </div>
+            {renderRewardsItems()}
+          </div>
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   )
 }
