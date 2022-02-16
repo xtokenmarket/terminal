@@ -3,7 +3,7 @@ import axios from 'axios'
 import { POLL_API_DATA, TERMINAL_API_URL } from 'config/constants'
 import { DefaultReadonlyProvider, getTokenFromAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
-import { parseEther } from 'ethers/lib/utils'
+import { parseEther, formatUnits } from 'ethers/lib/utils'
 import { useServices } from 'helpers'
 import { useEffect, useState } from 'react'
 import { CLRService, ERC20Service } from 'services'
@@ -18,6 +18,7 @@ import {
   getPoolDataMulticall,
   getTokenExchangeRate,
 } from './helper'
+import moment from 'moment'
 
 interface IState {
   pool?: ITerminalPool
@@ -193,23 +194,21 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
         [...depositHistory, ...withdrawHistory].map((x) => x.getBlock())
       )
 
-      console.log('blockInfos', blockInfos)
-
       const history = [...depositHistory, ...withdrawHistory].map(
         (x, index) => {
           const timestamp = blockInfos[index].timestamp
+          const time = moment.unix(timestamp).format('M[/]D[/]YYYY')
 
           return {
             action: x.event,
             amount: x.args,
-
-            time: timestamp,
+            amount0: x.args?.amount0,
+            amount1: x.args?.amount1,
+            time,
             tx: x.transactionHash,
           }
         }
       )
-
-      console.log('history', history)
 
       setState({
         loading: false,
@@ -237,7 +236,7 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
           tradeFee: pool.tradeFee,
           tvl,
           uniswapPool: pool.uniswapPool,
-          // history,
+          history,
         },
       })
     } catch (error) {

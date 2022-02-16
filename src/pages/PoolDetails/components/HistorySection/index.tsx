@@ -1,5 +1,9 @@
 import { Button, makeStyles, Typography } from '@material-ui/core'
+import moment from 'moment'
 import { ITerminalPool } from 'types'
+import { formatBigNumber, numberWithCommas } from 'utils'
+
+const URL = 'https://kovan.etherscan.io/tx/'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -92,16 +96,26 @@ export const HistorySection = (props: IProps) => {
               </tr>
             </thead>
             <tbody>
-              {MOCK.map((item) => (
-                <tr key={item.txId}>
+              {pool.history.map((item) => (
+                <tr key={item.tx}>
                   <td>{item.action}</td>
                   <td>
-                    <span>{item.value}</span>&nbsp;{pool.token0.symbol}/
-                    {pool.token1.symbol} LP
+                    <span>
+                      {numberWithCommas(
+                        formatBigNumber(item.amount0, pool.token0.decimals)
+                      )}
+                    </span>{' '}
+                    {pool.token0.symbol} /{' '}
+                    <span>
+                      {numberWithCommas(
+                        formatBigNumber(item.amount1, pool.token1.decimals)
+                      )}
+                    </span>{' '}
+                    {pool.token1.symbol}
                   </td>
-                  <td>{item.time}</td>
+                  <td>{moment(item.time).fromNow()}</td>
                   <td>
-                    <a href={item.txId}>
+                    <a href={`${URL}${item.tx}`} target="_blank">
                       <img alt="alt" src="/assets/icons/expand.png" />
                     </a>
                   </td>

@@ -82,7 +82,7 @@ export interface ITerminalPool {
   tradeFee: BigNumber // xToken Trade Fee as a divisor (100 = 1%)
   tvl: string
   uniswapPool: string
-  // history: History
+  history: History[]
 }
 
 export interface ICreatePoolData {
@@ -111,9 +111,11 @@ interface MintState {
 }
 
 interface History {
-  action: string,
+  action: string | undefined,
   amount: array,
   time: string,
-  tx: string, 
+  tx: string | undefined, 
+  amount0: BigNumber,
+  amount1: BigNumber,
 }
 
