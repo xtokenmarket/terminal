@@ -124,14 +124,14 @@ export const HistorySection = (props: IProps) => {
             </tbody>
           </table>
         </div>
-        <Button
+        {/* <Button
           className={classes.button}
           color="secondary"
           fullWidth
           variant="contained"
         >
           Full History
-        </Button>
+        </Button> */}
       </div>
     </div>
   )
