@@ -3,7 +3,7 @@ import axios from 'axios'
 import { POLL_API_DATA, TERMINAL_API_URL } from 'config/constants'
 import { DefaultReadonlyProvider, getTokenFromAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
-import { parseEther, formatUnits } from 'ethers/lib/utils'
+import { parseEther } from 'ethers/lib/utils'
 import { useServices } from 'helpers'
 import { useEffect, useState } from 'react'
 import { CLRService, ERC20Service } from 'services'
@@ -12,6 +12,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { formatBigNumber } from 'utils'
 import { ERewardStep, Network } from 'utils/enums'
 import { formatDuration, ONE_ETHER } from 'utils/number'
+import _ from 'lodash'
 
 import {
   getCoinGeckoIDs,
@@ -194,21 +195,22 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
         [...depositHistory, ...withdrawHistory].map((x) => x.getBlock())
       )
 
-      const history = [...depositHistory, ...withdrawHistory].map(
-        (x, index) => {
-          const timestamp = blockInfos[index].timestamp
-          const time = moment.unix(timestamp).format('M[/]D[/]YYYY')
+      let history = [...depositHistory, ...withdrawHistory].map((x, index) => {
+        const timestamp = blockInfos[index].timestamp
+        const time = moment.unix(timestamp).format('LLLL')
 
-          return {
-            action: x.event,
-            amount: x.args,
-            amount0: x.args?.amount0,
-            amount1: x.args?.amount1,
-            time,
-            tx: x.transactionHash,
-          }
+        return {
+          action: x.event,
+          amount: x.args,
+          amount0: x.args?.amount0,
+          amount1: x.args?.amount1,
+          time,
+          tx: x.transactionHash,
+          timestamp,
         }
-      )
+      })
+
+      history = _.orderBy(history, 'timestamp', 'desc')
 
       setState({
         loading: false,
