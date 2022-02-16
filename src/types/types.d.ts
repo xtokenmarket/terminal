@@ -111,10 +111,10 @@ interface MintState {
 }
 
 interface History {
-  action: string | undefined,
+  action?: string,
   amount: array,
   time: string,
-  tx: string | undefined, 
+  tx?: string, 
   amount0: BigNumber,
   amount1: BigNumber,
 }

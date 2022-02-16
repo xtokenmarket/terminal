@@ -2,8 +2,8 @@ import { Button, makeStyles, Typography } from '@material-ui/core'
 import moment from 'moment'
 import { ITerminalPool } from 'types'
 import { formatBigNumber, numberWithCommas } from 'utils'
-
-const URL = 'https://kovan.etherscan.io/tx/'
+import { getEtherscanUri } from 'config/networks'
+import { useConnectedWeb3Context } from 'contexts'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -80,6 +80,8 @@ interface IProps {
 export const HistorySection = (props: IProps) => {
   const classes = useStyles()
   const { pool } = props
+  const { networkId } = useConnectedWeb3Context()
+  const etherscanUri = getEtherscanUri(networkId)
 
   return (
     <div className={classes.root}>
@@ -115,7 +117,7 @@ export const HistorySection = (props: IProps) => {
                   </td>
                   <td>{moment(item.time).fromNow()}</td>
                   <td>
-                    <a href={`${URL}${item.tx}`} target="_blank">
+                    <a href={`${etherscanUri}tx/${item.tx}`} target="_blank">
                       <img alt="alt" src="/assets/icons/expand.png" />
                     </a>
                   </td>
