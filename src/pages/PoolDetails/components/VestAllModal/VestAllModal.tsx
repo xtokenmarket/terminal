@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Modal, makeStyles, Typography, IconButton, Button, CircularProgress } from '@material-ui/core'
 import CloseOutlined from '@material-ui/icons/CloseOutlined'
 import { VestingTokens } from 'types'
@@ -12,9 +12,9 @@ const ICON_SIZE = 150
 
 const useStyles = makeStyles(theme => ({
   modal: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   content: {
     position: 'relative',
@@ -111,6 +111,23 @@ export const VestAllModal: React.FC<IProps> = ({
   const cl = useStyles()
   const { account, library: provider } = useConnectedWeb3Context()
   const { rewardEscrow } = useServices()
+
+  useEffect(() => {
+    (async () => {
+      // const bal = await rewardEscrow.contract.balanceOf(account, poolAddress)
+      // console.log(
+      //   'bal:',
+      //   formatEther(bal),
+      // )
+      
+      // const x = await rewardEscrow.contract.checkAccountSchedule(
+      //   poolAddress,
+      //   vestingTokens[0].address,
+      //   account,
+      // )
+      // console.log(x)
+    })()
+  }, [])
 
   const [txState, setTxState] = useState<TxState>(TxState.None)
   const [claimTx, setClaimTx] = useState('')

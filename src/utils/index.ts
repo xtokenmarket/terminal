@@ -121,6 +121,16 @@ export const getTimeDurationStr = (secs: number) => {
 export const getTimeRemainingUnits = (time: number, unitPrecision = 3) => {
   const duration = moment.duration(time)
   
+  const x = [
+    { years: duration.years() },
+    { months: duration.months() },
+    { weeks: duration.weeks() },
+    { days: duration.days() },
+    { hours: duration.hours() },
+    { minutes: duration.minutes() },
+  ]
+  console.log('x:', x)
+
   return [
     { years: duration.years() },
     { months: duration.months() },

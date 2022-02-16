@@ -7,6 +7,7 @@ import { ActionStepRow, ViewTransaction, WarningInfo } from '..'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { getContractAddress } from 'config/networks'
 import { ERC20Service } from 'services'
+import { BigNumber } from 'ethers'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -236,7 +237,14 @@ export const CreatePoolSection = (props: IProps) => {
         isCreatingPool: true,
       }))
 
-      const txId = await lmService.deployIncentivizedPool(poolData)
+      const tempPoolData = {
+        ...poolData,
+        rewardState: {
+          ...poolData.rewardState,
+          vesting: '0.005',
+        },
+      }
+      const txId = await lmService.deployIncentivizedPool(tempPoolData)
       const finalTxId = await lmService.waitUntilTerminalPoolCreated(
         poolData.token0.address,
         poolData.token1.address,

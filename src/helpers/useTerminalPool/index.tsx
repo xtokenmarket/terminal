@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react'
 import { CLRService, ERC20Service } from 'services'
 import { ITerminalPool, IToken } from 'types'
 import { BigNumber } from '@ethersproject/bignumber'
-import { formatBigNumber, getTimeRemainingUnits } from 'utils'
+import { formatBigNumber, getCurrentTimeStamp, getTimeRemainingUnits } from 'utils'
 import { ERewardStep, Network } from 'utils/enums'
 import { formatDuration, ONE_ETHER } from 'utils/number'
 
@@ -18,6 +18,7 @@ import {
   getPoolDataMulticall,
   getTokenExchangeRate,
 } from './helper'
+import moment from 'moment'
 
 interface IState {
   pool?: ITerminalPool
@@ -197,7 +198,7 @@ export const useTerminalPool = (
         params: [token.address],
       }))
 
-      console.log('pool:', pool)
+      // console.log('pool:', pool)
       let vestingTokens = []
       if (!vestingPeriod.isZero() && !!poolAddress && !!account) {
         vestingTokens = await Promise.all(
@@ -207,7 +208,9 @@ export const useTerminalPool = (
               token.address,
               account,
             )
-            const durationRemaining = getTimeRemainingUnits(timestamp)
+            const now = getCurrentTimeStamp()
+            const diff = (timestamp - now) * 1000
+            const durationRemaining = getTimeRemainingUnits(diff)
             return {
               amount,
               durationRemaining,
