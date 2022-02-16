@@ -22,6 +22,7 @@ import {
   WithdrawModal,
 } from '../index'
 import { RewardVestSection } from '../RewardVestSection'
+import { VestAllModal } from '../VestAllModal'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -269,7 +270,7 @@ export const Content = (props: IProps) => {
         />
       )}
 
-      {state.vestVisible && (
+      {/* {state.vestVisible && (
         <VestModal
           onClose={() => setVestModalVisible(false)}
           onSuccess={async () => {
@@ -277,6 +278,15 @@ export const Content = (props: IProps) => {
             await props.reloadTerminalPool(true)
           }}
           poolData={poolData}
+        />
+      )} */}
+
+      {poolData.vestingTokens && (
+        <VestAllModal
+          open={state.vestVisible}
+          onClose={() => setVestModalVisible(false)}
+          vestingTokens={poolData.vestingTokens}
+          poolAddress={poolData.address}
         />
       )}
 

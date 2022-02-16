@@ -1,12 +1,9 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { makeStyles, Typography } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
-import { useIsMountedRef, useServices } from 'helpers'
+import { useServices } from 'helpers'
 import { IVestState } from 'pages/PoolDetails/components'
 import { useEffect, useState } from 'react'
-import { CLRService } from 'services'
 import { ITerminalPool } from 'types'
-import { ZERO } from 'utils/number'
 import { ActionStepRow, ViewTransaction, WarningInfo } from '..'
 
 const useStyles = makeStyles((theme) => ({
@@ -81,7 +78,7 @@ export const VestSection: React.FC<IProps> = ({
     vestTx: '',
     step: 1,
   })
-  const { account, networkId, library: provider } = useConnectedWeb3Context()
+  const { account, library: provider } = useConnectedWeb3Context()
 
   useEffect(() => {
     if (state.vestDone) {
@@ -91,45 +88,7 @@ export const VestSection: React.FC<IProps> = ({
     }
   }, [state.vestDone])
 
-  // const onVest = async () => {
-  //   if (!account || !provider) return
-  //   try {
-  //     setState((prev) => ({
-  //       ...prev,
-  //       vesting: true,
-  //     }))
-
-  //     const clr = new CLRService(provider, account, poolData.address)
-
-  //     const txId = await clr.claimReward()
-  //     const finalTxId = await clr.waitUntilClaimReward(account, txId)
-  //     const claimInfo = await clr.parseClaimTx(finalTxId)
-
-  //     const claimedEarn: BigNumber[] = []
-
-  //     poolData.rewardState.tokens.forEach((rewardToken) => {
-  //       const rewardAmount = claimInfo[rewardToken.address.toLowerCase()] || ZERO
-  //       claimedEarn.push(rewardAmount)
-  //     })
-
-  //     setState((prev) => ({
-  //       ...prev,
-  //       vesting: false,
-  //       vestTx: txId,
-  //       vestDone: true,
-  //       claimedEarn,
-  //     }))
-  //   } catch (error) {
-  //     console.error(error)
-  //     setState((prev) => ({
-  //       ...prev,
-  //       vesting: false,
-  //     }))
-  //   }
-  // }
-
   const { rewardEscrow } = useServices()
-  // console.log('pool', poolData)
 
   const onVest = async () => {
     if (!account || !provider) return
