@@ -1,4 +1,4 @@
-import { Button, makeStyles, Typography } from '@material-ui/core'
+import { makeStyles, Typography } from '@material-ui/core'
 import moment from 'moment'
 import { ITerminalPool } from 'types'
 import { formatBigNumber, numberWithCommas } from 'utils'
@@ -64,14 +64,6 @@ const useStyles = makeStyles((theme) => ({
     height: 40,
   },
 }))
-
-const MOCK = [
-  { action: 'Deposit', value: '34.4002', time: '11 mins ago', txId: '123' },
-  { action: 'Deposit', value: '34.4002', time: '11 mins ago', txId: '234' },
-  { action: 'Deposit', value: '34.4002', time: '11 mins ago', txId: '1234' },
-  { action: 'Deposit', value: '34.4002', time: '11 mins ago', txId: '253' },
-  { action: 'Deposit', value: '34.4002', time: '11 mins ago', txId: '222' },
-]
 
 interface IProps {
   pool: ITerminalPool
