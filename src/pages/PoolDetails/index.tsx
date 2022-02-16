@@ -8,7 +8,7 @@ import { Content } from './components'
 const PoolDetails = () => {
   const history = useHistory()
   const params = useParams()
-  const { id: poolAddress } = params as any
+  const { id: poolAddress, network } = params as any
 
   // TODO: Add `network` check before displaying pool details
 
@@ -16,7 +16,7 @@ const PoolDetails = () => {
     loadInfo,
     loading,
     pool: poolData,
-  } = useTerminalPool(undefined, poolAddress)
+  } = useTerminalPool(undefined, poolAddress, network)
 
   const onBack = () => {
     history.push('/terminal/discover')

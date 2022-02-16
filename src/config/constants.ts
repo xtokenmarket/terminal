@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { ConnectorNames } from 'utils/enums'
+import { ConnectorNames, Network } from 'utils/enums'
 
 import { ReactComponent as HomeIcon } from 'assets/svgs/home.svg'
 import { ReactComponent as MarketIcon } from 'assets/svgs/shopping.svg'
@@ -15,6 +15,7 @@ export const STORAGE_KEY_CONNECTOR = 'CONNECTOR'
 
 export const LOGGER_ID = 'xToken-Terminal'
 
+export const DEFAULT_NETWORK = Network.KOVAN
 export const DEFAULT_NETWORK_ID = 42
 
 export const WALLET_ICONS: { [key in ConnectorNames]: string } = {
@@ -44,7 +45,6 @@ export const LIQUIDITY_LOCK_MIN_DURATION = 30 * 24 * 60 * 60 // 1 month
 export const POLL_API_DATA = 300000 // 5 min TODO: Reduce the interval for Production
 
 export const FLEEK_STORAGE_START_URL = 'https://storageapi.fleek.co/'
-// export const TERMINAL_API_URL = process.env.NODE_ENV === 'development' ? 'http://3.8.192.52:3000/api' : 'https://terminal-api-staging.link:3001/api'
 export const TERMINAL_API_URL = 'https://terminal-api-staging.link:3001/api'
 
 export const SvgIcons = {

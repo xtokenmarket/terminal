@@ -9,6 +9,8 @@ import {
   NetworkId,
 } from 'types/types'
 import { DEFAULT_NETWORK_ID } from './constants'
+import { Network } from 'utils/enums'
+import { getIdFromNetwork } from 'utils/network'
 
 export const networkIds = {
   MAINNET: 1,
@@ -245,6 +247,11 @@ export const DefaultReadonlyProvider = new providers.JsonRpcProvider(
   networks[DEFAULT_NETWORK_ID].url,
   DEFAULT_NETWORK_ID
 )
+
+export const getNetworkProvider = (network?: Network) => {
+  const networkId = getIdFromNetwork(network)
+  return new providers.JsonRpcProvider(networks[networkId].url, networkId)
+}
 
 /**
  * Prompt the user to add BSC as a network on Metamask, or switch to BSC if the wallet is on a different network
