@@ -410,6 +410,10 @@ class LMService {
   deployIncentivizedPool = async (
     poolData: ICreatePoolData
   ): Promise<string> => {
+    const isTokenSorted = BigNumber.from(poolData.token0.address).lt(
+      BigNumber.from(poolData.token1.address)
+    )
+
     // TODO: Standardize symbol for different fee tiers
     const symbol = `${poolData.token0.symbol}-${poolData.token1.symbol}-CLR`
     const deploymentFee = await this.contract.deploymentFee()
@@ -420,11 +424,11 @@ class LMService {
     }
 
     const poolDetails = {
-      amount0: poolData.amount0,
-      amount1: poolData.amount1,
+      amount0: isTokenSorted ? poolData.amount0 : poolData.amount1,
+      amount1: isTokenSorted ? poolData.amount1 : poolData.amount0,
       fee: poolData.tier,
-      token0: poolData.token0.address,
-      token1: poolData.token1.address,
+      token0: isTokenSorted ? poolData.token0.address : poolData.token1.address,
+      token1: isTokenSorted ? poolData.token1.address : poolData.token0.address,
     }
 
     const transactionObject = await this.contract.deployIncentivizedPool(
