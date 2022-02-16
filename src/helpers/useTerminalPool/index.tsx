@@ -1,6 +1,5 @@
 import Abi from 'abis'
 import axios from 'axios'
-import https from 'https'
 import { POLL_API_DATA, TERMINAL_API_URL } from 'config/constants'
 import { DefaultReadonlyProvider, getTokenFromAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
@@ -10,7 +9,7 @@ import { useEffect, useState } from 'react'
 import { CLRService, ERC20Service } from 'services'
 import { ITerminalPool, IToken } from 'types'
 import { BigNumber } from '@ethersproject/bignumber'
-import { formatBigNumber, getCurrentTimeStamp, getTimeDurationStr, getTimeDurationUnitInfo, getTimeRemainingUnits } from 'utils'
+import { formatBigNumber, getTimeRemainingUnits } from 'utils'
 import { ERewardStep, Network } from 'utils/enums'
 import { formatDuration, ONE_ETHER } from 'utils/number'
 
@@ -19,8 +18,6 @@ import {
   getPoolDataMulticall,
   getTokenExchangeRate,
 } from './helper'
-import { formatEther } from 'ethers/lib/utils'
-import moment from 'moment'
 
 interface IState {
   pool?: ITerminalPool
@@ -87,10 +84,7 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
     setState((prev) => ({ ...prev, loading: true }))
 
     if ((!pool && poolAddress) || isReloadPool) {
-      pool = (await axios.get(
-        `${TERMINAL_API_URL}/pool/${poolAddress}`,
-        // { httpsAgent: new https.Agent({ rejectUnauthorized: false }) }
-      )).data
+      pool = (await axios.get(`${TERMINAL_API_URL}/pool/${poolAddress}`)).data
 
       // Fallback in case the pool is recently deployed
       if (!pool) {
@@ -147,7 +141,6 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
       const token1tvl = token1Balance
         .mul(parseEther(pool.token1.price))
         .div(ONE_ETHER)
-      // const tvl = formatBigNumber(BigNumber.from(pool.tvl), 18)
       const tvl = pool.tvl
         ? formatBigNumber(BigNumber.from(pool.tvl), 18)
         : formatBigNumber(token0tvl.add(token1tvl), token0.decimals)
@@ -185,7 +178,6 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
               token.address,
               account,
             )
-            // console.log('stuff', timestamp, formatEther(amount))
             const durationRemaining = getTimeRemainingUnits(timestamp)
             console.log('duration remaining:', durationRemaining)
             return {
