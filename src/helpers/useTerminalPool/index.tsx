@@ -1,7 +1,7 @@
 import Abi from 'abis'
 import axios from 'axios'
 import { POLL_API_DATA, TERMINAL_API_URL } from 'config/constants'
-import { DefaultReadonlyProvider, getTokenFromAddress } from 'config/networks'
+import { getNetworkProvider, getTokenFromAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import { parseEther } from 'ethers/lib/utils'
 import { useServices } from 'helpers'
@@ -24,19 +24,24 @@ interface IState {
   loading: boolean
 }
 
+// TODO: Remove this and leverage `parseEther()` & `formatEther()`
 const MULTIPLY_PRECISION = 1000000
 
-export const useTerminalPool = (pool?: any, poolAddress?: string) => {
+export const useTerminalPool = (
+  pool?: any,
+  poolAddress?: string,
+  network?: Network
+) => {
   const [state, setState] = useState<IState>({ loading: true, pool: undefined })
   const { account, library: provider, networkId } = useConnectedWeb3Context()
-  const { multicall, rewardEscrow } = useServices()
+  const { multicall, rewardEscrow } = useServices(network)
 
   const getTokenDetails = async (addr: string) => {
     try {
       return getTokenFromAddress(addr, networkId)
     } catch (error) {
       const erc20 = new ERC20Service(
-        provider || DefaultReadonlyProvider,
+        provider || getNetworkProvider(network),
         account,
         addr
       )
@@ -49,7 +54,11 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
     uniswapPool: string
   ) => {
     if (!account) return BigNumber.from(0)
-    const erc20 = new ERC20Service(provider, uniswapPool, tokenAddress)
+    const erc20 = new ERC20Service(
+      provider || getNetworkProvider(network),
+      uniswapPool,
+      tokenAddress
+    )
     return erc20.getBalanceOf(uniswapPool)
   }
 
@@ -84,7 +93,13 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
     setState((prev) => ({ ...prev, loading: true }))
 
     if ((!pool && poolAddress) || isReloadPool) {
-      pool = (await axios.get(`${TERMINAL_API_URL}/pool/${poolAddress}`)).data
+      pool = (
+        await axios.get(`${TERMINAL_API_URL}/pool/${poolAddress}`, {
+          params: {
+            network,
+          },
+        })
+      ).data
 
       // Fallback in case the pool is recently deployed
       if (!pool) {
@@ -94,59 +109,71 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
 
     try {
       // console.time(`loadInfo token details ${pool.poolAddress}`)
-      // TODO: Skip fetching token details, if API returns data
-      const [token0, token1, stakedToken] = await Promise.all([
-        getTokenDetails(pool.token0.address),
-        getTokenDetails(pool.token1.address),
-        getTokenDetails(pool.stakedToken.address),
-      ])
+      let { token0, token1, stakedToken } = pool
+      let tvl = '0'
 
-      const token0Balance = await getERC20TokenBalance(
-        token0.address,
-        pool.uniswapPool
-      )
-      const token1Balance = await getERC20TokenBalance(
-        token1.address,
-        pool.uniswapPool
-      )
-
-      const token0Percent = getTokenPercent(
-        token0Balance,
-        token0Balance,
-        token1Balance,
-        token0.decimals,
-        token1.decimals,
-        token0.decimals
-      )
-      const token1Percent = getTokenPercent(
-        token1Balance,
-        token0Balance,
-        token1Balance,
-        token0.decimals,
-        token1.decimals,
-        token1.decimals
-      )
-
+      // Fetch token details and relevant data, if API fails
       if (!pool.token0.price || !pool.token1.price) {
+        ;[token0, token1, stakedToken] = await Promise.all([
+          getTokenDetails(pool.token0.address),
+          getTokenDetails(pool.token1.address),
+          getTokenDetails(pool.stakedToken.address),
+        ])
+
         const ids = await getCoinGeckoIDs([token0.symbol, token1.symbol])
         const rates = await getTokenExchangeRate(ids)
         pool.token0.price = rates ? rates[0].toString() : '0'
         pool.token1.price = rates ? rates[1].toString() : '0'
+
+        const [token0Balance, token1Balance] = await Promise.all([
+          getERC20TokenBalance(token0.address, pool.uniswapPool),
+          getERC20TokenBalance(token1.address, pool.uniswapPool),
+        ])
+        const token0Percent = getTokenPercent(
+          token0Balance,
+          token0Balance,
+          token1Balance,
+          token0.decimals,
+          token1.decimals,
+          token0.decimals
+        )
+        const token1Percent = getTokenPercent(
+          token1Balance,
+          token0Balance,
+          token1Balance,
+          token0.decimals,
+          token1.decimals,
+          token1.decimals
+        )
+
+        const token0tvl = token0Balance
+          .mul(parseEther(pool.token0.price))
+          .div(ONE_ETHER)
+        const token1tvl = token1Balance
+          .mul(parseEther(pool.token1.price))
+          .div(ONE_ETHER)
+
+        token0.percent = token0Percent
+        token1.percent = token1Percent
+        token0.tvl = formatBigNumber(token0tvl, token0.decimals)
+        token1.tvl = formatBigNumber(token1tvl, token1.decimals)
+        tvl = formatBigNumber(token0tvl.add(token1tvl), token0.decimals)
+      } else {
+        // Parse API data
+        token0.image = token0.image || '/assets/tokens/unknown.png'
+        token1.image = token1.image || '/assets/tokens/unknown.png'
+        stakedToken.image = stakedToken.image || '/assets/tokens/unknown.png'
+        pool.rewardTokens = pool.rewardTokens.map((token: IToken) => ({
+          ...token,
+          image: token.image || '/assets/tokens/unknown.png',
+        }))
+
+        token0.percent = token0.percent.toString()
+        token1.percent = token1.percent.toString()
+        token0.tvl = formatBigNumber(token0.tvl, token0.decimals)
+        token1.tvl = formatBigNumber(token1.tvl, token1.decimals)
+        tvl = formatBigNumber(BigNumber.from(pool.tvl), 18)
       }
-
-      // TODO: Replace individual token's TVL from `pool` data
-      const token0tvl = token0Balance
-        .mul(parseEther(pool.token0.price))
-        .div(ONE_ETHER)
-      const token1tvl = token1Balance
-        .mul(parseEther(pool.token1.price))
-        .div(ONE_ETHER)
-      const tvl = formatBigNumber(BigNumber.from(pool.tvl), 18)
-
-      token0.tvl = formatBigNumber(token0tvl, token0.decimals)
-      token1.tvl = formatBigNumber(token1tvl, token1.decimals)
-      token0.percent = token0Percent
-      token1.percent = token1Percent
       // console.timeEnd(`loadInfo token details ${poolAddress}`)
 
       // console.time(`loadInfo vesting period ${poolAddress}`)
@@ -155,13 +182,16 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
       )
       // console.timeEnd(`loadInfo vesting period ${poolAddress}`)
 
-      // console.time(`loadInfo reward tokens ${poolAddress}`)
-      const rewardTokens = (await Promise.all(
-        pool.rewardTokens.map((token: any) => getTokenDetails(token.address))
-      )) as IToken[]
-      // console.timeEnd(`loadInfo reward tokens ${poolAddress}`)
+      if (!pool.rewardTokens[0].price) {
+        pool.rewardTokens = (await Promise.all(
+          pool.rewardTokens.map((token: { address: string }) =>
+            getTokenDetails(token.address)
+          )
+        )) as IToken[]
+      }
 
-      const rewardCalls = rewardTokens.map((token) => ({
+      // TODO: Replace with `rewardsPerToken` from API response
+      const rewardCalls = pool.rewardTokens.map((token: IToken) => ({
         name: 'rewardPerToken',
         address: pool.poolAddress,
         params: [token.address],
@@ -194,7 +224,7 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
             duration: pool.rewardProgramDuration,
             errors: [],
             step: ERewardStep.Input,
-            tokens: rewardTokens,
+            tokens: pool.rewardTokens,
             vesting: formatDuration(vestingPeriod.toString()),
           },
           stakedToken,

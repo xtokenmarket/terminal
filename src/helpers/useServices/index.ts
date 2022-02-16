@@ -1,4 +1,4 @@
-import { DefaultReadonlyProvider, getContractAddress } from 'config/networks'
+import { getContractAddress, getNetworkProvider } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import { useMemo } from 'react'
 import {
@@ -7,36 +7,36 @@ import {
   UniPositionService,
   LMService,
 } from 'services'
+import { Network } from 'utils/enums'
 
-export const useServices = () => {
+export const useServices = (network?: Network) => {
   const { account, library: provider, networkId } = useConnectedWeb3Context()
+  const readonlyProvider = getNetworkProvider(network)
 
-  const services = useMemo(() => {
+  return useMemo(() => {
     const multicall = new MulticallService(
-      provider || DefaultReadonlyProvider,
+      provider || readonlyProvider,
       account,
       getContractAddress('multicall', networkId)
     )
 
     const rewardEscrow = new RewardEscrowService(
-      provider || DefaultReadonlyProvider,
+      provider || readonlyProvider,
       account,
       getContractAddress('rewardEscrow', networkId)
     )
 
     const lmService = new LMService(
-      provider || DefaultReadonlyProvider,
+      provider || readonlyProvider,
       account,
       getContractAddress('LM', networkId)
     )
     const uniPositionService = new UniPositionService(
-      provider || DefaultReadonlyProvider,
+      provider || readonlyProvider,
       account,
       getContractAddress('uniPositionManager', networkId)
     )
 
     return { multicall, rewardEscrow, lmService, uniPositionService }
   }, [networkId])
-
-  return services
 }
