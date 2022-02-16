@@ -18,7 +18,6 @@ import {
   DepositModal,
   HistorySection,
   InfoSection,
-  VestModal,
   WithdrawModal,
 } from '../index'
 import { RewardVestSection } from '../RewardVestSection'
@@ -269,17 +268,6 @@ export const Content = (props: IProps) => {
           poolData={poolData}
         />
       )}
-
-      {/* {state.vestVisible && (
-        <VestModal
-          onClose={() => setVestModalVisible(false)}
-          onSuccess={async () => {
-            setVestModalVisible(false)
-            await props.reloadTerminalPool(true)
-          }}
-          poolData={poolData}
-        />
-      )} */}
 
       {poolData.vestingTokens && (
         <VestAllModal

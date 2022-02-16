@@ -1,20 +1,21 @@
 import React, { useState } from 'react'
 import { Modal, makeStyles, Typography, IconButton, Button, CircularProgress } from '@material-ui/core'
 import CloseOutlined from '@material-ui/icons/CloseOutlined'
-import { EarnedTokens } from 'types'
 import { formatEther } from 'ethers/lib/utils'
 import { ViewTransaction, WarningInfo } from 'components/Modal/RewardModal/components'
 import { useConnectedWeb3Context } from 'contexts'
 import { CLRService } from 'services'
 import { ZERO } from 'utils/number'
+import { EarnedTokens } from 'types'
+import { TxState } from 'utils/enums'
 
 const ICON_SIZE = 150
 
 const useStyles = makeStyles(theme => ({
   modal: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   content: {
     position: 'relative',
@@ -95,12 +96,6 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-enum ClaimState {
-  None,
-  Claiming,
-  Claimed,
-}
-
 interface IProps {
   open: boolean
   onClose: () => void
@@ -117,17 +112,17 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
   const cl = useStyles()
   const { account, library: provider } = useConnectedWeb3Context()
 
-  const [claimState, setClaimState] = useState<ClaimState>(ClaimState.None)
+  const [txState, setTxState] = useState<TxState>(TxState.None)
   const [claimTx, setClaimTx] = useState('')
   const [claimedTokens, setClaimedTokens] = useState<EarnedTokens>([])
 
-  const tokensToRender = claimState === ClaimState.Claimed ? claimedTokens : earnedTokens
+  const tokensToRender = txState === TxState.Complete ? claimedTokens : earnedTokens
 
   const _onClose = () => {
-    if (claimState === ClaimState.Claimed) {
+    if (txState === TxState.Complete) {
       setClaimTx('')
       setClaimedTokens([])
-      setClaimState(ClaimState.None)
+      setTxState(TxState.None)
     }
     onClose()
   }
@@ -137,7 +132,7 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
 
     const clr = new CLRService(provider, account, poolAddress)
     const txId = await clr.claimReward()
-    setClaimState(ClaimState.Claiming)
+    setTxState(TxState.InProgress)
     
     const finalTxId = await clr.waitUntilClaimReward(account, txId)
     const claimInfo = await clr.parseClaimTx(finalTxId)
@@ -146,13 +141,13 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
       amount: claimInfo[token.address.toLowerCase()] || ZERO
     }))
 
-    setClaimState(ClaimState.Claimed)
+    setTxState(TxState.Complete)
     setClaimTx(finalTxId)
     setClaimedTokens(claimedTokens)
   }
 
   const renderTopContent = () => {
-    if (claimState === ClaimState.Claimed) {
+    if (txState === TxState.Complete) {
       return (
         <>
           <img
@@ -175,7 +170,7 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
   }
 
   const renderBottomContent = () => {
-    if (claimState === ClaimState.Claimed) {
+    if (txState === TxState.Complete) {
       return (
         <div className={cl.bottomContent}>
           <ViewTransaction txId={claimTx} />
@@ -183,11 +178,11 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
       )
     }
     const buttonContent = {
-      [ClaimState.None]: 'Claim',
-      [ClaimState.Claiming]: (
+      [TxState.None]: 'Claim',
+      [TxState.InProgress]: (
         <CircularProgress style={{color: 'white'}} size={30} />
       ),
-    }[claimState]
+    }[txState]
 
     return (
       <div className={cl.bottomContent}>
@@ -195,7 +190,7 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
           fullWidth
           color="primary"
           variant="contained"
-          disabled={claimState !== ClaimState.None}
+          disabled={txState !== TxState.None}
           onClick={onClickClaim}
         >
         {buttonContent}
@@ -213,7 +208,7 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
         {renderTopContent()}
         <div className={cl.tokens}>
           <Typography variant="subtitle2" className={cl.subheader}>
-            {claimState === ClaimState.Claimed ? 'YOU CLAIMED' : 'AVAILABLE TO CLAIM'}
+            {txState === TxState.Complete ? 'YOU CLAIMED' : 'AVAILABLE TO CLAIM'}
           </Typography>
           {tokensToRender.map((token, i) => {
             return (
@@ -229,7 +224,7 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
             )
           })}
         </div>
-        {claimState === ClaimState.Claiming && (
+        {txState === TxState.InProgress && (
           <WarningInfo
             className={cl.warning}
             title="Warning"

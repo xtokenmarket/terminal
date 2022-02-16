@@ -5,9 +5,8 @@ import { VestingTokens } from 'types'
 import { formatEther } from 'ethers/lib/utils'
 import { ViewTransaction, WarningInfo } from 'components/Modal/RewardModal/components'
 import { useConnectedWeb3Context } from 'contexts'
-import { CLRService } from 'services'
-import { ZERO } from 'utils/number'
 import { useServices } from 'helpers'
+import { TxState } from 'utils/enums'
 
 const ICON_SIZE = 150
 
@@ -96,12 +95,6 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-enum TxState {
-  None,
-  InProgress,
-  Complete,
-}
-
 interface IProps {
   open: boolean
   onClose: () => void
@@ -142,7 +135,7 @@ export const VestAllModal: React.FC<IProps> = ({
     setTxState(TxState.InProgress)
     const finalTxId = await rewardEscrow.waitUntilVestAll(account, txId)
     // TODO
-    // const parsedInfo = await rewardEscrow.parseVestAllTx(finalTxId)
+    const parsedInfo = await rewardEscrow.parseVestAllTx(finalTxId)
     // const vestedTokens = vestingTokens.map(token => ({
     //   ...token,
     //   amount: parsedInfo[token.address.toLowerCase()] || ZERO

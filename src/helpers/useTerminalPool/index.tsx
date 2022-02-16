@@ -197,6 +197,7 @@ export const useTerminalPool = (
         params: [token.address],
       }))
 
+      console.log('pool:', pool)
       let vestingTokens = []
       if (!vestingPeriod.isZero() && !!poolAddress && !!account) {
         vestingTokens = await Promise.all(
@@ -207,7 +208,6 @@ export const useTerminalPool = (
               account,
             )
             const durationRemaining = getTimeRemainingUnits(timestamp)
-            console.log('duration remaining:', durationRemaining)
             return {
               amount,
               durationRemaining,

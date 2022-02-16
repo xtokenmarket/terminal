@@ -1,8 +1,8 @@
+import { useState } from 'react'
+import { formatEther } from 'ethers/lib/utils'
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { SimpleLoader } from 'components'
-import { formatEther } from 'ethers/lib/utils'
 import { useTerminalPool } from 'helpers'
-import { useState } from 'react'
 import { ClaimRewardsModal } from './ClaimRewardsModal'
 
 const useStyles = makeStyles((theme) => ({

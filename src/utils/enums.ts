@@ -1,3 +1,9 @@
+export enum TxState {
+  None,
+  InProgress,
+  Complete,
+}
+
 export enum ConnectorNames {
   Injected = 'injected',
   TrustWallet = 'trustwallet',
