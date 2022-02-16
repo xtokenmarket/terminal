@@ -1,11 +1,8 @@
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { SimpleLoader } from 'components'
-import { useConnectedWeb3Context } from 'contexts'
-import { BigNumber } from 'ethers'
 import { formatEther } from 'ethers/lib/utils'
 import { useTerminalPool } from 'helpers'
 import { useState } from 'react'
-import { CLRService } from 'services'
 import { ClaimRewardsModal } from './ClaimRewardsModal'
 
 const useStyles = makeStyles((theme) => ({
@@ -106,22 +103,22 @@ export const RewardVestSection: React.FC<IProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const renderVestingTokens = () => {
-    if (!pool || !pool.vestingInfo) {
+    if (!pool || !pool.vestingTokens) {
       return <Typography variant="h5" className={cl.whiteText}>N/A</Typography>
     }
     return (
       <>
-        {pool.vestingInfo.map(data => (
-          <div key={data.symbol} className={cl.vestingWrapper}>
+        {pool.vestingTokens.map(token => (
+          <div key={token.symbol} className={cl.vestingWrapper}>
             <div className={cl.symbolWrapper}>
-              <img className={cl.icon} alt="token" src={data.image} />
+              <img className={cl.icon} alt="token" src={token.image} />
               <Typography className={cl.symbol}>
-                {data.symbol}
+                {token.symbol}
               </Typography>
             </div>
             <div className={cl.valueWrapper}>
               <Typography className={cl.value}>
-                {Number(formatEther(data.amount)).toFixed(4)}
+                {Number(formatEther(token.amount)).toFixed(4)}
               </Typography>
               {/* <Typography className={cl.lightPurpletext}>
                 {`~ $ ${rate}`}
@@ -134,7 +131,7 @@ export const RewardVestSection: React.FC<IProps> = ({
   }
 
   const renderVestingPeriods = () => {
-    if (!pool || !pool.vestingInfo) {
+    if (!pool || !pool.vestingTokens) {
       return <Typography variant="h5" className={cl.whiteText}>N/A</Typography>
     }
     const formatDurationUnits = (duration: string[]) => {
@@ -145,8 +142,8 @@ export const RewardVestSection: React.FC<IProps> = ({
     }
     return (
       <>
-        {pool.vestingInfo.map((data, i) => {
-          const { primary, rest } = formatDurationUnits(data.durationRemaining)
+        {pool.vestingTokens.map((token, i) => {
+          const { primary, rest } = formatDurationUnits(token.durationRemaining)
           return (
             <div key={i} className={cl.vestingWrapper}>
               <Typography className={cl.whiteText}>
@@ -162,48 +159,9 @@ export const RewardVestSection: React.FC<IProps> = ({
     )
   }
 
-  const { account, networkId, library: provider } = useConnectedWeb3Context()
-  const onClickClaim = async () => {
-    if (!account || !provider || loading || !pool) return
-    try {
-      // setState((prev) => ({
-      //   ...prev,
-      //   vesting: true,
-      // }))
-      const clr = new CLRService(provider, account, poolAddress)
-      const txId = await clr.claimReward()
-      console.log('tx id:', txId)
-      const finalTxId = await clr.waitUntilClaimReward(account, txId)
-      console.log('final tx id:', finalTxId)
-      const claimInfo = await clr.parseClaimTx(finalTxId)
-      console.log('claim info:', claimInfo)
-
-      const claimedEarn: BigNumber[] = []
-
-      // poolData.rewardState.tokens.forEach((rewardToken) => {
-      //   const rewardAmount = claimInfo[rewardToken.address.toLowerCase()] || ZERO
-      //   claimedEarn.push(rewardAmount)
-      // })
-
-      // setState((prev) => ({
-      //   ...prev,
-      //   vesting: false,
-      //   vestTx: txId,
-      //   vestDone: true,
-      //   claimedEarn,
-      // }))
-    } catch (error) {
-      console.error(error)
-      // setState((prev) => ({
-      //   ...prev,
-      //   vesting: false,
-      // }))
-    }
-  }
-
   const renderRewardsItems = () => (
     <div>
-      {pool && pool.earnedInfo.map(({ symbol, image, amount}, i) => (
+      {pool && pool.earnedTokens.map(({ symbol, image, amount}, i) => (
         <div key={i} className={cl.itemWrapper}>
           <div className={cl.symbolWrapper}>
             <img className={cl.icon} alt="token" src={image} />
@@ -253,7 +211,7 @@ export const RewardVestSection: React.FC<IProps> = ({
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         poolAddress={poolAddress}
-        earnedInfo={pool.earnedInfo}
+        earnedTokens={pool.earnedTokens}
       />
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>

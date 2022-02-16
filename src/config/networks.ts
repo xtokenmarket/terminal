@@ -41,10 +41,8 @@ const networks: { [K in NetworkId]: INetwork } = {
     label: 'Kovan Test Network',
     url: 'https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
     contracts: {
-      // LM: '0xafa0A9A7E5535b299824FfB664cee18C18FBad43',
       LM: '0xA3566Ca5c0F892b8e651227E5ACd5ee186d239a9',
       multicall: '0x0284D6D74C31B23179CB642aa77164752C6859ed',
-      // rewardEscrow: '0x4BF0138A05C9b19B518173ceF5028f76f8922a31',
       rewardEscrow: '0x27841D2ABCe40791d3a816f264eD16D484DE570C',
       uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',

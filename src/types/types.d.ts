@@ -65,18 +65,18 @@ export interface IPositionTicks {
 
 export type ITerminalPoolTableSortFactor = 'tvl' | 'vesting' | 'ending' | 'apr'
 
-interface VestingInfoDatum extends IToken {
+interface VestingToken extends IToken {
   amount: BigNumber
   durationRemaining: string[]
 }
 
-export type VestingInfo = VestingInfoDatum[]
+export type VestingTokens = VestingToken[]
 
-interface EarnedInfoDatum extends IToken {
+interface EarnedToken extends IToken {
   amount: BigNumber
 }
 
-export type EarnedInfo = EarnedInfoDatum[]
+export type EarnedTokens = EarnedToken[]
 
 export interface ITerminalPool {
   address: string
@@ -95,8 +95,8 @@ export interface ITerminalPool {
   tradeFee: BigNumber // xToken Trade Fee as a divisor (100 = 1%)
   tvl: string
   uniswapPool: string
-  vestingInfo?: VestingInfo
-  earnedInfo: EarnedInfo
+  vestingTokens?: VestingTokens
+  earnedTokens: EarnedTokens
 }
 
 export interface ICreatePoolData {

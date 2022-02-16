@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Modal, makeStyles, Typography, IconButton, Button, CircularProgress } from '@material-ui/core'
 import CloseOutlined from '@material-ui/icons/CloseOutlined'
-import { EarnedInfo } from 'types'
+import { EarnedTokens } from 'types'
 import { formatEther } from 'ethers/lib/utils'
 import { ViewTransaction, WarningInfo } from 'components/Modal/RewardModal/components'
 import { useConnectedWeb3Context } from 'contexts'
@@ -104,14 +104,14 @@ enum ClaimState {
 interface IProps {
   open: boolean
   onClose: () => void
-  earnedInfo: EarnedInfo
+  earnedTokens: EarnedTokens
   poolAddress: string
 }
 
 export const ClaimRewardsModal: React.FC<IProps> = ({
   open,
   onClose,
-  earnedInfo,
+  earnedTokens,
   poolAddress,
 }) => {
   const cl = useStyles()
@@ -119,9 +119,9 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
 
   const [claimState, setClaimState] = useState<ClaimState>(ClaimState.None)
   const [claimTx, setClaimTx] = useState('')
-  const [claimedTokens, setClaimedTokens] = useState<EarnedInfo>([])
+  const [claimedTokens, setClaimedTokens] = useState<EarnedTokens>([])
 
-  const tokensToRender = claimState === ClaimState.Claimed ? claimedTokens : earnedInfo
+  const tokensToRender = claimState === ClaimState.Claimed ? claimedTokens : earnedTokens
 
   const _onClose = () => {
     if (claimState === ClaimState.Claimed) {
@@ -141,7 +141,7 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
     
     const finalTxId = await clr.waitUntilClaimReward(account, txId)
     const claimInfo = await clr.parseClaimTx(finalTxId)
-    const claimedTokens = earnedInfo.map(token => ({
+    const claimedTokens = earnedTokens.map(token => ({
       ...token,
       amount: claimInfo[token.address.toLowerCase()] || ZERO
     }))

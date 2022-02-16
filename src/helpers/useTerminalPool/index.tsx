@@ -176,9 +176,9 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
         params: [token.address],
       }))
 
-      let vestingInfo = []
+      let vestingTokens = []
       if (!vestingPeriod.isZero() && !!poolAddress && !!account) {
-        vestingInfo = await Promise.all(
+        vestingTokens = await Promise.all(
           rewardTokens.map(async (token: any) => {
             const { timestamp, amount } = await rewardEscrow.getNextVestingEntry(
               poolAddress,
@@ -197,7 +197,7 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
         )
       }
 
-      const earnedInfo = await Promise.all(
+      const earnedTokens = await Promise.all(
         rewardTokens.map(async (token: any) => {
           const clr = new CLRService(provider, account, pool.poolAddress)
           const amount = await clr.earned(account, token.address)
@@ -246,8 +246,8 @@ export const useTerminalPool = (pool?: any, poolAddress?: string) => {
           tradeFee: pool.tradeFee,
           tvl,
           uniswapPool: pool.uniswapPool,
-          vestingInfo: vestingInfo.length ? vestingInfo : undefined,
-          earnedInfo,
+          vestingTokens: vestingTokens.length ? vestingTokens : undefined,
+          earnedTokens,
         },
       })
     } catch (error) {
