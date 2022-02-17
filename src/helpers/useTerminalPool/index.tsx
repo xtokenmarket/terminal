@@ -6,18 +6,20 @@ import { useConnectedWeb3Context } from 'contexts'
 import { parseEther } from 'ethers/lib/utils'
 import { useServices } from 'helpers'
 import { useEffect, useState } from 'react'
-import { ERC20Service } from 'services'
+import { CLRService, ERC20Service } from 'services'
 import { ITerminalPool, IToken } from 'types'
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatBigNumber } from 'utils'
 import { ERewardStep, Network } from 'utils/enums'
 import { formatDuration, ONE_ETHER } from 'utils/number'
+import _ from 'lodash'
 
 import {
   getCoinGeckoIDs,
   getPoolDataMulticall,
   getTokenExchangeRate,
 } from './helper'
+import moment from 'moment'
 
 interface IState {
   pool?: ITerminalPool
@@ -209,6 +211,37 @@ export const useTerminalPool = (
         (response: any) => response[0]
       )
 
+      const clr = new CLRService(provider, account, pool.poolAddress)
+
+      const depositFilter = clr.contract.filters.Deposit()
+      const withdrawFilter = clr.contract.filters.Withdraw()
+
+      const [depositHistory, withdrawHistory] = await Promise.all([
+        clr.contract.queryFilter(depositFilter),
+        clr.contract.queryFilter(withdrawFilter),
+      ])
+
+      const blockInfos = await Promise.all(
+        [...depositHistory, ...withdrawHistory].map((x) => x.getBlock())
+      )
+
+      let history = [...depositHistory, ...withdrawHistory].map((x, index) => {
+        const timestamp = blockInfos[index].timestamp
+        const time = moment.unix(timestamp).format('LLLL')
+
+        return {
+          action: x.event,
+          amount: x.args,
+          amount0: x.args?.amount0,
+          amount1: x.args?.amount1,
+          time,
+          tx: x.transactionHash,
+          timestamp,
+        }
+      })
+
+      history = _.orderBy(history, 'timestamp', 'desc')
+
       setState({
         loading: false,
         pool: {
@@ -235,6 +268,7 @@ export const useTerminalPool = (
           tradeFee: pool.tradeFee,
           tvl,
           uniswapPool: pool.uniswapPool,
+          history,
         },
       })
     } catch (error) {
