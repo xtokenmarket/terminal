@@ -63,6 +63,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 12,
     height: 40,
   },
+  text: {
+    fontFamily: 'Gilmer',
+    fontWeight: 'bold',
+    margin: '30px',
+    textAlign: 'center',
+    color: theme.colors.white,
+  },
 }))
 
 interface IProps {
@@ -74,6 +81,14 @@ export const HistorySection = (props: IProps) => {
   const { pool } = props
   const { networkId } = useConnectedWeb3Context()
   const etherscanUri = getEtherscanUri(networkId)
+
+  if (pool.history.length === 0) {
+    return (
+      <div className={classes.root}>
+        <div className={classes.text}>No history record yet.</div>
+      </div>
+    )
+  }
 
   return (
     <div className={classes.root}>
