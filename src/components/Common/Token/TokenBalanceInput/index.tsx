@@ -128,10 +128,11 @@ export const TokenBalanceInput: React.FC<IProps> = ({
         className={classes.input}
         value={state.amount}
         onChange={(e) => {
-          if (Number(e.target.value) < 0) return
-          setState((prev) => ({ ...prev, amount: e.target.value }))
+          const amount = Number(e.target.value)
+          if (amount < 0) return
+          setState((prev) => ({ ...prev, amount: amount.toString() }))
           onChange(
-            ethers.utils.parseUnits(e.target.value || '0', token.decimals),
+            ethers.utils.parseUnits(amount.toString() || '0', token.decimals),
             balance
           )
         }}
