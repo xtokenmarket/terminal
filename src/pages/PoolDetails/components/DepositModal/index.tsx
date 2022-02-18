@@ -103,6 +103,9 @@ export const DepositModal = (props: IProps) => {
     }
   }
 
+  const goBack = () =>
+    setState((prev) => ({ ...prev, step: EDepositStep.Input }))
+
   const renderContent = () => {
     switch (state.step) {
       case EDepositStep.Init:
@@ -124,6 +127,7 @@ export const DepositModal = (props: IProps) => {
             depositState={state}
             onClose={props.onClose}
             poolData={props.poolData}
+            goBack={goBack}
           />
         )
       case EDepositStep.Deposit:
