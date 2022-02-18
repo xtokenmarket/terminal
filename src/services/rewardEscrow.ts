@@ -81,7 +81,6 @@ class RewardEscrowService {
     const result: Record<string, BigNumber> = {}
     const { logs } = await this.contract.provider.getTransactionReceipt(txId)
     const uniPositionInterface = new Interface(Abi.RewardEscrow)
-    console.log('parseVestAllTx logs:', logs)
     for (let i = 0; i < logs.length; i++) {
       const log = logs[i]
       try {
@@ -94,6 +93,33 @@ class RewardEscrowService {
       }
     }
     return result
+  }
+
+  getVestedBalance = async (
+    address: string,
+    tokenAddress: string,
+    account: string,
+  ): Promise<any> => {
+    let sum = BigNumber.from(0);
+    try {
+      const latestBlock = await this.provider.getBlock("latest");
+      const numVestingEntries = await this.contract.numVestingEntries(address, tokenAddress, account);
+      const schedule = await this.contract.checkAccountSchedule(address, tokenAddress, account);
+      if (numVestingEntries > 0) {
+        for (let i = 0; i < +numVestingEntries * 2; i = i + 2) {
+          const t = schedule[i];
+          const v = schedule[i + 1];
+          if (t.gt(0) && v.gt(0)) {
+            if (t.lt(latestBlock.timestamp)) {
+              sum = BigNumber.from(sum).add(v);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error(error)
+    }
+    return sum;
   }
 }
 

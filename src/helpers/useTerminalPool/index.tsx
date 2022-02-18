@@ -211,9 +211,15 @@ export const useTerminalPool = (
             const now = getCurrentTimeStamp()
             const diff = (timestamp - now) * 1000
             const durationRemaining = getTimeRemainingUnits(diff)
+            const vestedAmount = await rewardEscrow.getVestedBalance(
+              poolAddress,
+              token.address,
+              account,
+            )
             return {
               amount,
               durationRemaining,
+              vestedAmount,
               ...token,
             }
           })

@@ -129,7 +129,6 @@ export const getTimeRemainingUnits = (time: number, unitPrecision = 3) => {
     { hours: duration.hours() },
     { minutes: duration.minutes() },
   ]
-  console.log('x:', x)
 
   return [
     { years: duration.years() },

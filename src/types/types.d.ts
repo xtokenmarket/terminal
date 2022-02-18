@@ -67,6 +67,7 @@ export type ITerminalPoolTableSortFactor = 'tvl' | 'vesting' | 'ending' | 'apr'
 
 interface VestingToken extends IToken {
   amount: BigNumber
+  vestedAmount: BigNumber
   durationRemaining: string[]
 }
 

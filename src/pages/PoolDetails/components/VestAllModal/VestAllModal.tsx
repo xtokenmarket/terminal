@@ -7,6 +7,7 @@ import { ViewTransaction, WarningInfo } from 'components/Modal/RewardModal/compo
 import { useConnectedWeb3Context } from 'contexts'
 import { useServices } from 'helpers'
 import { TxState } from 'utils/enums'
+import { ZERO } from 'utils/number'
 
 const ICON_SIZE = 150
 
@@ -112,23 +113,6 @@ export const VestAllModal: React.FC<IProps> = ({
   const { account, library: provider } = useConnectedWeb3Context()
   const { rewardEscrow } = useServices()
 
-  useEffect(() => {
-    (async () => {
-      // const bal = await rewardEscrow.contract.balanceOf(account, poolAddress)
-      // console.log(
-      //   'bal:',
-      //   formatEther(bal),
-      // )
-      
-      // const x = await rewardEscrow.contract.checkAccountSchedule(
-      //   poolAddress,
-      //   vestingTokens[0].address,
-      //   account,
-      // )
-      // console.log(x)
-    })()
-  }, [])
-
   const [txState, setTxState] = useState<TxState>(TxState.None)
   const [claimTx, setClaimTx] = useState('')
   const [vestedTokens, setVestedTokens] = useState<VestingTokens>([])
@@ -147,20 +131,19 @@ export const VestAllModal: React.FC<IProps> = ({
   const onClickVest = async () => {
     if (!provider || !account) return
 
-    const rewardTokenAddresses = vestingTokens.map(token => token.address)
-    const txId = await rewardEscrow.vestAll(poolAddress, rewardTokenAddresses)
+    const addresses = vestingTokens.map(token => token.address)
+    const txId = await rewardEscrow.vestAll(poolAddress, addresses)
     setTxState(TxState.InProgress)
     const finalTxId = await rewardEscrow.waitUntilVestAll(account, txId)
-    // TODO
-    const parsedInfo = await rewardEscrow.parseVestAllTx(finalTxId)
-    // const vestedTokens = vestingTokens.map(token => ({
-    //   ...token,
-    //   amount: parsedInfo[token.address.toLowerCase()] || ZERO
-    // }))
+    const parsedLogs = await rewardEscrow.parseVestAllTx(finalTxId)
+    const vestedTokens = vestingTokens.map(token => ({
+      ...token,
+      amount: parsedLogs[token.address.toLowerCase()] || ZERO
+    }))
 
-    // setTxState(TxState.Complete)
-    // setClaimTx(finalTxId)
-    // setVestedTokens(vestedTokens)
+    setTxState(TxState.Complete)
+    setClaimTx(finalTxId)
+    setVestedTokens(vestedTokens)
   }
 
   const renderTopContent = () => {

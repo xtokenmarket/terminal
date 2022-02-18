@@ -144,6 +144,13 @@ export const RewardVestSection: React.FC<IProps> = ({
       <>
         {pool.vestingTokens.map((token, i) => {
           const { primary, rest } = formatDurationUnits(token.durationRemaining)
+          if (token.durationRemaining.length === 0) {
+            return (
+              <div className={cl.vestingWrapper}>
+                <Typography className={cl.whiteText}>N/A</Typography>
+              </div>
+            )
+          }
           return (
             <div key={i} className={cl.vestingWrapper}>
               <Typography className={cl.whiteText}>
