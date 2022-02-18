@@ -237,14 +237,14 @@ export const CreatePoolSection = (props: IProps) => {
         isCreatingPool: true,
       }))
 
-      const tempPoolData = {
-        ...poolData,
-        rewardState: {
-          ...poolData.rewardState,
-          vesting: '0.005',
-        },
-      }
-      const txId = await lmService.deployIncentivizedPool(tempPoolData)
+      // const tempPoolData = {
+      //   ...poolData,
+      //   rewardState: {
+      //     ...poolData.rewardState,
+      //     vesting: '0.005',
+      //   },
+      // }
+      const txId = await lmService.deployIncentivizedPool(poolData)
       const finalTxId = await lmService.waitUntilTerminalPoolCreated(
         poolData.token0.address,
         poolData.token1.address,
