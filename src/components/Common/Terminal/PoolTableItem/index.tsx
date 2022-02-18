@@ -101,7 +101,7 @@ interface IProps {
 export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
   const cl = useStyles()
 
-  const { loading, pool: poolData } = useTerminalPool(pool)
+  const { loading, pool: poolData } = useTerminalPool(pool, pool.poolAddress)
 
   const renderContent = () => {
     if (!poolData) {
