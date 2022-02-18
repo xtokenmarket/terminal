@@ -7,7 +7,8 @@ import { ViewTransaction, WarningInfo } from 'components/Modal/RewardModal/compo
 import { useConnectedWeb3Context } from 'contexts'
 import { useServices } from 'helpers'
 import { TxState } from 'utils/enums'
-import { ZERO } from 'utils/number'
+import { ONE_WEEK_IN_TIME, ZERO } from 'utils/number'
+import { getTimeRemainingUnits } from 'utils'
 
 const ICON_SIZE = 150
 
@@ -112,6 +113,9 @@ export const VestAllModal: React.FC<IProps> = ({
   const cl = useStyles()
   const { account, library: provider } = useConnectedWeb3Context()
   const { rewardEscrow } = useServices()
+
+  const time = ONE_WEEK_IN_TIME * 2 * 1000
+  console.log(getTimeRemainingUnits(time))
 
   const [txState, setTxState] = useState<TxState>(TxState.None)
   const [claimTx, setClaimTx] = useState('')
