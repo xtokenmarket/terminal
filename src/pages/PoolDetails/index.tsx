@@ -16,7 +16,7 @@ const PoolDetails = () => {
     loadInfo,
     loading,
     pool: poolData,
-  } = useTerminalPool(undefined, poolAddress, network)
+  } = useTerminalPool(undefined, poolAddress, network, true)
 
   const onBack = () => {
     history.push('/terminal/discover')

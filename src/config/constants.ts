@@ -42,7 +42,7 @@ export const PRICE_DECIMALS = 6
 export const MIN_START_TIME_DIFF = 10 * 60 // 10 mins
 export const LIQUIDITY_LOCK_MIN_DURATION = 30 * 24 * 60 * 60 // 1 month
 
-export const POLL_API_DATA = 300000 // 5 min TODO: Reduce the interval for Production
+export const POLL_API_DATA = 60000 // 1 min
 
 export const FLEEK_STORAGE_START_URL = 'https://storageapi.fleek.co/'
 export const TERMINAL_API_URL = 'https://terminal-api-staging.link:3001/api'

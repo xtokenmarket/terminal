@@ -21,7 +21,6 @@ export const useMyTerminalPools = () => {
         const userPools = await axios.get(
           `${TERMINAL_API_URL}/pools?userAddress=${account}`
         )
-        console.log('userPools', userPools.data)
 
         setState((prev) => ({
           ...prev,
