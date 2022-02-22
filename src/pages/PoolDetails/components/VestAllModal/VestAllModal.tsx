@@ -114,9 +114,6 @@ export const VestAllModal: React.FC<IProps> = ({
   const { account, library: provider } = useConnectedWeb3Context()
   const { rewardEscrow } = useServices()
 
-  const time = ONE_WEEK_IN_TIME * 2 * 1000
-  console.log(getTimeRemainingUnits(time))
-
   const [txState, setTxState] = useState<TxState>(TxState.None)
   const [claimTx, setClaimTx] = useState('')
   const [vestedTokens, setVestedTokens] = useState<VestingTokens>([])

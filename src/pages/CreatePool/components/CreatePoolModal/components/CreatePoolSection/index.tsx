@@ -237,6 +237,9 @@ export const CreatePoolSection = (props: IProps) => {
         isCreatingPool: true,
       }))
 
+      // TODO: can delete later
+      // this lets us make a pool that vests in 50 mins, for testing
+      
       // const tempPoolData = {
       //   ...poolData,
       //   rewardState: {
