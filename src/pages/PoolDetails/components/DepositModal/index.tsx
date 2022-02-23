@@ -139,6 +139,7 @@ export const DepositModal = (props: IProps) => {
             depositState={state}
             poolData={props.poolData}
             updateState={updateState}
+            onClose={props.onClose}
           />
         )
       default:
