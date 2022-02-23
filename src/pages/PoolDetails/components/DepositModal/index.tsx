@@ -53,6 +53,7 @@ export interface IDepositState {
   amount0Used: BigNumber
   amount1Used: BigNumber
   liquidityAdded: BigNumber
+  errorMessage: string
 }
 
 export const DepositModal = (props: IProps) => {
@@ -72,6 +73,7 @@ export const DepositModal = (props: IProps) => {
     amount0Used: ZERO,
     amount1Used: ZERO,
     liquidityAdded: ZERO,
+    errorMessage: '',
   })
 
   useEffect(() => {
