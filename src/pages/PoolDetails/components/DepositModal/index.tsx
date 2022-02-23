@@ -111,7 +111,7 @@ export const DepositModal = (props: IProps) => {
   const renderContent = () => {
     switch (state.step) {
       case EDepositStep.Init:
-        return <InitSection onNext={onNextStep} />
+        return <InitSection onNext={onNextStep} onClose={props.onClose} />
       case EDepositStep.Input:
         return (
           <InputSection
