@@ -3,9 +3,10 @@ import { makeStyles, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import { TokenIcon } from 'components'
 import { ETHER_DECIMAL } from 'config/constants'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { IDepositState } from 'pages/PoolDetails/components'
 import { ITerminalPool } from 'types'
-import { formatBigNumber } from 'utils'
+import { formatBigNumber, numberWithCommas } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -61,6 +62,17 @@ export const OutputEstimation = (props: IProps) => {
   const isEstimation =
     props.isEstimation !== undefined ? props.isEstimation : true
 
+  const renderTokenPriceInUSD = (
+    amount: BigNumber,
+    decimal: number,
+    price: string
+  ) => {
+    const totalPrice =
+      Number(formatUnits(amount, decimal).toString()) * Number(price)
+
+    return totalPrice.toFixed(2)
+  }
+
   return (
     <div className={clsx(classes.root, props.className)}>
       <div className={classes.estimation}>
@@ -87,7 +99,16 @@ export const OutputEstimation = (props: IProps) => {
           <Typography className={classes.amount}>
             {formatBigNumber(amount0, poolData.token0.decimals, 4)}
             &nbsp;
-            <span>~ $13.009</span>
+            {poolData.token0.price && (
+              <span>
+                ~ $
+                {renderTokenPriceInUSD(
+                  amount0,
+                  poolData.token0.decimals,
+                  poolData.token0.price
+                )}
+              </span>
+            )}
           </Typography>
         </div>
         <div className={classes.infoRow}>
@@ -96,7 +117,16 @@ export const OutputEstimation = (props: IProps) => {
           <Typography className={classes.amount}>
             {formatBigNumber(amount1, poolData.token1.decimals, 4)}
             &nbsp;
-            <span>~ $13.009</span>
+            {poolData.token1.price && (
+              <span>
+                ~ $
+                {renderTokenPriceInUSD(
+                  amount0,
+                  poolData.token1.decimals,
+                  poolData.token1.price
+                )}
+              </span>
+            )}
           </Typography>
         </div>
         <Typography className={classes.label}>SHARE OF POOL</Typography>
