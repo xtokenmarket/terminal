@@ -6,7 +6,7 @@ import { ETHER_DECIMAL } from 'config/constants'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { IDepositState } from 'pages/PoolDetails/components'
 import { ITerminalPool } from 'types'
-import { formatBigNumber, numberWithCommas } from 'utils'
+import { formatBigNumber, numberWithCommas, getTotalTokenPrice } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -62,17 +62,6 @@ export const OutputEstimation = (props: IProps) => {
   const isEstimation =
     props.isEstimation !== undefined ? props.isEstimation : true
 
-  const renderTokenPriceInUSD = (
-    amount: BigNumber,
-    decimal: number,
-    price: string
-  ) => {
-    const totalPrice =
-      Number(formatUnits(amount, decimal).toString()) * Number(price)
-
-    return totalPrice.toFixed(2)
-  }
-
   return (
     <div className={clsx(classes.root, props.className)}>
       <div className={classes.estimation}>
@@ -102,7 +91,7 @@ export const OutputEstimation = (props: IProps) => {
             {poolData.token0.price && (
               <span>
                 ~ $
-                {renderTokenPriceInUSD(
+                {getTotalTokenPrice(
                   amount0,
                   poolData.token0.decimals,
                   poolData.token0.price
@@ -120,7 +109,7 @@ export const OutputEstimation = (props: IProps) => {
             {poolData.token1.price && (
               <span>
                 ~ $
-                {renderTokenPriceInUSD(
+                {getTotalTokenPrice(
                   amount0,
                   poolData.token1.decimals,
                   poolData.token1.price

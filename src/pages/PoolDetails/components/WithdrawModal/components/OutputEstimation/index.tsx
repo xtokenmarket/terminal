@@ -5,7 +5,7 @@ import { TokenIcon } from 'components'
 import { ETHER_DECIMAL } from 'config/constants'
 import { IDepositState } from 'pages/PoolDetails/components'
 import { ITerminalPool } from 'types'
-import { formatBigNumber } from 'utils'
+import { formatBigNumber, getTotalTokenPrice } from 'utils'
 import { ZERO } from 'utils/number'
 
 const useStyles = makeStyles((theme) => ({
@@ -76,7 +76,16 @@ export const OutputEstimation = (props: IProps) => {
           <Typography className={classes.amount}>
             {formatBigNumber(amount0, poolData.token0.decimals, 4)}
             &nbsp;
-            <span>~ $13.009</span>
+            {poolData.token0.price && (
+              <span>
+                ~ $
+                {getTotalTokenPrice(
+                  amount0,
+                  poolData.token0.decimals,
+                  poolData.token0.price
+                )}
+              </span>
+            )}
           </Typography>
         </div>
         <div className={classes.infoRow}>
@@ -85,7 +94,16 @@ export const OutputEstimation = (props: IProps) => {
           <Typography className={classes.amount}>
             {formatBigNumber(amount1, poolData.token1.decimals, 4)}
             &nbsp;
-            <span>~ $13.009</span>
+            {poolData.token1.price && (
+              <span>
+                ~ $
+                {getTotalTokenPrice(
+                  amount1,
+                  poolData.token1.decimals,
+                  poolData.token1.price
+                )}
+              </span>
+            )}
           </Typography>
         </div>
         <Typography className={classes.label}>
