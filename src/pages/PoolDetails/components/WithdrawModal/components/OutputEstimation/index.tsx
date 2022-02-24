@@ -67,8 +67,7 @@ export const OutputEstimation = (props: IProps) => {
     <div className={clsx(classes.root, props.className)}>
       <div className={classes.estimation}>
         <Typography className={classes.label}>
-          POOLED {[poolData.token0.symbol, poolData.token1.symbol].join('/')}{' '}
-          {isEstimation ? 'YOU WILL WITHDRAW' : 'YOU WITHDREW'}
+          TOKEN AMOUNTS TO WITHDRAW
         </Typography>
         <div className={classes.infoRow}>
           <TokenIcon token={poolData.token0} className={classes.tokenIcon} />
@@ -76,14 +75,14 @@ export const OutputEstimation = (props: IProps) => {
           <Typography className={classes.amount}>
             {formatBigNumber(amount0, poolData.token0.decimals, 4)}
             &nbsp;
+            {poolData.token0.symbol}
             {poolData.token0.price && (
               <span>
-                ~ $
-                {getTotalTokenPrice(
+                {` ~ $${getTotalTokenPrice(
                   amount0,
                   poolData.token0.decimals,
                   poolData.token0.price
-                )}
+                )}`}
               </span>
             )}
           </Typography>
@@ -94,20 +93,20 @@ export const OutputEstimation = (props: IProps) => {
           <Typography className={classes.amount}>
             {formatBigNumber(amount1, poolData.token1.decimals, 4)}
             &nbsp;
+            {poolData.token1.symbol}
             {poolData.token1.price && (
               <span>
-                ~ $
-                {getTotalTokenPrice(
+                {` ~ $${getTotalTokenPrice(
                   amount1,
                   poolData.token1.decimals,
                   poolData.token1.price
-                )}
+                )}`}
               </span>
             )}
           </Typography>
         </div>
         <Typography className={classes.label}>
-          {isEstimation ? 'REWARDS YOU WILL EARN' : 'REWARDS YOU EARNED'}
+          {isEstimation ? 'CLAIMABLE REWARDS' : 'REWARDS YOU EARNED'}
         </Typography>
         {poolData.rewardState.tokens.map((rewardToken, index) => {
           return (
@@ -123,7 +122,16 @@ export const OutputEstimation = (props: IProps) => {
                   4
                 )}
                 &nbsp;
-                <span>~ $13.009</span>
+                {rewardToken.price && (
+                  <span>
+                    ~ $
+                    {getTotalTokenPrice(
+                      earned[index],
+                      rewardToken.decimals,
+                      rewardToken.price
+                    )}
+                  </span>
+                )}
               </Typography>
             </div>
           )
