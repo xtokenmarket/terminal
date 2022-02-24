@@ -3,7 +3,7 @@ import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef, useServices } from 'helpers'
 import { useEffect, useState } from 'react'
 import { ICreatePoolData } from 'types'
-import { ActionStepRow, ViewTransaction } from '..'
+import { ActionStepRow } from '..'
 import { WarningInfo } from 'components/Common/WarningInfo'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { getContractAddress } from 'config/networks'
@@ -300,11 +300,6 @@ export const CreatePoolSection = (props: IProps) => {
                 src={poolData.token0.image}
               />
             }
-            rightComponent={
-              state.token0Approved && state.token0ApproveTx !== '' ? (
-                <ViewTransaction txId={state.token0ApproveTx} />
-              ) : null
-            }
           />
           <ActionStepRow
             step={2}
@@ -322,11 +317,6 @@ export const CreatePoolSection = (props: IProps) => {
                 src={poolData.token1.image}
               />
             }
-            rightComponent={
-              state.token1Approved && state.token1ApproveTx !== '' ? (
-                <ViewTransaction txId={state.token1ApproveTx} />
-              ) : null
-            }
           />
           <ActionStepRow
             step={3}
@@ -337,11 +327,6 @@ export const CreatePoolSection = (props: IProps) => {
             onConfirm={onCreatePool}
             actionPending={state.isCreatingPool}
             actionDone={isPoolCreated}
-            rightComponent={
-              isPoolCreated ? (
-                <ViewTransaction txId={state.createPoolTx} />
-              ) : null
-            }
           />
         </div>
       </div>

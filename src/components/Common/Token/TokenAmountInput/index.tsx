@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import useCommonStyles from 'style/common'
 import { IToken } from 'types'
 import { formatBigNumber } from 'utils'
+import { useDebounce } from 'hooks'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,32 +60,27 @@ interface IProps {
   max: BigNumber
 }
 
-interface IState {
-  amount: string
-}
-
 export const TokenAmountInput = (props: IProps) => {
   const { token, onChange, max } = props
   const classes = useStyles()
   const commonClasses = useCommonStyles()
 
-  const [state, setState] = useState<IState>({ amount: '' })
+  const [amount, setAmount] = useState('')
+  const debouncedAmount = useDebounce(amount, 500)
+
   useEffect(() => {
     if (
       !ethers.utils
-        .parseUnits(state.amount || '0', token.decimals)
+        .parseUnits(debouncedAmount || '0', token.decimals)
         .eq(props.value)
     ) {
       if (props.value.isZero()) {
-        setState((prev) => ({ ...prev, amount: '' }))
+        setAmount('')
       } else {
-        setState((prev) => ({
-          ...prev,
-          amount: ethers.utils.formatUnits(props.value || '0', token.decimals),
-        }))
+        setAmount(ethers.utils.formatUnits(props.value || '0', token.decimals))
       }
     }
-  }, [props.value, state.amount, token.decimals])
+  }, [props.value, debouncedAmount, token.decimals])
 
   return (
     <div className={clsx(classes.root, props.className)}>
@@ -99,10 +95,10 @@ export const TokenAmountInput = (props: IProps) => {
           },
         }}
         className={classes.input}
-        value={state.amount}
+        value={debouncedAmount}
         onChange={(e) => {
-          if (Number(e.target.value) < 0) return
-          setState((prev) => ({ ...prev, amount: e.target.value }))
+          if (isNaN(Number(e.target.value))) return
+          setAmount(e.target.value)
           onChange(
             ethers.utils.parseUnits(e.target.value || '0', token.decimals)
           )

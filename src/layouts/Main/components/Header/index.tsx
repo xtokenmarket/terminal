@@ -114,7 +114,7 @@ export const Header = () => {
       <div className={classes.title}>
         {Icon && <Icon />}
         <span>
-          xtoken.<span>{selectedMenuItem?.label}</span>
+          xtoken <span>{selectedMenuItem?.label}</span>
         </span>
       </div>
       <div className={classes.right}>

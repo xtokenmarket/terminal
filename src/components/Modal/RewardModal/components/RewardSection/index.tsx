@@ -232,7 +232,10 @@ export const RewardSection = (props: IProps) => {
           {isCreatePool ? 'Approve Reward Tokens' : 'Initiate Rewards Program'}
         </Typography>
         <Typography className={classes.description}>
-          Please complete all transactions to complete the rewards program.
+          Please complete all transactions to complete the rewards program.{' '}
+          {!isCreatePool
+            ? 'Rewards will begin accruing to LPs once rewards initiation transaction confirms.'
+            : ''}
         </Typography>
       </div>
       <div className={classes.content}>

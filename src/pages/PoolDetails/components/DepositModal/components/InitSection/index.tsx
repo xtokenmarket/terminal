@@ -19,7 +19,7 @@ export const InitSection = (props: IProps) => {
   return (
     <div className={classes.root}>
       <WarningInfo
-        title="Trade at your own risk!"
+        title="LP at your own risk!"
         description="xToken Terminal is a permissionless platform. Please do proper due diligence on the token and project before providing liquidity to a pool."
       />
 

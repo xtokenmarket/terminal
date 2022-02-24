@@ -3,6 +3,8 @@ import { TokenIcon } from 'components'
 import { useTokenBalance } from 'helpers'
 import { ITerminalPool, IToken } from 'types'
 import { formatBigNumber, numberWithCommas } from 'utils'
+import { useConnectedWeb3Context } from '../../../../contexts'
+import { getEtherscanUri } from '../../../../config/networks'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,6 +58,9 @@ interface IProps {
 
 export const BalanceSection = (props: IProps) => {
   const classes = useStyles()
+  const { networkId } = useConnectedWeb3Context()
+
+  const etherscanUri = getEtherscanUri(networkId)
   const { token, pool } = props
 
   // TODO: Remove fetching token balance via `useTokenBalance()` hook
@@ -66,7 +71,13 @@ export const BalanceSection = (props: IProps) => {
     <div className={classes.root}>
       <Typography className={classes.label}>{token.symbol} balance</Typography>
       <div className={classes.content}>
-        <TokenIcon className={classes.icon} token={token} />
+        <a
+          href={`${etherscanUri}token/${token.address}`}
+          target={'_blank'}
+          rel={'noopener noreferrer'}
+        >
+          <TokenIcon className={classes.icon} token={token} />
+        </a>
         <div className={classes.texts}>
           <Typography className={classes.balance}>
             {numberWithCommas(formatBigNumber(balance, token.decimals))}{' '}
