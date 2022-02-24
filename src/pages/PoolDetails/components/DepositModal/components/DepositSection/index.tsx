@@ -276,9 +276,11 @@ export const DepositSection = (props: IProps) => {
         <Typography className={classes.description}>
           Please complete all transactions to complete the deposit.
         </Typography>
-        <IconButton className={classes.closeButton} onClick={onClose}>
-          <CloseOutlinedIcon />
-        </IconButton>
+        {!state.token0Approving && !state.token1Approving && !state.depositing && (
+          <IconButton className={classes.closeButton} onClick={onClose}>
+            <CloseOutlinedIcon />
+          </IconButton>
+        )}
       </div>
       <div className={classes.content}>
         <WarningInfo
