@@ -174,8 +174,9 @@ export const TokenPriceInput = (props: IProps) => {
           className={classes.input}
           value={localValue}
           onChange={(e) => {
-            if (Number(e.target.value) < 0) return
-            setLocalValue(e.target.value || '0')
+            const amount = Number(e.target.value)
+            if (amount < 0) return
+            setLocalValue(amount.toString() || '0')
           }}
           variant="outlined"
           fullWidth

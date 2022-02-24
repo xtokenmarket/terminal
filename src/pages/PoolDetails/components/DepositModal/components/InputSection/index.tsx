@@ -2,7 +2,8 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Button, IconButton, makeStyles, Typography } from '@material-ui/core'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { TokenBalanceInput } from 'components'
-import { DefaultReadonlyProvider } from 'config/networks'
+import { DefaultReadonlyProvider, knownTokens } from 'config/networks'
+import { WarningInfo } from '../../../../../../components/Common/WarningInfo'
 import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef, useTokenBalance } from 'helpers'
 import { IDepositState } from 'pages/PoolDetails/components'
@@ -38,6 +39,21 @@ const useStyles = makeStyles((theme) => ({
 
   deposit: { marginTop: 32 },
   buy: { marginTop: 8 },
+  warning: {
+    margin: '20px 0',
+    padding: '16px !important',
+    '& div': {
+      '&:first-child': {
+        marginTop: 0,
+        marginRight: 16,
+      },
+      '& p': {
+        fontSize: 14,
+        marginTop: 3,
+        '&:first-child': { fontSize: 16, marginTop: 0 },
+      },
+    },
+  },
 }))
 
 interface IProps {
@@ -55,8 +71,13 @@ export const InputSection = (props: IProps) => {
   const { onNext, onClose, depositState, updateState, poolData } = props
   const { account, library: provider, networkId } = useConnectedWeb3Context()
   const isMountedRef = useIsMountedRef()
+
   const { balance: balance0 } = useTokenBalance(poolData.token0.address)
   const { balance: balance1 } = useTokenBalance(poolData.token1.address)
+
+  const isWethToken =
+    poolData.token0.symbol.toLowerCase() === 'weth' ||
+    poolData.token1.symbol.toLowerCase() === 'weth'
 
   const loadEstimations = async (amount0: BigNumber, amount1: BigNumber) => {
     try {
@@ -114,6 +135,16 @@ export const InputSection = (props: IProps) => {
     }, 1000)
   }
 
+  const onClickBuy = () => {
+    const wethUrl = `https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=${
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      knownTokens.weth.addresses[networkId || 1]
+    }`
+    const newWindow = window.open(wethUrl, '_blank', 'noopener,noreferrer')
+    if (newWindow) newWindow.opener = null
+  }
+
   return (
     <div className={classes.root}>
       <div className={classes.header}>
@@ -137,6 +168,13 @@ export const InputSection = (props: IProps) => {
             token={poolData.token1}
           />
         </div>
+        {depositState.errorMessage && (
+          <WarningInfo
+            className={classes.warning}
+            title="Warning"
+            description={depositState.errorMessage}
+          />
+        )}
       </div>
       <OutputEstimation
         poolData={poolData}
@@ -161,14 +199,17 @@ export const InputSection = (props: IProps) => {
         >
           DEPOSIT
         </Button>
-        <Button
-          color="secondary"
-          variant="contained"
-          fullWidth
-          className={classes.buy}
-        >
-          BUY
-        </Button>
+        {isWethToken && (
+          <Button
+            color="secondary"
+            variant="contained"
+            fullWidth
+            className={classes.buy}
+            onClick={onClickBuy}
+          >
+            BUY
+          </Button>
+        )}
       </div>
     </div>
   )

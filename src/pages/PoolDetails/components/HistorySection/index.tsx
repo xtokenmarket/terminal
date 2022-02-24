@@ -1,5 +1,9 @@
-import { Button, makeStyles, Typography } from '@material-ui/core'
+import { makeStyles, Typography } from '@material-ui/core'
+import moment from 'moment'
 import { ITerminalPool } from 'types'
+import { formatBigNumber, numberWithCommas } from 'utils'
+import { getEtherscanUri } from 'config/networks'
+import { useConnectedWeb3Context } from 'contexts'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,15 +63,14 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 12,
     height: 40,
   },
+  text: {
+    fontFamily: 'Gilmer',
+    fontWeight: 'bold',
+    margin: '30px',
+    textAlign: 'center',
+    color: theme.colors.white,
+  },
 }))
-
-const MOCK = [
-  { action: 'Deposit', value: '34.4002', time: '11 mins ago', txId: '123' },
-  { action: 'Deposit', value: '34.4002', time: '11 mins ago', txId: '234' },
-  { action: 'Deposit', value: '34.4002', time: '11 mins ago', txId: '1234' },
-  { action: 'Deposit', value: '34.4002', time: '11 mins ago', txId: '253' },
-  { action: 'Deposit', value: '34.4002', time: '11 mins ago', txId: '222' },
-]
 
 interface IProps {
   pool: ITerminalPool
@@ -76,6 +79,16 @@ interface IProps {
 export const HistorySection = (props: IProps) => {
   const classes = useStyles()
   const { pool } = props
+  const { networkId } = useConnectedWeb3Context()
+  const etherscanUri = getEtherscanUri(networkId)
+
+  if (pool.history.length === 0) {
+    return (
+      <div className={classes.root}>
+        <div className={classes.text}>No history record yet.</div>
+      </div>
+    )
+  }
 
   return (
     <div className={classes.root}>
@@ -92,16 +105,26 @@ export const HistorySection = (props: IProps) => {
               </tr>
             </thead>
             <tbody>
-              {MOCK.map((item) => (
-                <tr key={item.txId}>
+              {pool.history.map((item) => (
+                <tr key={item.tx}>
                   <td>{item.action}</td>
                   <td>
-                    <span>{item.value}</span>&nbsp;{pool.token0.symbol}/
-                    {pool.token1.symbol} LP
+                    <span>
+                      {numberWithCommas(
+                        formatBigNumber(item.amount0, pool.token0.decimals)
+                      )}
+                    </span>{' '}
+                    {pool.token0.symbol} /{' '}
+                    <span>
+                      {numberWithCommas(
+                        formatBigNumber(item.amount1, pool.token1.decimals)
+                      )}
+                    </span>{' '}
+                    {pool.token1.symbol}
                   </td>
-                  <td>{item.time}</td>
+                  <td>{moment(item.time).fromNow()}</td>
                   <td>
-                    <a href={item.txId}>
+                    <a href={`${etherscanUri}tx/${item.tx}`} target="_blank">
                       <img alt="alt" src="/assets/icons/expand.png" />
                     </a>
                   </td>
@@ -110,14 +133,14 @@ export const HistorySection = (props: IProps) => {
             </tbody>
           </table>
         </div>
-        <Button
+        {/* <Button
           className={classes.button}
           color="secondary"
           fullWidth
           variant="contained"
         >
           Full History
-        </Button>
+        </Button> */}
       </div>
     </div>
   )

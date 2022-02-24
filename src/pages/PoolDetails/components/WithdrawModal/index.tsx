@@ -98,6 +98,9 @@ export const WithdrawModal = (props: IProps) => {
     }
   }
 
+  const goBack = () =>
+    setState((prev) => ({ ...prev, step: EWithdrawStep.Input }))
+
   const renderContent = () => {
     switch (state.step) {
       case EWithdrawStep.Input:
@@ -117,6 +120,8 @@ export const WithdrawModal = (props: IProps) => {
             withdrawState={state}
             poolData={props.poolData}
             updateState={updateState}
+            goBack={goBack}
+            onClose={props.onClose}
           />
         )
       default:

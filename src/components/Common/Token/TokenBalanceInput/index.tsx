@@ -4,7 +4,7 @@ import clsx from 'clsx'
 import { TokenIcon } from 'components'
 import { ethers } from 'ethers'
 import { useTokenBalance } from 'helpers'
-import { useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import useCommonStyles from 'style/common'
 import { IToken } from 'types'
 import { formatBigNumber } from 'utils'
@@ -54,7 +54,9 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.primary100,
     marginTop: 8,
     textDecoration: 'underline',
+    cursor: 'pointer',
     '& span': { fontWeight: 700 },
+    '&.disabled': { cursor: 'default' },
   },
   bottomRow: {
     display: 'flex',
@@ -92,6 +94,8 @@ export const TokenBalanceInput: React.FC<IProps> = ({
   const commonClasses = useCommonStyles()
   const { balance } = useTokenBalance(token.address)
 
+  const isBalanceDisabled = balance.isZero() || isDisabled
+
   const [state, setState] = useState<IState>({ amount: '' })
   useEffect(() => {
     if (
@@ -107,6 +111,21 @@ export const TokenBalanceInput: React.FC<IProps> = ({
       }
     }
   }, [value, state.amount, token.decimals])
+
+  const onInputBalance = (e: ChangeEvent<HTMLInputElement>) => {
+    const amount = Number(e.target.value)
+    if (amount < 0) return
+    setState((prev) => ({ ...prev, amount: amount.toString() }))
+    onChange(
+      ethers.utils.parseUnits(amount.toString() || '0', token.decimals),
+      balance
+    )
+  }
+
+  const onClickAvailable = () => {
+    if (balance.isZero()) return
+    onChange(balance, balance)
+  }
 
   return (
     <div className={clsx(classes.root, className)}>
@@ -126,15 +145,10 @@ export const TokenBalanceInput: React.FC<IProps> = ({
           },
         }}
         className={classes.input}
-        value={state.amount}
-        onChange={(e) => {
-          if (Number(e.target.value) < 0) return
-          setState((prev) => ({ ...prev, amount: e.target.value }))
-          onChange(
-            ethers.utils.parseUnits(e.target.value || '0', token.decimals),
-            balance
-          )
-        }}
+        value={Number(state.amount)
+          .toFixed(4)
+          .replace(/\.?0*$/g, '')}
+        onChange={onInputBalance}
         variant="outlined"
         fullWidth
         type="number"
@@ -146,7 +160,10 @@ export const TokenBalanceInput: React.FC<IProps> = ({
         <span className={classes.tokenLabel}>{token.symbol}</span>
       </div>
       <div className={classes.bottomRow}>
-        <Typography className={classes.balance}>
+        <Typography
+          className={clsx(classes.balance, isBalanceDisabled ? 'disabled' : '')}
+          onClick={isBalanceDisabled ? undefined : onClickAvailable}
+        >
           Available -{' '}
           <b>
             {formatBigNumber(balance, token.decimals, 4)} {token.symbol}

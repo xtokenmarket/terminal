@@ -7,11 +7,12 @@ import { parseEther } from 'ethers/lib/utils'
 import { useServices } from 'helpers'
 import { useEffect, useState } from 'react'
 import { CLRService, ERC20Service } from 'services'
-import { ITerminalPool, IToken } from 'types'
+import { History, ITerminalPool, IToken } from 'types'
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatBigNumber, getCurrentTimeStamp, getTimeRemainingUnits } from 'utils'
 import { ERewardStep, Network } from 'utils/enums'
 import { formatDuration, ONE_ETHER } from 'utils/number'
+import _ from 'lodash'
 
 import {
   getCoinGeckoIDs,
@@ -31,7 +32,8 @@ const MULTIPLY_PRECISION = 1000000
 export const useTerminalPool = (
   pool?: any,
   poolAddress?: string,
-  network?: Network
+  network?: Network,
+  isPoolDetails = false
 ) => {
   const [state, setState] = useState<IState>({ loading: true, pool: undefined })
   const { account, library: provider, networkId } = useConnectedWeb3Context()
@@ -88,22 +90,22 @@ export const useTerminalPool = (
   }
 
   const loadInfo = async (isReloadPool = false) => {
-    // console.log('loadInfo', pool, poolAddress)
     if (!pool && !poolAddress) return
 
     setState((prev) => ({ ...prev, loading: true }))
 
     if ((!pool && poolAddress) || isReloadPool) {
-      pool = (
-        await axios.get(`${TERMINAL_API_URL}/pool/${poolAddress}`, {
-          params: {
-            network,
-          },
-        })
-      ).data
-
-      // Fallback in case the pool is recently deployed
-      if (!pool) {
+      try {
+        pool = (
+          await axios.get(`${TERMINAL_API_URL}/pool/${poolAddress}`, {
+            params: {
+              network,
+            },
+          })
+        ).data
+      } catch (e) {
+        console.error('Error fetching pool details', e)
+        // Fallback in case API doesn't return pool details
         pool = await getPoolDataMulticall(poolAddress as string, multicall)
       }
     }
@@ -177,10 +179,11 @@ export const useTerminalPool = (
       }
       // console.timeEnd(`loadInfo token details ${poolAddress}`)
 
-      // console.time(`loadInfo vesting period ${poolAddress}`)
-      const vestingPeriod = await rewardEscrow.clrPoolVestingPeriod(
-        pool.poolAddress
-      )
+      if (!pool.vestingPeriod) {
+        pool.vestingPeriod = (
+          await rewardEscrow.clrPoolVestingPeriod(pool.poolAddress)
+        ).toString()
+      }
       // console.timeEnd(`loadInfo vesting period ${poolAddress}`)
 
       if (!pool.rewardTokens[0].price) {
@@ -191,16 +194,24 @@ export const useTerminalPool = (
         )) as IToken[]
       }
 
-      // TODO: Replace with `rewardsPerToken` from API response
-      const rewardCalls = pool.rewardTokens.map((token: IToken) => ({
-        name: 'rewardPerToken',
-        address: pool.poolAddress,
-        params: [token.address],
-      }))
+      if (!pool.rewardsPerToken) {
+        const rewardCalls = pool.rewardTokens.map((token: IToken) => ({
+          name: 'rewardPerToken',
+          address: pool.poolAddress,
+          params: [token.address],
+        }))
+        const rewardsResponse = await multicall.multicallv2(
+          Abi.xAssetCLR,
+          rewardCalls,
+          { requireSuccess: false }
+        )
+        pool.rewardsPerToken = rewardsResponse.map((response: any) =>
+          response[0].toString()
+        )
+      }
 
-      // console.log('pool:', pool)
       let vestingTokens = []
-      if (!vestingPeriod.isZero() && !!poolAddress && !!account) {
+      if (pool.vestingPeriod !== '0' && !!poolAddress && !!account) {
         vestingTokens = await Promise.all(
           pool.rewardTokens.map(async (token: any) => {
             const { timestamp, amount } = await rewardEscrow.getNextVestingEntry(
@@ -237,17 +248,46 @@ export const useTerminalPool = (
         })
       )
 
-      // console.time(`loadInfo rewards response ${poolAddress}`)
-      const rewardsResponse = await multicall.multicallv2(
-        Abi.xAssetCLR,
-        rewardCalls,
-        { requireSuccess: false }
-      )
-      // console.timeEnd(`loadInfo rewards response ${poolAddress}`)
+      // Fetch history only on PoolDetails page
+      let history: History[] = []
+      if (isPoolDetails) {
+        const clr = new CLRService(
+          provider || getNetworkProvider(network),
+          account,
+          pool.poolAddress
+        )
 
-      const rewardsPerToken = rewardsResponse.map(
-        (response: any) => response[0]
-      )
+        const depositFilter = clr.contract.filters.Deposit()
+        const withdrawFilter = clr.contract.filters.Withdraw()
+
+        const [depositHistory, withdrawHistory] = await Promise.all([
+          clr.contract.queryFilter(depositFilter),
+          clr.contract.queryFilter(withdrawFilter),
+        ])
+
+        const blockInfos = await Promise.all(
+          [...depositHistory, ...withdrawHistory].map((x) => x.getBlock())
+        )
+
+        const eventHistory = [...depositHistory, ...withdrawHistory].map(
+          (x, index) => {
+            const timestamp = blockInfos[index].timestamp
+            const time = moment.unix(timestamp).format('LLLL')
+
+            return {
+              action: x.event,
+              amount: x.args,
+              amount0: x.args?.amount0,
+              amount1: x.args?.amount1,
+              time,
+              tx: x.transactionHash,
+              timestamp,
+            }
+          }
+        )
+
+        history = _.orderBy(eventHistory, 'timestamp', 'desc')
+      }
 
       setState({
         loading: false,
@@ -260,12 +300,14 @@ export const useTerminalPool = (
           poolFee: pool.poolFee,
           rewardsAreEscrowed: pool.rewardsAreEscrowed,
           rewardState: {
-            amounts: rewardsPerToken,
+            amounts: pool.rewardsPerToken.map((reward: string) =>
+              BigNumber.from(reward)
+            ),
             duration: pool.rewardProgramDuration,
             errors: [],
             step: ERewardStep.Input,
             tokens: pool.rewardTokens,
-            vesting: formatDuration(vestingPeriod.toString()),
+            vesting: formatDuration(pool.vestingPeriod),
           },
           stakedToken,
           ticks: pool.ticks,
@@ -277,6 +319,7 @@ export const useTerminalPool = (
           uniswapPool: pool.uniswapPool,
           vestingTokens: vestingTokens.length ? vestingTokens : undefined,
           earnedTokens,
+          history,
         },
       })
     } catch (error) {
@@ -288,7 +331,7 @@ export const useTerminalPool = (
 
   useEffect(() => {
     loadInfo()
-    const interval = setInterval(loadInfo, POLL_API_DATA)
+    const interval = setInterval(() => loadInfo(true), POLL_API_DATA)
 
     return () => {
       clearInterval(interval)

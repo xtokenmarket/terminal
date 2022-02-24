@@ -98,6 +98,7 @@ export interface ITerminalPool {
   uniswapPool: string
   vestingTokens?: VestingTokens
   earnedTokens: EarnedTokens
+  history: History[]
 }
 
 export interface ICreatePoolData {
@@ -124,3 +125,13 @@ interface MintState {
   leftRangeTypedValue: string | IFullRange
   rightRangeTypedValue: string | IFullRange
 }
+
+interface History {
+  action?: string,
+  amount: array,
+  time: string,
+  tx?: string, 
+  amount0: BigNumber,
+  amount1: BigNumber,
+}
+

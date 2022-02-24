@@ -16,7 +16,7 @@ import _ from 'lodash'
 import { useEffect, useState } from 'react'
 import { ICreatePoolData, MintState } from 'types'
 import { Bound, Field } from 'utils/enums'
-import { WarningInfo } from '../CreatePoolModal/components'
+import { WarningInfo } from '../../../../components/Common/WarningInfo'
 
 const useStyles = makeStyles((theme) => ({
   root: {
