@@ -53,6 +53,7 @@ export interface IDepositState {
   amount0Used: BigNumber
   amount1Used: BigNumber
   liquidityAdded: BigNumber
+  errorMessage: string
 }
 
 export const DepositModal = (props: IProps) => {
@@ -72,6 +73,7 @@ export const DepositModal = (props: IProps) => {
     amount0Used: ZERO,
     amount1Used: ZERO,
     liquidityAdded: ZERO,
+    errorMessage: '',
   })
 
   useEffect(() => {
@@ -103,10 +105,13 @@ export const DepositModal = (props: IProps) => {
     }
   }
 
+  const goBack = () =>
+    setState((prev) => ({ ...prev, step: EDepositStep.Input }))
+
   const renderContent = () => {
     switch (state.step) {
       case EDepositStep.Init:
-        return <InitSection onNext={onNextStep} />
+        return <InitSection onNext={onNextStep} onClose={props.onClose} />
       case EDepositStep.Input:
         return (
           <InputSection
@@ -124,6 +129,7 @@ export const DepositModal = (props: IProps) => {
             depositState={state}
             onClose={props.onClose}
             poolData={props.poolData}
+            goBack={goBack}
           />
         )
       case EDepositStep.Deposit:
@@ -133,6 +139,7 @@ export const DepositModal = (props: IProps) => {
             depositState={state}
             poolData={props.poolData}
             updateState={updateState}
+            onClose={props.onClose}
           />
         )
       default:

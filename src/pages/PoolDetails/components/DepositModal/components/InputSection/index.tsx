@@ -3,6 +3,7 @@ import { Button, IconButton, makeStyles, Typography } from '@material-ui/core'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { TokenBalanceInput } from 'components'
 import { DefaultReadonlyProvider, knownTokens } from 'config/networks'
+import { WarningInfo } from '../../../../../../components/Common/WarningInfo'
 import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef, useTokenBalance } from 'helpers'
 import { IDepositState } from 'pages/PoolDetails/components'
@@ -38,6 +39,21 @@ const useStyles = makeStyles((theme) => ({
 
   deposit: { marginTop: 32 },
   buy: { marginTop: 8 },
+  warning: {
+    margin: '20px 0',
+    padding: '16px !important',
+    '& div': {
+      '&:first-child': {
+        marginTop: 0,
+        marginRight: 16,
+      },
+      '& p': {
+        fontSize: 14,
+        marginTop: 3,
+        '&:first-child': { fontSize: 16, marginTop: 0 },
+      },
+    },
+  },
 }))
 
 interface IProps {
@@ -152,6 +168,13 @@ export const InputSection = (props: IProps) => {
             token={poolData.token1}
           />
         </div>
+        {depositState.errorMessage && (
+          <WarningInfo
+            className={classes.warning}
+            title="Warning"
+            description={depositState.errorMessage}
+          />
+        )}
       </div>
       <OutputEstimation
         poolData={poolData}

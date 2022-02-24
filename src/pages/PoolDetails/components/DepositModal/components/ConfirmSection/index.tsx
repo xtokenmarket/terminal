@@ -2,7 +2,7 @@ import { Button, IconButton, makeStyles, Typography } from '@material-ui/core'
 import { IDepositState } from 'pages/PoolDetails/components'
 import { ITerminalPool } from 'types'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
-
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 import { OutputEstimation, OutputEstimationInfo } from '..'
 
 const useStyles = makeStyles((theme) => ({
@@ -11,6 +11,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 32,
     position: 'relative',
     paddingBottom: 16,
+    display: 'flex',
   },
   title: {
     color: theme.colors.white,
@@ -34,11 +35,17 @@ const useStyles = makeStyles((theme) => ({
   actions: {
     padding: 32,
   },
+  arrowBackIosStyle: {
+    color: theme.colors.white,
+    cursor: 'pointer',
+    marginTop: 5,
+    marginRight: 20,
+  },
 }))
 
 interface IProps {
   onClose: () => void
-
+  goBack: () => void
   onNext: () => void
   depositState: IDepositState
   poolData: ITerminalPool
@@ -46,16 +53,24 @@ interface IProps {
 
 export const ConfirmSection = (props: IProps) => {
   const classes = useStyles()
-  const { onNext, depositState, poolData, onClose } = props
+  const { onNext, depositState, poolData, onClose, goBack } = props
 
   return (
     <div className={classes.root}>
       <div className={classes.header}>
-        <Typography className={classes.title}>Confirm your deposit</Typography>
-        <Typography className={classes.description}>
-          Please confirm your deposit transaction information to proceed with
-          deposit process.
-        </Typography>
+        <ArrowBackIosIcon
+          className={classes.arrowBackIosStyle}
+          onClick={goBack}
+        />
+        <div>
+          <Typography className={classes.title}>
+            Confirm your deposit
+          </Typography>
+          <Typography className={classes.description}>
+            Please confirm your deposit transaction information to proceed with
+            deposit process.
+          </Typography>
+        </div>
         <IconButton className={classes.closeButton} onClick={onClose}>
           <CloseOutlinedIcon />
         </IconButton>

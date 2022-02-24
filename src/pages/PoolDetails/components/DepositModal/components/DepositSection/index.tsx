@@ -1,4 +1,4 @@
-import { makeStyles, Typography } from '@material-ui/core'
+import { makeStyles, Typography, IconButton } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef, useServices } from 'helpers'
 import { IDepositState } from 'pages/PoolDetails/components'
@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react'
 import { ERC20Service, CLRService } from 'services'
 import { ITerminalPool } from 'types'
 import { ActionStepRow, ViewTransaction, WarningInfo } from '..'
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -50,6 +51,17 @@ const useStyles = makeStyles((theme) => ({
     height: 24,
     borderRadius: '50%',
   },
+  closeButton: {
+    padding: 0,
+    color: theme.colors.white1,
+    position: 'absolute',
+    right: 24,
+    top: 24,
+    [theme.breakpoints.down('xs')]: {
+      top: 12,
+      right: 12,
+    },
+  },
 }))
 
 interface IProps {
@@ -57,6 +69,7 @@ interface IProps {
   depositState: IDepositState
   poolData: ITerminalPool
   updateState: (e: any) => void
+  onClose: () => void
 }
 
 interface IState {
@@ -86,7 +99,7 @@ export const DepositSection = (props: IProps) => {
     depositTx: '',
     step: 1,
   })
-  const { onNext, depositState, poolData, updateState } = props
+  const { onNext, depositState, poolData, updateState, onClose } = props
   const { lmService } = useServices()
   const { account, library: provider } = useConnectedWeb3Context()
 
@@ -263,6 +276,11 @@ export const DepositSection = (props: IProps) => {
         <Typography className={classes.description}>
           Please complete all transactions to complete the deposit.
         </Typography>
+        {!state.token0Approving && !state.token1Approving && !state.depositing && (
+          <IconButton className={classes.closeButton} onClick={onClose}>
+            <CloseOutlinedIcon />
+          </IconButton>
+        )}
       </div>
       <div className={classes.content}>
         <WarningInfo

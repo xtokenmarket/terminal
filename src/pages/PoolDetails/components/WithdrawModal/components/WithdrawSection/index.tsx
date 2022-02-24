@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Button, makeStyles, Typography } from '@material-ui/core'
+import { Button, makeStyles, Typography, IconButton } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef, useServices } from 'helpers'
 import { IWithdrawState } from 'pages/PoolDetails/components'
@@ -8,6 +8,8 @@ import { ERC20Service, CLRService } from 'services'
 import { ITerminalPool } from 'types'
 import { ZERO } from 'utils/number'
 import { ActionStepRow, ViewTransaction, WarningInfo } from '..'
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -15,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 32,
     position: 'relative',
     paddingBottom: 16,
+    display: 'flex',
   },
   title: {
     color: theme.colors.white,
@@ -52,6 +55,23 @@ const useStyles = makeStyles((theme) => ({
     height: 24,
     borderRadius: '50%',
   },
+  arrowBackIosStyle: {
+    color: theme.colors.white,
+    cursor: 'pointer',
+    marginTop: 5,
+    marginRight: 20,
+  },
+  closeButton: {
+    padding: 0,
+    color: theme.colors.white1,
+    position: 'absolute',
+    right: 24,
+    top: 24,
+    [theme.breakpoints.down('xs')]: {
+      top: 12,
+      right: 12,
+    },
+  },
 }))
 
 interface IProps {
@@ -59,6 +79,8 @@ interface IProps {
   withdrawState: IWithdrawState
   poolData: ITerminalPool
   updateState: (e: any) => void
+  goBack: () => void
+  onClose: () => void
 }
 
 interface IState {
@@ -76,7 +98,8 @@ export const WithdrawSection = (props: IProps) => {
     withdrawTx: '',
     step: 1,
   })
-  const { onNext, withdrawState, poolData, updateState } = props
+  const { onNext, withdrawState, poolData, updateState, goBack, onClose } =
+    props
   const { multicall, lmService } = useServices()
   const { account, networkId, library: provider } = useConnectedWeb3Context()
 
@@ -156,10 +179,19 @@ export const WithdrawSection = (props: IProps) => {
   return (
     <div className={classes.root}>
       <div className={classes.header}>
-        <Typography className={classes.title}>Withdraw Liquidity</Typography>
-        <Typography className={classes.description}>
-          Please complete all transactions to complete the withdraw.
-        </Typography>
+        <ArrowBackIosIcon
+          className={classes.arrowBackIosStyle}
+          onClick={goBack}
+        />
+        <div>
+          <Typography className={classes.title}>Withdraw Liquidity</Typography>
+          <Typography className={classes.description}>
+            Please complete all transactions to complete the withdraw.
+          </Typography>
+        </div>
+        <IconButton className={classes.closeButton} onClick={onClose}>
+          <CloseOutlinedIcon />
+        </IconButton>
       </div>
       <div className={classes.content}>
         <WarningInfo
