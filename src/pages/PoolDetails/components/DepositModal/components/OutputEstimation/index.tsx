@@ -66,20 +66,6 @@ export const OutputEstimation = (props: IProps) => {
     <div className={clsx(classes.root, props.className)}>
       <div className={classes.estimation}>
         <Typography className={classes.label}>
-          {poolData.token0.symbol}/{poolData.token1.symbol}{' '}
-          {isEstimation ? 'LP YOU WILL RECEIVE' : 'LP YOU RECEIVED'}
-        </Typography>
-        <div className={classes.infoRow}>
-          <div>
-            <TokenIcon token={poolData.token0} className={classes.tokenIcon} />
-            <TokenIcon token={poolData.token1} className={classes.tokenIcon} />
-          </div>
-          &nbsp;&nbsp;
-          <Typography className={classes.amount}>
-            {formatBigNumber(lpValue, ETHER_DECIMAL, 4)}
-          </Typography>
-        </div>
-        <Typography className={classes.label}>
           {isEstimation ? 'YOU WILL DEPOSIT' : 'YOU DEPOSITED'}
         </Typography>
         <div className={classes.infoRow}>
@@ -116,16 +102,6 @@ export const OutputEstimation = (props: IProps) => {
                 )}
               </span>
             )}
-          </Typography>
-        </div>
-        <Typography className={classes.label}>SHARE OF POOL</Typography>
-        <div>
-          <Typography className={classes.amount}>
-            {totalLiquidity.isZero()
-              ? '-'
-              : `${
-                  lpValue.mul(1000000).div(totalLiquidity).toNumber() / 10000
-                }%`}
           </Typography>
         </div>
       </div>
