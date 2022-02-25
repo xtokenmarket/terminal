@@ -3,9 +3,10 @@ import { makeStyles, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import { TokenIcon } from 'components'
 import { ETHER_DECIMAL } from 'config/constants'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { IDepositState } from 'pages/PoolDetails/components'
 import { ITerminalPool } from 'types'
-import { formatBigNumber } from 'utils'
+import { formatBigNumber, numberWithCommas, getTotalTokenPrice } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -87,7 +88,16 @@ export const OutputEstimation = (props: IProps) => {
           <Typography className={classes.amount}>
             {formatBigNumber(amount0, poolData.token0.decimals, 4)}
             &nbsp;
-            <span>~ $13.009</span>
+            {poolData.token0.price && (
+              <span>
+                ~ $
+                {getTotalTokenPrice(
+                  amount0,
+                  poolData.token0.decimals,
+                  poolData.token0.price
+                )}
+              </span>
+            )}
           </Typography>
         </div>
         <div className={classes.infoRow}>
@@ -96,7 +106,16 @@ export const OutputEstimation = (props: IProps) => {
           <Typography className={classes.amount}>
             {formatBigNumber(amount1, poolData.token1.decimals, 4)}
             &nbsp;
-            <span>~ $13.009</span>
+            {poolData.token1.price && (
+              <span>
+                ~ $
+                {getTotalTokenPrice(
+                  amount0,
+                  poolData.token1.decimals,
+                  poolData.token1.price
+                )}
+              </span>
+            )}
           </Typography>
         </div>
         <Typography className={classes.label}>SHARE OF POOL</Typography>

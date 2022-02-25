@@ -134,3 +134,14 @@ export const waitSeconds = (sec?: number) =>
   new Promise((resolve) => setTimeout(resolve, (sec || 1) * 1000))
 
 export const getCurrentTimeStamp = () => Math.floor(Date.now() / 1000)
+
+export const getTotalTokenPrice = (
+  amount: BigNumber,
+  decimal: number,
+  price: string
+) => {
+  const totalPrice =
+    Number(formatUnits(amount, decimal).toString()) * Number(price)
+
+  return totalPrice.toFixed(2)
+}

@@ -1,5 +1,5 @@
 import { Button, makeStyles } from '@material-ui/core'
-import { WarningInfo } from '../../../../../../components/Common/WarningInfo'
+import { WarningInfo } from 'components/Common/WarningInfo'
 
 const useStyles = makeStyles((theme) => ({
   root: {
