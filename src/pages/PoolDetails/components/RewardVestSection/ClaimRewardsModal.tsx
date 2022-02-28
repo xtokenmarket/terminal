@@ -5,7 +5,7 @@ import { formatEther } from 'ethers/lib/utils'
 import { ViewTransaction, WarningInfo } from 'components/Modal/RewardModal/components'
 import { useConnectedWeb3Context } from 'contexts'
 import { CLRService } from 'services'
-import { ZERO } from 'utils/number'
+import { toUsd, ZERO } from 'utils/number'
 import { EarnedTokens } from 'types'
 import { TxState } from 'utils/enums'
 
@@ -211,15 +211,17 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
             {txState === TxState.Complete ? 'YOU CLAIMED' : 'AVAILABLE TO CLAIM'}
           </Typography>
           {tokensToRender.map((token, i) => {
+            const amount = Number(formatEther(token.amount))
+            const price = toUsd(amount * Number(token.price))
             return (
               <div className={cl.token} key={i}>
                 <img src={token.image} className={cl.logo} />
                 <Typography variant="h2" className={cl.amount}>
-                  {Number(formatEther(token.amount)).toFixed(4)}
+                  {amount.toFixed(4)} {token.symbol}
                 </Typography>
-                {/* <Typography variant="h5" className={cl.dollarAmount}>
-                  ~ $ TODO
-                </Typography> */}
+                <Typography variant="h5" className={cl.dollarAmount}>
+                  ~ {price}
+                </Typography>
               </div>
             )
           })}

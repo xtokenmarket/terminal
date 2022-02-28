@@ -7,7 +7,7 @@ import { ViewTransaction, WarningInfo } from 'components/Modal/RewardModal/compo
 import { useConnectedWeb3Context } from 'contexts'
 import { useServices } from 'helpers'
 import { TxState } from 'utils/enums'
-import { ONE_WEEK_IN_TIME, ZERO } from 'utils/number'
+import { ONE_WEEK_IN_TIME, toUsd, ZERO } from 'utils/number'
 import { getTimeRemainingUnits } from 'utils'
 
 const ICON_SIZE = 150
@@ -212,15 +212,18 @@ export const VestAllModal: React.FC<IProps> = ({
             {txState === TxState.Complete ? 'YOU VESTED' : 'AVAILABLE TO VEST'}
           </Typography>
           {tokensToRender.map((token, i) => {
+            console.log('token:', token)
+            const amount = Number(formatEther(token.amount))
+            const price = toUsd(amount * Number(token.price))
             return (
               <div className={cl.token} key={i}>
                 <img src={token.image} className={cl.logo} />
                 <Typography variant="h2" className={cl.amount}>
-                  {Number(formatEther(token.amount)).toFixed(4)}
+                  {amount.toFixed(4)} {token.symbol}
                 </Typography>
-                {/* <Typography variant="h5" className={cl.dollarAmount}>
-                  ~ $ TODO
-                </Typography> */}
+                <Typography variant="h5" className={cl.dollarAmount}>
+                  ~ {price}
+                </Typography>
               </div>
             )
           })}
