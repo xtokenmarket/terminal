@@ -67,7 +67,7 @@ interface IProps {
   poolData: ITerminalPool
 }
 
-let timer: any = undefined
+const timer: any = undefined
 
 export const InputSection = (props: IProps) => {
   const classes = useStyles()
@@ -113,8 +113,15 @@ export const InputSection = (props: IProps) => {
           amount1Estimation,
           lpEstimation,
           totalLiquidity,
-          amount0: amount0.isZero() ? amount0Estimation : amount0,
-          amount1: amount0.isZero() ? amount1 : amount1Estimation,
+        })
+      }
+      if (amount0.isZero()) {
+        updateState({
+          amount0: amount0Estimation,
+        })
+      } else {
+        updateState({
+          amount1: amount1Estimation,
         })
       }
     } catch (error) {
@@ -129,13 +136,15 @@ export const InputSection = (props: IProps) => {
   }
 
   const handleAmountsChange = (amount0: BigNumber, amount1: BigNumber) => {
-    updateState({ amount0, amount1 })
-    if (timer) {
-      clearTimeout(timer)
+    if (amount0.isZero() && amount1.isZero()) {
+      updateState({ amount0, amount1 })
+    } else if (amount0.isZero()) {
+      updateState({ amount1 })
+    } else {
+      updateState({ amount0 })
     }
-    timer = setTimeout(() => {
-      loadEstimations(amount0, amount1)
-    }, 1000)
+
+    loadEstimations(amount0, amount1)
   }
 
   const onClickBuy = () => {
