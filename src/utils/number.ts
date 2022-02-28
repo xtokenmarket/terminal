@@ -10,3 +10,10 @@ export const formatDuration = (duration: string) =>
 
 export const parseDuration = (duration: string) =>
   Number(duration) * ONE_WEEK_IN_TIME
+
+export const toUsd = (n: number) => {
+  return n.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  })
+}

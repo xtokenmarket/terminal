@@ -69,12 +69,14 @@ interface VestingToken extends IToken {
   amount: BigNumber
   vestedAmount: BigNumber
   durationRemaining: string[]
+  price: string
 }
 
 export type VestingTokens = VestingToken[]
 
 interface EarnedToken extends IToken {
   amount: BigNumber
+  price: string
 }
 
 export type EarnedTokens = EarnedToken[]

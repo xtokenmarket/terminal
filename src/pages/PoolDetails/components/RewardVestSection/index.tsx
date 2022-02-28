@@ -4,6 +4,7 @@ import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { SimpleLoader } from 'components'
 import { useTerminalPool } from 'helpers'
 import { ClaimRewardsModal } from './ClaimRewardsModal'
+import { toUsd } from 'utils/number'
 
 const useStyles = makeStyles((theme) => ({
   block: {
@@ -108,24 +109,28 @@ export const RewardVestSection: React.FC<IProps> = ({
     }
     return (
       <>
-        {pool.vestingTokens.map(token => (
-          <div key={token.symbol} className={cl.vestingWrapper}>
-            <div className={cl.symbolWrapper}>
-              <img className={cl.icon} alt="token" src={token.image} />
-              <Typography className={cl.symbol}>
-                {token.symbol}
-              </Typography>
+        {pool.vestingTokens.map(token => {
+          const amount = Number(formatEther(token.amount))
+          const price = toUsd(amount * Number(token.price))
+          return (
+            <div key={token.symbol} className={cl.vestingWrapper}>
+              <div className={cl.symbolWrapper}>
+                <img className={cl.icon} alt="token" src={token.image} />
+                <Typography className={cl.symbol}>
+                  {token.symbol}
+                </Typography>
+              </div>
+              <div className={cl.valueWrapper}>
+                <Typography className={cl.value}>
+                  {amount.toFixed(4)}
+                </Typography>
+                <Typography className={cl.lightPurpletext}>
+                  ~ {price}
+                </Typography>
+              </div>
             </div>
-            <div className={cl.valueWrapper}>
-              <Typography className={cl.value}>
-                {Number(formatEther(token.amount)).toFixed(4)}
-              </Typography>
-              {/* <Typography className={cl.lightPurpletext}>
-                {`~ $ ${rate}`}
-              </Typography> */}
-            </div>
-          </div>
-        ))}
+          )
+        })}
       </>
     )
   }
@@ -168,35 +173,39 @@ export const RewardVestSection: React.FC<IProps> = ({
 
   const renderRewardsItems = () => (
     <div>
-      {pool && pool.earnedTokens.map(({ symbol, image, amount}, i) => (
-        <div key={i} className={cl.itemWrapper}>
-          <div className={cl.symbolWrapper}>
-            <img className={cl.icon} alt="token" src={image} />
-            <Typography className={cl.symbol}>
-              {symbol}
-            </Typography>
+      {pool && pool.earnedTokens.map((token, i) => {
+        const amount = Number(formatEther(token.amount))
+        const price = toUsd(amount * Number(token.price))
+        return (
+          <div key={i} className={cl.itemWrapper}>
+            <div className={cl.symbolWrapper}>
+              <img className={cl.icon} alt="token" src={token.image} />
+              <Typography className={cl.symbol}>
+                {token.symbol}
+              </Typography>
+            </div>
+            <div className={cl.rewardValueWrapper}>
+              <Typography className={cl.value}>
+                {amount.toFixed(4)}
+              </Typography>
+              <Typography className={cl.lightPurpletext}>
+                ~ {price}
+              </Typography>
+              <div style={{flex: 8}} />
+              {i === 0 && (
+                <Button
+                  className={cl.button}
+                  color="secondary"
+                  variant="contained"
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  CLAIM ALL REWARDS
+                </Button>
+              )}
+            </div>
           </div>
-          <div className={cl.rewardValueWrapper}>
-            <Typography className={cl.value}>
-              {Number(formatEther(amount)).toFixed(4)}
-            </Typography>
-            {/* <Typography className={cl.lightPurpletext}>
-              {`~ $ ${rate}`}
-            </Typography> */}
-            <div style={{flex: 8}} />
-            {i === 0 && (
-              <Button
-                className={cl.button}
-                color="secondary"
-                variant="contained"
-                onClick={() => setIsModalOpen(true)}
-              >
-                CLAIM ALL REWARDS
-              </Button>
-            )}
-          </div>
-        </div>
-      ))}
+        )
+      })}
     </div>
   )
 
