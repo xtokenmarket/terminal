@@ -411,6 +411,11 @@ export const Content = (props: IProps) => {
           )}
         </div>
 
+        {/* {(props.poolData.rewardState.vesting !== '0' || (
+          props.poolData.rewardState.amounts.some(amount => !amount.isZero())
+        )) && (
+          <RewardVestSection poolAddress={props.poolData.address} />
+        )} */}
         <RewardVestSection poolAddress={props.poolData.address} />
 
         <HistorySection pool={poolData} />

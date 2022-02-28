@@ -103,6 +103,18 @@ export const RewardVestSection: React.FC<IProps> = ({
   const { loading, pool } = useTerminalPool(undefined, poolAddress)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
+  let shouldDisplay = true
+  if (pool) {
+    const hasNoVisibleVesting = (!pool.vestingTokens || pool.vestingTokens.every(token => token.amount.isZero))
+    const hasNoVisibleRewards = (!pool.earnedTokens || pool.earnedTokens.every(token => token.amount.isZero()))
+
+    if (hasNoVisibleRewards && hasNoVisibleVesting) {
+      shouldDisplay = false
+    }
+  }
+
+  if (!shouldDisplay) return null
+
   const renderVestingTokens = () => {
     if (!pool || !pool.vestingTokens) {
       return <Typography variant="h5" className={cl.whiteText}>N/A</Typography>

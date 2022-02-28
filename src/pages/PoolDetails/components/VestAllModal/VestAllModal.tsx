@@ -212,7 +212,6 @@ export const VestAllModal: React.FC<IProps> = ({
             {txState === TxState.Complete ? 'YOU VESTED' : 'AVAILABLE TO VEST'}
           </Typography>
           {tokensToRender.map((token, i) => {
-            console.log('token:', token)
             const amount = Number(formatEther(token.amount))
             const price = toUsd(amount * Number(token.price))
             return (
