@@ -11,6 +11,9 @@ import { CLRService } from 'services'
 import { ITerminalPool } from 'types'
 import { ZERO } from 'utils/number'
 import { OutputEstimation, OutputEstimationInfo } from '..'
+import { useEffect } from 'react'
+import _ from 'lodash'
+import { formatUnits } from 'ethers/lib/utils'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -145,6 +148,26 @@ export const InputSection = (props: IProps) => {
     if (newWindow) newWindow.opener = null
   }
 
+  useEffect(() => {
+    const newErrors = [...depositState.errorMessage]
+    const newErrorA = depositState.amount0.gt(balance0)
+      ? `${poolData.token0.symbol} input exceeds balance`
+      : null
+    newErrors.splice(0, 1, newErrorA)
+
+    const newErrorB = depositState.amount1.gt(balance1)
+      ? `${poolData.token1.symbol} input exceeds balance`
+      : null
+    newErrors.splice(1, 1, newErrorB)
+
+    if (!_.isEqual(depositState.errorMessage, newErrors)) {
+      updateState({
+        ...depositState,
+        errorMessage: newErrors,
+      })
+    }
+  }, [balance0, balance1, depositState])
+
   return (
     <div className={classes.root}>
       <div className={classes.header}>
@@ -168,11 +191,12 @@ export const InputSection = (props: IProps) => {
             token={poolData.token1}
           />
         </div>
-        {depositState.errorMessage && (
+
+        {depositState.errorMessage.some((x) => x) && (
           <WarningInfo
             className={classes.warning}
             title="Warning"
-            description={depositState.errorMessage}
+            description={depositState.errorMessage.join('; ')}
           />
         )}
       </div>
