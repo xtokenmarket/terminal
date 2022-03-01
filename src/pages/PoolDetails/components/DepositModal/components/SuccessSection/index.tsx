@@ -1,4 +1,6 @@
 import { Button, makeStyles, Typography } from '@material-ui/core'
+import { getEtherscanUri } from 'config/networks'
+import { useConnectedWeb3Context } from 'contexts'
 import { IDepositState } from 'pages/PoolDetails/components'
 import { ITerminalPool } from 'types'
 
@@ -40,6 +42,9 @@ const useStyles = makeStyles((theme) => ({
     padding: 32,
     backgroundColor: theme.colors.primary500,
   },
+  button: {
+    marginTop: 20,
+  },
 }))
 
 interface IProps {
@@ -51,6 +56,8 @@ interface IProps {
 export const SuccessSection = (props: IProps) => {
   const classes = useStyles()
   const { depositState, poolData, onClose } = props
+  const { networkId } = useConnectedWeb3Context()
+  const etherscanUri = getEtherscanUri(networkId)
 
   return (
     <div className={classes.root}>
@@ -84,6 +91,22 @@ export const SuccessSection = (props: IProps) => {
         >
           DONE
         </Button>
+
+        <a
+          href={`${etherscanUri}tx/${depositState.depositTx}`}
+          className={classes.root}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <Button
+            color="secondary"
+            variant="contained"
+            fullWidth
+            className={classes.button}
+          >
+            View Transaction
+          </Button>
+        </a>
       </div>
     </div>
   )

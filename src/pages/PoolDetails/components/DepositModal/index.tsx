@@ -3,7 +3,6 @@ import { makeStyles, Modal } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import { EDepositStep } from 'utils/enums'
 import {
-  ConfirmSection,
   DepositSection,
   InitSection,
   InputSection,
@@ -54,6 +53,7 @@ export interface IDepositState {
   amount1Used: BigNumber
   liquidityAdded: BigNumber
   errorMessage: (string | null)[]
+  depositTx: string
 }
 
 export const DepositModal = (props: IProps) => {
@@ -74,6 +74,7 @@ export const DepositModal = (props: IProps) => {
     amount1Used: ZERO,
     liquidityAdded: ZERO,
     errorMessage: [],
+    depositTx: '',
   })
 
   useEffect(() => {
@@ -92,9 +93,6 @@ export const DepositModal = (props: IProps) => {
         setState((prev) => ({ ...prev, step: EDepositStep.Input }))
         break
       case EDepositStep.Input:
-        setState((prev) => ({ ...prev, step: EDepositStep.Confirm }))
-        break
-      case EDepositStep.Confirm:
         setState((prev) => ({ ...prev, step: EDepositStep.Deposit }))
         break
       case EDepositStep.Deposit:
@@ -120,16 +118,6 @@ export const DepositModal = (props: IProps) => {
             depositState={state}
             onClose={props.onClose}
             poolData={props.poolData}
-          />
-        )
-      case EDepositStep.Confirm:
-        return (
-          <ConfirmSection
-            onNext={onNextStep}
-            depositState={state}
-            onClose={props.onClose}
-            poolData={props.poolData}
-            goBack={goBack}
           />
         )
       case EDepositStep.Deposit:
