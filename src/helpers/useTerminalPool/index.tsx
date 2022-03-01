@@ -110,8 +110,6 @@ export const useTerminalPool = (
       }
     }
 
-    // console.log('pool (from api):', pool)
-
     try {
       // console.time(`loadInfo token details ${pool.poolAddress}`)
       let { token0, token1, stakedToken } = pool

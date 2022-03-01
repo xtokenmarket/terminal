@@ -100,9 +100,7 @@ export const VestSection: React.FC<IProps> = ({
     const rewardTokenAddresses = rewardState.tokens.map(t => t.address)
 
     const txId = await rewardEscrow.vestAll(address, rewardTokenAddresses)
-    console.log('tx Id:', txId)
     const finalTxId = await rewardEscrow.waitUntilVestAll(account, txId)
-    console.log('final tx id:', finalTxId)
 
     setState((prev) => ({
       ...prev,
