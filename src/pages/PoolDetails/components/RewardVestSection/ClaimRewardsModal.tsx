@@ -240,7 +240,7 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
             )
           })}
         </div>
-        {txState === TxState.InProgress && (
+        {(txState === TxState.InProgress || txState === TxState.Confirming) && (
           <WarningInfo
             className={cl.warning}
             title="Warning"
