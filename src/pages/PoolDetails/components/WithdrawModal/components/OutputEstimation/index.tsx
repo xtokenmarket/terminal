@@ -127,7 +127,7 @@ export const OutputEstimation = (props: IProps) => {
                     ~ $
                     {getTotalTokenPrice(
                       earned[index],
-                      rewardToken.decimals,
+                      Number(rewardToken.decimals),
                       rewardToken.price
                     )}
                   </span>
