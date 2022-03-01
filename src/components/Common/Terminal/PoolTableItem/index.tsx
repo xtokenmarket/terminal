@@ -9,6 +9,7 @@ import {
   getTimeDurationUnitInfo,
   numberWithCommas,
 } from 'utils'
+import { parseDuration } from 'utils/number'
 import moment from 'moment'
 import { NavLink } from 'react-router-dom'
 
@@ -109,7 +110,7 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
     }
 
     const {
-      rewardState: { amounts, duration, tokens },
+      rewardState: { amounts, duration, tokens, vesting },
     } = poolData
     const isInitiateRewardsPending = duration === '0'
 
@@ -159,9 +160,9 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
         <PoolTd type="vesting">
           <div className={cl.itemAlignRight}>
             <Typography className={cl.label}>
-              {isInitiateRewardsPending
-                ? 'N/A'
-                : getTimeDurationStr(Number(duration))}
+              {Number(vesting) === 0
+                ? 'None'
+                : getTimeDurationStr(parseDuration(vesting))}
             </Typography>
           </div>
         </PoolTd>

@@ -183,7 +183,7 @@ export const RewardsStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
                 <RewardTokensTable rewardState={data.rewardState} />
               ) : (
                 <Typography className={cl.noRewardsText}>
-                  You have no rewards program for this pool.
+                  You have not configured rewards for this pool
                 </Typography>
               )}
               <Button

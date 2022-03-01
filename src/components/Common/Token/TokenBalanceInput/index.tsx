@@ -4,7 +4,8 @@ import clsx from 'clsx'
 import { TokenIcon } from 'components'
 import { ethers } from 'ethers'
 import { useTokenBalance } from 'helpers'
-import { ChangeEvent, useEffect, useState } from 'react'
+import _ from 'lodash'
+import { ChangeEvent, useCallback, useEffect, useState } from 'react'
 import useCommonStyles from 'style/common'
 import { IToken } from 'types'
 import { formatBigNumber } from 'utils'
@@ -77,10 +78,6 @@ interface IProps {
   isDisabled?: boolean
 }
 
-interface IState {
-  amount: string
-}
-
 export const TokenBalanceInput: React.FC<IProps> = ({
   token,
   value,
@@ -96,30 +93,30 @@ export const TokenBalanceInput: React.FC<IProps> = ({
 
   const isBalanceDisabled = balance.isZero() || isDisabled
 
-  const [state, setState] = useState<IState>({ amount: '' })
+  const [amount, setAmount] = useState('')
+
   useEffect(() => {
-    if (
-      !ethers.utils.parseUnits(state.amount || '0', token.decimals).eq(value)
-    ) {
+    if (!ethers.utils.parseUnits(amount || '0', token.decimals).eq(value)) {
       if (value.isZero()) {
-        setState((prev) => ({ ...prev, amount: '' }))
+        setAmount('')
       } else {
-        setState((prev) => ({
-          ...prev,
-          amount: ethers.utils.formatUnits(value || '0', token.decimals),
-        }))
+        setAmount(ethers.utils.formatUnits(value || '0', token.decimals))
       }
     }
-  }, [value, state.amount, token.decimals])
+  }, [value])
+
+  const onChangeDebounced = useCallback(
+    _.debounce((value: string) => {
+      if (!isNaN(Number(value))) {
+        onChange(ethers.utils.parseUnits(value || '0', token.decimals), balance)
+      }
+    }, 1000),
+    []
+  )
 
   const onInputBalance = (e: ChangeEvent<HTMLInputElement>) => {
-    const amount = Number(e.target.value)
-    if (amount < 0) return
-    setState((prev) => ({ ...prev, amount: amount.toString() }))
-    onChange(
-      ethers.utils.parseUnits(amount.toString() || '0', token.decimals),
-      balance
-    )
+    setAmount(e.target.value)
+    onChangeDebounced(e.target.value)
   }
 
   const onClickAvailable = () => {
@@ -145,9 +142,8 @@ export const TokenBalanceInput: React.FC<IProps> = ({
           },
         }}
         className={classes.input}
-        value={Number(state.amount)
-          .toFixed(4)
-          .replace(/\.?0*$/g, '')}
+        value={amount}
+        // value={Number(amount).toFixed(4).replace(/\.?0*$/g, '')}
         onChange={onInputBalance}
         variant="outlined"
         fullWidth
@@ -173,7 +169,7 @@ export const TokenBalanceInput: React.FC<IProps> = ({
           <Typography className={classes.balance}>
             Total rewards (incl. {rewardFeePercent * 100}% fee) -{' '}
             <b>
-              {Number(state.amount) * (1 + rewardFeePercent)} {token.name}
+              {Number(amount) * (1 + rewardFeePercent)} {token.name}
             </b>
           </Typography>
         )}

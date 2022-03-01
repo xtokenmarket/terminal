@@ -12,11 +12,21 @@ export const formatBigNumber = (
   precision = 2
 ): string => Number(formatUnits(value, decimals)).toFixed(precision)
 
-export const numberWithCommas = (x: number | string) => {
-  const splits = x.toString().split('.')
-  const first = splits[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-  if (splits.length === 1) return first
-  return [first, splits[1]].join('.')
+export const numberWithCommas = (
+  x: string,
+  decimals = 2,
+  forcePrecision = false
+) => {
+  const n = Number(x)
+  if (n < 1000) {
+    return Number.isInteger(n) && !forcePrecision ? x : n.toFixed(decimals)
+  }
+  let formattedNumber = n.toFixed(decimals).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+  const splitArray = formattedNumber.split('.')
+  if (splitArray.length > 1) {
+    formattedNumber = splitArray[0]
+  }
+  return formattedNumber
 }
 
 export const formatToShortNumber = (number: string, decimals = 2): string => {

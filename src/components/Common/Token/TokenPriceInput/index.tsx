@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Button, makeStyles, TextField, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import { ethers } from 'ethers'
-import { useCallback, useEffect, useState } from 'react'
+import { ChangeEvent, useCallback, useEffect, useState } from 'react'
 import useCommonStyles from 'style/common'
 import { IToken } from 'types'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
@@ -105,9 +105,6 @@ interface IProps {
 export const TokenPriceInput = (props: IProps) => {
   const {
     label,
-    priceLower,
-    priceUpper,
-    ticksAtLimit,
     value,
     decrement,
     increment,
@@ -117,6 +114,7 @@ export const TokenPriceInput = (props: IProps) => {
     decrementDisabled,
     incrementDisabled,
   } = props
+
   //  for focus state, styled components doesnt let you select input parent container
   const [active, setActive] = useState(false)
 
@@ -148,6 +146,10 @@ export const TokenPriceInput = (props: IProps) => {
     onUserInput(increment())
   }, [increment, onUserInput])
 
+  const onChangeInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setLocalValue(e.target.value || '0')
+  }
+
   useEffect(() => {
     if (localValue !== value && !useLocalValue) {
       setTimeout(() => {
@@ -173,11 +175,7 @@ export const TokenPriceInput = (props: IProps) => {
           }}
           className={classes.input}
           value={localValue}
-          onChange={(e) => {
-            const amount = Number(e.target.value)
-            if (amount < 0) return
-            setLocalValue(amount.toString() || '0')
-          }}
+          onChange={onChangeInput}
           variant="outlined"
           fullWidth
           // for ∞ to be shown

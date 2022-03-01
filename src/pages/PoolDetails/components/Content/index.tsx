@@ -243,6 +243,7 @@ export const Content = (props: IProps) => {
     .includes((account || '').toLowerCase())
   const isDeposited = !state.stakedTokenBalance.isZero()
   const rewardPeriodFinished = poolData.periodFinish.toNumber() < timestamp
+  const { vesting } = poolData.rewardState
 
   const setDepositModalVisible = (depositVisible: boolean) => {
     setState((prev) => ({ ...prev, depositVisible }))
@@ -355,9 +356,11 @@ export const Content = (props: IProps) => {
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
               <InfoSection
                 label="VESTING PERIOD"
-                value={getTimeDurationStr(
-                  parseDuration(poolData.rewardState.vesting)
-                )}
+                value={
+                  Number(vesting) === 0
+                    ? 'None'
+                    : getTimeDurationStr(parseDuration(vesting))
+                }
               />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
@@ -424,7 +427,7 @@ export const Content = (props: IProps) => {
             WITHDRAW
           </Button>
 
-          {isDeposited && Number(poolData.rewardState.vesting) > 0 && (
+          {isDeposited && Number(vesting) > 0 && (
             <Button
               className={classes.button}
               color="secondary"
