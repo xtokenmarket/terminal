@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { Modal, makeStyles, Typography, IconButton, Button, CircularProgress } from '@material-ui/core'
 import CloseOutlined from '@material-ui/icons/CloseOutlined'
 import { formatEther } from 'ethers/lib/utils'
-import { ViewTransaction, WarningInfo } from 'components/Modal/RewardModal/components'
+import { ViewTransaction } from 'components/Modal/RewardModal/components'
+import { WarningInfo } from 'components/Common/WarningInfo'
 import { useConnectedWeb3Context } from 'contexts'
 import { CLRService } from 'services'
 import { toUsd, ZERO } from 'utils/number'
@@ -132,6 +133,7 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
 
     const clr = new CLRService(provider, account, poolAddress)
     const txId = await clr.claimReward()
+    console.log('txId:', txId)
     setTxState(TxState.InProgress)
     
     const finalTxId = await clr.waitUntilClaimReward(account, txId)

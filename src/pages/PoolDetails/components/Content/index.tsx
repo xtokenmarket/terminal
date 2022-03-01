@@ -234,6 +234,12 @@ export const Content = (props: IProps) => {
     loadPersonalInfo()
   }, [account, networkId])
 
+  const shouldDisplayVestButton = (
+    isDeposited &&
+    (Number(poolData.rewardState.vesting) > 0) &&
+    poolData.vestingTokens?.some(token => token.vestedAmount.gt(0) && token.durationRemaining.length === 0)
+  )
+
   return (
     <div className={classes.root}>
       {state.depositVisible && (
@@ -369,7 +375,7 @@ export const Content = (props: IProps) => {
             WITHDRAW
           </Button>
 
-          {isDeposited && Number(poolData.rewardState.vesting) > 0 && (
+          {shouldDisplayVestButton && (
             <Button
               className={classes.button}
               color="secondary"

@@ -102,6 +102,7 @@ export const RewardVestSection: React.FC<IProps> = ({
   const cl = useStyles()
   const { loading, pool } = useTerminalPool(undefined, poolAddress)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  console.log('pool:', pool)
 
   let shouldDisplay = true
   if (pool) {
