@@ -122,7 +122,7 @@ export const OutputEstimation = (props: IProps) => {
                   4
                 )}
                 &nbsp;
-                {rewardToken.price && (
+                {rewardToken.price && earned.length > 0 && (
                   <span>
                     ~ $
                     {getTotalTokenPrice(
