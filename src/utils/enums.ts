@@ -1,5 +1,6 @@
 export enum TxState {
   None,
+  Confirming,
   InProgress,
   Complete,
 }

@@ -121,11 +121,15 @@ export const VestAllModal: React.FC<IProps> = ({
 
   const tokensToRender = txState === TxState.Complete ? vestedTokens : vestingTokens
 
+  const _clearTxState = () => {
+    setClaimTx('')
+    setVestedTokens([])
+    setTxState(TxState.None)
+  }
+
   const _onClose = () => {
     if (txState === TxState.Complete) {
-      setClaimTx('')
-      setVestedTokens([])
-      setTxState(TxState.None)
+      _clearTxState()
     }
     onClose()
   }
@@ -133,19 +137,25 @@ export const VestAllModal: React.FC<IProps> = ({
   const onClickVest = async () => {
     if (!provider || !account) return
 
-    const addresses = vestingTokens.map(token => token.address)
-    const txId = await rewardEscrow.vestAll(poolAddress, addresses)
-    setTxState(TxState.InProgress)
-    const finalTxId = await rewardEscrow.waitUntilVestAll(account, txId)
-    const parsedLogs = await rewardEscrow.parseVestAllTx(finalTxId)
-    const vestedTokens = vestingTokens.map(token => ({
-      ...token,
-      amount: parsedLogs[token.address.toLowerCase()] || ZERO
-    }))
+    try {
+      setTxState(TxState.Confirming)
 
-    setTxState(TxState.Complete)
-    setClaimTx(finalTxId)
-    setVestedTokens(vestedTokens)
+      const addresses = vestingTokens.map(token => token.address)
+      const txId = await rewardEscrow.vestAll(poolAddress, addresses)
+      setTxState(TxState.InProgress)
+      const finalTxId = await rewardEscrow.waitUntilVestAll(account, txId)
+      const parsedLogs = await rewardEscrow.parseVestAllTx(finalTxId)
+      const vestedTokens = vestingTokens.map(token => ({
+        ...token,
+        amount: parsedLogs[token.address.toLowerCase()] || ZERO
+      }))
+  
+      setTxState(TxState.Complete)
+      setClaimTx(finalTxId)
+      setVestedTokens(vestedTokens)
+    } catch (error) {
+      _clearTxState()
+    }
   }
 
   const renderTopContent = () => {
@@ -181,6 +191,9 @@ export const VestAllModal: React.FC<IProps> = ({
     }
     const buttonContent = {
       [TxState.None]: 'Vest',
+      [TxState.Confirming]: (
+        <CircularProgress style={{color: 'white'}} size={30} />
+      ),
       [TxState.InProgress]: (
         <CircularProgress style={{color: 'white'}} size={30} />
       ),

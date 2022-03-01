@@ -119,11 +119,15 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
 
   const tokensToRender = txState === TxState.Complete ? claimedTokens : earnedTokens
 
+  const _clearTxState = () => {
+    setClaimTx('')
+    setClaimedTokens([])
+    setTxState(TxState.None)
+  }
+
   const _onClose = () => {
     if (txState === TxState.Complete) {
-      setClaimTx('')
-      setClaimedTokens([])
-      setTxState(TxState.None)
+      _clearTxState()
     }
     onClose()
   }
@@ -131,21 +135,26 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
   const onClickClaim = async () => {
     if (!provider || !account) return
 
-    const clr = new CLRService(provider, account, poolAddress)
-    const txId = await clr.claimReward()
-    console.log('txId:', txId)
-    setTxState(TxState.InProgress)
-    
-    const finalTxId = await clr.waitUntilClaimReward(account, txId)
-    const claimInfo = await clr.parseClaimTx(finalTxId)
-    const claimedTokens = earnedTokens.map(token => ({
-      ...token,
-      amount: claimInfo[token.address.toLowerCase()] || ZERO
-    }))
+    setTxState(TxState.Confirming)
+    try {
 
-    setTxState(TxState.Complete)
-    setClaimTx(finalTxId)
-    setClaimedTokens(claimedTokens)
+      const clr = new CLRService(provider, account, poolAddress)
+      const txId = await clr.claimReward()
+      setTxState(TxState.InProgress)
+
+      const finalTxId = await clr.waitUntilClaimReward(account, txId)
+      const claimInfo = await clr.parseClaimTx(finalTxId)
+      const claimedTokens = earnedTokens.map(token => ({
+        ...token,
+        amount: claimInfo[token.address.toLowerCase()] || ZERO
+      }))
+  
+      setTxState(TxState.Complete)
+      setClaimTx(finalTxId)
+      setClaimedTokens(claimedTokens)
+    } catch (error) {
+      _clearTxState()
+    }
   }
 
   const renderTopContent = () => {
@@ -181,6 +190,9 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
     }
     const buttonContent = {
       [TxState.None]: 'Claim',
+      [TxState.Confirming]: (
+        <CircularProgress style={{color: 'white'}} size={30} />
+      ),
       [TxState.InProgress]: (
         <CircularProgress style={{color: 'white'}} size={30} />
       ),
