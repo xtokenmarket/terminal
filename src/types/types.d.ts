@@ -56,6 +56,7 @@ export interface IToken {
   image: string
   percent?: string
   tvl?: string
+  price?: string
 }
 
 export interface IPositionTicks {

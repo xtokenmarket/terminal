@@ -260,6 +260,10 @@ export const DepositSection = (props: IProps) => {
         depositTx: txId,
         depositDone: true,
       }))
+
+      updateState({
+        depositTx: txId.hash,
+      })
     } catch (error) {
       console.error(error)
       setState((prev) => ({

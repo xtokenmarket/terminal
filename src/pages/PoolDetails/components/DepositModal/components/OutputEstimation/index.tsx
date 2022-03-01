@@ -3,9 +3,10 @@ import { makeStyles, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import { TokenIcon } from 'components'
 import { ETHER_DECIMAL } from 'config/constants'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { IDepositState } from 'pages/PoolDetails/components'
 import { ITerminalPool } from 'types'
-import { formatBigNumber } from 'utils'
+import { formatBigNumber, numberWithCommas, getTotalTokenPrice } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -65,20 +66,6 @@ export const OutputEstimation = (props: IProps) => {
     <div className={clsx(classes.root, props.className)}>
       <div className={classes.estimation}>
         <Typography className={classes.label}>
-          {poolData.token0.symbol}/{poolData.token1.symbol}{' '}
-          {isEstimation ? 'LP YOU WILL RECEIVE' : 'LP YOU RECEIVED'}
-        </Typography>
-        <div className={classes.infoRow}>
-          <div>
-            <TokenIcon token={poolData.token0} className={classes.tokenIcon} />
-            <TokenIcon token={poolData.token1} className={classes.tokenIcon} />
-          </div>
-          &nbsp;&nbsp;
-          <Typography className={classes.amount}>
-            {formatBigNumber(lpValue, ETHER_DECIMAL, 4)}
-          </Typography>
-        </div>
-        <Typography className={classes.label}>
           {isEstimation ? 'YOU WILL DEPOSIT' : 'YOU DEPOSITED'}
         </Typography>
         <div className={classes.infoRow}>
@@ -87,7 +74,16 @@ export const OutputEstimation = (props: IProps) => {
           <Typography className={classes.amount}>
             {formatBigNumber(amount0, poolData.token0.decimals, 4)}
             &nbsp;
-            <span>~ $13.009</span>
+            {poolData.token0.price && (
+              <span>
+                ~ $
+                {getTotalTokenPrice(
+                  amount0,
+                  poolData.token0.decimals,
+                  poolData.token0.price
+                )}
+              </span>
+            )}
           </Typography>
         </div>
         <div className={classes.infoRow}>
@@ -96,17 +92,16 @@ export const OutputEstimation = (props: IProps) => {
           <Typography className={classes.amount}>
             {formatBigNumber(amount1, poolData.token1.decimals, 4)}
             &nbsp;
-            <span>~ $13.009</span>
-          </Typography>
-        </div>
-        <Typography className={classes.label}>SHARE OF POOL</Typography>
-        <div>
-          <Typography className={classes.amount}>
-            {totalLiquidity.isZero()
-              ? '-'
-              : `${
-                  lpValue.mul(1000000).div(totalLiquidity).toNumber() / 10000
-                }%`}
+            {poolData.token1.price && (
+              <span>
+                ~ $
+                {getTotalTokenPrice(
+                  amount0,
+                  poolData.token1.decimals,
+                  poolData.token1.price
+                )}
+              </span>
+            )}
           </Typography>
         </div>
       </div>

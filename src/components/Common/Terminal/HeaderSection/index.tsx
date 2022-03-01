@@ -1,7 +1,7 @@
 import {
   makeStyles,
-  Checkbox,
-  FormControlLabel,
+  // Checkbox,
+  // FormControlLabel,
   TextField,
   InputAdornment,
 } from '@material-ui/core'
@@ -82,7 +82,7 @@ export const HeaderSection: React.FC = () => {
         placeholder="Search by token name, symbol, or address"
       />
       <div className={cl.bottomSection}>
-        <FormControlLabel
+        {/*<FormControlLabel
           className={cl.checkLabel}
           control={<Checkbox />}
           label="Staked Only"
@@ -91,7 +91,7 @@ export const HeaderSection: React.FC = () => {
           className={cl.checkLabel}
           control={<Checkbox />}
           label="Staked Ended"
-        />
+        />*/}
         {isConnected && (
           <NavLink to="/terminal/new-pool" className={cl.createBtn}>
             <AddIcon />

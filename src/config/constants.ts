@@ -64,6 +64,7 @@ export const LP_TOKEN_BASIC: IToken = {
   decimals: ETHER_DECIMAL,
   image: '',
   address: '',
+  price: ''
 }
 
 export const MINT_BURN_SLIPPAGE = BigNumber.from(100)

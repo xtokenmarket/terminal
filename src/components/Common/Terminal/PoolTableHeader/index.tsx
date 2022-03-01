@@ -33,7 +33,7 @@ export const PoolTableHeader = () => {
       <PoolTd type="allocation">
         <div className={classes.item}>
           ALLOCATION&nbsp;
-          <Tooltip title="This is lorem ipsum sit dolor allocation. Lorem allocation ipsum.">
+          <Tooltip title="The ratio of each LP asset required to deposit in USD terms">
             <img alt="question" src="/assets/icons/question.svg" />
           </Tooltip>
         </div>
@@ -51,9 +51,7 @@ export const PoolTableHeader = () => {
         </div>
       </PoolTd>
       <PoolTd type="program">
-        <div className={classes.itemAlignRight}>
-          PROGRAM
-        </div>
+        <div className={classes.itemAlignRight}>PROGRAM</div>
       </PoolTd>
       <PoolTd type="ending">
         <div className={classes.itemAlignRight}>

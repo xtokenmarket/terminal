@@ -62,6 +62,7 @@ const CreatePool = () => {
   const [state, setState] = useState<IState>(initialState)
 
   const onBack = () => {
+    setState(initialState)
     history.push('/terminal/discover')
   }
 

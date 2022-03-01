@@ -3,7 +3,7 @@ import { Button, IconButton, makeStyles, Typography } from '@material-ui/core'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { TokenBalanceInput } from 'components'
 import { DefaultReadonlyProvider, knownTokens } from 'config/networks'
-import { WarningInfo } from '../../../../../../components/Common/WarningInfo'
+import { WarningInfo } from 'components/Common/WarningInfo'
 import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef, useTokenBalance } from 'helpers'
 import { IDepositState } from 'pages/PoolDetails/components'
@@ -11,6 +11,9 @@ import { CLRService } from 'services'
 import { ITerminalPool } from 'types'
 import { ZERO } from 'utils/number'
 import { OutputEstimation, OutputEstimationInfo } from '..'
+import { useEffect } from 'react'
+import _ from 'lodash'
+import { formatUnits } from 'ethers/lib/utils'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -64,7 +67,7 @@ interface IProps {
   poolData: ITerminalPool
 }
 
-let timer: any = undefined
+const timer: any = undefined
 
 export const InputSection = (props: IProps) => {
   const classes = useStyles()
@@ -110,8 +113,15 @@ export const InputSection = (props: IProps) => {
           amount1Estimation,
           lpEstimation,
           totalLiquidity,
-          amount0: amount0.isZero() ? amount0Estimation : amount0,
-          amount1: amount0.isZero() ? amount1 : amount1Estimation,
+        })
+      }
+      if (amount0.isZero()) {
+        updateState({
+          amount0: amount0Estimation,
+        })
+      } else {
+        updateState({
+          amount1: amount1Estimation,
         })
       }
     } catch (error) {
@@ -126,13 +136,15 @@ export const InputSection = (props: IProps) => {
   }
 
   const handleAmountsChange = (amount0: BigNumber, amount1: BigNumber) => {
-    updateState({ amount0, amount1 })
-    if (timer) {
-      clearTimeout(timer)
+    if (amount0.isZero() && amount1.isZero()) {
+      updateState({ amount0, amount1 })
+    } else if (amount0.isZero()) {
+      updateState({ amount1 })
+    } else {
+      updateState({ amount0 })
     }
-    timer = setTimeout(() => {
-      loadEstimations(amount0, amount1)
-    }, 1000)
+
+    loadEstimations(amount0, amount1)
   }
 
   const onClickBuy = () => {
@@ -144,6 +156,26 @@ export const InputSection = (props: IProps) => {
     const newWindow = window.open(wethUrl, '_blank', 'noopener,noreferrer')
     if (newWindow) newWindow.opener = null
   }
+
+  useEffect(() => {
+    const newErrors = [...depositState.errorMessage]
+    const newErrorA = depositState.amount0.gt(balance0)
+      ? `${poolData.token0.symbol} input exceeds balance`
+      : null
+    newErrors.splice(0, 1, newErrorA)
+
+    const newErrorB = depositState.amount1.gt(balance1)
+      ? `${poolData.token1.symbol} input exceeds balance`
+      : null
+    newErrors.splice(1, 1, newErrorB)
+
+    if (!_.isEqual(depositState.errorMessage, newErrors)) {
+      updateState({
+        ...depositState,
+        errorMessage: newErrors,
+      })
+    }
+  }, [balance0, balance1, depositState])
 
   return (
     <div className={classes.root}>
@@ -168,11 +200,12 @@ export const InputSection = (props: IProps) => {
             token={poolData.token1}
           />
         </div>
-        {depositState.errorMessage && (
+
+        {depositState.errorMessage.some((x) => x) && (
           <WarningInfo
             className={classes.warning}
             title="Warning"
-            description={depositState.errorMessage}
+            description={depositState.errorMessage.join('; ')}
           />
         )}
       </div>

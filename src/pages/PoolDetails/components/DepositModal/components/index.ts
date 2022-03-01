@@ -1,4 +1,3 @@
-export * from './ConfirmSection'
 export * from './DepositSection'
 export * from './InitSection'
 export * from './InputSection'

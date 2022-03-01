@@ -14,12 +14,22 @@ export const formatBigNumber = (
   precision = 2
 ): string => Number(formatUnits(value, decimals)).toFixed(precision)
 
-export const numberWithCommas = (x: number | string) => {
+export const numberWithCommas = (
+  x: string,
+  decimals = 2,
+  forcePrecision = false
+) => {
   if (!x) return '0'
-  const splits = x.toString().split('.')
-  const first = splits[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
-  if (splits.length === 1) return first
-  return [first, splits[1]].join('.')
+  const n = Number(x)
+  if (n < 1000) {
+    return Number.isInteger(n) && !forcePrecision ? x : n.toFixed(decimals)
+  }
+  let formattedNumber = n.toFixed(decimals).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+  const splitArray = formattedNumber.split('.')
+  if (splitArray.length > 1) {
+    formattedNumber = splitArray[0]
+  }
+  return formattedNumber
 }
 
 export const formatToShortNumber = (number: string, decimals = 2): string => {
@@ -158,3 +168,14 @@ export const waitSeconds = (sec?: number) =>
   new Promise((resolve) => setTimeout(resolve, (sec || 1) * 1000))
 
 export const getCurrentTimeStamp = () => Math.floor(Date.now() / 1000)
+
+export const getTotalTokenPrice = (
+  amount: BigNumber,
+  decimal: number,
+  price: string
+) => {
+  const totalPrice =
+    Number(formatUnits(amount, decimal).toString()) * Number(price)
+
+  return totalPrice.toFixed(2)
+}

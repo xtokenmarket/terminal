@@ -88,7 +88,7 @@ export const InputSection: React.FC<IProps> = ({
         </Typography>
         <Typography className={cl.description}>
           {isCreatePool
-            ? 'Select a reward token and adjust the settings.'
+            ? 'Select rewards token(s) and set vesting period'
             : 'Configure rewards period and token amounts'}
         </Typography>
         <IconButton className={cl.closeButton} onClick={onClose}>
