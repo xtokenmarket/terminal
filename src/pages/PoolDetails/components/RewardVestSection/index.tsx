@@ -96,18 +96,19 @@ interface IProps {
   poolAddress: string
 }
 
-export const RewardVestSection: React.FC<IProps> = ({
-  poolAddress,
-}) => {
+export const RewardVestSection: React.FC<IProps> = ({ poolAddress }) => {
   const cl = useStyles()
   const { loading, pool } = useTerminalPool(undefined, poolAddress)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  console.log('pool:', pool)
 
   let shouldDisplay = true
   if (pool) {
-    const hasNoVisibleVesting = (!pool.vestingTokens || pool.vestingTokens.every(token => token.amount.isZero))
-    const hasNoVisibleRewards = (!pool.earnedTokens || pool.earnedTokens.every(token => token.amount.isZero()))
+    const hasNoVisibleVesting =
+      !pool.vestingTokens ||
+      pool.vestingTokens.every((token) => token.amount.isZero)
+    const hasNoVisibleRewards =
+      !pool.earnedTokens ||
+      pool.earnedTokens.every((token) => token.amount.isZero())
 
     if (hasNoVisibleRewards && hasNoVisibleVesting) {
       shouldDisplay = false
@@ -118,20 +119,22 @@ export const RewardVestSection: React.FC<IProps> = ({
 
   const renderVestingTokens = () => {
     if (!pool || !pool.vestingTokens) {
-      return <Typography variant="h5" className={cl.whiteText}>N/A</Typography>
+      return (
+        <Typography variant="h5" className={cl.whiteText}>
+          N/A
+        </Typography>
+      )
     }
     return (
       <>
-        {pool.vestingTokens.map(token => {
+        {pool.vestingTokens.map((token) => {
           const amount = Number(formatEther(token.amount))
           const price = toUsd(amount * Number(token.price))
           return (
             <div key={token.symbol} className={cl.vestingWrapper}>
               <div className={cl.symbolWrapper}>
                 <img className={cl.icon} alt="token" src={token.image} />
-                <Typography className={cl.symbol}>
-                  {token.symbol}
-                </Typography>
+                <Typography className={cl.symbol}>{token.symbol}</Typography>
               </div>
               <div className={cl.valueWrapper}>
                 <Typography className={cl.value}>
@@ -150,13 +153,17 @@ export const RewardVestSection: React.FC<IProps> = ({
 
   const renderVestingPeriods = () => {
     if (!pool || !pool.vestingTokens) {
-      return <Typography variant="h5" className={cl.whiteText}>N/A</Typography>
+      return (
+        <Typography variant="h5" className={cl.whiteText}>
+          N/A
+        </Typography>
+      )
     }
     const formatDurationUnits = (duration: string[]) => {
       const primary = duration[0] || ''
       const rest = duration.slice(1, duration.length)
       rest.splice(0, 0, '')
-      return { primary, rest: rest.join(' — ')}
+      return { primary, rest: rest.join(' — ') }
     }
     return (
       <>
@@ -171,12 +178,8 @@ export const RewardVestSection: React.FC<IProps> = ({
           }
           return (
             <div key={i} className={cl.vestingWrapper}>
-              <Typography className={cl.whiteText}>
-                {primary}
-              </Typography>
-              <Typography className={cl.lightPurpletext}>
-                {rest}
-              </Typography>
+              <Typography className={cl.whiteText}>{primary}</Typography>
+              <Typography className={cl.lightPurpletext}>{rest}</Typography>
             </div>
           )
         })}
@@ -186,39 +189,38 @@ export const RewardVestSection: React.FC<IProps> = ({
 
   const renderRewardsItems = () => (
     <div>
-      {pool && pool.earnedTokens.map((token, i) => {
-        const amount = Number(formatEther(token.amount))
-        const price = toUsd(amount * Number(token.price))
-        return (
-          <div key={i} className={cl.itemWrapper}>
-            <div className={cl.symbolWrapper}>
-              <img className={cl.icon} alt="token" src={token.image} />
-              <Typography className={cl.symbol}>
-                {token.symbol}
-              </Typography>
+      {pool &&
+        pool.earnedTokens.map((token, i) => {
+          const amount = Number(formatEther(token.amount))
+          const price = toUsd(amount * Number(token.price))
+          return (
+            <div key={i} className={cl.itemWrapper}>
+              <div className={cl.symbolWrapper}>
+                <img className={cl.icon} alt="token" src={token.image} />
+                <Typography className={cl.symbol}>{token.symbol}</Typography>
+              </div>
+              <div className={cl.rewardValueWrapper}>
+                <Typography className={cl.value}>
+                  {amount.toFixed(4)}
+                </Typography>
+                <Typography className={cl.lightPurpletext}>
+                  ~ {price}
+                </Typography>
+                <div style={{ flex: 8 }} />
+                {i === 0 && (
+                  <Button
+                    className={cl.button}
+                    color="secondary"
+                    variant="contained"
+                    onClick={() => setIsModalOpen(true)}
+                  >
+                    CLAIM ALL REWARDS
+                  </Button>
+                )}
+              </div>
             </div>
-            <div className={cl.rewardValueWrapper}>
-              <Typography className={cl.value}>
-                {amount.toFixed(4)}
-              </Typography>
-              <Typography className={cl.lightPurpletext}>
-                ~ {price}
-              </Typography>
-              <div style={{flex: 8}} />
-              {i === 0 && (
-                <Button
-                  className={cl.button}
-                  color="secondary"
-                  variant="contained"
-                  onClick={() => setIsModalOpen(true)}
-                >
-                  CLAIM ALL REWARDS
-                </Button>
-              )}
-            </div>
-          </div>
-        )
-      })}
+          )
+        })}
     </div>
   )
 
@@ -247,16 +249,12 @@ export const RewardVestSection: React.FC<IProps> = ({
           <div className={cl.block}>
             <Grid container spacing={2}>
               <Grid item xs={12} md={6}>
-                <Typography className={cl.title}>
-                  TOTAL VESTING
-                </Typography>
+                <Typography className={cl.title}>TOTAL VESTING</Typography>
                 {renderVestingTokens()}
               </Grid>
 
               <Grid item xs={12} md={6}>
-                <Typography className={cl.title}>
-                  REMAINING PERIOD
-                </Typography>
+                <Typography className={cl.title}>REMAINING PERIOD</Typography>
                 {renderVestingPeriods()}
               </Grid>
             </Grid>
@@ -265,9 +263,7 @@ export const RewardVestSection: React.FC<IProps> = ({
         <Grid item xs={12} md={6}>
           <div className={cl.block}>
             <div className={cl.titleWrapper}>
-              <Typography className={cl.title}>
-                CLAIMABLE REWARDS
-              </Typography>
+              <Typography className={cl.title}>CLAIMABLE REWARDS</Typography>
               <img
                 className={cl.icon}
                 alt="token"
