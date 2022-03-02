@@ -122,12 +122,12 @@ export const OutputEstimation = (props: IProps) => {
                   4
                 )}
                 &nbsp;
-                {rewardToken.price && (
+                {rewardToken.price && earned.length > 0 && (
                   <span>
                     ~ $
                     {getTotalTokenPrice(
                       earned[index],
-                      rewardToken.decimals,
+                      Number(rewardToken.decimals),
                       rewardToken.price
                     )}
                   </span>

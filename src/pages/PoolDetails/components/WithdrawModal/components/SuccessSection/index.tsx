@@ -60,10 +60,10 @@ export const SuccessSection = (props: IProps) => {
           src="/assets/icons/confirmed.png"
           className={classes.img}
         />
-        <Typography className={classes.title}>Deposit confirmed!</Typography>
+        <Typography className={classes.title}>Withdraw confirmed!</Typography>
         <Typography className={classes.description}>
-          You have successfully finished your deposit process! Below you can see
-          details of your transaction.
+          You have successfully finished your withdraw process! Below you can
+          see details of your transaction.
         </Typography>
       </div>
       <OutputEstimation
