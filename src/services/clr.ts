@@ -239,7 +239,7 @@ class CLRService {
     let resolved = false
     return new Promise((resolve) => {
       this.contract.on(
-        'ClaimedReward',
+        'RewardClaimed',
         (clrPool: string, sender: any, ...rest) => {
           if (account.toLowerCase() === sender.toLowerCase()) {
             if (!resolved) {
@@ -257,6 +257,13 @@ class CLRService {
         }
       })
     })
+  }
+
+  earned = async (
+    account: Maybe<string>,
+    tokenAddress: string,
+  ): Promise<BigNumber> => {
+    return this.contract.earned(account, tokenAddress)
   }
 }
 

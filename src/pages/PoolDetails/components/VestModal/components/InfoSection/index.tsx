@@ -51,9 +51,14 @@ interface IProps {
 
 let timerId: any
 
-export const InfoSection = (props: IProps) => {
-  const classes = useStyles()
-  const { onNext, onClose, vestState, updateState, poolData } = props
+export const InfoSection: React.FC<IProps> = ({
+  onNext,
+  onClose,
+  vestState,
+  updateState,
+  poolData,
+}) => {
+  const cl = useStyles()
   const { account, library: provider, networkId } = useConnectedWeb3Context()
   const isMountedRef = useIsMountedRef()
   const { multicall } = useServices()
@@ -200,32 +205,24 @@ export const InfoSection = (props: IProps) => {
     }, 800)
   }
 
-  const disabled = (() => {
-    for (let index = 0; index < vestState.earned.length; index++) {
-      const element = vestState.earned[index]
-      if (!element.isZero()) {
-        return false
-      }
-    }
-    return true
-  })()
+  const disabled = vestState.earned.some(el => el.isZero())
 
   return (
-    <div className={classes.root}>
-      <div className={classes.header}>
-        <Typography className={classes.title}>Vest tokens</Typography>
-        <IconButton className={classes.closeButton} onClick={onClose}>
+    <div className={cl.root}>
+      <div className={cl.header}>
+        <Typography className={cl.title}>Vest tokens</Typography>
+        <IconButton className={cl.closeButton} onClick={onClose}>
           <CloseOutlinedIcon />
         </IconButton>
       </div>
       <OutputEstimation poolData={poolData} earned={vestState.earned} />
-      <div className={classes.actions}>
+      <div className={cl.actions}>
         <Button
           color="primary"
           variant="contained"
           fullWidth
           disabled={disabled}
-          className={classes.deposit}
+          className={cl.deposit}
           onClick={() => {
             updateState({ withdrawOnly: false })
             onNext()

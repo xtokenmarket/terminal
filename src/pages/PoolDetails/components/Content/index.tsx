@@ -1,6 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Button, Grid, makeStyles } from '@material-ui/core'
-import clsx from 'clsx'
 import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef } from 'helpers'
 import moment from 'moment'
@@ -8,7 +7,6 @@ import { useEffect, useState } from 'react'
 import { ERC20Service } from 'services'
 import { ITerminalPool } from 'types'
 import {
-  formatToShortNumber,
   getCurrentTimeStamp,
   getTimeDurationStr,
   numberWithCommas,
@@ -20,59 +18,10 @@ import {
   DepositModal,
   HistorySection,
   InfoSection,
-  VestModal,
   WithdrawModal,
 } from '../index'
 import { RewardVestSection } from '../RewardVestSection'
-
-// Mock data
-
-const rewards = [
-  {
-    icon: '/assets/tokens/xtk.png',
-    symbol: 'XTK',
-    value: '247.3053',
-    rate: '309,73',
-  },
-  {
-    icon: '/assets/tokens/weth.png',
-    symbol: 'WETH',
-    value: '0.3053',
-    rate: '1409,73',
-  },
-]
-
-const vesting = [
-  {
-    icon: '/assets/tokens/xtk.png',
-    symbol: 'XTK',
-    value: '247.3053',
-    rate: '309,73',
-  },
-  {
-    icon: '/assets/tokens/weth.png',
-    symbol: 'WETH',
-    value: '0.3053',
-    rate: '1409,73',
-  },
-]
-
-const remainingPeriod = [
-  {
-    period: '20 days',
-    time: '— 10 hours — 17 minutes',
-  },
-  {
-    period: '4 days ',
-    time: '— 10 hours — 17 minutes',
-  },
-]
-
-const rewardVestData = {
-  remainingPeriod,
-  vesting,
-  rewards,
-}
+import { VestAllModal } from '../VestAllModal'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -235,8 +184,6 @@ export const Content = (props: IProps) => {
   } = useConnectedWeb3Context()
   const isMountedRef = useIsMountedRef()
 
-  // console.log('poolData', poolData)
-
   const timestamp = getCurrentTimeStamp()
   const isManageable = [poolData.owner, poolData.manager]
     .map((e) => e.toLowerCase())
@@ -288,6 +235,12 @@ export const Content = (props: IProps) => {
     loadPersonalInfo()
   }, [account, networkId])
 
+  const shouldDisplayVestButton = (
+    isDeposited &&
+    (Number(poolData.rewardState.vesting) > 0) &&
+    poolData.vestingTokens?.some(token => token.vestedAmount.gt(0) && token.durationRemaining.length === 0)
+  )
+
   return (
     <div className={classes.root}>
       {state.depositVisible && (
@@ -323,14 +276,12 @@ export const Content = (props: IProps) => {
         />
       )}
 
-      {state.vestVisible && (
-        <VestModal
+      {poolData.vestingTokens && (
+        <VestAllModal
+          open={state.vestVisible}
           onClose={() => setVestModalVisible(false)}
-          onSuccess={async () => {
-            setVestModalVisible(false)
-            await props.reloadTerminalPool(true)
-          }}
-          poolData={poolData}
+          vestingTokens={poolData.vestingTokens}
+          poolAddress={poolData.address}
         />
       )}
 
@@ -427,7 +378,7 @@ export const Content = (props: IProps) => {
             WITHDRAW
           </Button>
 
-          {isDeposited && Number(vesting) > 0 && (
+          {shouldDisplayVestButton && (
             <Button
               className={classes.button}
               color="secondary"
@@ -469,7 +420,7 @@ export const Content = (props: IProps) => {
           )}
         </div>
 
-        <RewardVestSection data={rewardVestData} />
+        <RewardVestSection poolAddress={props.poolData.address} />
 
         <HistorySection pool={poolData} />
       </div>

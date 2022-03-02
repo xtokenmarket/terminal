@@ -1,12 +1,9 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { makeStyles, Typography } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
-import { useIsMountedRef, useServices } from 'helpers'
+import { useServices } from 'helpers'
 import { IVestState } from 'pages/PoolDetails/components'
 import { useEffect, useState } from 'react'
-import { CLRService } from 'services'
 import { ITerminalPool } from 'types'
-import { ZERO } from 'utils/number'
 import { ActionStepRow, ViewTransaction, WarningInfo } from '..'
 
 const useStyles = makeStyles((theme) => ({
@@ -68,7 +65,12 @@ interface IState {
   step: number
 }
 
-export const VestSection = (props: IProps) => {
+export const VestSection: React.FC<IProps> = ({
+  onNext,
+  vestState,
+  poolData,
+  updateState,
+}) => {
   const classes = useStyles()
   const [state, setState] = useState<IState>({
     vestDone: false,
@@ -76,8 +78,7 @@ export const VestSection = (props: IProps) => {
     vestTx: '',
     step: 1,
   })
-  const { onNext, vestState, poolData, updateState } = props
-  const { account, networkId, library: provider } = useConnectedWeb3Context()
+  const { account, library: provider } = useConnectedWeb3Context()
 
   useEffect(() => {
     if (state.vestDone) {
@@ -87,45 +88,26 @@ export const VestSection = (props: IProps) => {
     }
   }, [state.vestDone])
 
+  const { rewardEscrow } = useServices()
+
   const onVest = async () => {
-    if (!account || !provider) {
-      return
-    }
-    try {
-      setState((prev) => ({
-        ...prev,
-        vesting: true,
-      }))
+    if (!account || !provider) return
+    setState((prev) => ({
+      ...prev,
+      vesting: true,
+    }))
+    const { address, rewardState } = poolData
+    const rewardTokenAddresses = rewardState.tokens.map(t => t.address)
 
-      const clr = new CLRService(provider, account, poolData.address)
-      const txId = await clr.claimReward()
+    const txId = await rewardEscrow.vestAll(address, rewardTokenAddresses)
+    const finalTxId = await rewardEscrow.waitUntilVestAll(account, txId)
 
-      const finalTxId = await clr.waitUntilClaimReward(account, txId)
-
-      const claimInfo = await clr.parseClaimTx(finalTxId)
-
-      const claimedEarn: BigNumber[] = []
-
-      poolData.rewardState.tokens.forEach((rewardToken) => {
-        const rewardAmount =
-          claimInfo[rewardToken.address.toLowerCase()] || ZERO
-        claimedEarn.push(rewardAmount)
-      })
-
-      setState((prev) => ({
-        ...prev,
-        vesting: false,
-        vestTx: txId,
-        vestDone: true,
-        claimedEarn,
-      }))
-    } catch (error) {
-      console.error(error)
-      setState((prev) => ({
-        ...prev,
-        vesting: false,
-      }))
-    }
+    setState((prev) => ({
+      ...prev,
+      vesting: false,
+      vestTx: txId,
+      vestDone: true,
+    }))
   }
 
   return (
@@ -140,7 +122,7 @@ export const VestSection = (props: IProps) => {
         <WarningInfo
           className={classes.warning}
           title="Warning"
-          description="Please, don’t close this window until the process is complete!"
+          description="Please, don't close this window until the process is complete!"
         />
         <div className={classes.actions}>
           <ActionStepRow

@@ -1,7 +1,14 @@
+import { useState } from 'react'
+import { formatEther } from 'ethers/lib/utils'
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
+import { SimpleLoader } from 'components'
+import { useTerminalPool } from 'helpers'
+import { ClaimRewardsModal } from './ClaimRewardsModal'
+import { toUsd } from 'utils/number'
 
 const useStyles = makeStyles((theme) => ({
   block: {
+    height: '100%',
     background: theme.colors.primary400,
     padding: 24,
     [theme.breakpoints.down('sm')]: {
@@ -31,12 +38,12 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.primary100,
     fontSize: 12,
     fontWeight: 400,
+    margin: theme.spacing(0, 1),
   },
   whiteText: {
     color: theme.colors.white,
     fontSize: 12,
     fontWeight: 400,
-    merginRight: 10,
   },
   wrapper: {
     display: 'flex',
@@ -52,12 +59,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     minHeight: 35,
-  },
-  button: {
-    flex: 1,
-    height: 20,
-    margin: '0 3px',
-    fontSize: 12,
   },
   icon: {
     widows: 14,
@@ -75,148 +76,208 @@ const useStyles = makeStyles((theme) => ({
   },
   rewardValueWrapper: {
     display: 'flex',
+    alignItems: 'center',
     flex: 8,
     [theme.breakpoints.down('sm')]: {
       flex: 3,
     },
   },
-  buttonWrapper: {
-    display: 'flex',
-    flex: 1,
+  button: {
+    height: 20,
+    margin: '0 3px',
+    fontSize: 12,
   },
   titleWrapper: {
     display: 'flex',
   },
 }))
 
-interface Item {
-  icon: string
-  symbol: string
-  value: string
-  rate: string
-}
-
-interface RemainingPeriod {
-  period: string
-  time: string
-}
-
 interface IProps {
-  data: Data
+  poolAddress: string
 }
 
-interface Data {
-  remainingPeriod: RemainingPeriod[]
-  vesting: Item[]
-  rewards: Item[]
-}
+export const RewardVestSection: React.FC<IProps> = ({
+  poolAddress,
+}) => {
+  const cl = useStyles()
+  const { loading, pool } = useTerminalPool(undefined, poolAddress)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  console.log('pool:', pool)
 
-export const RewardVestSection = (props: IProps) => {
-  const classes = useStyles()
-  const { remainingPeriod, vesting, rewards } = props.data
+  let shouldDisplay = true
+  if (pool) {
+    const hasNoVisibleVesting = (!pool.vestingTokens || pool.vestingTokens.every(token => token.amount.isZero))
+    const hasNoVisibleRewards = (!pool.earnedTokens || pool.earnedTokens.every(token => token.amount.isZero()))
 
-  const renderRewardsItem = (item: Item) => {
+    if (hasNoVisibleRewards && hasNoVisibleVesting) {
+      shouldDisplay = false
+    }
+  }
+
+  if (!shouldDisplay) return null
+
+  const renderVestingTokens = () => {
+    if (!pool || !pool.vestingTokens) {
+      return <Typography variant="h5" className={cl.whiteText}>N/A</Typography>
+    }
     return (
-      <div key={item.symbol} className={classes.itemWrapper}>
-        <div className={classes.symbolWrapper}>
-          <img className={classes.icon} alt="token" src={item.icon} />
-          <Typography className={classes.symbol}>{item.symbol}</Typography>
-        </div>
-        <div className={classes.rewardValueWrapper}>
-          <Typography className={classes.value}>{item.value}</Typography>
-          <Typography
-            className={classes.lightPurpletext}
-          >{`~ $ ${item.rate}`}</Typography>
-        </div>
-
-        <div className={classes.buttonWrapper}>
-          <Button
-            className={classes.button}
-            color="secondary"
-            variant="contained"
-          >
-            CLAIM
-          </Button>
-          <Button
-            className={classes.button}
-            color="secondary"
-            variant="contained"
-          >
-            VEST
-          </Button>
-        </div>
-      </div>
+      <>
+        {pool.vestingTokens.map(token => {
+          const amount = Number(formatEther(token.amount))
+          const price = toUsd(amount * Number(token.price))
+          return (
+            <div key={token.symbol} className={cl.vestingWrapper}>
+              <div className={cl.symbolWrapper}>
+                <img className={cl.icon} alt="token" src={token.image} />
+                <Typography className={cl.symbol}>
+                  {token.symbol}
+                </Typography>
+              </div>
+              <div className={cl.valueWrapper}>
+                <Typography className={cl.value}>
+                  {amount.toFixed(4)}
+                </Typography>
+                <Typography className={cl.lightPurpletext}>
+                  ~ {price}
+                </Typography>
+              </div>
+            </div>
+          )
+        })}
+      </>
     )
   }
 
-  const renderVestingItems = (item: Item) => {
+  const renderVestingPeriods = () => {
+    if (!pool || !pool.vestingTokens) {
+      return <Typography variant="h5" className={cl.whiteText}>N/A</Typography>
+    }
+    const formatDurationUnits = (duration: string[]) => {
+      const primary = duration[0] || ''
+      const rest = duration.slice(1, duration.length)
+      rest.splice(0, 0, '')
+      return { primary, rest: rest.join(' — ')}
+    }
     return (
-      <div className={classes.vestingWrapper}>
-        <div className={classes.symbolWrapper}>
-          <img className={classes.icon} alt="token" src={item.icon} />
-          <Typography className={classes.symbol}>{item.symbol}</Typography>
-        </div>
-        <div className={classes.valueWrapper}>
-          <Typography className={classes.value}>{item.value}</Typography>
-          <Typography
-            className={classes.lightPurpletext}
-          >{`~ $ ${item.rate}`}</Typography>
-        </div>
-      </div>
+      <>
+        {pool.vestingTokens.map((token, i) => {
+          const { primary, rest } = formatDurationUnits(token.durationRemaining)
+          if (token.durationRemaining.length === 0) {
+            return (
+              <div key={i} className={cl.vestingWrapper}>
+                <Typography className={cl.whiteText}>N/A</Typography>
+              </div>
+            )
+          }
+          return (
+            <div key={i} className={cl.vestingWrapper}>
+              <Typography className={cl.whiteText}>
+                {primary}
+              </Typography>
+              <Typography className={cl.lightPurpletext}>
+                {rest}
+              </Typography>
+            </div>
+          )
+        })}
+      </>
     )
   }
 
-  const renderRemainingItems = (item: RemainingPeriod) => {
+  const renderRewardsItems = () => (
+    <div>
+      {pool && pool.earnedTokens.map((token, i) => {
+        const amount = Number(formatEther(token.amount))
+        const price = toUsd(amount * Number(token.price))
+        return (
+          <div key={i} className={cl.itemWrapper}>
+            <div className={cl.symbolWrapper}>
+              <img className={cl.icon} alt="token" src={token.image} />
+              <Typography className={cl.symbol}>
+                {token.symbol}
+              </Typography>
+            </div>
+            <div className={cl.rewardValueWrapper}>
+              <Typography className={cl.value}>
+                {amount.toFixed(4)}
+              </Typography>
+              <Typography className={cl.lightPurpletext}>
+                ~ {price}
+              </Typography>
+              <div style={{flex: 8}} />
+              {i === 0 && (
+                <Button
+                  className={cl.button}
+                  color="secondary"
+                  variant="contained"
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  CLAIM ALL REWARDS
+                </Button>
+              )}
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+
+  if (loading || !pool) {
     return (
-      <div className={classes.vestingWrapper}>
-        <Typography className={classes.whiteText}>{item.period}</Typography>
-        <Typography className={classes.lightPurpletext}>{item.time}</Typography>
-      </div>
+      <Grid container spacing={2}>
+        <Grid item xs={12}>
+          <div className={cl.block}>
+            <SimpleLoader />
+          </div>
+        </Grid>
+      </Grid>
     )
   }
 
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12} md={6}>
-        <div className={classes.block}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
-              <Typography className={classes.title}>
-                {'Total Vesting'.toUpperCase()}
-              </Typography>
-              {vesting.map((vest) => {
-                return renderVestingItems(vest)
-              })}
-            </Grid>
+    <>
+      <ClaimRewardsModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        poolAddress={poolAddress}
+        earnedTokens={pool.earnedTokens}
+      />
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
+          <div className={cl.block}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} md={6}>
+                <Typography className={cl.title}>
+                  TOTAL VESTING
+                </Typography>
+                {renderVestingTokens()}
+              </Grid>
 
-            <Grid item xs={12} md={6}>
-              <Typography className={classes.title}>
-                {'Remaining period'.toUpperCase()}
-              </Typography>
-              {remainingPeriod.map((remainingPeriod) => {
-                return renderRemainingItems(remainingPeriod)
-              })}
+              <Grid item xs={12} md={6}>
+                <Typography className={cl.title}>
+                  REMAINING PERIOD
+                </Typography>
+                {renderVestingPeriods()}
+              </Grid>
             </Grid>
-          </Grid>
-        </div>
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <div className={classes.block}>
-          <div className={classes.titleWrapper}>
-            <Typography className={classes.title}>
-              {'Claimable Rewards'.toUpperCase()}
-            </Typography>
-            <img
-              className={classes.icon}
-              alt="token"
-              src={'/assets/imgs/star.svg'}
-            />
           </div>
-          {rewards.map((item: Item) => {
-            return renderRewardsItem(item)
-          })}
-        </div>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <div className={cl.block}>
+            <div className={cl.titleWrapper}>
+              <Typography className={cl.title}>
+                CLAIMABLE REWARDS
+              </Typography>
+              <img
+                className={cl.icon}
+                alt="token"
+                src={'/assets/imgs/star.svg'}
+              />
+            </div>
+            {renderRewardsItems()}
+          </div>
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   )
 }

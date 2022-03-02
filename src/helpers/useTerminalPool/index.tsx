@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react'
 import { CLRService, ERC20Service } from 'services'
 import { History, ITerminalPool, IToken } from 'types'
 import { BigNumber } from '@ethersproject/bignumber'
-import { formatBigNumber } from 'utils'
+import { formatBigNumber, getCurrentTimeStamp, getTimeRemainingUnits } from 'utils'
 import { ERewardStep, Network } from 'utils/enums'
 import { formatDuration, ONE_ETHER } from 'utils/number'
 import _ from 'lodash'
@@ -210,6 +210,44 @@ export const useTerminalPool = (
         )
       }
 
+      let vestingTokens = []
+      if (pool.vestingPeriod !== '0' && !!poolAddress && !!account) {
+        vestingTokens = await Promise.all(
+          pool.rewardTokens.map(async (token: any) => {
+            const { timestamp, amount } = await rewardEscrow.getNextVestingEntry(
+              poolAddress,
+              token.address,
+              account,
+            )
+            const now = getCurrentTimeStamp()
+            const diff = (timestamp - now) * 1000
+            const durationRemaining = getTimeRemainingUnits(diff)
+            const vestedAmount = await rewardEscrow.getVestedBalance(
+              poolAddress,
+              token.address,
+              account,
+            )
+            return {
+              amount,
+              durationRemaining,
+              vestedAmount,
+              ...token,
+            }
+          })
+        )
+      }
+
+      const earnedTokens = await Promise.all(
+        pool.rewardTokens.map(async (token: any) => {
+          const clr = new CLRService(provider, account, pool.poolAddress)
+          const amount = await clr.earned(account, token.address)
+          return {
+            ...token,
+            amount,
+          }
+        })
+      )
+
       // Fetch history only on PoolDetails page
       let history: History[] = []
       if (isPoolDetails) {
@@ -279,6 +317,8 @@ export const useTerminalPool = (
           tradeFee: pool.tradeFee,
           tvl,
           uniswapPool: pool.uniswapPool,
+          vestingTokens: vestingTokens.length ? vestingTokens : undefined,
+          earnedTokens,
           history,
         },
       })

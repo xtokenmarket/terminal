@@ -8,6 +8,7 @@ import { WarningInfo } from 'components/Common/WarningInfo'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { getContractAddress } from 'config/networks'
 import { ERC20Service } from 'services'
+import { BigNumber } from 'ethers'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -237,6 +238,16 @@ export const CreatePoolSection = (props: IProps) => {
         isCreatingPool: true,
       }))
 
+      // TODO: can delete later
+      // this lets us make a pool that vests in 50 mins, for testing
+      
+      // const tempPoolData = {
+      //   ...poolData,
+      //   rewardState: {
+      //     ...poolData.rewardState,
+      //     vesting: '0.005',
+      //   },
+      // }
       const txId = await lmService.deployIncentivizedPool(poolData)
       const finalTxId = await lmService.waitUntilTerminalPoolCreated(
         poolData.token0.address,
