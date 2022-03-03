@@ -282,6 +282,7 @@ export const useTerminalPool = (
             rewardAmount: x.args?.rewardAmount || BigNumber.from(0),
             symbol: rewardToken ? rewardToken.symbol : '',
             decimals: rewardToken ? Number(rewardToken.decimals) : 0,
+            reward: x.args?.reward,
           }
         })
 
