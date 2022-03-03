@@ -1,6 +1,5 @@
 import { BigNumber, utils } from 'ethers'
 import moment from 'moment'
-import { ONE_WEEK_IN_TIME } from './number'
 
 const { formatUnits } = utils
 
@@ -131,22 +130,22 @@ export const getTimeDurationStr = (secs: number) => {
 
 export const getTimeRemainingUnits = (time: number, unitPrecision = 3) => {
   const duration = moment.duration(time)
-  
+
   return [
     { years: duration.years() },
     { months: duration.months() },
     { weeks: duration.weeks() },
     // for some reason, moment keeps days and weeks irrespective of each other
-    { days: Math.max(duration.days() - (duration.weeks() * 7), 0) },
+    { days: Math.max(duration.days() - duration.weeks() * 7, 0) },
     { hours: duration.hours() },
     { minutes: duration.minutes() },
   ]
-  .filter(unit => Object.values(unit)[0] > 0)
-  .map(unit => {
-    const [key, value] = Object.entries(unit)[0]
-    return value.toString() + ' ' + (value === 1 ? key.slice(0, -1) : key)
-  })
-  .filter((_, i) => i < unitPrecision)
+    .filter((unit) => Object.values(unit)[0] > 0)
+    .map((unit) => {
+      const [key, value] = Object.entries(unit)[0]
+      return value.toString() + ' ' + (value === 1 ? key.slice(0, -1) : key)
+    })
+    .filter((_, i) => i < unitPrecision)
 }
 
 export const getFloatDecimalNumber = (num: string, decimals = 2) => {

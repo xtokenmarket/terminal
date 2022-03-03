@@ -84,7 +84,7 @@ export const RewardTokensTable: React.FC<IProps> = ({
                 </TableCell>
                 <TableCell>
                   <Typography variant="h5" className={cl.bodyRowText}>
-                    {vesting ? `${vesting} week(s)` : '-'}
+                    {Number(vesting) ? `${vesting} week(s)` : '-'}
                   </Typography>
                 </TableCell>
               </TableRow>

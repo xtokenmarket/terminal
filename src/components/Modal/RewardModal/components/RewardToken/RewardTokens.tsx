@@ -66,7 +66,7 @@ export const RewardTokens: React.FC<IProps> = ({
   ) => {
     const numAmount = Number(formatEther(amount))
     const numBalance = Number(formatEther(userBalance))
-    const exceedsBalance = numBalance < ((1 + rewardFeePercent) * numAmount)
+    const exceedsBalance = numBalance < (1 + rewardFeePercent) * numAmount
     const isZero = amount.isZero()
     const newErrors = errors
 
