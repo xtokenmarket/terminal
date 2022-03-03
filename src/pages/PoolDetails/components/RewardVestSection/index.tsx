@@ -2,9 +2,9 @@ import { useState } from 'react'
 import { formatEther } from 'ethers/lib/utils'
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { SimpleLoader } from 'components'
-import { useTerminalPool } from 'helpers'
 import { ClaimRewardsModal } from './ClaimRewardsModal'
 import { toUsd } from 'utils/number'
+import { ITerminalPool } from 'types'
 
 const useStyles = makeStyles((theme) => ({
   block: {
@@ -93,12 +93,12 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  poolAddress: string
+  pool: ITerminalPool
 }
 
-export const RewardVestSection: React.FC<IProps> = ({ poolAddress }) => {
+export const RewardVestSection: React.FC<IProps> = ({ pool }) => {
   const cl = useStyles()
-  const { loading, pool } = useTerminalPool(undefined, poolAddress)
+
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   let shouldDisplay = true
@@ -224,24 +224,12 @@ export const RewardVestSection: React.FC<IProps> = ({ poolAddress }) => {
     </div>
   )
 
-  if (loading || !pool) {
-    return (
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <div className={cl.block}>
-            <SimpleLoader />
-          </div>
-        </Grid>
-      </Grid>
-    )
-  }
-
   return (
     <>
       <ClaimRewardsModal
         open={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        poolAddress={poolAddress}
+        poolAddress={pool.address}
         earnedTokens={pool.earnedTokens}
       />
       <Grid container spacing={2}>

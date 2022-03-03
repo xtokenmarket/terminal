@@ -3,7 +3,7 @@ import { makeStyles, TextField, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import { TokenIcon } from 'components'
 import { ethers } from 'ethers'
-import { useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import useCommonStyles from 'style/common'
 import { IToken } from 'types'
 import { formatBigNumber } from 'utils'
@@ -64,6 +64,8 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 4,
   },
   balance: {
+    cursor: 'pointer',
+    display: 'inline-block',
     fontSize: 12,
     color: theme.colors.primary100,
     marginTop: 8,
@@ -81,37 +83,39 @@ interface IProps {
   max: BigNumber
 }
 
-interface IState {
-  amount: string
-}
-
 export const LPTokenAmountInput = (props: IProps) => {
   const { tokens, onChange, lpToken, max } = props
   const classes = useStyles()
   const commonClasses = useCommonStyles()
 
-  const [state, setState] = useState<IState>({ amount: '' })
+  const [amount, setAmount] = useState('')
+
   useEffect(() => {
     if (
-      !ethers.utils
-        .parseUnits(state.amount || '0', lpToken.decimals)
-        .eq(props.value)
+      !ethers.utils.parseUnits(amount || '0', lpToken.decimals).eq(props.value)
     ) {
       if (props.value.isZero()) {
-        setState((prev) => ({ ...prev, amount: '' }))
+        setAmount('')
       } else {
-        setState((prev) => ({
-          ...prev,
-          amount: ethers.utils.formatUnits(
-            props.value || '0',
-            lpToken.decimals
-          ),
-        }))
+        setAmount(
+          ethers.utils.formatUnits(props.value || '0', lpToken.decimals)
+        )
       }
     }
-  }, [props.value, state.amount, lpToken.decimals])
+  }, [props.value, amount, lpToken.decimals])
 
   const lpSymbol = tokens.map((token) => token.symbol.toUpperCase()).join('-')
+
+  const onInputBalance = (e: ChangeEvent<HTMLInputElement>) => {
+    setAmount(e.target.value)
+    onChange(ethers.utils.parseUnits(e.target.value || '0', lpToken.decimals))
+  }
+
+  const onClickAvailable = () => {
+    if (max.isZero()) return
+    setAmount(ethers.utils.formatUnits(max, lpToken.decimals))
+    onChange(max)
+  }
 
   return (
     <div className={clsx(classes.root, props.className)}>
@@ -126,14 +130,8 @@ export const LPTokenAmountInput = (props: IProps) => {
           },
         }}
         className={classes.input}
-        value={state.amount}
-        onChange={(e) => {
-          if (Number(e.target.value) < 0) return
-          setState((prev) => ({ ...prev, amount: e.target.value }))
-          onChange(
-            ethers.utils.parseUnits(e.target.value || '0', lpToken.decimals)
-          )
-        }}
+        value={amount}
+        onChange={onInputBalance}
         variant="outlined"
         fullWidth
         type="number"
@@ -152,7 +150,7 @@ export const LPTokenAmountInput = (props: IProps) => {
           {tokens.map((token) => token.symbol).join('/')}
         </span>
       </div>
-      <Typography className={classes.balance}>
+      <Typography className={classes.balance} onClick={onClickAvailable}>
         Available -{' '}
         <span>
           {formatBigNumber(max, lpToken.decimals, 4)} {lpSymbol}

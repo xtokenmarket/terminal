@@ -235,11 +235,13 @@ export const Content = (props: IProps) => {
     loadPersonalInfo()
   }, [account, networkId])
 
-  const shouldDisplayVestButton = (
+  const shouldDisplayVestButton =
     isDeposited &&
-    (Number(poolData.rewardState.vesting) > 0) &&
-    poolData.vestingTokens?.some(token => token.vestedAmount.gt(0) && token.durationRemaining.length === 0)
-  )
+    Number(poolData.rewardState.vesting) > 0 &&
+    poolData.vestingTokens?.some(
+      (token) =>
+        token.vestedAmount.gt(0) && token.durationRemaining.length === 0
+    )
 
   return (
     <div className={classes.root}>
@@ -420,7 +422,7 @@ export const Content = (props: IProps) => {
           )}
         </div>
 
-        <RewardVestSection poolAddress={props.poolData.address} />
+        <RewardVestSection pool={poolData} />
 
         <HistorySection pool={poolData} />
       </div>

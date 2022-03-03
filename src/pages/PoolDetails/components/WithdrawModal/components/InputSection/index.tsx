@@ -189,7 +189,7 @@ export const InputSection = (props: IProps) => {
       <div className={classes.actions}>
         <WarningInfo
           title="Vesting on rewards"
-          description="If this pool has a vesting period on rewards your rewards will be transfered to vesting contract and will be available to claim in the future."
+          description="If this pool has a vesting period on rewards your rewards will be transferred to vesting contract and will be available to claim in the future."
         />
         <Button
           color="primary"

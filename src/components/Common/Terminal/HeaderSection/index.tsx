@@ -67,7 +67,7 @@ export const HeaderSection: React.FC = () => {
 
   return (
     <div className={cl.root}>
-      <TextField
+      {/*<TextField
         className={cl.input}
         InputProps={{
           disableUnderline: true,
@@ -80,7 +80,7 @@ export const HeaderSection: React.FC = () => {
         variant="standard"
         color="primary"
         placeholder="Search by token name, symbol, or address"
-      />
+      />*/}
       <div className={cl.bottomSection}>
         {/*<FormControlLabel
           className={cl.checkLabel}
