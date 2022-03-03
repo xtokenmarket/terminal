@@ -45,7 +45,7 @@ export const useTerminalPool = (
 ) => {
   const [state, setState] = useState<IState>({ loading: true, pool: undefined })
   const { account, library: provider, networkId } = useConnectedWeb3Context()
-  const { multicall, rewardEscrow } = useServices(network)
+  const { multicall, rewardEscrow, lmService } = useServices(network)
 
   const getTokenDetails = async (addr: string) => {
     try {
@@ -230,29 +230,24 @@ export const useTerminalPool = (
           pool.poolAddress
         )
 
-        const rewardEscrow = new RewardEscrowService(
-          provider || getNetworkProvider(network),
-          account,
-          getContractAddress('rewardEscrow', networkId)
-        )
-
         const depositFilter = clr.contract.filters.Deposit()
         const withdrawFilter = clr.contract.filters.Withdraw()
         const rewardClaimedFilter = clr.contract.filters.RewardClaimed()
-        const RewardAddedFilter = clr.contract.filters.RewardAdded()
+        const InitiatedRewardsFilter =
+          lmService.contract.filters.InitiatedRewardsProgram(poolAddress)
         const VestedFilter = rewardEscrow.contract.filters.Vested(poolAddress)
 
         const [
           depositHistory,
           withdrawHistory,
           rewardClaimedHistory,
-          RewardAddedHistory,
+          InitiatedRewardsHistory,
           VestHistory,
         ] = await Promise.all([
           clr.contract.queryFilter(depositFilter),
           clr.contract.queryFilter(withdrawFilter),
           clr.contract.queryFilter(rewardClaimedFilter),
-          clr.contract.queryFilter(RewardAddedFilter),
+          lmService.contract.queryFilter(InitiatedRewardsFilter),
           rewardEscrow.contract.queryFilter(VestedFilter),
         ])
 
@@ -260,7 +255,7 @@ export const useTerminalPool = (
           ...depositHistory,
           ...withdrawHistory,
           ...rewardClaimedHistory,
-          ...RewardAddedHistory,
+          ...InitiatedRewardsHistory,
           ...VestHistory,
         ]
 
@@ -278,7 +273,7 @@ export const useTerminalPool = (
             RewardClaimed: 'Claim',
             Deposit: 'Deposit',
             Withdraw: 'Withdraw',
-            RewardAdded: 'Reward Initiate',
+            InitiatedRewardsProgram: 'Reward Initiate',
             Vested: 'Vest',
           }
 
@@ -295,9 +290,10 @@ export const useTerminalPool = (
             rewardAmount: x.args?.rewardAmount || BigNumber.from(0),
             symbol: token ? token.symbol : '',
             decimals: token ? Number(token.decimals) : 0,
-            reward: x.args?.reward,
             value: x.args?.value,
             timestamp,
+            totalRewardAmounts: x.args?.totalRewardAmounts,
+            rewardTokens: pool.rewardTokens,
           }
         })
 

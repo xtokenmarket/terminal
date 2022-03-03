@@ -137,7 +137,8 @@ export interface History {
   rewardAmount: BigNumber
   symbol: string, 
   decimals: number
-  reward: BigNumber
   value: BigNumber
   timestamp: number
+  totalRewardAmounts: BigNumber[]
+  rewardTokens: IToken[]
 }
