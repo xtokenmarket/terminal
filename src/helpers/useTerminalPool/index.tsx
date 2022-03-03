@@ -1,12 +1,16 @@
 import Abi from 'abis'
 import axios from 'axios'
 import { POLL_API_DATA, TERMINAL_API_URL } from 'config/constants'
-import { getNetworkProvider, getTokenFromAddress } from 'config/networks'
+import {
+  getNetworkProvider,
+  getTokenFromAddress,
+  getContractAddress,
+} from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import { parseEther } from 'ethers/lib/utils'
 import { useServices } from 'helpers'
 import { useEffect, useState } from 'react'
-import { CLRService, ERC20Service } from 'services'
+import { CLRService, ERC20Service, RewardEscrowService } from 'services'
 import { History, ITerminalPool, IToken } from 'types'
 import { BigNumber } from '@ethersproject/bignumber'
 import {
@@ -226,21 +230,30 @@ export const useTerminalPool = (
           pool.poolAddress
         )
 
+        const rewardEscrow = new RewardEscrowService(
+          provider || getNetworkProvider(network),
+          account,
+          getContractAddress('rewardEscrow', networkId)
+        )
+
         const depositFilter = clr.contract.filters.Deposit()
         const withdrawFilter = clr.contract.filters.Withdraw()
         const rewardClaimedFilter = clr.contract.filters.RewardClaimed()
         const RewardAddedFilter = clr.contract.filters.RewardAdded()
+        const VestedFilter = rewardEscrow.contract.filters.Vested(poolAddress)
 
         const [
           depositHistory,
           withdrawHistory,
           rewardClaimedHistory,
           RewardAddedHistory,
+          VestHistory,
         ] = await Promise.all([
           clr.contract.queryFilter(depositFilter),
           clr.contract.queryFilter(withdrawFilter),
           clr.contract.queryFilter(rewardClaimedFilter),
           clr.contract.queryFilter(RewardAddedFilter),
+          rewardEscrow.contract.queryFilter(VestedFilter),
         ])
 
         const allHistory = [
@@ -248,6 +261,7 @@ export const useTerminalPool = (
           ...withdrawHistory,
           ...rewardClaimedHistory,
           ...RewardAddedHistory,
+          ...VestHistory,
         ]
 
         const blockInfos = await Promise.all(
@@ -255,8 +269,6 @@ export const useTerminalPool = (
         )
 
         const eventHistory = allHistory.map((x, index) => {
-          console.log('x:', x)
-
           const timestamp = blockInfos[index].timestamp
           const time = moment.unix(timestamp).format('LLLL')
 
@@ -267,9 +279,10 @@ export const useTerminalPool = (
             Deposit: 'Deposit',
             Withdraw: 'Withdraw',
             RewardAdded: 'Reward Initiate',
+            Vested: 'Vest',
           }
 
-          const rewardToken = pool.rewardTokens.find(
+          const token = pool.rewardTokens.find(
             (token: IToken) => token.address === x.args?.token
           )
 
@@ -280,9 +293,10 @@ export const useTerminalPool = (
             time,
             tx: x.transactionHash,
             rewardAmount: x.args?.rewardAmount || BigNumber.from(0),
-            symbol: rewardToken ? rewardToken.symbol : '',
-            decimals: rewardToken ? Number(rewardToken.decimals) : 0,
+            symbol: token ? token.symbol : '',
+            decimals: token ? Number(token.decimals) : 0,
             reward: x.args?.reward,
+            value: x.args?.value,
           }
         })
 
