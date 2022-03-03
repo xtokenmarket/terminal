@@ -126,7 +126,17 @@ export const HistorySection = (props: IProps) => {
     if (item.action === 'Reward Initiate') {
       return (
         <td>
-          <span>{numberWithCommas(formatBigNumber(item.reward, 18))}</span>
+          {item.totalRewardAmounts.map((amount, index) => (
+            <>
+              <span>
+                {numberWithCommas(
+                  formatBigNumber(amount, item.rewardTokens[index].decimals)
+                )}
+              </span>{' '}
+              {item.rewardTokens[index].symbol}{' '}
+              {index !== item.totalRewardAmounts.length - 1 && `/ `}
+            </>
+          ))}
         </td>
       )
     }
