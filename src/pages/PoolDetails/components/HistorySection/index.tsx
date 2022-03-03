@@ -124,7 +124,22 @@ export const HistorySection = (props: IProps) => {
     }
 
     if (item.action === 'Reward Initiate') {
-      return <td>{numberWithCommas(formatBigNumber(item.reward, 18))}</td>
+      return (
+        <td>
+          <span>{numberWithCommas(formatBigNumber(item.reward, 18))}</span>
+        </td>
+      )
+    }
+
+    if (item.action === 'Vest') {
+      return (
+        <td>
+          <span>
+            {numberWithCommas(formatBigNumber(item.value, item.decimals))}
+          </span>{' '}
+          {item.symbol}
+        </td>
+      )
     }
   }
 

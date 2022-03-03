@@ -138,4 +138,5 @@ export interface History {
   symbol: string, 
   decimals: number
   reward: BigNumber
+  value: BigNumber
 }
