@@ -224,32 +224,62 @@ export const useTerminalPool = (
 
         const depositFilter = clr.contract.filters.Deposit()
         const withdrawFilter = clr.contract.filters.Withdraw()
+        const rewardClaimedFilter = clr.contract.filters.RewardClaimed()
+        const RewardAddedFilter = clr.contract.filters.RewardAdded()
 
-        const [depositHistory, withdrawHistory] = await Promise.all([
+        const [
+          depositHistory,
+          withdrawHistory,
+          rewardClaimedHistory,
+          RewardAddedHistory,
+        ] = await Promise.all([
           clr.contract.queryFilter(depositFilter),
           clr.contract.queryFilter(withdrawFilter),
+          clr.contract.queryFilter(rewardClaimedFilter),
+          clr.contract.queryFilter(RewardAddedFilter),
         ])
 
+        const allHistory = [
+          ...depositHistory,
+          ...withdrawHistory,
+          ...rewardClaimedHistory,
+          ...RewardAddedHistory,
+        ]
+
         const blockInfos = await Promise.all(
-          [...depositHistory, ...withdrawHistory].map((x) => x.getBlock())
+          allHistory.map((x) => x.getBlock())
         )
 
-        const eventHistory = [...depositHistory, ...withdrawHistory].map(
-          (x, index) => {
-            const timestamp = blockInfos[index].timestamp
-            const time = moment.unix(timestamp).format('LLLL')
+        const eventHistory = allHistory.map((x, index) => {
+          console.log('x:', x)
 
-            return {
-              action: x.event,
-              amount: x.args,
-              amount0: x.args?.amount0,
-              amount1: x.args?.amount1,
-              time,
-              tx: x.transactionHash,
-              timestamp,
-            }
+          const timestamp = blockInfos[index].timestamp
+          const time = moment.unix(timestamp).format('LLLL')
+
+          const eventName: {
+            [key: string]: string
+          } = {
+            RewardClaimed: 'Claim',
+            Deposit: 'Deposit',
+            Withdraw: 'Withdraw',
+            RewardAdded: 'Reward Initiate',
           }
-        )
+
+          const rewardToken = pool.rewardTokens.find(
+            (token: IToken) => token.address === x.args?.token
+          )
+
+          return {
+            action: x.event ? eventName[x.event] : '',
+            amount0: x.args?.amount0 || BigNumber.from(0),
+            amount1: x.args?.amount1 || BigNumber.from(0),
+            time,
+            tx: x.transactionHash,
+            rewardAmount: x.args?.rewardAmount || BigNumber.from(0),
+            symbol: rewardToken ? rewardToken.symbol : '',
+            decimals: rewardToken ? Number(rewardToken.decimals) : 0,
+          }
+        })
 
         history = _.orderBy(eventHistory, 'timestamp', 'desc')
 
