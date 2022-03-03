@@ -77,6 +77,7 @@ interface IProps {
   value: string
   onChange: (_: string) => void
   className?: string
+  isVesting?: boolean
 }
 
 export const RewardPeriodInput: React.FC<IProps> = ({
@@ -85,9 +86,16 @@ export const RewardPeriodInput: React.FC<IProps> = ({
   value,
   onChange,
   className,
+  isVesting = false,
 }) => {
   const cl = useStyles()
   const commonClasses = useCommonStyles()
+
+  const options = [1, 3, 5, 8]
+  if (isVesting) {
+    options.splice(0, 0, 0)
+  }
+
   const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     let newValue = e.target.value
     if (newValue !== '') {
@@ -121,16 +129,16 @@ export const RewardPeriodInput: React.FC<IProps> = ({
       />
       {!isDisabled && (
         <div className={cl.buttons}>
-          {[1, 3, 5, 8].map((week) => (
+          {options.map((week) => (
             <span
               key={`${week}`}
               className={clsx(
                 cl.button,
-                week === Number(value || '0') && 'active'
+                value !== '' && week === Number(value) && 'active'
               )}
               onClick={() => onChange(week.toString())}
             >
-              {week}&nbsp;W
+              {week === 0 ? 'None' : `${week} W`}
             </span>
           ))}
         </div>

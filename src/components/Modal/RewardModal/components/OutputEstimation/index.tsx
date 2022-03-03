@@ -1,9 +1,8 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { makeStyles, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import { IRewardState, TokenIcon } from 'components'
-import { IToken } from 'types'
 import { formatBigNumber } from 'utils'
+import { toUsd } from 'utils/number'
 import React from 'react'
 
 const useStyles = makeStyles((theme) => ({
@@ -72,13 +71,21 @@ export const OutputEstimation: React.FC<IProps> = ({
         </Typography>
         <Typography className={classes.amount}>
           {isCreatePool ? rewardState.vesting || '0' : rewardState.duration}{' '}
-          weeks
+          week(s)
         </Typography>
         <br />
         <Typography className={classes.label}>
           REWARD {isCreatePool ? 'TOKENS' : 'AMOUNTS'}
         </Typography>
         {rewardState.tokens.map((rewardToken, index) => {
+          const amount = !isCreatePool
+            ? formatBigNumber(
+                rewardState.amounts[index],
+                rewardToken.decimals,
+                4
+              )
+            : '0'
+
           return (
             <div className={classes.infoRow} key={rewardToken.address}>
               <div className={classes.token}>
@@ -92,14 +99,13 @@ export const OutputEstimation: React.FC<IProps> = ({
               &nbsp;&nbsp;
               {!isCreatePool && (
                 <Typography className={classes.amount}>
-                  {formatBigNumber(
-                    rewardState.amounts[index],
-                    rewardToken.decimals,
-                    4
-                  )}
+                  {amount}
                   &nbsp;
-                  {/* TODO: Display estimated token value */}
-                  <span>~ $13.009</span>
+                  {rewardToken.symbol}
+                  &nbsp;
+                  <span>
+                    ~ {toUsd(Number(amount) * Number(rewardToken.price))}
+                  </span>
                 </Typography>
               )}
             </div>

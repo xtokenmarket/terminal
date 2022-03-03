@@ -111,6 +111,7 @@ export const InputSection: React.FC<IProps> = ({
           isDisabled={!isCreatePool}
           label={'Vesting period'}
           value={rewardState.vesting}
+          isVesting
           onChange={(newValue) =>
             updateState({
               vesting: newValue,

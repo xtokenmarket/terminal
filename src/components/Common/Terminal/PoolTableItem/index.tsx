@@ -173,7 +173,8 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
               if (isInitiateRewardsPending) {
                 return (
                   <Typography className={cl.label} key={rewardToken.address}>
-                    {rewardToken.symbol}
+                    &nbsp;{rewardToken.symbol}
+                    {index !== tokens.length - 1 ? ' / ' : ''}
                   </Typography>
                 )
               } else {

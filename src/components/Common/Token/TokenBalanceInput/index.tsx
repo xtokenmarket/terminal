@@ -106,9 +106,12 @@ export const TokenBalanceInput: React.FC<IProps> = ({
   }, [value])
 
   const onChangeDebounced = useCallback(
-    _.debounce((value: string) => {
+    _.debounce((value: string, tokenBalance: BigNumber) => {
       if (!isNaN(Number(value))) {
-        onChange(ethers.utils.parseUnits(value || '0', token.decimals), balance)
+        onChange(
+          ethers.utils.parseUnits(value || '0', token.decimals),
+          tokenBalance
+        )
       }
     }, 1000),
     []
@@ -116,7 +119,7 @@ export const TokenBalanceInput: React.FC<IProps> = ({
 
   const onInputBalance = (e: ChangeEvent<HTMLInputElement>) => {
     setAmount(e.target.value)
-    onChangeDebounced(e.target.value)
+    onChangeDebounced(e.target.value, balance)
   }
 
   const onClickAvailable = () => {
