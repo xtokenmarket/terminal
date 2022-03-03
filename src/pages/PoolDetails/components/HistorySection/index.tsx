@@ -1,6 +1,6 @@
 import { makeStyles, Typography } from '@material-ui/core'
 import moment from 'moment'
-import { ITerminalPool } from 'types'
+import { History, ITerminalPool } from 'types'
 import { formatBigNumber, numberWithCommas } from 'utils'
 import { getEtherscanUri } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
@@ -90,6 +90,40 @@ export const HistorySection = (props: IProps) => {
     )
   }
 
+  const renderValue = (item: History) => {
+    if (item.action === 'Deposit' || item.action === 'Withdraw') {
+      return (
+        <td>
+          <span>
+            {numberWithCommas(
+              formatBigNumber(item.amount0, pool.token0.decimals)
+            )}
+          </span>{' '}
+          {pool.token0.symbol} /{' '}
+          <span>
+            {numberWithCommas(
+              formatBigNumber(item.amount1, pool.token1.decimals)
+            )}
+          </span>{' '}
+          {pool.token1.symbol}
+        </td>
+      )
+    }
+
+    if (item.action === 'Claim') {
+      return (
+        <td>
+          <span>
+            {numberWithCommas(
+              formatBigNumber(item.rewardAmount, item.decimals)
+            )}
+          </span>{' '}
+          {item.symbol}
+        </td>
+      )
+    }
+  }
+
   return (
     <div className={classes.root}>
       <Typography className={classes.title}>History</Typography>
@@ -108,20 +142,7 @@ export const HistorySection = (props: IProps) => {
               {pool.history.map((item) => (
                 <tr key={item.tx}>
                   <td>{item.action}</td>
-                  <td>
-                    <span>
-                      {numberWithCommas(
-                        formatBigNumber(item.amount0, pool.token0.decimals)
-                      )}
-                    </span>{' '}
-                    {pool.token0.symbol} /{' '}
-                    <span>
-                      {numberWithCommas(
-                        formatBigNumber(item.amount1, pool.token1.decimals)
-                      )}
-                    </span>{' '}
-                    {pool.token1.symbol}
-                  </td>
+                  {renderValue(item)}
                   <td>{moment(item.time).fromNow()}</td>
                   <td>
                     <a href={`${etherscanUri}tx/${item.tx}`} target="_blank">
