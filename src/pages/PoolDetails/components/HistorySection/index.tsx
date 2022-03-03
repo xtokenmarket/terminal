@@ -122,6 +122,10 @@ export const HistorySection = (props: IProps) => {
         </td>
       )
     }
+
+    if (item.action === 'Reward Initiate') {
+      return <td>{numberWithCommas(formatBigNumber(item.reward, 18))}</td>
+    }
   }
 
   return (
