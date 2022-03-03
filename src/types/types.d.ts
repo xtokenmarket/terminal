@@ -139,4 +139,5 @@ export interface History {
   decimals: number
   reward: BigNumber
   value: BigNumber
+  timestamp: number
 }

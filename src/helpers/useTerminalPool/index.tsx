@@ -293,6 +293,7 @@ export const useTerminalPool = (
             decimals: token ? Number(token.decimals) : 0,
             reward: x.args?.reward,
             value: x.args?.value,
+            timestamp,
           }
         })
 
