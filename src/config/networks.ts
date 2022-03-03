@@ -15,6 +15,7 @@ import { getIdFromNetwork } from 'utils/network'
 export const networkIds = {
   MAINNET: 1,
   KOVAN: 42,
+  RINKEBY: 4,
 } as const
 
 const networks: { [K in NetworkId]: INetwork } = {
@@ -29,7 +30,6 @@ const networks: { [K in NetworkId]: INetwork } = {
       uniRouter: '',
       uniQuoter: '',
       uniPositionManager: '',
-      xTokenManager: '',
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -50,7 +50,6 @@ const networks: { [K in NetworkId]: INetwork } = {
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
-      xTokenManager: '0x9a03bbeb70447f50a80e5d5733526cca125966ee',
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -58,6 +57,26 @@ const networks: { [K in NetworkId]: INetwork } = {
       deploymentFee: BigNumber.from(1),
     },
     etherscanUri: 'https://kovan.etherscan.io/',
+    unigraph: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
+  },
+  [networkIds.RINKEBY]: {
+    label: 'Rinkeby',
+    url: 'https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+    contracts: {
+      LM: '0x176e2db864C3cB0530d32D7129272A8dcE7Ae069',
+      multicall: '0x0284D6D74C31B23179CB642aa77164752C6859ed',
+      rewardEscrow: '0x2c6b3Fe49Fb1f0E2D9b2577f201d98fFfAb12Cc6',
+      uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
+      uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
+      uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
+      uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
+    },
+    terminal: {
+      tradeFee: BigNumber.from(1000),
+      rewardFee: BigNumber.from(100),
+      deploymentFee: BigNumber.from(1),
+    },
+    etherscanUri: 'https://rinkeby.etherscan.io/',
     unigraph: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
   },
 }
@@ -69,6 +88,7 @@ export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     addresses: {
       [networkIds.MAINNET]: '0x7f3edcdd180dbe4819bd98fee8929b5cedb3adeb',
       [networkIds.KOVAN]: '0x657ad2B770aFC7ACb0A219525C4c22BE6b807023',
+      [networkIds.RINKEBY]: '',
     },
     decimals: 18,
     image: '/assets/tokens/xtk.png',
@@ -79,6 +99,7 @@ export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     addresses: {
       [networkIds.MAINNET]: '0x6b175474e89094c44da98b954eedeac495271d0f',
       [networkIds.KOVAN]: '0xff795577d9ac8bd7d90ee22b6c1703490b6512fd',
+      [networkIds.RINKEBY]: '',
     },
     decimals: 18,
     image: '/assets/tokens/dai.png',
@@ -89,6 +110,7 @@ export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     addresses: {
       [networkIds.MAINNET]: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
       [networkIds.KOVAN]: '0x21344Ebc08B4dC8BadE8889D034A3f2Ec83ECbef',
+      [networkIds.RINKEBY]: '',
     },
     decimals: 18,
     image: '/assets/tokens/weth.png',
@@ -99,6 +121,7 @@ export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     addresses: {
       [networkIds.MAINNET]: '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
       [networkIds.KOVAN]: '0x40911223ee38C35E2ffd6a2F2AA64Dd0d10e9406',
+      [networkIds.RINKEBY]: '',
     },
     decimals: 18,
     image: '/assets/tokens/aave.png',
@@ -109,6 +132,7 @@ export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     addresses: {
       [networkIds.MAINNET]: '0xdac17f958d2ee523a2206206994597c13d831ec7',
       [networkIds.KOVAN]: '0x016750ac630f711882812f24dba6c95b9d35856d',
+      [networkIds.RINKEBY]: '',
     },
     decimals: 18,
     image: '/assets/tokens/usdt.png',
@@ -119,6 +143,7 @@ export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     addresses: {
       [networkIds.MAINNET]: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
       [networkIds.KOVAN]: '0x7b492527F49cB50518dAFc7668dE2E5eaBd8a009',
+      [networkIds.RINKEBY]: '',
     },
     decimals: 18,
     image: '/assets/tokens/usdc.png',

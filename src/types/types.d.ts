@@ -23,7 +23,6 @@ export interface INetwork {
     uniRouter: string
     uniQuoter: string
     uniPositionManager: string
-    xTokenManager: string
   }
   terminal: {
     tradeFee: BigNumber
@@ -34,7 +33,7 @@ export interface INetwork {
   unigraph: string
 }
 
-export type NetworkId = 1 | 42
+export type NetworkId = 1 | 4 | 42
 
 export type KnownContracts = keyof INetwork['contracts']
 
@@ -130,11 +129,10 @@ interface MintState {
 }
 
 interface History {
-  action?: string,
-  amount: array,
-  time: string,
-  tx?: string, 
-  amount0: BigNumber,
-  amount1: BigNumber,
+  action?: string
+  amount: array
+  time: string
+  tx?: string
+  amount0: BigNumber
+  amount1: BigNumber
 }
-
