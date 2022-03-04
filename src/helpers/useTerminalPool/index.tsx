@@ -236,6 +236,7 @@ export const useTerminalPool = (
         const InitiatedRewardsFilter =
           lmService.contract.filters.InitiatedRewardsProgram(poolAddress)
         const VestedFilter = rewardEscrow.contract.filters.Vested(poolAddress)
+        const RewardAddedFilter = clr.contract.filters.RewardAdded()
 
         const [
           depositHistory,
@@ -243,12 +244,14 @@ export const useTerminalPool = (
           rewardClaimedHistory,
           InitiatedRewardsHistory,
           VestHistory,
+          RewardAddedHistory,
         ] = await Promise.all([
           clr.contract.queryFilter(depositFilter),
           clr.contract.queryFilter(withdrawFilter),
           clr.contract.queryFilter(rewardClaimedFilter),
           lmService.contract.queryFilter(InitiatedRewardsFilter),
           rewardEscrow.contract.queryFilter(VestedFilter),
+          clr.contract.queryFilter(RewardAddedFilter),
         ])
 
         const allHistory = [
@@ -281,6 +284,11 @@ export const useTerminalPool = (
             (token: IToken) => token.address === x.args?.token
           )
 
+          const totalRewardAmounts =
+            RewardAddedHistory.length > 0
+              ? RewardAddedHistory.map((history) => history.args?.reward)
+              : [BigNumber.from(0)]
+
           return {
             action: x.event ? eventName[x.event] : '',
             amount0: x.args?.amount0 || BigNumber.from(0),
@@ -292,7 +300,7 @@ export const useTerminalPool = (
             decimals: token ? Number(token.decimals) : 0,
             value: x.args?.value,
             timestamp,
-            totalRewardAmounts: x.args?.totalRewardAmounts,
+            totalRewardAmounts,
             rewardTokens: pool.rewardTokens,
           }
         })
