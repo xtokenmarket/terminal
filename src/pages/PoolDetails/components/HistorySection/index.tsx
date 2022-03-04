@@ -169,7 +169,7 @@ export const HistorySection = (props: IProps) => {
             </thead>
             <tbody>
               {pool.history.map((item) => (
-                <tr key={item.tx}>
+                <tr key={`${item.tx}_${item.action}`}>
                   <td>{item.action}</td>
                   {renderValue(item)}
                   <td>{moment(item.time).fromNow()}</td>
