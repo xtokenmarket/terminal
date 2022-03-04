@@ -273,7 +273,7 @@ export const useTerminalPool = (
             RewardClaimed: 'Claim',
             Deposit: 'Deposit',
             Withdraw: 'Withdraw',
-            InitiatedRewardsProgram: 'Reward Initiate',
+            InitiatedRewardsProgram: 'Initiate Rewards',
             Vested: 'Vest',
           }
 

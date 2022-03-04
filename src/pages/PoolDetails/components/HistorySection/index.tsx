@@ -85,7 +85,7 @@ export const HistorySection = (props: IProps) => {
   if (pool.history.length === 0) {
     return (
       <div className={classes.root}>
-        <div className={classes.text}>No history record yet.</div>
+        <div className={classes.text}>No pool history.</div>
       </div>
     )
   }
@@ -123,7 +123,7 @@ export const HistorySection = (props: IProps) => {
       )
     }
 
-    if (item.action === 'Reward Initiate') {
+    if (item.action === 'Initiate Rewards') {
       return (
         <td>
           {item.totalRewardAmounts.map((amount, index) => (
