@@ -4,8 +4,8 @@ import { IToken } from 'types'
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: 48,
-    height: 48,
+    width: 32,
+    height: 32,
     borderRadius: '50%',
   },
 }))

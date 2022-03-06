@@ -31,17 +31,17 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 14,
   },
   balance: {
+    display: 'flex',
     fontWeight: 700,
     color: theme.colors.white,
-    fontSize: 34,
-    lineHeight: '34px',
+    fontSize: 18,
+    lineHeight: '28px',
     '& span': { fontWeight: 400, color: theme.colors.primary100 },
     [theme.breakpoints.down('xs')]: {
       fontSize: 22,
     },
   },
   dollar: {
-    fontWeight: 700,
     color: theme.colors.primary100,
     fontSize: 14,
     lineHeight: '28px',
@@ -49,11 +49,21 @@ const useStyles = makeStyles((theme) => ({
       display: 'none',
     },
   },
+  percent: {
+    background: theme.colors.primary200,
+    fontSize: 12,
+    color: theme.colors.white,
+    borderRadius: '16px',
+    justifyContent: 'center',
+    padding: '0 13px',
+    marginLeft: 16,
+  },
 }))
 
 interface IProps {
   token: IToken
   pool: ITerminalPool
+  isMydeposit?: boolean
 }
 
 export const BalanceSection = (props: IProps) => {
@@ -61,7 +71,7 @@ export const BalanceSection = (props: IProps) => {
   const { networkId } = useConnectedWeb3Context()
 
   const etherscanUri = getEtherscanUri(networkId)
-  const { token, pool } = props
+  const { token, pool, isMydeposit } = props
 
   // TODO: Remove fetching token balance via `useTokenBalance()` hook
   // Replace with `token0Balance` and `token1Balance` from `useTerminalPool()` hook
@@ -69,7 +79,6 @@ export const BalanceSection = (props: IProps) => {
 
   return (
     <div className={classes.root}>
-      <Typography className={classes.label}>{token.symbol} balance</Typography>
       <div className={classes.content}>
         <a
           href={`${etherscanUri}token/${token.address}`}
@@ -81,7 +90,11 @@ export const BalanceSection = (props: IProps) => {
         <div className={classes.texts}>
           <Typography className={classes.balance}>
             {numberWithCommas(formatBigNumber(balance, token.decimals))}{' '}
-            <span>{Number(token.percent).toFixed(2)}%</span>
+            {!isMydeposit && (
+              <div className={classes.percent}>
+                {Number(token.percent).toFixed(2)}%
+              </div>
+            )}
           </Typography>
           <Typography className={classes.dollar}>
             ~ ${numberWithCommas(token.tvl as string)}
