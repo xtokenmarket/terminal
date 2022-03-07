@@ -8,6 +8,7 @@ import useCommonStyles from 'style/common'
 import { useConnectedWeb3Context } from 'contexts'
 import { useHistory } from 'react-router'
 import { getNetworkFromId } from 'utils/network'
+import { DEFAULT_NETWORK_ID } from 'config/constants'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,7 +75,7 @@ export const CreatePoolModal = (props: IProps) => {
   const onSuccessClose = () => {
     history.push(
       `/terminal/pools/${getNetworkFromId(
-        (networkId || 42) as NetworkId
+        (networkId || DEFAULT_NETWORK_ID) as NetworkId
       )}/${poolAddress}`
     )
   }

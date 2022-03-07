@@ -102,6 +102,7 @@ export enum ECreatePoolModalStep {
 export enum Network {
   KOVAN = 'kovan',
   MAINNET = 'mainnet',
+  RINKEBY = 'rinkeby',
 }
 
 // uni v3

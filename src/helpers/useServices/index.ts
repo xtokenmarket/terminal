@@ -8,33 +8,42 @@ import {
   LMService,
 } from 'services'
 import { Network } from 'utils/enums'
+import { getIdFromNetwork } from 'utils/network'
 
 export const useServices = (network?: Network) => {
   const { account, library: provider, networkId } = useConnectedWeb3Context()
-  const readonlyProvider = getNetworkProvider(network)
+  let readonlyProvider = provider
+  let readonlyNetworkId = networkId
+
+  if (networkId !== getIdFromNetwork(network)) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    readonlyProvider = getNetworkProvider(network)
+    readonlyNetworkId = getIdFromNetwork(network)
+  }
 
   return useMemo(() => {
     const multicall = new MulticallService(
-      provider || readonlyProvider,
+      readonlyProvider,
       account,
-      getContractAddress('multicall', networkId)
+      getContractAddress('multicall', readonlyNetworkId)
     )
 
     const rewardEscrow = new RewardEscrowService(
-      provider || readonlyProvider,
+      readonlyProvider,
       account,
-      getContractAddress('rewardEscrow', networkId)
+      getContractAddress('rewardEscrow', readonlyNetworkId)
     )
 
     const lmService = new LMService(
-      provider || readonlyProvider,
+      readonlyProvider,
       account,
-      getContractAddress('LM', networkId)
+      getContractAddress('LM', readonlyNetworkId)
     )
     const uniPositionService = new UniPositionService(
-      provider || readonlyProvider,
+      readonlyProvider,
       account,
-      getContractAddress('uniPositionManager', networkId)
+      getContractAddress('uniPositionManager', readonlyNetworkId)
     )
 
     return { multicall, rewardEscrow, lmService, uniPositionService }
