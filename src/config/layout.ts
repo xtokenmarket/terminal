@@ -18,18 +18,18 @@ export const SOCIAL_ITEMS = [
     id: 'github',
     label: 'github',
     icon: SvgIcons.github,
-    href: 'https://github.com/',
+    href: 'https://github.com/xtokenmarket',
   },
   {
     id: 'twitter',
     label: 'twitter',
     icon: SvgIcons.twitter,
-    href: 'https://twitter.com/',
+    href: 'https://twitter.com/xtokenterminal',
   },
   {
     id: 'discord',
     label: 'discord',
     icon: SvgIcons.discord,
-    href: 'https://discord.com/',
+    href: 'https://discord.gg/QCp8QBWB72',
   },
 ]

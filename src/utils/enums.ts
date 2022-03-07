@@ -57,6 +57,7 @@ export enum ENetwork {
   Ethereum = 'Ethereum',
   Arbitrum = 'Arbitrum',
   Optimism = 'Optimism',
+  Polygon = 'Polygon'
 }
 
 export enum EDepositStep {
