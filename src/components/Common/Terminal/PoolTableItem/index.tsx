@@ -12,6 +12,7 @@ import {
 import { parseDuration } from 'utils/number'
 import moment from 'moment'
 import { NavLink } from 'react-router-dom'
+import { Network } from 'utils/enums'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -102,7 +103,11 @@ interface IProps {
 export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
   const cl = useStyles()
 
-  const { loading, pool: poolData } = useTerminalPool(pool, pool.poolAddress)
+  const { loading, pool: poolData } = useTerminalPool(
+    pool,
+    pool.poolAddress,
+    pool.network as Network
+  )
 
   const renderContent = () => {
     if (!poolData) {

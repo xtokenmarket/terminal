@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { TERMINAL_API_URL } from 'config/constants'
-import { networkIds } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import { useEffect, useState } from 'react'
 import { waitSeconds } from 'utils'
@@ -18,16 +17,12 @@ export const useTerminalPools = () => {
     setState((prev) => ({ ...prev, isLoading: true }))
     try {
       await waitSeconds(1)
-      if (!networkId || networkId === networkIds.KOVAN) {
-        const pools = (await axios.get(`${TERMINAL_API_URL}/pools`)).data
-        setState((prev) => ({
-          ...prev,
-          pools,
-          isLoading: false,
-        }))
-      } else {
-        setState((prev) => ({ ...prev, isLoading: false }))
-      }
+      const pools = (await axios.get(`${TERMINAL_API_URL}/pools`)).data
+      setState((prev) => ({
+        ...prev,
+        pools,
+        isLoading: false,
+      }))
     } catch (error) {
       setState((prev) => ({ ...prev, isLoading: false }))
     }

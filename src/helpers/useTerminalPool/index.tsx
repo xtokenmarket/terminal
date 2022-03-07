@@ -15,15 +15,16 @@ import {
   getTimeRemainingUnits,
 } from 'utils'
 import { ERewardStep, Network } from 'utils/enums'
+import { getIdFromNetwork } from 'utils/network'
 import { formatDuration, ONE_ETHER } from 'utils/number'
 import _ from 'lodash'
+import moment from 'moment'
 
 import {
   getCoinGeckoIDs,
   getPoolDataMulticall,
   getTokenExchangeRate,
 } from './helper'
-import moment from 'moment'
 
 interface IState {
   pool?: ITerminalPool
@@ -43,15 +44,18 @@ export const useTerminalPool = (
   const { account, library: provider, networkId } = useConnectedWeb3Context()
   const { multicall, rewardEscrow } = useServices(network)
 
+  let readonlyProvider = provider
+  if (networkId !== getIdFromNetwork(network)) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    readonlyProvider = getNetworkProvider(network)
+  }
+
   const getTokenDetails = async (addr: string) => {
     try {
-      return getTokenFromAddress(addr, networkId)
+      return getTokenFromAddress(addr, readonlyProvider?.network.chainId)
     } catch (error) {
-      const erc20 = new ERC20Service(
-        provider || getNetworkProvider(network),
-        account,
-        addr
-      )
+      const erc20 = new ERC20Service(readonlyProvider, account, addr)
       return erc20.getDetails()
     }
   }
@@ -61,11 +65,7 @@ export const useTerminalPool = (
     uniswapPool: string
   ) => {
     if (!account) return BigNumber.from(0)
-    const erc20 = new ERC20Service(
-      provider || getNetworkProvider(network),
-      uniswapPool,
-      tokenAddress
-    )
+    const erc20 = new ERC20Service(readonlyProvider, uniswapPool, tokenAddress)
     return erc20.getBalanceOf(uniswapPool)
   }
 
@@ -183,7 +183,7 @@ export const useTerminalPool = (
       }
       // console.timeEnd(`loadInfo token details ${poolAddress}`)
 
-      if (!pool.vestingPeriod) {
+      if (pool.vestingPeriod == null) {
         pool.vestingPeriod = (
           await rewardEscrow.clrPoolVestingPeriod(pool.poolAddress)
         ).toString()
@@ -198,7 +198,7 @@ export const useTerminalPool = (
         )) as IToken[]
       }
 
-      if (!pool.rewardsPerToken) {
+      if (pool.rewardsPerToken == null) {
         const rewardCalls = pool.rewardTokens.map((token: IToken) => ({
           name: 'rewardPerToken',
           address: pool.poolAddress,
@@ -220,11 +220,7 @@ export const useTerminalPool = (
 
       // Fetch events history and reward tokens only on PoolDetails page
       if (isPoolDetails) {
-        const clr = new CLRService(
-          provider || getNetworkProvider(network),
-          account,
-          pool.poolAddress
-        )
+        const clr = new CLRService(readonlyProvider, account, pool.poolAddress)
 
         const depositFilter = clr.contract.filters.Deposit()
         const withdrawFilter = clr.contract.filters.Withdraw()
@@ -261,7 +257,11 @@ export const useTerminalPool = (
         if (account) {
           earnedTokens = await Promise.all(
             pool.rewardTokens.map(async (token: IToken) => {
-              const clr = new CLRService(provider, account, pool.poolAddress)
+              const clr = new CLRService(
+                readonlyProvider,
+                account,
+                pool.poolAddress
+              )
               const amount = await clr.earned(account, token.address)
               return {
                 ...token,
@@ -304,7 +304,7 @@ export const useTerminalPool = (
         pool: {
           address: pool.poolAddress,
           manager: pool.manager.toLowerCase(),
-          network: Network.KOVAN,
+          network: pool.network,
           owner: pool.owner.toLowerCase(),
           periodFinish: BigNumber.from(pool.periodFinish),
           poolFee: pool.poolFee,
@@ -333,7 +333,6 @@ export const useTerminalPool = (
         },
       })
     } catch (error) {
-      console.error(error)
       setState(() => ({ loading: false }))
     }
     // console.timeEnd(`loadInfo ${poolAddress}`)
