@@ -157,6 +157,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 16,
     fontFamily: 'Gilmer',
     fontSize: 10,
+    marginLeft: 18,
   },
   percent: {
     background: theme.colors.primary200,

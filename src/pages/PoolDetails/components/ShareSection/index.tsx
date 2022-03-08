@@ -23,7 +23,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '16px',
     justifyContent: 'center',
     padding: '0 13px',
-    marginLeft: 16,
   },
 }))
 
