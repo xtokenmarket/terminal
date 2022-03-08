@@ -56,6 +56,8 @@ export interface IToken {
   percent?: string
   tvl?: string
   price?: string
+  myDeposit?: BigNumber
+  myDepositTvl?: string
 }
 
 export interface IPositionTicks {

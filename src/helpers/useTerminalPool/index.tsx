@@ -7,7 +7,7 @@ import {
   getContractAddress,
 } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
-import { parseEther } from 'ethers/lib/utils'
+import { formatEther, formatUnits, parseEther } from 'ethers/lib/utils'
 import { useServices } from 'helpers'
 import { useEffect, useState } from 'react'
 import { CLRService, ERC20Service, RewardEscrowService } from 'services'
@@ -29,14 +29,14 @@ import {
   getPoolDataMulticall,
   getTokenExchangeRate,
 } from './helper'
-
+import { ethers } from 'ethers'
 interface IState {
   pool?: ITerminalPool
   loading: boolean
 }
 
 // TODO: Remove this and leverage `parseEther()` & `formatEther()`
-const MULTIPLY_PRECISION = 1000000
+const MULTIPLY_PRECISION = 1000000000
 
 export const useTerminalPool = (
   pool?: any,
@@ -122,6 +122,10 @@ export const useTerminalPool = (
       // console.time(`loadInfo token details ${pool.poolAddress}`)
       let { token0, token1, stakedToken } = pool
       let tvl = '0'
+      let token0Balance = BigNumber.from(0)
+      let token1Balance = BigNumber.from(0)
+
+      const clr = new CLRService(readonlyProvider, account, pool.poolAddress)
 
       // Fetch token details and relevant data, if API fails
       if (!pool.token0.price || !pool.token1.price) {
@@ -136,10 +140,11 @@ export const useTerminalPool = (
         pool.token0.price = rates ? rates[0].toString() : '0'
         pool.token1.price = rates ? rates[1].toString() : '0'
 
-        const [token0Balance, token1Balance] = await Promise.all([
-          getERC20TokenBalance(token0.address, pool.uniswapPool),
-          getERC20TokenBalance(token1.address, pool.uniswapPool),
-        ])
+        const balance = await clr.contract.getStakedTokenBalance()
+
+        token0Balance = balance.amount0
+        token1Balance = balance.amount1
+
         const token0Percent = getTokenPercent(
           token0Balance,
           token0Balance,
@@ -221,11 +226,12 @@ export const useTerminalPool = (
       let history: History[] = []
       let earnedTokens = []
       let vestingTokens = []
+      let myDeposit0 = BigNumber.from(0)
+      let myDeposit1 = BigNumber.from(0)
+      const poolShare = '0'
 
       // Fetch events history and reward tokens only on PoolDetails page
       if (isPoolDetails) {
-        const clr = new CLRService(readonlyProvider, account, pool.poolAddress)
-
         const depositFilter = clr.contract.filters.Deposit()
         const withdrawFilter = clr.contract.filters.Withdraw()
         const rewardClaimedFilter = clr.contract.filters.RewardClaimed()
@@ -347,7 +353,45 @@ export const useTerminalPool = (
             )
           }
         }
+
+        // Get myDeposit
+        const stakedCLRTokenAbi = Abi.StakedCLRToken
+
+        const stakedCLRToken = new ethers.Contract(
+          pool.stakedToken.address,
+          stakedCLRTokenAbi,
+          provider
+        )
+
+        const myDeposit = await stakedCLRToken.balanceOf(account)
+        const totalSupply = await clr.contract.totalSupply()
+
+        myDeposit0 = token0Balance
+          // decimals are not supported
+          .mul(MULTIPLY_PRECISION)
+          .div(totalSupply)
+          .mul(myDeposit)
+          .div(MULTIPLY_PRECISION)
+
+        myDeposit1 = token1Balance
+          .mul(MULTIPLY_PRECISION)
+          .div(totalSupply)
+          .mul(myDeposit)
+          .div(MULTIPLY_PRECISION)
       }
+
+      token0.myDeposit = myDeposit0
+      token1.myDeposit = myDeposit1
+
+      token0.myDepositTvl = formatUnits(
+        myDeposit1.mul(parseEther(pool.token0.price)).div(ONE_ETHER),
+        pool.token0.decimals
+      )
+
+      token1.myDepositTvl = formatUnits(
+        myDeposit1.mul(parseEther(pool.token1.price)).div(ONE_ETHER),
+        pool.token1.decimals
+      )
 
       setState({
         loading: false,

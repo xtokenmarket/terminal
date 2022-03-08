@@ -5,6 +5,8 @@ import { ITerminalPool, IToken } from 'types'
 import { formatBigNumber, numberWithCommas } from 'utils'
 import { useConnectedWeb3Context } from '../../../../contexts'
 import { getEtherscanUri } from '../../../../config/networks'
+import { BigNumber } from 'ethers'
+import { formatEther } from 'ethers/lib/utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -89,7 +91,12 @@ export const BalanceSection = (props: IProps) => {
         </a>
         <div className={classes.texts}>
           <Typography className={classes.balance}>
-            {numberWithCommas(formatBigNumber(balance, token.decimals))}{' '}
+            {numberWithCommas(
+              formatBigNumber(
+                isMydeposit ? token.myDeposit || BigNumber.from(0) : balance,
+                token.decimals
+              )
+            )}{' '}
             {!isMydeposit && (
               <div className={classes.percent}>
                 {Number(token.percent).toFixed(2)}%
@@ -97,7 +104,10 @@ export const BalanceSection = (props: IProps) => {
             )}
           </Typography>
           <Typography className={classes.dollar}>
-            ~ ${numberWithCommas(token.tvl as string)}
+            ~ $
+            {numberWithCommas(
+              isMydeposit ? token.myDepositTvl || '0' : (token.tvl as string)
+            )}
           </Typography>
         </div>
       </div>
