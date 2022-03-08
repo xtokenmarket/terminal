@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
     borderRadius: '16px',
     justifyContent: 'center',
-    padding: '0 13px',
+    padding: '7px 13px',
   },
 }))
 
