@@ -103,6 +103,7 @@ export interface ITerminalPool {
   vestingTokens?: VestingTokens
   earnedTokens: EarnedTokens
   history: History[]
+  poolShare: string
 }
 
 export interface ICreatePoolData {

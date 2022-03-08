@@ -22,7 +22,7 @@ import {
 } from '../index'
 import { RewardVestSection } from '../RewardVestSection'
 import { VestAllModal } from '../VestAllModal'
-import { ShareSection } from '../ShareSection'
+import { PoolShareSection } from '../PoolShareSection'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -346,7 +346,7 @@ export const Content = (props: IProps) => {
               <Typography className={classes.title}>POOL SHARE</Typography>
               <Grid container spacing={0}>
                 <Grid item xs={12} md={12}>
-                  <ShareSection percent="0" />
+                  <PoolShareSection percent={poolData.poolShare} />
                 </Grid>
               </Grid>
             </Grid>

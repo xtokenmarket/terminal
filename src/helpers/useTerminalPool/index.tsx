@@ -228,7 +228,7 @@ export const useTerminalPool = (
       let vestingTokens = []
       let myDeposit0 = BigNumber.from(0)
       let myDeposit1 = BigNumber.from(0)
-      const poolShare = '0'
+      let poolShare = '0'
 
       // Fetch events history and reward tokens only on PoolDetails page
       if (isPoolDetails) {
@@ -393,6 +393,14 @@ export const useTerminalPool = (
         pool.token1.decimals
       )
 
+      poolShare = myDeposit0
+        .add(myDeposit1)
+        .mul(MULTIPLY_PRECISION)
+        .div(token0Balance.add(token1Balance))
+        .toString()
+
+      poolShare = String((Number(poolShare) / MULTIPLY_PRECISION) * 100)
+
       setState({
         loading: false,
         pool: {
@@ -424,6 +432,7 @@ export const useTerminalPool = (
           vestingTokens: vestingTokens.length ? vestingTokens : undefined,
           earnedTokens,
           history,
+          poolShare,
         },
       })
     } catch (error) {

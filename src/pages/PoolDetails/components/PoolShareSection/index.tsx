@@ -30,7 +30,7 @@ interface IProps {
   percent: string
 }
 
-export const ShareSection = (props: IProps) => {
+export const PoolShareSection = (props: IProps) => {
   const classes = useStyles()
 
   const { percent } = props
