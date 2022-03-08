@@ -128,11 +128,17 @@ interface MintState {
   rightRangeTypedValue: string | IFullRange
 }
 
-interface History {
-  action?: string
-  amount: array
-  time: string
-  tx?: string
-  amount0: BigNumber
-  amount1: BigNumber
+export interface History {
+  action: string,
+  time: string,
+  tx?: string, 
+  amount0: BigNumber,
+  amount1: BigNumber,
+  rewardAmount: BigNumber
+  symbol: string, 
+  decimals: number
+  value: BigNumber
+  timestamp: number
+  totalRewardAmounts: BigNumber[]
+  rewardTokens: IToken[]
 }

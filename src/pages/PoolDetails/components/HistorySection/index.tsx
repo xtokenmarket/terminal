@@ -1,6 +1,6 @@
 import { makeStyles, Typography } from '@material-ui/core'
 import moment from 'moment'
-import { ITerminalPool } from 'types'
+import { History, ITerminalPool } from 'types'
 import { formatBigNumber, numberWithCommas } from 'utils'
 import { getEtherscanUri } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
@@ -85,9 +85,72 @@ export const HistorySection = (props: IProps) => {
   if (pool.history.length === 0) {
     return (
       <div className={classes.root}>
-        <div className={classes.text}>No history record yet.</div>
+        <div className={classes.text}>No pool history.</div>
       </div>
     )
+  }
+
+  const renderValue = (item: History) => {
+    if (item.action === 'Deposit' || item.action === 'Withdraw') {
+      return (
+        <td>
+          <span>
+            {numberWithCommas(
+              formatBigNumber(item.amount0, pool.token0.decimals)
+            )}
+          </span>{' '}
+          {pool.token0.symbol} /{' '}
+          <span>
+            {numberWithCommas(
+              formatBigNumber(item.amount1, pool.token1.decimals)
+            )}
+          </span>{' '}
+          {pool.token1.symbol}
+        </td>
+      )
+    }
+
+    if (item.action === 'Claim') {
+      return (
+        <td>
+          <span>
+            {numberWithCommas(
+              formatBigNumber(item.rewardAmount, item.decimals)
+            )}
+          </span>{' '}
+          {item.symbol}
+        </td>
+      )
+    }
+
+    if (item.action === 'Initiate Rewards') {
+      return (
+        <td>
+          {item.totalRewardAmounts.map((amount, index) => (
+            <>
+              <span>
+                {numberWithCommas(
+                  formatBigNumber(amount, item.rewardTokens[index].decimals)
+                )}
+              </span>{' '}
+              {item.rewardTokens[index].symbol}{' '}
+              {index !== item.totalRewardAmounts.length - 1 && `/ `}
+            </>
+          ))}
+        </td>
+      )
+    }
+
+    if (item.action === 'Vest') {
+      return (
+        <td>
+          <span>
+            {numberWithCommas(formatBigNumber(item.value, item.decimals))}
+          </span>{' '}
+          {item.symbol}
+        </td>
+      )
+    }
   }
 
   return (
@@ -106,22 +169,9 @@ export const HistorySection = (props: IProps) => {
             </thead>
             <tbody>
               {pool.history.map((item) => (
-                <tr key={item.tx}>
+                <tr key={`${item.tx}_${item.action}`}>
                   <td>{item.action}</td>
-                  <td>
-                    <span>
-                      {numberWithCommas(
-                        formatBigNumber(item.amount0, pool.token0.decimals)
-                      )}
-                    </span>{' '}
-                    {pool.token0.symbol} /{' '}
-                    <span>
-                      {numberWithCommas(
-                        formatBigNumber(item.amount1, pool.token1.decimals)
-                      )}
-                    </span>{' '}
-                    {pool.token1.symbol}
-                  </td>
+                  {renderValue(item)}
                   <td>{moment(item.time).fromNow()}</td>
                   <td>
                     <a href={`${etherscanUri}tx/${item.tx}`} target="_blank">

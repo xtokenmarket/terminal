@@ -1,12 +1,16 @@
 import Abi from 'abis'
 import axios from 'axios'
 import { POLL_API_DATA, TERMINAL_API_URL } from 'config/constants'
-import { getNetworkProvider, getTokenFromAddress } from 'config/networks'
+import {
+  getNetworkProvider,
+  getTokenFromAddress,
+  getContractAddress,
+} from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import { parseEther } from 'ethers/lib/utils'
 import { useServices } from 'helpers'
 import { useEffect, useState } from 'react'
-import { CLRService, ERC20Service } from 'services'
+import { CLRService, ERC20Service, RewardEscrowService } from 'services'
 import { History, ITerminalPool, IToken } from 'types'
 import { BigNumber } from '@ethersproject/bignumber'
 import {
@@ -42,7 +46,7 @@ export const useTerminalPool = (
 ) => {
   const [state, setState] = useState<IState>({ loading: true, pool: undefined })
   const { account, library: provider, networkId } = useConnectedWeb3Context()
-  const { multicall, rewardEscrow } = useServices(network)
+  const { multicall, rewardEscrow, lmService } = useServices(network)
 
   let readonlyProvider = provider
   if (networkId !== getIdFromNetwork(network)) {
@@ -224,32 +228,78 @@ export const useTerminalPool = (
 
         const depositFilter = clr.contract.filters.Deposit()
         const withdrawFilter = clr.contract.filters.Withdraw()
+        const rewardClaimedFilter = clr.contract.filters.RewardClaimed()
+        const InitiatedRewardsFilter =
+          lmService.contract.filters.InitiatedRewardsProgram(poolAddress)
+        const VestedFilter = rewardEscrow.contract.filters.Vested(poolAddress)
+        const RewardAddedFilter = clr.contract.filters.RewardAdded()
 
-        const [depositHistory, withdrawHistory] = await Promise.all([
+        const [
+          depositHistory,
+          withdrawHistory,
+          rewardClaimedHistory,
+          InitiatedRewardsHistory,
+          VestHistory,
+          RewardAddedHistory,
+        ] = await Promise.all([
           clr.contract.queryFilter(depositFilter),
           clr.contract.queryFilter(withdrawFilter),
+          clr.contract.queryFilter(rewardClaimedFilter),
+          lmService.contract.queryFilter(InitiatedRewardsFilter),
+          rewardEscrow.contract.queryFilter(VestedFilter),
+          clr.contract.queryFilter(RewardAddedFilter),
         ])
 
+        const allHistory = [
+          ...depositHistory,
+          ...withdrawHistory,
+          ...rewardClaimedHistory,
+          ...InitiatedRewardsHistory,
+          ...VestHistory,
+        ]
+
         const blockInfos = await Promise.all(
-          [...depositHistory, ...withdrawHistory].map((x) => x.getBlock())
+          allHistory.map((x) => x.getBlock())
         )
 
-        const eventHistory = [...depositHistory, ...withdrawHistory].map(
-          (x, index) => {
-            const timestamp = blockInfos[index].timestamp
-            const time = moment.unix(timestamp).format('LLLL')
+        const eventHistory = allHistory.map((x, index) => {
+          const timestamp = blockInfos[index].timestamp
+          const time = moment.unix(timestamp).format('LLLL')
 
-            return {
-              action: x.event,
-              amount: x.args,
-              amount0: x.args?.amount0,
-              amount1: x.args?.amount1,
-              time,
-              tx: x.transactionHash,
-              timestamp,
-            }
+          const eventName: {
+            [key: string]: string
+          } = {
+            RewardClaimed: 'Claim',
+            Deposit: 'Deposit',
+            Withdraw: 'Withdraw',
+            InitiatedRewardsProgram: 'Initiate Rewards',
+            Vested: 'Vest',
           }
-        )
+
+          const token = pool.rewardTokens.find(
+            (token: IToken) => token.address === x.args?.token
+          )
+
+          const totalRewardAmounts =
+            RewardAddedHistory.length > 0
+              ? RewardAddedHistory.map((history) => history.args?.reward)
+              : [BigNumber.from(0)]
+
+          return {
+            action: x.event ? eventName[x.event] : '',
+            amount0: x.args?.amount0 || BigNumber.from(0),
+            amount1: x.args?.amount1 || BigNumber.from(0),
+            time,
+            tx: x.transactionHash,
+            rewardAmount: x.args?.rewardAmount || BigNumber.from(0),
+            symbol: token ? token.symbol : '',
+            decimals: token ? Number(token.decimals) : 0,
+            value: x.args?.value,
+            timestamp,
+            totalRewardAmounts,
+            rewardTokens: pool.rewardTokens,
+          }
+        })
 
         history = _.orderBy(eventHistory, 'timestamp', 'desc')
 
