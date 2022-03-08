@@ -254,6 +254,12 @@ export const PriceRangeStep = (props: IProps) => {
         : null
     newErrors.splice(1, 1, newErrorB)
 
+    const newErrorC =
+      (amountA > 0 && amountB === 0) || (amountB > 0 && amountA === 0)
+        ? `Your position will not earn fees or be used in trades until the market price moves into your range.`
+        : null
+    newErrors.splice(2, 1, newErrorC)
+
     if (!_.isEqual(state.balanceErrors, newErrors)) {
       setState((prev) => ({
         ...prev,
