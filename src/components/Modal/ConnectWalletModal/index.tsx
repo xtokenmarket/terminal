@@ -99,11 +99,7 @@ export const ConnectWalletModal = (props: IProps) => {
 
   const onClick = async (wallet: ConnectorNames) => {
     const currentConnector = connectors[wallet]
-    if (wallet === ConnectorNames.Injected) {
-      setActivatingConnector(currentConnector)
-    } else if (wallet === ConnectorNames.WalletConnect) {
-      setActivatingConnector(currentConnector)
-    } else if (wallet === ConnectorNames.TrustWallet) {
+    if (currentConnector) {
       setActivatingConnector(currentConnector)
     }
 
@@ -212,6 +208,14 @@ export const ConnectWalletModal = (props: IProps) => {
                     onClick(ConnectorNames.WalletConnect)
                   }}
                   text="Wallet Connect"
+                />
+                <ConnectWalletItem
+                  disabled={disableMetamask}
+                  icon={WALLET_ICONS[ConnectorNames.Coinbase]}
+                  onClick={() => {
+                    onClick(ConnectorNames.Coinbase)
+                  }}
+                  text="Coinbase"
                 />
               </>
             )}
