@@ -1,6 +1,6 @@
 import { makeStyles, Select, MenuItem } from '@material-ui/core'
 import clsx from 'clsx'
-import { ChainId, CHAIN_NAMES } from 'config/constants'
+import { ChainId, CHAIN_ICONS, CHAIN_NAMES } from 'config/constants'
 import { useNetworkContext } from 'contexts/networkContext'
 import { useCallback } from 'react'
 import { ENetwork } from 'utils/enums'
@@ -79,9 +79,11 @@ export const NetworkSelector = (props: IProps) => {
     >
       {supportedChains.map((chainId) => {
         const network = CHAIN_NAMES[chainId]
+        const icon = CHAIN_ICONS[chainId]
+
         return (
           <MenuItem value={chainId} key={chainId} className={classes.item}>
-            <img alt="img" src={`/assets/networks/${network}.svg`} />
+            <img alt="img" src={`/assets/networks/${icon}.svg`} />
             <span>{network}</span>
           </MenuItem>
         )

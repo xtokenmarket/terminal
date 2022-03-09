@@ -153,7 +153,17 @@ export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
 export const tokenSymbols = Object.keys(knownTokens)
 export const commonBaseTokenSymbols = ['usdt', 'weth']
 
-export const supportedNetworkIds = Object.values(ChainId).map(Number)
+export const supportedNetworkIds = [
+  ChainId.Mainnet,
+  ChainId.Arbitrum,
+  ChainId.Optimism,
+  ChainId.Polygon,
+  // Test nets
+  ChainId.EthereumKovan,
+  ChainId.ArbitrumRinkeby,
+  ChainId.OptimismKovan,
+  ChainId.PolygonMumbai,
+]
 
 export const supportedNetworkURLs = entries(networks).reduce<{
   [networkId: number]: string

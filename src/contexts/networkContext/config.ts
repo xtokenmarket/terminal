@@ -1,8 +1,7 @@
-import { ChainId, TestChainId } from 'config/constants'
+import { ChainId } from 'config/constants'
 
 export interface Config {
   supportedChains: ChainId[]
-  supportedTestChains: TestChainId[]
 }
 
 const DEFAULT_CONFIG: Config = {
@@ -11,12 +10,10 @@ const DEFAULT_CONFIG: Config = {
     ChainId.Arbitrum,
     ChainId.Optimism,
     ChainId.Polygon,
-  ],
-  supportedTestChains: [
-    TestChainId.EthereumKovan,
-    TestChainId.ArbitrumRinkeby,
-    TestChainId.OptimismKovan,
-    TestChainId.PolygonMumbai,
+    ChainId.EthereumKovan,
+    ChainId.ArbitrumRinkeby,
+    ChainId.OptimismKovan,
+    ChainId.PolygonMumbai,
   ],
 }
 

@@ -23,9 +23,6 @@ export enum ChainId {
   Arbitrum = 42161,
   Optimism = 10,
   Polygon = 137,
-}
-
-export enum TestChainId {
   EthereumKovan = 42,
   ArbitrumRinkeby = 421611,
   OptimismKovan = 69,
@@ -37,6 +34,21 @@ export const CHAIN_NAMES: Record<ChainId, string> = {
   [ChainId.Arbitrum]: 'Arbitrum',
   [ChainId.Optimism]: 'Optimism',
   [ChainId.Polygon]: 'Polygon',
+  [ChainId.EthereumKovan]: 'Ethereum Kovan',
+  [ChainId.ArbitrumRinkeby]: 'Arbitrum Rinkeby',
+  [ChainId.OptimismKovan]: 'Optimism Kovan',
+  [ChainId.PolygonMumbai]: 'Polygon Mumbai',
+}
+
+export const CHAIN_ICONS: Record<ChainId, string> = {
+  [ChainId.Mainnet]: 'Ethereum',
+  [ChainId.Arbitrum]: 'Arbitrum',
+  [ChainId.Optimism]: 'Optimism',
+  [ChainId.Polygon]: 'Polygon',
+  [ChainId.EthereumKovan]: 'Ethereum',
+  [ChainId.ArbitrumRinkeby]: 'Arbitrum',
+  [ChainId.OptimismKovan]: 'Optimism',
+  [ChainId.PolygonMumbai]: 'Polygon',
 }
 
 export interface AddNetworkChainParameters {
@@ -96,6 +108,51 @@ export const CHAIN_PARAMS: Record<ChainId, AddNetworkChainParameters> = {
     },
     rpcUrls: ['https://polygon-rpc.com/'],
     blockExplorerUrls: ['https://polygonscan.com'],
+  },
+  // Test Networks
+  [ChainId.EthereumKovan]: {
+    chainId: `0x${ChainId.EthereumKovan.toString(16)}`,
+    chainName: 'Kovan Test Network',
+    nativeCurrency: {
+      name: 'Ethereum',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+    rpcUrls: ['https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
+    blockExplorerUrls: ['https://kovan.etherscan.io'],
+  },
+  [ChainId.ArbitrumRinkeby]: {
+    chainId: `0x${ChainId.ArbitrumRinkeby.toString(16)}`,
+    chainName: 'Arbitrum Rinkeby',
+    nativeCurrency: {
+      name: 'Ethereum',
+      symbol: 'ARETH',
+      decimals: 18,
+    },
+    rpcUrls: ['https://rinkeby.arbitrum.io/rpc'],
+    blockExplorerUrls: ['https://rinkeby-explorer.arbitrum.io'],
+  },
+  [ChainId.OptimismKovan]: {
+    chainId: `0x${ChainId.OptimismKovan.toString(16)}`,
+    chainName: 'Optimism Kovan',
+    nativeCurrency: {
+      name: 'Ethereum',
+      symbol: 'KOR',
+      decimals: 18,
+    },
+    rpcUrls: ['https://kovan.optimism.io/'],
+    blockExplorerUrls: ['https://kovan-optimistic.etherscan.io'],
+  },
+  [ChainId.PolygonMumbai]: {
+    chainId: `0x${ChainId.PolygonMumbai.toString(16)}`,
+    chainName: 'Polygon Mumbai',
+    nativeCurrency: {
+      name: 'Ethereum',
+      symbol: 'MATIC',
+      decimals: 18,
+    },
+    rpcUrls: ['https://matic-mumbai.chainstacklabs.com'],
+    blockExplorerUrls: ['https://mumbai.polygonscan.com'],
   },
 }
 
