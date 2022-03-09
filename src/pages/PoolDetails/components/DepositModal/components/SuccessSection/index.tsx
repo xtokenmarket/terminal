@@ -77,8 +77,6 @@ export const SuccessSection = (props: IProps) => {
         poolData={poolData}
         amount0={depositState.amount0Used}
         amount1={depositState.amount1Used}
-        lpValue={depositState.liquidityAdded}
-        totalLiquidity={depositState.totalLiquidity}
         isEstimation={false}
       />
       <div className={classes.actions}>

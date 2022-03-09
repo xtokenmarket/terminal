@@ -43,9 +43,9 @@ const networks: { [K in NetworkId]: INetwork } = {
     label: 'Kovan Test Network',
     url: 'https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
     contracts: {
-      LM: '0x82B6D2ACB2877Ef6c4Ea0FbCC2346e8cb7B52394',
+      LM: '0x81b7D553b5Ccfa3a22c0BE89Ba67D2B9ce3D3778',
       multicall: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
-      rewardEscrow: '0x413dc48369C12D4a996B0bb8628833716Bd2f5ff',
+      rewardEscrow: '0x9655cE346A5b7d95929c022C914689788EE1D14b',
       uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
@@ -63,7 +63,7 @@ const networks: { [K in NetworkId]: INetwork } = {
     label: 'Rinkeby',
     url: 'https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
     contracts: {
-      LM: '0x4C9Ef1766c86466BE9E3402D1ed487f8C2bD6fBb',
+      LM: '0x4C29fA9bE2390f7025CbE257973506c74fb1df07',
       multicall: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
       rewardEscrow: '0xd3BD11c2aAfD64eE8414eFA64E16537dFa6d800B',
       uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
@@ -98,8 +98,8 @@ export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     symbol: 'DAI',
     addresses: {
       [networkIds.MAINNET]: '0x6b175474e89094c44da98b954eedeac495271d0f',
-      [networkIds.KOVAN]: '0xff795577d9ac8bd7d90ee22b6c1703490b6512fd',
-      [networkIds.RINKEBY]: '0xb99ddaA704cf8Cf6eCD34265835FCb0Db627bDaF',
+      [networkIds.KOVAN]: '0x90410304D88E333710703aF6Ed6A14d5ef74575F',
+      [networkIds.RINKEBY]: '0x67571cecddF314645f0148A7De404ebbd109A9B3',
     },
     decimals: 18,
     image: '/assets/tokens/dai.png',
@@ -120,8 +120,8 @@ export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     symbol: 'AAVE',
     addresses: {
       [networkIds.MAINNET]: '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
-      [networkIds.KOVAN]: '0x40911223ee38C35E2ffd6a2F2AA64Dd0d10e9406',
-      [networkIds.RINKEBY]: '0x0F50105A89a74029F412ab43C0FFE109eBd1D087',
+      [networkIds.KOVAN]: '0x3ce055008e078D2c4f819a94D57d870aA25A6403',
+      [networkIds.RINKEBY]: '0x1E38847dDF583d5b43AfCfe558e8aCe8777b1758',
     },
     decimals: 18,
     image: '/assets/tokens/aave.png',

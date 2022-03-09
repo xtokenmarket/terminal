@@ -261,7 +261,7 @@ const _abi = [
         type: "address",
       },
     ],
-    name: "lastLockedBlock",
+    name: "lastLockedTimestamp",
     outputs: [
       {
         internalType: "uint256",

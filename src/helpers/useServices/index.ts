@@ -15,7 +15,7 @@ export const useServices = (network?: Network) => {
   let readonlyProvider = provider
   let readonlyNetworkId = networkId
 
-  if (networkId !== getIdFromNetwork(network)) {
+  if (network && networkId !== getIdFromNetwork(network)) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     readonlyProvider = getNetworkProvider(network)

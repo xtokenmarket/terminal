@@ -75,19 +75,26 @@ export type UniswapContractsStructOutput = [string, string, string] & {
 export interface LMTerminalInterface extends utils.Interface {
   functions: {
     "clrDeployer()": FunctionFragment;
+    "customDeploymentFee(address)": FunctionFragment;
+    "customDeploymentFeeEnabled(address)": FunctionFragment;
     "deployIncentivizedPool(string,(int24,int24),(address[],uint256),(uint24,address,address,uint256,uint256))": FunctionFragment;
     "deployUniswapPool(address,address,uint24,uint160)": FunctionFragment;
     "deployedCLRPools(uint256)": FunctionFragment;
     "deploymentFee()": FunctionFragment;
+    "disableCustomDeploymentFee(address)": FunctionFragment;
+    "enableCustomDeploymentFee(address,uint256)": FunctionFragment;
     "getPool(address,address,uint24)": FunctionFragment;
     "initialize(address,address,address,address,address,(address,address,address),uint256,uint256,uint256)": FunctionFragment;
     "initiateNewRewardsProgram(address,uint256[],uint256)": FunctionFragment;
     "initiateRewardsProgram(address,uint256[],uint256)": FunctionFragment;
+    "owner()": FunctionFragment;
     "positionManager()": FunctionFragment;
     "proxyAdmin()": FunctionFragment;
+    "renounceOwnership()": FunctionFragment;
     "rewardEscrow()": FunctionFragment;
     "rewardFee()": FunctionFragment;
     "tradeFee()": FunctionFragment;
+    "transferOwnership(address)": FunctionFragment;
     "uniContracts()": FunctionFragment;
     "uniswapFactory()": FunctionFragment;
     "withdrawFees(address)": FunctionFragment;
@@ -97,6 +104,14 @@ export interface LMTerminalInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "clrDeployer",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "customDeploymentFee",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "customDeploymentFeeEnabled",
+    values: [string]
   ): string;
   encodeFunctionData(
     functionFragment: "deployIncentivizedPool",
@@ -118,6 +133,14 @@ export interface LMTerminalInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "deploymentFee",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "disableCustomDeploymentFee",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "enableCustomDeploymentFee",
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "getPool",
@@ -145,6 +168,7 @@ export interface LMTerminalInterface extends utils.Interface {
     functionFragment: "initiateRewardsProgram",
     values: [string, BigNumberish[], BigNumberish]
   ): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "positionManager",
     values?: undefined
@@ -154,11 +178,19 @@ export interface LMTerminalInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "renounceOwnership",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "rewardEscrow",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "rewardFee", values?: undefined): string;
   encodeFunctionData(functionFragment: "tradeFee", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [string]
+  ): string;
   encodeFunctionData(
     functionFragment: "uniContracts",
     values?: undefined
@@ -181,6 +213,14 @@ export interface LMTerminalInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "customDeploymentFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "customDeploymentFeeEnabled",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "deployIncentivizedPool",
     data: BytesLike
   ): Result;
@@ -196,6 +236,14 @@ export interface LMTerminalInterface extends utils.Interface {
     functionFragment: "deploymentFee",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "disableCustomDeploymentFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "enableCustomDeploymentFee",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "getPool", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
@@ -206,17 +254,26 @@ export interface LMTerminalInterface extends utils.Interface {
     functionFragment: "initiateRewardsProgram",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "positionManager",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "proxyAdmin", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "rewardEscrow",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "rewardFee", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "tradeFee", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "uniContracts",
     data: BytesLike
@@ -239,6 +296,7 @@ export interface LMTerminalInterface extends utils.Interface {
     "DeployedUniV3Pool(address,address,address,uint24)": EventFragment;
     "EthFeeWithdraw(uint256)": EventFragment;
     "InitiatedRewardsProgram(address,address[],uint256[],uint256)": EventFragment;
+    "OwnershipTransferred(address,address)": EventFragment;
     "TokenFeeWithdraw(address,uint256)": EventFragment;
   };
 
@@ -246,6 +304,7 @@ export interface LMTerminalInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "DeployedUniV3Pool"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "EthFeeWithdraw"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "InitiatedRewardsProgram"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TokenFeeWithdraw"): EventFragment;
 }
 
@@ -292,6 +351,14 @@ export type InitiatedRewardsProgramEvent = TypedEvent<
 export type InitiatedRewardsProgramEventFilter =
   TypedEventFilter<InitiatedRewardsProgramEvent>;
 
+export type OwnershipTransferredEvent = TypedEvent<
+  [string, string],
+  { previousOwner: string; newOwner: string }
+>;
+
+export type OwnershipTransferredEventFilter =
+  TypedEventFilter<OwnershipTransferredEvent>;
+
 export type TokenFeeWithdrawEvent = TypedEvent<
   [string, BigNumber],
   { token: string; amount: BigNumber }
@@ -329,6 +396,16 @@ export interface LMTerminal extends BaseContract {
   functions: {
     clrDeployer(overrides?: CallOverrides): Promise<[string]>;
 
+    customDeploymentFee(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    customDeploymentFeeEnabled(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
     deployIncentivizedPool(
       symbol: string,
       ticks: PositionTicksStruct,
@@ -351,6 +428,17 @@ export interface LMTerminal extends BaseContract {
     ): Promise<[string]>;
 
     deploymentFee(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    disableCustomDeploymentFee(
+      deployer: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    enableCustomDeploymentFee(
+      deployer: string,
+      feeAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     getPool(
       token0: string,
@@ -386,15 +474,26 @@ export interface LMTerminal extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    owner(overrides?: CallOverrides): Promise<[string]>;
+
     positionManager(overrides?: CallOverrides): Promise<[string]>;
 
     proxyAdmin(overrides?: CallOverrides): Promise<[string]>;
+
+    renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     rewardEscrow(overrides?: CallOverrides): Promise<[string]>;
 
     rewardFee(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     tradeFee(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     uniContracts(
       overrides?: CallOverrides
@@ -418,6 +517,16 @@ export interface LMTerminal extends BaseContract {
 
   clrDeployer(overrides?: CallOverrides): Promise<string>;
 
+  customDeploymentFee(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  customDeploymentFeeEnabled(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
   deployIncentivizedPool(
     symbol: string,
     ticks: PositionTicksStruct,
@@ -440,6 +549,17 @@ export interface LMTerminal extends BaseContract {
   ): Promise<string>;
 
   deploymentFee(overrides?: CallOverrides): Promise<BigNumber>;
+
+  disableCustomDeploymentFee(
+    deployer: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  enableCustomDeploymentFee(
+    deployer: string,
+    feeAmount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   getPool(
     token0: string,
@@ -475,15 +595,26 @@ export interface LMTerminal extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  owner(overrides?: CallOverrides): Promise<string>;
+
   positionManager(overrides?: CallOverrides): Promise<string>;
 
   proxyAdmin(overrides?: CallOverrides): Promise<string>;
+
+  renounceOwnership(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   rewardEscrow(overrides?: CallOverrides): Promise<string>;
 
   rewardFee(overrides?: CallOverrides): Promise<BigNumber>;
 
   tradeFee(overrides?: CallOverrides): Promise<BigNumber>;
+
+  transferOwnership(
+    newOwner: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   uniContracts(
     overrides?: CallOverrides
@@ -507,6 +638,16 @@ export interface LMTerminal extends BaseContract {
   callStatic: {
     clrDeployer(overrides?: CallOverrides): Promise<string>;
 
+    customDeploymentFee(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    customDeploymentFeeEnabled(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
     deployIncentivizedPool(
       symbol: string,
       ticks: PositionTicksStruct,
@@ -529,6 +670,17 @@ export interface LMTerminal extends BaseContract {
     ): Promise<string>;
 
     deploymentFee(overrides?: CallOverrides): Promise<BigNumber>;
+
+    disableCustomDeploymentFee(
+      deployer: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    enableCustomDeploymentFee(
+      deployer: string,
+      feeAmount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     getPool(
       token0: string,
@@ -564,15 +716,24 @@ export interface LMTerminal extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    owner(overrides?: CallOverrides): Promise<string>;
+
     positionManager(overrides?: CallOverrides): Promise<string>;
 
     proxyAdmin(overrides?: CallOverrides): Promise<string>;
+
+    renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
     rewardEscrow(overrides?: CallOverrides): Promise<string>;
 
     rewardFee(overrides?: CallOverrides): Promise<BigNumber>;
 
     tradeFee(overrides?: CallOverrides): Promise<BigNumber>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     uniContracts(
       overrides?: CallOverrides
@@ -638,6 +799,15 @@ export interface LMTerminal extends BaseContract {
       rewardsDuration?: null
     ): InitiatedRewardsProgramEventFilter;
 
+    "OwnershipTransferred(address,address)"(
+      previousOwner?: string | null,
+      newOwner?: string | null
+    ): OwnershipTransferredEventFilter;
+    OwnershipTransferred(
+      previousOwner?: string | null,
+      newOwner?: string | null
+    ): OwnershipTransferredEventFilter;
+
     "TokenFeeWithdraw(address,uint256)"(
       token?: string | null,
       amount?: null
@@ -650,6 +820,16 @@ export interface LMTerminal extends BaseContract {
 
   estimateGas: {
     clrDeployer(overrides?: CallOverrides): Promise<BigNumber>;
+
+    customDeploymentFee(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    customDeploymentFeeEnabled(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     deployIncentivizedPool(
       symbol: string,
@@ -674,6 +854,17 @@ export interface LMTerminal extends BaseContract {
 
     deploymentFee(overrides?: CallOverrides): Promise<BigNumber>;
 
+    disableCustomDeploymentFee(
+      deployer: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    enableCustomDeploymentFee(
+      deployer: string,
+      feeAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     getPool(
       token0: string,
       token1: string,
@@ -708,15 +899,26 @@ export interface LMTerminal extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    owner(overrides?: CallOverrides): Promise<BigNumber>;
+
     positionManager(overrides?: CallOverrides): Promise<BigNumber>;
 
     proxyAdmin(overrides?: CallOverrides): Promise<BigNumber>;
+
+    renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     rewardEscrow(overrides?: CallOverrides): Promise<BigNumber>;
 
     rewardFee(overrides?: CallOverrides): Promise<BigNumber>;
 
     tradeFee(overrides?: CallOverrides): Promise<BigNumber>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     uniContracts(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -732,6 +934,16 @@ export interface LMTerminal extends BaseContract {
 
   populateTransaction: {
     clrDeployer(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    customDeploymentFee(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    customDeploymentFeeEnabled(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     deployIncentivizedPool(
       symbol: string,
@@ -756,6 +968,17 @@ export interface LMTerminal extends BaseContract {
 
     deploymentFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    disableCustomDeploymentFee(
+      deployer: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    enableCustomDeploymentFee(
+      deployer: string,
+      feeAmount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     getPool(
       token0: string,
       token1: string,
@@ -790,15 +1013,26 @@ export interface LMTerminal extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     positionManager(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     proxyAdmin(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
     rewardEscrow(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     rewardFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     tradeFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
 
     uniContracts(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 

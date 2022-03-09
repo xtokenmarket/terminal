@@ -28,7 +28,7 @@ export interface StakedCLRTokenInterface extends utils.Interface {
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initialize(string,string,address,bool)": FunctionFragment;
-    "lastLockedBlock(address)": FunctionFragment;
+    "lastLockedTimestamp(address)": FunctionFragment;
     "mint(address,uint256)": FunctionFragment;
     "name()": FunctionFragment;
     "symbol()": FunctionFragment;
@@ -66,7 +66,7 @@ export interface StakedCLRTokenInterface extends utils.Interface {
     values: [string, string, string, boolean]
   ): string;
   encodeFunctionData(
-    functionFragment: "lastLockedBlock",
+    functionFragment: "lastLockedTimestamp",
     values: [string]
   ): string;
   encodeFunctionData(
@@ -108,7 +108,7 @@ export interface StakedCLRTokenInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "lastLockedBlock",
+    functionFragment: "lastLockedTimestamp",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
@@ -222,7 +222,7 @@ export interface StakedCLRToken extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    lastLockedBlock(
+    lastLockedTimestamp(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
@@ -299,7 +299,10 @@ export interface StakedCLRToken extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  lastLockedBlock(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+  lastLockedTimestamp(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   mint(
     _recipient: string,
@@ -373,7 +376,7 @@ export interface StakedCLRToken extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    lastLockedBlock(
+    lastLockedTimestamp(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -475,7 +478,7 @@ export interface StakedCLRToken extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    lastLockedBlock(
+    lastLockedTimestamp(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -556,7 +559,7 @@ export interface StakedCLRToken extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    lastLockedBlock(
+    lastLockedTimestamp(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;

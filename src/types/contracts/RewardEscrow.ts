@@ -48,6 +48,7 @@ export interface RewardEscrowInterface extends utils.Interface {
     "totalVestedAccountBalance(address,address)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "vest(address,address)": FunctionFragment;
+    "vestAll(address,address[])": FunctionFragment;
     "vestingSchedules(address,address,address,uint256,uint256)": FunctionFragment;
   };
 
@@ -162,6 +163,10 @@ export interface RewardEscrowInterface extends utils.Interface {
     values: [string, string]
   ): string;
   encodeFunctionData(
+    functionFragment: "vestAll",
+    values: [string, string[]]
+  ): string;
+  encodeFunctionData(
     functionFragment: "vestingSchedules",
     values: [string, string, string, BigNumberish, BigNumberish]
   ): string;
@@ -273,6 +278,7 @@ export interface RewardEscrowInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "vest", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "vestAll", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "vestingSchedules",
     data: BytesLike
@@ -573,6 +579,12 @@ export interface RewardEscrow extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    vestAll(
+      pool: string,
+      tokens: string[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     vestingSchedules(
       arg0: string,
       arg1: string,
@@ -738,6 +750,12 @@ export interface RewardEscrow extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  vestAll(
+    pool: string,
+    tokens: string[],
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   vestingSchedules(
     arg0: string,
     arg1: string,
@@ -899,6 +917,12 @@ export interface RewardEscrow extends BaseContract {
     ): Promise<void>;
 
     vest(pool: string, token: string, overrides?: CallOverrides): Promise<void>;
+
+    vestAll(
+      pool: string,
+      tokens: string[],
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     vestingSchedules(
       arg0: string,
@@ -1161,6 +1185,12 @@ export interface RewardEscrow extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    vestAll(
+      pool: string,
+      tokens: string[],
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     vestingSchedules(
       arg0: string,
       arg1: string,
@@ -1335,6 +1365,12 @@ export interface RewardEscrow extends BaseContract {
     vest(
       pool: string,
       token: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    vestAll(
+      pool: string,
+      tokens: string[],
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

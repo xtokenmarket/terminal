@@ -2,11 +2,8 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { makeStyles, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import { TokenIcon } from 'components'
-import { ETHER_DECIMAL } from 'config/constants'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
-import { IDepositState } from 'pages/PoolDetails/components'
 import { ITerminalPool } from 'types'
-import { formatBigNumber, numberWithCommas, getTotalTokenPrice } from 'utils'
+import { formatBigNumber, getTotalTokenPrice } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -51,14 +48,12 @@ interface IProps {
   poolData: ITerminalPool
   amount0: BigNumber
   amount1: BigNumber
-  lpValue: BigNumber
-  totalLiquidity: BigNumber
   isEstimation?: boolean
 }
 
 export const OutputEstimation = (props: IProps) => {
   const classes = useStyles()
-  const { poolData, amount0, amount1, lpValue, totalLiquidity } = props
+  const { poolData, amount0, amount1 } = props
   const isEstimation =
     props.isEstimation !== undefined ? props.isEstimation : true
 

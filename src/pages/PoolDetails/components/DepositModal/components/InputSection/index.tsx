@@ -13,7 +13,6 @@ import { ZERO } from 'utils/number'
 import { OutputEstimation, OutputEstimationInfo } from '..'
 import { useEffect } from 'react'
 import _ from 'lodash'
-import { formatUnits } from 'ethers/lib/utils'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -67,8 +66,6 @@ interface IProps {
   poolData: ITerminalPool
 }
 
-const timer: any = undefined
-
 export const InputSection = (props: IProps) => {
   const classes = useStyles()
   const { onNext, onClose, depositState, updateState, poolData } = props
@@ -89,7 +86,6 @@ export const InputSection = (props: IProps) => {
           amount0Estimation: ZERO,
           amount1Estimation: ZERO,
           lpEstimation: ZERO,
-          totalLiquidity: ZERO,
         })
         return
       }
@@ -103,16 +99,10 @@ export const InputSection = (props: IProps) => {
           amount0.isZero() ? 1 : 0,
           amount0.isZero() ? amount1 : amount0
         )
-      const [lpEstimation, totalLiquidity] = await Promise.all([
-        clr.getLiquidityForAmounts(amount0Estimation, amount1Estimation),
-        clr.getTotalLiquidity(),
-      ])
       if (isMountedRef.current === true) {
         updateState({
           amount0Estimation,
           amount1Estimation,
-          lpEstimation,
-          totalLiquidity,
         })
       }
       if (amount0.isZero()) {
@@ -129,8 +119,6 @@ export const InputSection = (props: IProps) => {
         updateState({
           amount0Estimation: ZERO,
           amount1Estimation: ZERO,
-          lpEstimation: ZERO,
-          totalLiquidity: ZERO,
         })
     }
   }
@@ -213,8 +201,6 @@ export const InputSection = (props: IProps) => {
         poolData={poolData}
         amount0={depositState.amount0Estimation}
         amount1={depositState.amount1Estimation}
-        lpValue={depositState.lpEstimation}
-        totalLiquidity={depositState.totalLiquidity}
       />
       <div className={classes.actions}>
         <OutputEstimationInfo />

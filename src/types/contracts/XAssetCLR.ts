@@ -69,7 +69,6 @@ export interface XAssetCLRInterface extends utils.Interface {
     "getRewardTokensCount()": FunctionFragment;
     "getStakedTokenBalance()": FunctionFragment;
     "getTicks()": FunctionFragment;
-    "getTotalLiquidity()": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
     "initialize(string,int24,int24,uint24,uint256,address,address,address,address,address,(address,address,address),(address[],address,bool))": FunctionFragment;
     "initializeReward(uint256,address)": FunctionFragment;
@@ -83,7 +82,7 @@ export interface XAssetCLRInterface extends utils.Interface {
     "paused()": FunctionFragment;
     "periodFinish()": FunctionFragment;
     "poolFee()": FunctionFragment;
-    "rebalance()": FunctionFragment;
+    "reinvest()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "rewardEscrow()": FunctionFragment;
     "rewardInfo(address)": FunctionFragment;
@@ -102,7 +101,6 @@ export interface XAssetCLRInterface extends utils.Interface {
     "token1()": FunctionFragment;
     "token1DecimalMultiplier()": FunctionFragment;
     "token1Decimals()": FunctionFragment;
-    "tokenDiffDecimalMultiplier()": FunctionFragment;
     "tokenId()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "tradeFee()": FunctionFragment;
@@ -206,10 +204,6 @@ export interface XAssetCLRInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "getTicks", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "getTotalLiquidity",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "increaseAllowance",
     values: [string, BigNumberish]
   ): string;
@@ -259,7 +253,7 @@ export interface XAssetCLRInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "poolFee", values?: undefined): string;
-  encodeFunctionData(functionFragment: "rebalance", values?: undefined): string;
+  encodeFunctionData(functionFragment: "reinvest", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
@@ -318,10 +312,6 @@ export interface XAssetCLRInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "token1Decimals",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "tokenDiffDecimalMultiplier",
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "tokenId", values?: undefined): string;
@@ -435,10 +425,6 @@ export interface XAssetCLRInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "getTicks", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "getTotalLiquidity",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "increaseAllowance",
     data: BytesLike
   ): Result;
@@ -472,7 +458,7 @@ export interface XAssetCLRInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "poolFee", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "rebalance", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "reinvest", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "renounceOwnership",
     data: BytesLike
@@ -533,10 +519,6 @@ export interface XAssetCLRInterface extends utils.Interface {
     functionFragment: "token1Decimals",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "tokenDiffDecimalMultiplier",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "tokenId", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "totalSupply",
@@ -577,8 +559,7 @@ export interface XAssetCLRInterface extends utils.Interface {
     "ManagerSet(address)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
     "Paused(address)": EventFragment;
-    "Rebalance()": EventFragment;
-    "Recovered(address,uint256)": EventFragment;
+    "Reinvest()": EventFragment;
     "RewardAdded(uint256)": EventFragment;
     "RewardClaimed(address,address,uint256)": EventFragment;
     "RewardsDurationUpdated(uint256)": EventFragment;
@@ -595,8 +576,7 @@ export interface XAssetCLRInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "ManagerSet"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Rebalance"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Recovered"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Reinvest"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RewardAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RewardClaimed"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RewardsDurationUpdated"): EventFragment;
@@ -644,16 +624,9 @@ export type PausedEvent = TypedEvent<[string], { account: string }>;
 
 export type PausedEventFilter = TypedEventFilter<PausedEvent>;
 
-export type RebalanceEvent = TypedEvent<[], {}>;
+export type ReinvestEvent = TypedEvent<[], {}>;
 
-export type RebalanceEventFilter = TypedEventFilter<RebalanceEvent>;
-
-export type RecoveredEvent = TypedEvent<
-  [string, BigNumber],
-  { token: string; amount: BigNumber }
->;
-
-export type RecoveredEventFilter = TypedEventFilter<RecoveredEvent>;
+export type ReinvestEventFilter = TypedEventFilter<ReinvestEvent>;
 
 export type RewardAddedEvent = TypedEvent<[BigNumber], { reward: BigNumber }>;
 
@@ -776,8 +749,8 @@ export interface XAssetCLR extends BaseContract {
     >;
 
     calculateMintAmount(
-      _amount: BigNumberish,
-      totalSupply: BigNumberish,
+      amount0: BigNumberish,
+      amount1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { mintAmount: BigNumber }>;
 
@@ -872,10 +845,6 @@ export interface XAssetCLR extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[number, number] & { tick0: number; tick1: number }>;
 
-    getTotalLiquidity(
-      overrides?: CallOverrides
-    ): Promise<[BigNumber] & { amount: BigNumber }>;
-
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -934,7 +903,7 @@ export interface XAssetCLR extends BaseContract {
 
     poolFee(overrides?: CallOverrides): Promise<[number]>;
 
-    rebalance(
+    reinvest(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -997,8 +966,6 @@ export interface XAssetCLR extends BaseContract {
     token1DecimalMultiplier(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     token1Decimals(overrides?: CallOverrides): Promise<[number]>;
-
-    tokenDiffDecimalMultiplier(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     tokenId(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -1094,8 +1061,8 @@ export interface XAssetCLR extends BaseContract {
   >;
 
   calculateMintAmount(
-    _amount: BigNumberish,
-    totalSupply: BigNumberish,
+    amount0: BigNumberish,
+    amount1: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -1182,8 +1149,6 @@ export interface XAssetCLR extends BaseContract {
     overrides?: CallOverrides
   ): Promise<[number, number] & { tick0: number; tick1: number }>;
 
-  getTotalLiquidity(overrides?: CallOverrides): Promise<BigNumber>;
-
   increaseAllowance(
     spender: string,
     addedValue: BigNumberish,
@@ -1239,7 +1204,7 @@ export interface XAssetCLR extends BaseContract {
 
   poolFee(overrides?: CallOverrides): Promise<number>;
 
-  rebalance(
+  reinvest(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -1296,8 +1261,6 @@ export interface XAssetCLR extends BaseContract {
   token1DecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>;
 
   token1Decimals(overrides?: CallOverrides): Promise<number>;
-
-  tokenDiffDecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>;
 
   tokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1390,8 +1353,8 @@ export interface XAssetCLR extends BaseContract {
     >;
 
     calculateMintAmount(
-      _amount: BigNumberish,
-      totalSupply: BigNumberish,
+      amount0: BigNumberish,
+      amount1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1478,8 +1441,6 @@ export interface XAssetCLR extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[number, number] & { tick0: number; tick1: number }>;
 
-    getTotalLiquidity(overrides?: CallOverrides): Promise<BigNumber>;
-
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -1533,7 +1494,7 @@ export interface XAssetCLR extends BaseContract {
 
     poolFee(overrides?: CallOverrides): Promise<number>;
 
-    rebalance(overrides?: CallOverrides): Promise<void>;
+    reinvest(overrides?: CallOverrides): Promise<void>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
@@ -1592,8 +1553,6 @@ export interface XAssetCLR extends BaseContract {
     token1DecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>;
 
     token1Decimals(overrides?: CallOverrides): Promise<number>;
-
-    tokenDiffDecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>;
 
     tokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1685,14 +1644,8 @@ export interface XAssetCLR extends BaseContract {
     "Paused(address)"(account?: null): PausedEventFilter;
     Paused(account?: null): PausedEventFilter;
 
-    "Rebalance()"(): RebalanceEventFilter;
-    Rebalance(): RebalanceEventFilter;
-
-    "Recovered(address,uint256)"(
-      token?: null,
-      amount?: null
-    ): RecoveredEventFilter;
-    Recovered(token?: null, amount?: null): RecoveredEventFilter;
+    "Reinvest()"(): ReinvestEventFilter;
+    Reinvest(): ReinvestEventFilter;
 
     "RewardAdded(uint256)"(reward?: null): RewardAddedEventFilter;
     RewardAdded(reward?: null): RewardAddedEventFilter;
@@ -1792,8 +1745,8 @@ export interface XAssetCLR extends BaseContract {
     ): Promise<BigNumber>;
 
     calculateMintAmount(
-      _amount: BigNumberish,
-      totalSupply: BigNumberish,
+      amount0: BigNumberish,
+      amount1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1863,8 +1816,6 @@ export interface XAssetCLR extends BaseContract {
 
     getTicks(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getTotalLiquidity(overrides?: CallOverrides): Promise<BigNumber>;
-
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -1920,7 +1871,7 @@ export interface XAssetCLR extends BaseContract {
 
     poolFee(overrides?: CallOverrides): Promise<BigNumber>;
 
-    rebalance(
+    reinvest(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1973,8 +1924,6 @@ export interface XAssetCLR extends BaseContract {
     token1DecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>;
 
     token1Decimals(overrides?: CallOverrides): Promise<BigNumber>;
-
-    tokenDiffDecimalMultiplier(overrides?: CallOverrides): Promise<BigNumber>;
 
     tokenId(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -2061,8 +2010,8 @@ export interface XAssetCLR extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     calculateMintAmount(
-      _amount: BigNumberish,
-      totalSupply: BigNumberish,
+      amount0: BigNumberish,
+      amount1: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -2144,8 +2093,6 @@ export interface XAssetCLR extends BaseContract {
 
     getTicks(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    getTotalLiquidity(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     increaseAllowance(
       spender: string,
       addedValue: BigNumberish,
@@ -2206,7 +2153,7 @@ export interface XAssetCLR extends BaseContract {
 
     poolFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    rebalance(
+    reinvest(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -2268,10 +2215,6 @@ export interface XAssetCLR extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     token1Decimals(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    tokenDiffDecimalMultiplier(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
 
     tokenId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
