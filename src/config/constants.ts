@@ -65,8 +65,6 @@ export const LP_TOKEN_BASIC: IToken = {
   image: '',
   address: '',
   price: '',
-  myDeposit: BigNumber.from(0),
-  myDepositTvl: ''
 }
 
 export const MINT_BURN_SLIPPAGE = BigNumber.from(100)

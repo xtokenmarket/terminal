@@ -66,6 +66,8 @@ interface IProps {
   token: IToken
   pool: ITerminalPool
   isMydeposit?: boolean
+  deposit?: BigNumber
+  tokenTvl?: string
 }
 
 export const BalanceSection = (props: IProps) => {
@@ -73,7 +75,7 @@ export const BalanceSection = (props: IProps) => {
   const { networkId } = useConnectedWeb3Context()
 
   const etherscanUri = getEtherscanUri(networkId)
-  const { token, pool, isMydeposit } = props
+  const { token, pool, isMydeposit, deposit, tokenTvl } = props
 
   // TODO: Remove fetching token balance via `useTokenBalance()` hook
   // Replace with `token0Balance` and `token1Balance` from `useTerminalPool()` hook
@@ -93,7 +95,7 @@ export const BalanceSection = (props: IProps) => {
           <Typography className={classes.balance}>
             {numberWithCommas(
               formatBigNumber(
-                isMydeposit ? token.myDeposit || BigNumber.from(0) : balance,
+                isMydeposit ? deposit || BigNumber.from(0) : balance,
                 token.decimals
               )
             )}{' '}
@@ -106,7 +108,7 @@ export const BalanceSection = (props: IProps) => {
           <Typography className={classes.dollar}>
             ~ $
             {numberWithCommas(
-              isMydeposit ? token.myDepositTvl || '0' : (token.tvl as string)
+              isMydeposit ? tokenTvl || '0' : (token.tvl as string)
             )}
           </Typography>
         </div>

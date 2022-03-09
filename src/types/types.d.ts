@@ -56,8 +56,6 @@ export interface IToken {
   percent?: string
   tvl?: string
   price?: string
-  myDeposit?: BigNumber
-  myDepositTvl?: string
 }
 
 export interface IPositionTicks {
@@ -104,6 +102,12 @@ export interface ITerminalPool {
   earnedTokens: EarnedTokens
   history: History[]
   poolShare: string
+  user: {
+    token0Deposit: BigNumber, 
+    token1Deposit: BigNumber, 
+    token0Tvl: string, 
+    token1Tvl: string
+  }
 }
 
 export interface ICreatePoolData {

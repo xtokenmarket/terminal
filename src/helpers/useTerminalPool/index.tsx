@@ -226,9 +226,15 @@ export const useTerminalPool = (
       let history: History[] = []
       let earnedTokens = []
       let vestingTokens = []
-      let myDeposit0 = BigNumber.from(0)
-      let myDeposit1 = BigNumber.from(0)
+      let token0Deposit = BigNumber.from(0)
+      let token1Deposit = BigNumber.from(0)
       let poolShare = '0'
+      const user = {
+        token0Deposit: BigNumber.from(0),
+        token1Deposit: BigNumber.from(0),
+        token0Tvl: '0',
+        token1Tvl: '0',
+      }
 
       // Fetch events history and reward tokens only on PoolDetails page
       if (isPoolDetails) {
@@ -366,36 +372,37 @@ export const useTerminalPool = (
         const myDeposit = await stakedCLRToken.balanceOf(account)
         const totalSupply = await clr.contract.totalSupply()
 
-        myDeposit0 = token0Balance
+        token0Deposit = token0Balance
           // decimals are not supported
           .mul(MULTIPLY_PRECISION)
           .div(totalSupply)
           .mul(myDeposit)
           .div(MULTIPLY_PRECISION)
 
-        myDeposit1 = token1Balance
+        token1Deposit = token1Balance
           .mul(MULTIPLY_PRECISION)
           .div(totalSupply)
           .mul(myDeposit)
           .div(MULTIPLY_PRECISION)
 
-        token0.myDeposit = myDeposit0
-        token1.myDeposit = myDeposit1
+        user.token0Deposit = token0Deposit
+        user.token1Deposit = token1Deposit
 
-        token0.myDepositTvl = formatUnits(
-          myDeposit1.mul(parseEther(pool.token0.price)).div(ONE_ETHER),
+        user.token0Tvl = formatUnits(
+          token0Deposit.mul(parseEther(pool.token0.price)).div(ONE_ETHER),
           pool.token0.decimals
         )
 
-        token1.myDepositTvl = formatUnits(
-          myDeposit1.mul(parseEther(pool.token1.price)).div(ONE_ETHER),
+        user.token1Tvl = formatUnits(
+          token1Deposit.mul(parseEther(pool.token1.price)).div(ONE_ETHER),
           pool.token1.decimals
         )
 
         const totalBalance = token0Balance.add(token1Balance)
 
         poolShare = String(
-          (myDeposit0.add(myDeposit1).toNumber() / totalBalance.toNumber()) *
+          (token0Deposit.add(token1Deposit).toNumber() /
+            totalBalance.toNumber()) *
             100
         )
 
@@ -434,6 +441,7 @@ export const useTerminalPool = (
           earnedTokens,
           history,
           poolShare,
+          user,
         },
       })
     } catch (error) {
