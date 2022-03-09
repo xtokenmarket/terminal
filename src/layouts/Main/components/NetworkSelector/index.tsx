@@ -1,5 +1,8 @@
-import { makeStyles, Button, Select, MenuItem } from '@material-ui/core'
+import { makeStyles, Select, MenuItem } from '@material-ui/core'
 import clsx from 'clsx'
+import { ChainId, CHAIN_NAMES } from 'config/constants'
+import { useNetworkContext } from 'contexts/networkContext'
+import { useCallback } from 'react'
 import { ENetwork } from 'utils/enums'
 
 const useStyles = makeStyles((theme) => ({
@@ -47,10 +50,18 @@ interface IProps {
 
 export const NetworkSelector = (props: IProps) => {
   const classes = useStyles()
+  const { chainId, supportedChains, switchChain } = useNetworkContext()
+
+  const handleNetworkChange = useCallback(
+    async ({ target: { value: network } }) => {
+      await switchChain(network)
+    },
+    [switchChain]
+  )
 
   return (
     <Select
-      value={props.network}
+      value={chainId || ChainId.Mainnet}
       className={clsx(classes.root, props.className)}
       disableUnderline
       classes={{
@@ -64,10 +75,12 @@ export const NetworkSelector = (props: IProps) => {
           list: classes.list,
         },
       }}
+      onChange={handleNetworkChange}
     >
-      {Object.values(ENetwork).map((network) => {
+      {supportedChains.map((chainId) => {
+        const network = CHAIN_NAMES[chainId]
         return (
-          <MenuItem value={network} key={network} className={classes.item}>
+          <MenuItem value={chainId} key={chainId} className={classes.item}>
             <img alt="img" src={`/assets/networks/${network}.svg`} />
             <span>{network}</span>
           </MenuItem>

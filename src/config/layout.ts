@@ -2,14 +2,33 @@ import { SvgIcons } from './constants'
 
 export const MENU_ITEMS = [
   // { id: "home", label: "home", icon: SvgIcons.home, href: "/home" },
-  { id: 'market', label: 'market', icon: SvgIcons.market, href: '/market' },
-  { id: 'cafe', label: 'cafe', icon: SvgIcons.cafe, href: '/cafe' },
-  { id: 'vote', label: 'vote', icon: SvgIcons.vote, href: '/vote' },
   {
     id: 'terminal',
     label: 'terminal',
-    icon: SvgIcons.terminal,
+    icon: SvgIcons.market,
     href: '/terminal',
+    enabled: true,
+  },
+  {
+    id: 'cafe',
+    label: 'cafe',
+    icon: SvgIcons.cafe,
+    href: '/cafe',
+    enabled: false,
+  },
+  {
+    id: 'vote',
+    label: 'vote',
+    icon: SvgIcons.vote,
+    href: '/vote',
+    enabled: false,
+  },
+  {
+    id: 'market',
+    label: 'market',
+    icon: SvgIcons.terminal,
+    href: '/market',
+    enabled: false,
   },
 ]
 

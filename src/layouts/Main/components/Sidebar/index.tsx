@@ -1,4 +1,5 @@
 import { makeStyles, Typography } from '@material-ui/core'
+import Tooltip from '@material-ui/core/Tooltip'
 import clsx from 'clsx'
 import { MENU_ITEMS, SOCIAL_ITEMS } from 'config/layout'
 import { NavLink, useHistory, matchPath } from 'react-router-dom'
@@ -65,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
     },
     display: 'flex',
     alignItems: 'center',
+    cursor: 'pointer',
 
     textDecoration: 'none',
 
@@ -76,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: theme.colors.primary300,
+      backgroundColor: theme.colors.primary500,
       color: theme.colors.purple0,
       transition: 'all 0.4s',
       '& svg': {
@@ -107,7 +109,7 @@ const useStyles = makeStyles((theme) => ({
     },
     '&.active': {
       '& .menu-item-icon-wrapper': {
-        backgroundColor: theme.colors.primary400,
+        backgroundColor: theme.colors.primary300,
         color: theme.colors.white,
         '& svg': {
           '& g': { opacity: 1 },
@@ -117,6 +119,16 @@ const useStyles = makeStyles((theme) => ({
         color: theme.colors.white,
       },
     },
+  },
+  tooltip: {
+    backgroundColor: theme.colors.primary300,
+    fontFamily: 'Gilmer',
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
+    fontSize: 8,
+  },
+  tooltipArrow: {
+    color: theme.colors.primary300,
   },
 }))
 
@@ -135,24 +147,43 @@ export const Sidebar = () => {
             </div>
           </div>
           <div className={classes.body}>
-            {MENU_ITEMS.map((item) => {
-              const Icon = item.icon
+            {MENU_ITEMS.map(({ icon: Icon, href, enabled }) => {
+              const content = (
+                <div className="menu-item-icon-wrapper">
+                  <Icon />
+                </div>
+              )
+
+              if (!enabled) {
+                return (
+                  <Tooltip
+                    title="Coming Soon"
+                    arrow
+                    placement="top"
+                    classes={{
+                      arrow: classes.tooltipArrow,
+                      tooltip: classes.tooltip,
+                    }}
+                    key={href}
+                  >
+                    <div className={classes.item}>{content}</div>
+                  </Tooltip>
+                )
+              }
 
               return (
                 <NavLink
                   isActive={() =>
                     !!matchPath(history.location.pathname, {
-                      path: item.href,
+                      path: href,
                       exact: false,
                     })
                   }
-                  to={item.href}
-                  key={item.href}
+                  to={href}
+                  key={href}
                   className={classes.item}
                 >
-                  <div className="menu-item-icon-wrapper">
-                    <Icon />
-                  </div>
+                  {content}
                 </NavLink>
               )
             })}
