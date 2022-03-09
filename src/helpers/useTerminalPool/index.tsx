@@ -378,28 +378,29 @@ export const useTerminalPool = (
           .div(totalSupply)
           .mul(myDeposit)
           .div(MULTIPLY_PRECISION)
+
+        token0.myDeposit = myDeposit0
+        token1.myDeposit = myDeposit1
+
+        token0.myDepositTvl = formatUnits(
+          myDeposit1.mul(parseEther(pool.token0.price)).div(ONE_ETHER),
+          pool.token0.decimals
+        )
+
+        token1.myDepositTvl = formatUnits(
+          myDeposit1.mul(parseEther(pool.token1.price)).div(ONE_ETHER),
+          pool.token1.decimals
+        )
+
+        const totalBalance = token0Balance.add(token1Balance)
+
+        poolShare = String(
+          (myDeposit0.add(myDeposit1).toNumber() / totalBalance.toNumber()) *
+            100
+        )
+
+        poolShare = poolShare === 'NaN' ? '0' : poolShare
       }
-
-      token0.myDeposit = myDeposit0
-      token1.myDeposit = myDeposit1
-
-      token0.myDepositTvl = formatUnits(
-        myDeposit1.mul(parseEther(pool.token0.price)).div(ONE_ETHER),
-        pool.token0.decimals
-      )
-
-      token1.myDepositTvl = formatUnits(
-        myDeposit1.mul(parseEther(pool.token1.price)).div(ONE_ETHER),
-        pool.token1.decimals
-      )
-
-      poolShare = myDeposit0
-        .add(myDeposit1)
-        .mul(MULTIPLY_PRECISION)
-        .div(token0Balance.add(token1Balance))
-        .toString()
-
-      poolShare = String((Number(poolShare) / MULTIPLY_PRECISION) * 100)
 
       setState({
         loading: false,
