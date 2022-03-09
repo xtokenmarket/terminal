@@ -2,10 +2,10 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { ConnectorNames, Network } from 'utils/enums'
 
 import { ReactComponent as HomeIcon } from 'assets/svgs/home.svg'
-import { ReactComponent as MarketIcon } from 'assets/svgs/shopping.svg'
-import { ReactComponent as CafeIcon } from 'assets/svgs/cup.svg'
-import { ReactComponent as VoteIcon } from 'assets/svgs/like.svg'
-import { ReactComponent as TerminalIcon } from 'assets/svgs/monitor.svg'
+import { ReactComponent as MarketIcon } from 'assets/svgs/market.svg'
+import { ReactComponent as CafeIcon } from 'assets/svgs/cafe.svg'
+import { ReactComponent as VoteIcon } from 'assets/svgs/vote.svg'
+import { ReactComponent as TerminalIcon } from 'assets/svgs/terminal.svg'
 import { ReactComponent as GithubIcon } from 'assets/svgs/github.svg'
 import { ReactComponent as TwitterIcon } from 'assets/svgs/twitter.svg'
 import { ReactComponent as DiscordIcon } from 'assets/svgs/discord.svg'
@@ -17,6 +17,87 @@ export const LOGGER_ID = 'xToken-Terminal'
 
 export const DEFAULT_NETWORK = Network.KOVAN
 export const DEFAULT_NETWORK_ID = 42
+
+export enum ChainId {
+  Mainnet = 1,
+  Arbitrum = 42161,
+  Optimism = 10,
+  Polygon = 137,
+}
+
+export enum TestChainId {
+  EthereumKovan = 42,
+  ArbitrumRinkeby = 421611,
+  OptimismKovan = 69,
+  PolygonMumbai = 80001,
+}
+
+export const CHAIN_NAMES: Record<ChainId, string> = {
+  [ChainId.Mainnet]: 'Ethereum',
+  [ChainId.Arbitrum]: 'Arbitrum',
+  [ChainId.Optimism]: 'Optimism',
+  [ChainId.Polygon]: 'Polygon',
+}
+
+export interface AddNetworkChainParameters {
+  chainId: string // A 0x-prefixed hexadecimal string
+  chainName: string
+  nativeCurrency: {
+    name: string
+    symbol: string // 2-6 characters long
+    decimals: 18
+  }
+  rpcUrls: string[]
+  blockExplorerUrls?: string[]
+  iconUrls?: string[] // Currently ignored.
+}
+
+export const CHAIN_PARAMS: Record<ChainId, AddNetworkChainParameters> = {
+  [ChainId.Mainnet]: {
+    chainId: `0x${ChainId.Mainnet.toString(16)}`,
+    chainName: 'Ethereum',
+    nativeCurrency: {
+      name: 'Ethereum',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+    rpcUrls: ['https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
+    blockExplorerUrls: ['https://etherscan.io'],
+  },
+  [ChainId.Arbitrum]: {
+    chainId: `0x${ChainId.Arbitrum.toString(16)}`,
+    chainName: 'Arbitrum One',
+    nativeCurrency: {
+      name: 'Ethereum',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+    rpcUrls: ['https://arb1.arbitrum.io/rpc'],
+    blockExplorerUrls: ['https://arbiscan.io'],
+  },
+  [ChainId.Optimism]: {
+    chainId: `0x${ChainId.Optimism.toString(16)}`,
+    chainName: 'Optimism',
+    nativeCurrency: {
+      name: 'Ethereum',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+    rpcUrls: ['https://mainnet.optimism.io/'],
+    blockExplorerUrls: ['https://optimistic.etherscan.io'],
+  },
+  [ChainId.Polygon]: {
+    chainId: `0x${ChainId.Polygon.toString(16)}`,
+    chainName: 'Polygon Mainnet',
+    nativeCurrency: {
+      name: 'Polygon',
+      symbol: 'MATIC',
+      decimals: 18,
+    },
+    rpcUrls: ['https://polygon-rpc.com/'],
+    blockExplorerUrls: ['https://polygonscan.com'],
+  },
+}
 
 export const WALLET_ICONS: { [key in ConnectorNames]: string } = {
   [ConnectorNames.Injected]: '/assets/wallets/metamask-color.svg',
@@ -64,7 +145,7 @@ export const LP_TOKEN_BASIC: IToken = {
   decimals: ETHER_DECIMAL,
   image: '',
   address: '',
-  price: ''
+  price: '',
 }
 
 export const MINT_BURN_SLIPPAGE = BigNumber.from(100)

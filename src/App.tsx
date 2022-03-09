@@ -10,6 +10,7 @@ import { ETHEME } from 'utils/enums'
 import React from 'react'
 import './App.scss'
 import { ConnectedWeb3 } from 'contexts'
+import { NetworkContextProvider } from 'contexts/networkContext'
 
 function getLibrary(provider: any): Web3Provider {
   const library = new Web3Provider(provider)
@@ -32,7 +33,9 @@ function App() {
           maxSnack={3}
         >
           <ConnectedWeb3>
-            <BrowserRouter>{renderRoutes(routes as never)}</BrowserRouter>
+            <NetworkContextProvider>
+              <BrowserRouter>{renderRoutes(routes as never)}</BrowserRouter>
+            </NetworkContextProvider>
           </ConnectedWeb3>
         </SnackbarProvider>
       </Web3ReactProvider>

@@ -8,7 +8,7 @@ import {
   KnownToken,
   NetworkId,
 } from 'types/types'
-import { DEFAULT_NETWORK_ID } from './constants'
+import { ChainId, DEFAULT_NETWORK_ID } from './constants'
 import { Network } from 'utils/enums'
 import { getIdFromNetwork } from 'utils/network'
 
@@ -153,9 +153,7 @@ export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
 export const tokenSymbols = Object.keys(knownTokens)
 export const commonBaseTokenSymbols = ['usdt', 'weth']
 
-export const supportedNetworkIds = Object.keys(networks).map(
-  Number
-) as NetworkId[]
+export const supportedNetworkIds = Object.values(ChainId).map(Number)
 
 export const supportedNetworkURLs = entries(networks).reduce<{
   [networkId: number]: string
