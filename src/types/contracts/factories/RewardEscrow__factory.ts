@@ -824,6 +824,24 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
+        name: "pool",
+        type: "address",
+      },
+      {
+        internalType: "address[]",
+        name: "tokens",
+        type: "address[]",
+      },
+    ],
+    name: "vestAll",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
         name: "",
         type: "address",
       },

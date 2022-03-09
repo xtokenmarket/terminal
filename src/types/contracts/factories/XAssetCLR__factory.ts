@@ -124,26 +124,7 @@ const _abi = [
   {
     anonymous: false,
     inputs: [],
-    name: "Rebalance",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "token",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    name: "Recovered",
+    name: "Reinvest",
     type: "event",
   },
   {
@@ -447,12 +428,12 @@ const _abi = [
     inputs: [
       {
         internalType: "uint256",
-        name: "_amount",
+        name: "amount0",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "totalSupply",
+        name: "amount1",
         type: "uint256",
       },
     ],
@@ -787,19 +768,6 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "getTotalLiquidity",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "address",
@@ -1091,7 +1059,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "rebalance",
+    name: "reinvest",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -1358,19 +1326,6 @@ const _abi = [
         internalType: "uint8",
         name: "",
         type: "uint8",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "tokenDiffDecimalMultiplier",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
       },
     ],
     stateMutability: "view",
