@@ -100,7 +100,6 @@ export const DepositSection = (props: IProps) => {
     step: 1,
   })
   const { onNext, depositState, poolData, updateState, onClose } = props
-  const { lmService } = useServices()
   const { account, library: provider } = useConnectedWeb3Context()
 
   const isMountedRef = useIsMountedRef()

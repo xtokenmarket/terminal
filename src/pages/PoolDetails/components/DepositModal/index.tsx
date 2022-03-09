@@ -46,8 +46,6 @@ export interface IDepositState {
   amount1: BigNumber
   amount0Estimation: BigNumber
   amount1Estimation: BigNumber
-  lpEstimation: BigNumber
-  totalLiquidity: BigNumber
   // used
   amount0Used: BigNumber
   amount1Used: BigNumber
@@ -68,8 +66,6 @@ export const DepositModal = (props: IProps) => {
     amount1: ZERO,
     amount0Estimation: ZERO,
     amount1Estimation: ZERO,
-    lpEstimation: ZERO,
-    totalLiquidity: ZERO,
     amount0Used: ZERO,
     amount1Used: ZERO,
     liquidityAdded: ZERO,

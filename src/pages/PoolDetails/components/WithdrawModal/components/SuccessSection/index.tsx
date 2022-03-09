@@ -70,8 +70,6 @@ export const SuccessSection = (props: IProps) => {
         poolData={poolData}
         amount0={withdrawState.amount0Withdrawn}
         amount1={withdrawState.amount1Withdrawn}
-        lpValue={withdrawState.liquidityWithdrawn}
-        totalLiquidity={withdrawState.totalLiquidity}
         isEstimation={false}
         earned={withdrawState.claimedEarn}
       />

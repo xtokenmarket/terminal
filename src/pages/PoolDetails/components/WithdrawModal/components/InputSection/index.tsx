@@ -54,7 +54,7 @@ let timerId: any
 export const InputSection = (props: IProps) => {
   const classes = useStyles()
   const { onNext, onClose, withdrawState, updateState, poolData } = props
-  const { account, library: provider, networkId } = useConnectedWeb3Context()
+  const { account, library: provider } = useConnectedWeb3Context()
   const isMountedRef = useIsMountedRef()
   const { multicall } = useServices()
 
@@ -133,8 +133,8 @@ export const InputSection = (props: IProps) => {
       const amount1 = amountResponse[1] as BigNumber
       const unstakeAmount0 = amount0.add(amount0.div(MINT_BURN_SLIPPAGE))
       const unstakeAmount1 = amount1.add(amount1.div(MINT_BURN_SLIPPAGE))
+
       updateState({
-        totalLiquidity,
         amount0Estimation: unstakeAmount0,
         amount1Estimation: unstakeAmount1,
       })
@@ -182,8 +182,6 @@ export const InputSection = (props: IProps) => {
         poolData={poolData}
         amount0={withdrawState.amount0Estimation}
         amount1={withdrawState.amount1Estimation}
-        lpValue={withdrawState.lpInput}
-        totalLiquidity={withdrawState.totalLiquidity}
         earned={withdrawState.earned}
       />
       <div className={classes.actions}>

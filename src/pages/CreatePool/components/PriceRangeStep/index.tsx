@@ -226,6 +226,7 @@ export const PriceRangeStep = (props: IProps) => {
 
   const { balance: balanceA } = useTokenBalance(data.token0.address)
   const { balance: balanceB } = useTokenBalance(data.token1.address)
+
   useEffect(() => {
     const amountA = Number(
       formatUnits(
@@ -271,6 +272,7 @@ export const PriceRangeStep = (props: IProps) => {
     !state.balanceErrors.some((e) => !!e) &&
     !outOfRange
   )
+
   const onFullRangeClick = () => {
     setState((prev) => ({
       ...prev,
@@ -280,6 +282,7 @@ export const PriceRangeStep = (props: IProps) => {
   }
 
   const totalErrors = [...state.balanceErrors].filter((e) => !!e)
+
   if (errorMessage) totalErrors.push(errorMessage)
 
   return (
