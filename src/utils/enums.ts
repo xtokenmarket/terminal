@@ -9,6 +9,7 @@ export enum ConnectorNames {
   Injected = 'injected',
   TrustWallet = 'trustwallet',
   WalletConnect = 'walletconnect',
+  Coinbase = 'coinbase',
 }
 
 export enum ETHEME {
@@ -57,7 +58,7 @@ export enum ENetwork {
   Ethereum = 'Ethereum',
   Arbitrum = 'Arbitrum',
   Optimism = 'Optimism',
-  Polygon = 'Polygon'
+  Polygon = 'Polygon',
 }
 
 export enum EDepositStep {

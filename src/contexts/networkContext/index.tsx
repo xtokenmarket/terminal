@@ -1,9 +1,4 @@
-import {
-  ChainId,
-  CHAIN_NAMES,
-  CHAIN_PARAMS,
-  TestChainId,
-} from 'config/constants'
+import { ChainId, CHAIN_NAMES, CHAIN_PARAMS } from 'config/constants'
 import { useConnectedWeb3Context } from 'contexts/connectedWeb3'
 import { createContext, useContext } from 'react'
 import { Config, getConfig } from './config'
@@ -12,13 +7,11 @@ interface IState {
   chainId: ChainId
   chainName: string
   isSupportedChain: boolean
-  isSupportedTestChain: boolean
 }
 
 interface INetworkContext extends IState {
   switchChain: (chainId: ChainId) => Promise<void>
   supportedChains: ChainId[]
-  supportedTestChains: TestChainId[]
 }
 
 const NetworkContext = createContext<INetworkContext>(null!)
@@ -29,7 +22,7 @@ interface IProps {
 }
 
 const NetworkContextProvider: React.FC<IProps> = ({ children, config }) => {
-  const { supportedChains, supportedTestChains } = getConfig(config)
+  const { supportedChains } = getConfig(config)
   const { networkId: chainId } = useConnectedWeb3Context()
 
   const refreshPage = () => {
@@ -40,11 +33,7 @@ const NetworkContextProvider: React.FC<IProps> = ({ children, config }) => {
     chainId: chainId as ChainId,
     chainName: chainId ? CHAIN_NAMES[chainId as ChainId] : '',
     supportedChains,
-    supportedTestChains,
-    isSupportedChain: [...supportedChains, ...supportedTestChains].includes(
-      chainId as ChainId
-    ),
-    isSupportedTestChain: supportedTestChains.includes(chainId as TestChainId),
+    isSupportedChain: [...supportedChains].includes(chainId as ChainId),
     switchChain: async (chainId: ChainId) => {
       const ethereum = (window as any).ethereum
       if (!ethereum) return
