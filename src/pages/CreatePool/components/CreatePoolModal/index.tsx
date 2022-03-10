@@ -47,6 +47,7 @@ export const CreatePoolModal = (props: IProps) => {
     ECreatePoolModalStep.Init
   )
   const [poolAddress, setPoolAddress] = useState('')
+  const [txId, setTxId] = useState('')
 
   useEffect(() => {
     if (!account) {
@@ -90,12 +91,17 @@ export const CreatePoolModal = (props: IProps) => {
             onNext={onNextStep}
             poolData={props.poolData}
             setPoolAddress={setPoolAddress}
+            setTxId={setTxId}
             onClose={onCreatePoolSectionClose}
           />
         )
       default:
         return (
-          <SuccessSection onClose={onSuccessClose} poolData={props.poolData} />
+          <SuccessSection
+            onClose={onSuccessClose}
+            poolData={props.poolData}
+            txId={txId}
+          />
         )
     }
   }

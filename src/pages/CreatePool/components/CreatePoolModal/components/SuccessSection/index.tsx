@@ -1,5 +1,6 @@
 import { Button, makeStyles, Typography } from '@material-ui/core'
 import { ICreatePoolData } from 'types'
+import { ViewTransaction } from '../ViewTransaction'
 
 const ICON_SIZE = 150
 
@@ -33,6 +34,11 @@ const useStyles = makeStyles((theme) => ({
   },
   deposit: {},
   buy: { marginTop: 8 },
+  bottomContent: {
+    padding: theme.spacing(2),
+    display: 'flex',
+    justifyContent: 'center',
+  },
   actions: {
     padding: 32,
     backgroundColor: theme.colors.primary500,
@@ -42,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   onClose: () => void
   poolData: ICreatePoolData
+  txId: string
 }
 
 export const SuccessSection = (props: IProps) => {
@@ -62,6 +69,9 @@ export const SuccessSection = (props: IProps) => {
         <Typography className={classes.description}>
           You have successfully created {pool} pool.
         </Typography>
+      </div>
+      <div className={classes.bottomContent}>
+        <ViewTransaction txId={props.txId} />
       </div>
       <div className={classes.actions}>
         <Button

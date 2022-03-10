@@ -243,13 +243,11 @@ export const DepositSection = (props: IProps) => {
 
       const data = await clr.parseProvideLiquidityTx(finalTxId)
 
-      const totalLiquidity = await clr.getTotalLiquidity()
       if (data) {
         updateState({
           amount0Used: data.amount0,
           amount1Used: data.amount1,
           liquidityAdded: data.liquidity,
-          totalLiquidity,
         })
       }
 

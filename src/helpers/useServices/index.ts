@@ -15,7 +15,8 @@ export const useServices = (network?: Network) => {
   let readonlyProvider = provider
   let readonlyNetworkId = networkId
 
-  if (network && networkId !== getIdFromNetwork(network)) {
+  const isWrongNetwork = network && networkId !== getIdFromNetwork(network)
+  if (isWrongNetwork) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     readonlyProvider = getNetworkProvider(network)
@@ -25,24 +26,24 @@ export const useServices = (network?: Network) => {
   return useMemo(() => {
     const multicall = new MulticallService(
       readonlyProvider,
-      account,
+      isWrongNetwork ? null : account,
       getContractAddress('multicall', readonlyNetworkId)
     )
 
     const rewardEscrow = new RewardEscrowService(
       readonlyProvider,
-      account,
+      isWrongNetwork ? null : account,
       getContractAddress('rewardEscrow', readonlyNetworkId)
     )
 
     const lmService = new LMService(
       readonlyProvider,
-      account,
+      isWrongNetwork ? null : account,
       getContractAddress('LM', readonlyNetworkId)
     )
     const uniPositionService = new UniPositionService(
       readonlyProvider,
-      account,
+      isWrongNetwork ? null : account,
       getContractAddress('uniPositionManager', readonlyNetworkId)
     )
 

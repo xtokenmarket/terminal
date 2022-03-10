@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Button, Grid, makeStyles } from '@material-ui/core'
+import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef } from 'helpers'
 import moment from 'moment'
@@ -22,6 +22,7 @@ import {
 } from '../index'
 import { RewardVestSection } from '../RewardVestSection'
 import { VestAllModal } from '../VestAllModal'
+import { PoolShareSection } from '../PoolShareSection'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -36,6 +37,9 @@ const useStyles = makeStyles((theme) => ({
         bottom: 0,
         left: 0,
         borderLeft: `1px solid ${theme.colors.primary200}`,
+      },
+      '&:last-child': {
+        '&::before': { borderLeft: 'none' },
       },
     },
     [theme.breakpoints.down('sm')]: {
@@ -147,6 +151,22 @@ const useStyles = makeStyles((theme) => ({
       width: '100%',
       flexDirection: 'column',
     },
+  },
+  title: {
+    color: theme.colors.primary100,
+    marginTop: 16,
+    fontFamily: 'Gilmer',
+    fontSize: 10,
+    marginLeft: 18,
+  },
+  percent: {
+    background: theme.colors.primary200,
+    fontSize: 12,
+    color: theme.colors.white,
+    borderRadius: '16px',
+    justifyContent: 'center',
+    padding: '0 13px',
+    marginLeft: 16,
   },
 }))
 
@@ -291,10 +311,46 @@ export const Content = (props: IProps) => {
         <div>
           <Grid container spacing={0}>
             <Grid item xs={12} md={6} className={classes.balance}>
-              <BalanceSection pool={poolData} token={token0} />
+              <Typography className={classes.title}>POOl BALANCE</Typography>
+              <Grid container spacing={0}>
+                <Grid item xs={12} md={6}>
+                  <BalanceSection token={token0} />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <BalanceSection token={token1} />
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item xs={12} md={6} className={classes.balance}>
-              <BalanceSection pool={poolData} token={token1} />
+
+            <Grid item xs={12} md={4} className={classes.balance}>
+              <Typography className={classes.title}>MY DEPOSIT</Typography>
+              <Grid container spacing={0}>
+                <Grid item xs={12} md={6}>
+                  <BalanceSection
+                    token={token0}
+                    isMydeposit={true}
+                    deposit={poolData.user.token0Deposit}
+                    tokenTvl={poolData.user.token0Tvl}
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <BalanceSection
+                    token={token1}
+                    isMydeposit={true}
+                    deposit={poolData.user.token1Deposit}
+                    tokenTvl={poolData.user.token1Tvl}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+
+            <Grid item xs={12} md={2} className={classes.balance}>
+              <Typography className={classes.title}>POOL SHARE</Typography>
+              <Grid container spacing={0}>
+                <Grid item xs={12} md={12}>
+                  <PoolShareSection percent={poolData.poolShare} />
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
         </div>
