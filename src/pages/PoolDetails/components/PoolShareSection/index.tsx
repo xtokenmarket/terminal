@@ -38,7 +38,9 @@ export const PoolShareSection = (props: IProps) => {
   return (
     <div className={classes.root}>
       <div className={classes.content}>
-        <div className={classes.percent}>{Number(percent).toFixed(2)}%</div>
+        <div className={classes.percent}>
+          {(Number(percent) * 100).toFixed(2)}%
+        </div>
       </div>
     </div>
   )

@@ -1,16 +1,12 @@
 import Abi from 'abis'
 import axios from 'axios'
 import { POLL_API_DATA, TERMINAL_API_URL } from 'config/constants'
-import {
-  getNetworkProvider,
-  getTokenFromAddress,
-  getContractAddress,
-} from 'config/networks'
+import { getNetworkProvider, getTokenFromAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import { formatEther, formatUnits, parseEther } from 'ethers/lib/utils'
 import { useServices } from 'helpers'
 import { useEffect, useState } from 'react'
-import { CLRService, ERC20Service, RewardEscrowService } from 'services'
+import { CLRService, ERC20Service } from 'services'
 import { History, ITerminalPool, IToken } from 'types'
 import { BigNumber } from '@ethersproject/bignumber'
 import {
@@ -30,13 +26,11 @@ import {
   getTokenExchangeRate,
 } from './helper'
 import { ethers } from 'ethers'
+
 interface IState {
   pool?: ITerminalPool
   loading: boolean
 }
-
-// TODO: Remove this and leverage `parseEther()` & `formatEther()`
-const MULTIPLY_PRECISION = 1000000000
 
 export const useTerminalPool = (
   pool?: any,
@@ -49,28 +43,29 @@ export const useTerminalPool = (
   const { multicall, rewardEscrow, lmService } = useServices(network)
 
   let readonlyProvider = provider
-  if (networkId !== getIdFromNetwork(network)) {
+
+  const isWrongNetwork = networkId !== getIdFromNetwork(network)
+  if (isWrongNetwork) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     readonlyProvider = getNetworkProvider(network)
+  }
+
+  const getFormatNumber = (_balance: BigNumber, _tokenDecimals: number) => {
+    return Number(formatBigNumber(_balance, _tokenDecimals)) * 10000
   }
 
   const getTokenDetails = async (addr: string) => {
     try {
       return getTokenFromAddress(addr, readonlyProvider?.network.chainId)
     } catch (error) {
-      const erc20 = new ERC20Service(readonlyProvider, account, addr)
+      const erc20 = new ERC20Service(
+        readonlyProvider,
+        isWrongNetwork ? null : account,
+        addr
+      )
       return erc20.getDetails()
     }
-  }
-
-  const getERC20TokenBalance = async (
-    tokenAddress: string,
-    uniswapPool: string
-  ) => {
-    if (!account) return BigNumber.from(0)
-    const erc20 = new ERC20Service(readonlyProvider, uniswapPool, tokenAddress)
-    return erc20.getBalanceOf(uniswapPool)
   }
 
   const getTokenPercent = (
@@ -82,19 +77,14 @@ export const useTerminalPool = (
     tokenDecimals: number
   ) => {
     const divisor = token0Balance.add(token1Balance)
-    const getFormatNumber = (_balance: BigNumber, _tokenDecimals: number) => {
-      return (
-        Number(formatBigNumber(_balance, _tokenDecimals)) * MULTIPLY_PRECISION
-      )
-    }
+    if (divisor.isZero()) return ''
 
-    if (Number(divisor.toString()) === 0) return ''
     const balanceNumber = getFormatNumber(balance, tokenDecimals)
     const token0Number = getFormatNumber(token0Balance, token0Decimals)
     const token1Number = getFormatNumber(token1Balance, token1Decimals)
-    const percent = (balanceNumber / (token0Number + token1Number)) * 100
 
-    return JSON.stringify(percent)
+    const percent = (balanceNumber / (token0Number + token1Number)) * 100
+    return percent.toString()
   }
 
   const loadInfo = async (isReloadPool = false) => {
@@ -123,7 +113,11 @@ export const useTerminalPool = (
       let { token0, token1, stakedToken } = pool
       let tvl = '0'
 
-      const clr = new CLRService(readonlyProvider, account, pool.poolAddress)
+      const clr = new CLRService(
+        readonlyProvider,
+        isWrongNetwork ? null : account,
+        pool.poolAddress
+      )
       const balance = await clr.contract.getStakedTokenBalance()
 
       const token0Balance = balance.amount0
@@ -226,8 +220,6 @@ export const useTerminalPool = (
       let history: History[] = []
       let earnedTokens = []
       let vestingTokens = []
-      let token0Deposit = BigNumber.from(0)
-      let token1Deposit = BigNumber.from(0)
       let poolShare = '0'
       const user = {
         token0Deposit: BigNumber.from(0),
@@ -315,7 +307,7 @@ export const useTerminalPool = (
 
         history = _.orderBy(eventHistory, 'timestamp', 'desc')
 
-        // Fetch reward tokens, only if wallet is connected
+        // Fetch reward tokens and deposit amounts, only if wallet is connected
         if (account) {
           earnedTokens = await Promise.all(
             pool.rewardTokens.map(async (token: IToken) => {
@@ -358,57 +350,49 @@ export const useTerminalPool = (
               })
             )
           }
+
+          // User deposit amounts + TVL
+          const stakedCLRToken = new ethers.Contract(
+            pool.stakedToken.address,
+            Abi.StakedCLRToken,
+            readonlyProvider
+          )
+
+          const [stakedTokenBalance, totalSupply] = await Promise.all([
+            stakedCLRToken.balanceOf(account),
+            clr.contract.totalSupply(),
+          ])
+
+          user.token0Deposit = token0Balance
+            .mul(stakedTokenBalance)
+            .div(totalSupply)
+          user.token1Deposit = token1Balance
+            .mul(stakedTokenBalance)
+            .div(totalSupply)
+
+          user.token0Tvl = formatUnits(
+            user.token0Deposit
+              .mul(parseEther(pool.token0.price))
+              .div(ONE_ETHER),
+            pool.token0.decimals
+          )
+
+          user.token1Tvl = formatUnits(
+            user.token1Deposit
+              .mul(parseEther(pool.token1.price))
+              .div(ONE_ETHER),
+            pool.token1.decimals
+          )
+
+          const totalBalance = token0Balance.add(token1Balance)
+
+          poolShare = formatEther(
+            user.token0Deposit
+              .add(user.token1Deposit)
+              .mul(ONE_ETHER)
+              .div(totalBalance)
+          )
         }
-
-        // Get myDeposit
-        const stakedCLRTokenAbi = Abi.StakedCLRToken
-
-        const stakedCLRToken = new ethers.Contract(
-          pool.stakedToken.address,
-          stakedCLRTokenAbi,
-          provider
-        )
-
-        const myDeposit = await stakedCLRToken.balanceOf(account)
-        const totalSupply = await clr.contract.totalSupply()
-
-        token0Deposit = token0Balance
-          // decimals are not supported
-          .mul(MULTIPLY_PRECISION)
-          .div(totalSupply)
-          .mul(myDeposit)
-          .div(MULTIPLY_PRECISION)
-
-        token1Deposit = token1Balance
-          .mul(MULTIPLY_PRECISION)
-          .div(totalSupply)
-          .mul(myDeposit)
-          .div(MULTIPLY_PRECISION)
-
-        user.token0Deposit = token0Deposit
-        user.token1Deposit = token1Deposit
-
-        user.token0Tvl = formatUnits(
-          token0Deposit.mul(parseEther(pool.token0.price)).div(ONE_ETHER),
-          pool.token0.decimals
-        )
-
-        user.token1Tvl = formatUnits(
-          token1Deposit.mul(parseEther(pool.token1.price)).div(ONE_ETHER),
-          pool.token1.decimals
-        )
-
-        const totalBalance = token0Balance.add(token1Balance)
-
-        poolShare = token0Deposit
-          .add(token1Deposit)
-          .mul(MULTIPLY_PRECISION)
-          .div(totalBalance)
-          .mul('100')
-          .div(MULTIPLY_PRECISION)
-          .toString()
-
-        poolShare = poolShare === 'NaN' ? '0' : poolShare
       }
 
       setState({
@@ -447,6 +431,7 @@ export const useTerminalPool = (
         },
       })
     } catch (error) {
+      console.error('useTerminalPool', error)
       setState(() => ({ loading: false }))
     }
     // console.timeEnd(`loadInfo ${poolAddress}`)

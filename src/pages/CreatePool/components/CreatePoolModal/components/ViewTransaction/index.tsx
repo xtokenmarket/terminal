@@ -19,7 +19,9 @@ const useStyles = makeStyles((theme) => ({
 export const ViewTransaction = (props: { txId: string }) => {
   const classes = useStyles()
   const { networkId } = useConnectedWeb3Context()
+
   const etherscanUri = getEtherscanUri(networkId)
+
   return (
     <a
       href={`${etherscanUri}tx/${props.txId}`}

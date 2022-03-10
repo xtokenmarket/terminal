@@ -70,6 +70,7 @@ interface IProps {
   onNext: () => void
   poolData: ICreatePoolData
   setPoolAddress: (poolAddress: string) => void
+  setTxId: (txId: string) => void
   onClose: () => void
 }
 
@@ -89,6 +90,10 @@ interface IState {
 
 export const CreatePoolSection = (props: IProps) => {
   const classes = useStyles()
+  const { lmService } = useServices()
+  const { account, library: provider, networkId } = useConnectedWeb3Context()
+  const isMountedRef = useIsMountedRef()
+
   const [state, setState] = useState<IState>({
     isCompleted: false,
     isCreatingPool: false,
@@ -102,13 +107,10 @@ export const CreatePoolSection = (props: IProps) => {
     token1Approved: false,
     token1Approving: false,
   })
-  const { onNext, poolData, setPoolAddress, onClose } = props
-  const { lmService } = useServices()
-  const { account, library: provider, networkId } = useConnectedWeb3Context()
-  const isMountedRef = useIsMountedRef()
+
+  const { onNext, poolData, setPoolAddress, setTxId, onClose } = props
 
   const isPoolCreated = state.createPoolTx !== ''
-
   const terminalAddress = getContractAddress('LM', networkId)
 
   const loadInitialInfo = async () => {
@@ -240,7 +242,7 @@ export const CreatePoolSection = (props: IProps) => {
 
       // TODO: can delete later
       // this lets us make a pool that vests in 50 mins, for testing
-      
+
       // const tempPoolData = {
       //   ...poolData,
       //   rewardState: {
@@ -258,6 +260,7 @@ export const CreatePoolSection = (props: IProps) => {
 
       const poolAddress = await lmService.parseTerminalPoolCreatedTx(finalTxId)
       setPoolAddress(poolAddress)
+      setTxId(finalTxId)
 
       setState((prev) => ({
         ...prev,
