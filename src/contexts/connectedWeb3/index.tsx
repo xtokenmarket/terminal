@@ -113,7 +113,6 @@ export const ConnectedWeb3: React.FC = (props) => {
           updateInitialized()
         }
       } else if (connector && Object.keys(connectors).includes(connector)) {
-        console.log(window.ethereum)
         const isMetaMaskActive = window.ethereum
           ? window.ethereum._metamask
           : false
