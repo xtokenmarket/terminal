@@ -226,7 +226,9 @@ export const useTerminalPool = (
         token1Deposit: BigNumber.from(0),
         token0Tvl: '0',
         token1Tvl: '0',
+        stakedTokenBalance: BigNumber.from(0),
       }
+      let _totalSupply = BigNumber.from(0)
 
       // Fetch events history and reward tokens only on PoolDetails page
       if (isPoolDetails) {
@@ -363,6 +365,10 @@ export const useTerminalPool = (
             clr.contract.totalSupply(),
           ])
 
+          _totalSupply = totalSupply
+
+          user.stakedTokenBalance = stakedTokenBalance
+
           user.token0Deposit = token0Balance
             .mul(stakedTokenBalance)
             .div(totalSupply)
@@ -428,6 +434,7 @@ export const useTerminalPool = (
           history,
           poolShare,
           user,
+          totalSupply: _totalSupply,
         },
       })
     } catch (error) {

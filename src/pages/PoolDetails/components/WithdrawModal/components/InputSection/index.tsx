@@ -3,14 +3,13 @@ import { Button, IconButton, makeStyles, Typography } from '@material-ui/core'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import Abi from 'abis'
 import { LPTokenAmountInput } from 'components'
-import { LP_TOKEN_BASIC, MINT_BURN_SLIPPAGE } from 'config/constants'
+import { LP_TOKEN_BASIC } from 'config/constants'
 import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef, useServices } from 'helpers'
 import { IWithdrawState } from 'pages/PoolDetails/components'
 import { useEffect } from 'react'
-import { ERC20Service, CLRService } from 'services'
 import { ITerminalPool } from 'types'
-import { OutputEstimation, OutputEstimationInfo, WarningInfo } from '..'
+import { OutputEstimation, WarningInfo } from '..'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -63,33 +62,18 @@ export const InputSection = (props: IProps) => {
       return
     }
     try {
-      const clr = new CLRService(provider, account, poolData.address)
-      const stakingToken = new ERC20Service(
-        provider,
-        account,
-        poolData.stakedToken.address
-      )
-
-      const [totalLiquidity, userLP] = await Promise.all([
-        clr.getTotalLiquidity(),
-        stakingToken.getBalanceOf(account),
-      ])
-
       const earnedCall = poolData.rewardState.tokens.map((rewardToken) => ({
         name: 'earned',
         address: poolData.address,
         params: [account, rewardToken.address],
       }))
-
       const earned = await multicall.multicallv2(Abi.xAssetCLR, earnedCall, {
         requireSuccess: false,
       })
-
       if (isMountedRef.current) {
         updateState({
-          totalLiquidity,
-          userLP,
           earned: earned.map((res: any) => res[0]),
+          userLP: poolData.user.stakedTokenBalance,
         })
       }
     } catch (error) {
@@ -103,40 +87,16 @@ export const InputSection = (props: IProps) => {
 
   const loadEstimations = async (amount: BigNumber) => {
     try {
-      const calls = ['getTotalLiquidity', 'totalSupply'].map((method) => ({
-        name: method,
-        address: poolData.address,
-        params: [],
-      }))
-      const [[totalLiquidity], [totalSupply]] = await multicall.multicallv2(
-        Abi.xAssetCLR,
-        calls,
-        {
-          requireSuccess: false,
-        }
-      )
-
-      const proRataBalance = amount.mul(totalLiquidity).div(totalSupply)
-      const amountCalls = [
-        {
-          name: 'getAmountsForLiquidity',
-          address: poolData.address,
-          params: [proRataBalance],
-        },
-      ]
-      const [amountResponse] = await multicall.multicallv2(
-        Abi.xAssetCLR,
-        amountCalls,
-        { requireSuccess: false }
-      )
-      const amount0 = amountResponse[0] as BigNumber
-      const amount1 = amountResponse[1] as BigNumber
-      const unstakeAmount0 = amount0.add(amount0.div(MINT_BURN_SLIPPAGE))
-      const unstakeAmount1 = amount1.add(amount1.div(MINT_BURN_SLIPPAGE))
+      const token0Deposit = amount
+        .mul(poolData.user.token0Deposit)
+        .div(poolData.totalSupply)
+      const token1Deposit = amount
+        .mul(poolData.user.token1Deposit)
+        .div(poolData.totalSupply)
 
       updateState({
-        amount0Estimation: unstakeAmount0,
-        amount1Estimation: unstakeAmount1,
+        amount0Estimation: token0Deposit,
+        amount1Estimation: token1Deposit,
       })
     } catch (error) {
       console.error(error)

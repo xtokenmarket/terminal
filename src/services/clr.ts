@@ -38,10 +38,6 @@ class CLRService {
     return this.contract.getLiquidityForAmounts(amount0, amount1)
   }
 
-  getTotalLiquidity = async () => {
-    return this.contract.getTotalLiquidity()
-  }
-
   deposit = async (
     inputAsset: number,
     amount: BigNumber

@@ -103,11 +103,13 @@ export interface ITerminalPool {
   earnedTokens: EarnedTokens
   history: History[]
   poolShare: string
+  totalSupply: BigNumber
   user: {
     token0Deposit: BigNumber, 
     token1Deposit: BigNumber, 
     token0Tvl: string, 
     token1Tvl: string
+    stakedTokenBalance: BigNumber
   }
 }
 

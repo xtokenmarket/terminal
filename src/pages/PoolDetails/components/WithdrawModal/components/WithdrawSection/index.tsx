@@ -1,10 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Button, makeStyles, Typography, IconButton } from '@material-ui/core'
+import { makeStyles, Typography, IconButton } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
-import { useIsMountedRef, useServices } from 'helpers'
 import { IWithdrawState } from 'pages/PoolDetails/components'
 import { useEffect, useState } from 'react'
-import { ERC20Service, CLRService } from 'services'
+import { CLRService } from 'services'
 import { ITerminalPool } from 'types'
 import { ZERO } from 'utils/number'
 import { ActionStepRow, ViewTransaction, WarningInfo } from '..'
@@ -100,10 +99,7 @@ export const WithdrawSection = (props: IProps) => {
   })
   const { onNext, withdrawState, poolData, updateState, goBack, onClose } =
     props
-  const { multicall, lmService } = useServices()
-  const { account, networkId, library: provider } = useConnectedWeb3Context()
-
-  const isMountedRef = useIsMountedRef()
+  const { account, library: provider } = useConnectedWeb3Context()
 
   useEffect(() => {
     if (state.withdrawDone) {
@@ -138,8 +134,6 @@ export const WithdrawSection = (props: IProps) => {
 
       const data = await clr.parseWithdrawTx(finalTxId)
 
-      const totalLiquidity = await clr.getTotalLiquidity()
-
       const claimedEarn: BigNumber[] = []
 
       if (!withdrawState.withdrawOnly) {
@@ -156,7 +150,6 @@ export const WithdrawSection = (props: IProps) => {
           amount0Withdrawn: data.amount0,
           amount1Withdrawn: data.amount1,
           liquidityWithdrawn: data.liquidity,
-          totalLiquidity,
           claimedEarn,
         })
       }
