@@ -314,10 +314,10 @@ export const Content = (props: IProps) => {
               <Typography className={classes.title}>POOl BALANCE</Typography>
               <Grid container spacing={0}>
                 <Grid item xs={12} md={6}>
-                  <BalanceSection pool={poolData} token={token0} />
+                  <BalanceSection token={token0} />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                  <BalanceSection pool={poolData} token={token1} />
+                  <BalanceSection token={token1} />
                 </Grid>
               </Grid>
             </Grid>
@@ -327,16 +327,18 @@ export const Content = (props: IProps) => {
               <Grid container spacing={0}>
                 <Grid item xs={12} md={6}>
                   <BalanceSection
-                    pool={poolData}
                     token={token0}
                     isMydeposit={true}
+                    deposit={poolData.user.token0Deposit}
+                    tokenTvl={poolData.user.token0Tvl}
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
                   <BalanceSection
-                    pool={poolData}
                     token={token1}
                     isMydeposit={true}
+                    deposit={poolData.user.token1Deposit}
+                    tokenTvl={poolData.user.token1Tvl}
                   />
                 </Grid>
               </Grid>

@@ -122,10 +122,15 @@ export const useTerminalPool = (
       // console.time(`loadInfo token details ${pool.poolAddress}`)
       let { token0, token1, stakedToken } = pool
       let tvl = '0'
-      let token0Balance = BigNumber.from(0)
-      let token1Balance = BigNumber.from(0)
 
       const clr = new CLRService(readonlyProvider, account, pool.poolAddress)
+      const balance = await clr.contract.getStakedTokenBalance()
+
+      const token0Balance = balance.amount0
+      const token1Balance = balance.amount1
+
+      pool.token0.balance = token0Balance
+      pool.token1.balance = token1Balance
 
       // Fetch token details and relevant data, if API fails
       if (!pool.token0.price || !pool.token1.price) {
@@ -139,11 +144,6 @@ export const useTerminalPool = (
         const rates = await getTokenExchangeRate(ids)
         pool.token0.price = rates ? rates[0].toString() : '0'
         pool.token1.price = rates ? rates[1].toString() : '0'
-
-        const balance = await clr.contract.getStakedTokenBalance()
-
-        token0Balance = balance.amount0
-        token1Balance = balance.amount1
 
         const token0Percent = getTokenPercent(
           token0Balance,
@@ -400,11 +400,13 @@ export const useTerminalPool = (
 
         const totalBalance = token0Balance.add(token1Balance)
 
-        poolShare = String(
-          (token0Deposit.add(token1Deposit).toNumber() /
-            totalBalance.toNumber()) *
-            100
-        )
+        poolShare = token0Deposit
+          .add(token1Deposit)
+          .mul(MULTIPLY_PRECISION)
+          .div(totalBalance)
+          .mul('100')
+          .div(MULTIPLY_PRECISION)
+          .toString()
 
         poolShare = poolShare === 'NaN' ? '0' : poolShare
       }
