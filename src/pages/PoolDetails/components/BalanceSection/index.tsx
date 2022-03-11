@@ -1,10 +1,10 @@
 import { makeStyles, Typography } from '@material-ui/core'
 import { TokenIcon } from 'components'
-import { ITerminalPool, IToken } from 'types'
 import { formatBigNumber, numberWithCommas } from 'utils'
-import { useConnectedWeb3Context } from '../../../../contexts'
-import { getEtherscanUri } from '../../../../config/networks'
+import { useConnectedWeb3Context } from 'contexts'
+import { getEtherscanUri } from 'config/networks'
 import { BigNumber } from 'ethers'
+import { IToken } from 'types'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   token: IToken
-  isMydeposit?: boolean
+  isDeposit?: boolean
   deposit?: BigNumber
   tokenTvl?: string
 }
@@ -72,7 +72,7 @@ export const BalanceSection = (props: IProps) => {
   const { networkId } = useConnectedWeb3Context()
 
   const etherscanUri = getEtherscanUri(networkId)
-  const { token, isMydeposit, deposit, tokenTvl } = props
+  const { token, isDeposit, deposit, tokenTvl } = props
 
   return (
     <div className={classes.root}>
@@ -88,13 +88,13 @@ export const BalanceSection = (props: IProps) => {
           <Typography className={classes.balance}>
             {numberWithCommas(
               formatBigNumber(
-                isMydeposit
+                isDeposit
                   ? deposit || BigNumber.from(0)
                   : token.balance || BigNumber.from(0),
                 token.decimals
               )
             )}{' '}
-            {!isMydeposit && (
+            {!isDeposit && (
               <div className={classes.percent}>
                 {Number(token.percent).toFixed(2)}%
               </div>
@@ -103,7 +103,7 @@ export const BalanceSection = (props: IProps) => {
           <Typography className={classes.dollar}>
             ~ $
             {numberWithCommas(
-              isMydeposit ? tokenTvl || '0' : (token.tvl as string)
+              isDeposit ? tokenTvl || '0' : (token.tvl as string)
             )}
           </Typography>
         </div>

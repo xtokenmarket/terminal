@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { Modal, makeStyles, Typography, IconButton, Button, CircularProgress } from '@material-ui/core'
+import {
+  Modal,
+  makeStyles,
+  Typography,
+  IconButton,
+  Button,
+  CircularProgress,
+} from '@material-ui/core'
 import CloseOutlined from '@material-ui/icons/CloseOutlined'
-import { VestingTokens } from 'types'
+import { VestingToken } from 'types'
 import { formatEther } from 'ethers/lib/utils'
 import { ViewTransaction } from 'components/Modal/RewardModal/components'
 import { WarningInfo } from 'components/Common/WarningInfo'
@@ -13,7 +20,7 @@ import { getTimeRemainingUnits } from 'utils'
 
 const ICON_SIZE = 150
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   modal: {
     display: 'flex',
     alignItems: 'center',
@@ -41,7 +48,7 @@ const useStyles = makeStyles(theme => ({
       fontSize: '16px',
       marginBottom: theme.spacing(2),
       padding: theme.spacing(0, 2),
-    }
+    },
   },
   subheader: {
     color: theme.colors.primary100,
@@ -60,7 +67,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(3),
     [theme.breakpoints.down('sm')]: {
       padding: theme.spacing(2),
-    }
+    },
   },
   token: {
     display: 'flex',
@@ -101,7 +108,7 @@ const useStyles = makeStyles(theme => ({
 interface IProps {
   open: boolean
   onClose: () => void
-  vestingTokens: VestingTokens
+  vestingTokens: VestingToken[]
   poolAddress: string
 }
 
@@ -117,9 +124,10 @@ export const VestAllModal: React.FC<IProps> = ({
 
   const [txState, setTxState] = useState<TxState>(TxState.None)
   const [claimTx, setClaimTx] = useState('')
-  const [vestedTokens, setVestedTokens] = useState<VestingTokens>([])
+  const [vestedTokens, setVestedTokens] = useState<VestingToken[]>([])
 
-  const tokensToRender = txState === TxState.Complete ? vestedTokens : vestingTokens
+  const tokensToRender =
+    txState === TxState.Complete ? vestedTokens : vestingTokens
 
   const _clearTxState = () => {
     setClaimTx('')
@@ -140,16 +148,16 @@ export const VestAllModal: React.FC<IProps> = ({
     try {
       setTxState(TxState.Confirming)
 
-      const addresses = vestingTokens.map(token => token.address)
+      const addresses = vestingTokens.map((token) => token.address)
       const txId = await rewardEscrow.vestAll(poolAddress, addresses)
       setTxState(TxState.InProgress)
       const finalTxId = await rewardEscrow.waitUntilVestAll(account, txId)
       const parsedLogs = await rewardEscrow.parseVestAllTx(finalTxId)
-      const vestedTokens = vestingTokens.map(token => ({
+      const vestedTokens = vestingTokens.map((token) => ({
         ...token,
-        amount: parsedLogs[token.address.toLowerCase()] || ZERO
+        amount: parsedLogs[token.address.toLowerCase()] || ZERO,
       }))
-  
+
       setTxState(TxState.Complete)
       setClaimTx(finalTxId)
       setVestedTokens(vestedTokens)
@@ -192,10 +200,10 @@ export const VestAllModal: React.FC<IProps> = ({
     const buttonContent = {
       [TxState.None]: 'Vest',
       [TxState.Confirming]: (
-        <CircularProgress style={{color: 'white'}} size={30} />
+        <CircularProgress style={{ color: 'white' }} size={30} />
       ),
       [TxState.InProgress]: (
-        <CircularProgress style={{color: 'white'}} size={30} />
+        <CircularProgress style={{ color: 'white' }} size={30} />
       ),
     }[txState]
 
@@ -208,7 +216,7 @@ export const VestAllModal: React.FC<IProps> = ({
           disabled={txState !== TxState.None}
           onClick={onClickVest}
         >
-        {buttonContent}
+          {buttonContent}
         </Button>
       </div>
     )

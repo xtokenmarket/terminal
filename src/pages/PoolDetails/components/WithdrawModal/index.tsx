@@ -40,16 +40,11 @@ export interface IWithdrawState {
   lpInput: BigNumber
   amount0Estimation: BigNumber
   amount1Estimation: BigNumber
-  totalLiquidity: BigNumber
-  //
-  userLP: BigNumber
   // used
   amount0Withdrawn: BigNumber
   amount1Withdrawn: BigNumber
   liquidityWithdrawn: BigNumber
   claimedEarn: BigNumber[]
-  //
-  earned: BigNumber[]
   //
   withdrawOnly: boolean
 }
@@ -65,12 +60,9 @@ export const WithdrawModal = (props: IProps) => {
     lpInput: ZERO,
     amount0Estimation: ZERO,
     amount1Estimation: ZERO,
-    userLP: ZERO,
-    totalLiquidity: ZERO,
     amount0Withdrawn: ZERO,
     amount1Withdrawn: ZERO,
     liquidityWithdrawn: ZERO,
-    earned: [],
     claimedEarn: [],
     withdrawOnly: false,
   })

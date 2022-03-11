@@ -176,7 +176,6 @@ interface IProps {
 }
 
 interface IState {
-  stakedTokenBalance: BigNumber
   depositVisible: boolean
   withdrawVisible: boolean
   vestVisible: boolean
@@ -184,7 +183,6 @@ interface IState {
 }
 
 const initialState: IState = {
-  stakedTokenBalance: ZERO,
   depositVisible: false,
   withdrawVisible: false,
   vestVisible: false,
@@ -192,23 +190,18 @@ const initialState: IState = {
 }
 
 export const Content = (props: IProps) => {
+  const classes = useStyles()
+  const { account, setWalletConnectModalOpened } = useConnectedWeb3Context()
+  const [state, setState] = useState<IState>(initialState)
+
   const { poolData } = props
   const { token0, token1 } = poolData
-  const [state, setState] = useState<IState>(initialState)
-  const classes = useStyles()
-  const {
-    account,
-    library: provider,
-    networkId,
-    setWalletConnectModalOpened,
-  } = useConnectedWeb3Context()
-  const isMountedRef = useIsMountedRef()
 
   const timestamp = getCurrentTimeStamp()
   const isManageable = [poolData.owner, poolData.manager]
     .map((e) => e.toLowerCase())
     .includes((account || '').toLowerCase())
-  const isDeposited = !state.stakedTokenBalance.isZero()
+  const isDeposited = !poolData.user.stakedTokenBalance.isZero()
   const rewardPeriodFinished = poolData.periodFinish.toNumber() < timestamp
   const { vesting } = poolData.rewardState
 
@@ -227,33 +220,6 @@ export const Content = (props: IProps) => {
   const setRewardModalVisible = (rewardVisible: boolean) => {
     setState((prev) => ({ ...prev, rewardVisible }))
   }
-
-  const loadPersonalInfo = async () => {
-    if (!account || !provider) {
-      setState((prev) => ({ ...prev, stakedTokenBalance: ZERO }))
-      return
-    }
-
-    try {
-      const stakedToken = new ERC20Service(
-        provider,
-        account,
-        poolData.stakedToken.address
-      )
-      const balance = await stakedToken.getBalanceOf(account)
-      if (isMountedRef.current) {
-        setState((prev) => ({ ...prev, stakedTokenBalance: balance }))
-      }
-    } catch (error) {
-      if (isMountedRef.current) {
-        setState((prev) => ({ ...prev, stakedTokenBalance: ZERO }))
-      }
-    }
-  }
-
-  useEffect(() => {
-    loadPersonalInfo()
-  }, [account, networkId])
 
   const shouldDisplayVestButton =
     isDeposited &&
@@ -328,7 +294,7 @@ export const Content = (props: IProps) => {
                 <Grid item xs={12} md={6}>
                   <BalanceSection
                     token={token0}
-                    isMydeposit={true}
+                    isDeposit
                     deposit={poolData.user.token0Deposit}
                     tokenTvl={poolData.user.token0Tvl}
                   />
@@ -336,7 +302,7 @@ export const Content = (props: IProps) => {
                 <Grid item xs={12} md={6}>
                   <BalanceSection
                     token={token1}
-                    isMydeposit={true}
+                    isDeposit
                     deposit={poolData.user.token1Deposit}
                     tokenTvl={poolData.user.token1Tvl}
                   />

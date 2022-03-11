@@ -1,13 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Button, IconButton, makeStyles, Typography } from '@material-ui/core'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
-import Abi from 'abis'
 import { LPTokenAmountInput } from 'components'
 import { LP_TOKEN_BASIC } from 'config/constants'
-import { useConnectedWeb3Context } from 'contexts'
-import { useIsMountedRef, useServices } from 'helpers'
 import { IWithdrawState } from 'pages/PoolDetails/components'
-import { useEffect } from 'react'
 import { ITerminalPool } from 'types'
 import { OutputEstimation, WarningInfo } from '..'
 
@@ -53,45 +49,16 @@ let timerId: any
 export const InputSection = (props: IProps) => {
   const classes = useStyles()
   const { onNext, onClose, withdrawState, updateState, poolData } = props
-  const { account, library: provider } = useConnectedWeb3Context()
-  const isMountedRef = useIsMountedRef()
-  const { multicall } = useServices()
 
-  const loadBasicInfo = async () => {
-    if (!account || !provider) {
-      return
-    }
-    try {
-      const earnedCall = poolData.rewardState.tokens.map((rewardToken) => ({
-        name: 'earned',
-        address: poolData.address,
-        params: [account, rewardToken.address],
-      }))
-      const earned = await multicall.multicallv2(Abi.xAssetCLR, earnedCall, {
-        requireSuccess: false,
-      })
-      if (isMountedRef.current) {
-        updateState({
-          earned: earned.map((res: any) => res[0]),
-          userLP: poolData.user.stakedTokenBalance,
-        })
-      }
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  useEffect(() => {
-    loadBasicInfo()
-  }, [])
+  const earned = poolData.earnedTokens.map((t) => t.amount)
 
   const loadEstimations = async (amount: BigNumber) => {
     try {
       const token0Deposit = amount
-        .mul(poolData.user.token0Deposit)
+        .mul(poolData.token0.balance as BigNumber)
         .div(poolData.totalSupply)
       const token1Deposit = amount
-        .mul(poolData.user.token1Deposit)
+        .mul(poolData.token1.balance as BigNumber)
         .div(poolData.totalSupply)
 
       updateState({
@@ -117,7 +84,7 @@ export const InputSection = (props: IProps) => {
 
   const isDisabled =
     withdrawState.lpInput.isZero() ||
-    withdrawState.lpInput.gt(withdrawState.userLP)
+    withdrawState.lpInput.gt(poolData.user.stakedTokenBalance)
 
   return (
     <div className={classes.root}>
@@ -134,7 +101,7 @@ export const InputSection = (props: IProps) => {
             }}
             tokens={[poolData.token0, poolData.token1]}
             lpToken={{ ...LP_TOKEN_BASIC, address: poolData.uniswapPool }}
-            max={withdrawState.userLP}
+            max={poolData.user.stakedTokenBalance}
           />
         </div>
       </div>
@@ -142,7 +109,7 @@ export const InputSection = (props: IProps) => {
         poolData={poolData}
         amount0={withdrawState.amount0Estimation}
         amount1={withdrawState.amount1Estimation}
-        earned={withdrawState.earned}
+        earned={earned}
       />
       <div className={classes.actions}>
         <WarningInfo

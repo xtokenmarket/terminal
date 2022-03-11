@@ -73,14 +73,10 @@ interface VestingToken extends IToken {
   price: string
 }
 
-export type VestingTokens = VestingToken[]
-
 interface EarnedToken extends IToken {
   amount: BigNumber
   price: string
 }
-
-export type EarnedTokens = EarnedToken[]
 
 export interface ITerminalPool {
   address: string
@@ -99,15 +95,15 @@ export interface ITerminalPool {
   tradeFee: BigNumber // xToken Trade Fee as a divisor (100 = 1%)
   tvl: string
   uniswapPool: string
-  vestingTokens?: VestingTokens
-  earnedTokens: EarnedTokens
+  vestingTokens?: VestingToken[]
+  earnedTokens: EarnedToken[]
   history: History[]
   poolShare: string
   totalSupply: BigNumber
   user: {
-    token0Deposit: BigNumber, 
-    token1Deposit: BigNumber, 
-    token0Tvl: string, 
+    token0Deposit: BigNumber
+    token1Deposit: BigNumber
+    token0Tvl: string
     token1Tvl: string
     stakedTokenBalance: BigNumber
   }
@@ -139,13 +135,13 @@ interface MintState {
 }
 
 export interface History {
-  action: string,
-  time: string,
-  tx?: string, 
-  amount0: BigNumber,
-  amount1: BigNumber,
+  action: string
+  time: string
+  tx?: string
+  amount0: BigNumber
+  amount1: BigNumber
   rewardAmount: BigNumber
-  symbol: string, 
+  symbol: string
   decimals: number
   value: BigNumber
   timestamp: number
