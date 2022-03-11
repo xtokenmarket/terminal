@@ -11,7 +11,10 @@ import { ReactComponent as TwitterIcon } from 'assets/svgs/twitter.svg'
 import { ReactComponent as DiscordIcon } from 'assets/svgs/discord.svg'
 import { IToken } from 'types'
 
-export const IS_PROD = process.env.NODE_ENV === 'production'
+// Enable testnet chain support for Vercel deployment
+export const IS_PROD =
+  process.env.NODE_ENV === 'production' &&
+  window.location.href.indexOf('xtokenterminal') !== -1
 
 export const STORAGE_KEY_CONNECTOR = 'CONNECTOR'
 

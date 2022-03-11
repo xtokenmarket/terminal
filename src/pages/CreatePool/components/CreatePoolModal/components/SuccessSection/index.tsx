@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
   header: {
     backgroundColor: theme.colors.primary500,
     padding: 32,
-    paddingBottom: 16,
+    paddingBottom: 2,
     paddingTop: ICON_SIZE / 2,
     textAlign: 'center',
     position: 'relative',
@@ -34,13 +34,14 @@ const useStyles = makeStyles((theme) => ({
   },
   deposit: {},
   buy: { marginTop: 8 },
-  bottomContent: {
+  transaction: {
     padding: theme.spacing(2),
     display: 'flex',
     justifyContent: 'center',
   },
   actions: {
     padding: 32,
+    paddingTop: 2,
     backgroundColor: theme.colors.primary500,
   },
 }))
@@ -70,10 +71,10 @@ export const SuccessSection = (props: IProps) => {
           You have successfully created {pool} pool.
         </Typography>
       </div>
-      <div className={classes.bottomContent}>
-        <ViewTransaction txId={props.txId} />
-      </div>
       <div className={classes.actions}>
+        <div className={classes.transaction}>
+          <ViewTransaction txId={props.txId} />
+        </div>
         <Button
           color="primary"
           variant="contained"
