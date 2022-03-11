@@ -184,9 +184,11 @@ export const WithdrawSection = (props: IProps) => {
             Please complete all transactions to complete the withdraw.
           </Typography>
         </div>
-        <IconButton className={classes.closeButton} onClick={onClose}>
-          <CloseOutlinedIcon />
-        </IconButton>
+        {!state.withdrawing && (
+          <IconButton className={classes.closeButton} onClick={onClose}>
+            <CloseOutlinedIcon />
+          </IconButton>
+        )}
       </div>
       <div className={classes.content}>
         <WarningInfo
