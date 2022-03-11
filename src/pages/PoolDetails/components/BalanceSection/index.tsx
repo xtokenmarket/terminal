@@ -94,6 +94,7 @@ export const BalanceSection = (props: IProps) => {
                 token.decimals
               )
             )}{' '}
+            {token.symbol}{' '}
             {!isDeposit && (
               <span className={classes.percent}>
                 {Number(token.percent).toFixed(2)}%
