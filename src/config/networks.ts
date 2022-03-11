@@ -8,7 +8,7 @@ import {
   KnownToken,
   NetworkId,
 } from 'types/types'
-import { ChainId, DEFAULT_NETWORK_ID } from './constants'
+import { ChainId, DEFAULT_NETWORK_ID, IS_PROD } from './constants'
 import { Network } from 'utils/enums'
 import { getIdFromNetwork } from 'utils/network'
 
@@ -158,11 +158,8 @@ export const supportedNetworkIds = [
   ChainId.Arbitrum,
   ChainId.Optimism,
   ChainId.Polygon,
-  // Test nets
-  ChainId.EthereumKovan,
-  ChainId.ArbitrumRinkeby,
-  ChainId.OptimismKovan,
-  ChainId.PolygonMumbai,
+  // Remove test nets if on production
+  ...(IS_PROD ? [] : [ChainId.Kovan, ChainId.Rinkeby]),
 ]
 
 export const supportedNetworkURLs = entries(networks).reduce<{
