@@ -1,16 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Button, IconButton, makeStyles, Typography } from '@material-ui/core'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
-import Abi from 'abis'
 import { LPTokenAmountInput } from 'components'
-import { LP_TOKEN_BASIC, MINT_BURN_SLIPPAGE } from 'config/constants'
-import { useConnectedWeb3Context } from 'contexts'
-import { useIsMountedRef, useServices } from 'helpers'
+import { LP_TOKEN_BASIC } from 'config/constants'
 import { IWithdrawState } from 'pages/PoolDetails/components'
-import { useEffect } from 'react'
-import { ERC20Service, CLRService } from 'services'
 import { ITerminalPool } from 'types'
-import { OutputEstimation, OutputEstimationInfo, WarningInfo } from '..'
+import { OutputEstimation, WarningInfo } from '..'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -54,89 +49,21 @@ let timerId: any
 export const InputSection = (props: IProps) => {
   const classes = useStyles()
   const { onNext, onClose, withdrawState, updateState, poolData } = props
-  const { account, library: provider } = useConnectedWeb3Context()
-  const isMountedRef = useIsMountedRef()
-  const { multicall } = useServices()
 
-  const loadBasicInfo = async () => {
-    if (!account || !provider) {
-      return
-    }
-    try {
-      const clr = new CLRService(provider, account, poolData.address)
-      const stakingToken = new ERC20Service(
-        provider,
-        account,
-        poolData.stakedToken.address
-      )
-
-      const [totalLiquidity, userLP] = await Promise.all([
-        clr.getTotalLiquidity(),
-        stakingToken.getBalanceOf(account),
-      ])
-
-      const earnedCall = poolData.rewardState.tokens.map((rewardToken) => ({
-        name: 'earned',
-        address: poolData.address,
-        params: [account, rewardToken.address],
-      }))
-
-      const earned = await multicall.multicallv2(Abi.xAssetCLR, earnedCall, {
-        requireSuccess: false,
-      })
-
-      if (isMountedRef.current) {
-        updateState({
-          totalLiquidity,
-          userLP,
-          earned: earned.map((res: any) => res[0]),
-        })
-      }
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  useEffect(() => {
-    loadBasicInfo()
-  }, [])
+  const earned = poolData.earnedTokens.map((t) => t.amount)
 
   const loadEstimations = async (amount: BigNumber) => {
     try {
-      const calls = ['getTotalLiquidity', 'totalSupply'].map((method) => ({
-        name: method,
-        address: poolData.address,
-        params: [],
-      }))
-      const [[totalLiquidity], [totalSupply]] = await multicall.multicallv2(
-        Abi.xAssetCLR,
-        calls,
-        {
-          requireSuccess: false,
-        }
-      )
-
-      const proRataBalance = amount.mul(totalLiquidity).div(totalSupply)
-      const amountCalls = [
-        {
-          name: 'getAmountsForLiquidity',
-          address: poolData.address,
-          params: [proRataBalance],
-        },
-      ]
-      const [amountResponse] = await multicall.multicallv2(
-        Abi.xAssetCLR,
-        amountCalls,
-        { requireSuccess: false }
-      )
-      const amount0 = amountResponse[0] as BigNumber
-      const amount1 = amountResponse[1] as BigNumber
-      const unstakeAmount0 = amount0.add(amount0.div(MINT_BURN_SLIPPAGE))
-      const unstakeAmount1 = amount1.add(amount1.div(MINT_BURN_SLIPPAGE))
+      const token0Deposit = amount
+        .mul(poolData.token0.balance as BigNumber)
+        .div(poolData.totalSupply)
+      const token1Deposit = amount
+        .mul(poolData.token1.balance as BigNumber)
+        .div(poolData.totalSupply)
 
       updateState({
-        amount0Estimation: unstakeAmount0,
-        amount1Estimation: unstakeAmount1,
+        amount0Estimation: token0Deposit,
+        amount1Estimation: token1Deposit,
       })
     } catch (error) {
       console.error(error)
@@ -157,7 +84,7 @@ export const InputSection = (props: IProps) => {
 
   const isDisabled =
     withdrawState.lpInput.isZero() ||
-    withdrawState.lpInput.gt(withdrawState.userLP)
+    withdrawState.lpInput.gt(poolData.user.stakedTokenBalance)
 
   return (
     <div className={classes.root}>
@@ -174,7 +101,7 @@ export const InputSection = (props: IProps) => {
             }}
             tokens={[poolData.token0, poolData.token1]}
             lpToken={{ ...LP_TOKEN_BASIC, address: poolData.uniswapPool }}
-            max={withdrawState.userLP}
+            max={poolData.user.stakedTokenBalance}
           />
         </div>
       </div>
@@ -182,7 +109,7 @@ export const InputSection = (props: IProps) => {
         poolData={poolData}
         amount0={withdrawState.amount0Estimation}
         amount1={withdrawState.amount1Estimation}
-        earned={withdrawState.earned}
+        earned={earned}
       />
       <div className={classes.actions}>
         <WarningInfo

@@ -1,5 +1,12 @@
 import React, { useState } from 'react'
-import { Modal, makeStyles, Typography, IconButton, Button, CircularProgress } from '@material-ui/core'
+import {
+  Modal,
+  makeStyles,
+  Typography,
+  IconButton,
+  Button,
+  CircularProgress,
+} from '@material-ui/core'
 import CloseOutlined from '@material-ui/icons/CloseOutlined'
 import { formatEther } from 'ethers/lib/utils'
 import { ViewTransaction } from 'components/Modal/RewardModal/components'
@@ -7,12 +14,12 @@ import { WarningInfo } from 'components/Common/WarningInfo'
 import { useConnectedWeb3Context } from 'contexts'
 import { CLRService } from 'services'
 import { toUsd, ZERO } from 'utils/number'
-import { EarnedTokens } from 'types'
+import { EarnedToken } from 'types'
 import { TxState } from 'utils/enums'
 
 const ICON_SIZE = 150
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   modal: {
     display: 'flex',
     alignItems: 'center',
@@ -40,7 +47,7 @@ const useStyles = makeStyles(theme => ({
       fontSize: '16px',
       marginBottom: theme.spacing(2),
       padding: theme.spacing(0, 2),
-    }
+    },
   },
   subheader: {
     color: theme.colors.primary100,
@@ -59,7 +66,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(3),
     [theme.breakpoints.down('sm')]: {
       padding: theme.spacing(2),
-    }
+    },
   },
   token: {
     display: 'flex',
@@ -100,7 +107,7 @@ const useStyles = makeStyles(theme => ({
 interface IProps {
   open: boolean
   onClose: () => void
-  earnedTokens: EarnedTokens
+  earnedTokens: EarnedToken[]
   poolAddress: string
 }
 
@@ -115,9 +122,10 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
 
   const [txState, setTxState] = useState<TxState>(TxState.None)
   const [claimTx, setClaimTx] = useState('')
-  const [claimedTokens, setClaimedTokens] = useState<EarnedTokens>([])
+  const [claimedTokens, setClaimedTokens] = useState<EarnedToken[]>([])
 
-  const tokensToRender = txState === TxState.Complete ? claimedTokens : earnedTokens
+  const tokensToRender =
+    txState === TxState.Complete ? claimedTokens : earnedTokens
 
   const _clearTxState = () => {
     setClaimTx('')
@@ -137,18 +145,17 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
 
     setTxState(TxState.Confirming)
     try {
-
       const clr = new CLRService(provider, account, poolAddress)
       const txId = await clr.claimReward()
       setTxState(TxState.InProgress)
 
       const finalTxId = await clr.waitUntilClaimReward(account, txId)
       const claimInfo = await clr.parseClaimTx(finalTxId)
-      const claimedTokens = earnedTokens.map(token => ({
+      const claimedTokens = earnedTokens.map((token) => ({
         ...token,
-        amount: claimInfo[token.address.toLowerCase()] || ZERO
+        amount: claimInfo[token.address.toLowerCase()] || ZERO,
       }))
-  
+
       setTxState(TxState.Complete)
       setClaimTx(finalTxId)
       setClaimedTokens(claimedTokens)
@@ -191,10 +198,10 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
     const buttonContent = {
       [TxState.None]: 'Claim',
       [TxState.Confirming]: (
-        <CircularProgress style={{color: 'white'}} size={30} />
+        <CircularProgress style={{ color: 'white' }} size={30} />
       ),
       [TxState.InProgress]: (
-        <CircularProgress style={{color: 'white'}} size={30} />
+        <CircularProgress style={{ color: 'white' }} size={30} />
       ),
     }[txState]
 
@@ -207,7 +214,7 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
           disabled={txState !== TxState.None}
           onClick={onClickClaim}
         >
-        {buttonContent}
+          {buttonContent}
         </Button>
       </div>
     )
@@ -222,7 +229,9 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
         {renderTopContent()}
         <div className={cl.tokens}>
           <Typography variant="subtitle2" className={cl.subheader}>
-            {txState === TxState.Complete ? 'YOU CLAIMED' : 'AVAILABLE TO CLAIM'}
+            {txState === TxState.Complete
+              ? 'YOU CLAIMED'
+              : 'AVAILABLE TO CLAIM'}
           </Typography>
           {tokensToRender.map((token, i) => {
             const amount = Number(formatEther(token.amount))

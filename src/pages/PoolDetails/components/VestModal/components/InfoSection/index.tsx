@@ -68,17 +68,13 @@ export const InfoSection: React.FC<IProps> = ({
       return
     }
     try {
-      const clr = new CLRService(provider, account, poolData.address)
       const stakingToken = new ERC20Service(
         provider,
         account,
         poolData.stakedToken.address
       )
 
-      const [totalLiquidity, userLP] = await Promise.all([
-        clr.getTotalLiquidity(),
-        stakingToken.getBalanceOf(account),
-      ])
+      const userLP = await stakingToken.getBalanceOf(account)
 
       const earnedCall = poolData.rewardState.tokens.map((rewardToken) => ({
         name: 'earned',
@@ -136,7 +132,6 @@ export const InfoSection: React.FC<IProps> = ({
 
       if (isMountedRef.current === true) {
         updateState({
-          totalLiquidity,
           userLP,
           earned: earned.map((res: any) => res[0]),
           vestings,
@@ -151,61 +146,7 @@ export const InfoSection: React.FC<IProps> = ({
     loadBasicInfo()
   }, [])
 
-  const loadEstimations = async (amount: BigNumber) => {
-    try {
-      const calls = ['getTotalLiquidity', 'totalSupply'].map((method) => ({
-        name: method,
-        address: poolData.address,
-        params: [],
-      }))
-      const [[totalLiquidity], [totalSupply]] = await multicall.multicallv2(
-        Abi.xAssetCLR,
-        calls,
-        {
-          requireSuccess: false,
-        }
-      )
-
-      const proRataBalance = amount.mul(totalLiquidity).div(totalSupply)
-      const amountCalls = [
-        {
-          name: 'getAmountsForLiquidity',
-          address: poolData.address,
-          params: [proRataBalance],
-        },
-      ]
-      const [amountResponse] = await multicall.multicallv2(
-        Abi.xAssetCLR,
-        amountCalls,
-        { requireSuccess: false }
-      )
-      const amount0 = amountResponse[0] as BigNumber
-      const amount1 = amountResponse[1] as BigNumber
-      const unstakeAmount0 = amount0.add(amount0.div(MINT_BURN_SLIPPAGE))
-      const unstakeAmount1 = amount1.add(amount1.div(MINT_BURN_SLIPPAGE))
-      updateState({
-        totalLiquidity,
-        amount0Estimation: unstakeAmount0,
-        amount1Estimation: unstakeAmount1,
-      })
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const handleInputChange = (newLPValue: BigNumber) => {
-    updateState({ lpInput: newLPValue })
-
-    if (timerId) {
-      clearTimeout(timerId)
-    }
-
-    timerId = setTimeout(() => {
-      loadEstimations(newLPValue)
-    }, 800)
-  }
-
-  const disabled = vestState.earned.some(el => el.isZero())
+  const disabled = vestState.earned.some((el) => el.isZero())
 
   return (
     <div className={cl.root}>
