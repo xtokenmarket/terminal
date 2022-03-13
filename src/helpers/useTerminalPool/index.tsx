@@ -329,28 +329,37 @@ export const useTerminalPool = (
           if (Number(pool.vestingPeriod) !== 0) {
             vestingTokens = await Promise.all(
               pool.rewardTokens.map(async (token: any) => {
-                const { timestamp, amount } =
-                  await rewardEscrow.getNextVestingEntry(
-                    poolAddress as string,
-                    token.address,
-                    account
-                  )
-                const now = getCurrentTimeStamp()
-                const diff = (timestamp - now) * 1000
-                const durationRemaining = getTimeRemainingUnits(diff)
-                const vestedAmount = await rewardEscrow.getVestedBalance(
-                  poolAddress as string,
-                  token.address,
-                  account
-                )
-                return {
-                  amount,
-                  durationRemaining,
-                  vestedAmount,
-                  ...token,
-                }
+                const [{ amounts, timestamps }, vestedAmount] =
+                  await Promise.all([
+                    rewardEscrow.checkAccountSchedule(
+                      poolAddress as string,
+                      token.address,
+                      account
+                    ),
+                    rewardEscrow.getVestedBalance(
+                      poolAddress as string,
+                      token.address,
+                      account
+                    ),
+                  ])
+                return amounts.map((amount, index) => {
+                  const timestamp = timestamps[index]
+                  const now = getCurrentTimeStamp()
+                  const diff = (timestamp.toNumber() - now) * 1000
+                  const durationRemaining = getTimeRemainingUnits(diff)
+
+                  return {
+                    amount,
+                    durationRemaining,
+                    vestedAmount,
+                    ...token,
+                  }
+                })
               })
             )
+
+            // Flatten all the vesting entries for each reward token
+            vestingTokens = vestingTokens.flat()
           }
 
           // User deposit amounts + TVL

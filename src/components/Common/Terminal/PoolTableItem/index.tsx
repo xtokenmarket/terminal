@@ -9,7 +9,7 @@ import {
   getTimeDurationUnitInfo,
   numberWithCommas,
 } from 'utils'
-import { parseDuration } from 'utils/number'
+import { parseDuration, ZERO } from 'utils/number'
 import moment from 'moment'
 import { NavLink } from 'react-router-dom'
 import { Network } from 'utils/enums'
@@ -185,8 +185,8 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
               } else {
                 const durationInfo = getTimeDurationUnitInfo(Number(duration))
                 const uintAmount = amounts[index]
-                  .mul(durationInfo.unit)
-                  .div(Number(duration))
+                  ? amounts[index].mul(durationInfo.unit).div(Number(duration))
+                  : ZERO
                 return (
                   <Typography className={cl.label} key={rewardToken.address}>
                     {formatToShortNumber(
