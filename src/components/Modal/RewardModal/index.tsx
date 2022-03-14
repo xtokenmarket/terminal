@@ -129,8 +129,11 @@ export const RewardModal: React.FC<IProps> = ({
     }
   }
 
-  const goBack = () =>
+  const goBackToInput = () =>
     setState((prev) => ({ ...prev, step: ERewardStep.Input }))
+
+  const goBackToConfirm = () =>
+    setState((prev) => ({ ...prev, step: ERewardStep.Confirm }))
 
   const renderContent = () => {
     switch (state.step) {
@@ -151,7 +154,7 @@ export const RewardModal: React.FC<IProps> = ({
             onNext={onNextStep}
             rewardState={state}
             updateState={updateState}
-            goBack={goBack}
+            goBack={goBackToInput}
             onClose={_onClose}
           />
         )
@@ -163,6 +166,8 @@ export const RewardModal: React.FC<IProps> = ({
             poolData={poolData as ITerminalPool}
             rewardState={state}
             updateState={updateState}
+            goBack={goBackToConfirm}
+            onClose={_onClose}
           />
         )
       default:

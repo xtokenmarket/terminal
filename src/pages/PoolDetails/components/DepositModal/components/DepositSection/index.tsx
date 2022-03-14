@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { ERC20Service, CLRService } from 'services'
 import { ITerminalPool } from 'types'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
 import { ActionStepRow, WarningInfo } from '..'
 
@@ -16,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 32,
     position: 'relative',
     paddingBottom: 16,
+    display: 'flex',
   },
   title: {
     color: theme.colors.white,
@@ -64,6 +66,12 @@ const useStyles = makeStyles((theme) => ({
       right: 12,
     },
   },
+  arrowBackIosStyle: {
+    color: theme.colors.white,
+    cursor: 'pointer',
+    marginTop: 5,
+    marginRight: 20,
+  },
 }))
 
 interface IProps {
@@ -72,6 +80,7 @@ interface IProps {
   poolData: ITerminalPool
   updateState: (e: any) => void
   onClose: () => void
+  goBack: () => void
 }
 
 interface IState {
@@ -101,7 +110,7 @@ export const DepositSection = (props: IProps) => {
     depositTx: '',
     step: 1,
   })
-  const { onNext, depositState, poolData, updateState, onClose } = props
+  const { onNext, depositState, poolData, updateState, onClose, goBack } = props
   const { account, library: provider } = useConnectedWeb3Context()
 
   const isMountedRef = useIsMountedRef()
@@ -275,10 +284,16 @@ export const DepositSection = (props: IProps) => {
   return (
     <div className={classes.root}>
       <div className={classes.header}>
-        <Typography className={classes.title}>Deposit Liquidity</Typography>
-        <Typography className={classes.description}>
-          Please complete all transactions to complete the deposit.
-        </Typography>
+        <ArrowBackIosIcon
+          className={classes.arrowBackIosStyle}
+          onClick={goBack}
+        />
+        <div>
+          <Typography className={classes.title}>Deposit Liquidity</Typography>
+          <Typography className={classes.description}>
+            Please complete all transactions to complete the deposit.
+          </Typography>
+        </div>
         {!state.token0Approving && !state.token1Approving && !state.depositing && (
           <IconButton className={classes.closeButton} onClick={onClose}>
             <CloseOutlinedIcon />

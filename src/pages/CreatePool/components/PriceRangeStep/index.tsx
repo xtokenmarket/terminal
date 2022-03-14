@@ -241,18 +241,19 @@ export const PriceRangeStep = (props: IProps) => {
       )
     )
 
-    const newErrors = [...state.balanceErrors]
-    const newErrorA =
-      amountA > Number(formatUnits(balanceA, data.token0.decimals))
-        ? `${data.token0.name} input exceeds balance`
-        : null
-    newErrors.splice(0, 1, newErrorA)
-
-    const newErrorB =
-      amountB > Number(formatUnits(balanceB, data.token1.decimals))
-        ? `${data.token1.name} input exceeds balance`
-        : null
-    newErrors.splice(1, 1, newErrorB)
+    const newErrors: string[] = []
+    const newErrorA = `${data.token0.name} input exceeds balance`
+    const newErrorB = `${data.token1.name} input exceeds balance`
+    const newErrorC = `Your position will not earn fees or be used in trades until the market price moves into your range.`
+    if (amountA > Number(formatUnits(balanceA, data.token0.decimals))) {
+      newErrors.push(newErrorA)
+    }
+    if (amountB > Number(formatUnits(balanceB, data.token1.decimals))) {
+      newErrors.push(newErrorB)
+    }
+    if ((amountA > 0 && amountB === 0) || (amountB > 0 && amountA === 0)) {
+      newErrors.push(newErrorC)
+    }
 
     if (!_.isEqual(state.balanceErrors, newErrors)) {
       setState((prev) => ({

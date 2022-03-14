@@ -1,4 +1,4 @@
-import { makeStyles, Typography } from '@material-ui/core'
+import { makeStyles, Typography, IconButton } from '@material-ui/core'
 import Abi from 'abis'
 import { useConnectedWeb3Context } from 'contexts'
 import { useServices } from 'helpers'
@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react'
 import { ERC20Service } from 'services'
 import { parseDuration } from 'utils/number'
 import { ITerminalPool } from 'types'
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
 import { ActionStepRow, WarningInfo } from '..'
 
@@ -16,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 32,
     position: 'relative',
     paddingBottom: 16,
+    display: 'flex',
   },
   title: {
     color: theme.colors.white,
@@ -53,6 +56,23 @@ const useStyles = makeStyles((theme) => ({
     height: 24,
     borderRadius: '50%',
   },
+  closeButton: {
+    padding: 0,
+    color: theme.colors.white1,
+    position: 'absolute',
+    right: 24,
+    top: 24,
+    [theme.breakpoints.down('xs')]: {
+      top: 12,
+      right: 12,
+    },
+  },
+  arrowBackIosStyle: {
+    color: theme.colors.white,
+    cursor: 'pointer',
+    marginTop: 5,
+    marginRight: 20,
+  },
 }))
 
 interface IProps {
@@ -61,6 +81,8 @@ interface IProps {
   poolData: ITerminalPool
   rewardState: IRewardState
   updateState: (e: any) => void
+  goBack: () => void
+  onClose: () => void
 }
 
 interface IState {
@@ -75,7 +97,7 @@ interface IState {
 
 export const RewardSection = (props: IProps) => {
   const classes = useStyles()
-  const { isCreatePool, onNext, poolData, rewardState } = props
+  const { isCreatePool, onNext, poolData, rewardState, onClose, goBack } = props
 
   const [state, setState] = useState<IState>({
     inited: false,
@@ -229,15 +251,28 @@ export const RewardSection = (props: IProps) => {
   return (
     <div className={classes.root}>
       <div className={classes.header}>
-        <Typography className={classes.title}>
-          {isCreatePool ? 'Approve Reward Tokens' : 'Initiate Rewards Program'}
-        </Typography>
-        <Typography className={classes.description}>
-          Please complete all transactions to complete the rewards program.{' '}
-          {!isCreatePool
-            ? 'Rewards will begin accruing to LPs once rewards initiation transaction confirms.'
-            : ''}
-        </Typography>
+        <ArrowBackIosIcon
+          className={classes.arrowBackIosStyle}
+          onClick={goBack}
+        />
+        <div>
+          <Typography className={classes.title}>
+            {isCreatePool
+              ? 'Approve Reward Tokens'
+              : 'Initiate Rewards Program'}
+          </Typography>
+          <Typography className={classes.description}>
+            Please complete all transactions to complete the rewards program.{' '}
+            {!isCreatePool
+              ? 'Rewards will begin accruing to LPs once rewards initiation transaction confirms.'
+              : ''}
+          </Typography>
+        </div>
+        {!state.initing && !state.approving[0] && (
+          <IconButton className={classes.closeButton} onClick={onClose}>
+            <CloseOutlinedIcon />
+          </IconButton>
+        )}
       </div>
       <div className={classes.content}>
         <WarningInfo
