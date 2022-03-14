@@ -2,7 +2,6 @@ import { makeStyles, Typography } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
 import { ViewTransaction } from 'components'
 import { useServices } from 'helpers'
-import { IVestState } from 'pages/PoolDetails/components'
 import { useEffect, useState } from 'react'
 import { ITerminalPool } from 'types'
 import { ActionStepRow, WarningInfo } from '..'
@@ -54,9 +53,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   onNext: () => void
-  vestState: IVestState
   poolData: ITerminalPool
-  updateState: (e: any) => void
 }
 
 interface IState {
@@ -66,12 +63,7 @@ interface IState {
   step: number
 }
 
-export const VestSection: React.FC<IProps> = ({
-  onNext,
-  vestState,
-  poolData,
-  updateState,
-}) => {
+export const VestSection: React.FC<IProps> = ({ onNext, poolData }) => {
   const classes = useStyles()
   const [state, setState] = useState<IState>({
     vestDone: false,

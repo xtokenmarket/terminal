@@ -24,7 +24,7 @@ const PoolDetails = () => {
   } = useTerminalPool(undefined, poolAddress, network, true)
 
   const onBack = () => {
-    history.push('/terminal/discover')
+    history.push('/discover')
   }
 
   useEffect(() => {

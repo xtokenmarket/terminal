@@ -95,7 +95,7 @@ export interface ITerminalPool {
   tradeFee: BigNumber // xToken Trade Fee as a divisor (100 = 1%)
   tvl: string
   uniswapPool: string
-  vestingTokens?: VestingToken[]
+  vestingTokens: VestingToken[]
   earnedTokens: EarnedToken[]
   history: History[]
   poolShare: string

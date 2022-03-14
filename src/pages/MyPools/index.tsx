@@ -34,11 +34,11 @@ const MyPools = () => {
   const isConnected = !!account
 
   const onCreatePool = () => {
-    history.push('/terminal/new-pool')
+    history.push('/new-pool')
   }
 
   const onBrowsePool = () => {
-    history.push('/terminal/discover')
+    history.push('/discover')
   }
 
   const NoPools = () => (

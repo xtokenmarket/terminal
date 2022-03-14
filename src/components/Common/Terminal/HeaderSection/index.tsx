@@ -93,7 +93,7 @@ export const HeaderSection: React.FC = () => {
           label="Staked Ended"
         />*/}
         {isConnected && (
-          <NavLink to="/terminal/new-pool" className={cl.createBtn}>
+          <NavLink to="/new-pool" className={cl.createBtn}>
             <AddIcon />
             &nbsp; CREATE
           </NavLink>
