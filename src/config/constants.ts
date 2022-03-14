@@ -198,3 +198,17 @@ export const FEE_TIERS = [
     label: 'Best for exotic pairs',
   },
 ]
+
+const ETH_TIP =
+  'Pool Deployment fee is 0.2 ETH. Additional 1% fee on any rewards distributed for this pool.'
+const POLYGON_TIP =
+  'Pool Deployment fee is 350 MATIC. Additional 1% fee on any rewards distributed for this pool.'
+
+export const FEE_TIPS: Record<ChainId, string> = {
+  [ChainId.Mainnet]: ETH_TIP,
+  [ChainId.Arbitrum]: ETH_TIP,
+  [ChainId.Optimism]: ETH_TIP,
+  [ChainId.Polygon]: POLYGON_TIP,
+  [ChainId.Kovan]: ETH_TIP,
+  [ChainId.Rinkeby]: ETH_TIP,
+}

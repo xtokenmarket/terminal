@@ -1,11 +1,12 @@
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { FEE_TIERS } from 'config/constants'
+import { FEE_TIERS, FEE_TIPS } from 'config/constants'
 import React, { useState } from 'react'
 import { ICreatePoolData, ITerminalPool } from 'types'
 import { RewardTokensTable } from './RewardTokensTable'
 import { IRewardState, RewardModal } from 'components'
 import { CreatePoolModal } from '../CreatePoolModal'
+import { useNetworkContext } from 'contexts/networkContext'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -108,12 +109,15 @@ interface IProps {
 export const RewardsStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
   const cl = useStyles()
 
+  const { chainId } = useNetworkContext()
+
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false)
   const [isRewardsModalVisible, setIsRewardsModalVisible] = useState(false)
 
   const feeAmount: FeeAmount = data.tier.toNumber()
   const feeLabel = FEE_TIERS.find((fee) => fee.value.eq(data.tier))?.label
   const priceLabel = `${data.token0.symbol.toUpperCase()} per ${data.token1.symbol.toUpperCase()}`
+  const feeTip = FEE_TIPS[chainId]
 
   const toggleCreateModal = () =>
     setIsCreateModalVisible((prevState) => !prevState)
@@ -199,10 +203,7 @@ export const RewardsStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
         </Grid>
       </div>
 
-      <Typography className={cl.fee}>
-        Pool Deployment fee is 0.2 ETH. Additional 1% fee on any rewards
-        distributed for this pool.
-      </Typography>
+      <Typography className={cl.fee}>{feeTip}</Typography>
       <Button
         color="primary"
         fullWidth
