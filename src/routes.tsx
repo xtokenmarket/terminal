@@ -30,45 +30,45 @@ const routes = [
       },
       {
         exact: true,
-        path: '/new-pool',
+        path: '/mining/new-pool',
         component: lazy(() => import('pages/CreatePool')),
       },
       {
         exact: true,
-        path: '/pools/:network/:id',
+        path: '/mining/pools/:network/:id',
         component: lazy(() => import('pages/PoolDetails')),
       },
       {
-        path: '/',
+        path: '/mining',
         layout: TerminalLayout,
         routes: [
           {
             exact: true,
-            path: '/discover',
+            path: '/mining/discover',
             component: lazy(() => import('pages/Discover')),
           },
           {
             exact: true,
-            path: '/my-pools',
+            path: '/mining/my-pools',
             component: lazy(() => import('pages/MyPools')),
           },
           {
             exact: true,
-            path: '/about',
+            path: '/mining/about',
             component: lazy(() => import('pages/About')),
           },
 
           {
             path: '*',
             // eslint-disable-next-line
-            component: () => <Redirect to="/discover" />,
+            component: () => <Redirect to="/mining/discover" />,
           },
         ],
       },
       {
         path: '*',
         // eslint-disable-next-line
-        component: () => <Redirect to="/" />,
+        component: () => <Redirect to="/mining" />,
       },
     ],
   },

@@ -75,7 +75,7 @@ export const CreatePoolModal = (props: IProps) => {
 
   const onSuccessClose = () => {
     history.push(
-      `/pools/${getNetworkFromId(
+      `/mining/pools/${getNetworkFromId(
         (networkId || DEFAULT_NETWORK_ID) as NetworkId
       )}/${poolAddress}`
     )

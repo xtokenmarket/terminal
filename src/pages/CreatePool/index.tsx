@@ -63,7 +63,7 @@ const CreatePool = () => {
 
   const onBack = () => {
     setState(initialState)
-    history.push('/discover')
+    history.push('/mining/discover')
   }
 
   const updateData = (e: any) => {

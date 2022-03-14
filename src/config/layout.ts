@@ -3,10 +3,10 @@ import { SvgIcons } from './constants'
 export const MENU_ITEMS = [
   // { id: "home", label: "home", icon: SvgIcons.home, href: "/home" },
   {
-    id: 'terminal',
-    label: 'terminal',
+    id: 'mining',
+    label: 'liquidity mining',
     icon: SvgIcons.mining,
-    href: '/',
+    href: '/mining',
     enabled: true,
   },
   {

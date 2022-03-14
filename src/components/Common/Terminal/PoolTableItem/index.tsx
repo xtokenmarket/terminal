@@ -122,7 +122,7 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
     return (
       <NavLink
         className={cl.content}
-        to={`/pools/${poolData.network}/${poolData.address}`}
+        to={`/mining/pools/${poolData.network}/${poolData.address}`}
       >
         <PoolTd type="pool">
           <div className={cl.item}>
