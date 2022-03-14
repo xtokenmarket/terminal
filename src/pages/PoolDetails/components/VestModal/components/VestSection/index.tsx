@@ -1,10 +1,11 @@
 import { makeStyles, Typography } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
+import { ViewTransaction } from 'components'
 import { useServices } from 'helpers'
 import { IVestState } from 'pages/PoolDetails/components'
 import { useEffect, useState } from 'react'
 import { ITerminalPool } from 'types'
-import { ActionStepRow, ViewTransaction, WarningInfo } from '..'
+import { ActionStepRow, WarningInfo } from '..'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -97,7 +98,7 @@ export const VestSection: React.FC<IProps> = ({
       vesting: true,
     }))
     const { address, rewardState } = poolData
-    const rewardTokenAddresses = rewardState.tokens.map(t => t.address)
+    const rewardTokenAddresses = rewardState.tokens.map((t) => t.address)
 
     const txId = await rewardEscrow.vestAll(address, rewardTokenAddresses)
     const finalTxId = await rewardEscrow.waitUntilVestAll(account, txId)

@@ -1,12 +1,14 @@
 import { makeStyles, Typography, IconButton } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
-import { useIsMountedRef, useServices } from 'helpers'
+import { ViewTransaction } from 'components'
+import { useIsMountedRef } from 'helpers'
 import { IDepositState } from 'pages/PoolDetails/components'
 import { useEffect, useState } from 'react'
 import { ERC20Service, CLRService } from 'services'
 import { ITerminalPool } from 'types'
-import { ActionStepRow, ViewTransaction, WarningInfo } from '..'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
+
+import { ActionStepRow, WarningInfo } from '..'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },

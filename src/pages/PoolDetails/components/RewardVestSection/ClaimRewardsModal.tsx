@@ -1,21 +1,22 @@
 import React, { useState } from 'react'
 import {
-  Modal,
-  makeStyles,
-  Typography,
-  IconButton,
   Button,
   CircularProgress,
+  IconButton,
+  makeStyles,
+  Modal,
+  Typography,
 } from '@material-ui/core'
 import CloseOutlined from '@material-ui/icons/CloseOutlined'
-import { formatEther } from 'ethers/lib/utils'
-import { ViewTransaction } from 'components/Modal/RewardModal/components'
+import { formatUnits } from 'ethers/lib/utils'
+import { ViewTransaction } from 'components'
 import { WarningInfo } from 'components/Common/WarningInfo'
 import { useConnectedWeb3Context } from 'contexts'
 import { CLRService } from 'services'
 import { toUsd, ZERO } from 'utils/number'
 import { EarnedToken } from 'types'
 import { TxState } from 'utils/enums'
+import { getEtherscanUri } from 'config/networks'
 
 const ICON_SIZE = 150
 
@@ -57,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
   },
   closeButton: {
     position: 'absolute',
-    top: 0,
+    top: 12,
     right: 0,
     color: theme.colors.white1,
   },
@@ -71,6 +72,9 @@ const useStyles = makeStyles((theme) => ({
   token: {
     display: 'flex',
     alignItems: 'center',
+    '& + &': {
+      marginTop: 10,
+    },
   },
   logo: {
     marginRight: theme.spacing(2),
@@ -84,11 +88,26 @@ const useStyles = makeStyles((theme) => ({
   },
   warning: {
     margin: theme.spacing(2),
+    padding: '16px !important',
+    '& div': {
+      '&:first-child': {
+        marginTop: 0,
+        marginRight: 16,
+      },
+      '& p': {
+        fontSize: 14,
+        marginTop: 3,
+        '&:first-child': { fontSize: 16, marginTop: 0 },
+      },
+    },
   },
   bottomContent: {
     padding: theme.spacing(2),
     display: 'flex',
     justifyContent: 'center',
+  },
+  actions: {
+    padding: theme.spacing(2),
   },
   img: {
     width: ICON_SIZE,
@@ -109,6 +128,7 @@ interface IProps {
   onClose: () => void
   earnedTokens: EarnedToken[]
   poolAddress: string
+  reloadTerminalPool: (isReloadPool: boolean) => Promise<void>
 }
 
 export const ClaimRewardsModal: React.FC<IProps> = ({
@@ -116,14 +136,18 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
   onClose,
   earnedTokens,
   poolAddress,
+  reloadTerminalPool,
 }) => {
   const cl = useStyles()
-  const { account, library: provider } = useConnectedWeb3Context()
+  const { account, library: provider, networkId } = useConnectedWeb3Context()
+  const etherscanUri = getEtherscanUri(networkId)
 
   const [txState, setTxState] = useState<TxState>(TxState.None)
   const [claimTx, setClaimTx] = useState('')
   const [claimedTokens, setClaimedTokens] = useState<EarnedToken[]>([])
 
+  const isTxPending =
+    txState === TxState.InProgress || txState === TxState.Confirming
   const tokensToRender =
     txState === TxState.Complete ? claimedTokens : earnedTokens
 
@@ -144,6 +168,7 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
     if (!provider || !account) return
 
     setTxState(TxState.Confirming)
+
     try {
       const clr = new CLRService(provider, account, poolAddress)
       const txId = await clr.claimReward()
@@ -162,6 +187,11 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
     } catch (error) {
       _clearTxState()
     }
+  }
+
+  const onClickDone = async () => {
+    _onClose()
+    await reloadTerminalPool(true)
   }
 
   const renderTopContent = () => {
@@ -190,11 +220,22 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
   const renderBottomContent = () => {
     if (txState === TxState.Complete) {
       return (
-        <div className={cl.bottomContent}>
-          <ViewTransaction txId={claimTx} />
+        <div className={cl.actions}>
+          <div className={cl.bottomContent}>
+            <ViewTransaction txId={claimTx} />
+          </div>
+          <Button
+            color="primary"
+            variant="contained"
+            fullWidth
+            onClick={onClickDone}
+          >
+            DONE
+          </Button>
         </div>
       )
     }
+
     const buttonContent = {
       [TxState.None]: 'Claim',
       [TxState.Confirming]: (
@@ -219,13 +260,15 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
       </div>
     )
   }
+
   return (
     <Modal open={open} onClose={_onClose} className={cl.modal}>
       <div className={cl.content}>
-        <IconButton className={cl.closeButton} onClick={_onClose}>
-          <CloseOutlined />
-        </IconButton>
-
+        {txState === TxState.None && (
+          <IconButton className={cl.closeButton} onClick={_onClose}>
+            <CloseOutlined />
+          </IconButton>
+        )}
         {renderTopContent()}
         <div className={cl.tokens}>
           <Typography variant="subtitle2" className={cl.subheader}>
@@ -234,11 +277,17 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
               : 'AVAILABLE TO CLAIM'}
           </Typography>
           {tokensToRender.map((token, i) => {
-            const amount = Number(formatEther(token.amount))
+            const amount = Number(formatUnits(token.amount, token.decimals))
             const price = toUsd(amount * Number(token.price))
             return (
               <div className={cl.token} key={i}>
-                <img src={token.image} className={cl.logo} />
+                <a
+                  href={`${etherscanUri}token/${token.address}`}
+                  target={'_blank'}
+                  rel={'noopener noreferrer'}
+                >
+                  <img src={token.image} className={cl.logo} />
+                </a>
                 <Typography variant="h2" className={cl.amount}>
                   {amount.toFixed(4)} {token.symbol}
                 </Typography>
@@ -249,7 +298,7 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
             )
           })}
         </div>
-        {(txState === TxState.InProgress || txState === TxState.Confirming) && (
+        {isTxPending && (
           <WarningInfo
             className={cl.warning}
             title="Warning"

@@ -1,10 +1,12 @@
 import { useState } from 'react'
+import { useConnectedWeb3Context } from 'contexts'
+import { getEtherscanUri } from 'config/networks'
 import { formatEther } from 'ethers/lib/utils'
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
-import { SimpleLoader } from 'components'
-import { ClaimRewardsModal } from './ClaimRewardsModal'
 import { toUsd } from 'utils/number'
 import { ITerminalPool } from 'types'
+
+import { ClaimRewardsModal } from './ClaimRewardsModal'
 
 const useStyles = makeStyles((theme) => ({
   block: {
@@ -69,6 +71,10 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flex: 2,
   },
+  tokenLink: {
+    display: 'flex',
+    alignItems: 'center',
+  },
   valueWrapper: {
     display: 'flex',
     flex: 5,
@@ -94,12 +100,20 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   pool: ITerminalPool
+  reloadTerminalPool: (isReloadPool: boolean) => Promise<void>
 }
 
-export const RewardVestSection: React.FC<IProps> = ({ pool }) => {
+export const RewardVestSection: React.FC<IProps> = ({
+  pool,
+  reloadTerminalPool,
+}) => {
   const cl = useStyles()
-
+  const { networkId } = useConnectedWeb3Context()
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const etherscanUri = getEtherscanUri(networkId)
+
+  const toggleModal = () => setIsModalOpen((prevState) => !prevState)
 
   let shouldDisplay = true
   if (pool) {
@@ -133,8 +147,15 @@ export const RewardVestSection: React.FC<IProps> = ({ pool }) => {
           return (
             <div key={token.symbol} className={cl.vestingWrapper}>
               <div className={cl.symbolWrapper}>
-                <img className={cl.icon} alt="token" src={token.image} />
-                <Typography className={cl.symbol}>{token.symbol}</Typography>
+                <a
+                  className={cl.tokenLink}
+                  href={`${etherscanUri}token/${token.address}`}
+                  target={'_blank'}
+                  rel={'noopener noreferrer'}
+                >
+                  <img className={cl.icon} alt="token" src={token.image} />
+                  <Typography className={cl.symbol}>{token.symbol}</Typography>
+                </a>
               </div>
               <div className={cl.valueWrapper}>
                 <Typography className={cl.value}>
@@ -159,12 +180,14 @@ export const RewardVestSection: React.FC<IProps> = ({ pool }) => {
         </Typography>
       )
     }
+
     const formatDurationUnits = (duration: string[]) => {
       const primary = duration[0] || ''
       const rest = duration.slice(1, duration.length)
       rest.splice(0, 0, '')
       return { primary, rest: rest.join(' — ') }
     }
+
     return (
       <>
         {pool.vestingTokens.map((token, i) => {
@@ -196,8 +219,15 @@ export const RewardVestSection: React.FC<IProps> = ({ pool }) => {
           return (
             <div key={i} className={cl.itemWrapper}>
               <div className={cl.symbolWrapper}>
-                <img className={cl.icon} alt="token" src={token.image} />
-                <Typography className={cl.symbol}>{token.symbol}</Typography>
+                <a
+                  className={cl.tokenLink}
+                  href={`${etherscanUri}token/${token.address}`}
+                  target={'_blank'}
+                  rel={'noopener noreferrer'}
+                >
+                  <img className={cl.icon} alt="token" src={token.image} />
+                  <Typography className={cl.symbol}>{token.symbol}</Typography>
+                </a>
               </div>
               <div className={cl.rewardValueWrapper}>
                 <Typography className={cl.value}>
@@ -212,7 +242,7 @@ export const RewardVestSection: React.FC<IProps> = ({ pool }) => {
                     className={cl.button}
                     color="secondary"
                     variant="contained"
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={toggleModal}
                   >
                     CLAIM ALL REWARDS
                   </Button>
@@ -228,9 +258,10 @@ export const RewardVestSection: React.FC<IProps> = ({ pool }) => {
     <>
       <ClaimRewardsModal
         open={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={toggleModal}
         poolAddress={pool.address}
         earnedTokens={pool.earnedTokens}
+        reloadTerminalPool={reloadTerminalPool}
       />
       <Grid container spacing={2}>
         <Grid item xs={12} md={6}>

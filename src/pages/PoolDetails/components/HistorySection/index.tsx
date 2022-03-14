@@ -70,6 +70,9 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     color: theme.colors.white,
   },
+  rewardAmounts: {
+    display: 'inline-block',
+  },
 }))
 
 interface IProps {
@@ -127,7 +130,10 @@ export const HistorySection = (props: IProps) => {
       return (
         <td>
           {item.totalRewardAmounts.map((amount, index) => (
-            <>
+            <div
+              className={classes.rewardAmounts}
+              key={item.rewardTokens[index].symbol}
+            >
               <span>
                 {numberWithCommas(
                   formatBigNumber(amount, item.rewardTokens[index].decimals)
@@ -135,7 +141,7 @@ export const HistorySection = (props: IProps) => {
               </span>{' '}
               {item.rewardTokens[index].symbol}{' '}
               {index !== item.totalRewardAmounts.length - 1 && `/ `}
-            </>
+            </div>
           ))}
         </td>
       )
@@ -169,7 +175,7 @@ export const HistorySection = (props: IProps) => {
             </thead>
             <tbody>
               {pool.history.map((item) => (
-                <tr key={`${item.tx}_${item.action}`}>
+                <tr key={`${item.tx}_${item.action}_${item.symbol}`}>
                   <td>{item.action}</td>
                   {renderValue(item)}
                   <td>{moment(item.time).fromNow()}</td>

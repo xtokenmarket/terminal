@@ -36,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
     fontSize: 18,
     lineHeight: '28px',
-    '& span': { fontWeight: 400, color: theme.colors.primary100 },
     [theme.breakpoints.down('xs')]: {
       fontSize: 22,
     },
@@ -52,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
   percent: {
     background: theme.colors.primary200,
     fontSize: 12,
+    fontWeight: 700,
     color: theme.colors.white,
     borderRadius: '16px',
     justifyContent: 'center',
@@ -95,9 +95,9 @@ export const BalanceSection = (props: IProps) => {
               )
             )}{' '}
             {!isDeposit && (
-              <div className={classes.percent}>
+              <span className={classes.percent}>
                 {Number(token.percent).toFixed(2)}%
-              </div>
+              </span>
             )}
           </Typography>
           <Typography className={classes.dollar}>

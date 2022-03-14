@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Modal,
   makeStyles,
@@ -10,13 +10,12 @@ import {
 import CloseOutlined from '@material-ui/icons/CloseOutlined'
 import { VestingToken } from 'types'
 import { formatEther } from 'ethers/lib/utils'
-import { ViewTransaction } from 'components/Modal/RewardModal/components'
+import { ViewTransaction } from 'components'
 import { WarningInfo } from 'components/Common/WarningInfo'
 import { useConnectedWeb3Context } from 'contexts'
 import { useServices } from 'helpers'
 import { TxState } from 'utils/enums'
-import { ONE_WEEK_IN_TIME, toUsd, ZERO } from 'utils/number'
-import { getTimeRemainingUnits } from 'utils'
+import { toUsd, ZERO } from 'utils/number'
 
 const ICON_SIZE = 150
 

@@ -2,12 +2,13 @@ import { makeStyles, Typography } from '@material-ui/core'
 import Abi from 'abis'
 import { useConnectedWeb3Context } from 'contexts'
 import { useServices } from 'helpers'
-import { IRewardState } from 'components'
+import { IRewardState, ViewTransaction } from 'components'
 import { useEffect, useState } from 'react'
 import { ERC20Service } from 'services'
-import { ActionStepRow, ViewTransaction, WarningInfo } from '../index'
 import { parseDuration } from 'utils/number'
 import { ITerminalPool } from 'types'
+
+import { ActionStepRow, WarningInfo } from '..'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },

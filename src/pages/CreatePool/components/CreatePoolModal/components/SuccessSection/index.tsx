@@ -1,6 +1,6 @@
 import { Button, makeStyles, Typography } from '@material-ui/core'
 import { ICreatePoolData } from 'types'
-import { ViewTransaction } from '../ViewTransaction'
+import { ViewTransaction } from 'components/Common/ViewTransaction'
 
 const ICON_SIZE = 150
 

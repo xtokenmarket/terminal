@@ -1,17 +1,14 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
-import { useIsMountedRef } from 'helpers'
 import moment from 'moment'
-import { useEffect, useState } from 'react'
-import { ERC20Service } from 'services'
+import { useState } from 'react'
 import { ITerminalPool } from 'types'
 import {
   getCurrentTimeStamp,
   getTimeDurationStr,
   numberWithCommas,
 } from 'utils'
-import { parseDuration, ZERO } from 'utils/number'
+import { parseDuration } from 'utils/number'
 import { RewardModal } from 'components'
 import {
   BalanceSection,
@@ -277,7 +274,7 @@ export const Content = (props: IProps) => {
         <div>
           <Grid container spacing={0}>
             <Grid item xs={12} md={6} className={classes.balance}>
-              <Typography className={classes.title}>POOl BALANCE</Typography>
+              <Typography className={classes.title}>POOL BALANCE</Typography>
               <Grid container spacing={0}>
                 <Grid item xs={12} md={6}>
                   <BalanceSection token={token0} />
@@ -340,7 +337,7 @@ export const Content = (props: IProps) => {
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
               <InfoSection
-                label="ENDING"
+                label="REWARDS ENDING"
                 value={
                   poolData.periodFinish.isZero()
                     ? 'N/A'
@@ -444,7 +441,10 @@ export const Content = (props: IProps) => {
           )}
         </div>
 
-        <RewardVestSection pool={poolData} />
+        <RewardVestSection
+          pool={poolData}
+          reloadTerminalPool={props.reloadTerminalPool}
+        />
 
         <HistorySection pool={poolData} />
       </div>

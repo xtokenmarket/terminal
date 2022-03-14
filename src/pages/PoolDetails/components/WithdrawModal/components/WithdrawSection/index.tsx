@@ -1,14 +1,16 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { makeStyles, Typography, IconButton } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
+import { ViewTransaction } from 'components'
 import { IWithdrawState } from 'pages/PoolDetails/components'
 import { useEffect, useState } from 'react'
 import { CLRService } from 'services'
 import { ITerminalPool } from 'types'
 import { ZERO } from 'utils/number'
-import { ActionStepRow, ViewTransaction, WarningInfo } from '..'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
+
+import { ActionStepRow, WarningInfo } from '..'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
