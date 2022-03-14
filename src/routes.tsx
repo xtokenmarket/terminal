@@ -15,60 +15,60 @@ const routes = [
       // },
       {
         exact: true,
-        path: '/market',
+        path: '/native',
         component: lazy(() => import('pages/ComingSoon')),
       },
       {
         exact: true,
-        path: '/cafe',
+        path: '/origination',
         component: lazy(() => import('pages/ComingSoon')),
       },
       {
         exact: true,
-        path: '/vote',
+        path: '/auction',
         component: lazy(() => import('pages/ComingSoon')),
       },
       {
         exact: true,
-        path: '/terminal/new-pool',
+        path: '/new-pool',
         component: lazy(() => import('pages/CreatePool')),
       },
       {
         exact: true,
-        path: '/terminal/pools/:network/:id',
+        path: '/pools/:network/:id',
         component: lazy(() => import('pages/PoolDetails')),
       },
       {
-        path: '/terminal',
+        path: '/',
         layout: TerminalLayout,
         routes: [
           {
             exact: true,
-            path: '/terminal/discover',
+            path: '/discover',
             component: lazy(() => import('pages/Discover')),
           },
           {
             exact: true,
-            path: '/terminal/my-pool',
+            path: '/my-pools',
             component: lazy(() => import('pages/MyPools')),
           },
           {
             exact: true,
-            path: '/terminal/about',
+            path: '/about',
             component: lazy(() => import('pages/About')),
           },
 
           {
             path: '*',
             // eslint-disable-next-line
-            component: () => <Redirect to="/terminal/discover" />,
+            component: () => <Redirect to="/discover" />,
           },
         ],
       },
       {
         path: '*',
         // eslint-disable-next-line
-        component: () => <Redirect to="/terminal" />,
+        component: () => <Redirect to="/" />,
       },
     ],
   },

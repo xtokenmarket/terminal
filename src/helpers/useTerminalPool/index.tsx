@@ -329,19 +329,12 @@ export const useTerminalPool = (
           if (Number(pool.vestingPeriod) !== 0) {
             vestingTokens = await Promise.all(
               pool.rewardTokens.map(async (token: any) => {
-                const [{ amounts, timestamps }, vestedAmount] =
-                  await Promise.all([
-                    rewardEscrow.checkAccountSchedule(
-                      poolAddress as string,
-                      token.address,
-                      account
-                    ),
-                    rewardEscrow.getVestedBalance(
-                      poolAddress as string,
-                      token.address,
-                      account
-                    ),
-                  ])
+                const { amounts, timestamps, vestedAmount } =
+                  await rewardEscrow.getVestedBalance(
+                    poolAddress as string,
+                    token.address,
+                    account
+                  )
                 return amounts.map((amount, index) => {
                   const timestamp = timestamps[index]
                   const now = getCurrentTimeStamp()
@@ -438,7 +431,7 @@ export const useTerminalPool = (
           tradeFee: pool.tradeFee,
           tvl,
           uniswapPool: pool.uniswapPool,
-          vestingTokens: vestingTokens.length ? vestingTokens : undefined,
+          vestingTokens,
           earnedTokens,
           history,
           poolShare,

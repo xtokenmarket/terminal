@@ -1,14 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { ConnectorNames, Network } from 'utils/enums'
-
-import { ReactComponent as HomeIcon } from 'assets/svgs/home.svg'
-import { ReactComponent as MarketIcon } from 'assets/svgs/market.svg'
-import { ReactComponent as CafeIcon } from 'assets/svgs/cafe.svg'
-import { ReactComponent as VoteIcon } from 'assets/svgs/vote.svg'
-import { ReactComponent as TerminalIcon } from 'assets/svgs/terminal.svg'
-import { ReactComponent as GithubIcon } from 'assets/svgs/github.svg'
-import { ReactComponent as TwitterIcon } from 'assets/svgs/twitter.svg'
+import { ReactComponent as AuctionIcon } from 'assets/svgs/auction.svg'
 import { ReactComponent as DiscordIcon } from 'assets/svgs/discord.svg'
+import { ReactComponent as GithubIcon } from 'assets/svgs/github.svg'
+import { ReactComponent as HomeIcon } from 'assets/svgs/home.svg'
+import { ReactComponent as MiningIcon } from 'assets/svgs/mining.svg'
+import { ReactComponent as NativeIcon } from 'assets/svgs/native.svg'
+import { ReactComponent as OriginationIcon } from 'assets/svgs/origination.svg'
+import { ReactComponent as TwitterIcon } from 'assets/svgs/twitter.svg'
 import { IToken } from 'types'
 
 // Enable testnet chain support for Vercel deployment
@@ -158,20 +157,20 @@ export const PRICE_DECIMALS = 6
 export const MIN_START_TIME_DIFF = 10 * 60 // 10 mins
 export const LIQUIDITY_LOCK_MIN_DURATION = 30 * 24 * 60 * 60 // 1 month
 
-export const POLL_API_DATA = 60000 // 1 min
+export const POLL_API_DATA = 120000 // 2 min
 
 export const FLEEK_STORAGE_START_URL = 'https://storageapi.fleek.co/'
 export const TERMINAL_API_URL = 'https://terminal-api-staging.link:3001/api'
 
 export const SvgIcons = {
-  home: HomeIcon,
-  market: MarketIcon,
-  cafe: CafeIcon,
-  vote: VoteIcon,
-  terminal: TerminalIcon,
-  github: GithubIcon,
-  twitter: TwitterIcon,
+  auction: AuctionIcon,
   discord: DiscordIcon,
+  github: GithubIcon,
+  home: HomeIcon,
+  mining: MiningIcon,
+  native: NativeIcon,
+  origination: OriginationIcon,
+  twitter: TwitterIcon,
 }
 
 export const LP_TOKEN_BASIC: IToken = {

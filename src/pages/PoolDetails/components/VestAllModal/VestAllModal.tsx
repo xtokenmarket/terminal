@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
   },
   closeButton: {
     position: 'absolute',
-    top: 0,
+    top: 12,
     right: 0,
     color: theme.colors.white1,
   },
@@ -71,6 +71,9 @@ const useStyles = makeStyles((theme) => ({
   token: {
     display: 'flex',
     alignItems: 'center',
+    '& + &': {
+      marginTop: 10,
+    },
   },
   logo: {
     marginRight: theme.spacing(2),
@@ -84,6 +87,21 @@ const useStyles = makeStyles((theme) => ({
   },
   warning: {
     margin: theme.spacing(2),
+    padding: '16px !important',
+    '& div': {
+      '&:first-child': {
+        marginTop: 0,
+        marginRight: 16,
+      },
+      '& p': {
+        fontSize: 14,
+        marginTop: 3,
+        '&:first-child': { fontSize: 16, marginTop: 0 },
+      },
+    },
+  },
+  actions: {
+    padding: theme.spacing(2),
   },
   bottomContent: {
     padding: theme.spacing(2),
@@ -107,8 +125,9 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   open: boolean
   onClose: () => void
-  vestingTokens: VestingToken[]
   poolAddress: string
+  reloadTerminalPool: (isReloadPool: boolean) => Promise<void>
+  vestingTokens: VestingToken[]
 }
 
 export const VestAllModal: React.FC<IProps> = ({
@@ -116,20 +135,32 @@ export const VestAllModal: React.FC<IProps> = ({
   onClose,
   vestingTokens,
   poolAddress,
+  reloadTerminalPool,
 }) => {
   const cl = useStyles()
   const { account, library: provider } = useConnectedWeb3Context()
   const { rewardEscrow } = useServices()
 
   const [txState, setTxState] = useState<TxState>(TxState.None)
-  const [claimTx, setClaimTx] = useState('')
+  const [vestTx, setVestTx] = useState('')
   const [vestedTokens, setVestedTokens] = useState<VestingToken[]>([])
 
+  const readyToVest: { [key: string]: VestingToken } = {}
+  vestingTokens.map((token) => {
+    if (readyToVest[token.symbol.toLowerCase()]) {
+      readyToVest[token.symbol.toLowerCase()].amount = readyToVest[
+        token.symbol.toLowerCase()
+      ].amount.add(token.amount)
+    } else {
+      readyToVest[token.symbol.toLowerCase()] = { ...token }
+    }
+  })
+
   const tokensToRender =
-    txState === TxState.Complete ? vestedTokens : vestingTokens
+    txState === TxState.Complete ? vestedTokens : Object.values(readyToVest)
 
   const _clearTxState = () => {
-    setClaimTx('')
+    setVestTx('')
     setVestedTokens([])
     setTxState(TxState.None)
   }
@@ -141,24 +172,31 @@ export const VestAllModal: React.FC<IProps> = ({
     onClose()
   }
 
+  const onClickDone = async () => {
+    _onClose()
+    await reloadTerminalPool(true)
+  }
+
   const onClickVest = async () => {
     if (!provider || !account) return
 
     try {
       setTxState(TxState.Confirming)
 
-      const addresses = vestingTokens.map((token) => token.address)
+      const addresses = Object.values(readyToVest).map((token) => token.address)
       const txId = await rewardEscrow.vestAll(poolAddress, addresses)
+
       setTxState(TxState.InProgress)
+
       const finalTxId = await rewardEscrow.waitUntilVestAll(account, txId)
       const parsedLogs = await rewardEscrow.parseVestAllTx(finalTxId)
-      const vestedTokens = vestingTokens.map((token) => ({
+      const vestedTokens = Object.values(readyToVest).map((token) => ({
         ...token,
         amount: parsedLogs[token.address.toLowerCase()] || ZERO,
       }))
 
       setTxState(TxState.Complete)
-      setClaimTx(finalTxId)
+      setVestTx(finalTxId)
       setVestedTokens(vestedTokens)
     } catch (error) {
       _clearTxState()
@@ -191,8 +229,18 @@ export const VestAllModal: React.FC<IProps> = ({
   const renderBottomContent = () => {
     if (txState === TxState.Complete) {
       return (
-        <div className={cl.bottomContent}>
-          <ViewTransaction txId={claimTx} />
+        <div className={cl.actions}>
+          <div className={cl.bottomContent}>
+            <ViewTransaction txId={vestTx} />
+          </div>
+          <Button
+            color="primary"
+            variant="contained"
+            fullWidth
+            onClick={onClickDone}
+          >
+            DONE
+          </Button>
         </div>
       )
     }
@@ -223,9 +271,11 @@ export const VestAllModal: React.FC<IProps> = ({
   return (
     <Modal open={open} onClose={_onClose} className={cl.modal}>
       <div className={cl.content}>
-        <IconButton className={cl.closeButton} onClick={_onClose}>
-          <CloseOutlined />
-        </IconButton>
+        {txState === TxState.None && (
+          <IconButton className={cl.closeButton} onClick={_onClose}>
+            <CloseOutlined />
+          </IconButton>
+        )}
 
         {renderTopContent()}
         <div className={cl.tokens}>

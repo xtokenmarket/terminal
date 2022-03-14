@@ -218,13 +218,13 @@ export const Content = (props: IProps) => {
     setState((prev) => ({ ...prev, rewardVisible }))
   }
 
+  const readyToVest = poolData.vestingTokens.filter(
+    (token) => token.vestedAmount.gt(0) && token.durationRemaining.length === 0
+  )
   const shouldDisplayVestButton =
     isDeposited &&
     Number(poolData.rewardState.vesting) > 0 &&
-    poolData.vestingTokens?.some(
-      (token) =>
-        token.vestedAmount.gt(0) && token.durationRemaining.length === 0
-    )
+    readyToVest.length !== 0
 
   return (
     <div className={classes.root}>
@@ -261,12 +261,13 @@ export const Content = (props: IProps) => {
         />
       )}
 
-      {poolData.vestingTokens && (
+      {poolData.vestingTokens.length !== 0 && (
         <VestAllModal
           open={state.vestVisible}
           onClose={() => setVestModalVisible(false)}
-          vestingTokens={poolData.vestingTokens}
+          vestingTokens={readyToVest}
           poolAddress={poolData.address}
+          reloadTerminalPool={props.reloadTerminalPool}
         />
       )}
 

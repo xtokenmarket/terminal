@@ -63,7 +63,7 @@ const CreatePool = () => {
 
   const onBack = () => {
     setState(initialState)
-    history.push('/terminal/discover')
+    history.push('/discover')
   }
 
   const updateData = (e: any) => {

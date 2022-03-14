@@ -91,14 +91,7 @@ export const VestModal = (props: IProps) => {
           />
         )
       case EVestStep.Vest:
-        return (
-          <VestSection
-            onNext={onNextStep}
-            vestState={state}
-            poolData={props.poolData}
-            updateState={updateState}
-          />
-        )
+        return <VestSection onNext={onNextStep} poolData={props.poolData} />
       default:
         return (
           <SuccessSection

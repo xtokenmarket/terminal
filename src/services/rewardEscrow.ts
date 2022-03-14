@@ -31,25 +31,6 @@ class RewardEscrowService {
     return this.contract.clrPoolVestingPeriod(addr)
   }
 
-  checkAccountSchedule = async (
-    poolAddress: string,
-    tokenAddress: string,
-    account: string
-  ) => {
-    const entries = await this.contract.checkAccountSchedule(
-      poolAddress,
-      tokenAddress,
-      account
-    )
-    const vestingEntries = entries.filter((s: BigNumber) => !s.isZero())
-    const amounts: BigNumber[] = []
-    const timestamps: BigNumber[] = []
-    vestingEntries.map((entry: BigNumber, index: number) =>
-      index % 2 === 0 ? timestamps.push(entry) : amounts.push(entry)
-    )
-    return { amounts, timestamps }
-  }
-
   getNextVestingEntry = async (
     address: string,
     tokenAddress: string,
@@ -99,7 +80,7 @@ class RewardEscrowService {
       try {
         const parsed = uniPositionInterface.parseLog(log)
         if (parsed.name === 'Vested') {
-          result[String(parsed.args[1]).toLowerCase()] = parsed.args[2]
+          result[parsed.args.token.toLowerCase()] = parsed.args.value
         }
       } catch (error) {
         console.error(error)
@@ -112,25 +93,29 @@ class RewardEscrowService {
     address: string,
     tokenAddress: string,
     account: string
-  ): Promise<any> => {
+  ): Promise<{
+    amounts: BigNumber[]
+    timestamps: BigNumber[]
+    vestedAmount: BigNumber
+  }> => {
+    const amounts: BigNumber[] = []
+    const timestamps: BigNumber[] = []
     let sum = BigNumber.from(0)
+
     try {
-      const latestBlock = await this.provider.getBlock('latest')
-      const numVestingEntries = await this.contract.numVestingEntries(
-        address,
-        tokenAddress,
-        account
-      )
-      const schedule = await this.contract.checkAccountSchedule(
-        address,
-        tokenAddress,
-        account
-      )
+      const [latestBlock, numVestingEntries, schedule] = await Promise.all([
+        this.provider.getBlock('latest'),
+        this.contract.numVestingEntries(address, tokenAddress, account),
+        this.contract.checkAccountSchedule(address, tokenAddress, account),
+      ])
+
       if (numVestingEntries > 0) {
         for (let i = 0; i < +numVestingEntries * 2; i = i + 2) {
           const t = schedule[i]
           const v = schedule[i + 1]
           if (t.gt(0) && v.gt(0)) {
+            timestamps.push(t)
+            amounts.push(v)
             if (t.lt(latestBlock.timestamp)) {
               sum = BigNumber.from(sum).add(v)
             }
@@ -140,7 +125,8 @@ class RewardEscrowService {
     } catch (error) {
       console.error(error)
     }
-    return sum
+
+    return { amounts, timestamps, vestedAmount: sum }
   }
 }
 
