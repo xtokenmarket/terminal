@@ -1,4 +1,10 @@
-import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
+import {
+  Button,
+  Grid,
+  makeStyles,
+  Tooltip,
+  Typography,
+} from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
 import moment from 'moment'
 import { useState } from 'react'
@@ -164,6 +170,16 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     padding: '0 13px',
     marginLeft: 16,
+  },
+  tooltipArrow: {
+    color: theme.colors.primary300,
+  },
+  tooltip: {
+    backgroundColor: theme.colors.primary300,
+    fontFamily: 'Gilmer',
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
+    fontSize: 8,
   },
 }))
 
@@ -432,13 +448,23 @@ export const Content = (props: IProps) => {
           )}
 
           {isManageable && (
-            <Button
-              className={classes.button}
-              color="secondary"
-              variant="contained"
+            <Tooltip
+              title="Coming Soon"
+              arrow
+              placement="top"
+              classes={{
+                arrow: classes.tooltipArrow,
+                tooltip: classes.tooltip,
+              }}
             >
-              REINVEST
-            </Button>
+              <Button
+                className={classes.button}
+                color="secondary"
+                variant="contained"
+              >
+                REINVEST
+              </Button>
+            </Tooltip>
           )}
         </div>
 
