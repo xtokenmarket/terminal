@@ -64,6 +64,7 @@ export const RewardTokens: React.FC<IProps> = ({
     userBalance: BigNumber,
     i: number
   ) => {
+    // TODO: Parse decimal units based on selected `token`
     const numAmount = Number(formatEther(amount))
     const numBalance = Number(formatEther(userBalance))
     const exceedsBalance = numBalance < (1 + rewardFeePercent) * numAmount

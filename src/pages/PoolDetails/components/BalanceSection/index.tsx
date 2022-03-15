@@ -57,6 +57,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     padding: '0 13px',
     marginLeft: 16,
+    height: 28,
   },
 }))
 

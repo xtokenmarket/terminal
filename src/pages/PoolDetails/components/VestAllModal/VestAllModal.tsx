@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core'
 import CloseOutlined from '@material-ui/icons/CloseOutlined'
 import { VestingToken } from 'types'
-import { formatEther } from 'ethers/lib/utils'
+import { formatUnits } from 'ethers/lib/utils'
 import { ViewTransaction } from 'components'
 import { WarningInfo } from 'components/Common/WarningInfo'
 import { useConnectedWeb3Context } from 'contexts'
@@ -283,7 +283,7 @@ export const VestAllModal: React.FC<IProps> = ({
             {txState === TxState.Complete ? 'YOU VESTED' : 'AVAILABLE TO VEST'}
           </Typography>
           {tokensToRender.map((token, i) => {
-            const amount = Number(formatEther(token.amount))
+            const amount = Number(formatUnits(token.amount, token.decimals))
             const price = toUsd(amount * Number(token.price))
             return (
               <div className={cl.token} key={i}>

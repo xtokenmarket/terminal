@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useConnectedWeb3Context } from 'contexts'
 import { getEtherscanUri } from 'config/networks'
-import { formatEther } from 'ethers/lib/utils'
+import { formatUnits } from 'ethers/lib/utils'
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { toUsd } from 'utils/number'
 import { ITerminalPool } from 'types'
@@ -142,7 +142,7 @@ export const RewardVestSection: React.FC<IProps> = ({
     return (
       <>
         {pool.vestingTokens.map((token) => {
-          const amount = Number(formatEther(token.amount))
+          const amount = Number(formatUnits(token.amount, token.decimals))
           const price = toUsd(amount * Number(token.price))
           return (
             <div key={token.symbol} className={cl.vestingWrapper}>
@@ -214,7 +214,7 @@ export const RewardVestSection: React.FC<IProps> = ({
     <div>
       {pool &&
         pool.earnedTokens.map((token, i) => {
-          const amount = Number(formatEther(token.amount))
+          const amount = Number(formatUnits(token.amount, token.decimals))
           const price = toUsd(amount * Number(token.price))
           return (
             <div key={i} className={cl.itemWrapper}>
