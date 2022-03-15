@@ -21,7 +21,6 @@ export interface RewardEscrowInterface extends utils.Interface {
   functions: {
     "MAX_VESTING_ENTRIES()": FunctionFragment;
     "addRewardsContract(address)": FunctionFragment;
-    "addRewardsToken(address)": FunctionFragment;
     "appendVestingEntry(address,address,address,uint256)": FunctionFragment;
     "balanceOf(address,address)": FunctionFragment;
     "checkAccountSchedule(address,address,address)": FunctionFragment;
@@ -30,17 +29,15 @@ export interface RewardEscrowInterface extends utils.Interface {
     "getNextVestingIndex(address,address,address)": FunctionFragment;
     "getNextVestingQuantity(address,address,address)": FunctionFragment;
     "getNextVestingTime(address,address,address)": FunctionFragment;
-    "getRewardTokens()": FunctionFragment;
     "getVestingQuantity(address,address,address,uint256)": FunctionFragment;
     "getVestingScheduleEntry(address,address,address,uint256)": FunctionFragment;
     "getVestingTime(address,address,address,uint256)": FunctionFragment;
+    "initialize()": FunctionFragment;
     "isRewardContract(address)": FunctionFragment;
     "numVestingEntries(address,address,address)": FunctionFragment;
     "owner()": FunctionFragment;
     "removeRewardsContract(address)": FunctionFragment;
-    "removeRewardsToken(address)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
-    "rewardTokens(uint256)": FunctionFragment;
     "setCLRPoolVestingPeriod(address,uint256)": FunctionFragment;
     "totalEscrowedAccountBalance(address,address)": FunctionFragment;
     "totalEscrowedBalance(address)": FunctionFragment;
@@ -58,10 +55,6 @@ export interface RewardEscrowInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "addRewardsContract",
-    values: [string]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "addRewardsToken",
     values: [string]
   ): string;
   encodeFunctionData(
@@ -97,10 +90,6 @@ export interface RewardEscrowInterface extends utils.Interface {
     values: [string, string, string]
   ): string;
   encodeFunctionData(
-    functionFragment: "getRewardTokens",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "getVestingQuantity",
     values: [string, string, string, BigNumberish]
   ): string;
@@ -111,6 +100,10 @@ export interface RewardEscrowInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "getVestingTime",
     values: [string, string, string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "initialize",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "isRewardContract",
@@ -126,16 +119,8 @@ export interface RewardEscrowInterface extends utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
-    functionFragment: "removeRewardsToken",
-    values: [string]
-  ): string;
-  encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "rewardTokens",
-    values: [BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "setCLRPoolVestingPeriod",
@@ -180,10 +165,6 @@ export interface RewardEscrowInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "addRewardsToken",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "appendVestingEntry",
     data: BytesLike
   ): Result;
@@ -213,10 +194,6 @@ export interface RewardEscrowInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getRewardTokens",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "getVestingQuantity",
     data: BytesLike
   ): Result;
@@ -228,6 +205,7 @@ export interface RewardEscrowInterface extends utils.Interface {
     functionFragment: "getVestingTime",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isRewardContract",
     data: BytesLike
@@ -242,15 +220,7 @@ export interface RewardEscrowInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "removeRewardsToken",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "renounceOwnership",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "rewardTokens",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -288,8 +258,6 @@ export interface RewardEscrowInterface extends utils.Interface {
     "OwnershipTransferred(address,address)": EventFragment;
     "RewardContractAdded(address)": EventFragment;
     "RewardContractRemoved(address)": EventFragment;
-    "RewardTokenAdded(address)": EventFragment;
-    "RewardTokenRemoved(address)": EventFragment;
     "Transfer(address,address,address,uint256)": EventFragment;
     "Vested(address,address,address,uint256,uint256)": EventFragment;
     "VestingEntryCreated(address,address,address,uint256,uint256)": EventFragment;
@@ -299,8 +267,6 @@ export interface RewardEscrowInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RewardContractAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RewardContractRemoved"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RewardTokenAdded"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RewardTokenRemoved"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Vested"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "VestingEntryCreated"): EventFragment;
@@ -330,22 +296,6 @@ export type RewardContractRemovedEvent = TypedEvent<
 
 export type RewardContractRemovedEventFilter =
   TypedEventFilter<RewardContractRemovedEvent>;
-
-export type RewardTokenAddedEvent = TypedEvent<
-  [string],
-  { rewardToken: string }
->;
-
-export type RewardTokenAddedEventFilter =
-  TypedEventFilter<RewardTokenAddedEvent>;
-
-export type RewardTokenRemovedEvent = TypedEvent<
-  [string],
-  { rewardToken: string }
->;
-
-export type RewardTokenRemovedEventFilter =
-  TypedEventFilter<RewardTokenRemovedEvent>;
 
 export type TransferEvent = TypedEvent<
   [string, string, string, BigNumber],
@@ -423,11 +373,6 @@ export interface RewardEscrow extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    addRewardsToken(
-      rewardToken: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     appendVestingEntry(
       token: string,
       account: string,
@@ -482,10 +427,6 @@ export interface RewardEscrow extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    getRewardTokens(
-      overrides?: CallOverrides
-    ): Promise<[string[]] & { tokens: string[] }>;
-
     getVestingQuantity(
       pool: string,
       token: string,
@@ -510,6 +451,10 @@ export interface RewardEscrow extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
+    initialize(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     isRewardContract(
       arg0: string,
       overrides?: CallOverrides
@@ -529,19 +474,9 @@ export interface RewardEscrow extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    removeRewardsToken(
-      rewardToken: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<ContractTransaction>;
-
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
-
-    rewardTokens(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
 
     setCLRPoolVestingPeriod(
       pool: string,
@@ -602,11 +537,6 @@ export interface RewardEscrow extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  addRewardsToken(
-    rewardToken: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   appendVestingEntry(
     token: string,
     account: string,
@@ -661,8 +591,6 @@ export interface RewardEscrow extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  getRewardTokens(overrides?: CallOverrides): Promise<string[]>;
-
   getVestingQuantity(
     pool: string,
     token: string,
@@ -687,6 +615,10 @@ export interface RewardEscrow extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  initialize(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   isRewardContract(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
   numVestingEntries(
@@ -703,16 +635,9 @@ export interface RewardEscrow extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  removeRewardsToken(
-    rewardToken: string,
-    overrides?: Overrides & { from?: string | Promise<string> }
-  ): Promise<ContractTransaction>;
-
   renounceOwnership(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
-
-  rewardTokens(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
   setCLRPoolVestingPeriod(
     pool: string,
@@ -773,11 +698,6 @@ export interface RewardEscrow extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    addRewardsToken(
-      rewardToken: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     appendVestingEntry(
       token: string,
       account: string,
@@ -832,8 +752,6 @@ export interface RewardEscrow extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getRewardTokens(overrides?: CallOverrides): Promise<string[]>;
-
     getVestingQuantity(
       pool: string,
       token: string,
@@ -858,6 +776,8 @@ export interface RewardEscrow extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    initialize(overrides?: CallOverrides): Promise<void>;
+
     isRewardContract(arg0: string, overrides?: CallOverrides): Promise<boolean>;
 
     numVestingEntries(
@@ -874,17 +794,7 @@ export interface RewardEscrow extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    removeRewardsToken(
-      rewardToken: string,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
-
-    rewardTokens(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
-    ): Promise<string>;
 
     setCLRPoolVestingPeriod(
       pool: string,
@@ -958,18 +868,6 @@ export interface RewardEscrow extends BaseContract {
       rewardContract?: string | null
     ): RewardContractRemovedEventFilter;
 
-    "RewardTokenAdded(address)"(
-      rewardToken?: string | null
-    ): RewardTokenAddedEventFilter;
-    RewardTokenAdded(rewardToken?: string | null): RewardTokenAddedEventFilter;
-
-    "RewardTokenRemoved(address)"(
-      rewardToken?: string | null
-    ): RewardTokenRemovedEventFilter;
-    RewardTokenRemoved(
-      rewardToken?: string | null
-    ): RewardTokenRemovedEventFilter;
-
     "Transfer(address,address,address,uint256)"(
       token?: string | null,
       from?: string | null,
@@ -1031,11 +929,6 @@ export interface RewardEscrow extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    addRewardsToken(
-      rewardToken: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     appendVestingEntry(
       token: string,
       account: string,
@@ -1090,8 +983,6 @@ export interface RewardEscrow extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getRewardTokens(overrides?: CallOverrides): Promise<BigNumber>;
-
     getVestingQuantity(
       pool: string,
       token: string,
@@ -1116,6 +1007,10 @@ export interface RewardEscrow extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    initialize(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     isRewardContract(
       arg0: string,
       overrides?: CallOverrides
@@ -1135,18 +1030,8 @@ export interface RewardEscrow extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    removeRewardsToken(
-      rewardToken: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<BigNumber>;
-
-    rewardTokens(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     setCLRPoolVestingPeriod(
@@ -1211,11 +1096,6 @@ export interface RewardEscrow extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    addRewardsToken(
-      rewardToken: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     appendVestingEntry(
       token: string,
       account: string,
@@ -1270,8 +1150,6 @@ export interface RewardEscrow extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getRewardTokens(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     getVestingQuantity(
       pool: string,
       token: string,
@@ -1296,6 +1174,10 @@ export interface RewardEscrow extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    initialize(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     isRewardContract(
       arg0: string,
       overrides?: CallOverrides
@@ -1315,18 +1197,8 @@ export interface RewardEscrow extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    removeRewardsToken(
-      rewardToken: string,
-      overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
     renounceOwnership(
       overrides?: Overrides & { from?: string | Promise<string> }
-    ): Promise<PopulatedTransaction>;
-
-    rewardTokens(
-      arg0: BigNumberish,
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     setCLRPoolVestingPeriod(

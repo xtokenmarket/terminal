@@ -19,10 +19,12 @@ const useStyles = makeStyles((theme) => ({
   percent: {
     background: theme.colors.primary200,
     fontSize: 12,
+    fontWeight: 700,
     color: theme.colors.white,
     borderRadius: '16px',
     justifyContent: 'center',
     padding: '7px 13px',
+    height: 28,
   },
 }))
 

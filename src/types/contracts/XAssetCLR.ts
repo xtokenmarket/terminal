@@ -54,6 +54,7 @@ export interface XAssetCLRInterface extends utils.Interface {
     "calculatePoolMintedAmounts(uint256,uint256)": FunctionFragment;
     "claimReward()": FunctionFragment;
     "collect()": FunctionFragment;
+    "collectAndReinvest()": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
     "deposit(uint8,uint256)": FunctionFragment;
@@ -149,6 +150,10 @@ export interface XAssetCLRInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "collect", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "collectAndReinvest",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "decreaseAllowance",
@@ -376,6 +381,10 @@ export interface XAssetCLRInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "collect", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "collectAndReinvest",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "decreaseAllowance",
@@ -773,6 +782,10 @@ export interface XAssetCLR extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    collectAndReinvest(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     decimals(overrides?: CallOverrides): Promise<[number]>;
 
     decreaseAllowance(
@@ -1085,6 +1098,10 @@ export interface XAssetCLR extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  collectAndReinvest(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   decimals(overrides?: CallOverrides): Promise<number>;
 
   decreaseAllowance(
@@ -1376,6 +1393,8 @@ export interface XAssetCLR extends BaseContract {
     ): Promise<
       [BigNumber, BigNumber] & { collected0: BigNumber; collected1: BigNumber }
     >;
+
+    collectAndReinvest(overrides?: CallOverrides): Promise<void>;
 
     decimals(overrides?: CallOverrides): Promise<number>;
 
@@ -1764,6 +1783,10 @@ export interface XAssetCLR extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    collectAndReinvest(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     decimals(overrides?: CallOverrides): Promise<BigNumber>;
 
     decreaseAllowance(
@@ -2026,6 +2049,10 @@ export interface XAssetCLR extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     collect(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    collectAndReinvest(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
