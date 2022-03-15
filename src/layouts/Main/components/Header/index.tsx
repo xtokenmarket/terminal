@@ -53,7 +53,6 @@ const useStyles = makeStyles((theme) => ({
     },
     '& span': {
       color: theme.colors.white,
-      '& span': { color: theme.colors.purple0 },
     },
     [theme.breakpoints.down('xs')]: {
       display: 'none',
@@ -113,9 +112,7 @@ export const Header = () => {
       </div>
       <div className={classes.title}>
         {Icon && <Icon />}
-        <span>
-          xtoken <span>{selectedMenuItem?.label}</span>
-        </span>
+        <span>xtoken {selectedMenuItem?.label}</span>
       </div>
       <div className={classes.right}>
         <NetworkSelector
