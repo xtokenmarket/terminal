@@ -8,8 +8,9 @@ import {
   Typography,
 } from '@material-ui/core'
 import { TokenSelect } from 'components'
-import { DEFAULT_NETWORK_ID, NULL_ADDRESS } from 'config/constants'
+import { DEFAULT_NETWORK_ID, FEE_TIPS, NULL_ADDRESS } from 'config/constants'
 import { useConnectedWeb3Context } from 'contexts'
+import { useNetworkContext } from 'contexts/networkContext'
 import { useIsMountedRef, useServices } from 'helpers'
 import { transparentize } from 'polished'
 import { useEffect, useState } from 'react'
@@ -84,11 +85,13 @@ export const TokenPairStep: React.FC<IProps> = ({
   const { account, networkId, setWalletConnectModalOpened, setTxModalInfo } =
     useConnectedWeb3Context()
   const { lmService } = useServices()
+  const { chainId } = useNetworkContext()
   const [state, setState] = useState<IState>(initialState)
 
   const mountedRef = useIsMountedRef()
 
   const isNewPool = state.poolChecked && !state.uniPoolExist
+  const feeTip = FEE_TIPS[chainId]
 
   const loadIfUniPoolExists = async () => {
     if (data.token0 && data.token1) {
@@ -263,10 +266,7 @@ export const TokenPairStep: React.FC<IProps> = ({
           />
         </Grid>
         <Grid item xs={12}>
-          <Typography className={classes.fee}>
-            Pool Deployment fee is 0.2 ETH. Additional 1% fee on any rewards
-            distributed for this pool.
-          </Typography>
+          <Typography className={classes.fee}>{feeTip}</Typography>
         </Grid>
         <Grid item xs={12}>
           {isNewPool ? (

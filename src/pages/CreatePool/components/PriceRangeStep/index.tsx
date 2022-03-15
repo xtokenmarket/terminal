@@ -3,7 +3,7 @@ import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { TokenBalanceInput, TokenPriceInput } from 'components'
-import { DEFAULT_NETWORK_ID } from 'config/constants'
+import { DEFAULT_NETWORK_ID, FEE_TIPS } from 'config/constants'
 import { useConnectedWeb3Context } from 'contexts'
 import { formatUnits } from 'ethers/lib/utils'
 import { useTokenBalance } from 'helpers'
@@ -17,6 +17,7 @@ import { useEffect, useState } from 'react'
 import { ICreatePoolData, MintState } from 'types'
 import { Bound, Field } from 'utils/enums'
 import { WarningInfo } from 'components/Common/WarningInfo'
+import { useNetworkContext } from 'contexts/networkContext'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -88,6 +89,7 @@ export const PriceRangeStep = (props: IProps) => {
   const { data, updateData } = props
   const classes = useStyles()
   const { networkId } = useConnectedWeb3Context()
+  const { chainId } = useNetworkContext()
 
   const [state, setState] = useState<IState>({
     ...initialState,
@@ -118,6 +120,7 @@ export const PriceRangeStep = (props: IProps) => {
     data.token1.name
   )
   const feeAmount: FeeAmount = data.tier.toNumber()
+  const feeTip = FEE_TIPS[chainId]
 
   // prevent an error if they input ETH/WETH
   const quoteCurrency =
@@ -393,10 +396,7 @@ export const PriceRangeStep = (props: IProps) => {
           </Grid>
         </Grid>
       </div>
-      <Typography className={classes.fee}>
-        Pool Deployment fee is 0.2 ETH. Additional 1% fee on any rewards
-        distributed for this pool.
-      </Typography>
+      <Typography className={classes.fee}>{feeTip}</Typography>
       {totalErrors.length > 0 && (
         <WarningInfo
           className={classes.warning}
