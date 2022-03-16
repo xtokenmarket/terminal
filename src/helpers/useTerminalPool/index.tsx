@@ -211,9 +211,9 @@ export const useTerminalPool = (
         )) as IToken[]
       }
 
-      if (pool.rewardsPerToken == null) {
+      if (pool.totalRewardAmounts == null) {
         const rewardCalls = pool.rewardTokens.map((token: IToken) => ({
-          name: 'rewardPerToken',
+          name: 'rewardInfo',
           address: pool.poolAddress,
           params: [token.address],
         }))
@@ -222,8 +222,8 @@ export const useTerminalPool = (
           rewardCalls,
           { requireSuccess: false }
         )
-        pool.rewardsPerToken = rewardsResponse.map((response: any) =>
-          response[0].toString()
+        pool.totalRewardAmounts = rewardsResponse.map((response: any) =>
+          response.totalRewardAmount.toString()
         )
       }
 
@@ -425,7 +425,7 @@ export const useTerminalPool = (
           poolFee: pool.poolFee,
           rewardsAreEscrowed: pool.rewardsAreEscrowed,
           rewardState: {
-            amounts: pool.rewardsPerToken.map((reward: string) =>
+            amounts: pool.totalRewardAmounts.map((reward: string) =>
               BigNumber.from(reward)
             ),
             duration: pool.rewardProgramDuration,
