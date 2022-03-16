@@ -382,14 +382,14 @@ export const useTerminalPool = (
 
           user.token0Tvl = formatUnits(
             user.token0Deposit
-              .mul(parseEther(pool.token0.price))
+              .mul(parseEther(JSON.stringify(pool.token0.price)))
               .div(ONE_ETHER),
             pool.token0.decimals
           )
 
           user.token1Tvl = formatUnits(
             user.token1Deposit
-              .mul(parseEther(pool.token1.price))
+              .mul(parseEther(JSON.stringify(pool.token1.price)))
               .div(ONE_ETHER),
             pool.token1.decimals
           )
