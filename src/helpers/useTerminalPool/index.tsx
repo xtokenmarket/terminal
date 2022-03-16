@@ -178,10 +178,18 @@ export const useTerminalPool = (
         pool.rewardTokens = pool.rewardTokens.map((token: IToken) => ({
           ...token,
           image: token.image || defaultTokenLogo,
+          symbol: token.symbol.toUpperCase(),
         }))
+
+        token0.symbol = token0.symbol.toUpperCase()
+        token1.symbol = token1.symbol.toUpperCase()
+
+        token0.price = token0.price.toString()
+        token1.price = token1.price.toString()
 
         token0.percent = token0.percent.toString()
         token1.percent = token1.percent.toString()
+
         token0.tvl = formatBigNumber(token0.tvl, token0.decimals)
         token1.tvl = formatBigNumber(token1.tvl, token1.decimals)
         tvl = formatBigNumber(BigNumber.from(pool.tvl), 18)
