@@ -80,6 +80,7 @@ interface EarnedToken extends IToken {
 
 export interface ITerminalPool {
   address: string
+  apr: string
   manager: string
   network?: Network
   owner: string

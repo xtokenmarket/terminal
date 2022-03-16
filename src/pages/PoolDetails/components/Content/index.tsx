@@ -365,7 +365,12 @@ export const Content = (props: IProps) => {
               />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
-              <InfoSection label="APR" value="N/A" />
+              <InfoSection
+                label="APR"
+                value={
+                  poolData.apr === 'N/A' ? poolData.apr : `${poolData.apr}%`
+                }
+              />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
               {/* <InfoSection

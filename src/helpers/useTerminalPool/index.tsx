@@ -417,6 +417,7 @@ export const useTerminalPool = (
         loading: false,
         pool: {
           address: pool.poolAddress,
+          apr: pool.apr || 'N/A',
           manager: pool.manager.toLowerCase(),
           network: pool.network,
           owner: pool.owner.toLowerCase(),
