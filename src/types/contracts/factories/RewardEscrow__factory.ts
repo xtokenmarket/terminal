@@ -58,32 +58,6 @@ const _abi = [
       {
         indexed: true,
         internalType: "address",
-        name: "rewardToken",
-        type: "address",
-      },
-    ],
-    name: "RewardTokenAdded",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "rewardToken",
-        type: "address",
-      },
-    ],
-    name: "RewardTokenRemoved",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "address",
         name: "token",
         type: "address",
       },
@@ -224,19 +198,6 @@ const _abi = [
       },
     ],
     name: "addRewardsContract",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "rewardToken",
-        type: "address",
-      },
-    ],
-    name: "addRewardsToken",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -458,19 +419,6 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "getRewardTokens",
-    outputs: [
-      {
-        internalType: "address[]",
-        name: "tokens",
-        type: "address[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
       {
         internalType: "address",
@@ -573,6 +521,13 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "initialize",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -647,42 +602,10 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "rewardToken",
-        type: "address",
-      },
-    ],
-    name: "removeRewardsToken",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     inputs: [],
     name: "renounceOwnership",
     outputs: [],
     stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    name: "rewardTokens",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
   },
   {

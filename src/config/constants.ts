@@ -17,10 +17,7 @@ export const IS_PROD =
 
 export const STORAGE_KEY_CONNECTOR = 'CONNECTOR'
 
-export const LOGGER_ID = 'xToken-Terminal'
-
-export const DEFAULT_NETWORK = Network.KOVAN
-export const DEFAULT_NETWORK_ID = 42
+export const LOGGER_ID = 'terminal'
 
 export const TERMINAL_API_URL = 'https://terminal-api-staging.link:3001/api'
 export const POLL_API_DATA = 120000 // 2 min
@@ -67,6 +64,9 @@ export const COINGECKO_CHAIN_IDS: Record<ChainId, string> = {
   [ChainId.Kovan]: 'kovan',
   [ChainId.Rinkeby]: 'rinkeby',
 }
+
+export const DEFAULT_NETWORK = Network.MAINNET
+export const DEFAULT_NETWORK_ID = ChainId.Mainnet
 
 export interface AddNetworkChainParameters {
   chainId: string // A 0x-prefixed hexadecimal string

@@ -71,13 +71,6 @@ export function useTokenBalancesWithLoadingIndicator(
 
   useEffect(() => {
     const loadData = async () => {
-      console.log(
-        'loadData',
-        address,
-        tokens,
-        validatedTokens,
-        validatedTokenAddresses
-      )
       if (!address || !tokens) {
         setState(() => ({}))
         return

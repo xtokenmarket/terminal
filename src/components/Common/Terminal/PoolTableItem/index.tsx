@@ -212,7 +212,9 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
         </PoolTd>
         <PoolTd type="apr">
           <div className={cl.itemAlignRight}>
-            <Typography className={cl.apr}>99%</Typography>
+            <Typography className={cl.apr}>
+              {poolData.apr === 'N/A' ? poolData.apr : `${poolData.apr}%`}
+            </Typography>
           </div>
         </PoolTd>
       </NavLink>

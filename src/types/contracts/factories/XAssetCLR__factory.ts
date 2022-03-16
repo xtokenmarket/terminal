@@ -504,6 +504,13 @@ const _abi = [
   },
   {
     inputs: [],
+    name: "collectAndReinvest",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "decimals",
     outputs: [
       {

@@ -66,7 +66,7 @@ const About = () => {
         access to these primitives. By standardizing and enhancing these common
         financial methods -- as well as building some novel ones 👀 -- we
         believe Terminal can become the go-to capital markets platform for Web3.
-        Continue through these docs or join us in{' '}
+        Join us in{' '}
         <a
           className={classes.discord}
           href="https://discord.gg/bYYDMSH"

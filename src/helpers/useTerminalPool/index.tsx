@@ -169,17 +169,27 @@ export const useTerminalPool = (
         token1.tvl = formatBigNumber(token1tvl, token1.decimals)
         tvl = formatBigNumber(token0tvl.add(token1tvl), token0.decimals)
       } else {
+        const defaultTokenLogo = '/assets/tokens/unknown.png'
+
         // Parse API data
-        token0.image = token0.image || '/assets/tokens/unknown.png'
-        token1.image = token1.image || '/assets/tokens/unknown.png'
-        stakedToken.image = stakedToken.image || '/assets/tokens/unknown.png'
+        token0.image = token0.image || defaultTokenLogo
+        token1.image = token1.image || defaultTokenLogo
+        stakedToken.image = stakedToken.image || defaultTokenLogo
         pool.rewardTokens = pool.rewardTokens.map((token: IToken) => ({
           ...token,
-          image: token.image || '/assets/tokens/unknown.png',
+          image: token.image || defaultTokenLogo,
+          symbol: token.symbol.toUpperCase(),
         }))
+
+        token0.symbol = token0.symbol.toUpperCase()
+        token1.symbol = token1.symbol.toUpperCase()
+
+        token0.price = token0.price.toString()
+        token1.price = token1.price.toString()
 
         token0.percent = token0.percent.toString()
         token1.percent = token1.percent.toString()
+
         token0.tvl = formatBigNumber(token0.tvl, token0.decimals)
         token1.tvl = formatBigNumber(token1.tvl, token1.decimals)
         tvl = formatBigNumber(BigNumber.from(pool.tvl), 18)
@@ -407,6 +417,7 @@ export const useTerminalPool = (
         loading: false,
         pool: {
           address: pool.poolAddress,
+          apr: pool.apr || 'N/A',
           manager: pool.manager.toLowerCase(),
           network: pool.network,
           owner: pool.owner.toLowerCase(),

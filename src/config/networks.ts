@@ -8,28 +8,22 @@ import {
   KnownToken,
   NetworkId,
 } from 'types/types'
-import { ChainId, DEFAULT_NETWORK_ID, IS_PROD } from './constants'
+import { CHAIN_NAMES, ChainId, DEFAULT_NETWORK_ID, IS_PROD } from './constants'
 import { Network } from 'utils/enums'
 import { getIdFromNetwork } from 'utils/network'
 
-export const networkIds = {
-  MAINNET: 1,
-  KOVAN: 42,
-  RINKEBY: 4,
-} as const
-
-const networks: { [K in NetworkId]: INetwork } = {
-  [networkIds.MAINNET]: {
-    label: 'Ethereum Mainnet',
-    url: 'https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+const networks: { [K in ChainId]: INetwork } = {
+  [ChainId.Mainnet]: {
+    label: CHAIN_NAMES[ChainId.Mainnet],
+    url: 'https://eth-mainnet.alchemyapi.io/v2/NNM6Jp5aqBppePm-R-D4IkNPd0fcTMkZ',
     contracts: {
-      LM: '',
-      multicall: '',
-      rewardEscrow: '',
-      uniswapFactory: '',
-      uniRouter: '',
-      uniQuoter: '',
-      uniPositionManager: '',
+      LM: '0x090559D58aAB8828C27eE7a7EAb18efD5bB90374',
+      multicall: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
+      rewardEscrow: '0x40E8cb3440C0B05EB20522D1F63397e5B36efcf2',
+      uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
+      uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
+      uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
+      uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -39,13 +33,73 @@ const networks: { [K in NetworkId]: INetwork } = {
     etherscanUri: 'https://etherscan.io/',
     unigraph: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
   },
-  [networkIds.KOVAN]: {
-    label: 'Kovan Test Network',
+  [ChainId.Arbitrum]: {
+    label: CHAIN_NAMES[ChainId.Arbitrum],
+    url: 'https://arb-mainnet.g.alchemy.com/v2/NNM6Jp5aqBppePm-R-D4IkNPd0fcTMkZ',
+    contracts: {
+      LM: '0x090559D58aAB8828C27eE7a7EAb18efD5bB90374',
+      multicall: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
+      rewardEscrow: '0x40E8cb3440C0B05EB20522D1F63397e5B36efcf2',
+      uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
+      uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
+      uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
+      uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
+    },
+    terminal: {
+      tradeFee: BigNumber.from(1000),
+      rewardFee: BigNumber.from(100),
+      deploymentFee: BigNumber.from(1),
+    },
+    etherscanUri: 'https://arbiscan.io/',
+    unigraph: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
+  },
+  [ChainId.Optimism]: {
+    label: CHAIN_NAMES[ChainId.Optimism],
+    url: 'https://opt-mainnet.g.alchemy.com/v2/NNM6Jp5aqBppePm-R-D4IkNPd0fcTMkZ',
+    contracts: {
+      LM: '0x090559D58aAB8828C27eE7a7EAb18efD5bB90374',
+      multicall: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
+      rewardEscrow: '0x40E8cb3440C0B05EB20522D1F63397e5B36efcf2',
+      uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
+      uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
+      uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
+      uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
+    },
+    terminal: {
+      tradeFee: BigNumber.from(1000),
+      rewardFee: BigNumber.from(100),
+      deploymentFee: BigNumber.from(1),
+    },
+    etherscanUri: 'https://optimistic.etherscan.io/',
+    unigraph: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
+  },
+  [ChainId.Polygon]: {
+    label: CHAIN_NAMES[ChainId.Polygon],
+    url: 'https://polygon-mainnet.g.alchemy.com/v2/NNM6Jp5aqBppePm-R-D4IkNPd0fcTMkZ',
+    contracts: {
+      LM: '0x090559D58aAB8828C27eE7a7EAb18efD5bB90374',
+      multicall: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
+      rewardEscrow: '0x40E8cb3440C0B05EB20522D1F63397e5B36efcf2',
+      uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
+      uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
+      uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
+      uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
+    },
+    terminal: {
+      tradeFee: BigNumber.from(1000),
+      rewardFee: BigNumber.from(100),
+      deploymentFee: BigNumber.from(1),
+    },
+    etherscanUri: 'https://polygonscan.com/',
+    unigraph: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
+  },
+  [ChainId.Kovan]: {
+    label: CHAIN_NAMES[ChainId.Kovan],
     url: 'https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
     contracts: {
-      LM: '0x81b7D553b5Ccfa3a22c0BE89Ba67D2B9ce3D3778',
+      LM: '0x9448b6881550B1f311D0e1F459b29662bA2addAf',
       multicall: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
-      rewardEscrow: '0x9655cE346A5b7d95929c022C914689788EE1D14b',
+      rewardEscrow: '0x9897e91B2D5460F61c174D6eb32D3FA2DA956A65',
       uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
@@ -59,13 +113,13 @@ const networks: { [K in NetworkId]: INetwork } = {
     etherscanUri: 'https://kovan.etherscan.io/',
     unigraph: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
   },
-  [networkIds.RINKEBY]: {
-    label: 'Rinkeby',
+  [ChainId.Rinkeby]: {
+    label: CHAIN_NAMES[ChainId.Rinkeby],
     url: 'https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
     contracts: {
-      LM: '0x4C29fA9bE2390f7025CbE257973506c74fb1df07',
+      LM: '0x9e20D2512A060D88245b0F3d3e2Cdf2b3CE23988',
       multicall: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
-      rewardEscrow: '0xd3BD11c2aAfD64eE8414eFA64E16537dFa6d800B',
+      rewardEscrow: '0xc9D4B4cD84d27Ac1C0cFeE430515d89440766Cb9',
       uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
@@ -82,24 +136,16 @@ const networks: { [K in NetworkId]: INetwork } = {
 }
 
 export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
-  xtk: {
-    name: 'xToken',
-    symbol: 'XTK',
-    addresses: {
-      [networkIds.MAINNET]: '0x7f3edcdd180dbe4819bd98fee8929b5cedb3adeb',
-      [networkIds.KOVAN]: '0x657ad2B770aFC7ACb0A219525C4c22BE6b807023',
-      [networkIds.RINKEBY]: '0xEe78Ae82ab0bbbae6D99b36A999E7b6de2E8664b',
-    },
-    decimals: 18,
-    image: '/assets/tokens/xtk.png',
-  },
   dai: {
     name: 'DAI',
     symbol: 'DAI',
     addresses: {
-      [networkIds.MAINNET]: '0x6b175474e89094c44da98b954eedeac495271d0f',
-      [networkIds.KOVAN]: '0x90410304D88E333710703aF6Ed6A14d5ef74575F',
-      [networkIds.RINKEBY]: '0x67571cecddF314645f0148A7De404ebbd109A9B3',
+      [ChainId.Mainnet]: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+      [ChainId.Arbitrum]: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
+      [ChainId.Optimism]: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
+      [ChainId.Polygon]: '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
+      [ChainId.Kovan]: '0x90410304D88E333710703aF6Ed6A14d5ef74575F',
+      [ChainId.Rinkeby]: '0x67571cecddF314645f0148A7De404ebbd109A9B3',
     },
     decimals: 18,
     image: '/assets/tokens/dai.png',
@@ -108,31 +154,26 @@ export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     name: 'Wrapped ETHER',
     symbol: 'wETH',
     addresses: {
-      [networkIds.MAINNET]: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
-      [networkIds.KOVAN]: '0x21344Ebc08B4dC8BadE8889D034A3f2Ec83ECbef',
-      [networkIds.RINKEBY]: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
+      [ChainId.Mainnet]: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+      [ChainId.Arbitrum]: '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
+      [ChainId.Optimism]: '0x4200000000000000000000000000000000000006',
+      [ChainId.Polygon]: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
+      [ChainId.Kovan]: '0x21344Ebc08B4dC8BadE8889D034A3f2Ec83ECbef',
+      [ChainId.Rinkeby]: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
     },
     decimals: 18,
     image: '/assets/tokens/weth.png',
-  },
-  aave: {
-    name: 'AAVE',
-    symbol: 'AAVE',
-    addresses: {
-      [networkIds.MAINNET]: '0x7fc66500c84a76ad7e9c93437bfc5ac33e2ddae9',
-      [networkIds.KOVAN]: '0x3ce055008e078D2c4f819a94D57d870aA25A6403',
-      [networkIds.RINKEBY]: '0x1E38847dDF583d5b43AfCfe558e8aCe8777b1758',
-    },
-    decimals: 18,
-    image: '/assets/tokens/aave.png',
   },
   usdt: {
     name: 'Tether USD',
     symbol: 'USDT',
     addresses: {
-      [networkIds.MAINNET]: '0xdac17f958d2ee523a2206206994597c13d831ec7',
-      [networkIds.KOVAN]: '0x016750ac630f711882812f24dba6c95b9d35856d',
-      [networkIds.RINKEBY]: '0x3B00Ef435fA4FcFF5C209a37d1f3dcff37c705aD',
+      [ChainId.Mainnet]: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+      [ChainId.Arbitrum]: '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9',
+      [ChainId.Optimism]: '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58',
+      [ChainId.Polygon]: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
+      [ChainId.Kovan]: '0x016750ac630f711882812f24dba6c95b9d35856d',
+      [ChainId.Rinkeby]: '0x3B00Ef435fA4FcFF5C209a37d1f3dcff37c705aD',
     },
     decimals: 18,
     image: '/assets/tokens/usdt.png',
@@ -141,9 +182,12 @@ export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     name: 'USD Coin',
     symbol: 'USDC',
     addresses: {
-      [networkIds.MAINNET]: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-      [networkIds.KOVAN]: '0x7b492527F49cB50518dAFc7668dE2E5eaBd8a009',
-      [networkIds.RINKEBY]: '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa',
+      [ChainId.Mainnet]: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+      [ChainId.Arbitrum]: '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8',
+      [ChainId.Optimism]: '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
+      [ChainId.Polygon]: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
+      [ChainId.Kovan]: '0x7b492527F49cB50518dAFc7668dE2E5eaBd8a009',
+      [ChainId.Rinkeby]: '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa',
     },
     decimals: 18,
     image: '/assets/tokens/usdc.png',
@@ -315,7 +359,6 @@ export const setupNetwork = async () => {
       return false
     }
   } else {
-    alert('shit')
     console.error(
       "Can't setup the AVAX network on metamask because window.ethereum is undefined"
     )

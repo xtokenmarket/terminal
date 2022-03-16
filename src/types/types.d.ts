@@ -33,11 +33,11 @@ export interface INetwork {
   unigraph: string
 }
 
-export type NetworkId = 1 | 4 | 42
+export type NetworkId = 1 | 4 | 10 | 42 | 137 | 42161
 
 export type KnownContracts = keyof INetwork['contracts']
 
-export type KnownToken = 'xtk' | 'dai' | 'weth' | 'usdt' | 'usdc' | 'aave'
+export type KnownToken = 'dai' | 'weth' | 'usdt' | 'usdc'
 
 export interface IKnownTokenData {
   name: string
@@ -80,6 +80,7 @@ interface EarnedToken extends IToken {
 
 export interface ITerminalPool {
   address: string
+  apr: string
   manager: string
   network?: Network
   owner: string
