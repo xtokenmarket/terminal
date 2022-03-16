@@ -17,10 +17,7 @@ export const IS_PROD =
 
 export const STORAGE_KEY_CONNECTOR = 'CONNECTOR'
 
-export const LOGGER_ID = 'xToken-Terminal'
-
-export const DEFAULT_NETWORK = Network.KOVAN
-export const DEFAULT_NETWORK_ID = 42
+export const LOGGER_ID = 'terminal'
 
 export enum ChainId {
   Mainnet = 1,
@@ -48,6 +45,9 @@ export const CHAIN_ICONS: Record<ChainId, string> = {
   [ChainId.Kovan]: 'Ethereum',
   [ChainId.Rinkeby]: 'Ethereum',
 }
+
+export const DEFAULT_NETWORK = Network.MAINNET
+export const DEFAULT_NETWORK_ID = ChainId.Mainnet
 
 export interface AddNetworkChainParameters {
   chainId: string // A 0x-prefixed hexadecimal string

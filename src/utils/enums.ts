@@ -102,8 +102,11 @@ export enum ECreatePoolModalStep {
 }
 
 export enum Network {
-  KOVAN = 'kovan',
   MAINNET = 'mainnet',
+  ARBITRUM = 'arbitrum',
+  OPTIMISM = 'optimism',
+  POLYGON = 'polygon',
+  KOVAN = 'kovan',
   RINKEBY = 'rinkeby',
 }
 

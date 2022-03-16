@@ -1,28 +1,40 @@
 import { Network } from './enums'
 import { NetworkId } from 'types'
-import { DEFAULT_NETWORK, DEFAULT_NETWORK_ID } from 'config/constants'
+import { ChainId, DEFAULT_NETWORK, DEFAULT_NETWORK_ID } from 'config/constants'
 
 export const getNetworkFromId = (networkId?: NetworkId) => {
   switch (networkId) {
-    case 1:
+    case ChainId.Mainnet:
       return Network.MAINNET
-    case 4:
+    case ChainId.Arbitrum:
+      return Network.ARBITRUM
+    case ChainId.Optimism:
+      return Network.OPTIMISM
+    case ChainId.Polygon:
+      return Network.POLYGON
+    case ChainId.Rinkeby:
       return Network.RINKEBY
-    case 42:
+    case ChainId.Kovan:
       return Network.KOVAN
     default:
       return DEFAULT_NETWORK
   }
 }
 
-export const getIdFromNetwork = (network?: Network) => {
+export const getIdFromNetwork = (network?: Network): ChainId => {
   switch (network) {
     case Network.MAINNET:
-      return 1
+      return ChainId.Mainnet
+    case Network.ARBITRUM:
+      return ChainId.Arbitrum
+    case Network.OPTIMISM:
+      return ChainId.Optimism
+    case Network.POLYGON:
+      return ChainId.Polygon
     case Network.RINKEBY:
-      return 4
+      return ChainId.Rinkeby
     case Network.KOVAN:
-      return 42
+      return ChainId.Kovan
     default:
       return DEFAULT_NETWORK_ID
   }
