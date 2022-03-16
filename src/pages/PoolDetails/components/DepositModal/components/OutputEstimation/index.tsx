@@ -91,7 +91,7 @@ export const OutputEstimation = (props: IProps) => {
               <span>
                 ~ $
                 {getTotalTokenPrice(
-                  amount0,
+                  amount1,
                   poolData.token1.decimals,
                   poolData.token1.price
                 )}
