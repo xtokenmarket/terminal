@@ -84,12 +84,12 @@ export const getTimeDurationUnitInfo = (
     return { unit: 86400, unitStr: 'day' }
   }
 
-  const weeks = Math.floor(days / 7)
-  if (weeks < 5) {
-    return { unit: 604800, unitStr: 'week' }
-  }
+  // const weeks = Math.floor(days / 7)
+  // if (weeks < 5) {
+  return { unit: 604800, unitStr: 'week' }
+  // }
 
-  return { unit: 2592000, unitStr: 'month' }
+  // return { unit: 2592000, unitStr: 'month' }
 }
 
 export const getTimeDurationStr = (secs: number) => {
