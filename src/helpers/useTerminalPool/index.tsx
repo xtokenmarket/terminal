@@ -169,13 +169,15 @@ export const useTerminalPool = (
         token1.tvl = formatBigNumber(token1tvl, token1.decimals)
         tvl = formatBigNumber(token0tvl.add(token1tvl), token0.decimals)
       } else {
+        const defaultTokenLogo = '/assets/tokens/unknown.png'
+
         // Parse API data
-        token0.image = token0.image || '/assets/tokens/unknown.png'
-        token1.image = token1.image || '/assets/tokens/unknown.png'
-        stakedToken.image = stakedToken.image || '/assets/tokens/unknown.png'
+        token0.image = token0.image || defaultTokenLogo
+        token1.image = token1.image || defaultTokenLogo
+        stakedToken.image = stakedToken.image || defaultTokenLogo
         pool.rewardTokens = pool.rewardTokens.map((token: IToken) => ({
           ...token,
-          image: token.image || '/assets/tokens/unknown.png',
+          image: token.image || defaultTokenLogo,
         }))
 
         token0.percent = token0.percent.toString()
