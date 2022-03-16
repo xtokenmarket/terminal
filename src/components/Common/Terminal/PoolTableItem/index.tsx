@@ -13,8 +13,7 @@ import { parseDuration, ZERO } from 'utils/number'
 import moment from 'moment'
 import { NavLink } from 'react-router-dom'
 import { Network, NetworkIcon } from 'utils/enums'
-
-const DEFAULT_NETWORK = 'mainnet'
+import { DEFAULT_NETWORK } from 'config/constants'
 
 const useStyles = makeStyles((theme) => ({
   root: {
