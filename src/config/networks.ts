@@ -359,7 +359,6 @@ export const setupNetwork = async () => {
       return false
     }
   } else {
-    alert('shit')
     console.error(
       "Can't setup the AVAX network on metamask because window.ethereum is undefined"
     )
