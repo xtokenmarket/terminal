@@ -14,6 +14,8 @@ import moment from 'moment'
 import { NavLink } from 'react-router-dom'
 import { Network, NetworkIcon } from 'utils/enums'
 
+const DEFAULT_NETWORK = 'mainnet'
+
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.colors.primary400,
@@ -122,7 +124,7 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
     } = poolData
     const isInitiateRewardsPending = duration === '0'
 
-    const network = poolData.network || 'unknown'
+    const network = poolData.network || DEFAULT_NETWORK
 
     return (
       <NavLink

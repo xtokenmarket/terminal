@@ -135,5 +135,4 @@ export enum NetworkIcon {
   polygon = 'Polygon',
   kovan = 'Ethereum',
   rinkeby = 'Ethereum',
-  unknown = 'Unknown'
 }
