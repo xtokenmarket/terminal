@@ -194,7 +194,7 @@ export const WithdrawSection = (props: IProps) => {
         <WarningInfo
           className={classes.warning}
           title="Warning"
-          description="Please, don’t close this window until the process is complete!"
+          description="Please don’t close this window until the process is complete!"
         />
         <div className={classes.actions}>
           <ActionStepRow
