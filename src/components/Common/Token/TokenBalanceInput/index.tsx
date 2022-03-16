@@ -9,6 +9,8 @@ import { ChangeEvent, useCallback, useEffect, useState } from 'react'
 import useCommonStyles from 'style/common'
 import { IToken } from 'types'
 import { formatBigNumber } from 'utils'
+import { knownTokens } from 'config/networks'
+import { useConnectedWeb3Context } from 'contexts'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -64,6 +66,13 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  buyWETH: {
+    textDecoration: 'underline',
+    cursor: 'pointer',
+    color: theme.colors.primary100,
+    fontSize: 12,
+    marginTop: 8,
+  },
 }))
 
 type Variant = 'normal' | 'rewardToken'
@@ -90,6 +99,7 @@ export const TokenBalanceInput: React.FC<IProps> = ({
   const classes = useStyles()
   const commonClasses = useCommonStyles()
   const { balance } = useTokenBalance(token.address)
+  const { networkId } = useConnectedWeb3Context()
 
   const isBalanceDisabled = balance.isZero() || isDisabled
 
@@ -116,6 +126,16 @@ export const TokenBalanceInput: React.FC<IProps> = ({
     }, 1000),
     []
   )
+
+  const onClickBuy = () => {
+    const wethUrl = `https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=${
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      knownTokens.weth.addresses[networkId || 1]
+    }`
+    const newWindow = window.open(wethUrl, '_blank', 'noopener,noreferrer')
+    if (newWindow) newWindow.opener = null
+  }
 
   const onInputBalance = (e: ChangeEvent<HTMLInputElement>) => {
     setAmount(e.target.value)
@@ -175,6 +195,11 @@ export const TokenBalanceInput: React.FC<IProps> = ({
               {Number(amount) * (1 + rewardFeePercent)} {token.name}
             </b>
           </Typography>
+        )}
+        {token.symbol.toLowerCase() === 'weth' && (
+          <span className={classes.buyWETH} onClick={onClickBuy}>
+            Wrap ETH
+          </span>
         )}
       </div>
     </div>
