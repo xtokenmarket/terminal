@@ -97,9 +97,9 @@ const networks: { [K in ChainId]: INetwork } = {
     label: CHAIN_NAMES[ChainId.Kovan],
     url: 'https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
     contracts: {
-      LM: '0x81b7D553b5Ccfa3a22c0BE89Ba67D2B9ce3D3778',
+      LM: '0x9448b6881550B1f311D0e1F459b29662bA2addAf',
       multicall: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
-      rewardEscrow: '0x9655cE346A5b7d95929c022C914689788EE1D14b',
+      rewardEscrow: '0x9897e91B2D5460F61c174D6eb32D3FA2DA956A65',
       uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
@@ -117,9 +117,9 @@ const networks: { [K in ChainId]: INetwork } = {
     label: CHAIN_NAMES[ChainId.Rinkeby],
     url: 'https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
     contracts: {
-      LM: '0x4C29fA9bE2390f7025CbE257973506c74fb1df07',
+      LM: '0x9e20D2512A060D88245b0F3d3e2Cdf2b3CE23988',
       multicall: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
-      rewardEscrow: '0xd3BD11c2aAfD64eE8414eFA64E16537dFa6d800B',
+      rewardEscrow: '0xc9D4B4cD84d27Ac1C0cFeE430515d89440766Cb9',
       uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
