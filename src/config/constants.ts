@@ -30,7 +30,7 @@ export const MINT_BURN_SLIPPAGE = BigNumber.from(100)
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export const COINGECKO_URL = 'https://pro-api.coingecko.com/api/v3/coins'
-export const COINGECKO_API_KEY = process.env.COINGECKO_API_KEY
+export const COINGECKO_API_KEY = process.env.REACT_APP_COINGECKO_API_KEY
 
 export enum ChainId {
   Mainnet = 1,
