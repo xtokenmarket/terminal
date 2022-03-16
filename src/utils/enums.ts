@@ -127,3 +127,13 @@ export enum Bound {
   LOWER = 'LOWER',
   UPPER = 'UPPER',
 }
+
+export enum NetworkIcon {
+  mainnet = 'Ethereum',
+  arbitrum = 'Arbitrum',
+  optimism = 'Optimism',
+  polygon = 'Polygon',
+  kovan = 'Ethereum',
+  rinkeby = 'Ethereum',
+  unknown = 'Unknown'
+}

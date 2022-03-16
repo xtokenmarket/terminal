@@ -3,6 +3,7 @@ import clsx from 'clsx'
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
+    '&.network': { width: '8%' },
     '&.pool': { width: '10%' },
     '&.allocation': { flex: 1 },
     '&.tvl': { width: '10%' },
@@ -18,14 +19,19 @@ const useStyles = makeStyles((theme: any) => ({
 }))
 
 interface IProps {
-  type: 'pool' | 'tvl' | 'vesting' | 'program' | 'ending' | 'apr' | 'allocation'
+  type:
+    | 'pool'
+    | 'tvl'
+    | 'vesting'
+    | 'program'
+    | 'ending'
+    | 'apr'
+    | 'allocation'
+    | 'network'
   children: React.ReactNode | React.ReactNode[]
 }
 
-export const PoolTd: React.FC<IProps> = ({
-  type,
-  children
-}) => {
+export const PoolTd: React.FC<IProps> = ({ type, children }) => {
   const cl = useStyles()
 
   return <div className={clsx(cl.root, type)}>{children}</div>

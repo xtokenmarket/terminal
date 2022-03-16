@@ -65,6 +65,12 @@ export const PoolTableHeader = () => {
           <SortButton />
         </div>
       </PoolTd>
+      <PoolTd type="network">
+        <div className={classes.itemAlignRight}>
+          NETWORK
+          <SortButton />
+        </div>
+      </PoolTd>
     </div>
   )
 }
