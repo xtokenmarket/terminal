@@ -20,6 +20,7 @@ import { filterTokens } from 'utils/filter'
 
 import { useConnectedWeb3Context } from 'contexts'
 import { fetchUnknownToken } from 'utils/token'
+import { useNetworkContext } from 'contexts/networkContext'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -102,6 +103,7 @@ export const TokenSelectModal: React.FC<IProps> = ({
 }) => {
   const cl = useStyles()
   const { library: provider } = useConnectedWeb3Context()
+  const { chainId } = useNetworkContext()
 
   const [searchQuery, setSearchQuery] = useState('')
   const onSearchQueryChange = useCallback((e) => {
@@ -115,8 +117,12 @@ export const TokenSelectModal: React.FC<IProps> = ({
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    (async () => {
-      const unknownToken = await fetchUnknownToken(provider, debouncedQuery)
+    ;(async () => {
+      const unknownToken = await fetchUnknownToken(
+        provider,
+        chainId,
+        debouncedQuery
+      )
       if (unknownToken) {
         setTokensList([unknownToken])
       } else {
@@ -125,7 +131,7 @@ export const TokenSelectModal: React.FC<IProps> = ({
       }
       setIsLoading(false)
     })()
-  }, [debouncedQuery])
+  }, [debouncedQuery, chainId])
 
   const _onClose = () => {
     setSearchQuery('')

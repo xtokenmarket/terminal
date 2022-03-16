@@ -148,6 +148,17 @@ export const FLEEK_STORAGE_API_KEY =
 export const FLEEK_STORAGE_API_SECRET =
   process.env.REACT_APP_FLEEK_STORAGE_API_SECRET || ''
 
+export const COINGECKO_API_KEY = process.env.REACT_APP_COINGECKO_API_KEY
+export const COINGECKO_URL = 'https://pro-api.coingecko.com/api/v3/coins'
+export const COINGECKO_CHAIN_IDS: Record<ChainId, string> = {
+  [ChainId.Mainnet]: 'ethereum',
+  [ChainId.Arbitrum]: 'arbitrum-one',
+  [ChainId.Optimism]: 'optimistic-ethereum',
+  [ChainId.Polygon]: 'polygon-pos',
+  [ChainId.Kovan]: 'kovan',
+  [ChainId.Rinkeby]: 'rinkeby',
+}
+
 export const PRESALE_ITEMS_PER_PAGE = 4
 export const TOKENS_PER_PAGE = 10
 
