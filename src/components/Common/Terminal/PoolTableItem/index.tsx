@@ -12,7 +12,7 @@ import {
 import { parseDuration, ZERO } from 'utils/number'
 import moment from 'moment'
 import { NavLink } from 'react-router-dom'
-import { Network } from 'utils/enums'
+import { Network, NetworkIcon } from 'utils/enums'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -93,6 +93,9 @@ const useStyles = makeStyles((theme) => ({
     padding: '0 16px',
     borderRadius: 20,
   },
+  networkIcon: {
+    borderRadius: '50%',
+  },
 }))
 
 interface IProps {
@@ -118,6 +121,8 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
       rewardState: { amounts, duration, tokens, vesting },
     } = poolData
     const isInitiateRewardsPending = duration === '0'
+
+    const network = poolData.network || 'unknown'
 
     return (
       <NavLink
@@ -213,6 +218,15 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
         <PoolTd type="apr">
           <div className={cl.itemAlignRight}>
             <Typography className={cl.apr}>99%</Typography>
+          </div>
+        </PoolTd>
+        <PoolTd type="network">
+          <div className={cl.itemAlignRight}>
+            <img
+              className={cl.networkIcon}
+              alt="img"
+              src={`/assets/networks/${NetworkIcon[network]}.svg`}
+            />
           </div>
         </PoolTd>
       </NavLink>
