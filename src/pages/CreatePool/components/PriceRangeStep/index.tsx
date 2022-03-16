@@ -245,8 +245,8 @@ export const PriceRangeStep = (props: IProps) => {
     )
 
     const newErrors: string[] = []
-    const newErrorA = `${data.token0.name} input exceeds balance`
-    const newErrorB = `${data.token1.name} input exceeds balance`
+    const newErrorA = `${data.token0.symbol} input exceeds balance`
+    const newErrorB = `${data.token1.symbol} input exceeds balance`
     const newErrorC = `Your position will not earn fees or be used in trades until the market price moves into your range.`
     if (amountA > Number(formatUnits(balanceA, data.token0.decimals))) {
       newErrors.push(newErrorA)
