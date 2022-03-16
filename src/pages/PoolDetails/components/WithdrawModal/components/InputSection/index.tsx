@@ -5,7 +5,7 @@ import { LPTokenAmountInput } from 'components'
 import { LP_TOKEN_BASIC } from 'config/constants'
 import { IWithdrawState } from 'pages/PoolDetails/components'
 import { ITerminalPool } from 'types'
-import { OutputEstimation, WarningInfo } from '..'
+import { OutputEstimation } from '..'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },

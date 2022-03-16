@@ -22,6 +22,16 @@ export const LOGGER_ID = 'xToken-Terminal'
 export const DEFAULT_NETWORK = Network.KOVAN
 export const DEFAULT_NETWORK_ID = 42
 
+export const TERMINAL_API_URL = 'https://terminal-api-staging.link:3001/api'
+export const POLL_API_DATA = 120000 // 2 min
+
+export const ETHER_DECIMAL = 18
+export const MINT_BURN_SLIPPAGE = BigNumber.from(100)
+export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000'
+
+export const COINGECKO_URL = 'https://pro-api.coingecko.com/api/v3/coins'
+export const COINGECKO_API_KEY = process.env.COINGECKO_API_KEY
+
 export enum ChainId {
   Mainnet = 1,
   Arbitrum = 42161,
@@ -47,6 +57,15 @@ export const CHAIN_ICONS: Record<ChainId, string> = {
   [ChainId.Polygon]: 'Polygon',
   [ChainId.Kovan]: 'Ethereum',
   [ChainId.Rinkeby]: 'Ethereum',
+}
+
+export const COINGECKO_CHAIN_IDS: Record<ChainId, string> = {
+  [ChainId.Mainnet]: 'ethereum',
+  [ChainId.Arbitrum]: 'arbitrum-one',
+  [ChainId.Optimism]: 'optimistic-ethereum',
+  [ChainId.Polygon]: 'polygon-pos',
+  [ChainId.Kovan]: 'kovan',
+  [ChainId.Rinkeby]: 'rinkeby',
 }
 
 export interface AddNetworkChainParameters {
@@ -139,29 +158,6 @@ export const WALLET_ICONS: { [key in ConnectorNames]: string } = {
   [ConnectorNames.Coinbase]: '/assets/wallets/coinbase.svg',
 }
 
-export const ETHER_DECIMAL = 18
-
-export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000'
-
-export const FLEEK_STORAGE_API_KEY =
-  process.env.REACT_APP_FLEEK_STORAGE_API_KEY || ''
-export const FLEEK_STORAGE_API_SECRET =
-  process.env.REACT_APP_FLEEK_STORAGE_API_SECRET || ''
-
-export const PRESALE_ITEMS_PER_PAGE = 4
-export const TOKENS_PER_PAGE = 10
-
-export const PRICE_MULTIPLIER = BigNumber.from(1000000)
-export const PRICE_DECIMALS = 6
-
-export const MIN_START_TIME_DIFF = 10 * 60 // 10 mins
-export const LIQUIDITY_LOCK_MIN_DURATION = 30 * 24 * 60 * 60 // 1 month
-
-export const POLL_API_DATA = 120000 // 2 min
-
-export const FLEEK_STORAGE_START_URL = 'https://storageapi.fleek.co/'
-export const TERMINAL_API_URL = 'https://terminal-api-staging.link:3001/api'
-
 export const SvgIcons = {
   auction: AuctionIcon,
   discord: DiscordIcon,
@@ -181,8 +177,6 @@ export const LP_TOKEN_BASIC: IToken = {
   address: '',
   price: '',
 }
-
-export const MINT_BURN_SLIPPAGE = BigNumber.from(100)
 
 export const FEE_TIERS = [
   {
