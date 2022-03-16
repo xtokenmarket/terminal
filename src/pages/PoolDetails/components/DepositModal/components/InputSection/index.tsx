@@ -148,12 +148,12 @@ export const InputSection = (props: IProps) => {
   useEffect(() => {
     const newErrors = [...depositState.errorMessage]
     const newErrorA = depositState.amount0.gt(balance0)
-      ? `${poolData.token0.name} input exceeds balance`
+      ? `${poolData.token0.symbol} input exceeds balance`
       : null
     newErrors.splice(0, 1, newErrorA)
 
     const newErrorB = depositState.amount1.gt(balance1)
-      ? `${poolData.token1.name} input exceeds balance`
+      ? `${poolData.token1.symbol} input exceeds balance`
       : null
     newErrors.splice(1, 1, newErrorB)
 
