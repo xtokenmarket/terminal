@@ -146,16 +146,16 @@ export const InputSection = (props: IProps) => {
   }
 
   useEffect(() => {
-    const newErrors = [...depositState.errorMessage]
-    const newErrorA = depositState.amount0.gt(balance0)
-      ? `${poolData.token0.symbol} input exceeds balance`
-      : null
-    newErrors.splice(0, 1, newErrorA)
+    const newErrors: string[] = []
+    const newErrorA = `${poolData.token0.symbol} input exceeds balance`
+    const newErrorB = `${poolData.token1.symbol} input exceeds balance`
+    if (depositState.amount0.gt(balance0)) {
+      newErrors.push(newErrorA)
+    }
 
-    const newErrorB = depositState.amount1.gt(balance1)
-      ? `${poolData.token1.symbol} input exceeds balance`
-      : null
-    newErrors.splice(1, 1, newErrorB)
+    if (depositState.amount1.gt(balance1)) {
+      newErrors.push(newErrorB)
+    }
 
     if (!_.isEqual(depositState.errorMessage, newErrors)) {
       updateState({
