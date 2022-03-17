@@ -248,7 +248,7 @@ export const useTerminalPool = (
         const rewardClaimedFilter = clr.contract.filters.RewardClaimed(account)
         const InitiatedRewardsFilter =
           lmService.contract.filters.InitiatedRewardsProgram(poolAddress)
-        const VestedFilter = rewardEscrow.contract.filters.Vested()
+        const VestedFilter = rewardEscrow.contract.filters.Vested(poolAddress)
 
         const [
           depositHistory,
@@ -264,12 +264,28 @@ export const useTerminalPool = (
           rewardEscrow.contract.queryFilter(VestedFilter),
         ])
 
+        const initiatedRewardtransactions = await Promise.all(
+          InitiatedRewardsHistory.map((x) => x.getTransaction())
+        )
+
+        const vestHistorytransactions = await Promise.all(
+          VestHistory.map((x) => x.getTransaction())
+        )
+
+        const userInitiatedRewards = InitiatedRewardsHistory.filter(
+          (x, index) => initiatedRewardtransactions[index].from === account
+        )
+
+        const userVestHistory = VestHistory.filter(
+          (x, index) => vestHistorytransactions[index].from === account
+        )
+
         const allHistory = [
           ...depositHistory,
           ...withdrawHistory,
           ...rewardClaimedHistory,
-          ...InitiatedRewardsHistory,
-          ...VestHistory,
+          ...userInitiatedRewards,
+          ...userVestHistory,
         ]
 
         const blockInfos = await Promise.all(
