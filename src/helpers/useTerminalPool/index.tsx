@@ -241,14 +241,14 @@ export const useTerminalPool = (
       let _totalSupply = BigNumber.from(0)
 
       // Fetch events history and reward tokens only on PoolDetails page
-      if (isPoolDetails) {
-        const depositFilter = clr.contract.filters.Deposit()
-        const withdrawFilter = clr.contract.filters.Withdraw()
-        const rewardClaimedFilter = clr.contract.filters.RewardClaimed()
+      if (isPoolDetails && account) {
+        // Fetch reward tokens and deposit amounts, only if wallet is connected
+        const depositFilter = clr.contract.filters.Deposit(account)
+        const withdrawFilter = clr.contract.filters.Withdraw(account)
+        const rewardClaimedFilter = clr.contract.filters.RewardClaimed(account)
         const InitiatedRewardsFilter =
           lmService.contract.filters.InitiatedRewardsProgram(poolAddress)
-        const VestedFilter = rewardEscrow.contract.filters.Vested(poolAddress)
-        const RewardAddedFilter = clr.contract.filters.RewardAdded()
+        const VestedFilter = rewardEscrow.contract.filters.Vested()
 
         const [
           depositHistory,
@@ -256,14 +256,12 @@ export const useTerminalPool = (
           rewardClaimedHistory,
           InitiatedRewardsHistory,
           VestHistory,
-          RewardAddedHistory,
         ] = await Promise.all([
           clr.contract.queryFilter(depositFilter),
           clr.contract.queryFilter(withdrawFilter),
           clr.contract.queryFilter(rewardClaimedFilter),
           lmService.contract.queryFilter(InitiatedRewardsFilter),
           rewardEscrow.contract.queryFilter(VestedFilter),
-          clr.contract.queryFilter(RewardAddedFilter),
         ])
 
         const allHistory = [
@@ -296,11 +294,6 @@ export const useTerminalPool = (
             (token: IToken) => token.address === x.args?.token
           )
 
-          const totalRewardAmounts =
-            RewardAddedHistory.length > 0
-              ? RewardAddedHistory.map((history) => history.args?.reward)
-              : [BigNumber.from(0)]
-
           return {
             action: x.event ? eventName[x.event] : '',
             amount0: x.args?.amount0 || BigNumber.from(0),
@@ -312,105 +305,98 @@ export const useTerminalPool = (
             decimals: token ? Number(token.decimals) : 0,
             value: x.args?.value,
             timestamp,
-            totalRewardAmounts,
+            totalRewardAmounts: x.args?.totalRewardAmounts || [],
             rewardTokens: pool.rewardTokens,
           }
         })
 
         history = _.orderBy(eventHistory, 'timestamp', 'desc')
 
-        // Fetch reward tokens and deposit amounts, only if wallet is connected
-        if (account) {
-          earnedTokens = await Promise.all(
-            pool.rewardTokens.map(async (token: IToken) => {
-              const clr = new CLRService(
-                readonlyProvider,
-                account,
-                pool.poolAddress
-              )
-              const amount = await clr.earned(account, token.address)
-              return {
-                ...token,
-                amount,
-              }
+        earnedTokens = await Promise.all(
+          pool.rewardTokens.map(async (token: IToken) => {
+            const clr = new CLRService(
+              readonlyProvider,
+              account,
+              pool.poolAddress
+            )
+            const amount = await clr.earned(account, token.address)
+            return {
+              ...token,
+              amount,
+            }
+          })
+        )
+
+        if (Number(pool.vestingPeriod) !== 0) {
+          vestingTokens = await Promise.all(
+            pool.rewardTokens.map(async (token: any) => {
+              const { amounts, timestamps, vestedAmount } =
+                await rewardEscrow.getVestedBalance(
+                  poolAddress as string,
+                  token.address,
+                  account
+                )
+              return amounts.map((amount, index) => {
+                const timestamp = timestamps[index]
+                const now = getCurrentTimeStamp()
+                const diff = (timestamp.toNumber() - now) * 1000
+                const durationRemaining = getTimeRemainingUnits(diff)
+
+                return {
+                  amount,
+                  durationRemaining,
+                  vestedAmount,
+                  ...token,
+                }
+              })
             })
           )
 
-          if (Number(pool.vestingPeriod) !== 0) {
-            vestingTokens = await Promise.all(
-              pool.rewardTokens.map(async (token: any) => {
-                const { amounts, timestamps, vestedAmount } =
-                  await rewardEscrow.getVestedBalance(
-                    poolAddress as string,
-                    token.address,
-                    account
-                  )
-                return amounts.map((amount, index) => {
-                  const timestamp = timestamps[index]
-                  const now = getCurrentTimeStamp()
-                  const diff = (timestamp.toNumber() - now) * 1000
-                  const durationRemaining = getTimeRemainingUnits(diff)
-
-                  return {
-                    amount,
-                    durationRemaining,
-                    vestedAmount,
-                    ...token,
-                  }
-                })
-              })
-            )
-
-            // Flatten all the vesting entries for each reward token
-            vestingTokens = vestingTokens.flat()
-          }
-
-          // User deposit amounts + TVL
-          const stakedCLRToken = new ethers.Contract(
-            pool.stakedToken.address,
-            Abi.StakedCLRToken,
-            readonlyProvider
-          )
-
-          const [stakedTokenBalance, totalSupply] = await Promise.all([
-            stakedCLRToken.balanceOf(account),
-            clr.contract.totalSupply(),
-          ])
-
-          _totalSupply = totalSupply
-
-          user.stakedTokenBalance = stakedTokenBalance
-
-          user.token0Deposit = token0Balance
-            .mul(stakedTokenBalance)
-            .div(totalSupply)
-          user.token1Deposit = token1Balance
-            .mul(stakedTokenBalance)
-            .div(totalSupply)
-
-          user.token0Tvl = formatUnits(
-            user.token0Deposit
-              .mul(parseEther(pool.token0.price))
-              .div(ONE_ETHER),
-            pool.token0.decimals
-          )
-
-          user.token1Tvl = formatUnits(
-            user.token1Deposit
-              .mul(parseEther(pool.token1.price))
-              .div(ONE_ETHER),
-            pool.token1.decimals
-          )
-
-          const totalBalance = token0Balance.add(token1Balance)
-
-          poolShare = formatEther(
-            user.token0Deposit
-              .add(user.token1Deposit)
-              .mul(ONE_ETHER)
-              .div(totalBalance)
-          )
+          // Flatten all the vesting entries for each reward token
+          vestingTokens = vestingTokens.flat()
         }
+
+        // User deposit amounts + TVL
+        const stakedCLRToken = new ethers.Contract(
+          pool.stakedToken.address,
+          Abi.StakedCLRToken,
+          readonlyProvider
+        )
+
+        const [stakedTokenBalance, totalSupply] = await Promise.all([
+          stakedCLRToken.balanceOf(account),
+          clr.contract.totalSupply(),
+        ])
+
+        _totalSupply = totalSupply
+
+        user.stakedTokenBalance = stakedTokenBalance
+
+        user.token0Deposit = token0Balance
+          .mul(stakedTokenBalance)
+          .div(totalSupply)
+        user.token1Deposit = token1Balance
+          .mul(stakedTokenBalance)
+          .div(totalSupply)
+
+        user.token0Tvl = formatUnits(
+          user.token0Deposit.mul(parseEther(pool.token0.price)).div(ONE_ETHER),
+          pool.token0.decimals
+        )
+
+        user.token1Tvl = formatUnits(
+          user.token1Deposit.mul(parseEther(pool.token1.price)).div(ONE_ETHER),
+          pool.token1.decimals
+        )
+
+        const totalBalance = token0Balance.add(token1Balance)
+
+        poolShare = formatEther(
+          user.token0Deposit
+            .add(user.token1Deposit)
+            .mul(ONE_ETHER)
+            .div(totalBalance)
+        )
       }
 
       setState({
