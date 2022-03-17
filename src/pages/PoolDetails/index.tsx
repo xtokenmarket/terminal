@@ -1,19 +1,30 @@
+import { Button, makeStyles } from '@material-ui/core'
 import { PageWrapper, PageHeader, PageContent, SimpleLoader } from 'components'
 import { useConnectedWeb3Context } from 'contexts'
 import { useTerminalPool } from 'helpers'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router'
 import { isAddress } from 'utils/tools'
-import { getNetworkFromId } from 'utils/network'
+import { getIdFromNetwork, getNetworkFromId } from 'utils/network'
 import { NetworkId } from 'types'
 
 import { Content } from './components'
-import { Typography } from '@material-ui/core'
+import { useNetworkContext } from '../../contexts/networkContext'
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    textAlign: 'center',
+    height: '300px',
+  },
+  button: { height: 48, margin: 20, width: 220 },
+}))
 
 const PoolDetails = () => {
   const history = useHistory()
   const params = useParams()
+  const classes = useStyles()
   const { account, networkId } = useConnectedWeb3Context()
+  const { switchChain } = useNetworkContext()
 
   const { id: poolAddress, network } = params as any
 
@@ -27,6 +38,10 @@ const PoolDetails = () => {
     history.push('/mining/discover')
   }
 
+  const handleNetworkChange = useCallback(async () => {
+    await switchChain(getIdFromNetwork(network))
+  }, [switchChain])
+
   useEffect(() => {
     if (!isAddress(poolAddress)) {
       onBack()
@@ -37,12 +52,19 @@ const PoolDetails = () => {
     }
   }, [account, poolAddress, loading, poolData])
 
-  // TODO: Display switch `network` button
   if (networkId && getNetworkFromId(networkId as NetworkId) !== network) {
     return (
-      <Typography color="error">
-        Switch network to {network.toUpperCase()}
-      </Typography>
+      <div className={classes.root}>
+        <Button
+          className={classes.button}
+          color="primary"
+          fullWidth
+          onClick={handleNetworkChange}
+          variant="contained"
+        >
+          SWITCH TO {network.toUpperCase()}
+        </Button>
+      </div>
     )
   }
 
