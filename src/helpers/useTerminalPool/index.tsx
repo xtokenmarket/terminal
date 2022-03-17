@@ -264,28 +264,21 @@ export const useTerminalPool = (
           rewardEscrow.contract.queryFilter(VestedFilter),
         ])
 
-        const initiatedRewardtransactions = await Promise.all(
-          InitiatedRewardsHistory.map((x) => x.getTransaction())
+        const temphistorys = [...InitiatedRewardsHistory, ...VestHistory]
+
+        const transactions = await Promise.all(
+          temphistorys.map((x) => x.getTransaction())
         )
 
-        const vestHistorytransactions = await Promise.all(
-          VestHistory.map((x) => x.getTransaction())
-        )
-
-        const userInitiatedRewards = InitiatedRewardsHistory.filter(
-          (x, index) => initiatedRewardtransactions[index].from === account
-        )
-
-        const userVestHistory = VestHistory.filter(
-          (x, index) => vestHistorytransactions[index].from === account
+        const userInitiatedRewardsVestHistory = InitiatedRewardsHistory.filter(
+          (x, index) => transactions[index].from === account
         )
 
         const allHistory = [
           ...depositHistory,
           ...withdrawHistory,
           ...rewardClaimedHistory,
-          ...userInitiatedRewards,
-          ...userVestHistory,
+          ...userInitiatedRewardsVestHistory,
         ]
 
         const blockInfos = await Promise.all(
@@ -466,7 +459,7 @@ export const useTerminalPool = (
     return () => {
       clearInterval(interval)
     }
-  }, [networkId, pool, poolAddress])
+  }, [networkId, pool, poolAddress, account])
 
   return { ...state, loadInfo }
 }
