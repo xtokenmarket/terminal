@@ -231,6 +231,8 @@ export const useTerminalPool = (
       let earnedTokens = []
       let vestingTokens = []
       let poolShare = '0'
+      let _totalSupply = BigNumber.from(0)
+
       const user = {
         token0Deposit: BigNumber.from(0),
         token1Deposit: BigNumber.from(0),
@@ -238,39 +240,37 @@ export const useTerminalPool = (
         token1Tvl: '0',
         stakedTokenBalance: BigNumber.from(0),
       }
-      let _totalSupply = BigNumber.from(0)
 
-      // Fetch events history and reward tokens only on PoolDetails page
+      // Fetch events history, reward tokens and deposit amounts of user
       if (isPoolDetails && account) {
-        // Fetch reward tokens and deposit amounts, only if wallet is connected
         const depositFilter = clr.contract.filters.Deposit(account)
         const withdrawFilter = clr.contract.filters.Withdraw(account)
         const rewardClaimedFilter = clr.contract.filters.RewardClaimed(account)
-        const InitiatedRewardsFilter =
+        const initiatedRewardsFilter =
           lmService.contract.filters.InitiatedRewardsProgram(poolAddress)
-        const VestedFilter = rewardEscrow.contract.filters.Vested(poolAddress)
+        const vestedFilter = rewardEscrow.contract.filters.Vested(poolAddress)
 
         const [
           depositHistory,
           withdrawHistory,
           rewardClaimedHistory,
-          InitiatedRewardsHistory,
-          VestHistory,
+          initiatedRewardsHistory,
+          vestHistory,
         ] = await Promise.all([
           clr.contract.queryFilter(depositFilter),
           clr.contract.queryFilter(withdrawFilter),
           clr.contract.queryFilter(rewardClaimedFilter),
-          lmService.contract.queryFilter(InitiatedRewardsFilter),
-          rewardEscrow.contract.queryFilter(VestedFilter),
+          lmService.contract.queryFilter(initiatedRewardsFilter),
+          rewardEscrow.contract.queryFilter(vestedFilter),
         ])
 
-        const temphistorys = [...InitiatedRewardsHistory, ...VestHistory]
+        const filterUserHistory = [...initiatedRewardsHistory, ...vestHistory]
 
         const transactions = await Promise.all(
-          temphistorys.map((x) => x.getTransaction())
+          filterUserHistory.map((x) => x.getTransaction())
         )
 
-        const userInitiatedRewardsVestHistory = InitiatedRewardsHistory.filter(
+        const userInitiatedRewardsVestHistory = filterUserHistory.filter(
           (x, index) => transactions[index].from === account
         )
 
@@ -446,7 +446,7 @@ export const useTerminalPool = (
         },
       })
     } catch (error) {
-      console.error('useTerminalPool', error)
+      console.error(error)
       setState(() => ({ loading: false }))
     }
     // console.timeEnd(`loadInfo ${poolAddress}`)
