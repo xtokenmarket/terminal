@@ -166,7 +166,6 @@ export const TokenBalanceInput: React.FC<IProps> = ({
         }}
         className={classes.input}
         value={amount}
-        // value={Number(amount).toFixed(4).replace(/\.?0*$/g, '')}
         onChange={onInputBalance}
         variant="outlined"
         fullWidth
