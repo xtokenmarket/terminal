@@ -117,15 +117,14 @@ export const getTimeDurationStr = (secs: number) => {
   const weeks = Math.floor(days / 7)
   if (weeks === 1) {
     return `${weeks} week`
-  } else if (weeks < 5) {
-    return `${weeks} weeks`
   }
+  return `${weeks} weeks`
 
-  const months = Math.floor(days / 30)
-  if (months === 1) {
-    return `${months} month`
-  }
-  return `${months} months`
+  // const months = Math.floor(days / 30)
+  // if (months === 1) {
+  //   return `${months} month`
+  // }
+  // return `${months} months`
 }
 
 export const getTimeRemainingUnits = (time: number, unitPrecision = 3) => {

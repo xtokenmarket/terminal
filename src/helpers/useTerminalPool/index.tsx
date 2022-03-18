@@ -123,9 +123,6 @@ export const useTerminalPool = (
       const token0Balance = balance.amount0
       const token1Balance = balance.amount1
 
-      pool.token0.balance = token0Balance
-      pool.token1.balance = token1Balance
-
       // Fetch token details and relevant data, if API fails
       if (!pool.token0.price || !pool.token1.price) {
         ;[token0, token1, stakedToken] = await Promise.all([
@@ -165,6 +162,7 @@ export const useTerminalPool = (
 
         token0.percent = token0Percent
         token1.percent = token1Percent
+
         token0.tvl = formatBigNumber(token0tvl, token0.decimals)
         token1.tvl = formatBigNumber(token1tvl, token1.decimals)
         tvl = formatBigNumber(token0tvl.add(token1tvl), token0.decimals)
@@ -195,6 +193,10 @@ export const useTerminalPool = (
         tvl = formatBigNumber(BigNumber.from(pool.tvl), 18)
       }
       // console.timeEnd(`loadInfo token details ${poolAddress}`)
+
+      // Set staked balances
+      token0.balance = token0Balance
+      token1.balance = token1Balance
 
       if (pool.vestingPeriod == null) {
         pool.vestingPeriod = (
