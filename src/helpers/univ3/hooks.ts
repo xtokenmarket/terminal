@@ -27,7 +27,6 @@ import { useServices } from 'helpers'
 import { MintState } from 'types'
 import { BigNumber } from 'ethers'
 import { encodeSqrtRatioX96, nearestUsableTick } from '@uniswap/v3-sdk/dist/'
-import { useCurrencyBalances } from './wallet'
 
 export const BIG_INT_ZERO = JSBI.BigInt(0)
 
@@ -606,11 +605,13 @@ export function useV3DerivedMintInfo(
   }
 
   if (invalidRange) {
-    errorMessage = 'Invalid range selected. The min price must be lower than the max'
+    errorMessage =
+      'Invalid range selected. The min price must be lower than the max'
   }
 
   if (outOfRange) {
-    errorMessage = 'Your position will not earn fees or be used in trades until the market price moves into your range.'
+    errorMessage =
+      'Your position will not earn fees or be used in trades until the market price moves into your range.'
   }
 
   const invalidPool = poolState === PoolState.INVALID

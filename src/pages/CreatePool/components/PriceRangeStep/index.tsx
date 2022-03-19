@@ -156,19 +156,31 @@ export const PriceRangeStep = (props: IProps) => {
   const { [Bound.LOWER]: priceLower, [Bound.UPPER]: priceUpper } = pricesAtTicks
 
   // Decimal difference between two tokens
-  const decimalDifference = Math.abs(data.token1.decimals - data.token0.decimals);
+  const decimalDifference = Math.abs(
+    data.token1.decimals - data.token0.decimals
+  )
 
   // Parse if the independent field token's decimal is lower than the dependent field's token, otherwise format units.
-  const shouldParse = (state.independentField === Field.CURRENCY_A && data.token0.decimals < data.token1.decimals) || (state.independentField === Field.CURRENCY_A && data.token0.decimals > data.token1.decimals);
-  const amountForParse = parsedAmounts[dependentField]?.toSignificant(6) || '0';
-  const parsedAmount = (shouldParse ? ethers.utils.parseUnits(amountForParse, decimalDifference).toString() : ethers.utils.formatUnits(amountForParse, decimalDifference)) ?? '0'
+  const shouldParse =
+    (state.independentField === Field.CURRENCY_A &&
+      data.token0.decimals < data.token1.decimals) ||
+    (state.independentField === Field.CURRENCY_A &&
+      data.token0.decimals > data.token1.decimals)
+  const amountForParse = parsedAmounts[dependentField]?.toSignificant(6) || '0'
+  const parsedAmount =
+    (shouldParse
+      ? ethers.utils.parseUnits(amountForParse, decimalDifference).toString()
+      : ethers.utils.formatUnits(amountForParse, decimalDifference)) ?? '0'
 
   // get formatted amounts
   const formattedAmounts = {
     [state.independentField]: state.typedValue,
     // Don't parse if two token's decimals are the same
-    [dependentField]: data.token0.decimals === data.token1.decimals ? amountForParse : parsedAmount,
-  };
+    [dependentField]:
+      data.token0.decimals === data.token1.decimals
+        ? amountForParse
+        : parsedAmount,
+  }
 
   const tokenA = (baseCurrency ?? undefined)?.wrapped
   const tokenB = (currencyB ?? undefined)?.wrapped
