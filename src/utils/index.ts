@@ -45,7 +45,7 @@ export const formatToShortNumber = (number: string, decimals = 2): string => {
     rNumber = rNumber / 1000
   }
 
-  return `${parseFloat(rNumber.toFixed(decimals))}${units[unitIndex]}`
+  return `${Math.round(parseFloat(rNumber.toFixed(decimals)))}${units[unitIndex]}`
 }
 
 export const hideInsignificantZeros = (x: string) => {
