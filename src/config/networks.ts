@@ -78,7 +78,7 @@ const networks: { [K in ChainId]: INetwork } = {
     url: 'https://polygon-mainnet.g.alchemy.com/v2/NNM6Jp5aqBppePm-R-D4IkNPd0fcTMkZ',
     contracts: {
       LM: '0x090559D58aAB8828C27eE7a7EAb18efD5bB90374',
-      multicall: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
+      multicall: '0x275617327c958bD06b5D6b871E7f491D76113dd8', // 3rd party deployment: https://github.com/makerdao/multicall/pull/24
       rewardEscrow: '0x40E8cb3440C0B05EB20522D1F63397e5B36efcf2',
       uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',

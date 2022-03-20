@@ -12,7 +12,7 @@
     "@testing-library/user-event": "^12.1.10",
     "@uniswap/sdk-core": "3.0.1",
     "@uniswap/v2-sdk": "3.0.1",
-    "@uniswap/v3-sdk": "3.6.3",
+    "@uniswap/v3-sdk": "3.8.2",
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
     "@web3-react/walletconnect-connector": "^6.2.4",

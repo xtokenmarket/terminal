@@ -5,7 +5,7 @@ import { FeeAmount } from '@uniswap/v3-sdk'
 import { TokenBalanceInput, TokenPriceInput } from 'components'
 import { DEFAULT_NETWORK_ID, FEE_TIPS } from 'config/constants'
 import { useConnectedWeb3Context } from 'contexts'
-import { formatUnits } from 'ethers/lib/utils'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { useTokenBalance } from 'helpers'
 import {
   usePools,
@@ -18,7 +18,6 @@ import { ICreatePoolData, MintState } from 'types'
 import { Bound, Field } from 'utils/enums'
 import { WarningInfo } from 'components/Common/WarningInfo'
 import { useNetworkContext } from 'contexts/networkContext'
-import { ethers } from 'ethers'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -98,9 +97,9 @@ export const PriceRangeStep = (props: IProps) => {
       ? Field.CURRENCY_B
       : Field.CURRENCY_A,
     typedValue: !data.amount1.isZero()
-      ? data.amount1.toString()
+      ? formatUnits(data.amount1, data.token1.decimals)
       : !data.amount0.isZero()
-      ? data.amount0.toString()
+      ? formatUnits(data.amount0, data.token0.decimals)
       : '',
     leftRangeTypedValue: data.minPrice,
     rightRangeTypedValue: data.maxPrice,
@@ -155,31 +154,10 @@ export const PriceRangeStep = (props: IProps) => {
   const { [Bound.LOWER]: tickLower, [Bound.UPPER]: tickUpper } = ticks
   const { [Bound.LOWER]: priceLower, [Bound.UPPER]: priceUpper } = pricesAtTicks
 
-  // Decimal difference between two tokens
-  const decimalDifference = Math.abs(
-    data.token1.decimals - data.token0.decimals
-  )
-
-  // Parse if the independent field token's decimal is lower than the dependent field's token, otherwise format units.
-  const shouldParse =
-    (state.independentField === Field.CURRENCY_A &&
-      data.token0.decimals < data.token1.decimals) ||
-    (state.independentField === Field.CURRENCY_A &&
-      data.token0.decimals > data.token1.decimals)
-  const amountForParse = parsedAmounts[dependentField]?.toSignificant(6) || '0'
-  const parsedAmount =
-    (shouldParse
-      ? ethers.utils.parseUnits(amountForParse, decimalDifference).toString()
-      : ethers.utils.formatUnits(amountForParse, decimalDifference)) ?? '0'
-
   // get formatted amounts
   const formattedAmounts = {
     [state.independentField]: state.typedValue,
-    // Don't parse if two token's decimals are the same
-    [dependentField]:
-      data.token0.decimals === data.token1.decimals
-        ? amountForParse
-        : parsedAmount,
+    [dependentField]: parsedAmounts[dependentField]?.toSignificant(6) ?? '',
   }
 
   const tokenA = (baseCurrency ?? undefined)?.wrapped
@@ -225,11 +203,13 @@ export const PriceRangeStep = (props: IProps) => {
 
   const onClickNext = () => {
     updateData({
-      amount0: BigNumber.from(
-        parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)
+      amount0: parseUnits(
+        parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) || '0',
+        data.token0.decimals
       ),
-      amount1: BigNumber.from(
-        parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)
+      amount1: parseUnits(
+        parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) || '0',
+        data.token1.decimals
       ),
       minPrice: state.leftRangeTypedValue,
       maxPrice: state.rightRangeTypedValue,
@@ -245,7 +225,10 @@ export const PriceRangeStep = (props: IProps) => {
     setState((prev) => ({
       ...prev,
       independentField: field,
-      typedValue: amount.toString(),
+      typedValue: formatUnits(
+        amount.toString(),
+        field === Field.CURRENCY_A ? data.token0.decimals : data.token1.decimals
+      ),
     }))
   }
 
@@ -253,23 +236,14 @@ export const PriceRangeStep = (props: IProps) => {
   const { balance: balanceB } = useTokenBalance(data.token1.address)
 
   useEffect(() => {
-    const amountA = Number(
-      formatUnits(
-        formattedAmounts[Field.CURRENCY_A] || '0',
-        data.token0.decimals
-      )
-    )
-    const amountB = Number(
-      formatUnits(
-        formattedAmounts[Field.CURRENCY_B] || '0',
-        data.token1.decimals
-      )
-    )
+    const amountA = Number(formattedAmounts[Field.CURRENCY_A] || '0')
+    const amountB = Number(formattedAmounts[Field.CURRENCY_B] || '0')
 
     const newErrors: string[] = []
     const newErrorA = `${data.token0.symbol} input exceeds balance`
     const newErrorB = `${data.token1.symbol} input exceeds balance`
     const newErrorC = `Your position will not earn fees or be used in trades until the market price moves into your range.`
+
     if (amountA > Number(formatUnits(balanceA, data.token0.decimals))) {
       newErrors.push(newErrorA)
     }
@@ -399,7 +373,10 @@ export const PriceRangeStep = (props: IProps) => {
             <Typography className={classes.label}>Deposit amounts</Typography>
             <TokenBalanceInput
               className="token0-balance-input"
-              value={BigNumber.from(formattedAmounts[Field.CURRENCY_A] || '0')}
+              value={parseUnits(
+                formattedAmounts[Field.CURRENCY_A] || '0',
+                data.token0.decimals
+              )}
               onChange={(amount) =>
                 onTokenInputChange(Field.CURRENCY_A, amount)
               }
@@ -408,7 +385,10 @@ export const PriceRangeStep = (props: IProps) => {
             />
             <TokenBalanceInput
               className="token1-balance-input"
-              value={BigNumber.from(formattedAmounts[Field.CURRENCY_B] || '0')}
+              value={parseUnits(
+                formattedAmounts[Field.CURRENCY_B] || '0',
+                data.token1.decimals
+              )}
               onChange={(amount) =>
                 onTokenInputChange(Field.CURRENCY_B, amount)
               }
