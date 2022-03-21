@@ -10,8 +10,10 @@ const DEFAULT_CONFIG: Config = {
     ChainId.Arbitrum,
     ChainId.Optimism,
     ChainId.Polygon,
-    // Remove test nets if on production
-    ...(IS_PROD ? [] : [ChainId.Kovan, ChainId.Rinkeby]),
+
+    ChainId.Kovan,
+    // Remove Rinkeby test net if on production
+    ...(IS_PROD ? [] : [ChainId.Rinkeby]),
   ],
 }
 

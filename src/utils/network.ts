@@ -39,3 +39,7 @@ export const getIdFromNetwork = (network?: Network): ChainId => {
       return DEFAULT_NETWORK_ID
   }
 }
+
+export const isTestnet = (chainId: ChainId): boolean => {
+  return [ChainId.Kovan, ChainId.Rinkeby].includes(chainId)
+}

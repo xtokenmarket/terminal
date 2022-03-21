@@ -206,3 +206,5 @@ export const FEE_TIPS: Record<ChainId, string> = {
   [ChainId.Kovan]: ETH_TIP,
   [ChainId.Rinkeby]: ETH_TIP,
 }
+
+export const PROD_TESTNET_DISCOVER_PAGE_SIZE = 5
