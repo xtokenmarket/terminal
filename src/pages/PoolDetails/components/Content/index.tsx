@@ -10,11 +10,14 @@ import moment from 'moment'
 import { useState } from 'react'
 import { ITerminalPool } from 'types'
 import {
+  formatBigNumber,
+  formatToShortNumber,
   getCurrentTimeStamp,
   getTimeDurationStr,
+  getTimeDurationUnitInfo,
   numberWithCommas,
 } from 'utils'
-import { parseDuration } from 'utils/number'
+import { parseDuration, ZERO } from 'utils/number'
 import { RewardModal } from 'components'
 import {
   BalanceSection,
@@ -242,6 +245,29 @@ export const Content = (props: IProps) => {
     Number(poolData.rewardState.vesting) > 0 &&
     readyToVest.length !== 0
 
+  const getRewardsPerWeek = () => {
+    const { duration, amounts } = poolData.rewardState
+    const isInitiateRewardsPending = duration === '0'
+
+    const rewards = poolData.rewardState.tokens.map((rewardToken, index) => {
+      if (isInitiateRewardsPending) {
+        return `${rewardToken.symbol}${
+          index !== poolData.rewardState.tokens.length - 1 ? ' / ' : ''
+        }`
+      } else {
+        const durationInfo = getTimeDurationUnitInfo(Number(duration))
+        const uintAmount = amounts[index]
+          ? amounts[index].mul(durationInfo.unit).div(Number(duration))
+          : ZERO
+        return `${formatToShortNumber(
+          formatBigNumber(uintAmount, rewardToken.decimals)
+        )}
+              ${rewardToken.symbol} / ${durationInfo.unitStr}`
+      }
+    })
+    return rewards.join('')
+  }
+
   return (
     <div className={classes.root}>
       {state.depositVisible && (
@@ -373,22 +399,18 @@ export const Content = (props: IProps) => {
               />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
-              {/* <InfoSection
-                label="VOLUME(24H)"
-                value={`$${formatToShortNumber('791')}`}
-                right={
-                  <span className={clsx(classes.tag, 'positive')}>+17.38%</span>
-                }
-              /> */}
+              <InfoSection
+                label="REWARDS PER WEEK"
+                value={getRewardsPerWeek()}
+              />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
-              {/* <InfoSection
-                label="VOLUME(7D)"
-                value={`$${formatToShortNumber('91451')}`}
-                right={
-                  <span className={clsx(classes.tag, 'negative')}>-13.38%</span>
-                }
-              /> */}
+              <InfoSection
+                label="FEE TIER"
+                value={`${(
+                  Number(poolData.poolFee.toString()) / 10000
+                ).toString()} %`}
+              />
             </Grid>
           </Grid>
         </div>
