@@ -262,7 +262,9 @@ export const Content = (props: IProps) => {
         return `${formatToShortNumber(
           formatBigNumber(uintAmount, rewardToken.decimals)
         )}
-              ${rewardToken.symbol} / ${durationInfo.unitStr}`
+              ${rewardToken.symbol} ${
+          index !== poolData.rewardState.tokens.length - 1 ? ' / ' : ''
+        }`
       }
     })
     return rewards.join('')
@@ -370,12 +372,16 @@ export const Content = (props: IProps) => {
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
               <InfoSection
-                label="VESTING PERIOD"
+                label="APR"
                 value={
-                  Number(vesting) === 0
-                    ? 'None'
-                    : getTimeDurationStr(parseDuration(vesting))
+                  poolData.apr === 'N/A' ? poolData.apr : `${poolData.apr}%`
                 }
+              />
+            </Grid>
+            <Grid item xs={6} sm={4} md={2} className={classes.info}>
+              <InfoSection
+                label="REWARDS PER WEEK"
+                value={getRewardsPerWeek()}
               />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
@@ -392,16 +398,12 @@ export const Content = (props: IProps) => {
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
               <InfoSection
-                label="APR"
+                label="VESTING PERIOD"
                 value={
-                  poolData.apr === 'N/A' ? poolData.apr : `${poolData.apr}%`
+                  Number(vesting) === 0
+                    ? 'None'
+                    : getTimeDurationStr(parseDuration(vesting))
                 }
-              />
-            </Grid>
-            <Grid item xs={6} sm={4} md={2} className={classes.info}>
-              <InfoSection
-                label="REWARDS PER WEEK"
-                value={getRewardsPerWeek()}
               />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
