@@ -5,7 +5,7 @@ import { useHistory } from 'react-router'
 import { useConnectedWeb3Context } from 'contexts'
 import { useNetworkContext } from 'contexts/networkContext'
 import { IS_PROD } from 'config/constants'
-import { isTestNet } from 'utils/network'
+import { isTestnet } from 'utils/network'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,7 +37,7 @@ const MyPools = () => {
   const isConnected = !!account
 
   const { chainId } = useNetworkContext()
-  const isProdTestNet = IS_PROD && isTestNet(chainId)
+  const isProdTestNet = IS_PROD && isTestnet(chainId)
 
   const onCreatePool = () => {
     history.push('/mining/new-pool')
