@@ -45,7 +45,6 @@ export const useTerminalPool = (
   let readonlyProvider = provider
 
   const isWrongNetwork = networkId !== getIdFromNetwork(network)
-  console.log(isWrongNetwork, networkId, network)
   if (isWrongNetwork) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
