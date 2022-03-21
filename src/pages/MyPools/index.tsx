@@ -3,6 +3,9 @@ import { useMyTerminalPools } from 'helpers'
 import { makeStyles, Button } from '@material-ui/core'
 import { useHistory } from 'react-router'
 import { useConnectedWeb3Context } from 'contexts'
+import { useNetworkContext } from 'contexts/networkContext'
+import { IS_PROD } from 'config/constants'
+import { isTestNet } from 'utils/network'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,6 +36,9 @@ const MyPools = () => {
   const { account } = useConnectedWeb3Context()
   const isConnected = !!account
 
+  const { chainId } = useNetworkContext()
+  const isProdTestNet = IS_PROD && isTestNet(chainId)
+
   const onCreatePool = () => {
     history.push('/mining/new-pool')
   }
@@ -40,6 +46,12 @@ const MyPools = () => {
   const onBrowsePool = () => {
     history.push('/mining/discover')
   }
+
+  const NoTestNetSupport = () => (
+    <div className={classes.root}>
+      <div className={classes.title}>We don't support it on this network</div>
+    </div>
+  )
 
   const NoPools = () => (
     <div className={classes.root}>
@@ -75,13 +87,19 @@ const MyPools = () => {
   // TODO: Display `Connect Wallet` button, if not logged in
   return (
     <div>
-      <HeaderSection />
-      {isLoading ? (
-        <SimpleLoader />
-      ) : pools.length === 0 ? (
-        <NoPools />
+      {isProdTestNet ? (
+        <NoTestNetSupport />
       ) : (
-        <PoolTable pools={pools} />
+        <>
+          <HeaderSection />
+          {isLoading ? (
+            <SimpleLoader />
+          ) : pools.length === 0 ? (
+            <NoPools />
+          ) : (
+            <PoolTable pools={pools} />
+          )}
+        </>
       )}
     </div>
   )
