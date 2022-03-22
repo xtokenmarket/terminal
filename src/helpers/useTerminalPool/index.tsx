@@ -245,6 +245,15 @@ export const useTerminalPool = (
 
       // Fetch events history, reward tokens and deposit amounts of user
       if (isPoolDetails && account) {
+        const blockNumber = await readonlyProvider?.getBlockNumber()
+
+        let from = 0
+        if (blockNumber) {
+          from = blockNumber - 10000
+        }
+
+        const to = blockNumber
+
         const depositFilter = clr.contract.filters.Deposit(account)
         const withdrawFilter = clr.contract.filters.Withdraw(account)
         const rewardClaimedFilter = clr.contract.filters.RewardClaimed(account)
@@ -259,11 +268,11 @@ export const useTerminalPool = (
           initiatedRewardsHistory,
           vestHistory,
         ] = await Promise.all([
-          clr.contract.queryFilter(depositFilter),
-          clr.contract.queryFilter(withdrawFilter),
-          clr.contract.queryFilter(rewardClaimedFilter),
-          lmService.contract.queryFilter(initiatedRewardsFilter),
-          rewardEscrow.contract.queryFilter(vestedFilter),
+          clr.contract.queryFilter(depositFilter, from, to),
+          clr.contract.queryFilter(withdrawFilter, from, to),
+          clr.contract.queryFilter(rewardClaimedFilter, from, to),
+          lmService.contract.queryFilter(initiatedRewardsFilter, from, to),
+          rewardEscrow.contract.queryFilter(vestedFilter, from, to),
         ])
 
         const filterUserHistory = [...initiatedRewardsHistory, ...vestHistory]
