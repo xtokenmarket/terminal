@@ -252,9 +252,7 @@ export const Content = (props: IProps) => {
 
     const rewards = poolData.rewardState.tokens.map((rewardToken, index) => {
       if (isInitiateRewardsPending) {
-        return `${rewardToken.symbol}${
-          index !== poolData.rewardState.tokens.length - 1 ? ' / ' : ''
-        }`
+        return 'N/A'
       } else {
         const durationInfo = getTimeDurationUnitInfo(Number(duration))
         const uintAmount = amounts[index]
