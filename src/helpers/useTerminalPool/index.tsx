@@ -251,7 +251,7 @@ export const useTerminalPool = (
           const blockNumber = await readonlyProvider?.getBlockNumber()
 
           if (blockNumber) {
-            from = blockNumber - 10000
+            from = blockNumber - 9500
           }
         }
 

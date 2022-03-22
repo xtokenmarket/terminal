@@ -31,8 +31,8 @@ export const PoolTable: React.FC<IProps> = ({ pools }) => {
       <div className={cl.content}>
         <PoolTableHeader />
         <div>
-          {pools.map((pool) => (
-            <PoolTableItem key={pool.poolAddress} pool={pool} />
+          {pools.map((pool, index) => (
+            <PoolTableItem key={`${pool.poolAddress}-${index}`} pool={pool} />
           ))}
         </div>
       </div>
