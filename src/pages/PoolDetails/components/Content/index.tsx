@@ -16,6 +16,7 @@ import {
   getTimeDurationStr,
   getTimeDurationUnitInfo,
   numberWithCommas,
+  parseFee,
 } from 'utils'
 import { parseDuration, ZERO } from 'utils/number'
 import { RewardModal } from 'components'
@@ -409,9 +410,7 @@ export const Content = (props: IProps) => {
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
               <InfoSection
                 label="FEE TIER"
-                value={`${(
-                  Number(poolData.poolFee.toString()) / 10000
-                ).toString()} %`}
+                value={`${parseFee(poolData.poolFee).toString()} %`}
               />
             </Grid>
           </Grid>

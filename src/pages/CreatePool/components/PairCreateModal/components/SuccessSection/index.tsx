@@ -1,6 +1,7 @@
 import { Button, makeStyles, Typography } from '@material-ui/core'
 import { BigNumber } from 'ethers'
 import { IToken } from 'types'
+import { parseFee } from 'utils'
 
 const ICON_SIZE = 150
 
@@ -59,8 +60,6 @@ export const SuccessSection: React.FC<IProps> = ({
 }) => {
   const classes = useStyles()
 
-  const parseFee = (tier: BigNumber) => `${tier.toNumber() / 10000}%`
-
   return (
     <div className={classes.root}>
       <div className={classes.header}>
@@ -75,7 +74,8 @@ export const SuccessSection: React.FC<IProps> = ({
           ))}
         </div>
         <Typography className={classes.title}>
-          {`${token0.symbol}/${token1.symbol}`} {parseFee(tier)} pool deployed!
+          {`${token0.symbol}/${token1.symbol}`} {`${parseFee(tier)}%`} pool
+          deployed!
         </Typography>
         <Typography className={classes.description}>
           You have successfully deployed {`${token0.symbol}/${token1.symbol}`}{' '}

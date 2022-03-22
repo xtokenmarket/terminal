@@ -7,6 +7,7 @@ import { RewardTokensTable } from './RewardTokensTable'
 import { IRewardState, RewardModal } from 'components'
 import { CreatePoolModal } from '../CreatePoolModal'
 import { useNetworkContext } from 'contexts/networkContext'
+import { parseFee } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -114,7 +115,6 @@ export const RewardsStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false)
   const [isRewardsModalVisible, setIsRewardsModalVisible] = useState(false)
 
-  const feeAmount: FeeAmount = data.tier.toNumber()
   const feeLabel = FEE_TIERS.find((fee) => fee.value.eq(data.tier))?.label
   const priceLabel = `${data.token0.symbol.toUpperCase()} per ${data.token1.symbol.toUpperCase()}`
   const feeTip = FEE_TIPS[chainId]
@@ -163,7 +163,7 @@ export const RewardsStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
                   </Grid>
                   <Grid item xs={12} sm={4} className={cl.section}>
                     <p className="title">Fee tier</p>
-                    <p className="data">{feeAmount / 10000}%</p>
+                    <p className="data">{parseFee(data.tier)}%</p>
                     <p className="description">{feeLabel}</p>
                   </Grid>
                 </Grid>

@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core'
 import { useServices } from 'helpers'
 import { IRewardState } from 'components'
+import { parseFee } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   tableContainer: {},
@@ -49,7 +50,7 @@ export const RewardTokensTable: React.FC<IProps> = ({
   useEffect(() => {
     ;(async () => {
       const fee = await lmService.getRewardFee()
-      setRewardFeePercent(fee.toNumber() / 10000)
+      setRewardFeePercent(parseFee(fee))
     })()
   }, [lmService])
 
