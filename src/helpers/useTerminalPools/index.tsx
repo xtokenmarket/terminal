@@ -1,27 +1,28 @@
 import axios from 'axios'
 import { TERMINAL_API_URL } from 'config/constants'
-import { useConnectedWeb3Context } from 'contexts'
+import { useNetworkContext } from 'contexts/networkContext'
 import { useEffect, useState } from 'react'
-import { NetworkId } from 'types'
+import { ITerminalPool } from 'types'
 import { waitSeconds } from 'utils'
-import { getNetworkFromId } from 'utils/network'
+import { Network } from 'utils/enums'
+import { isTestnet } from 'utils/network'
 
 interface IState {
   isLoading: boolean
-  pools: any[]
+  pools: ITerminalPool[]
 }
 
 export const useTerminalPools = () => {
   const [state, setState] = useState<IState>({ pools: [], isLoading: true })
-  const { networkId } = useConnectedWeb3Context()
+  const { chainId } = useNetworkContext()
 
-  const loadPools = async (network: string) => {
+  const loadPools = async (testnet: boolean) => {
     setState((prev) => ({ ...prev, isLoading: true }))
     try {
       await waitSeconds(1)
-      const pools = (
-        await axios.get(`${TERMINAL_API_URL}/pools?network=${network}`)
-      ).data
+      const { data: pools } = await axios.get<ITerminalPool[]>(
+        `${TERMINAL_API_URL}/pools`
+      )
       setState((prev) => ({
         ...prev,
         pools,
@@ -34,8 +35,8 @@ export const useTerminalPools = () => {
 
   useEffect(() => {
     setState((prev) => ({ ...prev, pools: [], isLoading: true }))
-    loadPools(getNetworkFromId(networkId as NetworkId))
-  }, [networkId])
+    loadPools(isTestnet(chainId))
+  }, [chainId])
 
   return state
 }
