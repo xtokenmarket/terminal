@@ -3,6 +3,7 @@ import { Grid, makeStyles, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import { transparentize } from 'polished'
 import { FEE_TIERS } from 'config/constants'
+import { parseFee } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   tierInner: {
@@ -76,7 +77,7 @@ export const FeeTierSection: React.FC<IProps> = ({
           <Grid item xs={12} sm={4} key={label} onClick={() => onChange(value)}>
             <div className={clsx(cl.tierInner, { active })}>
               <Typography className={clsx(cl.percent, { active })}>
-                {value.toNumber() / 10000}%
+                {parseFee(value)}%
               </Typography>
               <Typography className={clsx(cl.label, { active })}>
                 {label}

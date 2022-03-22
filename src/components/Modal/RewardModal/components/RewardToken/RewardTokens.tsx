@@ -7,6 +7,7 @@ import { RewardToken } from '.'
 import { IRewardState } from '../..'
 import { useServices } from 'helpers'
 import { formatEther } from 'ethers/lib/utils'
+import { parseFee } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   rewardTokens: {},
@@ -37,7 +38,7 @@ export const RewardTokens: React.FC<IProps> = ({
   useEffect(() => {
     ;(async () => {
       const fee = await lmService.getRewardFee()
-      setRewardFeePercent(fee.toNumber() / 10000)
+      setRewardFeePercent(parseFee(fee))
     })()
   }, [lmService])
 

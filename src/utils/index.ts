@@ -177,3 +177,8 @@ export const getTotalTokenPrice = (
 
   return totalPrice.toFixed(2)
 }
+
+export const parseFee = (tier: BigNumber | number ) => {
+  const fee = typeof tier === 'number' ? tier : tier.toNumber()
+  return (fee / 10000)
+}
