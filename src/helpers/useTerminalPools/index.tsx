@@ -23,9 +23,13 @@ export const useTerminalPools = () => {
       const { data: pools } = await axios.get<ITerminalPool[]>(
         `${TERMINAL_API_URL}/pools`
       )
+      const testNetworks = [Network.KOVAN, Network.RINKEBY]
+      const filteredPools = testnet
+        ? pools.filter((pool) => testNetworks.includes(pool.network!))
+        : pools.filter((pool) => !testNetworks.includes(pool.network!))
       setState((prev) => ({
         ...prev,
-        pools,
+        pools: filteredPools,
         isLoading: false,
       }))
     } catch (error) {
