@@ -16,7 +16,7 @@ export const useTerminalPools = () => {
   const [state, setState] = useState<IState>({ pools: [], isLoading: true })
   const { chainId } = useNetworkContext()
 
-  const loadPools = async (testnet: boolean) => {
+  const loadPools = async () => {
     setState((prev) => ({ ...prev, isLoading: true }))
     try {
       await waitSeconds(1)
@@ -24,9 +24,11 @@ export const useTerminalPools = () => {
         `${TERMINAL_API_URL}/pools`
       )
       const testNetworks = [Network.KOVAN, Network.RINKEBY]
-      const filteredPools = testnet
-        ? pools.filter((pool) => testNetworks.includes(pool.network!))
-        : pools.filter((pool) => !testNetworks.includes(pool.network!))
+      const filteredPools = isTestnet(chainId)
+        ? pools.filter((pool) => testNetworks.includes(pool.network as Network))
+        : pools.filter(
+            (pool) => !testNetworks.includes(pool.network as Network)
+          )
       setState((prev) => ({
         ...prev,
         pools: filteredPools,
@@ -39,7 +41,7 @@ export const useTerminalPools = () => {
 
   useEffect(() => {
     setState((prev) => ({ ...prev, pools: [], isLoading: true }))
-    loadPools(isTestnet(chainId))
+    loadPools()
   }, [chainId])
 
   return state
