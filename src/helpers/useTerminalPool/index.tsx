@@ -1,6 +1,6 @@
 import Abi from 'abis'
 import axios from 'axios'
-import { POLL_API_DATA, TERMINAL_API_URL } from 'config/constants'
+import { ChainId, POLL_API_DATA, TERMINAL_API_URL } from 'config/constants'
 import { getNetworkProvider, getTokenFromAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import { formatEther, formatUnits, parseEther } from 'ethers/lib/utils'
@@ -248,11 +248,13 @@ export const useTerminalPool = (
         const blockNumber = await readonlyProvider?.getBlockNumber()
 
         let from = 0
-        if (blockNumber) {
-          from = blockNumber - 10000
+        if (readonlyProvider?.network.chainId === ChainId.Optimism) {
+          if (blockNumber) {
+            from = blockNumber - 10000
+          }
         }
 
-        const to = blockNumber
+        const to = 'latest'
 
         const depositFilter = clr.contract.filters.Deposit(account)
         const withdrawFilter = clr.contract.filters.Withdraw(account)
