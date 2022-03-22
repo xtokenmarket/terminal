@@ -19,7 +19,7 @@ export const STORAGE_KEY_CONNECTOR = 'CONNECTOR'
 
 export const LOGGER_ID = 'terminal'
 
-export const TERMINAL_API_URL = 'https://terminal-api-staging.link:3001/api'
+export const TERMINAL_API_URL = 'https://terminal.xtokenapi.link/api'
 export const POLL_API_DATA = 120000 // 2 min
 
 export const ETHER_DECIMAL = 18
