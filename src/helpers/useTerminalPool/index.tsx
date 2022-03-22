@@ -245,16 +245,15 @@ export const useTerminalPool = (
 
       // Fetch events history, reward tokens and deposit amounts of user
       if (isPoolDetails && account) {
-        const blockNumber = await readonlyProvider?.getBlockNumber()
-
         let from = 0
+        const to = 'latest'
         if (readonlyProvider?.network.chainId === ChainId.Optimism) {
+          const blockNumber = await readonlyProvider?.getBlockNumber()
+
           if (blockNumber) {
             from = blockNumber - 10000
           }
         }
-
-        const to = 'latest'
 
         const depositFilter = clr.contract.filters.Deposit(account)
         const withdrawFilter = clr.contract.filters.Withdraw(account)
