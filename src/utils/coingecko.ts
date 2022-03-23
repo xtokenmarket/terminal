@@ -7,7 +7,9 @@ export const getTokenLogo = async (
 ): Promise<string | undefined> => {
   const url = `${TERMINAL_API_URL}/token/${address}/logo?network=${network}`
   try {
-    const { data: logo } = await axios.get(url)
+    const {
+      data: { logo },
+    } = await axios.get(url)
     return logo
   } catch (err) {
     return undefined
