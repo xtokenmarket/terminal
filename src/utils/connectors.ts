@@ -1,8 +1,8 @@
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
-import { DEFAULT_NETWORK_ID } from '../config/constants'
-import { supportedNetworkIds, supportedNetworkURLs } from '../config/networks'
+import { ChainId } from 'config/constants'
+import { supportedNetworkIds, supportedNetworkURLs } from 'config/networks'
 
 const POLLING_INTERVAL = 12000
 
@@ -11,7 +11,12 @@ const injected = new InjectedConnector({
 })
 
 const walletconnect = new WalletConnectConnector({
-  rpc: { [DEFAULT_NETWORK_ID]: supportedNetworkURLs[DEFAULT_NETWORK_ID] },
+  rpc: {
+    [ChainId.Mainnet]: supportedNetworkURLs[ChainId.Mainnet],
+    [ChainId.Arbitrum]: supportedNetworkURLs[ChainId.Arbitrum],
+    [ChainId.Polygon]: supportedNetworkURLs[ChainId.Polygon],
+    [ChainId.Optimism]: supportedNetworkURLs[ChainId.Optimism],
+  },
   bridge: 'https://bridge.walletconnect.org',
   qrcode: true,
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
