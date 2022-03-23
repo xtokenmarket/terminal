@@ -185,6 +185,19 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 'bold',
     fontSize: 8,
   },
+  titleWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  tooltipWrapper: {
+    fontSize: 10,
+    color: theme.colors.primary300,
+    marginTop: 16,
+    width: 15,
+    height: 15,
+    marginLeft: 10,
+    cursor: 'pointer',
+  },
 }))
 
 interface IProps {
@@ -269,6 +282,41 @@ export const Content = (props: IProps) => {
     return rewards.join('')
   }
 
+  const getPriceRange = () => {
+    const { token0, token1, ticks, poolFee } = poolData
+    const { tick0, tick1 } = ticks
+
+    const numberPoolFee = Number(poolFee)
+    const numberTick0 = Number(tick0)
+    const numberTick1 = Number(tick1)
+
+    if (
+      (numberPoolFee === 500 &&
+        numberTick0 == -887270 &&
+        numberTick1 === 887270) ||
+      (numberPoolFee === 3000 &&
+        numberTick0 == -887220 &&
+        numberTick1 === 887220) ||
+      (numberPoolFee === 10000 &&
+        numberTick0 == -887200 &&
+        numberTick1 === 887200)
+    ) {
+      return '0 to infinity'
+    }
+
+    const ratio0 = Math.pow(1.0001, Number(tick0))
+    const ratio1 = Math.pow(1.0001, Number(tick1))
+
+    const price0 = 1 / ratio1
+    const price0Int = parseInt(price0.toString())
+
+    const toFixed = price0Int >= 100 ? 0 : price0Int >= 1 ? 2 : 4
+
+    return `${price0.toFixed(toFixed)} ${token0.symbol} per ${
+      token1.symbol
+    } to ${(1 / ratio0).toFixed(toFixed)} ${token0.symbol} per ${token1.symbol}`
+  }
+
   return (
     <div className={classes.root}>
       {state.depositVisible && (
@@ -318,7 +366,23 @@ export const Content = (props: IProps) => {
         <div>
           <Grid container spacing={0}>
             <Grid item xs={12} md={6} className={classes.balance}>
-              <Typography className={classes.title}>POOL BALANCE</Typography>
+              <div className={classes.titleWrapper}>
+                <Typography className={classes.title}>POOL BALANCE</Typography>
+                <div className={classes.tooltipWrapper}>
+                  <Tooltip
+                    arrow
+                    placement="right"
+                    classes={{
+                      arrow: classes.tooltipArrow,
+                      tooltip: classes.tooltip,
+                    }}
+                    title={`Price Range: ${getPriceRange()}`}
+                  >
+                    <img alt="question" src="/assets/icons/info.svg" />
+                  </Tooltip>
+                </div>
+              </div>
+
               <Grid container spacing={0}>
                 <Grid item xs={12} md={6}>
                   <BalanceSection token={token0} />
