@@ -187,16 +187,17 @@ const useStyles = makeStyles((theme) => ({
   },
   titleWrapper: {
     display: 'flex',
-    alignItems: 'center',
   },
   tooltipWrapper: {
     fontSize: 10,
     color: theme.colors.primary300,
     marginTop: 16,
-    width: 15,
-    height: 15,
     marginLeft: 10,
     cursor: 'pointer',
+  },
+  infoIcon: {
+    width: 16,
+    height: 16,
   },
 }))
 
@@ -378,7 +379,11 @@ export const Content = (props: IProps) => {
                     }}
                     title={`Price Range: ${getPriceRange()}`}
                   >
-                    <img alt="question" src="/assets/icons/info.svg" />
+                    <img
+                      className={classes.infoIcon}
+                      alt="question"
+                      src="/assets/icons/info.svg"
+                    />
                   </Tooltip>
                 </div>
               </div>
