@@ -1,14 +1,14 @@
 import { makeStyles, Typography, IconButton } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef, useServices } from 'helpers'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ICreatePoolData } from 'types'
 import { ActionStepRow } from '..'
 import { WarningInfo } from 'components/Common/WarningInfo'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { getContractAddress } from 'config/networks'
 import { ERC20Service } from 'services'
-import { BigNumber } from 'ethers'
+import { getMetamaskError } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -64,6 +64,9 @@ const useStyles = makeStyles((theme) => ({
       right: 12,
     },
   },
+  error: {
+    marginTop: 24,
+  },
 }))
 
 interface IProps {
@@ -78,6 +81,7 @@ interface IState {
   isCompleted: boolean
   isCreatingPool: boolean
   createPoolTx: string
+  error: string
   poolAddress: string
   step: number
   token0Approved: boolean
@@ -98,6 +102,7 @@ export const CreatePoolSection = (props: IProps) => {
     isCompleted: false,
     isCreatingPool: false,
     createPoolTx: '',
+    error: '',
     poolAddress: '',
     step: 1,
     token0Approved: false,
@@ -269,12 +274,24 @@ export const CreatePoolSection = (props: IProps) => {
         poolAddress,
         isCompleted: true,
       }))
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error when deploying terminal pool', error)
+      const metamaskError = getMetamaskError(error)
+
       setState((prev) => ({
         ...prev,
+        error: metamaskError || '',
         isCreatingPool: false,
       }))
+
+      if (metamaskError) {
+        setTimeout(() => {
+          setState((prev) => ({
+            ...prev,
+            error: '',
+          }))
+        }, 8000)
+      }
     }
   }
 
@@ -334,7 +351,7 @@ export const CreatePoolSection = (props: IProps) => {
           />
           <ActionStepRow
             step={3}
-            isActiveStep={state.step === 3}
+            isActiveStep={state.step === 3 && !state.error}
             comment="Complete"
             title="Create Pool"
             actionLabel={isPoolCreated ? 'POOL CREATED' : 'CREATE POOL'}
@@ -342,6 +359,11 @@ export const CreatePoolSection = (props: IProps) => {
             actionPending={state.isCreatingPool}
             actionDone={isPoolCreated}
           />
+          {state.error && (
+            <Typography align="center" className={classes.error} color="error">
+              {state.error}
+            </Typography>
+          )}
         </div>
       </div>
     </div>

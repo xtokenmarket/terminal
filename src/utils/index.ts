@@ -45,7 +45,9 @@ export const formatToShortNumber = (number: string, decimals = 2): string => {
     rNumber = rNumber / 1000
   }
 
-  return `${Math.round(parseFloat(rNumber.toFixed(decimals)))}${units[unitIndex]}`
+  return `${Math.round(parseFloat(rNumber.toFixed(decimals)))}${
+    units[unitIndex]
+  }`
 }
 
 export const hideInsignificantZeros = (x: string) => {
@@ -178,7 +180,22 @@ export const getTotalTokenPrice = (
   return totalPrice.toFixed(2)
 }
 
-export const parseFee = (tier: BigNumber | number | string ) => {
-  const fee = typeof tier === 'number' || typeof tier === 'string' ? Number(tier) : tier.toNumber()
-  return (fee / 10000)
+export const parseFee = (tier: BigNumber | number | string) => {
+  const fee =
+    typeof tier === 'number' || typeof tier === 'string'
+      ? Number(tier)
+      : tier.toNumber()
+  return fee / 10000
+}
+
+export const getMetamaskError = (error: any) => {
+  if (error && error.error && error.error.message) {
+    const isInsufficientFundsError =
+      error.error.message.indexOf('insufficient funds') !== -1
+    if (isInsufficientFundsError) {
+      // TODO: Move to error constants
+      return 'Insufficient funds to process the transaction'
+    }
+  }
+  return null
 }

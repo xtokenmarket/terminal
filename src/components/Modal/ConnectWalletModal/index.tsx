@@ -9,9 +9,13 @@ import CloseIcon from '@material-ui/icons/Close'
 
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { useWeb3React } from '@web3-react/core'
-import { setupNetwork, supportedNetworkIds } from 'config/networks'
+import { supportedNetworkIds } from 'config/networks'
 import { ConnectWalletItem } from 'components/Button'
-import { STORAGE_KEY_CONNECTOR, WALLET_ICONS } from 'config/constants'
+import {
+  DEFAULT_NETWORK_ID,
+  STORAGE_KEY_CONNECTOR,
+  WALLET_ICONS,
+} from 'config/constants'
 import { useSnackbar } from 'notistack'
 import React, { useEffect } from 'react'
 import { ConnectorNames } from 'utils/enums'
@@ -73,8 +77,9 @@ interface IProps {
 export const ConnectWalletModal = (props: IProps) => {
   const context = useWeb3React()
   const classes = useStyles()
-  const { onClose } = props
   const { enqueueSnackbar } = useSnackbar()
+
+  const { onClose } = props
 
   // handle logic to recognize the connector currently being activated
   const [activatingConnector, setActivatingConnector] = React.useState<any>()
@@ -124,16 +129,23 @@ export const ConnectWalletModal = (props: IProps) => {
               onClose()
               return
             }
-            const hasSetup = await setupNetwork()
 
-            if (!hasSetup) {
+            try {
+              await window.ethereum.request({
+                method: 'wallet_switchEthereumChain',
+                params: [{ chainId: `0x${DEFAULT_NETWORK_ID.toString(16)}` }],
+              })
+            } catch (error: any) {
+              console.error('Error while trying to switch to Mainnet')
               onClose()
               return
             }
           }
         }
+
         context.activate(currentConnector)
         localStorage.setItem(STORAGE_KEY_CONNECTOR, wallet)
+
         onClose()
       } catch (error) {
         onClose()
