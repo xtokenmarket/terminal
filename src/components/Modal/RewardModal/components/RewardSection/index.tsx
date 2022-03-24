@@ -121,7 +121,6 @@ export const RewardSection = (props: IProps) => {
   }
 
   const loadInitInfo = async () => {
-    console.log('loadInitInfo', account)
     if (!account) {
       return
     }
@@ -134,10 +133,9 @@ export const RewardSection = (props: IProps) => {
       const response = await multicall.multicallv2(Abi.ERC20, calls, {
         requireSuccess: false,
       })
-      const approved = response.map(
-        (e: any, index: number) => e[0] > rewardState.amounts[index]
+      const approved = response.map((e: any, index: number) =>
+        e[0].gte(rewardState.amounts[index])
       )
-      console.log('approved', approved)
       const stepNumber = getNextApproveIndex(approved) + 1
       setState((prev) => ({ ...prev, approved, step: stepNumber }))
     } catch (error) {
