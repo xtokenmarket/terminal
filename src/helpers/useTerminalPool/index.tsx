@@ -1,7 +1,16 @@
 import Abi from 'abis'
 import axios from 'axios'
-import { ChainId, POLL_API_DATA, TERMINAL_API_URL } from 'config/constants'
-import { getNetworkProvider, getTokenFromAddress } from 'config/networks'
+import {
+  ChainId,
+  DEFAULT_NETWORK_ID,
+  POLL_API_DATA,
+  TERMINAL_API_URL,
+} from 'config/constants'
+import {
+  getNetworkProvider,
+  getTokenFromAddress,
+  getContractAddress,
+} from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import {
   formatEther,
@@ -30,8 +39,8 @@ import {
   getPoolDataMulticall,
   getTokenExchangeRate,
 } from './helper'
-import { ethers } from 'ethers'
-
+import { ethers, Contract } from 'ethers'
+import { useNetworkContext } from 'contexts/networkContext'
 interface IState {
   pool?: ITerminalPool
   loading: boolean
@@ -46,6 +55,7 @@ export const useTerminalPool = (
   const [state, setState] = useState<IState>({ loading: true, pool: undefined })
   const { account, library: provider, networkId } = useConnectedWeb3Context()
   const { multicall, rewardEscrow, lmService } = useServices(network)
+  const { chainId } = useNetworkContext()
 
   let readonlyProvider = provider
 
@@ -249,6 +259,8 @@ export const useTerminalPool = (
         token0Tvl: '0',
         token1Tvl: '0',
         stakedTokenBalance: BigNumber.from(0),
+        collectableFees0: BigNumber.from(0),
+        collectableFees1: BigNumber.from(0),
       }
 
       // Fetch events history, reward tokens and deposit amounts of user
@@ -426,6 +438,27 @@ export const useTerminalPool = (
             .mul(ONE_ETHER)
             .div(totalBalance)
         )
+
+        // Get collectable fees
+        if (account === pool.owner) {
+          const nonfungiblePositionManagerAddress = getContractAddress(
+            'nonfungiblePositionManager',
+            chainId || DEFAULT_NETWORK_ID
+          )
+          const nonfungiblePositionManagerContract = new Contract(
+            nonfungiblePositionManagerAddress,
+            Abi.NonfungiblePositionManager,
+            provider
+          )
+
+          const tokenId = await clr.contract.tokenId()
+
+          const collectableFees =
+            await nonfungiblePositionManagerContract.positions(tokenId)
+
+          user.collectableFees0 = collectableFees.tokensOwed0
+          user.collectableFees1 = collectableFees.tokensOwed1
+        }
       }
 
       setState({

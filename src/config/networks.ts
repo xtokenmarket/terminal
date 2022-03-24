@@ -30,6 +30,7 @@ const networks: { [K in ChainId]: INetwork } = {
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
+      nonfungiblePositionManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88'
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -50,6 +51,7 @@ const networks: { [K in ChainId]: INetwork } = {
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
+      nonfungiblePositionManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88'
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -70,6 +72,7 @@ const networks: { [K in ChainId]: INetwork } = {
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
+      nonfungiblePositionManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88'
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -90,6 +93,7 @@ const networks: { [K in ChainId]: INetwork } = {
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
+      nonfungiblePositionManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88'
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -105,11 +109,12 @@ const networks: { [K in ChainId]: INetwork } = {
     contracts: {
       LM: '0xa11BFF0cA52c8F20126B1084Bb70E9E5Da3ef6F2',
       multicall: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
-      rewardEscrow: '0x37F82851593cf54f2D30dfF76a5329615331BD07',
+      rewardEscrow: '0x0956636dF01cA07e3101F300602f9D4DDA6deD66',
       uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
+      nonfungiblePositionManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88'
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -130,6 +135,7 @@ const networks: { [K in ChainId]: INetwork } = {
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
+      nonfungiblePositionManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88'
     },
     terminal: {
       tradeFee: BigNumber.from(1000),

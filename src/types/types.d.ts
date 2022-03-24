@@ -23,6 +23,7 @@ export interface INetwork {
     uniRouter: string
     uniQuoter: string
     uniPositionManager: string
+    nonfungiblePositionManager: string
   }
   terminal: {
     tradeFee: BigNumber

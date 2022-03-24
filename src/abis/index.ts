@@ -7,6 +7,7 @@ import UniswapV3FactoryAbi from './UniswapV3Factory.json'
 import UniswapV3PoolStateAbi from './UniswapV3PoolState.json'
 import UniswapV3PositionAbi from './UniswapV3Position.json'
 import xAssetCLRAbi from './xAssetCLR.json'
+import nonfungiblePositionManagerAbi from './NonfungiblePositionManager.json'
 
 const Abi = {
   ERC20: ERC20Abi,
@@ -18,6 +19,7 @@ const Abi = {
   UniswapV3PoolState: UniswapV3PoolStateAbi,
   UniswapV3Position: UniswapV3PositionAbi, // NonfungiblePositionManager
   xAssetCLR: xAssetCLRAbi,
+  NonfungiblePositionManager: nonfungiblePositionManagerAbi
 }
 
 export default Abi
