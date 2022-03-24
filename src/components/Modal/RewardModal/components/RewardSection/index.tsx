@@ -121,6 +121,7 @@ export const RewardSection = (props: IProps) => {
   }
 
   const loadInitInfo = async () => {
+    console.log('loadInitInfo', account)
     if (!account) {
       return
     }
@@ -136,6 +137,7 @@ export const RewardSection = (props: IProps) => {
       const approved = response.map(
         (e: any, index: number) => e[0] > rewardState.amounts[index]
       )
+      console.log('approved', approved)
       const stepNumber = getNextApproveIndex(approved) + 1
       setState((prev) => ({ ...prev, approved, step: stepNumber }))
     } catch (error) {
