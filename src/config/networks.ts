@@ -8,7 +8,13 @@ import {
   KnownToken,
   NetworkId,
 } from 'types/types'
-import { CHAIN_NAMES, ChainId, DEFAULT_NETWORK_ID, IS_PROD } from './constants'
+import {
+  CHAIN_NAMES,
+  CHAIN_PARAMS,
+  ChainId,
+  DEFAULT_NETWORK_ID,
+  IS_PROD,
+} from './constants'
 import { Network } from 'utils/enums'
 import { getIdFromNetwork } from 'utils/network'
 
@@ -336,27 +342,13 @@ export const getNetworkProvider = (network?: Network) => {
 export const setupNetwork = async () => {
   const provider = window.ethereum
   if (provider) {
-    const chainId = DEFAULT_NETWORK_ID
     try {
       await provider.request({
         method: 'wallet_addEthereumChain',
-        params: [
-          {
-            chainId: `0x${chainId.toString(16)}`,
-            chainName: networks[DEFAULT_NETWORK_ID].label,
-            nativeCurrency: {
-              name: networks[DEFAULT_NETWORK_ID].label,
-              symbol: 'ETH',
-              decimals: 18,
-            },
-            rpcUrls: [networks[chainId].url],
-            blockExplorerUrls: [networks[chainId].etherscanUri],
-          },
-        ],
+        params: [CHAIN_PARAMS[DEFAULT_NETWORK_ID]],
       })
       return true
     } catch (error) {
-      alert(JSON.stringify(error))
       console.error(error)
       return false
     }

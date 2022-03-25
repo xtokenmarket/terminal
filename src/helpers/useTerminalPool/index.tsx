@@ -3,7 +3,12 @@ import axios from 'axios'
 import { ChainId, POLL_API_DATA, TERMINAL_API_URL } from 'config/constants'
 import { getNetworkProvider, getTokenFromAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
-import { formatEther, formatUnits, parseEther } from 'ethers/lib/utils'
+import {
+  formatEther,
+  formatUnits,
+  getAddress,
+  parseEther,
+} from 'ethers/lib/utils'
 import { useServices } from 'helpers'
 import { useEffect, useState } from 'react'
 import { CLRService, ERC20Service } from 'services'
@@ -95,11 +100,14 @@ export const useTerminalPool = (
     if ((!pool && poolAddress) || isReloadPool) {
       try {
         pool = (
-          await axios.get(`${TERMINAL_API_URL}/pool/${poolAddress}`, {
-            params: {
-              network,
-            },
-          })
+          await axios.get(
+            `${TERMINAL_API_URL}/pool/${getAddress(poolAddress as string)}`,
+            {
+              params: {
+                network,
+              },
+            }
+          )
         ).data
       } catch (e) {
         console.error('Error fetching pool details', e)

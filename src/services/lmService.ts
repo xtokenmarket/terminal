@@ -414,8 +414,10 @@ class LMService {
       BigNumber.from(poolData.token1.address)
     )
 
-    // TODO: Standardize symbol for different fee tiers
-    const symbol = `${poolData.token0.symbol}-${poolData.token1.symbol}-CLR`
+    // Includes fee tier as part of symbol
+    const symbol = `${poolData.token0.symbol}-${poolData.token1.symbol}-CLR-${
+      poolData.tier.toNumber() / 100
+    }bps`
     const deploymentFee = await this.contract.deploymentFee()
 
     const rewardsProgram = {
