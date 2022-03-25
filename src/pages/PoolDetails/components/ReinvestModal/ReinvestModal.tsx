@@ -15,6 +15,7 @@ import { CLRService } from 'services'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { SuccessSection } from './SuccessSection'
 import { CollectableFees } from './CollectableFees'
+import { BigNumber } from 'ethers'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -72,6 +73,9 @@ interface IProps {
 interface IState {
   reinvestTx: string
   txState: TxState
+  collectableFeesOnConfirm: {
+    [key: string]: BigNumber
+  }
 }
 
 export const ReinvestModal: React.FC<IProps> = ({
@@ -84,6 +88,10 @@ export const ReinvestModal: React.FC<IProps> = ({
   const [state, setState] = useState<IState>({
     reinvestTx: '',
     txState: TxState.None,
+    collectableFeesOnConfirm: {
+      Fees0: BigNumber.from(0),
+      Fees1: BigNumber.from(0),
+    },
   })
 
   const _clearTxState = () => {
@@ -109,13 +117,17 @@ export const ReinvestModal: React.FC<IProps> = ({
       setState((prev) => ({
         ...prev,
         txState: TxState.InProgress,
+        collectableFeesOnConfirm: {
+          fees0: poolData.user.collectableFees0,
+          fees1: poolData.user.collectableFees1,
+        },
       }))
 
       const clr = new CLRService(provider, account, poolData.address)
 
       const txId = await clr.reinvest()
 
-      const finalTxId = await clr.waitUntilReinvest(account, txId)
+      const finalTxId = await clr.waitUntilReinvest(txId)
 
       setState((prev) => ({
         ...prev,
@@ -131,13 +143,24 @@ export const ReinvestModal: React.FC<IProps> = ({
     }
   }
 
+  const isDisable = !!(
+    poolData.user.collectableFees0.toNumber() === 0 &&
+    poolData.user.collectableFees1.toNumber() === 0
+  )
+
   return (
-    <Modal open={open} onClose={_onClose} className={classes.modal}>
+    <Modal
+      disableBackdropClick={true}
+      open={open}
+      onClose={_onClose}
+      className={classes.modal}
+    >
       {state.txState === TxState.Complete ? (
         <SuccessSection
           reinvestState={state.txState}
           poolData={poolData}
           onClose={_onClose}
+          collectableFeesOnConfirm={state.collectableFeesOnConfirm}
         />
       ) : (
         <div className={classes.content}>
@@ -147,10 +170,15 @@ export const ReinvestModal: React.FC<IProps> = ({
               <CloseOutlinedIcon />
             </IconButton>
           )}
-          <CollectableFees poolData={poolData} reinvestState={state.txState} />
+          <CollectableFees
+            poolData={poolData}
+            reinvestState={state.txState}
+            collectableFeesOnConfirm={{ fees0: BigNumber.from(0) }}
+          />
 
           <div className={classes.buttonWrapper}>
             <Button
+              disabled={isDisable}
               fullWidth
               color="primary"
               variant="contained"

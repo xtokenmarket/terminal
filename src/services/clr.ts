@@ -271,19 +271,16 @@ class CLRService {
   }
 
   waitUntilReinvest = async (
-    account: string,
     txId: string
   ): Promise<string> => {
     let resolved = false
     return new Promise((resolve) => {
       this.contract.on(
         'Reinvest',
-        (clrPool: string, sender: any, ...rest) => {
-          if (account.toLowerCase() === sender.toLowerCase()) {
-            if (!resolved) {
-              resolved = true
-              resolve(rest[0].transactionHash)
-            }
+        (...rest) => {
+          if (!resolved) {
+            resolved = true
+            resolve(rest[0].transactionHash)
           }
         }
       )

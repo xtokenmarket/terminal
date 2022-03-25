@@ -1,4 +1,5 @@
 import { Button, makeStyles, Typography } from '@material-ui/core'
+import { BigNumber } from 'ethers'
 import { ITerminalPool } from 'types'
 import { TxState } from 'utils/enums'
 import { CollectableFees } from '../CollectableFees'
@@ -45,11 +46,12 @@ interface IProps {
   onClose: () => void
   reinvestState: TxState
   poolData: ITerminalPool
+  collectableFeesOnConfirm: { [key: string]: BigNumber }
 }
 
 export const SuccessSection = (props: IProps) => {
   const classes = useStyles()
-  const { reinvestState, poolData, onClose } = props
+  const { reinvestState, poolData, onClose, collectableFeesOnConfirm } = props
 
   return (
     <div className={classes.root}>
@@ -65,7 +67,11 @@ export const SuccessSection = (props: IProps) => {
           see details of your transaction.
         </Typography>
       </div>
-      <CollectableFees poolData={poolData} reinvestState={reinvestState} />
+      <CollectableFees
+        collectableFeesOnConfirm={collectableFeesOnConfirm}
+        poolData={poolData}
+        reinvestState={reinvestState}
+      />
       <div className={classes.actions}>
         <Button
           color="primary"
