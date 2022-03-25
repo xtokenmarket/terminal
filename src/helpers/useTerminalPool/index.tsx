@@ -453,11 +453,13 @@ export const useTerminalPool = (
 
           const tokenId = await clr.contract.tokenId()
 
-          const collectableFees =
+          const positionInfo =
             await nonfungiblePositionManagerContract.positions(tokenId)
 
-          user.collectableFees0 = collectableFees.tokensOwed0
-          user.collectableFees1 = collectableFees.tokensOwed1
+
+          user.collectableFees0 = positionInfo.tokensOwed0
+          user.collectableFees1 = positionInfo.tokensOwed1
+
         }
       }
 

@@ -261,6 +261,41 @@ class CLRService {
   ): Promise<BigNumber> => {
     return this.contract.earned(account, tokenAddress)
   }
+
+  reinvest = async (
+  ): Promise<string> => {
+    const transactionObject = await this.contract.collectAndReinvest()
+    console.log(`reinvest transaction hash: ${transactionObject.hash}`)
+
+    return transactionObject.hash
+  }
+
+  waitUntilReinvest = async (
+    account: string,
+    txId: string
+  ): Promise<string> => {
+    let resolved = false
+    return new Promise((resolve) => {
+      this.contract.on(
+        'CollectAndReinvest',
+        (clrPool: string, sender: any, ...rest) => {
+          if (account.toLowerCase() === sender.toLowerCase()) {
+            if (!resolved) {
+              resolved = true
+              resolve(rest[0].transactionHash)
+            }
+          }
+        }
+      )
+
+      this.contract.provider.waitForTransaction(txId).then(() => {
+        if (!resolved) {
+          resolved = true
+          resolve(txId)
+        }
+      })
+    })
+  }
 }
 
 export { CLRService }
