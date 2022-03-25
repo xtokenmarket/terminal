@@ -277,7 +277,7 @@ class CLRService {
     let resolved = false
     return new Promise((resolve) => {
       this.contract.on(
-        'CollectAndReinvest',
+        'Reinvest',
         (clrPool: string, sender: any, ...rest) => {
           if (account.toLowerCase() === sender.toLowerCase()) {
             if (!resolved) {
