@@ -123,6 +123,7 @@ export const ReinvestModal: React.FC<IProps> = ({
 }) => {
   const classes = useStyles()
   const { account, library: provider } = useConnectedWeb3Context()
+  const { user } = poolData
   const [state, setState] = useState<IState>({
     reinvestDone: false,
     reinvesting: false,
@@ -191,19 +192,27 @@ export const ReinvestModal: React.FC<IProps> = ({
             <TokenIcon token={poolData.token0} className={classes.tokenIcon} />
             &nbsp;&nbsp;
             <Typography className={classes.amount}>
-              {/* {formatBigNumber(amount0, poolData.token0.decimals, 4)} */}
-              123 &nbsp;
+              {formatBigNumber(
+                user.collectableFees0,
+                poolData.token0.decimals,
+                4
+              )}
+              &nbsp;
               {poolData.token0.symbol}
             </Typography>
           </div>
 
           <div className={classes.infoRow}>
-            <TokenIcon token={poolData.token0} className={classes.tokenIcon} />
+            <TokenIcon token={poolData.token1} className={classes.tokenIcon} />
             &nbsp;&nbsp;
             <Typography className={classes.amount}>
-              {/* {formatBigNumber(amount0, poolData.token0.decimals, 4)} */}
-              123 &nbsp;
-              {poolData.token0.symbol}
+              {formatBigNumber(
+                user.collectableFees1,
+                poolData.token1.decimals,
+                4
+              )}
+              &nbsp;
+              {poolData.token1.symbol}
             </Typography>
           </div>
         </div>

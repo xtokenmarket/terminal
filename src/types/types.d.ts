@@ -108,6 +108,8 @@ export interface ITerminalPool {
     token0Tvl: string
     token1Tvl: string
     stakedTokenBalance: BigNumber
+    collectableFees0: BigNumber
+    collectableFees1: BigNumber
   }
 }
 
