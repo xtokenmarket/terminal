@@ -440,10 +440,13 @@ export const useTerminalPool = (
         )
 
         // Get collectable fees
-        if (account === pool.owner) {
+        if (
+          account.toLowerCase() === pool.owner.toLowerCase() ||
+          account.toLowerCase() === pool.manager.toLowerCase()
+        ) {
           const nonfungiblePositionManagerAddress = getContractAddress(
             'nonfungiblePositionManager',
-            chainId || DEFAULT_NETWORK_ID
+            chainId || readonlyProvider?.network.chainId
           )
           const nonfungiblePositionManagerContract = new Contract(
             nonfungiblePositionManagerAddress,
@@ -456,10 +459,8 @@ export const useTerminalPool = (
           const positionInfo =
             await nonfungiblePositionManagerContract.positions(tokenId)
 
-
           user.collectableFees0 = positionInfo.tokensOwed0
           user.collectableFees1 = positionInfo.tokensOwed1
-
         }
       }
 

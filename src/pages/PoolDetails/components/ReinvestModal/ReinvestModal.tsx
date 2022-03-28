@@ -7,7 +7,7 @@ import {
   Button,
   CircularProgress,
 } from '@material-ui/core'
-import { ITerminalPool } from 'types'
+import { ICollectableFees, ITerminalPool } from 'types'
 import { useConnectedWeb3Context } from 'contexts'
 import { TxState } from 'utils/enums'
 import clsx from 'clsx'
@@ -73,9 +73,7 @@ interface IProps {
 interface IState {
   reinvestTx: string
   txState: TxState
-  collectableFeesOnConfirm: {
-    [key: string]: BigNumber
-  }
+  collectableFees: ICollectableFees
 }
 
 export const ReinvestModal: React.FC<IProps> = ({
@@ -88,9 +86,9 @@ export const ReinvestModal: React.FC<IProps> = ({
   const [state, setState] = useState<IState>({
     reinvestTx: '',
     txState: TxState.None,
-    collectableFeesOnConfirm: {
-      Fees0: BigNumber.from(0),
-      Fees1: BigNumber.from(0),
+    collectableFees: {
+      token0Fee: BigNumber.from(0),
+      token1Fee: BigNumber.from(0),
     },
   })
 
@@ -117,9 +115,9 @@ export const ReinvestModal: React.FC<IProps> = ({
       setState((prev) => ({
         ...prev,
         txState: TxState.InProgress,
-        collectableFeesOnConfirm: {
-          fees0: poolData.user.collectableFees0,
-          fees1: poolData.user.collectableFees1,
+        collectableFees: {
+          token0Fee: poolData.user.collectableFees0,
+          token1Fee: poolData.user.collectableFees1,
         },
       }))
 
@@ -144,8 +142,8 @@ export const ReinvestModal: React.FC<IProps> = ({
   }
 
   const isDisable = !!(
-    poolData.user.collectableFees0.toNumber() === 0 &&
-    poolData.user.collectableFees1.toNumber() === 0
+    poolData.user.collectableFees0.isZero() &&
+    poolData.user.collectableFees1.isZero()
   )
 
   return (
@@ -160,7 +158,7 @@ export const ReinvestModal: React.FC<IProps> = ({
           reinvestState={state.txState}
           poolData={poolData}
           onClose={_onClose}
-          collectableFeesOnConfirm={state.collectableFeesOnConfirm}
+          collectableFees={state.collectableFees}
         />
       ) : (
         <div className={classes.content}>
@@ -173,7 +171,8 @@ export const ReinvestModal: React.FC<IProps> = ({
           <CollectableFees
             poolData={poolData}
             reinvestState={state.txState}
-            collectableFeesOnConfirm={{ fees0: BigNumber.from(0) }}
+            token0Fee={poolData.user.collectableFees0}
+            token1Fee={poolData.user.collectableFees1}
           />
 
           <div className={classes.buttonWrapper}>

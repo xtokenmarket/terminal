@@ -1,8 +1,6 @@
 import { makeStyles, Typography } from '@material-ui/core'
-import clsx from 'clsx'
 import { TokenIcon } from 'components'
 import { formatBigNumber } from 'utils'
-import { toUsd } from 'utils/number'
 import React from 'react'
 import { ITerminalPool } from 'types'
 import { TxState } from 'utils/enums'
@@ -55,13 +53,15 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   poolData: ITerminalPool
   reinvestState: TxState
-  collectableFeesOnConfirm: { [key: string]: BigNumber }
+  token0Fee: BigNumber
+  token1Fee: BigNumber
 }
 
 export const CollectableFees: React.FC<IProps> = ({
   poolData,
   reinvestState,
-  collectableFeesOnConfirm,
+  token0Fee,
+  token1Fee,
 }) => {
   const classes = useStyles()
   const { user } = poolData
@@ -77,13 +77,7 @@ export const CollectableFees: React.FC<IProps> = ({
         <TokenIcon token={poolData.token0} className={classes.tokenIcon} />
         &nbsp;&nbsp;
         <Typography className={classes.amount}>
-          {formatBigNumber(
-            reinvestState === TxState.Complete
-              ? collectableFeesOnConfirm.fees0
-              : user.collectableFees0,
-            poolData.token0.decimals,
-            4
-          )}
+          {formatBigNumber(token0Fee, poolData.token0.decimals, 4)}
           &nbsp;
           {poolData.token0.symbol}
         </Typography>
@@ -93,13 +87,7 @@ export const CollectableFees: React.FC<IProps> = ({
         <TokenIcon token={poolData.token1} className={classes.tokenIcon} />
         &nbsp;&nbsp;
         <Typography className={classes.amount}>
-          {formatBigNumber(
-            reinvestState === TxState.Complete
-              ? collectableFeesOnConfirm.fees1
-              : user.collectableFees1,
-            poolData.token1.decimals,
-            4
-          )}
+          {formatBigNumber(token1Fee, poolData.token1.decimals, 4)}
           &nbsp;
           {poolData.token1.symbol}
         </Typography>

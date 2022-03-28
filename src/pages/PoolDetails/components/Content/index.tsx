@@ -560,11 +560,7 @@ export const Content = (props: IProps) => {
               className={classes.button}
               color="secondary"
               variant="contained"
-              onClick={() =>
-                account
-                  ? setReinvestModalVisible(true)
-                  : setWalletConnectModalOpened(true)
-              }
+              onClick={() => setReinvestModalVisible(true)}
             >
               REINVEST
             </Button>

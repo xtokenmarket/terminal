@@ -152,3 +152,8 @@ export interface History {
   totalRewardAmounts: BigNumber[]
   rewardTokens: IToken[]
 }
+
+export interface ICollectableFees {
+  token0Fee: BigNumber
+  token1Fee: BigNumber
+}

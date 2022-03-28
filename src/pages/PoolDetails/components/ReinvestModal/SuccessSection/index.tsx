@@ -1,6 +1,6 @@
 import { Button, makeStyles, Typography } from '@material-ui/core'
 import { BigNumber } from 'ethers'
-import { ITerminalPool } from 'types'
+import { ICollectableFees, ITerminalPool } from 'types'
 import { TxState } from 'utils/enums'
 import { CollectableFees } from '../CollectableFees'
 
@@ -34,8 +34,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 24,
     color: theme.colors.white,
   },
-  deposit: {},
-  buy: { marginTop: 8 },
   actions: {
     padding: 32,
     backgroundColor: theme.colors.primary500,
@@ -46,12 +44,12 @@ interface IProps {
   onClose: () => void
   reinvestState: TxState
   poolData: ITerminalPool
-  collectableFeesOnConfirm: { [key: string]: BigNumber }
+  collectableFees: ICollectableFees
 }
 
 export const SuccessSection = (props: IProps) => {
   const classes = useStyles()
-  const { reinvestState, poolData, onClose, collectableFeesOnConfirm } = props
+  const { reinvestState, poolData, onClose, collectableFees } = props
 
   return (
     <div className={classes.root}>
@@ -68,18 +66,13 @@ export const SuccessSection = (props: IProps) => {
         </Typography>
       </div>
       <CollectableFees
-        collectableFeesOnConfirm={collectableFeesOnConfirm}
+        token0Fee={collectableFees.token0Fee}
+        token1Fee={collectableFees.token1Fee}
         poolData={poolData}
         reinvestState={reinvestState}
       />
       <div className={classes.actions}>
-        <Button
-          color="primary"
-          variant="contained"
-          fullWidth
-          className={classes.deposit}
-          onClick={onClose}
-        >
+        <Button color="primary" variant="contained" fullWidth onClick={onClose}>
           DONE
         </Button>
       </div>
