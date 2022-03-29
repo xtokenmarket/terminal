@@ -267,13 +267,13 @@ export const useTerminalPool = (
       // Fetch events history, reward tokens and deposit amounts of user
       if (isPoolDetails && account) {
         const nonfungiblePositionManagerAddress = getContractAddress(
-          'nonfungiblePositionManager',
+          'uniPositionManager',
           readonlyProvider?.network.chainId
         )
 
         const nonfungiblePositionManagerContract = new Contract(
           nonfungiblePositionManagerAddress,
-          Abi.NonfungiblePositionManager,
+          Abi.UniswapV3Position,
           provider
         )
 

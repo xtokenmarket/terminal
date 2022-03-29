@@ -30,7 +30,6 @@ const networks: { [K in ChainId]: INetwork } = {
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
-      nonfungiblePositionManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88'
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -51,7 +50,6 @@ const networks: { [K in ChainId]: INetwork } = {
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
-      nonfungiblePositionManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88'
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -72,7 +70,6 @@ const networks: { [K in ChainId]: INetwork } = {
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
-      nonfungiblePositionManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88'
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -93,7 +90,6 @@ const networks: { [K in ChainId]: INetwork } = {
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
-      nonfungiblePositionManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88'
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -114,7 +110,6 @@ const networks: { [K in ChainId]: INetwork } = {
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
-      nonfungiblePositionManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88'
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -135,7 +130,6 @@ const networks: { [K in ChainId]: INetwork } = {
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
-      nonfungiblePositionManager: '0xC36442b4a4522E871399CD717aBDD847Ab11FE88'
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
