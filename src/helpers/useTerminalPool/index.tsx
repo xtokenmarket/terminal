@@ -328,10 +328,19 @@ export const useTerminalPool = (
           (x, index) => transactions[index].from === account
         )
 
+        // Filter reinvest history from collect history and user
         const filterCollectHistory = collectHistory.filter((history) =>
           reinvestHistory
             .map((history) => history.transactionHash)
             .includes(history.transactionHash)
+        )
+
+        const collectTransactions = await Promise.all(
+          filterCollectHistory.map((x) => x.getTransaction())
+        )
+
+        const userCollectHistory = filterCollectHistory.filter(
+          (x, index) => collectTransactions[index].from === account
         )
 
         const allHistory = [
@@ -339,7 +348,7 @@ export const useTerminalPool = (
           ...withdrawHistory,
           ...rewardClaimedHistory,
           ...userInitiatedRewardsVestHistory,
-          ...filterCollectHistory,
+          ...userCollectHistory,
         ]
 
         const blockInfos = await Promise.all(
