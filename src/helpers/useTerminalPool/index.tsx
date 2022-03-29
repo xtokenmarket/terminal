@@ -1,11 +1,6 @@
 import Abi from 'abis'
 import axios from 'axios'
-import {
-  ChainId,
-  DEFAULT_NETWORK_ID,
-  POLL_API_DATA,
-  TERMINAL_API_URL,
-} from 'config/constants'
+import { ChainId, POLL_API_DATA, TERMINAL_API_URL } from 'config/constants'
 import {
   getNetworkProvider,
   getTokenFromAddress,
@@ -40,7 +35,6 @@ import {
   getTokenExchangeRate,
 } from './helper'
 import { ethers, Contract } from 'ethers'
-import { useNetworkContext } from 'contexts/networkContext'
 interface IState {
   pool?: ITerminalPool
   loading: boolean
@@ -55,7 +49,6 @@ export const useTerminalPool = (
   const [state, setState] = useState<IState>({ loading: true, pool: undefined })
   const { account, library: provider, networkId } = useConnectedWeb3Context()
   const { multicall, rewardEscrow, lmService } = useServices(network)
-  const { chainId } = useNetworkContext()
 
   let readonlyProvider = provider
 
@@ -326,7 +319,8 @@ export const useTerminalPool = (
         )
 
         const userInitiatedRewardsVestHistory = filterUserHistory.filter(
-          (x, index) => transactions[index].from === account
+          (x, index) =>
+            transactions[index].from.toLowerCase() === account.toLowerCase()
         )
 
         // Filter reinvest history from collect history and user
@@ -341,7 +335,9 @@ export const useTerminalPool = (
         )
 
         const userCollectHistory = filterCollectHistory.filter(
-          (x, index) => collectTransactions[index].from === account
+          (x, index) =>
+            collectTransactions[index].from.toLowerCase() ===
+            account.toLowerCase()
         )
 
         const allHistory = [
