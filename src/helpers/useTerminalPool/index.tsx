@@ -268,7 +268,7 @@ export const useTerminalPool = (
       if (isPoolDetails && account) {
         const nonfungiblePositionManagerAddress = getContractAddress(
           'nonfungiblePositionManager',
-          chainId || readonlyProvider?.network.chainId
+          readonlyProvider?.network.chainId
         )
 
         const nonfungiblePositionManagerContract = new Contract(
