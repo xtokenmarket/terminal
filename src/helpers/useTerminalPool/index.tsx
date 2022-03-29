@@ -480,11 +480,18 @@ export const useTerminalPool = (
           account.toLowerCase() === pool.owner.toLowerCase() ||
           account.toLowerCase() === pool.manager.toLowerCase()
         ) {
-          const positionInfo =
-            await nonfungiblePositionManagerContract.positions(tokenId)
+          const MAX_UINT128 = BigNumber.from(2).pow(128).sub(1)
 
-          user.collectableFees0 = positionInfo.tokensOwed0
-          user.collectableFees1 = positionInfo.tokensOwed1
+          const feesInfo =
+            await nonfungiblePositionManagerContract.callStatic.collect({
+              tokenId,
+              recipient: account, // some tokens might fail if transferred to address(0)
+              amount0Max: MAX_UINT128,
+              amount1Max: MAX_UINT128,
+            })
+
+          user.collectableFees0 = feesInfo.amount0
+          user.collectableFees1 = feesInfo.amount1
         }
       }
 
