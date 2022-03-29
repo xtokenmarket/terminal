@@ -136,6 +136,19 @@ export const useTerminalPool = (
         isWrongNetwork ? null : account,
         pool.poolAddress
       )
+      const nonfungiblePositionManagerAddress = getContractAddress(
+        'nonfungiblePositionManager',
+        chainId || readonlyProvider?.network.chainId
+      )
+
+      const nonfungiblePositionManagerContract = new Contract(
+        nonfungiblePositionManagerAddress,
+        Abi.NonfungiblePositionManager,
+        provider
+      )
+
+      const tokenId = await clr.contract.tokenId()
+
       const balance = await clr.contract.getStakedTokenBalance()
 
       const token0Balance = balance.amount0
@@ -282,18 +295,27 @@ export const useTerminalPool = (
           lmService.contract.filters.InitiatedRewardsProgram(poolAddress)
         const vestedFilter = rewardEscrow.contract.filters.Vested(poolAddress)
 
+        const collectFilter =
+          nonfungiblePositionManagerContract.filters.Collect(tokenId)
+
+        const reinvestFilter = clr.contract.filters.Reinvest()
+
         const [
           depositHistory,
           withdrawHistory,
           rewardClaimedHistory,
           initiatedRewardsHistory,
           vestHistory,
+          collectHistory,
+          reinvestHistory,
         ] = await Promise.all([
           clr.contract.queryFilter(depositFilter, from, to),
           clr.contract.queryFilter(withdrawFilter, from, to),
           clr.contract.queryFilter(rewardClaimedFilter, from, to),
           lmService.contract.queryFilter(initiatedRewardsFilter, from, to),
           rewardEscrow.contract.queryFilter(vestedFilter, from, to),
+          nonfungiblePositionManagerContract.queryFilter(collectFilter),
+          clr.contract.queryFilter(reinvestFilter, from, to),
         ])
 
         const filterUserHistory = [...initiatedRewardsHistory, ...vestHistory]
@@ -306,11 +328,18 @@ export const useTerminalPool = (
           (x, index) => transactions[index].from === account
         )
 
+        const filterCollectHistory = collectHistory.filter((history) =>
+          reinvestHistory
+            .map((history) => history.transactionHash)
+            .includes(history.transactionHash)
+        )
+
         const allHistory = [
           ...depositHistory,
           ...withdrawHistory,
           ...rewardClaimedHistory,
           ...userInitiatedRewardsVestHistory,
+          ...filterCollectHistory,
         ]
 
         const blockInfos = await Promise.all(
@@ -329,6 +358,7 @@ export const useTerminalPool = (
             Withdraw: 'Withdraw',
             InitiatedRewardsProgram: 'Initiate Rewards',
             Vested: 'Vest',
+            Collect: 'Reinvest',
           }
 
           const token = pool.rewardTokens.find(
@@ -444,18 +474,6 @@ export const useTerminalPool = (
           account.toLowerCase() === pool.owner.toLowerCase() ||
           account.toLowerCase() === pool.manager.toLowerCase()
         ) {
-          const nonfungiblePositionManagerAddress = getContractAddress(
-            'nonfungiblePositionManager',
-            chainId || readonlyProvider?.network.chainId
-          )
-          const nonfungiblePositionManagerContract = new Contract(
-            nonfungiblePositionManagerAddress,
-            Abi.NonfungiblePositionManager,
-            provider
-          )
-
-          const tokenId = await clr.contract.tokenId()
-
           const positionInfo =
             await nonfungiblePositionManagerContract.positions(tokenId)
 

@@ -157,6 +157,25 @@ export const HistorySection = (props: IProps) => {
         </td>
       )
     }
+
+    if (item.action === 'Reinvest') {
+      return (
+        <td>
+          <span>
+            {numberWithCommas(
+              formatBigNumber(item.amount0, pool.token0.decimals, 4)
+            )}
+          </span>{' '}
+          {pool.token0.symbol} /{' '}
+          <span>
+            {numberWithCommas(
+              formatBigNumber(item.amount1, pool.token1.decimals, 4)
+            )}
+          </span>{' '}
+          {pool.token1.symbol}
+        </td>
+      )
+    }
   }
 
   return (
