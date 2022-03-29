@@ -136,18 +136,6 @@ export const useTerminalPool = (
         isWrongNetwork ? null : account,
         pool.poolAddress
       )
-      const nonfungiblePositionManagerAddress = getContractAddress(
-        'nonfungiblePositionManager',
-        chainId || readonlyProvider?.network.chainId
-      )
-
-      const nonfungiblePositionManagerContract = new Contract(
-        nonfungiblePositionManagerAddress,
-        Abi.NonfungiblePositionManager,
-        provider
-      )
-
-      const tokenId = await clr.contract.tokenId()
 
       const balance = await clr.contract.getStakedTokenBalance()
 
@@ -278,6 +266,19 @@ export const useTerminalPool = (
 
       // Fetch events history, reward tokens and deposit amounts of user
       if (isPoolDetails && account) {
+        const nonfungiblePositionManagerAddress = getContractAddress(
+          'nonfungiblePositionManager',
+          chainId || readonlyProvider?.network.chainId
+        )
+
+        const nonfungiblePositionManagerContract = new Contract(
+          nonfungiblePositionManagerAddress,
+          Abi.NonfungiblePositionManager,
+          provider
+        )
+
+        const tokenId = await clr.contract.tokenId()
+
         let from = 0
         const to = 'latest'
         if (readonlyProvider?.network.chainId === ChainId.Optimism) {
