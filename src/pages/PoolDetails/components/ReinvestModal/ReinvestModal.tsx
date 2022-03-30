@@ -143,10 +143,9 @@ export const ReinvestModal: React.FC<IProps> = ({
     }
   }
 
-  const isDisable = !!(
+  const isDisable =
     poolData.user.collectableFees0.isZero() ||
     poolData.user.collectableFees1.isZero()
-  )
 
   const resetTxState = () => {
     setState((prev) => ({
