@@ -163,13 +163,13 @@ export const HistorySection = (props: IProps) => {
         <td>
           <span>
             {numberWithCommas(
-              formatBigNumber(item.amount0, pool.token0.decimals, 4)
+              formatBigNumber(item.amount0, pool.token0.decimals, 2)
             )}
           </span>{' '}
           {pool.token0.symbol} /{' '}
           <span>
             {numberWithCommas(
-              formatBigNumber(item.amount1, pool.token1.decimals, 4)
+              formatBigNumber(item.amount1, pool.token1.decimals, 2)
             )}
           </span>{' '}
           {pool.token1.symbol}
