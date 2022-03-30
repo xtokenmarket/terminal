@@ -374,6 +374,10 @@ export const Content = (props: IProps) => {
         open={state.reinvestVisible}
         onClose={() => setReinvestModalVisible(false)}
         poolData={poolData}
+        onSuccess={async () => {
+          setReinvestModalVisible(false)
+          await props.reloadTerminalPool(true)
+        }}
       />
 
       <div className={classes.content}>

@@ -68,6 +68,7 @@ interface IProps {
   open: boolean
   onClose: () => void
   poolData: ITerminalPool
+  onSuccess: () => Promise<void>
 }
 
 interface IState {
@@ -80,6 +81,7 @@ export const ReinvestModal: React.FC<IProps> = ({
   open,
   onClose,
   poolData,
+  onSuccess,
 }) => {
   const classes = useStyles()
   const { account, library: provider } = useConnectedWeb3Context()
@@ -141,9 +143,17 @@ export const ReinvestModal: React.FC<IProps> = ({
     }
   }
 
-  const isDisable =
-    poolData.user.collectableFees0.isZero() &&
+  const isDisable = !!(
+    poolData.user.collectableFees0.isZero() ||
     poolData.user.collectableFees1.isZero()
+  )
+
+  const resetTxState = () => {
+    setState((prev) => ({
+      ...prev,
+      txState: TxState.None,
+    }))
+  }
 
   return (
     <Modal
@@ -162,8 +172,9 @@ export const ReinvestModal: React.FC<IProps> = ({
         <SuccessSection
           reinvestState={state.txState}
           poolData={poolData}
-          onClose={_onClose}
+          onClose={onSuccess}
           collectableFees={state.collectableFees}
+          resetTxState={resetTxState}
         />
       ) : (
         <div className={classes.content}>
