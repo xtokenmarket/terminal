@@ -139,7 +139,7 @@ interface MintState {
 
 export interface History {
   action: string
-  time: string
+  // time: string
   tx?: string
   amount0: BigNumber
   amount1: BigNumber

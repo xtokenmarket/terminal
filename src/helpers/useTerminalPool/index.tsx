@@ -27,7 +27,6 @@ import { ERewardStep, Network } from 'utils/enums'
 import { getIdFromNetwork } from 'utils/network'
 import { formatDuration, ONE_ETHER } from 'utils/number'
 import _ from 'lodash'
-import moment from 'moment'
 
 import {
   getCoinGeckoIDs,
@@ -354,7 +353,8 @@ export const useTerminalPool = (
 
         const eventHistory = allHistory.map((x, index) => {
           const timestamp = blockInfos[index].timestamp
-          const time = moment.unix(timestamp).format('LLLL')
+          // TODO: Remove, unnecessary parsing of timestamp
+          // const time = moment.unix(timestamp).format('LLLL')
 
           const eventName: {
             [key: string]: string
@@ -375,7 +375,7 @@ export const useTerminalPool = (
             action: x.event ? eventName[x.event] : '',
             amount0: x.args?.amount0 || BigNumber.from(0),
             amount1: x.args?.amount1 || BigNumber.from(0),
-            time,
+            // time,
             tx: x.transactionHash,
             rewardAmount: x.args?.rewardAmount || BigNumber.from(0),
             symbol: token ? token.symbol : '',

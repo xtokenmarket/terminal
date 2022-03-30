@@ -141,16 +141,21 @@ export const ReinvestModal: React.FC<IProps> = ({
     }
   }
 
-  const isDisable = !!(
+  const isDisable =
     poolData.user.collectableFees0.isZero() &&
     poolData.user.collectableFees1.isZero()
-  )
 
   return (
     <Modal
-      disableBackdropClick={true}
       open={open}
-      onClose={_onClose}
+      onClose={(e, reason) => {
+        // TODO: Migrate `Modal` to include this behaviour handling using props
+        // Ref: https://robertmarshall.dev/blog/disablebackdropclick-of-forwardrefdialog-is-deprecated-solution-and-example/
+        if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
+          return
+        }
+        _onClose()
+      }}
       className={classes.modal}
     >
       {state.txState === TxState.Complete ? (
