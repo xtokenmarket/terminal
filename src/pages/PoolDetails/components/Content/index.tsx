@@ -26,6 +26,7 @@ import {
   HistorySection,
   InfoSection,
   WithdrawModal,
+  ReinvestModal,
 } from '../index'
 import { RewardVestSection } from '../RewardVestSection'
 import { VestAllModal } from '../VestAllModal'
@@ -211,6 +212,7 @@ interface IState {
   withdrawVisible: boolean
   vestVisible: boolean
   rewardVisible: boolean
+  reinvestVisible: boolean
 }
 
 const initialState: IState = {
@@ -218,6 +220,7 @@ const initialState: IState = {
   withdrawVisible: false,
   vestVisible: false,
   rewardVisible: false,
+  reinvestVisible: false,
 }
 
 export const Content = (props: IProps) => {
@@ -250,6 +253,10 @@ export const Content = (props: IProps) => {
 
   const setRewardModalVisible = (rewardVisible: boolean) => {
     setState((prev) => ({ ...prev, rewardVisible }))
+  }
+
+  const setReinvestModalVisible = (reinvestVisible: boolean) => {
+    setState((prev) => ({ ...prev, reinvestVisible }))
   }
 
   const readyToVest = poolData.vestingTokens.filter(
@@ -362,6 +369,16 @@ export const Content = (props: IProps) => {
           reloadTerminalPool={props.reloadTerminalPool}
         />
       )}
+
+      <ReinvestModal
+        open={state.reinvestVisible}
+        onClose={() => setReinvestModalVisible(false)}
+        poolData={poolData}
+        onSuccess={async () => {
+          setReinvestModalVisible(false)
+          await props.reloadTerminalPool(true)
+        }}
+      />
 
       <div className={classes.content}>
         <div>
@@ -543,23 +560,14 @@ export const Content = (props: IProps) => {
           )}
 
           {isManageable && (
-            <Tooltip
-              title="Coming Soon"
-              arrow
-              placement="top"
-              classes={{
-                arrow: classes.tooltipArrow,
-                tooltip: classes.tooltip,
-              }}
+            <Button
+              className={classes.button}
+              color="secondary"
+              variant="contained"
+              onClick={() => setReinvestModalVisible(true)}
             >
-              <Button
-                className={classes.button}
-                color="secondary"
-                variant="contained"
-              >
-                REINVEST
-              </Button>
-            </Tooltip>
+              REINVEST
+            </Button>
           )}
         </div>
 

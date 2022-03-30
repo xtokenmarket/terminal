@@ -1,7 +1,11 @@
 import Abi from 'abis'
 import axios from 'axios'
 import { ChainId, POLL_API_DATA, TERMINAL_API_URL } from 'config/constants'
-import { getNetworkProvider, getTokenFromAddress } from 'config/networks'
+import {
+  getNetworkProvider,
+  getTokenFromAddress,
+  getContractAddress,
+} from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import {
   formatEther,
@@ -23,15 +27,13 @@ import { ERewardStep, Network } from 'utils/enums'
 import { getIdFromNetwork } from 'utils/network'
 import { formatDuration, ONE_ETHER } from 'utils/number'
 import _ from 'lodash'
-import moment from 'moment'
 
 import {
   getCoinGeckoIDs,
   getPoolDataMulticall,
   getTokenExchangeRate,
 } from './helper'
-import { ethers } from 'ethers'
-
+import { ethers, Contract } from 'ethers'
 interface IState {
   pool?: ITerminalPool
   loading: boolean
@@ -126,6 +128,7 @@ export const useTerminalPool = (
         isWrongNetwork ? null : account,
         pool.poolAddress
       )
+
       const balance = await clr.contract.getStakedTokenBalance()
 
       const token0Balance = balance.amount0
@@ -249,10 +252,25 @@ export const useTerminalPool = (
         token0Tvl: '0',
         token1Tvl: '0',
         stakedTokenBalance: BigNumber.from(0),
+        collectableFees0: BigNumber.from(0),
+        collectableFees1: BigNumber.from(0),
       }
 
       // Fetch events history, reward tokens and deposit amounts of user
       if (isPoolDetails && account) {
+        const nonfungiblePositionManagerAddress = getContractAddress(
+          'uniPositionManager',
+          readonlyProvider?.network.chainId
+        )
+
+        const nonfungiblePositionManagerContract = new Contract(
+          nonfungiblePositionManagerAddress,
+          Abi.UniswapV3Position,
+          provider
+        )
+
+        const tokenId = await clr.contract.tokenId()
+
         let from = 0
         const to = 'latest'
         if (readonlyProvider?.network.chainId === ChainId.Optimism) {
@@ -270,18 +288,27 @@ export const useTerminalPool = (
           lmService.contract.filters.InitiatedRewardsProgram(poolAddress)
         const vestedFilter = rewardEscrow.contract.filters.Vested(poolAddress)
 
+        const collectFilter =
+          nonfungiblePositionManagerContract.filters.Collect(tokenId)
+
+        const reinvestFilter = clr.contract.filters.Reinvest()
+
         const [
           depositHistory,
           withdrawHistory,
           rewardClaimedHistory,
           initiatedRewardsHistory,
           vestHistory,
+          collectHistory,
+          reinvestHistory,
         ] = await Promise.all([
           clr.contract.queryFilter(depositFilter, from, to),
           clr.contract.queryFilter(withdrawFilter, from, to),
           clr.contract.queryFilter(rewardClaimedFilter, from, to),
           lmService.contract.queryFilter(initiatedRewardsFilter, from, to),
           rewardEscrow.contract.queryFilter(vestedFilter, from, to),
+          nonfungiblePositionManagerContract.queryFilter(collectFilter),
+          clr.contract.queryFilter(reinvestFilter, from, to),
         ])
 
         const filterUserHistory = [...initiatedRewardsHistory, ...vestHistory]
@@ -291,7 +318,25 @@ export const useTerminalPool = (
         )
 
         const userInitiatedRewardsVestHistory = filterUserHistory.filter(
-          (x, index) => transactions[index].from === account
+          (x, index) =>
+            transactions[index].from.toLowerCase() === account.toLowerCase()
+        )
+
+        // Filter reinvest history from collect history and user
+        const filterCollectHistory = collectHistory.filter((history) =>
+          reinvestHistory
+            .map((history) => history.transactionHash)
+            .includes(history.transactionHash)
+        )
+
+        const collectTransactions = await Promise.all(
+          filterCollectHistory.map((x) => x.getTransaction())
+        )
+
+        const userCollectHistory = filterCollectHistory.filter(
+          (x, index) =>
+            collectTransactions[index].from.toLowerCase() ===
+            account.toLowerCase()
         )
 
         const allHistory = [
@@ -299,6 +344,7 @@ export const useTerminalPool = (
           ...withdrawHistory,
           ...rewardClaimedHistory,
           ...userInitiatedRewardsVestHistory,
+          ...userCollectHistory,
         ]
 
         const blockInfos = await Promise.all(
@@ -307,7 +353,8 @@ export const useTerminalPool = (
 
         const eventHistory = allHistory.map((x, index) => {
           const timestamp = blockInfos[index].timestamp
-          const time = moment.unix(timestamp).format('LLLL')
+          // TODO: Remove, unnecessary parsing of timestamp
+          // const time = moment.unix(timestamp).format('LLLL')
 
           const eventName: {
             [key: string]: string
@@ -317,6 +364,7 @@ export const useTerminalPool = (
             Withdraw: 'Withdraw',
             InitiatedRewardsProgram: 'Initiate Rewards',
             Vested: 'Vest',
+            Collect: 'Reinvest',
           }
 
           const token = pool.rewardTokens.find(
@@ -327,7 +375,7 @@ export const useTerminalPool = (
             action: x.event ? eventName[x.event] : '',
             amount0: x.args?.amount0 || BigNumber.from(0),
             amount1: x.args?.amount1 || BigNumber.from(0),
-            time,
+            // time,
             tx: x.transactionHash,
             rewardAmount: x.args?.rewardAmount || BigNumber.from(0),
             symbol: token ? token.symbol : '',
@@ -426,6 +474,25 @@ export const useTerminalPool = (
             .mul(ONE_ETHER)
             .div(totalBalance)
         )
+
+        // Get collectable fees
+        if (
+          account.toLowerCase() === pool.owner.toLowerCase() ||
+          account.toLowerCase() === pool.manager.toLowerCase()
+        ) {
+          const MAX_UINT128 = BigNumber.from(2).pow(128).sub(1)
+
+          const feesInfo =
+            await nonfungiblePositionManagerContract.callStatic.collect({
+              tokenId,
+              recipient: account, // some tokens might fail if transferred to address(0)
+              amount0Max: MAX_UINT128,
+              amount1Max: MAX_UINT128,
+            })
+
+          user.collectableFees0 = feesInfo.amount0
+          user.collectableFees1 = feesInfo.amount1
+        }
       }
 
       setState({

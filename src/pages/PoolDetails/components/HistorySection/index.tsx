@@ -157,6 +157,25 @@ export const HistorySection = (props: IProps) => {
         </td>
       )
     }
+
+    if (item.action === 'Reinvest') {
+      return (
+        <td>
+          <span>
+            {numberWithCommas(
+              formatBigNumber(item.amount0, pool.token0.decimals, 2)
+            )}
+          </span>{' '}
+          {pool.token0.symbol} /{' '}
+          <span>
+            {numberWithCommas(
+              formatBigNumber(item.amount1, pool.token1.decimals, 2)
+            )}
+          </span>{' '}
+          {pool.token1.symbol}
+        </td>
+      )
+    }
   }
 
   return (
@@ -178,7 +197,7 @@ export const HistorySection = (props: IProps) => {
                 <tr key={`${item.tx}_${item.action}_${item.symbol}`}>
                   <td>{item.action}</td>
                   {renderValue(item)}
-                  <td>{moment(item.time).fromNow()}</td>
+                  <td>{moment.unix(item.timestamp).fromNow()}</td>
                   <td>
                     <a href={`${etherscanUri}tx/${item.tx}`} target="_blank">
                       <img alt="alt" src="/assets/icons/expand.png" />

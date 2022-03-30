@@ -107,6 +107,8 @@ export interface ITerminalPool {
     token0Tvl: string
     token1Tvl: string
     stakedTokenBalance: BigNumber
+    collectableFees0: BigNumber
+    collectableFees1: BigNumber
   }
 }
 
@@ -137,7 +139,7 @@ interface MintState {
 
 export interface History {
   action: string
-  time: string
+  // time: string
   tx?: string
   amount0: BigNumber
   amount1: BigNumber
@@ -148,4 +150,9 @@ export interface History {
   timestamp: number
   totalRewardAmounts: BigNumber[]
   rewardTokens: IToken[]
+}
+
+export interface ICollectableFees {
+  token0Fee: BigNumber
+  token1Fee: BigNumber
 }
