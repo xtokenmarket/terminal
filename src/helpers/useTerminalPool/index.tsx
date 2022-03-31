@@ -101,16 +101,17 @@ export const useTerminalPool = (
 
     if ((!pool && poolAddress) || isReloadPool) {
       try {
-        pool = (
-          await axios.get(
-            `${TERMINAL_API_URL}/pool/${getAddress(poolAddress as string)}`,
-            {
-              params: {
-                network,
-              },
-            }
-          )
-        ).data
+        // pool = (
+        //   await axios.get(
+        //     `${TERMINAL_API_URL}/pool/${getAddress(poolAddress as string)}`,
+        //     {
+        //       params: {
+        //         network,
+        //       },
+        //     }
+        //   )
+        // ).data
+        pool = await getPoolDataMulticall(poolAddress as string, multicall)
       } catch (e) {
         console.error('Error fetching pool details', e)
         // Fallback in case API doesn't return pool details
