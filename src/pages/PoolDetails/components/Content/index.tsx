@@ -353,7 +353,7 @@ export const Content = (props: IProps) => {
 
   const _triggerRipple = () => {
     setTimeout(() => {
-      if (rewardPeriodFinished) triggerRipple()
+      if (rewardPeriodFinished && isManageable) triggerRipple()
     }, 500)
   }
 
