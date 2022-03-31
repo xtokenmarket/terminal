@@ -4,10 +4,12 @@ import {
   makeStyles,
   Tooltip,
   Typography,
+  ButtonBase,
 } from '@material-ui/core'
+import TouchRipple from '@material-ui/core/ButtonBase/TouchRipple'
 import { useConnectedWeb3Context } from 'contexts'
 import moment from 'moment'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { ITerminalPool } from 'types'
 import {
   formatBigNumber,
@@ -239,6 +241,9 @@ export const Content = (props: IProps) => {
   const rewardPeriodFinished = poolData.periodFinish.toNumber() < timestamp
   const { vesting } = poolData.rewardState
 
+  const rippleRef = useRef(null)
+  const buttonRef = useRef(null)
+
   const setDepositModalVisible = (depositVisible: boolean) => {
     setState((prev) => ({ ...prev, depositVisible }))
   }
@@ -324,6 +329,35 @@ export const Content = (props: IProps) => {
       token1.symbol
     } to ${(1 / ratio0).toFixed(toFixed)} ${token0.symbol} per ${token1.symbol}`
   }
+
+  const triggerRipple = () => {
+    const container = buttonRef.current
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const rect = container.getBoundingClientRect()
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    rippleRef.current.start(
+      {
+        clientX: rect.left + rect.width / 2,
+        clientY: rect.top + rect.height / 2,
+      },
+      // when center is true, the ripple doesn't travel to the border of the container
+      { center: false }
+    )
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+
+    setTimeout(() => rippleRef.current.stop({}), 320)
+  }
+
+  const _triggerRipple = () => {
+    setTimeout(() => {
+      if (rewardPeriodFinished) triggerRipple()
+    }, 500)
+  }
+
+  _triggerRipple()
 
   return (
     <div className={classes.root}>
@@ -545,6 +579,7 @@ export const Content = (props: IProps) => {
 
           {isManageable && (
             <Button
+              ref={buttonRef}
               className={classes.button}
               color="secondary"
               variant="contained"
@@ -556,6 +591,7 @@ export const Content = (props: IProps) => {
               }
             >
               REWARDS
+              <TouchRipple ref={rippleRef} center />
             </Button>
           )}
 
