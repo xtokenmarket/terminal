@@ -123,6 +123,7 @@ export const InputSection = (props: IProps) => {
           amount1: amount1Estimation,
         })
       }
+      resetLoading()
     } catch (error) {
       if (isMountedRef.current === true)
         updateState({
@@ -183,9 +184,6 @@ export const InputSection = (props: IProps) => {
             setLoadingStart={() =>
               setState((prev) => ({ ...prev, isAmount1Estimating: true }))
             }
-            setLoadingEnd={() =>
-              setState((prev) => ({ ...prev, isAmount1Estimating: true }))
-            }
           />
           <TokenBalanceInput
             value={depositState.amount1}
@@ -195,9 +193,6 @@ export const InputSection = (props: IProps) => {
             token={poolData.token1}
             loading={state.isAmount1Estimating}
             setLoadingStart={() =>
-              setState((prev) => ({ ...prev, isAmount0Estimating: true }))
-            }
-            setLoadingEnd={() =>
               setState((prev) => ({ ...prev, isAmount0Estimating: true }))
             }
           />

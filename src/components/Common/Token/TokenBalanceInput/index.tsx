@@ -97,7 +97,6 @@ interface IProps {
   isDisabled?: boolean
   loading?: boolean
   setLoadingStart?: () => void
-  setLoadingEnd?: () => void
 }
 
 export const TokenBalanceInput: React.FC<IProps> = ({
@@ -110,7 +109,6 @@ export const TokenBalanceInput: React.FC<IProps> = ({
   isDisabled = false,
   loading,
   setLoadingStart,
-  setLoadingEnd,
 }) => {
   const classes = useStyles()
   const commonClasses = useCommonStyles()
@@ -138,7 +136,6 @@ export const TokenBalanceInput: React.FC<IProps> = ({
           ethers.utils.parseUnits(value || '0', token.decimals),
           tokenBalance
         )
-        setLoadingEnd && setLoadingEnd()
       }
     }, 1000),
     []
