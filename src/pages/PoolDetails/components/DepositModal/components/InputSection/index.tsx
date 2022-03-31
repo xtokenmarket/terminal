@@ -11,7 +11,7 @@ import { CLRService } from 'services'
 import { ITerminalPool } from 'types'
 import { ZERO } from 'utils/number'
 import { OutputEstimation, OutputEstimationInfo } from '..'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import _ from 'lodash'
 
 const useStyles = makeStyles((theme) => ({
@@ -75,6 +75,19 @@ export const InputSection = (props: IProps) => {
   const { balance: balance0 } = useTokenBalance(poolData.token0.address)
   const { balance: balance1 } = useTokenBalance(poolData.token1.address)
 
+  const [state, setState] = useState({
+    isAmount0Estimating: false,
+    isAmount1Estimating: false,
+  })
+
+  const resetLoading = () => {
+    setState((prev) => ({
+      ...prev,
+      isAmount0Estimating: false,
+      isAmount1Estimating: false,
+    }))
+  }
+
   const loadEstimations = async (amount0: BigNumber, amount1: BigNumber) => {
     try {
       if (amount0.isZero() && amount1.isZero()) {
@@ -116,6 +129,7 @@ export const InputSection = (props: IProps) => {
           amount0Estimation: ZERO,
           amount1Estimation: ZERO,
         })
+      resetLoading()
     }
   }
 
@@ -165,6 +179,13 @@ export const InputSection = (props: IProps) => {
               handleAmountsChange(amount0, ZERO)
             }}
             token={poolData.token0}
+            loading={state.isAmount0Estimating}
+            setLoadingStart={() =>
+              setState((prev) => ({ ...prev, isAmount1Estimating: true }))
+            }
+            setLoadingEnd={() =>
+              setState((prev) => ({ ...prev, isAmount1Estimating: true }))
+            }
           />
           <TokenBalanceInput
             value={depositState.amount1}
@@ -172,9 +193,15 @@ export const InputSection = (props: IProps) => {
               handleAmountsChange(ZERO, amount1)
             }}
             token={poolData.token1}
+            loading={state.isAmount1Estimating}
+            setLoadingStart={() =>
+              setState((prev) => ({ ...prev, isAmount0Estimating: true }))
+            }
+            setLoadingEnd={() =>
+              setState((prev) => ({ ...prev, isAmount0Estimating: true }))
+            }
           />
         </div>
-
         {depositState.errorMessage.some((x) => x) && (
           <WarningInfo
             className={classes.warning}
