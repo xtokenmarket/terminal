@@ -9,7 +9,7 @@ import {
 import TouchRipple from '@material-ui/core/ButtonBase/TouchRipple'
 import { useConnectedWeb3Context } from 'contexts'
 import moment from 'moment'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { ITerminalPool } from 'types'
 import {
   formatBigNumber,
@@ -244,6 +244,16 @@ export const Content = (props: IProps) => {
   const rippleRef = useRef(null)
   const buttonRef = useRef(null)
 
+  useEffect(() => {
+    const _triggerRipple = () => {
+      setTimeout(() => {
+        if (rewardPeriodFinished && isManageable) triggerRipple()
+      }, 500)
+    }
+
+    _triggerRipple()
+  }, [])
+
   const setDepositModalVisible = (depositVisible: boolean) => {
     setState((prev) => ({ ...prev, depositVisible }))
   }
@@ -350,14 +360,6 @@ export const Content = (props: IProps) => {
 
     setTimeout(() => rippleRef.current.stop({}), 320)
   }
-
-  const _triggerRipple = () => {
-    setTimeout(() => {
-      if (rewardPeriodFinished && isManageable) triggerRipple()
-    }, 500)
-  }
-
-  _triggerRipple()
 
   return (
     <div className={classes.root}>
