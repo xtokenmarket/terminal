@@ -257,138 +257,141 @@ export const useTerminalPool = (
         collectableFees1: BigNumber.from(0),
       }
 
+      const nonfungiblePositionManagerAddress = getContractAddress(
+        'uniPositionManager',
+        readonlyProvider?.network.chainId
+      )
+
+      const nonfungiblePositionManagerContract = new Contract(
+        nonfungiblePositionManagerAddress,
+        Abi.UniswapV3Position,
+        provider
+      )
+
+      const tokenId = await clr.contract.tokenId()
+
       // Fetch events history, reward tokens and deposit amounts of user
       if (isPoolDetails && account) {
-        const nonfungiblePositionManagerAddress = getContractAddress(
-          'uniPositionManager',
-          readonlyProvider?.network.chainId
-        )
+        if (readonlyProvider?.network.chainId !== ChainId.Optimism) {
+          let from = 0
+          const to = 'latest'
+          if (readonlyProvider?.network.chainId === ChainId.Optimism) {
+            const blockNumber = await readonlyProvider?.getBlockNumber()
 
-        const nonfungiblePositionManagerContract = new Contract(
-          nonfungiblePositionManagerAddress,
-          Abi.UniswapV3Position,
-          provider
-        )
-
-        const tokenId = await clr.contract.tokenId()
-
-        let from = 0
-        const to = 'latest'
-        if (readonlyProvider?.network.chainId === ChainId.Optimism) {
-          const blockNumber = await readonlyProvider?.getBlockNumber()
-
-          if (blockNumber) {
-            from = blockNumber - 9500
-          }
-        }
-
-        const depositFilter = clr.contract.filters.Deposit(account)
-        const withdrawFilter = clr.contract.filters.Withdraw(account)
-        const rewardClaimedFilter = clr.contract.filters.RewardClaimed(account)
-        const initiatedRewardsFilter =
-          lmService.contract.filters.InitiatedRewardsProgram(poolAddress)
-        const vestedFilter = rewardEscrow.contract.filters.Vested(poolAddress)
-
-        const collectFilter =
-          nonfungiblePositionManagerContract.filters.Collect(tokenId)
-
-        const reinvestFilter = clr.contract.filters.Reinvest()
-
-        const [
-          depositHistory,
-          withdrawHistory,
-          rewardClaimedHistory,
-          initiatedRewardsHistory,
-          vestHistory,
-          collectHistory,
-          reinvestHistory,
-        ] = await Promise.all([
-          clr.contract.queryFilter(depositFilter, from, to),
-          clr.contract.queryFilter(withdrawFilter, from, to),
-          clr.contract.queryFilter(rewardClaimedFilter, from, to),
-          lmService.contract.queryFilter(initiatedRewardsFilter, from, to),
-          rewardEscrow.contract.queryFilter(vestedFilter, from, to),
-          nonfungiblePositionManagerContract.queryFilter(collectFilter),
-          clr.contract.queryFilter(reinvestFilter, from, to),
-        ])
-
-        const filterUserHistory = [...initiatedRewardsHistory, ...vestHistory]
-
-        const transactions = await Promise.all(
-          filterUserHistory.map((x) => x.getTransaction())
-        )
-
-        const userInitiatedRewardsVestHistory = filterUserHistory.filter(
-          (x, index) =>
-            transactions[index].from.toLowerCase() === account.toLowerCase()
-        )
-
-        // Filter reinvest history from collect history and user
-        const filterCollectHistory = collectHistory.filter((history) =>
-          reinvestHistory
-            .map((history) => history.transactionHash)
-            .includes(history.transactionHash)
-        )
-
-        const collectTransactions = await Promise.all(
-          filterCollectHistory.map((x) => x.getTransaction())
-        )
-
-        const userCollectHistory = filterCollectHistory.filter(
-          (x, index) =>
-            collectTransactions[index].from.toLowerCase() ===
-            account.toLowerCase()
-        )
-
-        const allHistory = [
-          ...depositHistory,
-          ...withdrawHistory,
-          ...rewardClaimedHistory,
-          ...userInitiatedRewardsVestHistory,
-          ...userCollectHistory,
-        ]
-
-        const blockInfos = await Promise.all(
-          allHistory.map((x) => x.getBlock())
-        )
-
-        const eventHistory = allHistory.map((x, index) => {
-          const timestamp = blockInfos[index].timestamp
-          // TODO: Remove, unnecessary parsing of timestamp
-          // const time = moment.unix(timestamp).format('LLLL')
-
-          const eventName: {
-            [key: string]: string
-          } = {
-            RewardClaimed: 'Claim',
-            Deposit: 'Deposit',
-            Withdraw: 'Withdraw',
-            InitiatedRewardsProgram: 'Initiate Rewards',
-            Vested: 'Vest',
-            Collect: 'Reinvest',
+            if (blockNumber) {
+              from = blockNumber - 9500
+            }
           }
 
-          const token = pool.rewardTokens.find(
-            (token: IToken) => token.address === x.args?.token
+          const depositFilter = clr.contract.filters.Deposit(account)
+          const withdrawFilter = clr.contract.filters.Withdraw(account)
+          const rewardClaimedFilter =
+            clr.contract.filters.RewardClaimed(account)
+          const initiatedRewardsFilter =
+            lmService.contract.filters.InitiatedRewardsProgram(poolAddress)
+          const vestedFilter = rewardEscrow.contract.filters.Vested(poolAddress)
+
+          const collectFilter =
+            nonfungiblePositionManagerContract.filters.Collect(tokenId)
+
+          const reinvestFilter = clr.contract.filters.Reinvest()
+
+          const [
+            depositHistory,
+            withdrawHistory,
+            rewardClaimedHistory,
+            initiatedRewardsHistory,
+            vestHistory,
+            collectHistory,
+            reinvestHistory,
+          ] = await Promise.all([
+            clr.contract.queryFilter(depositFilter, from, to),
+            clr.contract.queryFilter(withdrawFilter, from, to),
+            clr.contract.queryFilter(rewardClaimedFilter, from, to),
+            lmService.contract.queryFilter(initiatedRewardsFilter, from, to),
+            rewardEscrow.contract.queryFilter(vestedFilter, from, to),
+            nonfungiblePositionManagerContract.queryFilter(collectFilter),
+            clr.contract.queryFilter(reinvestFilter, from, to),
+          ])
+
+          const filterUserHistory = [...initiatedRewardsHistory, ...vestHistory]
+
+          const transactions = await Promise.all(
+            filterUserHistory.map((x) => x.getTransaction())
           )
 
-          return {
-            action: x.event ? eventName[x.event] : '',
-            amount0: x.args?.amount0 || BigNumber.from(0),
-            amount1: x.args?.amount1 || BigNumber.from(0),
-            // time,
-            tx: x.transactionHash,
-            rewardAmount: x.args?.rewardAmount || BigNumber.from(0),
-            symbol: token ? token.symbol : '',
-            decimals: token ? Number(token.decimals) : 0,
-            value: x.args?.value,
-            timestamp,
-            totalRewardAmounts: x.args?.totalRewardAmounts || [],
-            rewardTokens: pool.rewardTokens,
-          }
-        })
+          const userInitiatedRewardsVestHistory = filterUserHistory.filter(
+            (x, index) =>
+              transactions[index].from.toLowerCase() === account.toLowerCase()
+          )
 
-        history = _.orderBy(eventHistory, 'timestamp', 'desc')
+          // Filter reinvest history from collect history and user
+          const filterCollectHistory = collectHistory.filter((history) =>
+            reinvestHistory
+              .map((history) => history.transactionHash)
+              .includes(history.transactionHash)
+          )
+
+          const collectTransactions = await Promise.all(
+            filterCollectHistory.map((x) => x.getTransaction())
+          )
+
+          const userCollectHistory = filterCollectHistory.filter(
+            (x, index) =>
+              collectTransactions[index].from.toLowerCase() ===
+              account.toLowerCase()
+          )
+
+          const allHistory = [
+            ...depositHistory,
+            ...withdrawHistory,
+            ...rewardClaimedHistory,
+            ...userInitiatedRewardsVestHistory,
+            ...userCollectHistory,
+          ]
+
+          const blockInfos = await Promise.all(
+            allHistory.map((x) => x.getBlock())
+          )
+
+          const eventHistory = allHistory.map((x, index) => {
+            const timestamp = blockInfos[index].timestamp
+            // TODO: Remove, unnecessary parsing of timestamp
+            // const time = moment.unix(timestamp).format('LLLL')
+
+            const eventName: {
+              [key: string]: string
+            } = {
+              RewardClaimed: 'Claim',
+              Deposit: 'Deposit',
+              Withdraw: 'Withdraw',
+              InitiatedRewardsProgram: 'Initiate Rewards',
+              Vested: 'Vest',
+              Collect: 'Reinvest',
+            }
+
+            const token = pool.rewardTokens.find(
+              (token: IToken) => token.address === x.args?.token
+            )
+
+            return {
+              action: x.event ? eventName[x.event] : '',
+              amount0: x.args?.amount0 || BigNumber.from(0),
+              amount1: x.args?.amount1 || BigNumber.from(0),
+              // time,
+              tx: x.transactionHash,
+              rewardAmount: x.args?.rewardAmount || BigNumber.from(0),
+              symbol: token ? token.symbol : '',
+              decimals: token ? Number(token.decimals) : 0,
+              value: x.args?.value,
+              timestamp,
+              totalRewardAmounts: x.args?.totalRewardAmounts || [],
+              rewardTokens: pool.rewardTokens,
+            }
+          })
+
+          history = _.orderBy(eventHistory, 'timestamp', 'desc')
+        }
 
         earnedTokens = await Promise.all(
           pool.rewardTokens.map(async (token: IToken) => {
