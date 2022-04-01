@@ -75,25 +75,6 @@ export const useTerminalPool = (
     }
   }
 
-  const getTokenPercent = (
-    balance: BigNumber,
-    token0Balance: BigNumber,
-    token1Balance: BigNumber,
-    token0Decimals: number,
-    token1Decimals: number,
-    tokenDecimals: number
-  ) => {
-    const divisor = token0Balance.add(token1Balance)
-    if (divisor.isZero()) return ''
-
-    const balanceNumber = getFormatNumber(balance, tokenDecimals)
-    const token0Number = getFormatNumber(token0Balance, token0Decimals)
-    const token1Number = getFormatNumber(token1Balance, token1Decimals)
-
-    const percent = (balanceNumber / (token0Number + token1Number)) * 100
-    return percent.toString()
-  }
-
   const loadInfo = async (isReloadPool = false) => {
     if (!pool && !poolAddress) return
 
@@ -147,36 +128,28 @@ export const useTerminalPool = (
         pool.token0.price = rates ? rates[0].toString() : '0'
         pool.token1.price = rates ? rates[1].toString() : '0'
 
-        const token0Percent = getTokenPercent(
-          token0Balance,
-          token0Balance,
-          token1Balance,
-          token0.decimals,
-          token1.decimals,
-          token0.decimals
-        )
-        const token1Percent = getTokenPercent(
-          token1Balance,
-          token0Balance,
-          token1Balance,
-          token0.decimals,
-          token1.decimals,
-          token1.decimals
-        )
+        // calculateTVL
+        // ref: https://github.com/xtokenmarket/lm-terminal-api/blob/37fdac0dfbc97aa0215e2270add11f234567b8cc/scripts/helpers.js#L14
+        const bn = (amount: string) => {
+          return ethers.BigNumber.from(amount)
+        }
 
-        const token0tvl = token0Balance
-          .mul(parseEther(pool.token0.price))
-          .div(ONE_ETHER)
-        const token1tvl = token1Balance
-          .mul(parseEther(pool.token1.price))
-          .div(ONE_ETHER)
+        const token0Price = bn((pool.token0.price * 1e8).toFixed(0))
+        const token1Price = bn((pool.token1.price * 1e8).toFixed(0))
+        const t0Value = token0Balance.mul(token0Price).div(1e8)
+        const t1Value = token1Balance.mul(token1Price).div(1e8)
+        tvl = t0Value.add(t1Value).toString()
 
-        token0.percent = token0Percent
-        token1.percent = token1Percent
+        const t0Percentage =
+          Number(tvl) === 0 ? 0 : t0Value.mul(1e8).div(tvl).toNumber() / 1e6
+        const t1Percentage =
+          Number(tvl) === 0 ? 0 : t1Value.mul(1e8).div(tvl).toNumber() / 1e6
 
-        token0.tvl = formatBigNumber(token0tvl, token0.decimals)
-        token1.tvl = formatBigNumber(token1tvl, token1.decimals)
-        tvl = formatBigNumber(token0tvl.add(token1tvl), token0.decimals)
+        token0.tvl = formatBigNumber(t0Value, token0.decimals)
+        token1.tvl = formatBigNumber(t1Value, token1.decimals)
+        token0.percent = t0Percentage
+        token1.percent = t1Percentage
+        tvl = formatBigNumber(BigNumber.from(tvl), 18)
       } else {
         const defaultTokenLogo = '/assets/tokens/unknown.png'
 
@@ -201,7 +174,7 @@ export const useTerminalPool = (
 
         token0.tvl = formatBigNumber(token0.tvl, token0.decimals)
         token1.tvl = formatBigNumber(token1.tvl, token1.decimals)
-        tvl = formatBigNumber(BigNumber.from(pool.tvl), 18)
+        tvl = formatBigNumber(pool.tvl, 18)
       }
       // console.timeEnd(`loadInfo token details ${poolAddress}`)
 
