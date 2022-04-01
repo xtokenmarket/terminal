@@ -154,9 +154,9 @@ export const TokenBalanceInput: React.FC<IProps> = ({
   const onInputBalance = (e: ChangeEvent<HTMLInputElement>) => {
     const decimals = e.target.value.includes('.')
       ? e.target.value.split('.')[1]
-      : 0
+      : ''
 
-    if (loading || Number(decimals) > token.decimals) return
+    if (loading || Number(decimals.length) > token.decimals) return
     setLoadingStart && setLoadingStart()
     setAmount(e.target.value)
     onChangeDebounced(e.target.value, balance)

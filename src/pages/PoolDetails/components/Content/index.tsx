@@ -245,13 +245,18 @@ export const Content = (props: IProps) => {
   const buttonRef = useRef(null)
 
   useEffect(() => {
-    const _triggerRipple = () => {
-      setTimeout(() => {
-        if (rewardPeriodFinished && isManageable) triggerRipple()
-      }, 500)
+    const timer = (ms: number) => new Promise((res) => setTimeout(res, ms))
+
+    const slowTrigger = async () => {
+      for (let i = 0; i < 3; i++) {
+        triggerRipple()
+        await timer(700)
+      }
     }
 
-    _triggerRipple()
+    if (rewardPeriodFinished && isManageable) {
+      slowTrigger()
+    }
   }, [])
 
   const setDepositModalVisible = (depositVisible: boolean) => {
