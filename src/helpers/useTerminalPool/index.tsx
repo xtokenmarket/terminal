@@ -58,10 +58,6 @@ export const useTerminalPool = (
     readonlyProvider = getNetworkProvider(network)
   }
 
-  const getFormatNumber = (_balance: BigNumber, _tokenDecimals: number) => {
-    return Number(formatBigNumber(_balance, _tokenDecimals)) * 10000
-  }
-
   const getTokenDetails = async (addr: string) => {
     try {
       return getTokenFromAddress(addr, readonlyProvider?.network.chainId)
@@ -73,25 +69,6 @@ export const useTerminalPool = (
       )
       return erc20.getDetails()
     }
-  }
-
-  const getTokenPercent = (
-    balance: BigNumber,
-    token0Balance: BigNumber,
-    token1Balance: BigNumber,
-    token0Decimals: number,
-    token1Decimals: number,
-    tokenDecimals: number
-  ) => {
-    const divisor = token0Balance.add(token1Balance)
-    if (divisor.isZero()) return ''
-
-    const balanceNumber = getFormatNumber(balance, tokenDecimals)
-    const token0Number = getFormatNumber(token0Balance, token0Decimals)
-    const token1Number = getFormatNumber(token1Balance, token1Decimals)
-
-    const percent = (balanceNumber / (token0Number + token1Number)) * 100
-    return percent.toString()
   }
 
   const loadInfo = async (isReloadPool = false) => {
@@ -147,23 +124,6 @@ export const useTerminalPool = (
         pool.token0.price = rates ? rates[0].toString() : '0'
         pool.token1.price = rates ? rates[1].toString() : '0'
 
-        const token0Percent = getTokenPercent(
-          token0Balance,
-          token0Balance,
-          token1Balance,
-          token0.decimals,
-          token1.decimals,
-          token0.decimals
-        )
-        const token1Percent = getTokenPercent(
-          token1Balance,
-          token0Balance,
-          token1Balance,
-          token0.decimals,
-          token1.decimals,
-          token1.decimals
-        )
-
         const token0tvl = token0Balance
           .mul(parseEther(pool.token0.price))
           .div(ONE_ETHER)
@@ -171,16 +131,24 @@ export const useTerminalPool = (
           .mul(parseEther(pool.token1.price))
           .div(ONE_ETHER)
 
-        token0.percent = token0Percent
-        token1.percent = token1Percent
-
         token0.tvl = formatBigNumber(token0tvl, token0.decimals)
         token1.tvl = formatBigNumber(token1tvl, token1.decimals)
-        tvl = formatBigNumber(token0tvl.add(token1tvl), token0.decimals)
+
+        tvl = (Number(token0.tvl) + Number(token1.tvl)).toString()
+
+        const token0Percent =
+          Number(tvl) === 0 ? 0 : (Number(token0.tvl) / Number(tvl)) * 100
+        const token1Percent =
+          Number(tvl) === 0 ? 0 : (Number(token1.tvl) / Number(tvl)) * 100
+
+        token0.percent = token0Percent
+        token1.percent = token1Percent
       } else {
         const defaultTokenLogo = '/assets/tokens/unknown.png'
 
         // Parse API data
+        pool.tokenId = BigNumber.from(pool.tokenId)
+
         token0.image = token0.image || defaultTokenLogo
         token1.image = token1.image || defaultTokenLogo
         stakedToken.image = stakedToken.image || defaultTokenLogo
@@ -201,7 +169,7 @@ export const useTerminalPool = (
 
         token0.tvl = formatBigNumber(token0.tvl, token0.decimals)
         token1.tvl = formatBigNumber(token1.tvl, token1.decimals)
-        tvl = formatBigNumber(BigNumber.from(pool.tvl), 18)
+        tvl = formatBigNumber(pool.tvl, 18)
       }
       // console.timeEnd(`loadInfo token details ${poolAddress}`)
 
@@ -256,21 +224,19 @@ export const useTerminalPool = (
         token0Tvl: '0',
       }
 
-      const nonfungiblePositionManagerAddress = getContractAddress(
-        'uniPositionManager',
-        readonlyProvider?.network.chainId
-      )
-
-      const nonfungiblePositionManagerContract = new Contract(
-        nonfungiblePositionManagerAddress,
-        Abi.UniswapV3Position,
-        provider
-      )
-
-      const tokenId = await clr.contract.tokenId()
-
       // Fetch events history, reward tokens and deposit amounts of user
       if (isPoolDetails && account) {
+        const nonfungiblePositionManagerAddress = getContractAddress(
+          'uniPositionManager',
+          readonlyProvider?.network.chainId
+        )
+
+        const nonfungiblePositionManagerContract = new Contract(
+          nonfungiblePositionManagerAddress,
+          Abi.UniswapV3Position,
+          provider
+        )
+
         if (readonlyProvider?.network.chainId !== ChainId.Optimism) {
           const from = 0
           const to = 'latest'
@@ -289,10 +255,8 @@ export const useTerminalPool = (
           const initiatedRewardsFilter =
             lmService.contract.filters.InitiatedRewardsProgram(poolAddress)
           const vestedFilter = rewardEscrow.contract.filters.Vested(poolAddress)
-
           const collectFilter =
-            nonfungiblePositionManagerContract.filters.Collect(tokenId)
-
+            nonfungiblePositionManagerContract.filters.Collect(pool.tokenId)
           const reinvestFilter = clr.contract.filters.Reinvest()
 
           const [
@@ -487,7 +451,7 @@ export const useTerminalPool = (
 
           const feesInfo =
             await nonfungiblePositionManagerContract.callStatic.collect({
-              tokenId,
+              tokenId: pool.tokenId,
               recipient: account, // some tokens might fail if transferred to address(0)
               amount0Max: MAX_UINT128,
               amount1Max: MAX_UINT128,
