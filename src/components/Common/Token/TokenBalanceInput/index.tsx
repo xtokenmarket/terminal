@@ -1,5 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { makeStyles, TextField, Typography } from '@material-ui/core'
+import {
+  makeStyles,
+  TextField,
+  Typography,
+  CircularProgress,
+} from '@material-ui/core'
 import clsx from 'clsx'
 import { TokenIcon } from 'components'
 import { ethers } from 'ethers'
@@ -73,6 +78,11 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 12,
     marginTop: 8,
   },
+  loading: {
+    color: theme.colors.white,
+    position: 'absolute',
+    top: '-4px',
+  },
 }))
 
 type Variant = 'normal' | 'rewardToken'
@@ -85,6 +95,8 @@ interface IProps {
   value: BigNumber
   onChange: (_: BigNumber, balance: BigNumber) => void
   isDisabled?: boolean
+  loading?: boolean
+  setLoadingStart?: () => void
 }
 
 export const TokenBalanceInput: React.FC<IProps> = ({
@@ -95,6 +107,8 @@ export const TokenBalanceInput: React.FC<IProps> = ({
   rewardFeePercent,
   className,
   isDisabled = false,
+  loading,
+  setLoadingStart,
 }) => {
   const classes = useStyles()
   const commonClasses = useCommonStyles()
@@ -138,6 +152,12 @@ export const TokenBalanceInput: React.FC<IProps> = ({
   }
 
   const onInputBalance = (e: ChangeEvent<HTMLInputElement>) => {
+    const decimals = e.target.value.includes('.')
+      ? e.target.value.split('.')[1]
+      : ''
+
+    if (loading || decimals.length > token.decimals) return
+    setLoadingStart && setLoadingStart()
     setAmount(e.target.value)
     onChangeDebounced(e.target.value, balance)
   }
@@ -165,7 +185,7 @@ export const TokenBalanceInput: React.FC<IProps> = ({
           },
         }}
         className={classes.input}
-        value={amount}
+        value={loading ? '' : amount}
         onChange={onInputBalance}
         variant="outlined"
         fullWidth
@@ -174,6 +194,15 @@ export const TokenBalanceInput: React.FC<IProps> = ({
         disabled={isDisabled}
       />
       <div className={classes.token}>
+        {loading && (
+          <CircularProgress
+            className={classes.loading}
+            color="primary"
+            size={40}
+            thickness={4}
+          />
+        )}
+
         <TokenIcon token={token} className={classes.tokenIcon} />
         <span className={classes.tokenLabel}>{token.symbol}</span>
       </div>

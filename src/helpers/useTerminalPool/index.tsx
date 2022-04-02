@@ -25,7 +25,7 @@ import {
 } from 'utils'
 import { ERewardStep, Network } from 'utils/enums'
 import { getIdFromNetwork } from 'utils/network'
-import { formatDuration, ONE_ETHER } from 'utils/number'
+import { formatDuration, ONE_ETHER, ZERO } from 'utils/number'
 import _ from 'lodash'
 
 import {
@@ -244,16 +244,16 @@ export const useTerminalPool = (
       let earnedTokens = []
       let vestingTokens = []
       let poolShare = '0'
-      let _totalSupply = BigNumber.from(0)
+      let _totalSupply = ZERO
 
       const user = {
-        token0Deposit: BigNumber.from(0),
-        token1Deposit: BigNumber.from(0),
-        token0Tvl: '0',
+        collectableFees1: ZERO,
+        collectableFees0: ZERO,
+        stakedTokenBalance: ZERO,
+        token1Deposit: ZERO,
         token1Tvl: '0',
-        stakedTokenBalance: BigNumber.from(0),
-        collectableFees0: BigNumber.from(0),
-        collectableFees1: BigNumber.from(0),
+        token0Deposit: ZERO,
+        token0Tvl: '0',
       }
 
       const nonfungiblePositionManagerAddress = getContractAddress(
@@ -375,11 +375,11 @@ export const useTerminalPool = (
 
             return {
               action: x.event ? eventName[x.event] : '',
-              amount0: x.args?.amount0 || BigNumber.from(0),
-              amount1: x.args?.amount1 || BigNumber.from(0),
+              amount0: x.args?.amount0 || ZERO,
+              amount1: x.args?.amount1 || ZERO,
               // time,
               tx: x.transactionHash,
-              rewardAmount: x.args?.rewardAmount || BigNumber.from(0),
+              rewardAmount: x.args?.rewardAmount || ZERO,
               symbol: token ? token.symbol : '',
               decimals: token ? Number(token.decimals) : 0,
               value: x.args?.value,
