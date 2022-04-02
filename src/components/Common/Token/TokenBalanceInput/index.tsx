@@ -156,7 +156,7 @@ export const TokenBalanceInput: React.FC<IProps> = ({
       ? e.target.value.split('.')[1]
       : ''
 
-    if (loading || Number(decimals.length) > token.decimals) return
+    if (loading || decimals.length > token.decimals) return
     setLoadingStart && setLoadingStart()
     setAmount(e.target.value)
     onChangeDebounced(e.target.value, balance)
@@ -185,7 +185,7 @@ export const TokenBalanceInput: React.FC<IProps> = ({
           },
         }}
         className={classes.input}
-        value={loading ? BigNumber.from(0) : amount}
+        value={loading ? '' : amount}
         onChange={onInputBalance}
         variant="outlined"
         fullWidth
