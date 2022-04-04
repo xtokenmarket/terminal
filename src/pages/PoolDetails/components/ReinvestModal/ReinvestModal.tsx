@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import {
-  Modal,
   makeStyles,
   Typography,
   IconButton,
@@ -16,6 +15,7 @@ import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { SuccessSection } from './SuccessSection'
 import { CollectableFees } from './CollectableFees'
 import { BigNumber } from 'ethers'
+import { Modal } from 'components/Common/Modal'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -157,15 +157,10 @@ export const ReinvestModal: React.FC<IProps> = ({
   return (
     <Modal
       open={open}
-      onClose={(e, reason) => {
-        // TODO: Migrate `Modal` to include this behaviour handling using props
-        // Ref: https://robertmarshall.dev/blog/disablebackdropclick-of-forwardrefdialog-is-deprecated-solution-and-example/
-        if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
-          return
-        }
-        _onClose()
-      }}
+      onClose={_onClose}
       className={classes.modal}
+      disableBackdropClick
+      disableEscapeKeyDown
     >
       {state.txState === TxState.Complete ? (
         <SuccessSection
