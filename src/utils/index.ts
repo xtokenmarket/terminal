@@ -1,3 +1,4 @@
+import { INSUFFICIENT_FUNDS_ERROR } from 'config/constants'
 import { BigNumber, utils } from 'ethers'
 import moment from 'moment'
 
@@ -193,8 +194,7 @@ export const getMetamaskError = (error: any) => {
     const isInsufficientFundsError =
       error.error.message.indexOf('insufficient funds') !== -1
     if (isInsufficientFundsError) {
-      // TODO: Move to error constants
-      return 'Insufficient funds to process the transaction'
+      return INSUFFICIENT_FUNDS_ERROR
     }
   }
   return null
