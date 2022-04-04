@@ -25,6 +25,15 @@ const useStyles = makeStyles((theme) => ({
     margin: 20,
   },
   button: { height: 48, margin: 20, width: 180 },
+  connect: {
+    marginTop: 100,
+    background: theme.colors.primary,
+    borderRadius: 4,
+    height: 40,
+    [theme.breakpoints.down(theme.custom.xsss)]: {
+      height: 36,
+    },
+  },
 }))
 
 const MyPools = () => {
@@ -33,7 +42,7 @@ const MyPools = () => {
   const classes = useStyles()
   const isLoading = loading && pools.length === 0
 
-  const { account } = useConnectedWeb3Context()
+  const { account, setWalletConnectModalOpened } = useConnectedWeb3Context()
   const isConnected = !!account
 
   const { chainId } = useNetworkContext()
@@ -84,20 +93,40 @@ const MyPools = () => {
     </div>
   )
 
-  // TODO: Display `Connect Wallet` button, if not logged in
+  const ConnectButton = () => {
+    return (
+      <div className={classes.root}>
+        <Button
+          className={classes.connect}
+          color="primary"
+          variant="contained"
+          onClick={() => setWalletConnectModalOpened(true)}
+        >
+          CONNECT WALLET
+        </Button>
+      </div>
+    )
+  }
+
   return (
     <div>
       {isProdTestNet ? (
         <NoTestNetSupport />
       ) : (
         <>
-          <HeaderSection />
-          {isLoading ? (
-            <SimpleLoader />
-          ) : pools.length === 0 ? (
-            <NoPools />
+          {isConnected ? (
+            <>
+              <HeaderSection />
+              {isLoading ? (
+                <SimpleLoader />
+              ) : pools.length === 0 ? (
+                <NoPools />
+              ) : (
+                <PoolTable pools={pools} />
+              )}
+            </>
           ) : (
-            <PoolTable pools={pools} />
+            <ConnectButton />
           )}
         </>
       )}
