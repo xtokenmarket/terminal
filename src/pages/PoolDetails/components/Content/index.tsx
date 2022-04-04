@@ -347,6 +347,7 @@ export const Content = (props: IProps) => {
 
   const triggerRipple = () => {
     const container = buttonRef.current
+    if (!container) return
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const rect = container.getBoundingClientRect()
