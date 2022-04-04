@@ -319,8 +319,6 @@ export const useTerminalPool = (
 
           const eventHistory = allHistory.map((x, index) => {
             const timestamp = blockInfos[index].timestamp
-            // TODO: Remove, unnecessary parsing of timestamp
-            // const time = moment.unix(timestamp).format('LLLL')
 
             const eventName: {
               [key: string]: string
@@ -341,7 +339,6 @@ export const useTerminalPool = (
               action: x.event ? eventName[x.event] : '',
               amount0: x.args?.amount0 || ZERO,
               amount1: x.args?.amount1 || ZERO,
-              // time,
               tx: x.transactionHash,
               rewardAmount: x.args?.rewardAmount || ZERO,
               symbol: token ? token.symbol : '',
