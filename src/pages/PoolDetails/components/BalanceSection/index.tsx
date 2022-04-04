@@ -5,6 +5,7 @@ import { useConnectedWeb3Context } from 'contexts'
 import { getEtherscanUri } from 'config/networks'
 import { BigNumber } from 'ethers'
 import { IToken } from 'types'
+import { ETHER_DECIMAL } from 'config/constants'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -92,7 +93,7 @@ export const BalanceSection = (props: IProps) => {
                 isDeposit
                   ? deposit || BigNumber.from(0)
                   : token.balance || BigNumber.from(0),
-                token.decimals
+                ETHER_DECIMAL // `getStakedTokenBalance` returns the amounts in 18 decimals
               )
             )}{' '}
             {token.symbol}{' '}
