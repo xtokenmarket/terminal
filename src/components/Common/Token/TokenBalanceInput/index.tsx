@@ -93,7 +93,7 @@ interface IProps {
   rewardFeePercent?: number
   token: IToken
   value: BigNumber
-  onChange: (_: BigNumber, balance: BigNumber) => void
+  onChange: (_: BigNumber, balance: BigNumber, token: IToken) => void
   isDisabled?: boolean
   loading?: boolean
   setLoadingStart?: () => void
@@ -134,7 +134,8 @@ export const TokenBalanceInput: React.FC<IProps> = ({
       if (!isNaN(Number(value))) {
         onChange(
           ethers.utils.parseUnits(value || '0', token.decimals),
-          tokenBalance
+          tokenBalance,
+          token
         )
       }
     }, 1000),
@@ -164,7 +165,7 @@ export const TokenBalanceInput: React.FC<IProps> = ({
 
   const onClickAvailable = () => {
     if (balance.isZero()) return
-    onChange(balance, balance)
+    onChange(balance, balance, token)
   }
 
   return (

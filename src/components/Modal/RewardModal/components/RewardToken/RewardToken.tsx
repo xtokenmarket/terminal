@@ -27,7 +27,11 @@ interface IProps {
   balance?: BigNumber
   rewardFeePercent: number
   onSelectToken: (token: IToken) => void
-  onChangeAmount: (amount: BigNumber, balance: BigNumber) => void
+  onChangeAmount: (
+    amount: BigNumber,
+    balance: BigNumber,
+    token?: IToken
+  ) => void
   onRemove?: () => void
 }
 
