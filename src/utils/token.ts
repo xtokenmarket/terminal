@@ -1,10 +1,11 @@
 import Abi from 'abis'
+import { MulticallService } from 'services'
 import { ChainId, COINGECKO_CHAIN_IDS } from 'config/constants'
-import { Contract } from 'ethers'
 import { isAddress } from 'ethers/lib/utils'
 import { IToken } from 'types'
 import { getTokenLogo } from './coingecko'
 import { isContract } from './tools'
+import { Web3Provider } from '@ethersproject/providers'
 
 export const getSortedToken = (tokenA: string, tokenB: string) => {
   const tA = tokenA.toLowerCase()
@@ -14,9 +15,10 @@ export const getSortedToken = (tokenA: string, tokenB: string) => {
 }
 
 export async function fetchUnknownToken(
-  provider: any,
+  provider: Web3Provider | undefined,
   chainId: ChainId,
-  address: string
+  address: string,
+  multicall: MulticallService
 ): Promise<IToken | false> {
   if (!isAddress(address)) return false
 
@@ -24,12 +26,17 @@ export async function fetchUnknownToken(
   if (!isTokenContract) return false
 
   try {
-    const contract = new Contract(address, Abi.ERC20, provider)
-    // TODO: Add multicall
-    const name = await contract.name()
-    const symbol = await contract.symbol()
-    const decimals = await contract.decimals()
-    const logo = await getTokenLogo(address, COINGECKO_CHAIN_IDS[chainId])
+    const calls = ['name', 'symbol', 'decimals'].map((method) => ({
+      name: method,
+      address: address,
+      params: [],
+    }))
+    const [[[name], [symbol], [decimals]], logo] = await Promise.all([
+      multicall.multicallv2(Abi.ERC20, calls, {
+        requireSuccess: false,
+      }),
+      getTokenLogo(address, COINGECKO_CHAIN_IDS[chainId]),
+    ])
     const image = logo ?? '/assets/tokens/unknown.png'
     const unknownToken: IToken = {
       name,

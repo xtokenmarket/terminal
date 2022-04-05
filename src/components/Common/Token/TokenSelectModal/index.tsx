@@ -21,6 +21,7 @@ import { filterTokens } from 'utils/filter'
 import { useConnectedWeb3Context } from 'contexts'
 import { fetchUnknownToken } from 'utils/token'
 import { useNetworkContext } from 'contexts/networkContext'
+import { useServices } from 'helpers'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -104,6 +105,7 @@ export const TokenSelectModal: React.FC<IProps> = ({
   const cl = useStyles()
   const { library: provider } = useConnectedWeb3Context()
   const { chainId } = useNetworkContext()
+  const { multicall } = useServices()
 
   const [searchQuery, setSearchQuery] = useState('')
   const onSearchQueryChange = useCallback((e) => {
@@ -121,7 +123,8 @@ export const TokenSelectModal: React.FC<IProps> = ({
       const unknownToken = await fetchUnknownToken(
         provider,
         chainId,
-        debouncedQuery
+        debouncedQuery,
+        multicall
       )
       if (unknownToken) {
         setTokensList([unknownToken])
