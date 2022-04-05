@@ -31,14 +31,12 @@ export async function fetchUnknownToken(
       address: address,
       params: [],
     }))
-    const [[name], [symbol], [decimals]] = await multicall.multicallv2(
-      Abi.ERC20,
-      calls,
-      {
+    const [[[name], [symbol], [decimals]], logo] = await Promise.all([
+      multicall.multicallv2(Abi.ERC20, calls, {
         requireSuccess: false,
-      }
-    )
-    const logo = await getTokenLogo(address, COINGECKO_CHAIN_IDS[chainId])
+      }),
+      getTokenLogo(address, COINGECKO_CHAIN_IDS[chainId]),
+    ])
     const image = logo ?? '/assets/tokens/unknown.png'
     const unknownToken: IToken = {
       name,
