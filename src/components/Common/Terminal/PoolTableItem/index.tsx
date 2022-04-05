@@ -73,13 +73,6 @@ const useStyles = makeStyles((theme) => ({
   },
   allocation: {
     display: 'flex',
-    color: theme.colors.white,
-    fontWeight: 700,
-    '& span': {
-      fontWeight: 400,
-      color: theme.colors.primary100,
-      fontSize: 14,
-    },
   },
   label: {
     color: theme.colors.white,
@@ -102,6 +95,13 @@ const useStyles = makeStyles((theme) => ({
   allocationItem: {
     display: 'flex',
     flexDirection: 'column',
+    color: theme.colors.white,
+    fontWeight: 700,
+    '& span': {
+      fontWeight: 400,
+      color: theme.colors.primary100,
+      fontSize: 14,
+    },
   },
 }))
 
