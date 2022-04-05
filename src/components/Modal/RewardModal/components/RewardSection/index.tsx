@@ -72,6 +72,8 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
     marginTop: 5,
     marginRight: 20,
+    width: 24,
+    height: 24,
   },
 }))
 
@@ -248,13 +250,19 @@ export const RewardSection = (props: IProps) => {
     }
   }
 
+  const isHideBackButton = !state.initing && !state.approving[0]
+
   return (
     <div className={classes.root}>
       <div className={classes.header}>
-        <ArrowBackIosIcon
-          className={classes.arrowBackIosStyle}
-          onClick={goBack}
-        />
+        {isHideBackButton ? (
+          <ArrowBackIosIcon
+            className={classes.arrowBackIosStyle}
+            onClick={goBack}
+          />
+        ) : (
+          <div className={classes.arrowBackIosStyle} />
+        )}
         <div>
           <Typography className={classes.title}>
             {isCreatePool
@@ -268,7 +276,7 @@ export const RewardSection = (props: IProps) => {
               : ''}
           </Typography>
         </div>
-        {!state.initing && !state.approving[0] && (
+        {isHideBackButton && (
           <IconButton className={classes.closeButton} onClick={onClose}>
             <CloseOutlinedIcon />
           </IconButton>

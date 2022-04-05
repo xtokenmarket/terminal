@@ -61,6 +61,8 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
     marginTop: 5,
     marginRight: 20,
+    width: 24,
+    height: 24,
   },
   closeButton: {
     padding: 0,
@@ -174,10 +176,14 @@ export const WithdrawSection = (props: IProps) => {
   return (
     <div className={classes.root}>
       <div className={classes.header}>
-        <ArrowBackIosIcon
-          className={classes.arrowBackIosStyle}
-          onClick={goBack}
-        />
+        {!state.withdrawing ? (
+          <ArrowBackIosIcon
+            className={classes.arrowBackIosStyle}
+            onClick={goBack}
+          />
+        ) : (
+          <div className={classes.arrowBackIosStyle} />
+        )}
         <div>
           <Typography className={classes.title}>Withdraw Liquidity</Typography>
           <Typography className={classes.description}>
