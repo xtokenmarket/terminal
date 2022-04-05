@@ -6,7 +6,7 @@ import { ZERO } from 'utils/number'
 import { RewardToken } from '.'
 import { IRewardState } from '../..'
 import { useServices } from 'helpers'
-import { formatEther } from 'ethers/lib/utils'
+import { formatEther, formatUnits } from 'ethers/lib/utils'
 import { parseFee } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
@@ -63,11 +63,17 @@ export const RewardTokens: React.FC<IProps> = ({
   const onChangeAmount = (
     amount: BigNumber,
     userBalance: BigNumber,
-    i: number
+    i: number,
+    token?: IToken
   ) => {
-    // TODO: Parse decimal units based on selected `token`
-    const numAmount = Number(formatEther(amount))
-    const numBalance = Number(formatEther(userBalance))
+    const numAmount = Number(
+      token ? formatUnits(amount, token.decimals) : formatEther(amount)
+    )
+    const numBalance = Number(
+      token
+        ? formatUnits(userBalance, token.decimals)
+        : formatEther(userBalance)
+    )
     const exceedsBalance = numBalance < (1 + rewardFeePercent) * numAmount
     const isZero = amount.isZero()
     const newErrors = errors
@@ -125,7 +131,7 @@ export const RewardTokens: React.FC<IProps> = ({
         rewardFeePercent={rewardFeePercent}
         balance={ZERO}
         onSelectToken={(token) => onSelectToken(token, 0)}
-        onChangeAmount={(amount, balance) => onChangeAmount(amount, balance, 0)}
+        onChangeAmount={() => onChangeAmount(ZERO, ZERO, 0)}
         onRemove={() => onClickRemove(0)}
       />
     )
@@ -146,8 +152,8 @@ export const RewardTokens: React.FC<IProps> = ({
             balance={amount}
             rewardFeePercent={rewardFeePercent}
             onSelectToken={(token) => onSelectToken(token, i)}
-            onChangeAmount={(amount, balance) =>
-              onChangeAmount(amount, balance, i)
+            onChangeAmount={(amount, balance, token) =>
+              onChangeAmount(amount, balance, i, token)
             }
             onRemove={() => onClickRemove(i)}
           />
