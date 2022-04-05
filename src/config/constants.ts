@@ -205,3 +205,5 @@ export const FEE_TIPS: Record<ChainId, string> = {
 }
 
 export const PROD_TESTNET_DISCOVER_PAGE_SIZE = 5
+
+export const INSUFFICIENT_FUNDS_ERROR = 'Insufficient funds to process the transaction'

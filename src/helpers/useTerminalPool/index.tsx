@@ -1,6 +1,11 @@
 import Abi from 'abis'
 import axios from 'axios'
-import { ChainId, POLL_API_DATA, TERMINAL_API_URL } from 'config/constants'
+import {
+  ChainId,
+  ETHER_DECIMAL,
+  POLL_API_DATA,
+  TERMINAL_API_URL,
+} from 'config/constants'
 import {
   getNetworkProvider,
   getTokenFromAddress,
@@ -131,8 +136,8 @@ export const useTerminalPool = (
           .mul(parseEther(pool.token1.price))
           .div(ONE_ETHER)
 
-        token0.tvl = formatBigNumber(token0tvl, token0.decimals)
-        token1.tvl = formatBigNumber(token1tvl, token1.decimals)
+        token0.tvl = formatBigNumber(token0tvl, ETHER_DECIMAL)
+        token1.tvl = formatBigNumber(token1tvl, ETHER_DECIMAL)
 
         tvl = (Number(token0.tvl) + Number(token1.tvl)).toString()
 
@@ -167,8 +172,8 @@ export const useTerminalPool = (
         token0.percent = token0.percent.toString()
         token1.percent = token1.percent.toString()
 
-        token0.tvl = formatBigNumber(token0.tvl, token0.decimals)
-        token1.tvl = formatBigNumber(token1.tvl, token1.decimals)
+        token0.tvl = formatBigNumber(token0.tvl, ETHER_DECIMAL)
+        token1.tvl = formatBigNumber(token1.tvl, ETHER_DECIMAL)
         tvl = formatBigNumber(pool.tvl, 18)
       }
       // console.timeEnd(`loadInfo token details ${poolAddress}`)
@@ -319,8 +324,6 @@ export const useTerminalPool = (
 
           const eventHistory = allHistory.map((x, index) => {
             const timestamp = blockInfos[index].timestamp
-            // TODO: Remove, unnecessary parsing of timestamp
-            // const time = moment.unix(timestamp).format('LLLL')
 
             const eventName: {
               [key: string]: string
@@ -341,7 +344,6 @@ export const useTerminalPool = (
               action: x.event ? eventName[x.event] : '',
               amount0: x.args?.amount0 || ZERO,
               amount1: x.args?.amount1 || ZERO,
-              // time,
               tx: x.transactionHash,
               rewardAmount: x.args?.rewardAmount || ZERO,
               symbol: token ? token.symbol : '',
@@ -425,12 +427,12 @@ export const useTerminalPool = (
 
         user.token0Tvl = formatUnits(
           user.token0Deposit.mul(parseEther(pool.token0.price)).div(ONE_ETHER),
-          pool.token0.decimals
+          ETHER_DECIMAL
         )
 
         user.token1Tvl = formatUnits(
           user.token1Deposit.mul(parseEther(pool.token1.price)).div(ONE_ETHER),
-          pool.token1.decimals
+          ETHER_DECIMAL
         )
 
         const totalBalance = token0Balance.add(token1Balance)
