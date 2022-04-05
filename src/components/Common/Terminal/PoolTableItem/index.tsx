@@ -72,11 +72,13 @@ const useStyles = makeStyles((theme) => ({
     '&+&': { left: -16 },
   },
   allocation: {
+    display: 'flex',
     color: theme.colors.white,
     fontWeight: 700,
     '& span': {
       fontWeight: 400,
       color: theme.colors.primary100,
+      fontSize: 14,
     },
   },
   label: {
@@ -96,6 +98,10 @@ const useStyles = makeStyles((theme) => ({
   },
   networkIcon: {
     borderRadius: '50%',
+  },
+  allocationItem: {
+    display: 'flex',
+    flexDirection: 'column',
   },
 }))
 
@@ -146,19 +152,23 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
         </PoolTd>
         <PoolTd type="allocation">
           <div className={cl.item}>
-            <Typography className={cl.allocation}>
-              {poolData.token0.symbol}&nbsp;
-              <span>{`${getFloatDecimalNumber(
-                poolData.token0.percent as string,
-                2
-              )}%`}</span>
-              &nbsp;&nbsp;
-              {poolData.token1.symbol}&nbsp;
-              <span>{`${getFloatDecimalNumber(
-                poolData.token1.percent as string,
-                2
-              )}%`}</span>
-            </Typography>
+            <div className={cl.allocation}>
+              <Typography className={cl.allocationItem}>
+                {poolData.token0.symbol}&nbsp;
+                <span>{`${getFloatDecimalNumber(
+                  poolData.token0.percent as string,
+                  2
+                )}%`}</span>
+              </Typography>
+              &nbsp; &nbsp;
+              <Typography className={cl.allocationItem}>
+                {poolData.token1.symbol}&nbsp;
+                <span>{`${getFloatDecimalNumber(
+                  poolData.token1.percent as string,
+                  2
+                )}%`}</span>
+              </Typography>
+            </div>
           </div>
         </PoolTd>
         <PoolTd type="tvl">
