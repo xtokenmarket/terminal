@@ -283,13 +283,13 @@ export const DepositSection = (props: IProps) => {
     }
   }
 
-  const isHideBackButton =
+  const isShowBackButton =
     !state.token0Approving && !state.token1Approving && !state.depositing
 
   return (
     <div className={classes.root}>
       <div className={classes.header}>
-        {isHideBackButton ? (
+        {isShowBackButton ? (
           <ArrowBackIosIcon
             className={classes.arrowBackIosStyle}
             onClick={goBack}
@@ -303,7 +303,7 @@ export const DepositSection = (props: IProps) => {
             Please complete all transactions to complete the deposit.
           </Typography>
         </div>
-        {isHideBackButton && (
+        {isShowBackButton && (
           <IconButton className={classes.closeButton} onClick={onClose}>
             <CloseOutlinedIcon />
           </IconButton>

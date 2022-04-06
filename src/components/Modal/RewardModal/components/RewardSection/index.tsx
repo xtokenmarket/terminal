@@ -250,12 +250,12 @@ export const RewardSection = (props: IProps) => {
     }
   }
 
-  const isHideBackButton = !state.initing && !state.approving[0]
+  const isShowBackButton = !state.initing && !state.approving[0]
 
   return (
     <div className={classes.root}>
       <div className={classes.header}>
-        {isHideBackButton ? (
+        {isShowBackButton ? (
           <ArrowBackIosIcon
             className={classes.arrowBackIosStyle}
             onClick={goBack}
@@ -276,7 +276,7 @@ export const RewardSection = (props: IProps) => {
               : ''}
           </Typography>
         </div>
-        {isHideBackButton && (
+        {isShowBackButton && (
           <IconButton className={classes.closeButton} onClick={onClose}>
             <CloseOutlinedIcon />
           </IconButton>
