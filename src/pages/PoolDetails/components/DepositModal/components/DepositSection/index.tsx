@@ -71,6 +71,8 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
     marginTop: 5,
     marginRight: 20,
+    width: 24,
+    height: 24,
   },
 }))
 
@@ -281,20 +283,27 @@ export const DepositSection = (props: IProps) => {
     }
   }
 
+  const isShowBackButton =
+    !state.token0Approving && !state.token1Approving && !state.depositing
+
   return (
     <div className={classes.root}>
       <div className={classes.header}>
-        <ArrowBackIosIcon
-          className={classes.arrowBackIosStyle}
-          onClick={goBack}
-        />
+        {isShowBackButton ? (
+          <ArrowBackIosIcon
+            className={classes.arrowBackIosStyle}
+            onClick={goBack}
+          />
+        ) : (
+          <div className={classes.arrowBackIosStyle} />
+        )}
         <div>
           <Typography className={classes.title}>Deposit Liquidity</Typography>
           <Typography className={classes.description}>
             Please complete all transactions to complete the deposit.
           </Typography>
         </div>
-        {!state.token0Approving && !state.token1Approving && !state.depositing && (
+        {isShowBackButton && (
           <IconButton className={classes.closeButton} onClick={onClose}>
             <CloseOutlinedIcon />
           </IconButton>
