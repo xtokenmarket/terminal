@@ -31,12 +31,12 @@ const routes = [
       {
         exact: true,
         path: '/mining/new-pool',
-        component: lazy(() => import('pages/CreatePool')),
+        component: lazy(() => import('pages/mining/CreatePool')),
       },
       {
         exact: true,
         path: '/mining/pools/:network/:id',
-        component: lazy(() => import('pages/PoolDetails')),
+        component: lazy(() => import('pages/mining/PoolDetails')),
       },
       {
         path: '/mining',
@@ -45,12 +45,12 @@ const routes = [
           {
             exact: true,
             path: '/mining/discover',
-            component: lazy(() => import('pages/Discover')),
+            component: lazy(() => import('pages/mining/Discover')),
           },
           {
             exact: true,
             path: '/mining/my-pools',
-            component: lazy(() => import('pages/MyPools')),
+            component: lazy(() => import('pages/mining/MyPools')),
           },
           {
             exact: true,
