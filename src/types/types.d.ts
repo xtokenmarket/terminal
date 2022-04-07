@@ -1,6 +1,6 @@
 import { BigNumber } from 'ethers'
 import { IRewardState } from 'components'
-import { Network } from '../utils/enums'
+import { Network, IpricingFormula } from '../utils/enums'
 
 declare global {
   interface Window {
@@ -206,4 +206,18 @@ export interface PoolService {
   reinvest: () => Promise<any>
   waitUntilReinvest: (txId: string) => Promise<any>
   calculateWithdrawAmounts: (amount: BigNumber) => Promise<any>
+}
+
+export interface ICreateTokenSaleData {
+  offerTokenAmount: BigNumber
+  reserveOfferTokenAmount: BigNumber
+  offeringPeriod: number
+  offerToken?: IToken
+  purchaseToken?: IToken
+  pricingFormula: IpricingFormula
+  startingPrice: string
+  endingPrice: string
+  isAddVestingPeriod?: boolean
+  vestiingPeriod?: string
+  cliffPeriod?: string
 }
