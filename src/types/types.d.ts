@@ -209,8 +209,8 @@ export interface PoolService {
 }
 
 export interface ICreateTokenSaleData {
-  offerTokenAmount: BigNumber
-  reserveOfferTokenAmount: BigNumber
+  offerTokenAmount: string
+  reserveOfferTokenAmount: string
   offeringPeriod: number
   offerToken?: IToken
   purchaseToken?: IToken
