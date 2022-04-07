@@ -25,6 +25,11 @@ const routes = [
       },
       {
         exact: true,
+        path: '/origination/new-token-sale',
+        component: lazy(() => import('pages/origination/CreateTokenSale')),
+      },
+      {
+        exact: true,
         path: '/auction',
         component: lazy(() => import('pages/ComingSoon')),
       },

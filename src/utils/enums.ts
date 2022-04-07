@@ -136,3 +136,18 @@ export enum NetworkIcon {
   kovan = 'Ethereum',
   rinkeby = 'Ethereum',
 }
+
+export enum ECreareTokenSaleStep {
+  Offering = 'Offering',
+  Auction = 'Auction',
+  Vesting = 'Vesting',
+  Confirm = 'Confirm'
+}
+
+export enum IpricingFormula {
+  Standard = 'Standard',
+  Ascending = 'Ascending',
+  Descending = 'Descending',
+  Default = 'Default'
+}
+
