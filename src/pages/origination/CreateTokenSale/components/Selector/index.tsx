@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
     border: `1px solid ${theme.colors.primary100}`,
     fontSize: 16,
-    padding: '10px 26px 10px 12px',
+    padding: '17px 26px 17px 12px',
     transition: theme.transitions.create(['border-color', 'box-shadow']),
   },
   paper: { backgroundColor: theme.colors.fifth },
