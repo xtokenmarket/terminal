@@ -35,7 +35,9 @@ export const OfferingStep: React.FC<IProps> = ({
     data.offerToken &&
     data.purchaseToken &&
     data.offerTokenAmount &&
-    data.reserveOfferTokenAmount
+    data.reserveOfferTokenAmount &&
+    data.offeringPeriod &&
+    data.offeringPeriodUnit
   )
 
   return (
