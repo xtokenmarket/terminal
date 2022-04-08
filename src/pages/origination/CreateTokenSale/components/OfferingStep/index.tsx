@@ -1,13 +1,5 @@
-import {
-  Button,
-  Grid,
-  makeStyles,
-  MenuItem,
-  Select,
-  Typography,
-} from '@material-ui/core'
+import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { TokenSelect } from 'components'
-import { useState } from 'react'
 import { ICreateTokenSaleData } from 'types'
 import { Input } from '../Input'
 import { Selector } from '../Selector'
@@ -28,18 +20,12 @@ interface IProps {
   onNext: () => void
 }
 
-const initialState = {
-  offeringPeriod: '',
-  offeringPeriodUnit: '',
-}
-
 export const OfferingStep: React.FC<IProps> = ({
   data,
   updateData,
   onNext,
 }) => {
   const classes = useStyles()
-  const [state, setState] = useState(initialState)
 
   const onClickNext = () => {
     onNext()
@@ -51,19 +37,6 @@ export const OfferingStep: React.FC<IProps> = ({
     data.offerTokenAmount &&
     data.reserveOfferTokenAmount
   )
-
-  const handleChange = (selectedValue: any) => {
-    console.log('selectedValue', selectedValue)
-
-    setState((prev) => ({
-      ...prev,
-      offeringPeriodUnit: 'Ten',
-    }))
-  }
-
-  // const onChangeinput = (e: Event) => {
-  //   updateData({ offeringPeriod: e.target.value })
-  // }
 
   return (
     <>
