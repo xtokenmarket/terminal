@@ -163,7 +163,7 @@ export interface ICreateTokenSaleData {
   offeringPeriod: string
   offerToken?: IToken
   purchaseToken?: IToken
-  pricingFormula: IpricingFormula
+  pricingFormula?: IpricingFormula
   startingPrice: string
   endingPrice: string
   isAddVestingPeriod?: boolean

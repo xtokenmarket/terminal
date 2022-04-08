@@ -151,6 +151,5 @@ export enum IpricingFormula {
   Standard = 'Standard',
   Ascending = 'Ascending',
   Descending = 'Descending',
-  Default = 'Default'
 }
 
