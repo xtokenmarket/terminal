@@ -18,7 +18,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   input: {
-    // height: 42,
     borderRadius: 4,
     position: 'relative',
     border: `1px solid ${theme.colors.primary100}`,
