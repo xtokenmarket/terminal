@@ -39,7 +39,7 @@ interface IState extends Omit<ICreateTokenSaleData, 'token0' | 'token1'> {
 const initialState: IState = {
   offerTokenAmount: '',
   reserveOfferTokenAmount: '',
-  offeringPeriod: 0,
+  offeringPeriod: '',
   pricingFormula: IpricingFormula.Default,
   startingPrice: '',
   endingPrice: '',
@@ -49,6 +49,7 @@ const initialState: IState = {
   offerToken: undefined,
   purchaseToken: undefined,
   step: ECreareTokenSaleStep.Offering,
+  offeringPeriodUnit: '',
 }
 
 const CreareTokenSale = () => {
