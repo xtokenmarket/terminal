@@ -1,7 +1,16 @@
-import { Grid, makeStyles, Typography } from '@material-ui/core'
+import {
+  Button,
+  Grid,
+  makeStyles,
+  MenuItem,
+  Select,
+  Typography,
+} from '@material-ui/core'
 import { TokenSelect } from 'components'
+import { useState } from 'react'
 import { ICreateTokenSaleData } from 'types'
 import { Input } from '../Input'
+import { Selector } from '../Selector'
 
 const useStyles = makeStyles((theme) => ({
   label: {
@@ -19,12 +28,42 @@ interface IProps {
   onNext: () => void
 }
 
+const initialState = {
+  offeringPeriod: '',
+  offeringPeriodUnit: '',
+}
+
 export const OfferingStep: React.FC<IProps> = ({
   data,
   updateData,
   onNext,
 }) => {
   const classes = useStyles()
+  const [state, setState] = useState(initialState)
+
+  const onClickNext = () => {
+    onNext()
+  }
+
+  const isNextBtnDisabled = !(
+    data.offerToken &&
+    data.purchaseToken &&
+    data.offerTokenAmount &&
+    data.reserveOfferTokenAmount
+  )
+
+  const handleChange = (selectedValue: any) => {
+    console.log('selectedValue', selectedValue)
+
+    setState((prev) => ({
+      ...prev,
+      offeringPeriodUnit: 'Ten',
+    }))
+  }
+
+  // const onChangeinput = (e: Event) => {
+  //   updateData({ offeringPeriod: e.target.value })
+  // }
 
   return (
     <>
@@ -63,7 +102,32 @@ export const OfferingStep: React.FC<IProps> = ({
             }
           />
         </Grid>
+
+        <Grid item xs={12} md={6}>
+          <Typography className={classes.label}>Offering Period</Typography>
+
+          <Selector
+            onSelectorChange={(e) =>
+              updateData({ offeringPeriodUnit: e.target.value })
+            }
+            selectorValue={data.offeringPeriodUnit}
+            inputValue={data.offeringPeriod}
+            onChangeinput={(e) => {
+              updateData({ offeringPeriod: e.target.value })
+            }}
+          />
+        </Grid>
       </Grid>
+
+      <Button
+        color="primary"
+        fullWidth
+        onClick={onClickNext}
+        variant="contained"
+        disabled={isNextBtnDisabled}
+      >
+        Next
+      </Button>
     </>
   )
 }
