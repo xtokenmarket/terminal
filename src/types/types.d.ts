@@ -160,7 +160,7 @@ export interface ICollectableFees {
 export interface ICreateTokenSaleData {
   offerTokenAmount: string
   reserveOfferTokenAmount: string
-  offeringPeriod: number
+  offeringPeriod: string
   offerToken?: IToken
   purchaseToken?: IToken
   pricingFormula: IpricingFormula
@@ -169,5 +169,6 @@ export interface ICreateTokenSaleData {
   isAddVestingPeriod?: boolean
   vestiingPeriod?: string
   cliffPeriod?: string
+  offeringPeriodUnit: string
 }
 
