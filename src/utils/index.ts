@@ -190,9 +190,10 @@ export const parseFee = (tier: BigNumber | number | string) => {
 }
 
 export const getMetamaskError = (error: any) => {
-  if (error && error.error && error.error.message) {
+  if (error && error.error && error.error.message || error && error.data && error.data.message) {
     const isInsufficientFundsError =
-      error.error.message.indexOf('insufficient funds') !== -1
+    error.error ? error.error.message.indexOf('insufficient funds') !== -1 : error.data.message.indexOf('insufficient funds') !== -1
+      
     if (isInsufficientFundsError) {
       return INSUFFICIENT_FUNDS_ERROR
     }
