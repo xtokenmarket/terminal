@@ -168,6 +168,8 @@ export interface ICreateTokenSaleData {
   endingPrice: string
   isAddVestingPeriod?: boolean
   vestingPeriod: string
+  vestingPeriodUnit: string
   cliffPeriod: string
+  cliffPeriodUnit: string
   offeringPeriodUnit: string
 }
