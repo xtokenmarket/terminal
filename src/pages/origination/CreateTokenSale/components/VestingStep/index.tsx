@@ -1,4 +1,5 @@
 import { makeStyles, Grid, Typography, Button } from '@material-ui/core'
+import { useEffect, useState } from 'react'
 import { ICreateTokenSaleData } from 'types'
 import { Radio } from '../Radio'
 import { Selector } from '../Selector'
@@ -29,52 +30,72 @@ type VestingOption = 'Yes' | 'No'
 const vestingOptions: VestingOption[] = ['Yes', 'No']
 
 export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
+  const [vestingSelected, setVestingSelected] = useState(false)
   const classes = useStyles()
+
+  useEffect(() => {
+    if (!vestingSelected) {
+      updateData({
+        vestingPeriod: '',
+        cliffPeriod: '',
+      })
+    }
+  }, [vestingSelected])
+
+  const handleVestingOptionChange = (option: VestingOption) => {
+    const selectedVestingStatus = option === 'Yes'
+
+    if (selectedVestingStatus !== vestingSelected) {
+      setVestingSelected(selectedVestingStatus)
+    }
+  }
 
   return (
     <>
-      <Grid container xs={12} md={5} className={classes.formContainer}>
+      <Grid item xs={12} md={5} className={classes.formContainer}>
         <Grid item xs={12}>
           <Typography className={classes.label}>
             Do you want to add a vesting Period to your token sale?
           </Typography>
           <Radio
             items={vestingOptions}
-            onChange={(event) => {
-              updateData({ pricingFormula: event.target.value })
-            }}
+            onChange={(event) =>
+              handleVestingOptionChange(event.target.value as VestingOption)
+            }
           />
         </Grid>
         <Grid item xs={12}>
-          <Typography className={classes.label}>Vestiing Period</Typography>
           <Selector
             onSelectorChange={(e) =>
-              updateData({ vestiingPeriod: e.target.value })
+              updateData({ vestingPeriod: e.target.value })
             }
-            selectorValue={data.vestiingPeriod}
-            inputValue={data.vestiingPeriod}
+            selectorValue={data.vestingPeriod}
+            label="Vesting Period"
+            inputValue={data.vestingPeriod}
             onChangeinput={(e) => {
-              updateData({ vestiingPeriod: e.target.value })
+              updateData({ vestingPeriod: e.target.value })
             }}
+            disabled={!vestingSelected}
           />
         </Grid>
         <Grid item xs={12}>
-          <Typography className={classes.label}>Cliff Period</Typography>
           <Selector
             onSelectorChange={(e) =>
               updateData({ cliffPeriod: e.target.value })
             }
             selectorValue={data.cliffPeriod}
-            inputValue={data.offeringPeriod}
+            label="Cliff Period"
+            inputValue={data.cliffPeriod}
             onChangeinput={(e) => {
               updateData({ cliffPeriod: e.target.value })
             }}
+            disabled={!vestingSelected}
           />
         </Grid>
         <InfoPanel
           className={classes.infoPanel}
-          title={'Fees'}
-          description={'Cliff period must be less than or equal to vesting'}
+          title="Fees"
+          description="Cliff period must be less than or equal to vesting"
         />
       </Grid>
 
