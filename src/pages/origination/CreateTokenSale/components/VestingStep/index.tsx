@@ -83,6 +83,8 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
             }
             selectorValue={data.vestingPeriodUnit}
             label="Vesting Period"
+            // TODO: add a non-placeholder text
+            infoText="Placeholder text"
             inputValue={data.vestingPeriod}
             onChangeinput={(e) => {
               updateData({ vestingPeriod: e.target.value })
