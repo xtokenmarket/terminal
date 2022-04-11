@@ -1,6 +1,7 @@
-import { makeStyles, Typography } from '@material-ui/core'
+import { Grid, makeStyles, Typography } from '@material-ui/core'
 import { ICreateTokenSaleData } from 'types'
 import { IpricingFormula } from 'utils/enums'
+import { Input } from '../Input'
 import { Radio } from '../Radio'
 
 const useStyles = makeStyles((theme) => ({
@@ -8,6 +9,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
     marginBottom: theme.spacing(2),
   },
+  radio: { marginBottom: 34 },
 }))
 
 interface IProps {
@@ -25,11 +27,26 @@ export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
         Choose the Pricing formula for this offering
       </Typography>
       <Radio
+        className={classes.radio}
         items={Object.values(IpricingFormula)}
         onChange={(event) => {
           updateData({ pricingFormula: event.target.value })
         }}
       />
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={6}>
+          <Input
+            label={`Starting Price - ${data.purchaseToken?.symbol} per ${data.offerToken?.symbol}`}
+            value={data.startingPrice}
+            onChange={(e) => updateData({ startingPrice: e.target.value })}
+          />
+          <Input
+            label={`Ending Price - ${data.purchaseToken?.symbol} per ${data.offerToken?.symbol}`}
+            value={data.endingPrice}
+            onChange={(e) => updateData({ endingPrice: e.target.value })}
+          />
+        </Grid>
+      </Grid>
     </>
   )
 }

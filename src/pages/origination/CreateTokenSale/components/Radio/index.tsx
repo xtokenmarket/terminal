@@ -17,14 +17,15 @@ interface IProps {
     event: React.ChangeEvent<HTMLInputElement>,
     checked?: boolean
   ) => void
+  className?: string
 }
 
-export const Radio: React.FC<IProps> = ({ items, onChange }) => {
+export const Radio: React.FC<IProps> = ({ items, onChange, className }) => {
   const [value, setValue] = useState('')
   const classes = useStyles()
 
   return (
-    <div>
+    <div className={className}>
       {items.map((item: string) => (
         <div key={item} className={classes.item}>
           <Checkbox
