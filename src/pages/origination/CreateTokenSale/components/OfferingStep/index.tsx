@@ -60,17 +60,15 @@ export const OfferingStep: React.FC<IProps> = ({
       </Grid>
       <Grid container spacing={3} direction="column">
         <Grid item xs={12} md={6}>
-          <Typography className={classes.label}>Offer Token Amount</Typography>
           <Input
+            label="Offer Token Amount"
             value={data.offerTokenAmount}
             onChange={(e) => updateData({ offerTokenAmount: e.target.value })}
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <Typography className={classes.label}>
-            Reserve Offer Token Amount
-          </Typography>
           <Input
+            label={'Reserve Offer Token Amount'}
             value={data.reserveOfferTokenAmount}
             onChange={(e) =>
               updateData({ reserveOfferTokenAmount: e.target.value })
