@@ -1,4 +1,10 @@
-import { Select, makeStyles, MenuItem, Grid } from '@material-ui/core'
+import {
+  Select,
+  makeStyles,
+  MenuItem,
+  Grid,
+  Typography,
+} from '@material-ui/core'
 import clsx from 'clsx'
 import { Input } from '../Input'
 
@@ -25,6 +31,26 @@ const useStyles = makeStyles((theme) => ({
     padding: '17px 26px 17px 12px',
     transition: theme.transitions.create(['border-color', 'box-shadow']),
   },
+  inputDisabled: {
+    borderRadius: 4,
+    borderColor: theme.colors.primary200,
+    color: theme.colors.primary200,
+    '&::placeholder': {
+      /* Chrome, Firefox, Opera, Safari 10.1+ */
+      color: theme.colors.primary200,
+      /* Firefox */
+      opacity: 1,
+    },
+    '&:-ms-input-placeholder': {
+      /* Internet Explorer 10-11 */
+      color: theme.colors.primary200,
+    },
+
+    '&::-ms-input-placeholder': {
+      /* Microsoft Edge */
+      color: theme.colors.primary200,
+    },
+  },
   paper: { backgroundColor: theme.colors.fifth },
   list: {
     backgroundColor: theme.colors.fifth,
@@ -32,6 +58,19 @@ const useStyles = makeStyles((theme) => ({
   },
   width: {
     width: 150,
+  },
+  label: {
+    color: theme.colors.white,
+    marginBottom: theme.spacing(2),
+    fontWeight: 700,
+  },
+  labelDisabled: {
+    color: theme.colors.primary200,
+  },
+  selectIcon: {
+    width: 12,
+    position: 'absolute',
+    right: 16,
   },
 }))
 
@@ -44,51 +83,76 @@ interface IProps {
     child: React.ReactNode
   ) => void | undefined
   selectorValue: string
+  label?: string
   inputValue: string
+  disabled?: boolean
   onChangeinput: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 export const Selector: React.FC<IProps> = ({
   onSelectorChange,
   selectorValue,
+  label,
   inputValue,
+  disabled,
   onChangeinput,
 }) => {
   const classes = useStyles()
 
   return (
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={6}>
-        <Input value={inputValue} onChange={onChangeinput} />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <Select
-          placeholder="Weeks"
-          className={clsx(classes.root, classes.width)}
-          disableUnderline
-          classes={{
-            root: classes.input,
-          }}
-          MenuProps={{
-            PaperProps: {
-              className: classes.paper,
-            },
-            classes: {
-              list: classes.list,
-            },
-          }}
-          value={selectorValue}
-          onChange={onSelectorChange}
+    <>
+      {label && (
+        <Typography
+          className={clsx(classes.label, disabled && classes.labelDisabled)}
         >
-          {['Days', 'Weeks', 'Months', 'Years'].map((unit) => {
-            return (
-              <MenuItem className={classes.item} value={unit} key={unit}>
-                {unit}
-              </MenuItem>
-            )
-          })}
-        </Select>
+          {label}
+        </Typography>
+      )}
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={6}>
+          <Input
+            value={inputValue}
+            onChange={onChangeinput}
+            disabled={disabled}
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Select
+            placeholder="Weeks"
+            className={clsx(classes.root, classes.width)}
+            disableUnderline
+            classes={{
+              root: clsx(classes.input, disabled && classes.inputDisabled),
+            }}
+            MenuProps={{
+              PaperProps: {
+                className: classes.paper,
+              },
+              classes: {
+                list: classes.list,
+              },
+            }}
+            IconComponent={() => (
+              <img
+                alt="down"
+                className={classes.selectIcon}
+                src="/assets/icons/down-arrow.svg"
+              />
+            )}
+            value={selectorValue}
+            onChange={onSelectorChange}
+            disabled={disabled}
+          >
+            {['Days', 'Weeks', 'Months', 'Years'].map((unit) => {
+              return (
+                <MenuItem className={classes.item} value={unit} key={unit}>
+                  {unit}
+                </MenuItem>
+              )
+            })}
+          </Select>
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   )
 }
