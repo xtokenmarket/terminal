@@ -43,11 +43,11 @@ const initialState: IState = {
   startingPrice: '',
   endingPrice: '',
   isAddVestingPeriod: undefined,
-  vestiingPeriod: '',
+  vestingPeriod: '',
   cliffPeriod: '',
   offerToken: undefined,
   purchaseToken: undefined,
-  step: ECreareTokenSaleStep.Auction,
+  step: ECreareTokenSaleStep.Vesting,
   offeringPeriodUnit: '',
 }
 
