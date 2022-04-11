@@ -218,7 +218,7 @@ export interface ICreateTokenSaleData {
   startingPrice: string
   endingPrice: string
   isAddVestingPeriod?: boolean
-  vestiingPeriod?: string
-  cliffPeriod?: string
+  vestiingPeriod: string
+  cliffPeriod: string
   offeringPeriodUnit: string
 }
