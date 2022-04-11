@@ -1,4 +1,4 @@
-import { Grid, makeStyles, Typography } from '@material-ui/core'
+import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { ICreateTokenSaleData } from 'types'
 import { IpricingFormula } from 'utils/enums'
 import { Input } from '../Input'
@@ -20,6 +20,16 @@ interface IProps {
 
 export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
   const classes = useStyles()
+
+  const isNextBtnDisabled = !(
+    data.pricingFormula &&
+    data.startingPrice &&
+    data.endingPrice
+  )
+
+  const onClickNext = () => {
+    onNext()
+  }
 
   return (
     <>
@@ -47,6 +57,16 @@ export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
           />
         </Grid>
       </Grid>
+
+      <Button
+        color="primary"
+        fullWidth
+        onClick={onClickNext}
+        variant="contained"
+        disabled={isNextBtnDisabled}
+      >
+        Next
+      </Button>
     </>
   )
 }
