@@ -7,6 +7,7 @@ import {
 } from '@material-ui/core'
 import clsx from 'clsx'
 import { Input } from '../Input'
+import { QuestionTooltip } from '../QuestionTooltip'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,13 +60,21 @@ const useStyles = makeStyles((theme) => ({
   width: {
     width: 150,
   },
+  labelContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: theme.spacing(2),
+  },
   label: {
     color: theme.colors.white,
-    marginBottom: theme.spacing(2),
     fontWeight: 700,
   },
   labelDisabled: {
     color: theme.colors.primary200,
+  },
+  tooltipQuestion: {
+    marginLeft: 16,
+    marginTop: 2,
   },
   selectIcon: {
     width: 12,
@@ -84,6 +93,7 @@ interface IProps {
   ) => void | undefined
   selectorValue: string
   label?: string
+  infoText?: string
   inputValue: string
   disabled?: boolean
   onChangeinput: (e: React.ChangeEvent<HTMLInputElement>) => void
@@ -93,6 +103,7 @@ export const Selector: React.FC<IProps> = ({
   onSelectorChange,
   selectorValue,
   label,
+  infoText,
   inputValue,
   disabled,
   onChangeinput,
@@ -102,11 +113,19 @@ export const Selector: React.FC<IProps> = ({
   return (
     <>
       {label && (
-        <Typography
-          className={clsx(classes.label, disabled && classes.labelDisabled)}
-        >
-          {label}
-        </Typography>
+        <div className={classes.labelContainer}>
+          <Typography
+            className={clsx(classes.label, disabled && classes.labelDisabled)}
+          >
+            {label}
+          </Typography>
+          {infoText && (
+            <QuestionTooltip
+              title={infoText}
+              className={classes.tooltipQuestion}
+            />
+          )}
+        </div>
       )}
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
