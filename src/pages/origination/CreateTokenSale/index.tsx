@@ -76,6 +76,9 @@ const CreareTokenSale = () => {
       case ECreareTokenSaleStep.Auction:
         setState((prev) => ({ ...prev, step: ECreareTokenSaleStep.Vesting }))
         break
+      case ECreareTokenSaleStep.Vesting:
+        setState((prev) => ({ ...prev, step: ECreareTokenSaleStep.Confirm }))
+        break
       default:
         onBack()
         break
