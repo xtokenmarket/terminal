@@ -32,6 +32,10 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: 'Gilmer',
     fontWeight: 700,
   },
+  fiat: {
+    color: theme.colors.primary100,
+    fontSize: 12,
+  },
 }))
 
 interface IProps {
@@ -73,18 +77,21 @@ export const PricingFormulaTable: React.FC<IProps> = ({ data }) => {
             <TableCell>
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <img src={data.offerToken?.image} style={{ marginRight: 8 }} />
-                <Typography variant="h3" className={cl.bodyRowText}>
-                  {data.offerToken?.symbol}
-                </Typography>
-                <Typography variant="h5" className={cl.bodyRowText}>
-                  {data.startingPrice}
-                </Typography>
+                <div>
+                  <Typography variant="h3" className={cl.bodyRowText}>
+                    {data.startingPrice}
+                  </Typography>
+                  <Typography className={cl.fiat}>~ $ 13.009,73</Typography>
+                </div>
               </div>
             </TableCell>
             <TableCell>
-              <Typography variant="h5" className={cl.bodyRowText}>
-                {data.endingPrice}
-              </Typography>
+              <div>
+                <Typography variant="h5" className={cl.bodyRowText}>
+                  {data.endingPrice}
+                </Typography>
+                <Typography className={cl.fiat}>~ $ 13.009,73</Typography>
+              </div>
             </TableCell>
             <TableCell>
               <Typography variant="h5" className={cl.bodyRowText}>
