@@ -12,6 +12,8 @@ const useStyles = makeStyles((theme) => ({
   },
   label: {
     color: theme.colors.white,
+    fontSize: 14,
+    lineHeight: '16.8px',
     marginBottom: theme.spacing(2),
   },
   infoPanel: {
