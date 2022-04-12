@@ -47,18 +47,19 @@ const useStyles = makeStyles((theme) => ({
       color: theme.colors.primary100,
       margin: 0,
       fontSize: 14,
-      fontWeight: 700,
+      fontWeight: 500,
+      marginBottom: 5,
     },
 
     '& .data': {
       color: theme.colors.white,
       margin: 0,
       fontSize: 22,
-      fontWeight: 800,
+      fontWeight: 600,
     },
 
     '& .description': {
-      color: theme.colors.white,
+      color: theme.colors.primary100,
       margin: 0,
       fontSize: 14,
       fontWeight: 500,
@@ -70,6 +71,9 @@ const useStyles = makeStyles((theme) => ({
         left: -16,
       },
     },
+  },
+  button: {
+    marginTop: 20,
   },
 }))
 interface IProps {
@@ -148,7 +152,6 @@ export const ConfirmStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
                     <p className="data">
                       {data.offeringPeriod} {data.offeringPeriodUnit}
                     </p>
-                    <p className="description">Best for most pairs.</p>
                   </Grid>
                 </Grid>
 
@@ -172,6 +175,7 @@ export const ConfirmStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
       </div>
 
       <Button
+        className={classes.button}
         color="primary"
         fullWidth
         onClick={toggleSellTokenModal}
