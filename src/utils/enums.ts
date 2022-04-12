@@ -156,3 +156,8 @@ export enum IpricingFormula {
   Ascending = 'Ascending',
   Descending = 'Descending',
 }
+
+export enum ECreateTokenSaleModalStep {
+  Init = 'Init',
+  Success = 'Success',
+}
