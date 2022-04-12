@@ -40,7 +40,7 @@ export const CreateTokenSaleModal = (props: IProps) => {
   const commonClasses = useCommonStyles()
   const { account, networkId } = useConnectedWeb3Context()
 
-  const { onClose } = props
+  const { onClose, data } = props
   const [step, setStep] = useState<ECreateTokenSaleModalStep>(
     ECreateTokenSaleModalStep.Init
   )
@@ -74,7 +74,14 @@ export const CreateTokenSaleModal = (props: IProps) => {
   const renderContent = () => {
     switch (step) {
       case ECreateTokenSaleModalStep.Init:
-        return <InitSection onNext={onNextStep} onClose={onClose} />
+        return (
+          <InitSection
+            onNext={onNextStep}
+            onClose={onClose}
+            data={data}
+            setTxId={setTxId}
+          />
+        )
       default:
         return (
           <SuccessSection
