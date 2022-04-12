@@ -11,11 +11,6 @@ import { Input } from '../Input'
 import { QuestionTooltip } from '../QuestionTooltip'
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    '& svg': {
-      color: theme.colors.eighth,
-    },
-  },
   item: {
     display: 'flex',
     alignItems: 'center',
@@ -28,14 +23,20 @@ const useStyles = makeStyles((theme) => ({
   selectorInput: {
     borderRadius: 4,
     position: 'relative',
+    background: 'transparent',
     color: theme.colors.primary100,
     border: `1px solid ${theme.colors.primary100}`,
     fontSize: 16,
     padding: '17px 26px 17px 12px',
     transition: theme.transitions.create(['border-color', 'box-shadow']),
+
+    '&:focus': {
+      borderRadius: 4,
+    },
   },
   selectorInputDisabled: {
     borderRadius: 4,
+    background: 'transparent',
     borderColor: theme.colors.primary200,
     color: theme.colors.primary200,
     '&::placeholder': {
@@ -54,10 +55,22 @@ const useStyles = makeStyles((theme) => ({
       color: theme.colors.primary200,
     },
   },
-  paper: { backgroundColor: theme.colors.fifth },
   list: {
-    backgroundColor: theme.colors.fifth,
+    backgroundColor: theme.colors.primary400,
+    borderRadius: 4,
     color: theme.colors.white,
+    fontSize: 14,
+    lineHeight: '16.8px',
+    '& li.Mui-selected': {
+      fontWeight: 700,
+      background: 'none',
+    },
+    '& li.Mui-selected:hover': {
+      background: 'none',
+    },
+    '& li:hover': {
+      background: 'none',
+    },
   },
   width: {
     width: 150,
@@ -143,7 +156,6 @@ export const Selector: React.FC<IProps> = ({
             fullWidth
             disableUnderline
             placeholder={EPeriods.Weeks}
-            className={clsx(classes.root)}
             classes={{
               root: clsx(
                 classes.selectorInput,
@@ -151,9 +163,6 @@ export const Selector: React.FC<IProps> = ({
               ),
             }}
             MenuProps={{
-              PaperProps: {
-                className: classes.paper,
-              },
               classes: {
                 list: classes.list,
               },
