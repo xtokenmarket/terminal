@@ -77,6 +77,7 @@ const useStyles = makeStyles((theme) => ({
   label: {
     color: theme.colors.white,
     textTransform: 'capitalize',
+    marginLeft: 5,
   },
   apr: {
     backgroundColor: theme.colors.primary200,
