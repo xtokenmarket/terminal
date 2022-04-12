@@ -6,6 +6,7 @@ import {
   Typography,
 } from '@material-ui/core'
 import clsx from 'clsx'
+import { EPeriods } from 'utils/enums'
 import { Input } from '../Input'
 import { QuestionTooltip } from '../QuestionTooltip'
 
@@ -24,15 +25,16 @@ const useStyles = makeStyles((theme) => ({
       marginRight: 6,
     },
   },
-  input: {
+  selectorInput: {
     borderRadius: 4,
     position: 'relative',
+    color: theme.colors.primary100,
     border: `1px solid ${theme.colors.primary100}`,
     fontSize: 16,
     padding: '17px 26px 17px 12px',
     transition: theme.transitions.create(['border-color', 'box-shadow']),
   },
-  inputDisabled: {
+  selectorInputDisabled: {
     borderRadius: 4,
     borderColor: theme.colors.primary200,
     color: theme.colors.primary200,
@@ -63,11 +65,12 @@ const useStyles = makeStyles((theme) => ({
   labelContainer: {
     display: 'flex',
     alignItems: 'center',
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(1),
   },
   label: {
     color: theme.colors.white,
     fontWeight: 700,
+    fontSize: 14,
   },
   labelDisabled: {
     color: theme.colors.primary200,
@@ -127,21 +130,25 @@ export const Selector: React.FC<IProps> = ({
           )}
         </div>
       )}
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={6}>
+      <Grid container justify="space-between" spacing={3}>
+        <Grid item xs={12} md={7}>
           <Input
             value={inputValue}
             onChange={onChangeinput}
             disabled={disabled}
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={5}>
           <Select
-            placeholder="Weeks"
-            className={clsx(classes.root, classes.width)}
+            fullWidth
             disableUnderline
+            placeholder={EPeriods.Weeks}
+            className={clsx(classes.root)}
             classes={{
-              root: clsx(classes.input, disabled && classes.inputDisabled),
+              root: clsx(
+                classes.selectorInput,
+                disabled && classes.selectorInputDisabled
+              ),
             }}
             MenuProps={{
               PaperProps: {
@@ -162,7 +169,7 @@ export const Selector: React.FC<IProps> = ({
             onChange={onSelectorChange}
             disabled={disabled}
           >
-            {['Days', 'Weeks', 'Months', 'Years'].map((unit) => {
+            {Object.values(EPeriods).map((unit) => {
               return (
                 <MenuItem className={classes.item} value={unit} key={unit}>
                   {unit}

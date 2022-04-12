@@ -7,13 +7,16 @@ const useStyles = makeStyles((theme) => ({
   input: {
     '& .Mui-focused': {
       '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: theme.colors.white,
+        borderColor: theme.colors.primary100,
         borderWidth: 1,
       },
     },
     '& .MuiOutlinedInput-root': {
       '&.Mui-disabled .MuiOutlinedInput-notchedOutline': {
         borderColor: theme.colors.primary200,
+      },
+      '&:hover fieldset': {
+        borderColor: theme.colors.primary100,
       },
     },
   },
@@ -22,6 +25,22 @@ const useStyles = makeStyles((theme) => ({
   },
   inputBox: {
     paddingRight: 60,
+    color: theme.colors.primary100,
+    '&::placeholder': {
+      /* Chrome, Firefox, Opera, Safari 10.1+ */
+      color: theme.colors.primary100,
+      /* Firefox */
+      opacity: 1,
+    },
+    '&:-ms-input-placeholder': {
+      /* Internet Explorer 10-11 */
+      color: theme.colors.primary100,
+    },
+
+    '&::-ms-input-placeholder': {
+      /* Microsoft Edge */
+      color: theme.colors.primary100,
+    },
   },
   inputDisabledText: {
     color: theme.colors.primary200,
@@ -71,10 +90,10 @@ export const Input: React.FC<IProps> = ({
     <>
       {label && <Typography className={classes.label}>{label}</Typography>}
       <TextField
+        fullWidth
         className={classes.input}
         type="number"
         variant="outlined"
-        fullWidth
         value={value}
         placeholder="Amount"
         onChange={onChange}
@@ -84,7 +103,7 @@ export const Input: React.FC<IProps> = ({
             input: clsx(
               commonClasses.hideInputArrow,
               classes.inputBox,
-              classes.inputDisabledText
+              disabled && classes.inputDisabledText
             ),
           },
         }}
