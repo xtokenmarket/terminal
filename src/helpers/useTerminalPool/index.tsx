@@ -146,8 +146,8 @@ export const useTerminalPool = (
         const token1Percent =
           Number(tvl) === 0 ? 0 : (Number(token1.tvl) / Number(tvl)) * 100
 
-        token0.percent = token0Percent
-        token1.percent = token1Percent
+        token0.percent = token0Percent.toString()
+        token1.percent = token1Percent.toString()
       } else {
         const defaultTokenLogo = '/assets/tokens/unknown.png'
 
@@ -189,7 +189,7 @@ export const useTerminalPool = (
       }
       // console.timeEnd(`loadInfo vesting period ${poolAddress}`)
 
-      if (!pool.rewardTokens[0].price) {
+      if (pool.rewardTokens.length !== 0 && !pool.rewardTokens[0].price) {
         pool.rewardTokens = (await Promise.all(
           pool.rewardTokens.map((token: { address: string }) =>
             getTokenDetails(token.address)
@@ -470,7 +470,7 @@ export const useTerminalPool = (
           address: pool.poolAddress,
           apr: pool.apr || 'N/A',
           manager: pool.manager.toLowerCase(),
-          network: pool.network,
+          network: pool.network || network,
           owner: pool.owner.toLowerCase(),
           periodFinish: BigNumber.from(pool.periodFinish),
           poolFee: pool.poolFee,
