@@ -80,7 +80,7 @@ interface IProps {
 export const ConfirmStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
   // TODO: tempData for testing. Can be removed later
   data = {
-    cliffPeriod: '4',
+    cliffPeriod: 4,
     cliffPeriodUnit: 'Weeks',
     endingPrice: '136',
     isAddVestingPeriod: undefined,
@@ -104,7 +104,7 @@ export const ConfirmStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
     },
     reserveOfferTokenAmount: '43000',
     startingPrice: '134',
-    vestingPeriod: '4',
+    vestingPeriod: 4,
     vestingPeriodUnit: 'Weeks',
   }
 

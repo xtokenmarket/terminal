@@ -112,6 +112,13 @@ export enum Network {
   GOERLI = 'goerli',
 }
 
+export enum EPeriods {
+  Days = 'Days',
+  Weeks = 'Weeks',
+  Months = 'Months',
+  Years = 'Years',
+}
+
 // uni v3
 export enum PoolState {
   LOADING,
@@ -144,7 +151,7 @@ export enum ECreareTokenSaleStep {
   Offering = 'Offering',
   Auction = 'Auction',
   Vesting = 'Vesting',
-  Confirm = 'Confirm'
+  Confirm = 'Confirm',
 }
 
 export enum IpricingFormula {
@@ -152,4 +159,3 @@ export enum IpricingFormula {
   Ascending = 'Ascending',
   Descending = 'Descending',
 }
-

@@ -39,8 +39,8 @@ export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
       <Radio
         className={classes.radio}
         items={Object.values(IpricingFormula)}
-        onChange={(event) => {
-          updateData({ pricingFormula: event.target.value })
+        onChange={(value) => {
+          updateData({ pricingFormula: value })
         }}
       />
       <Grid container spacing={3}>
