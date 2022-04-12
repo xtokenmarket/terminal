@@ -1,6 +1,7 @@
 import { makeStyles, Grid, Typography, Button } from '@material-ui/core'
 import { useEffect, useState } from 'react'
 import { ICreateTokenSaleData } from 'types'
+import { EPeriods } from 'utils/enums'
 import { Radio } from '../Radio'
 import { Selector } from '../Selector'
 import { InfoPanel } from './InfoPanel'
@@ -46,20 +47,20 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
     if (!vestingWanted) {
       // clear previously inserted data if the user selects 'No' option
       updateData({
-        vestingPeriod: '',
-        vestingPeriodUnit: '',
-        cliffPeriod: '',
-        cliffPeriodUnit: '',
+        vestingPeriod: 0,
+        vestingPeriodUnit: EPeriods.Weeks,
+        cliffPeriod: 0,
+        cliffPeriodUnit: EPeriods.Weeks,
       })
     }
   }, [vestingWanted])
 
-  const validVestingDataInserted = !(
+  // TODO: add vestingPeriod and cliffPeriod comparision
+  const validVestingDataInserted =
     data.vestingPeriod &&
     data.vestingPeriodUnit &&
     data.cliffPeriod &&
     data.cliffPeriodUnit
-  )
 
   const handleVestingOptionChange = (option: VestingOption) =>
     selectedVestingOption !== option && setselectedVestingOption(option)
@@ -73,8 +74,8 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
           </Typography>
           <Radio
             items={Object.values(EVestingOpton)}
-            onChange={(event) =>
-              handleVestingOptionChange(event.target.value as VestingOption)
+            onChange={(value) =>
+              handleVestingOptionChange(value as VestingOption)
             }
           />
         </Grid>
@@ -83,11 +84,11 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
             onSelectorChange={(e) =>
               updateData({ vestingPeriodUnit: e.target.value })
             }
-            selectorValue={data.vestingPeriodUnit}
+            selectorValue={`${data.vestingPeriodUnit}`}
             label="Vesting Period"
             // TODO: add a non-placeholder text
             infoText="Placeholder text"
-            inputValue={data.vestingPeriod}
+            inputValue={`${data.vestingPeriod}`}
             onChangeinput={(e) => {
               updateData({ vestingPeriod: e.target.value })
             }}
@@ -99,9 +100,9 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
             onSelectorChange={(e) =>
               updateData({ cliffPeriodUnit: e.target.value })
             }
-            selectorValue={data.cliffPeriodUnit}
+            selectorValue={`${data.cliffPeriodUnit}`}
             label="Cliff Period"
-            inputValue={data.cliffPeriod}
+            inputValue={`${data.cliffPeriod}`}
             onChangeinput={(e) => {
               updateData({ cliffPeriod: e.target.value })
             }}
@@ -121,7 +122,7 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
         onClick={onNext}
         variant="contained"
         disabled={
-          vestingWanted ? validVestingDataInserted : !selectedVestingOption
+          vestingWanted ? !validVestingDataInserted : !selectedVestingOption
         }
       >
         Next

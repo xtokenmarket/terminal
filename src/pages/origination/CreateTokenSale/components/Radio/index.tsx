@@ -4,6 +4,7 @@ import { useState } from 'react'
 const useStyles = makeStyles((theme) => ({
   label: {
     color: theme.colors.white,
+    cursor: 'pointer',
   },
   item: {
     display: 'flex',
@@ -25,16 +26,18 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   items: string[]
-  onChange: (
-    event: React.ChangeEvent<HTMLInputElement>,
-    checked?: boolean
-  ) => void
+  onChange: (value: string, checked?: boolean) => void
   className?: string
 }
 
 export const Radio: React.FC<IProps> = ({ items, onChange, className }) => {
   const [value, setValue] = useState('')
   const classes = useStyles()
+
+  const handleItemSelected = (item: string) => {
+    onChange(item)
+    setValue(item)
+  }
 
   return (
     <div className={className}>
@@ -58,14 +61,18 @@ export const Radio: React.FC<IProps> = ({ items, onChange, className }) => {
                 className={classes.checkboxIcon}
               />
             }
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              onChange(e)
-              setValue(item)
-            }}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handleItemSelected(e.target.value)
+            }
             disableRipple
             value={item}
           />
-          <Typography className={classes.label}>{item}</Typography>
+          <Typography
+            className={classes.label}
+            onClick={() => handleItemSelected(item)}
+          >
+            {item}
+          </Typography>
         </div>
       ))}
     </div>
