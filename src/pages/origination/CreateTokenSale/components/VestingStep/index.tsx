@@ -1,6 +1,7 @@
-import { makeStyles, Grid, Typography, Button } from '@material-ui/core'
 import { useEffect, useState } from 'react'
-import { ICreateTokenSaleData } from 'types'
+import moment, { unitOfTime } from 'moment'
+import { makeStyles, Grid, Typography, Button } from '@material-ui/core'
+import { ICreateTokenSaleData, PeriodUnit } from 'types'
 import { EPeriods } from 'utils/enums'
 import { Radio } from '../Radio'
 import { Selector } from '../Selector'
@@ -42,6 +43,8 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
   const classes = useStyles()
 
   const vestingWanted = selectedVestingOption === EVestingOpton.Yes
+  const { vestingPeriod, vestingPeriodUnit, cliffPeriod, cliffPeriodUnit } =
+    data
 
   useEffect(() => {
     if (!vestingWanted) {
@@ -55,15 +58,40 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
     }
   }, [vestingWanted])
 
-  // TODO: add vestingPeriod and cliffPeriod comparision
-  const validVestingDataInserted =
-    data.vestingPeriod &&
-    data.vestingPeriodUnit &&
-    data.cliffPeriod &&
-    data.cliffPeriodUnit
-
   const handleVestingOptionChange = (option: VestingOption) =>
     selectedVestingOption !== option && setselectedVestingOption(option)
+
+  const validInsertedVestingConfig = (
+    vestingPeriod: number,
+    vestingPeriodUnit: PeriodUnit,
+    cliffPeriod: number,
+    cliffPeriodUnit: PeriodUnit
+  ) => {
+    const vestingEndDate = moment().add(
+      vestingPeriod,
+      `${vestingPeriodUnit}`.toLowerCase() as unitOfTime.DurationConstructor
+    )
+    const cliffPeriodEndDate = moment().add(
+      cliffPeriod,
+      `${cliffPeriodUnit}`.toLowerCase() as unitOfTime.DurationConstructor
+    )
+
+    return (
+      vestingPeriod > 0 && cliffPeriodEndDate.isSameOrBefore(vestingEndDate)
+    )
+  }
+
+  const validVestingDataInserted =
+    vestingPeriod &&
+    vestingPeriodUnit &&
+    cliffPeriod &&
+    cliffPeriodUnit &&
+    validInsertedVestingConfig(
+      vestingPeriod,
+      vestingPeriodUnit,
+      cliffPeriod,
+      cliffPeriodUnit
+    )
 
   return (
     <>
