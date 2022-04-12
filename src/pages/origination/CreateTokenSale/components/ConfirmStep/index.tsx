@@ -2,6 +2,7 @@ import { Button, Grid, Typography, makeStyles } from '@material-ui/core'
 import { useState } from 'react'
 import { ICreateTokenSaleData } from 'types'
 import { IpricingFormula } from 'utils/enums'
+import { CreateTokenSaleModal } from '../CreateTokenSaleModal'
 import { PricingFormulaTable } from '../PricingFormulaTable'
 
 const useStyles = makeStyles((theme) => ({
@@ -178,6 +179,12 @@ export const ConfirmStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
       >
         SUBMIT
       </Button>
+
+      <CreateTokenSaleModal
+        isOpen={isSellTokenModalVisible}
+        onClose={toggleSellTokenModal}
+        data={data}
+      />
     </div>
   )
 }
