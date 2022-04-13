@@ -1,4 +1,5 @@
 import { makeStyles, Typography } from '@material-ui/core'
+import clsx from 'clsx'
 import { ECreareTokenSaleStep } from 'utils/enums'
 import { CreateTokenSaleStepper } from './CreateTokenSaleStepper'
 
@@ -26,6 +27,11 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
     },
   },
+  firstStepHeader: {
+    [theme.breakpoints.up('lg')]: {
+      paddingRight: 110,
+    },
+  },
   title: {
     fontSize: 18,
     color: theme.colors.white,
@@ -39,7 +45,6 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 600,
     cursor: 'pointer',
     marginLeft: 52,
-    flexShrink: 1,
   },
 }))
 
@@ -50,15 +55,23 @@ interface IProps {
 
 export const CreareTokenSaleHeader = ({ step, onCancel }: IProps) => {
   const classes = useStyles()
+  const isFirstStep = step === ECreareTokenSaleStep.Offering
 
   return (
-    <div className={classes.headerTop}>
+    <div
+      className={clsx(
+        classes.headerTop,
+        isFirstStep && classes.firstStepHeader
+      )}
+    >
       <Typography className={classes.title}>Token Sale</Typography>
       <div className={classes.headerDataContainer}>
         <CreateTokenSaleStepper step={step} />
-        <span className={classes.cancel} onClick={onCancel}>
-          Cancel
-        </span>
+        {!isFirstStep && (
+          <span className={classes.cancel} onClick={onCancel}>
+            Cancel
+          </span>
+        )}
       </div>
     </div>
   )
