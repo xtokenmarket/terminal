@@ -39,6 +39,7 @@ import {
   getTokenExchangeRate,
 } from './helper'
 import { ethers, Contract } from 'ethers'
+
 interface IState {
   pool?: ITerminalPool
   loading: boolean
@@ -126,8 +127,8 @@ export const useTerminalPool = (
 
         const ids = await getCoinGeckoIDs([token0.symbol, token1.symbol])
         const rates = await getTokenExchangeRate(ids)
-        pool.token0.price = rates ? rates[0].toString() : '0'
-        pool.token1.price = rates ? rates[1].toString() : '0'
+        pool.token0.price = rates && rates[0] ? rates[0].toString() : '0'
+        pool.token1.price = rates && rates[1] ? rates[1].toString() : '0'
 
         const token0tvl = token0Balance
           .mul(parseEther(pool.token0.price))
