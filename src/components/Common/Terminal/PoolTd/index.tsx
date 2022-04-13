@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme: any) => ({
     '&.allocation': { flex: 1 },
     '&.tvl': { width: '10%' },
     '&.vesting': { width: '10%' },
-    '&.program': { width: '18%' },
+    '&.program': { width: '25%' },
     '&.ending': { width: '15%' },
     '&.apr': { width: '10%' },
     '&+&': { paddingLeft: 16 },

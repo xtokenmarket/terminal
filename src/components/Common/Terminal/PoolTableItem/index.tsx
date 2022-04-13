@@ -77,6 +77,7 @@ const useStyles = makeStyles((theme) => ({
   label: {
     color: theme.colors.white,
     textTransform: 'capitalize',
+    marginLeft: 5,
   },
   apr: {
     backgroundColor: theme.colors.primary200,
@@ -208,7 +209,11 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
                     {formatToShortNumber(
                       formatBigNumber(uintAmount, rewardToken.decimals)
                     )}{' '}
-                    {rewardToken.symbol} / {durationInfo.unitStr}
+                    {rewardToken.symbol}
+                    {index !== tokens.length - 1 ? ' + ' : ' '}
+                    {index === tokens.length - 1
+                      ? `/ ${durationInfo.unitStr}`
+                      : ''}
                   </Typography>
                 )
               }
