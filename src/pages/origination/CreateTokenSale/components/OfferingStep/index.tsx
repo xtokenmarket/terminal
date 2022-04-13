@@ -1,7 +1,7 @@
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { TokenSelect } from 'components'
 import { ICreateTokenSaleData } from 'types'
-import { InfoText } from 'utils/enums'
+import { Description, InfoText } from 'utils/enums'
 import { Input } from '../Input'
 import { QuestionTooltip } from '../QuestionTooltip'
 import { Selector } from '../Selector'
@@ -23,6 +23,11 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     marginTop: 20,
+  },
+  description: {
+    color: theme.colors.primary100,
+    fontSize: 12,
+    marginTop: 5,
   },
 }))
 
@@ -80,6 +85,9 @@ export const OfferingStep: React.FC<IProps> = ({
             token={data.purchaseToken}
             onChange={(purchaseToken) => updateData({ purchaseToken })}
           />
+          <Typography className={classes.description}>
+            {Description.PurchaseToken}
+          </Typography>
         </Grid>
       </Grid>
       <Grid container spacing={3} direction="column">
@@ -90,6 +98,9 @@ export const OfferingStep: React.FC<IProps> = ({
             onChange={(e) => updateData({ offerTokenAmount: e.target.value })}
             infoText={InfoText.OfferTokenAmount}
           />
+          <Typography className={classes.description}>
+            {Description.OfferTokenAmount}
+          </Typography>
         </Grid>
         <Grid item xs={12} md={6}>
           <Input
@@ -100,6 +111,9 @@ export const OfferingStep: React.FC<IProps> = ({
             }
             infoText={InfoText.ReserveOfferTokenAmount}
           />
+          <Typography className={classes.description}>
+            {Description.ReserveOfferTokenAmount}
+          </Typography>
         </Grid>
 
         <Grid item xs={12} md={6}>
