@@ -143,7 +143,7 @@ export const Selector: React.FC<IProps> = ({
           )}
         </div>
       )}
-      <Grid container justify="space-between" spacing={3}>
+      <Grid container justifyContent="space-between" spacing={3}>
         <Grid item xs={12} md={7}>
           <Input
             value={inputValue}
