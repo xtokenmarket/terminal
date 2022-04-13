@@ -120,7 +120,7 @@ const TokenSwapCTA = ({ token }: ITokenSwapCTA) => {
 
   return (
     <span className={classes.buyToken} onClick={() => onTokenBuyClick(token)}>
-      Swap to {token.symbol}
+      Swap for {token.symbol}
     </span>
   )
 }
