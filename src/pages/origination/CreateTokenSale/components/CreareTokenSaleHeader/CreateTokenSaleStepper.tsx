@@ -1,17 +1,20 @@
 import React from 'react'
+import clsx from 'clsx'
 import {
   Stepper,
   Step,
   StepLabel,
   makeStyles,
-  Typography,
   useMediaQuery,
 } from '@material-ui/core'
 import { ECreareTokenSaleStep } from 'utils/enums'
 
 const useStyles = makeStyles((theme) => ({
   stepper: {
-    background: theme.colors.primary500,
+    maxWidth: 748,
+    maraginLeft: 'auto',
+    background: 'transparent',
+    padding: 0,
     [theme.breakpoints.up('md')]: {
       width: '100%',
     },
@@ -19,34 +22,58 @@ const useStyles = makeStyles((theme) => ({
       padding: '10px 4px',
     },
   },
-  step: {
+  stepIcon: {
+    width: 32,
+    height: 32,
+    border: `2px solid ${theme.colors.primary200}`,
+    borderRadius: '50%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: 15,
+    fontWeight: 700,
+  },
+  stepIconActive: {
+    color: theme.colors.white,
+    background: theme.colors.primary300,
+  },
+  stepIconInactive: {
+    color: theme.colors.primary100,
+  },
+  stepLabel: {
     '& .MuiStepLabel-label': {
-      color: theme.colors.gray2,
+      color: theme.colors.primary100,
+      fontSize: 14,
+      fontWeight: 600,
+
       '&.MuiStepLabel-active': {
         color: theme.colors.white,
       },
-      '&.MuiStepLabel-completed': {},
-    },
-    '& .MuiStepIcon-root text': {
-      fill: theme.colors.gray2,
-    },
-    '& .MuiStepIcon-active': {
-      color: theme.colors.primary200,
-      '& text': {
-        fill: theme.colors.white,
-      },
-    },
-    '& .MuiStepIcon-completed': {
-      color: theme.colors.primary200,
-      '& text': {
-        fill: theme.colors.gray2,
-      },
-    },
-    '& svg': {
-      fontSize: 36,
     },
   },
 }))
+
+interface IStepCircleIcon {
+  active: boolean
+}
+
+const StepCircleIcon = ({
+  active,
+  children,
+}: React.PropsWithChildren<IStepCircleIcon>) => {
+  const classes = useStyles()
+
+  return (
+    <div
+      className={clsx(
+        classes.stepIcon,
+        active ? classes.stepIconActive : classes.stepIconInactive
+      )}
+    >
+      {children}
+    </div>
+  )
+}
 
 interface IProps {
   step: ECreareTokenSaleStep
@@ -74,7 +101,7 @@ const STEPS_DATA: Record<
   },
 }
 
-export const CreateTokenSaleStepper: React.FC<IProps> = ({ step }) => {
+export const CreateTokenSaleStepper = ({ step }: IProps) => {
   const cl = useStyles()
   const stepNum = STEPS_DATA[step].index
   const isSm = useMediaQuery('(max-width: 959px)')
@@ -86,9 +113,14 @@ export const CreateTokenSaleStepper: React.FC<IProps> = ({ step }) => {
       orientation={orientation}
     >
       {Object.values(STEPS_DATA).map(({ index, label }) => (
-        <Step key={index} className={cl.step}>
-          <StepLabel>
-            <Typography variant="body1">{label}</Typography>
+        <Step key={index}>
+          <StepLabel
+            className={cl.stepLabel}
+            StepIconComponent={({ active, icon }) => (
+              <StepCircleIcon active={active}>{icon}</StepCircleIcon>
+            )}
+          >
+            {label}
           </StepLabel>
         </Step>
       ))}

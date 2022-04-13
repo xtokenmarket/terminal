@@ -14,6 +14,9 @@ import {
 } from './components'
 
 const useStyles = makeStyles((theme) => ({
+  pageWrapper: {
+    paddingTop: 42,
+  },
   label: {
     color: theme.colors.white,
     marginBottom: theme.spacing(2),
@@ -148,7 +151,7 @@ const CreareTokenSale = () => {
   }
 
   return (
-    <PageWrapper>
+    <PageWrapper className={classes.pageWrapper}>
       <CreareTokenSaleHeader step={state.step} onCancel={onBack} />
       <PageContent>
         <div className={classes.content}>{renderContent()}</div>
