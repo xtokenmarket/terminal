@@ -167,13 +167,18 @@ export enum InfoText {
   PurchaseToken = 'PurchaseToken',
   OfferTokenAmount = 'OfferTokenAmount',
   ReserveOfferTokenAmount = 'ReserveOfferTokenAmount',
-  OfferingPeriod = 'OfferingPeriod'
+  OfferingPeriod = 'OfferingPeriod',
+  Standard = 'Standard',
+  Ascending = 'Ascending',
+  Descending = 'Descending'
 }
 
 export enum Description {
   PurchaseToken = 'choose what to sell your offer token for',
   OfferTokenAmount = 'Determine the amount of token you want to sell',
   ReserveOfferTokenAmount = 'Maximum amount of tokens you want to offer',
+  StartingPrice = 'Determine the price of the token',
+  EndingPrice = 'Maximum amount of tokens you want to offer'
 }
 
 

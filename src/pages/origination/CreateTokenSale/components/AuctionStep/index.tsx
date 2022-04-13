@@ -1,6 +1,6 @@
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { ICreateTokenSaleData } from 'types'
-import { IpricingFormula } from 'utils/enums'
+import { Description, IpricingFormula } from 'utils/enums'
 import { Input } from '../Input'
 import { Radio } from '../Radio'
 
@@ -10,6 +10,14 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
   },
   radio: { marginBottom: 34 },
+  description: {
+    color: theme.colors.primary100,
+    fontSize: 12,
+    marginTop: 5,
+  },
+  button: {
+    marginTop: 20,
+  },
 }))
 
 interface IProps {
@@ -50,11 +58,17 @@ export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
             value={data.startingPrice}
             onChange={(e) => updateData({ startingPrice: e.target.value })}
           />
+          <Typography className={classes.description}>
+            {Description.StartingPrice}
+          </Typography>
           <Input
             label={`Ending Price - ${data.purchaseToken?.symbol} per ${data.offerToken?.symbol}`}
             value={data.endingPrice}
             onChange={(e) => updateData({ endingPrice: e.target.value })}
           />
+          <Typography className={classes.description}>
+            {Description.EndingPrice}
+          </Typography>
         </Grid>
       </Grid>
 
@@ -64,6 +78,7 @@ export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
         onClick={onClickNext}
         variant="contained"
         disabled={isNextBtnDisabled}
+        className={classes.button}
       >
         Next
       </Button>
