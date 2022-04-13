@@ -21,6 +21,14 @@ const useStyles = makeStyles((theme) => ({
     '& .MuiStepConnector-vertical': {
       padding: '10px 4px',
     },
+    '& .MuiStepConnector-root': {
+      [theme.breakpoints.up('md')]: {
+        display: 'none',
+      },
+    },
+    '& .MuiStep-root': {
+      // padding: '0px 20px',
+    },
   },
   stepIcon: {
     width: 32,
@@ -45,6 +53,9 @@ const useStyles = makeStyles((theme) => ({
       color: theme.colors.primary100,
       fontSize: 14,
       fontWeight: 600,
+      [theme.breakpoints.up('lg')]: {
+        whiteSpace: 'nowrap',
+      },
 
       '&.MuiStepLabel-active': {
         color: theme.colors.white,
