@@ -52,7 +52,7 @@ const initialState: IState = {
   cliffPeriodUnit: '',
   offerToken: undefined,
   purchaseToken: undefined,
-  step: ECreareTokenSaleStep.Vesting,
+  step: ECreareTokenSaleStep.Offering,
   offeringPeriodUnit: '',
 }
 
