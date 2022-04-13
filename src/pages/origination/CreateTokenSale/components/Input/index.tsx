@@ -2,6 +2,7 @@ import { makeStyles, TextField, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 
 import useCommonStyles from 'style/common'
+import { QuestionTooltip } from '../QuestionTooltip'
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -25,12 +26,14 @@ const useStyles = makeStyles((theme) => ({
   },
   inputBox: {
     paddingRight: 60,
-    color: theme.colors.primary100,
+    color: theme.colors.white,
+    fontWeight: 700,
     '&::placeholder': {
       /* Chrome, Firefox, Opera, Safari 10.1+ */
       color: theme.colors.primary100,
       /* Firefox */
       opacity: 1,
+      fontWeight: 'normal',
     },
     '&:-ms-input-placeholder': {
       /* Internet Explorer 10-11 */
@@ -68,6 +71,13 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     marginTop: 22,
   },
+  labelWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  tooltipQuestion: {
+    marginLeft: 10,
+  },
 }))
 
 interface IProps {
@@ -75,6 +85,7 @@ interface IProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   label?: string
   disabled?: boolean
+  infoText?: string
 }
 
 export const Input: React.FC<IProps> = ({
@@ -82,13 +93,27 @@ export const Input: React.FC<IProps> = ({
   onChange,
   label,
   disabled,
+  infoText,
 }) => {
   const classes = useStyles()
   const commonClasses = useCommonStyles()
 
   return (
     <>
-      {label && <Typography className={classes.label}>{label}</Typography>}
+      {label && (
+        <div className={classes.labelWrapper}>
+          <Typography className={classes.label}>
+            {label}
+            {infoText && (
+              <QuestionTooltip
+                title={infoText}
+                className={classes.tooltipQuestion}
+              />
+            )}
+          </Typography>
+        </div>
+      )}
+
       <TextField
         fullWidth
         className={classes.input}

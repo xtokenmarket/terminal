@@ -161,3 +161,11 @@ export enum ECreateTokenSaleModalStep {
   Init = 'Init',
   Success = 'Success',
 }
+
+export enum InfoText {
+  OfferToken = 'OfferToken',
+  PurchaseToken = 'PurchaseToken',
+  OfferTokenAmount = 'OfferTokenAmount',
+  ReserveOfferTokenAmount = 'ReserveOfferTokenAmount',
+  OfferingPeriod = 'OfferingPeriod'
+}
