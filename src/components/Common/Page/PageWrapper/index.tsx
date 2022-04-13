@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
@@ -13,11 +14,14 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  children?: React.ReactNode | React.ReactNode[]
+  className?: string
 }
 
-export const PageWrapper = (props: IProps) => {
+export const PageWrapper = ({
+  className,
+  children,
+}: React.PropsWithChildren<IProps>) => {
   const classes = useStyles()
 
-  return <div className={classes.root}>{props.children}</div>
+  return <div className={clsx(classes.root, className)}>{children}</div>
 }

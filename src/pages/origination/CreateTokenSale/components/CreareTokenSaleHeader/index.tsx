@@ -7,23 +7,39 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     background: theme.colors.primary500,
+    borderBottom: `1px solid ${theme.colors.primary200}`,
+    paddingBottom: theme.spacing(2),
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
       justifyContent: 'center',
-      padding: theme.spacing(3, 0),
-      margin: theme.spacing(2),
+    },
+  },
+  headerDataContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    [theme.breakpoints.down('md')]: {
+      flexDirection: 'column',
     },
   },
   title: {
     fontSize: 18,
     color: theme.colors.white,
     fontWeight: 700,
+    lineHeight: '21.6px',
+    flexShrink: 2,
   },
   cancel: {
+    fontSize: 14,
     color: theme.colors.primary100,
     fontWeight: 600,
     cursor: 'pointer',
+    marginLeft: 52,
+    flexShrink: 1,
   },
 }))
 
@@ -38,10 +54,12 @@ export const CreareTokenSaleHeader = ({ step, onCancel }: IProps) => {
   return (
     <div className={classes.headerTop}>
       <Typography className={classes.title}>Token Sale</Typography>
-      <CreateTokenSaleStepper step={step} />
-      <span className={classes.cancel} onClick={onCancel}>
-        Cancel
-      </span>
+      <div className={classes.headerDataContainer}>
+        <CreateTokenSaleStepper step={step} />
+        <span className={classes.cancel} onClick={onCancel}>
+          Cancel
+        </span>
+      </div>
     </div>
   )
 }
