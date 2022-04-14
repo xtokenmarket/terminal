@@ -1,9 +1,6 @@
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
-import clsx from 'clsx'
 import { DetailedTokenSelect } from 'components/Modal/RewardModal/components/DetailedTokenSelect'
-import { useTokenBalance } from 'helpers'
 import { ICreateTokenSaleData } from 'types'
-import { formatBigNumber } from 'utils'
 import { Description, InfoText } from 'utils/enums'
 import { InputDescription } from '../InputDescription'
 import { QuestionTooltip } from '../QuestionTooltip'
@@ -125,6 +122,7 @@ export const OfferingStep: React.FC<IProps> = ({
         <Grid item xs={12} md={6}>
           <TokenAmountInput
             label="Reserve Offer Token Amount"
+            token={data.offerToken}
             value={data.reserveOfferTokenAmount}
             onChange={(e) =>
               updateData({ reserveOfferTokenAmount: e.target.value })
