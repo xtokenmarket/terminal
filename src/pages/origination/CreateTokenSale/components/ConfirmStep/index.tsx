@@ -1,7 +1,7 @@
 import { Button, Grid, Typography, makeStyles } from '@material-ui/core'
 import { useState } from 'react'
 import { ICreateTokenSaleData } from 'types'
-import { IpricingFormula } from 'utils/enums'
+import { EPeriods, IpricingFormula } from 'utils/enums'
 import { CreateTokenSaleModal } from '../CreateTokenSaleModal'
 import { PricingFormulaTable } from '../PricingFormulaTable'
 
@@ -97,8 +97,8 @@ export const ConfirmStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
       image: '/assets/tokens/unknown.png',
     },
     offerTokenAmount: '43001',
-    offeringPeriod: '2',
-    offeringPeriodUnit: 'Weeks',
+    offeringPeriod: 2,
+    offeringPeriodUnit: EPeriods.Weeks,
     pricingFormula: IpricingFormula.Ascending,
     purchaseToken: {
       name: 'DAI',
