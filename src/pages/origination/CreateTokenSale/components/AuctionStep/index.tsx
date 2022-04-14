@@ -66,6 +66,8 @@ export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
           <Typography className={classes.description}>
             {Description.StartingPrice}
           </Typography>
+          <br />
+          <br />
           <Input
             label={`Ending Price - ${data.purchaseToken?.symbol} per ${data.offerToken?.symbol}`}
             value={data.endingPrice}
