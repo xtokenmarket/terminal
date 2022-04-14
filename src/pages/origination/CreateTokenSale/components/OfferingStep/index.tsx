@@ -1,7 +1,10 @@
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
+import clsx from 'clsx'
 import { TokenSelect } from 'components'
 import { DetailedTokenSelect } from 'components/Modal/RewardModal/components/DetailedTokenSelect'
+import { useTokenBalance } from 'helpers'
 import { ICreateTokenSaleData } from 'types'
+import { formatBigNumber } from 'utils'
 import { Description, InfoText } from 'utils/enums'
 import { Input } from '../Input'
 import { InputDescription } from '../InputDescription'
@@ -44,6 +47,10 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  textDecoration: {
+    textDecoration: `underline ${theme.colors.primary200}`,
+    textUnderlineOffset: '5px',
+  },
 }))
 
 interface IProps {
@@ -59,6 +66,10 @@ export const OfferingStep: React.FC<IProps> = ({
 }) => {
   const classes = useStyles()
 
+  const tokenAddress = data.offerToken ? data.offerToken?.address : ''
+
+  const { balance: balance0 } = useTokenBalance(tokenAddress)
+
   const onClickNext = () => {
     onNext()
   }
@@ -71,6 +82,26 @@ export const OfferingStep: React.FC<IProps> = ({
     data.offeringPeriod &&
     data.offeringPeriodUnit
   )
+
+  const renderDescription = () => {
+    return data.offerToken ? (
+      <>
+        <Typography
+          className={clsx(classes.description, classes.textDecoration)}
+        >
+          Available ~ ${' '}
+          <b>
+            {formatBigNumber(balance0, data.offerToken.decimals)} $
+            {data.offerToken.symbol}
+          </b>
+        </Typography>
+      </>
+    ) : (
+      <Typography className={classes.description}>
+        {Description.ReserveOfferTokenAmount}
+      </Typography>
+    )
+  }
 
   return (
     <>
@@ -118,9 +149,7 @@ export const OfferingStep: React.FC<IProps> = ({
             onChange={(e) => updateData({ offerTokenAmount: e.target.value })}
             infoText={InfoText.OfferTokenAmount}
           />
-          <InputDescription className={classes.description}>
-            {Description.OfferTokenAmount}
-          </InputDescription>
+          {renderDescription()}
         </Grid>
         <Grid item xs={12} md={6}>
           <Input
@@ -131,9 +160,7 @@ export const OfferingStep: React.FC<IProps> = ({
             }
             infoText={InfoText.ReserveOfferTokenAmount}
           />
-          <InputDescription className={classes.description}>
-            {Description.ReserveOfferTokenAmount}
-          </InputDescription>
+          {renderDescription()}
         </Grid>
 
         <Grid item xs={12} md={6}>
