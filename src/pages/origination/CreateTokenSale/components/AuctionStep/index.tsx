@@ -1,6 +1,6 @@
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { ICreateTokenSaleData } from 'types'
-import { Description, IpricingFormula } from 'utils/enums'
+import { Description, InfoText, IpricingFormula } from 'utils/enums'
 import { Input } from '../Input'
 import { Radio } from '../Radio'
 
@@ -45,6 +45,11 @@ export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
         Choose the Pricing formula for this offering
       </Typography>
       <Radio
+        infoText={Object.values([
+          InfoText.Standard,
+          InfoText.Ascending,
+          InfoText.Descending,
+        ])}
         className={classes.radio}
         items={Object.values(IpricingFormula)}
         onChange={(value) => {
