@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import { makeStyles, Typography } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
-  desc: {
+  description: {
     color: theme.colors.primary100,
     fontSize: 12,
     lineHeight: '14.4px',
@@ -29,7 +29,7 @@ export const InputDescription = ({
   const classes = useStyles()
 
   return (
-    <Typography className={clsx(classes.desc, className)}>
+    <Typography className={clsx(classes.description, className)}>
       {children}
       {underlined && <div className={classes.descriptionUnderline} />}
     </Typography>

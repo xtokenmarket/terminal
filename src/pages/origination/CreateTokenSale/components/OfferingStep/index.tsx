@@ -1,15 +1,14 @@
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import clsx from 'clsx'
-import { TokenSelect } from 'components'
 import { DetailedTokenSelect } from 'components/Modal/RewardModal/components/DetailedTokenSelect'
 import { useTokenBalance } from 'helpers'
 import { ICreateTokenSaleData } from 'types'
 import { formatBigNumber } from 'utils'
 import { Description, InfoText } from 'utils/enums'
-import { Input } from '../Input'
 import { InputDescription } from '../InputDescription'
 import { QuestionTooltip } from '../QuestionTooltip'
 import { Selector } from '../Selector'
+import { TokenAmountInput } from '../TokenAmountInput'
 
 const useStyles = makeStyles((theme) => ({
   label: {
@@ -65,15 +64,6 @@ export const OfferingStep: React.FC<IProps> = ({
   onNext,
 }) => {
   const classes = useStyles()
-
-  const tokenAddress = data.offerToken ? data.offerToken?.address : ''
-
-  const { balance: balance0 } = useTokenBalance(tokenAddress)
-
-  const onClickNext = () => {
-    onNext()
-  }
-
   const isNextBtnDisabled = !(
     data.offerToken &&
     data.purchaseToken &&
@@ -82,26 +72,6 @@ export const OfferingStep: React.FC<IProps> = ({
     data.offeringPeriod &&
     data.offeringPeriodUnit
   )
-
-  const renderDescription = () => {
-    return data.offerToken ? (
-      <>
-        <Typography
-          className={clsx(classes.description, classes.textDecoration)}
-        >
-          Available ~ ${' '}
-          <b>
-            {formatBigNumber(balance0, data.offerToken.decimals)} $
-            {data.offerToken.symbol}
-          </b>
-        </Typography>
-      </>
-    ) : (
-      <Typography className={classes.description}>
-        {Description.ReserveOfferTokenAmount}
-      </Typography>
-    )
-  }
 
   return (
     <>
@@ -143,24 +113,25 @@ export const OfferingStep: React.FC<IProps> = ({
         className={classes.tokenInputsContainer}
       >
         <Grid item xs={12} md={6}>
-          <Input
+          <TokenAmountInput
             label="Offer Token Amount"
+            token={data.offerToken}
             value={data.offerTokenAmount}
             onChange={(e) => updateData({ offerTokenAmount: e.target.value })}
             infoText={InfoText.OfferTokenAmount}
+            tokenDetailsPlaceholder={Description.ReserveOfferTokenAmount}
           />
-          {renderDescription()}
         </Grid>
         <Grid item xs={12} md={6}>
-          <Input
-            label={'Reserve Offer Token Amount'}
+          <TokenAmountInput
+            label="Reserve Offer Token Amount"
             value={data.reserveOfferTokenAmount}
             onChange={(e) =>
               updateData({ reserveOfferTokenAmount: e.target.value })
             }
             infoText={InfoText.ReserveOfferTokenAmount}
+            tokenDetailsPlaceholder={Description.ReserveOfferTokenAmount}
           />
-          {renderDescription()}
         </Grid>
 
         <Grid item xs={12} md={6}>
@@ -188,7 +159,7 @@ export const OfferingStep: React.FC<IProps> = ({
       <Button
         color="primary"
         fullWidth
-        onClick={onClickNext}
+        onClick={onNext}
         variant="contained"
         disabled={isNextBtnDisabled}
       >
