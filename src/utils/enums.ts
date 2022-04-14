@@ -171,9 +171,9 @@ export enum InfoText {
   OfferTokenAmount = 'OfferTokenAmount',
   ReserveOfferTokenAmount = 'ReserveOfferTokenAmount',
   OfferingPeriod = 'OfferingPeriod',
-  Standard = 'Standard',
-  Ascending = 'Ascending',
-  Descending = 'Descending'
+  Standard = 'All offer tokens sells for 1 USDC',
+  Ascending = 'Price steadily goes up from offering standard price. ',
+  Descending = 'Price steadily goes down from offering standard price. '
 }
 
 export enum Description {
