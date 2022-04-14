@@ -116,7 +116,7 @@ export const OfferingStep: React.FC<IProps> = ({
             value={data.offerTokenAmount}
             onChange={(e) => updateData({ offerTokenAmount: e.target.value })}
             infoText={InfoText.OfferTokenAmount}
-            tokenDetailsPlaceholder={Description.ReserveOfferTokenAmount}
+            tokenDetailsPlaceholder={Description.OfferTokenAmount}
           />
         </Grid>
         <Grid item xs={12} md={6}>
