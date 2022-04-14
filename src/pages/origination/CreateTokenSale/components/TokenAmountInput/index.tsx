@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { BigNumber } from '@ethersproject/bignumber'
+import { TokenIcon } from 'components'
 import { IToken } from 'types'
 import { makeStyles, TextField, Typography } from '@material-ui/core'
 
@@ -90,6 +90,20 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: `underline ${theme.colors.primary200}`,
     textUnderlineOffset: '5px',
   },
+  tokenIcon: {
+    width: 32,
+    height: 32,
+    position: 'absolute',
+    left: 16,
+    top: '50%',
+    transform: 'translateY(-50%)',
+  },
+  detailedInput: {
+    paddingLeft: theme.spacing(9),
+  },
+  inputContainer: {
+    position: 'relative',
+  },
 }))
 
 interface IProps {
@@ -140,28 +154,31 @@ export const TokenAmountInput: React.FC<IProps> = ({
           </Typography>
         </div>
       )}
-
-      <TextField
-        fullWidth
-        className={classes.input}
-        type="number"
-        variant="outlined"
-        value={value}
-        placeholder="Amount"
-        onChange={onChange}
-        InputProps={{
-          classes: {
-            notchedOutline: classes.notchedOutline,
-            input: clsx(
-              commonClasses.hideInputArrow,
-              classes.inputBox,
-              className,
-              disabled && classes.inputDisabledText
-            ),
-          },
-        }}
-        disabled={disabled}
-      />
+      <div className={classes.inputContainer}>
+        <TextField
+          fullWidth
+          className={classes.input}
+          type="number"
+          variant="outlined"
+          value={value}
+          placeholder={token ? 'Input amount' : 'Amount'}
+          onChange={onChange}
+          InputProps={{
+            classes: {
+              notchedOutline: classes.notchedOutline,
+              input: clsx(
+                commonClasses.hideInputArrow,
+                classes.inputBox,
+                token && classes.detailedInput,
+                className,
+                disabled && classes.inputDisabledText
+              ),
+            },
+          }}
+          disabled={disabled}
+        />
+        {token && <TokenIcon token={token} className={classes.tokenIcon} />}
+      </div>
 
       <Typography className={classes.bottomDetails}>
         {value === '' || !token
