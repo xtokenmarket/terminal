@@ -213,7 +213,7 @@ export type PeriodUnit = EPeriods[keyof EPeriods]
 export interface ICreateTokenSaleData {
   offerTokenAmount: string
   reserveOfferTokenAmount: string
-  offeringPeriod: string
+  offeringPeriod: number
   offerToken?: IToken
   purchaseToken?: IToken
   pricingFormula?: IpricingFormula
@@ -224,5 +224,5 @@ export interface ICreateTokenSaleData {
   vestingPeriodUnit: PeriodUnit
   cliffPeriod?: number
   cliffPeriodUnit: PeriodUnit
-  offeringPeriodUnit: string
+  offeringPeriodUnit: PeriodUnit
 }

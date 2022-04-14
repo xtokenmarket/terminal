@@ -1,8 +1,10 @@
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { TokenSelect } from 'components'
+import { DetailedTokenSelect } from 'components/Modal/RewardModal/components/DetailedTokenSelect'
 import { ICreateTokenSaleData } from 'types'
 import { Description, InfoText } from 'utils/enums'
 import { Input } from '../Input'
+import { InputDescription } from '../InputDescription'
 import { QuestionTooltip } from '../QuestionTooltip'
 import { Selector } from '../Selector'
 
@@ -21,13 +23,26 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     marginBottom: 18,
   },
-  button: {
-    marginTop: 20,
-  },
   description: {
-    color: theme.colors.primary100,
-    fontSize: 12,
-    marginTop: 5,
+    marginTop: theme.spacing(1),
+  },
+  selectInputsContainer: {
+    [theme.breakpoints.up('md')]: {
+      '&>:not(:last-child)': {
+        paddingRight: theme.spacing(4),
+      },
+    },
+  },
+  tokenInputsContainer: {
+    paddingBottom: theme.spacing(7),
+    '&>:not(:last-child)': {
+      marginBottom: 22,
+    },
+    [theme.breakpoints.up('md')]: {
+      '& > *': {
+        paddingRight: theme.spacing(4),
+      },
+    },
   },
 }))
 
@@ -59,7 +74,7 @@ export const OfferingStep: React.FC<IProps> = ({
 
   return (
     <>
-      <Grid container spacing={3}>
+      <Grid container className={classes.selectInputsContainer}>
         <Grid item xs={12} md={6}>
           <div className={classes.labelWarpper}>
             <Typography className={classes.label}>Offer Token</Typography>
@@ -68,7 +83,7 @@ export const OfferingStep: React.FC<IProps> = ({
               className={classes.tooltipQuestion}
             />
           </div>
-          <TokenSelect
+          <DetailedTokenSelect
             token={data.offerToken}
             onChange={(offerToken) => updateData({ offerToken })}
           />
@@ -81,16 +96,21 @@ export const OfferingStep: React.FC<IProps> = ({
               className={classes.tooltipQuestion}
             />
           </div>
-          <TokenSelect
+          <DetailedTokenSelect
             token={data.purchaseToken}
+            hasPlaceholderTokenIcon={false}
             onChange={(purchaseToken) => updateData({ purchaseToken })}
           />
-          <Typography className={classes.description}>
+          <InputDescription underlined={false}>
             {Description.PurchaseToken}
-          </Typography>
+          </InputDescription>
         </Grid>
       </Grid>
-      <Grid container spacing={3} direction="column">
+      <Grid
+        container
+        direction="column"
+        className={classes.tokenInputsContainer}
+      >
         <Grid item xs={12} md={6}>
           <Input
             label="Offer Token Amount"
@@ -98,9 +118,9 @@ export const OfferingStep: React.FC<IProps> = ({
             onChange={(e) => updateData({ offerTokenAmount: e.target.value })}
             infoText={InfoText.OfferTokenAmount}
           />
-          <Typography className={classes.description}>
+          <InputDescription className={classes.description}>
             {Description.OfferTokenAmount}
-          </Typography>
+          </InputDescription>
         </Grid>
         <Grid item xs={12} md={6}>
           <Input
@@ -111,9 +131,9 @@ export const OfferingStep: React.FC<IProps> = ({
             }
             infoText={InfoText.ReserveOfferTokenAmount}
           />
-          <Typography className={classes.description}>
+          <InputDescription className={classes.description}>
             {Description.ReserveOfferTokenAmount}
-          </Typography>
+          </InputDescription>
         </Grid>
 
         <Grid item xs={12} md={6}>
@@ -129,8 +149,8 @@ export const OfferingStep: React.FC<IProps> = ({
             onSelectorChange={(e) =>
               updateData({ offeringPeriodUnit: e.target.value })
             }
-            selectorValue={data.offeringPeriodUnit}
-            inputValue={data.offeringPeriod}
+            selectorValue={`${data.offeringPeriodUnit}`}
+            inputValue={`${data.offeringPeriod}`}
             onChangeinput={(e) => {
               updateData({ offeringPeriod: e.target.value })
             }}
@@ -139,7 +159,6 @@ export const OfferingStep: React.FC<IProps> = ({
       </Grid>
 
       <Button
-        className={classes.button}
         color="primary"
         fullWidth
         onClick={onClickNext}
