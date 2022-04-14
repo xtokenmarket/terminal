@@ -1,6 +1,5 @@
 export * from './LPTokenAmountInput'
 export * from './LPTokenBalanceInput'
-export * from './TokenAmountInput'
 export * from './TokenBalanceInput'
 export * from './TokenIcon'
 export * from './TokenPriceInput'
