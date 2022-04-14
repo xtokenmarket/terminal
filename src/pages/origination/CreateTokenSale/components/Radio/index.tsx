@@ -1,5 +1,6 @@
 import { Checkbox, makeStyles, Typography } from '@material-ui/core'
 import { useState } from 'react'
+import { QuestionTooltip } from '../QuestionTooltip'
 
 const useStyles = makeStyles((theme) => ({
   label: {
@@ -22,15 +23,24 @@ const useStyles = makeStyles((theme) => ({
   checkboxRoot: {
     marginRight: 8,
   },
+  tooltipQuestion: {
+    marginLeft: 10,
+  },
 }))
 
 interface IProps {
   items: string[]
   onChange: (value: string, checked?: boolean) => void
   className?: string
+  infoText?: string[]
 }
 
-export const Radio: React.FC<IProps> = ({ items, onChange, className }) => {
+export const Radio: React.FC<IProps> = ({
+  items,
+  onChange,
+  className,
+  infoText,
+}) => {
   const [value, setValue] = useState('')
   const classes = useStyles()
 
@@ -41,7 +51,7 @@ export const Radio: React.FC<IProps> = ({ items, onChange, className }) => {
 
   return (
     <div className={className}>
-      {items.map((item: string) => (
+      {items.map((item: string, index) => (
         <div key={item} className={classes.item}>
           <Checkbox
             checked={value === item}
@@ -73,6 +83,12 @@ export const Radio: React.FC<IProps> = ({ items, onChange, className }) => {
           >
             {item}
           </Typography>
+          {infoText && (
+            <QuestionTooltip
+              title={infoText[index]}
+              className={classes.tooltipQuestion}
+            />
+          )}
         </div>
       ))}
     </div>
