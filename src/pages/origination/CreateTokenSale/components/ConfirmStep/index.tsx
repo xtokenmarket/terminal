@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { ethers } from 'ethers'
 import { Button, Grid, Typography, makeStyles } from '@material-ui/core'
 import { ICreateTokenSaleData } from 'types'
 import { EPeriods, IpricingFormula } from 'utils/enums'
@@ -169,7 +168,9 @@ export const ConfirmStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <Typography className={classes.label}>Rewards</Typography>
+            <Typography className={classes.label}>
+              Standard Pricing Formula
+            </Typography>
             <PricingFormulaTable data={data} />
           </Grid>
         </Grid>
