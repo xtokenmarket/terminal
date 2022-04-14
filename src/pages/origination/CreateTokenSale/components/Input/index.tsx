@@ -65,15 +65,14 @@ const useStyles = makeStyles((theme) => ({
   },
   label: {
     color: theme.colors.white,
-    marginBottom: 18,
     fontFamily: 'Gilmer',
     fontWeight: 700,
     fontSize: 14,
-    marginTop: 22,
   },
   labelWrapper: {
     display: 'flex',
     alignItems: 'center',
+    marginBottom: 18,
   },
   tooltipQuestion: {
     marginLeft: 10,
@@ -81,6 +80,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
+  className?: string
   value: string
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
   label?: string
@@ -89,6 +89,7 @@ interface IProps {
 }
 
 export const Input: React.FC<IProps> = ({
+  className,
   value,
   onChange,
   label,
@@ -128,6 +129,7 @@ export const Input: React.FC<IProps> = ({
             input: clsx(
               commonClasses.hideInputArrow,
               classes.inputBox,
+              className,
               disabled && classes.inputDisabledText
             ),
           },
