@@ -4,7 +4,7 @@ import { useConnectedWeb3Context } from 'contexts'
 import { useState } from 'react'
 import { useHistory } from 'react-router'
 import { ICreateTokenSaleData } from 'types'
-import { ECreareTokenSaleStep } from 'utils/enums'
+import { ECreareTokenSaleStep, EPeriods } from 'utils/enums'
 import {
   OfferingStep,
   AuctionStep,
@@ -41,7 +41,7 @@ interface IState extends Omit<ICreateTokenSaleData, 'token0' | 'token1'> {
 const initialState: IState = {
   offerTokenAmount: '',
   reserveOfferTokenAmount: '',
-  offeringPeriod: '',
+  offeringPeriod: 0,
   pricingFormula: undefined,
   startingPrice: '',
   endingPrice: '',
@@ -53,7 +53,7 @@ const initialState: IState = {
   offerToken: undefined,
   purchaseToken: undefined,
   step: ECreareTokenSaleStep.Offering,
-  offeringPeriodUnit: '',
+  offeringPeriodUnit: EPeriods.Weeks,
 }
 
 const CreareTokenSale = () => {

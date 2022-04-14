@@ -72,8 +72,9 @@ const useStyles = makeStyles((theme) => ({
       background: 'none',
     },
   },
-  width: {
-    width: 150,
+  inputField: {
+    color: theme.colors.primary100,
+    fontWeight: 400,
   },
   labelContainer: {
     display: 'flex',
@@ -146,6 +147,7 @@ export const Selector: React.FC<IProps> = ({
       <Grid container justifyContent="space-between" spacing={3}>
         <Grid item xs={12} md={7}>
           <Input
+            className={classes.inputField}
             value={inputValue}
             onChange={onChangeinput}
             disabled={disabled}
