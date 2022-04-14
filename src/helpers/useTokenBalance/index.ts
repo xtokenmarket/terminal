@@ -26,7 +26,7 @@ export const useTokenBalance = (
     }
 
     try {
-      if (tokenAddress === NULL_ADDRESS) {
+      if (tokenAddress === NULL_ADDRESS || !tokenAddress) {
         // ethBalance;
         const bal = await fProvider.getBalance(user || account || '')
         if (isMountedRef.current) {
