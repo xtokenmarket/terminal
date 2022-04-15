@@ -21,6 +21,15 @@ export const getCoinGeckoIDs = async (tokens: string[]) => {
   })
 }
 
+export const getTokenUsdPrice = async (tokenSymbol: string) => {
+  const tokenId = tokenSymbol.toLowerCase()
+  const url = `https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=usd`
+  const response = await fetch(url)
+  const result = await response.json()
+
+  return Number(result[tokenId].usd)
+}
+
 export const getTokenExchangeRate = async (
   ids: string[],
   address?: string
