@@ -243,7 +243,10 @@ export const useTerminalPool = (
           provider
         )
 
-        if (readonlyProvider?.network.chainId !== ChainId.Optimism) {
+        if (
+          readonlyProvider?.network.chainId !== ChainId.Optimism &&
+          readonlyProvider?.network.chainId !== ChainId.Arbitrum
+        ) {
           const from = 0
           const to = 'latest'
           // if (readonlyProvider?.network.chainId === ChainId.Optimism) {
