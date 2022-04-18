@@ -15,15 +15,17 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
       justifyContent: 'center',
+      paddingTop: theme.spacing(2),
     },
   },
   headerDataContainer: {
     display: 'flex',
     flexDirection: 'row',
     flex: 1,
-    justifyContent: 'flex-end',
     alignItems: 'center',
-    [theme.breakpoints.down('md')]: {
+    justifyContent: 'flex-end',
+
+    [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
     },
   },
@@ -44,7 +46,12 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.primary100,
     fontWeight: 600,
     cursor: 'pointer',
-    marginLeft: 52,
+
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: 40,
+      marginTop: 40,
+      marginRight: 'auto',
+    },
   },
 }))
 
