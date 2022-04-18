@@ -5,7 +5,14 @@ import { QuestionTooltip } from '../QuestionTooltip'
 const useStyles = makeStyles((theme) => ({
   label: {
     color: theme.colors.white,
+    fontSize: 14,
+    lineHeight: '16.8px',
+    marginBottom: theme.spacing(2),
+  },
+  itemText: {
+    color: theme.colors.white,
     cursor: 'pointer',
+    fontSize: 14,
   },
   item: {
     display: 'flex',
@@ -30,6 +37,8 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   items: string[]
+  selectedItem?: string
+  label?: string
   onChange: (value: string, checked?: boolean) => void
   className?: string
   infoText?: string[]
@@ -37,11 +46,13 @@ interface IProps {
 
 export const Radio: React.FC<IProps> = ({
   items,
+  selectedItem = '',
+  label,
   onChange,
   className,
   infoText,
 }) => {
-  const [value, setValue] = useState('')
+  const [value, setValue] = useState(selectedItem)
   const classes = useStyles()
 
   const handleItemSelected = (item: string) => {
@@ -51,6 +62,7 @@ export const Radio: React.FC<IProps> = ({
 
   return (
     <div className={className}>
+      {label && <Typography className={classes.label}>{label}</Typography>}
       {items.map((item: string, index) => (
         <div key={item} className={classes.item}>
           <Checkbox
@@ -74,11 +86,11 @@ export const Radio: React.FC<IProps> = ({
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               handleItemSelected(e.target.value)
             }
-            disableRipple
             value={item}
+            disableRipple
           />
           <Typography
-            className={classes.label}
+            className={classes.itemText}
             onClick={() => handleItemSelected(item)}
           >
             {item}
