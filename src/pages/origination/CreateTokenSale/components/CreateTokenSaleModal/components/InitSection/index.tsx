@@ -1,9 +1,10 @@
 import { Button, CircularProgress, makeStyles } from '@material-ui/core'
 import { WarningInfo } from 'components/Common/WarningInfo'
 import { useConnectedWeb3Context } from 'contexts'
+import { BigNumber } from 'ethers'
 import { useEffect, useState } from 'react'
 import { ICreateTokenSaleData } from 'types'
-import { getMetamaskError } from 'utils'
+import { getDurationSecStr, getMetamaskError } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -58,6 +59,34 @@ export const InitSection = (props: IProps) => {
         ...prev,
         isCreatingTokenSale: true,
       }))
+
+      const saleParams = {
+        offerToken: data.offerToken?.address,
+        purchaseToken: data.purchaseToken?.address,
+        startingPrice: BigNumber.from(data.startingPrice),
+        endingPrice: BigNumber.from(data.endingPrice),
+        saleDuration: BigNumber.from(
+          getDurationSecStr(
+            data.offeringPeriod,
+            data.offeringPeriodUnit.toString()
+          )
+        ),
+
+        totalOfferingAmount: BigNumber.from(data.offerTokenAmount),
+        reserveAmount: BigNumber.from(data.reserveOfferTokenAmount),
+        vestingPeriod: BigNumber.from(
+          getDurationSecStr(
+            Number(data.vestingPeriod),
+            data.vestingPeriodUnit.toString()
+          )
+        ),
+        cliffPeriod: BigNumber.from(
+          getDurationSecStr(
+            Number(data.cliffPeriod),
+            data.cliffPeriodUnit.toString()
+          )
+        ),
+      }
       const txId =
         '0x8978e74a425212a30ef9328bef8ed9a6778233950c9f762a8e94f22f89e4e3af'
       const finalTxId =
