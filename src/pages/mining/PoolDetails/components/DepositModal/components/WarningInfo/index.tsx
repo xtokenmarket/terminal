@@ -1,4 +1,4 @@
-import { Button, makeStyles, Typography } from '@material-ui/core'
+import { makeStyles, Typography } from '@material-ui/core'
 import { transparentize } from 'polished'
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined'
 import clsx from 'clsx'

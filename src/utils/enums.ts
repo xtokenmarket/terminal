@@ -110,6 +110,13 @@ export enum Network {
   RINKEBY = 'rinkeby',
 }
 
+export enum EPeriods {
+  Days = 'Days',
+  Weeks = 'Weeks',
+  Months = 'Months',
+  Years = 'Years',
+}
+
 // uni v3
 export enum PoolState {
   LOADING,
@@ -135,4 +142,46 @@ export enum NetworkIcon {
   polygon = 'Polygon',
   kovan = 'Ethereum',
   rinkeby = 'Ethereum',
+}
+
+export enum ECreareTokenSaleStep {
+  Offering = 'Offering',
+  Auction = 'Auction',
+  Vesting = 'Vesting',
+  Confirm = 'Confirm',
+}
+
+export enum EPricingFormula {
+  Standard = 'Standard',
+  Ascending = 'Ascending',
+  Descending = 'Descending',
+}
+
+export enum ECreateTokenSaleModalStep {
+  Init = 'Init',
+  Success = 'Success',
+}
+
+export enum InfoText {
+  OfferToken = 'OfferToken',
+  PurchaseToken = 'PurchaseToken',
+  OfferTokenAmount = 'OfferTokenAmount',
+  ReserveOfferTokenAmount = 'ReserveOfferTokenAmount',
+  OfferingPeriod = 'OfferingPeriod',
+  Standard = 'All offer tokens sells for 1 USDC',
+  Ascending = 'Price steadily goes up from offering standard price. ',
+  Descending = 'Price steadily goes down from offering standard price. ',
+}
+
+export enum Description {
+  PurchaseToken = 'choose what to sell your offer token for',
+  OfferTokenAmount = 'Determine the amount of token you want to sell',
+  ReserveOfferTokenAmount = 'Maximum amount of tokens you want to offer',
+  StartingPrice = 'Determine the price of the token',
+  EndingPrice = 'Maximum amount of tokens you want to offer',
+}
+
+export enum EVestingOption {
+  Yes = 'Yes',
+  No = 'No',
 }

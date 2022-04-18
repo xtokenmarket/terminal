@@ -14,7 +14,7 @@ export const MENU_ITEMS = [
     label: 'origination',
     icon: SvgIcons.origination,
     href: '/origination',
-    enabled: false,
+    enabled: true,
   },
   {
     id: 'auction',

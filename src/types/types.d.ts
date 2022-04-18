@@ -1,6 +1,11 @@
 import { BigNumber } from 'ethers'
 import { IRewardState } from 'components'
-import { Network } from '../utils/enums'
+import {
+  Network,
+  EPricingFormula,
+  EPeriods,
+  EVestingOption,
+} from '../utils/enums'
 
 declare global {
   interface Window {
@@ -155,4 +160,25 @@ export interface History {
 export interface ICollectableFees {
   token0Fee: BigNumber
   token1Fee: BigNumber
+}
+
+export type PeriodUnit = EPeriods[keyof EPeriods]
+
+type VestingOption = EVestingOption[keyof EVestingOption]
+
+export interface ICreateTokenSaleData {
+  offerTokenAmount: string
+  reserveOfferTokenAmount: string
+  offeringPeriod: number
+  offerToken?: IToken
+  purchaseToken?: IToken
+  pricingFormula?: EPricingFormula
+  startingPrice: string
+  endingPrice: string
+  vestingEnabled?: VestingOption
+  vestingPeriod?: number
+  vestingPeriodUnit: PeriodUnit
+  cliffPeriod?: number
+  cliffPeriodUnit: PeriodUnit
+  offeringPeriodUnit: PeriodUnit
 }
