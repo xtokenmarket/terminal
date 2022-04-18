@@ -108,7 +108,6 @@ export enum Network {
   OPTIMISM = 'optimism',
   POLYGON = 'polygon',
   KOVAN = 'kovan',
-  RINKEBY = 'rinkeby',
   GOERLI = 'goerli',
 }
 
