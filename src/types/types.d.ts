@@ -2,7 +2,7 @@ import { BigNumber } from 'ethers'
 import { IRewardState } from 'components'
 import {
   Network,
-  IpricingFormula,
+  EPricingFormula,
   EPeriods,
   EVestingOption,
 } from '../utils/enums'
@@ -223,7 +223,7 @@ export interface ICreateTokenSaleData {
   offeringPeriod: number
   offerToken?: IToken
   purchaseToken?: IToken
-  pricingFormula?: IpricingFormula
+  pricingFormula?: EPricingFormula
   startingPrice: string
   endingPrice: string
   vestingEnabled?: VestingOption

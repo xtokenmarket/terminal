@@ -154,7 +154,7 @@ export enum ECreareTokenSaleStep {
   Confirm = 'Confirm',
 }
 
-export enum IpricingFormula {
+export enum EPricingFormula {
   Standard = 'Standard',
   Ascending = 'Ascending',
   Descending = 'Descending',
