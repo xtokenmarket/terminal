@@ -39,7 +39,6 @@ export enum ChainId {
   Optimism = 10,
   Polygon = 137,
   Kovan = 42,
-  Rinkeby = 4,
   Goerli = 5,
 }
 
@@ -49,7 +48,6 @@ export const CHAIN_NAMES: Record<ChainId, string> = {
   [ChainId.Optimism]: 'Optimism',
   [ChainId.Polygon]: 'Polygon',
   [ChainId.Kovan]: 'Kovan',
-  [ChainId.Rinkeby]: 'Rinkeby',
   [ChainId.Goerli]: 'Goerli',
 }
 
@@ -59,7 +57,6 @@ export const CHAIN_ICONS: Record<ChainId, string> = {
   [ChainId.Optimism]: 'Optimism',
   [ChainId.Polygon]: 'Polygon',
   [ChainId.Kovan]: 'Ethereum',
-  [ChainId.Rinkeby]: 'Ethereum',
   [ChainId.Goerli]: 'Ethereum',
 }
 
@@ -69,7 +66,6 @@ export const COINGECKO_CHAIN_IDS: Record<ChainId, string> = {
   [ChainId.Optimism]: 'optimistic-ethereum',
   [ChainId.Polygon]: 'polygon-pos',
   [ChainId.Kovan]: Network.KOVAN,
-  [ChainId.Rinkeby]: Network.RINKEBY,
   [ChainId.Goerli]: Network.GOERLI,
 }
 
@@ -146,17 +142,6 @@ export const CHAIN_PARAMS: Record<ChainId, AddNetworkChainParameters> = {
     rpcUrls: ['https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
     blockExplorerUrls: ['https://kovan.etherscan.io'],
   },
-  [ChainId.Rinkeby]: {
-    chainId: `0x${ChainId.Rinkeby.toString(16)}`,
-    chainName: 'Rinkeby Test Network',
-    nativeCurrency: {
-      name: 'Ethereum',
-      symbol: 'ETH',
-      decimals: 18,
-    },
-    rpcUrls: ['https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
-    blockExplorerUrls: ['https://rinkeby.etherscan.io'],
-  },
   [ChainId.Goerli]: {
     chainId: `0x${ChainId.Goerli.toString(16)}`,
     chainName: 'Goerli Test Network',
@@ -228,7 +213,6 @@ export const FEE_TIPS: Record<ChainId, string> = {
   [ChainId.Optimism]: ETH_TIP,
   [ChainId.Polygon]: POLYGON_TIP,
   [ChainId.Kovan]: ETH_TIP,
-  [ChainId.Rinkeby]: ETH_TIP,
   [ChainId.Goerli]: ETH_TIP,
 }
 
@@ -248,7 +232,6 @@ export const GRAPHQL_URLS: Record<Network, string> = {
     'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-polygon',
   [Network.KOVAN]:
     'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-kovan',
-  [Network.RINKEBY]: '',
   [Network.GOERLI]:
     'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-goerli',
 }

@@ -6,6 +6,7 @@ import {
   RewardEscrowService,
   UniPositionService,
   LMService,
+  OriginationService,
 } from 'services'
 import { Network } from 'utils/enums'
 import { getIdFromNetwork } from 'utils/network'
@@ -41,12 +42,25 @@ export const useServices = (network?: Network) => {
       isWrongNetwork ? null : account,
       getContractAddress('LM', readonlyNetworkId)
     )
+
+    const originationService = new OriginationService(
+      readonlyProvider,
+      isWrongNetwork ? null : account,
+      getContractAddress('origination', readonlyNetworkId)
+    )
+
     const uniPositionService = new UniPositionService(
       readonlyProvider,
       isWrongNetwork ? null : account,
       getContractAddress('uniPositionManager', readonlyNetworkId)
     )
 
-    return { multicall, rewardEscrow, lmService, uniPositionService }
+    return {
+      multicall,
+      rewardEscrow,
+      lmService,
+      originationService,
+      uniPositionService,
+    }
   }, [networkId])
 }
