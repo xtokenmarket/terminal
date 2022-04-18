@@ -1,4 +1,4 @@
-import { ChainId, IS_PROD } from 'config/constants'
+import { ChainId } from 'config/constants'
 
 export interface Config {
   supportedChains: ChainId[]
@@ -10,10 +10,7 @@ const DEFAULT_CONFIG: Config = {
     ChainId.Arbitrum,
     ChainId.Optimism,
     ChainId.Polygon,
-
     ChainId.Kovan,
-    // Remove Rinkeby test net if on production
-    ...(IS_PROD ? [] : [ChainId.Rinkeby]),
   ],
 }
 

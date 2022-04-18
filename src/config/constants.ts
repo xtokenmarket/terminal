@@ -32,7 +32,7 @@ export enum ChainId {
   Optimism = 10,
   Polygon = 137,
   Kovan = 42,
-  Rinkeby = 4,
+  // Rinkeby = 4,
 }
 
 export const CHAIN_NAMES: Record<ChainId, string> = {
@@ -41,7 +41,7 @@ export const CHAIN_NAMES: Record<ChainId, string> = {
   [ChainId.Optimism]: 'Optimism',
   [ChainId.Polygon]: 'Polygon',
   [ChainId.Kovan]: 'Kovan',
-  [ChainId.Rinkeby]: 'Rinkeby',
+  // [ChainId.Rinkeby]: 'Rinkeby',
 }
 
 export const CHAIN_ICONS: Record<ChainId, string> = {
@@ -50,7 +50,7 @@ export const CHAIN_ICONS: Record<ChainId, string> = {
   [ChainId.Optimism]: 'Optimism',
   [ChainId.Polygon]: 'Polygon',
   [ChainId.Kovan]: 'Ethereum',
-  [ChainId.Rinkeby]: 'Ethereum',
+  // [ChainId.Rinkeby]: 'Ethereum',
 }
 
 export const COINGECKO_CHAIN_IDS: Record<ChainId, string> = {
@@ -59,7 +59,7 @@ export const COINGECKO_CHAIN_IDS: Record<ChainId, string> = {
   [ChainId.Optimism]: 'optimistic-ethereum',
   [ChainId.Polygon]: 'polygon-pos',
   [ChainId.Kovan]: Network.KOVAN,
-  [ChainId.Rinkeby]: Network.RINKEBY,
+  // [ChainId.Rinkeby]: Network.RINKEBY,
 }
 
 export const DEFAULT_NETWORK = Network.MAINNET
@@ -135,7 +135,7 @@ export const CHAIN_PARAMS: Record<ChainId, AddNetworkChainParameters> = {
     rpcUrls: ['https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
     blockExplorerUrls: ['https://kovan.etherscan.io'],
   },
-  [ChainId.Rinkeby]: {
+  /*[ChainId.Rinkeby]: {
     chainId: `0x${ChainId.Rinkeby.toString(16)}`,
     chainName: 'Rinkeby Test Network',
     nativeCurrency: {
@@ -145,7 +145,7 @@ export const CHAIN_PARAMS: Record<ChainId, AddNetworkChainParameters> = {
     },
     rpcUrls: ['https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
     blockExplorerUrls: ['https://rinkeby.etherscan.io'],
-  },
+  },*/
 }
 
 export const WALLET_ICONS: { [key in ConnectorNames]: string } = {
@@ -201,7 +201,7 @@ export const FEE_TIPS: Record<ChainId, string> = {
   [ChainId.Optimism]: ETH_TIP,
   [ChainId.Polygon]: POLYGON_TIP,
   [ChainId.Kovan]: ETH_TIP,
-  [ChainId.Rinkeby]: ETH_TIP,
+  // [ChainId.Rinkeby]: ETH_TIP,
 }
 
 export const PROD_TESTNET_DISCOVER_PAGE_SIZE = 5
