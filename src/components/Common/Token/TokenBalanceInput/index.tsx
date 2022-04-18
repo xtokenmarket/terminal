@@ -16,6 +16,7 @@ import { IToken } from 'types'
 import { formatBigNumber } from 'utils'
 import { knownTokens } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
+import { ChainId, CHAIN_NAMES } from 'config/constants'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -71,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  buyWETH: {
+  buyToken: {
     textDecoration: 'underline',
     cursor: 'pointer',
     color: theme.colors.primary100,
@@ -84,6 +85,45 @@ const useStyles = makeStyles((theme) => ({
     top: '-4px',
   },
 }))
+
+interface ITokenSwapCTA {
+  token: IToken
+}
+
+const TokenSwapCTA = ({ token }: ITokenSwapCTA) => {
+  const classes = useStyles()
+  const { networkId } = useConnectedWeb3Context()
+
+  const onTokenBuyClick = (token: IToken) => {
+    const chainId: ChainId = networkId || 1
+    const uniChainName =
+      CHAIN_NAMES[chainId].toLowerCase() === 'ethereum'
+        ? 'mainnet'
+        : CHAIN_NAMES[chainId].toLowerCase()
+    const tokenAddress =
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      knownTokens[token.symbol]?.addresses?.[chainId] || token.address
+    const swapUrl = `https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=${tokenAddress}&chain=${uniChainName}`
+
+    const newWindow = window.open(swapUrl, '_blank', 'noopener,noreferrer')
+    if (newWindow) newWindow.opener = null
+  }
+
+  if (token.symbol.toLowerCase() === 'weth') {
+    return (
+      <span className={classes.buyToken} onClick={() => onTokenBuyClick(token)}>
+        Wrap ETH
+      </span>
+    )
+  }
+
+  return (
+    <span className={classes.buyToken} onClick={() => onTokenBuyClick(token)}>
+      Swap for {token.symbol}
+    </span>
+  )
+}
 
 type Variant = 'normal' | 'rewardToken'
 
@@ -113,7 +153,6 @@ export const TokenBalanceInput: React.FC<IProps> = ({
   const classes = useStyles()
   const commonClasses = useCommonStyles()
   const { balance } = useTokenBalance(token.address)
-  const { networkId } = useConnectedWeb3Context()
 
   const isBalanceDisabled = balance.isZero() || isDisabled
 
@@ -141,16 +180,6 @@ export const TokenBalanceInput: React.FC<IProps> = ({
     }, 1000),
     []
   )
-
-  const onClickBuy = () => {
-    const wethUrl = `https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=${
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      knownTokens.weth.addresses[networkId || 1]
-    }`
-    const newWindow = window.open(wethUrl, '_blank', 'noopener,noreferrer')
-    if (newWindow) newWindow.opener = null
-  }
 
   const onInputBalance = (e: ChangeEvent<HTMLInputElement>) => {
     const decimals = e.target.value.includes('.')
@@ -225,11 +254,7 @@ export const TokenBalanceInput: React.FC<IProps> = ({
             </b>
           </Typography>
         )}
-        {token.symbol.toLowerCase() === 'weth' && (
-          <span className={classes.buyWETH} onClick={onClickBuy}>
-            Wrap ETH
-          </span>
-        )}
+        <TokenSwapCTA token={token} />
       </div>
     </div>
   )
