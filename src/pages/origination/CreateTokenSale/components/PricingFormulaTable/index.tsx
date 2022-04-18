@@ -1,4 +1,5 @@
 import React from 'react'
+import clsx from 'clsx'
 import {
   makeStyles,
   Typography,
@@ -10,6 +11,7 @@ import {
   TableCell,
 } from '@material-ui/core'
 import { ICreateTokenSaleData } from 'types'
+import { TokenAmountPriceEstimation } from '../TokenAmountPriceEstimation'
 
 const useStyles = makeStyles((theme) => ({
   tableContainer: {},
@@ -26,15 +28,19 @@ const useStyles = makeStyles((theme) => ({
   rowHeader: {
     color: theme.colors.primary100,
     fontSize: '12px',
+    fontWeight: 700,
   },
   bodyRowText: {
     color: 'white',
     fontFamily: 'Gilmer',
     fontWeight: 700,
   },
-  fiat: {
+  priceEstimation: {
     color: theme.colors.primary100,
     fontSize: 12,
+  },
+  endingPriceEstimation: {
+    marginTop: 4,
   },
 }))
 
@@ -44,6 +50,7 @@ interface IProps {
 
 export const PricingFormulaTable: React.FC<IProps> = ({ data }) => {
   const cl = useStyles()
+  const { offerToken } = data
 
   return (
     <TableContainer>
@@ -81,7 +88,13 @@ export const PricingFormulaTable: React.FC<IProps> = ({ data }) => {
                   <Typography variant="h3" className={cl.bodyRowText}>
                     {data.startingPrice}
                   </Typography>
-                  <Typography className={cl.fiat}>~ $ 13.009,73</Typography>
+                  {offerToken && (
+                    <TokenAmountPriceEstimation
+                      className={cl.priceEstimation}
+                      token={offerToken}
+                      tokenAmount={Number(data.startingPrice)}
+                    />
+                  )}
                 </div>
               </div>
             </TableCell>
@@ -90,7 +103,16 @@ export const PricingFormulaTable: React.FC<IProps> = ({ data }) => {
                 <Typography variant="h5" className={cl.bodyRowText}>
                   {data.endingPrice}
                 </Typography>
-                <Typography className={cl.fiat}>~ $ 13.009,73</Typography>
+                {offerToken && (
+                  <TokenAmountPriceEstimation
+                    className={clsx(
+                      cl.priceEstimation,
+                      cl.endingPriceEstimation
+                    )}
+                    token={offerToken}
+                    tokenAmount={Number(data.endingPrice)}
+                  />
+                )}
               </div>
             </TableCell>
             <TableCell>

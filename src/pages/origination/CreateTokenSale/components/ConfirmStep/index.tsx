@@ -36,14 +36,34 @@ const useStyles = makeStyles((theme) => ({
     lineHeight: '48px',
   },
   detailsWrapper: {
-    margin: theme.spacing(4, 0),
+    marginTop: 38,
+    marginBottom: theme.spacing(1),
+    [theme.breakpoints.up('sm')]: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      flexWrap: 'nowrap',
+    },
+
+    '& .separator': {
+      [theme.breakpoints.up('sm')]: {
+        marginRight: 'auto',
+        marginLeft: 'auto',
+        alignSelf: 'flex-end',
+        width: 1,
+        background: theme.colors.primary200,
+        height: 58,
+      },
+    },
   },
   section: {
+    width: 'fit-content',
+    minHeight: 88,
+
     '& .title': {
       color: theme.colors.primary100,
       margin: 0,
       fontSize: 14,
-      fontWeight: 500,
+      fontWeight: 700,
       marginBottom: 5,
     },
 
@@ -59,13 +79,6 @@ const useStyles = makeStyles((theme) => ({
       margin: 0,
       fontSize: 14,
       fontWeight: 500,
-    },
-
-    '&+&': {
-      [theme.breakpoints.up('sm')]: {
-        borderLeft: `1px solid ${theme.colors.primary200}`,
-        left: -16,
-      },
     },
   },
   button: {
@@ -94,30 +107,42 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit }) => {
             <Grid item xs={12}>
               <div className={classes.logos}>
                 {[data.offerToken?.image, data.purchaseToken?.image].map(
-                  (img) => (
-                    <img className={classes.tokenIcon} src={img} key={img} />
+                  (img, index) => (
+                    <img
+                      className={classes.tokenIcon}
+                      src={img}
+                      key={`${img}-${index}`}
+                    />
                   )
                 )}
                 <Typography className={classes.tokenSymbols}>
                   {`${data.offerToken?.symbol.toUpperCase()}/${data.purchaseToken?.symbol.toUpperCase()}`}
                 </Typography>
               </div>
-              <Grid container spacing={3} className={classes.detailsWrapper}>
-                <Grid item xs={12} sm={4} className={classes.section}>
-                  <p className="title">Offer token amount</p>
-                  <p className="data">{data.offerTokenAmount}</p>
-                  <p className="description">{`${data.purchaseToken?.symbol} per ${data.offerToken?.symbol}`}</p>
+              <Grid container className={classes.detailsWrapper}>
+                <Grid item xs={12} sm={3} className={classes.section}>
+                  <div className="content">
+                    <p className="title">Offer token amount</p>
+                    <p className="data">{data.offerTokenAmount}</p>
+                    <p className="description">{`${data.offerToken?.symbol} per ${data.purchaseToken?.symbol}`}</p>
+                  </div>
                 </Grid>
+                <span className="separator" />
                 <Grid item xs={12} sm={4} className={classes.section}>
-                  <p className="title">Reserve offer token amount</p>
-                  <p className="data">{data.reserveOfferTokenAmount}</p>
-                  <p className="description">{`${data.purchaseToken?.symbol} per ${data.offerToken?.symbol}`}</p>
+                  <div className="content">
+                    <p className="title">Reserve offer token amount</p>
+                    <p className="data">{data.reserveOfferTokenAmount}</p>
+                    <p className="description">{`${data.offerToken?.symbol} per ${data.purchaseToken?.symbol}`}</p>
+                  </div>
                 </Grid>
-                <Grid item xs={12} sm={4} className={classes.section}>
-                  <p className="title">Offering Period</p>
-                  <p className="data">
-                    {data.offeringPeriod} {data.offeringPeriodUnit}
-                  </p>
+                <span className="separator" />
+                <Grid item xs={12} sm={3} className={classes.section}>
+                  <div className="content">
+                    <p className="title">Offering Period</p>
+                    <p className="data">
+                      {data.offeringPeriod} {data.offeringPeriodUnit}
+                    </p>
+                  </div>
                 </Grid>
               </Grid>
 

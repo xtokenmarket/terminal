@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import clsx from 'clsx'
 import { TokenIcon } from 'components'
 import { IToken } from 'types'
@@ -7,8 +7,8 @@ import { makeStyles, TextField, Typography } from '@material-ui/core'
 import useCommonStyles from 'style/common'
 import { QuestionTooltip } from '../QuestionTooltip'
 import { useTokenBalance } from 'helpers'
-import { formatBigNumber, numberWithCommas } from 'utils'
-import { getTokenUsdPrice } from 'helpers/useTerminalPool/helper'
+import { formatBigNumber } from 'utils'
+import { TokenAmountPriceEstimation } from '../TokenAmountPriceEstimation'
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -106,7 +106,7 @@ const useStyles = makeStyles((theme) => ({
   inputContainer: {
     position: 'relative',
   },
-  dollar: {
+  priceEstimation: {
     position: 'absolute',
     top: '50%',
     right: 0,
@@ -116,9 +116,6 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'right',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    color: theme.colors.primary100,
-    fontSize: 14,
     lineHeight: '28px',
   },
 }))
@@ -147,8 +144,6 @@ export const TokenAmountInput: React.FC<IProps> = ({
   const classes = useStyles()
   const commonClasses = useCommonStyles()
   const { balance } = useTokenBalance(token?.address || '')
-  const [tokenUsdPrice, setTokenUsdPrice] = useState(0)
-  const [priceEstimation, setPriceEstimation] = useState(0)
 
   const getFormattedTokenBalance = () => {
     if (!token) {
@@ -157,37 +152,6 @@ export const TokenAmountInput: React.FC<IProps> = ({
 
     return `${formatBigNumber(balance, token.decimals, 4)} ${token.symbol}`
   }
-
-  const updateTokenUsdPrice = async (tokenSymbol: string) => {
-    try {
-      setTokenUsdPrice(await getTokenUsdPrice(tokenSymbol))
-    } catch (error) {
-      // token USD price not found
-      // reset it
-      setTokenUsdPrice(0)
-      console.error(error)
-    }
-  }
-
-  useEffect(() => {
-    if (!token) {
-      setTokenUsdPrice(0)
-      return
-    }
-
-    updateTokenUsdPrice(token.symbol)
-    // Update usd token price every 3 seconds
-    const interval = setInterval(async () => {
-      await updateTokenUsdPrice(token.symbol)
-    }, 3 * 1000)
-
-    return () => clearInterval(interval)
-  }, [token])
-
-  useEffect(() => {
-    const insertedTokenValue = Number(value)
-    setPriceEstimation(insertedTokenValue * tokenUsdPrice)
-  }, [value, tokenUsdPrice])
 
   return (
     <>
@@ -228,10 +192,12 @@ export const TokenAmountInput: React.FC<IProps> = ({
           disabled={disabled}
         />
         {token && <TokenIcon token={token} className={classes.tokenIcon} />}
-        {!!priceEstimation && (
-          <Typography className={classes.dollar}>
-            ~ ${numberWithCommas(priceEstimation.toString())}
-          </Typography>
+        {token && Number(value) > 0 && (
+          <TokenAmountPriceEstimation
+            className={classes.priceEstimation}
+            token={token}
+            tokenAmount={Number(value)}
+          />
         )}
       </div>
 
