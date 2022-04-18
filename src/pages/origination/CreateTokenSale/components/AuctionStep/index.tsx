@@ -1,7 +1,7 @@
 import { Button, Grid, makeStyles } from '@material-ui/core'
 import { ICreateTokenSaleData } from 'types'
 import { InputDescription } from '../InputDescription'
-import { Description, InfoText, IpricingFormula } from 'utils/enums'
+import { Description, InfoText, EPricingFormula } from 'utils/enums'
 import { Input } from '../Input'
 import { Radio } from '../Radio'
 
@@ -30,10 +30,71 @@ interface IProps {
 
 export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
   const classes = useStyles()
+
+  const validPricingDetailsSet = () => {
+    switch (data.pricingFormula) {
+      case EPricingFormula.Ascending:
+        return Number(data.startingPrice) < Number(data.endingPrice)
+      case EPricingFormula.Descending:
+        return Number(data.startingPrice) > Number(data.endingPrice)
+      case EPricingFormula.Standard:
+        return Number(data.startingPrice) === Number(data.endingPrice)
+      default:
+        return false
+    }
+  }
+
+  const handlePricingFormulaChange = (
+    newPricingFormula: EPricingFormula[keyof EPricingFormula]
+  ) => {
+    if (
+      data.pricingFormula !== newPricingFormula &&
+      newPricingFormula === EPricingFormula.Standard
+    ) {
+      const price = data.startingPrice ? data.startingPrice : data.endingPrice
+
+      return updateData({
+        pricingFormula: newPricingFormula,
+        startingPrice: price,
+        endingPrice: price,
+      })
+    }
+
+    updateData({ pricingFormula: newPricingFormula })
+  }
+
+  const handleStartingPriceChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const startingPriceValue = e.target.value
+
+    if (data.pricingFormula === EPricingFormula.Standard) {
+      return updateData({
+        startingPrice: startingPriceValue,
+        endingPrice: startingPriceValue,
+      })
+    }
+    updateData({ startingPrice: startingPriceValue })
+  }
+
+  const handleEndingPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const endingPriceValue = e.target.value
+
+    if (data.pricingFormula === EPricingFormula.Standard) {
+      return updateData({
+        startingPrice: endingPriceValue,
+        endingPrice: endingPriceValue,
+      })
+    }
+
+    updateData({ endingPrice: endingPriceValue })
+  }
+
   const isNextBtnDisabled = !(
     data.pricingFormula &&
     data.startingPrice &&
-    data.endingPrice
+    data.endingPrice &&
+    validPricingDetailsSet()
   )
 
   return (
@@ -46,9 +107,9 @@ export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
           InfoText.Descending,
         ])}
         className={classes.radio}
-        items={Object.values(IpricingFormula)}
+        items={Object.values(EPricingFormula)}
         selectedItem={data.pricingFormula}
-        onChange={(value) => updateData({ pricingFormula: value })}
+        onChange={handlePricingFormulaChange}
       />
       <Grid container>
         <Grid item xs={12} md={6}>
@@ -56,7 +117,7 @@ export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
             <Input
               label={`Starting Price - ${data.purchaseToken?.symbol} per ${data.offerToken?.symbol}`}
               value={data.startingPrice}
-              onChange={(e) => updateData({ startingPrice: e.target.value })}
+              onChange={handleStartingPriceChange}
             />
 
             <InputDescription className={classes.inputDescription}>
@@ -67,7 +128,7 @@ export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
             <Input
               label={`Ending Price - ${data.purchaseToken?.symbol} per ${data.offerToken?.symbol}`}
               value={data.endingPrice}
-              onChange={(e) => updateData({ endingPrice: e.target.value })}
+              onChange={handleEndingPriceChange}
             />
             <InputDescription className={classes.inputDescription}>
               {Description.EndingPrice}

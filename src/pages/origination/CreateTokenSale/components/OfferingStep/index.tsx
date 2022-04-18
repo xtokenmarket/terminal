@@ -68,6 +68,7 @@ export const OfferingStep: React.FC<IProps> = ({
     data.reserveOfferTokenAmount &&
     data.offeringPeriod &&
     data.offeringPeriodUnit &&
+    data.offerToken.address !== data.purchaseToken.address &&
     Number(data.offerTokenAmount) >= Number(data.reserveOfferTokenAmount)
   )
 
