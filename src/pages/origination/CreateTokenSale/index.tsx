@@ -1,8 +1,7 @@
+import { useState } from 'react'
 import { Button, makeStyles } from '@material-ui/core'
 import { PageContent, PageWrapper } from 'components'
 import { useConnectedWeb3Context } from 'contexts'
-import { useState } from 'react'
-import { ethers } from 'ethers'
 import { useHistory } from 'react-router'
 import { ICreateTokenSaleData } from 'types'
 import { ECreareTokenSaleStep, EPeriods } from 'utils/enums'
@@ -23,7 +22,12 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
   },
   content: {
-    padding: theme.spacing(3, 0),
+    paddingTop: theme.spacing(3),
+    paddingBottom: 66,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    minHeight: 620,
   },
   connectBtn: {
     background: theme.colors.primary,
@@ -46,7 +50,7 @@ const initialState: IState = {
   pricingFormula: undefined,
   startingPrice: '',
   endingPrice: '',
-  isAddVestingPeriod: undefined,
+  vestingEnabled: undefined,
   vestingPeriod: 0,
   vestingPeriodUnit: '',
   cliffPeriod: 0,
