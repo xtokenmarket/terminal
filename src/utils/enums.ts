@@ -170,7 +170,7 @@ export enum InfoText {
   OfferingPeriod = 'OfferingPeriod',
   Standard = 'All offer tokens sells for 1 USDC',
   Ascending = 'Price steadily goes up from offering standard price. ',
-  Descending = 'Price steadily goes down from offering standard price. '
+  Descending = 'Price steadily goes down from offering standard price. ',
 }
 
 export enum Description {
@@ -178,8 +178,10 @@ export enum Description {
   OfferTokenAmount = 'Determine the amount of token you want to sell',
   ReserveOfferTokenAmount = 'Maximum amount of tokens you want to offer',
   StartingPrice = 'Determine the price of the token',
-  EndingPrice = 'Maximum amount of tokens you want to offer'
+  EndingPrice = 'Maximum amount of tokens you want to offer',
 }
 
-
-
+export enum EVestingOption {
+  Yes = 'Yes',
+  No = 'No',
+}

@@ -31,7 +31,7 @@ export const InputDescription = ({
   return (
     <Typography className={clsx(classes.description, className)}>
       {children}
-      {underlined && <div className={classes.descriptionUnderline} />}
+      {underlined && <span className={classes.descriptionUnderline} />}
     </Typography>
   )
 }
