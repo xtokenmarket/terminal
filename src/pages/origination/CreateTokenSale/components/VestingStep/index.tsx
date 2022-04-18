@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import moment, { unitOfTime } from 'moment'
 import { makeStyles, Grid, Typography, Button } from '@material-ui/core'
 import { ICreateTokenSaleData, PeriodUnit } from 'types'
-import { EPeriods } from 'utils/enums'
+import { EPeriods, EVestingOption } from 'utils/enums'
 import { Radio } from '../Radio'
 import { Selector } from '../Selector'
 import { InfoPanel } from './InfoPanel'
@@ -29,25 +29,14 @@ interface IProps {
   onNext: () => void
 }
 
-enum EVestingOpton {
-  Yes = 'Yes',
-  No = 'No',
-}
-
-type VestingOption = EVestingOpton[keyof EVestingOpton]
-
 export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
-  const [selectedVestingOption, setselectedVestingOption] = useState<
-    VestingOption | undefined
-  >()
   const classes = useStyles()
-
-  const vestingWanted = selectedVestingOption === EVestingOpton.Yes
+  const vestingWanted = data.vestingEnabled === EVestingOption.Yes
   const { vestingPeriod, vestingPeriodUnit, cliffPeriod, cliffPeriodUnit } =
     data
 
   useEffect(() => {
-    if (!vestingWanted) {
+    if (!data.vestingEnabled) {
       // clear previously inserted data if the user selects 'No' option
       updateData({
         vestingPeriod: 0,
@@ -56,10 +45,7 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
         cliffPeriodUnit: EPeriods.Weeks,
       })
     }
-  }, [vestingWanted])
-
-  const handleVestingOptionChange = (option: VestingOption) =>
-    selectedVestingOption !== option && setselectedVestingOption(option)
+  }, [data.vestingEnabled])
 
   const validInsertedVestingConfig = (
     vestingPeriod: number,
@@ -101,9 +87,12 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
             Do you want to add a vesting Period to your token sale?
           </Typography>
           <Radio
-            items={Object.values(EVestingOpton)}
+            items={Object.values(EVestingOption)}
+            selectedItem={data.vestingEnabled ? `${data.vestingEnabled}` : ''}
             onChange={(value) =>
-              handleVestingOptionChange(value as VestingOption)
+              updateData({
+                vestingEnabled: value,
+              })
             }
           />
         </Grid>
@@ -149,9 +138,7 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
         fullWidth
         onClick={onNext}
         variant="contained"
-        disabled={
-          vestingWanted ? !validVestingDataInserted : !selectedVestingOption
-        }
+        disabled={vestingWanted ? !validVestingDataInserted : false}
       >
         Next
       </Button>
