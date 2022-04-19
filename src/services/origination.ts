@@ -45,12 +45,10 @@ class OriginationService {
     let resolved = false
     return new Promise((resolve) => {
       this.contract.on('CreateFungibleListing', 
-        (contractAddress: string, sender: any, ...rest: any) => {
-          if (account.toLowerCase() === sender.toLowerCase()) {
-            if (!resolved) {
-              resolved = true
-              resolve(rest[0].transactionHash)
-            }
+        (_: string, sender: any, transactionDetails: any) => {
+          if (account.toLowerCase() === sender.toLowerCase() && !resolved) {
+            resolved = true
+              resolve(transactionDetails.transactionHash)
           }
       })
 
