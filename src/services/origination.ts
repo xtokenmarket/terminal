@@ -1,5 +1,5 @@
 import { Contract, Wallet, ethers } from 'ethers'
-import { Maybe } from 'types'
+import { ISaleParams, Maybe } from 'types'
 import Abi from 'abis'
 
 class OriginationService {
@@ -26,6 +26,40 @@ class OriginationService {
 
   get address(): string {
     return this.contract.address
+  }
+
+  createFungibleListing = async (
+    payableAmount: number,
+    saleParams: ISaleParams
+  ): Promise<string> => {
+    const transactionObject = await this.contract.createFungibleListing(
+      payableAmount,
+      saleParams
+    )
+    console.log(`createFungibleListing transaction hash: ${transactionObject.hash}`)
+
+    return transactionObject.hash
+  }
+
+  waitUntilCreateFungibleListing = async (
+    txId: string
+  ): Promise<string> => {
+    let resolved = false
+    return new Promise((resolve) => {
+      this.contract.on(
+        'createFungibleListing',
+        (...rest) => {
+          console.log("rest >>", rest);
+        }
+      )
+
+      this.contract.provider.waitForTransaction(txId).then(() => {
+        if (!resolved) {
+          resolved = true
+          resolve(txId)
+        }
+      })
+    })
   }
 }
 

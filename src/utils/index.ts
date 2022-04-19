@@ -205,7 +205,7 @@ export const getMetamaskError = (error: any) => {
   return null
 }
 
-export const getDurationSecStr = (amount: number, unit: string) => {
+export const getDurationSec = (amount: number, unit: string) => {
   let durationSec = 0
   const secondsIn1Day = 24 * 60 * 60 
   if(unit === 'Days') {
@@ -221,5 +221,5 @@ export const getDurationSecStr = (amount: number, unit: string) => {
     durationSec = amount * secondsIn1Day * 7 * 4 * 365
   }
 
-  return durationSec.toString()
+  return durationSec
 } 
