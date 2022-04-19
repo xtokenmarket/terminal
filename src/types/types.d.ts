@@ -43,7 +43,7 @@ export type NetworkId = 1 | 10 | 42 | 137 | 42161
 
 export type KnownContracts = keyof INetwork['contracts']
 
-export type KnownToken = 'dai' | 'weth' | 'usdt' | 'usdc'
+export type KnownToken = 'dai' | 'weth' | 'usdt' | 'usdc' | 'eth'
 
 export interface IKnownTokenData {
   name: string
