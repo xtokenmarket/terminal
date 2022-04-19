@@ -41,11 +41,18 @@ class OriginationService {
     return transactionObject.hash
   }
 
-  waitUntilCreateFungibleListing = async (txId: string): Promise<string> => {
+  waitUntilCreateFungibleListing = async (account: string, txId: string): Promise<string> => {
     let resolved = false
     return new Promise((resolve) => {
       this.contract.on('CreateFungibleListing', (...rest) => {
-        console.log('CreateFungibleListing Event data >>', rest)
+        (contractAddress: string, sender: any, ...rest: any) => {
+          if (account.toLowerCase() === sender.toLowerCase()) {
+            if (!resolved) {
+              resolved = true
+              resolve(rest[0].transactionHash)
+            }
+          }
+        }
       })
 
       this.contract.provider.waitForTransaction(txId).then(() => {
