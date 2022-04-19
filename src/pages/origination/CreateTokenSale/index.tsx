@@ -26,8 +26,7 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: 66,
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between',
-    minHeight: 620,
+    minHeight: 700,
   },
   connectBtn: {
     background: theme.colors.primary,

@@ -47,6 +47,9 @@ const useStyles = makeStyles((theme) => ({
     textDecoration: `underline ${theme.colors.primary200}`,
     textUnderlineOffset: '5px',
   },
+  nextButton: {
+    marginTop: 'auto',
+  },
 }))
 
 interface IProps {
@@ -158,6 +161,7 @@ export const OfferingStep: React.FC<IProps> = ({
       </Grid>
 
       <Button
+        className={classes.nextButton}
         color="primary"
         fullWidth
         onClick={onNext}
