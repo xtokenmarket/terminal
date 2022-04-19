@@ -1,5 +1,4 @@
 import React from 'react'
-import clsx from 'clsx'
 import {
   makeStyles,
   Typography,
@@ -25,6 +24,9 @@ const useStyles = makeStyles((theme) => ({
       borderColor: theme.colors.primary200,
     },
   },
+  tableCell: {
+    verticalAlign: 'top',
+  },
   rowHeader: {
     color: theme.colors.primary100,
     fontSize: '12px',
@@ -33,14 +35,13 @@ const useStyles = makeStyles((theme) => ({
   bodyRowText: {
     color: 'white',
     fontFamily: 'Gilmer',
+    fontSize: 16,
     fontWeight: 700,
+    marginTop: 6,
   },
   priceEstimation: {
     color: theme.colors.primary100,
     fontSize: 12,
-  },
-  endingPriceEstimation: {
-    marginTop: 4,
   },
 }))
 
@@ -81,11 +82,11 @@ export const PricingFormulaTable: React.FC<IProps> = ({ data }) => {
         </TableHead>
         <TableBody>
           <TableRow>
-            <TableCell>
-              <div style={{ display: 'flex', alignItems: 'center' }}>
+            <TableCell className={cl.tableCell}>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}>
                 <img src={data.offerToken?.image} style={{ marginRight: 8 }} />
                 <div>
-                  <Typography variant="h3" className={cl.bodyRowText}>
+                  <Typography className={cl.bodyRowText}>
                     {data.startingPrice}
                   </Typography>
                   {offerToken && (
@@ -98,30 +99,27 @@ export const PricingFormulaTable: React.FC<IProps> = ({ data }) => {
                 </div>
               </div>
             </TableCell>
-            <TableCell>
-              <div>
-                <Typography variant="h5" className={cl.bodyRowText}>
+            <TableCell className={cl.tableCell}>
+              <>
+                <Typography className={cl.bodyRowText}>
                   {data.endingPrice}
                 </Typography>
                 {offerToken && (
                   <TokenAmountPriceEstimation
-                    className={clsx(
-                      cl.priceEstimation,
-                      cl.endingPriceEstimation
-                    )}
+                    className={cl.priceEstimation}
                     token={offerToken}
                     tokenAmount={Number(data.endingPrice)}
                   />
                 )}
-              </div>
+              </>
             </TableCell>
-            <TableCell>
-              <Typography variant="h5" className={cl.bodyRowText}>
+            <TableCell className={cl.tableCell}>
+              <Typography className={cl.bodyRowText}>
                 {data.vestingPeriod} {data.vestingPeriodUnit}
               </Typography>
             </TableCell>
-            <TableCell>
-              <Typography variant="h5" className={cl.bodyRowText}>
+            <TableCell className={cl.tableCell}>
+              <Typography className={cl.bodyRowText}>
                 {data.cliffPeriod} {data.cliffPeriodUnit}
               </Typography>
             </TableCell>
