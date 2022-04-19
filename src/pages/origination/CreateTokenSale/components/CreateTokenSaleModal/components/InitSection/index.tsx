@@ -1,9 +1,8 @@
+import { useEffect, useState } from 'react'
 import { Button, CircularProgress, makeStyles } from '@material-ui/core'
 import { WarningInfo } from 'components/Common/WarningInfo'
 import { getContractAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
-import { BigNumber } from 'ethers'
-import { useEffect, useState } from 'react'
 import { OriginationService } from 'services/origination'
 import { ICreateTokenSaleData } from 'types'
 import { getDurationSec, getMetamaskError } from 'utils'
@@ -34,7 +33,7 @@ interface IState {
 export const InitSection = (props: IProps) => {
   const classes = useStyles()
 
-  const { account, library: provider, networkId } = useConnectedWeb3Context()
+  const { account, library: provider } = useConnectedWeb3Context()
 
   const [state, setState] = useState<IState>({
     isCompleted: false,
@@ -96,14 +95,10 @@ export const InitSection = (props: IProps) => {
         originationAddress
       )
 
-      const payableAmount = 0.01
-
-      const txId = await origination.createFungibleListing(
-        payableAmount,
-        saleParams
-      )
+      const txId = await origination.createFungibleListing(saleParams)
       const finalTxId = await origination.waitUntilCreateFungibleListing(txId)
       setTxId(finalTxId)
+
       setTimeout(() => {
         setState((prev) => ({
           ...prev,
@@ -112,7 +107,7 @@ export const InitSection = (props: IProps) => {
           isCompleted: true,
         }))
       }, 3000)
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error when creating token sale', error)
       const metamaskError = getMetamaskError(error)
       setState((prev) => ({

@@ -28,30 +28,25 @@ class OriginationService {
     return this.contract.address
   }
 
-  createFungibleListing = async (
-    payableAmount: number,
-    saleParams: ISaleParams
-  ): Promise<string> => {
+  createFungibleListing = async (saleParams: ISaleParams): Promise<string> => {
+    const listingFee = await this.contract.listingFee()
     const transactionObject = await this.contract.createFungibleListing(
-      payableAmount,
-      saleParams
+      saleParams,
+      { value: listingFee }
     )
-    console.log(`createFungibleListing transaction hash: ${transactionObject.hash}`)
+    console.log(
+      `CreateFungibleListing transaction hash: ${transactionObject.hash}`
+    )
 
     return transactionObject.hash
   }
 
-  waitUntilCreateFungibleListing = async (
-    txId: string
-  ): Promise<string> => {
+  waitUntilCreateFungibleListing = async (txId: string): Promise<string> => {
     let resolved = false
     return new Promise((resolve) => {
-      this.contract.on(
-        'createFungibleListing',
-        (...rest) => {
-          console.log("rest >>", rest);
-        }
-      )
+      this.contract.on('CreateFungibleListing', (...rest) => {
+        console.log('CreateFungibleListing Event data >>', rest)
+      })
 
       this.contract.provider.waitForTransaction(txId).then(() => {
         if (!resolved) {
