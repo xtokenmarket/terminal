@@ -234,3 +234,15 @@ export interface ICreateTokenSaleData {
   cliffPeriodUnit: PeriodUnit
   offeringPeriodUnit: PeriodUnit
 }
+
+export interface ISaleParams {
+offerToken: string
+purchaseToken: string
+startingPrice: string
+endingPrice: string
+saleDuration: number
+totalOfferingAmount: string
+reserveAmount: string
+vestingPeriod: number
+cliffPeriod: number
+}
