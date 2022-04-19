@@ -81,8 +81,8 @@ const useStyles = makeStyles((theme) => ({
       fontWeight: 500,
     },
   },
-  button: {
-    marginTop: 20,
+  nextButton: {
+    marginTop: 'auto',
   },
 }))
 
@@ -167,7 +167,7 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit }) => {
       </Grid>
 
       <Button
-        className={classes.button}
+        className={classes.nextButton}
         color="primary"
         fullWidth
         onClick={toggleSellTokenModal}
