@@ -6,6 +6,7 @@ import { useConnectedWeb3Context } from 'contexts'
 import { OriginationService } from 'services/origination'
 import { ICreateTokenSaleData } from 'types'
 import { getDurationSec, getMetamaskError } from 'utils'
+import { parseUnits } from 'ethers/lib/utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,15 +66,24 @@ export const InitSection = (props: IProps) => {
       const saleParams = {
         offerToken: data.offerToken?.address as string,
         purchaseToken: data.purchaseToken?.address as string,
-        startingPrice: data.startingPrice,
-        endingPrice: data.endingPrice,
+        startingPrice: parseUnits(
+          data.startingPrice,
+          data.purchaseToken?.decimals
+        ),
+        endingPrice: parseUnits(data.endingPrice, data.purchaseToken?.decimals),
         saleDuration: getDurationSec(
           data.offeringPeriod,
           data.offeringPeriodUnit.toString()
         ),
 
-        totalOfferingAmount: data.offerTokenAmount,
-        reserveAmount: data.reserveOfferTokenAmount,
+        totalOfferingAmount: parseUnits(
+          data.offerTokenAmount,
+          data.offerToken?.decimals
+        ),
+        reserveAmount: parseUnits(
+          data.reserveOfferTokenAmount,
+          data.offerToken?.decimals
+        ),
         vestingPeriod: getDurationSec(
           Number(data.vestingPeriod),
           data.vestingPeriodUnit.toString()
