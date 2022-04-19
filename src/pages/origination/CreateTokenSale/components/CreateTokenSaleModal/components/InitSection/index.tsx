@@ -106,7 +106,10 @@ export const InitSection = (props: IProps) => {
       )
 
       const txId = await origination.createFungibleListing(saleParams)
-      const finalTxId = await origination.waitUntilCreateFungibleListing(txId)
+      const finalTxId = await origination.waitUntilCreateFungibleListing(
+        account,
+        txId
+      )
       setTxId(finalTxId)
 
       setTimeout(() => {
