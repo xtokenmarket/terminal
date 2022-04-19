@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme) => ({
   infoPanel: {
     marginTop: 56,
   },
+  nextButton: {
+    marginTop: 'auto',
+  },
 }))
 
 interface IProps {
@@ -134,6 +137,7 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
       </Grid>
 
       <Button
+        className={classes.nextButton}
         color="primary"
         fullWidth
         onClick={onNext}
