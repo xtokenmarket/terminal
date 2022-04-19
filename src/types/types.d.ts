@@ -238,11 +238,11 @@ export interface ICreateTokenSaleData {
 export interface ISaleParams {
 offerToken: string
 purchaseToken: string
-startingPrice: string
-endingPrice: string
+startingPrice: BigNumber
+endingPrice: BigNumber
 saleDuration: number
-totalOfferingAmount: string
-reserveAmount: string
+totalOfferingAmount: BigNumber
+reserveAmount: BigNumber
 vestingPeriod: number
 cliffPeriod: number
 }
