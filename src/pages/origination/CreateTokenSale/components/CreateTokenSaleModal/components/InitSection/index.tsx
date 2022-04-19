@@ -1,10 +1,12 @@
 import { Button, CircularProgress, makeStyles } from '@material-ui/core'
 import { WarningInfo } from 'components/Common/WarningInfo'
+import { getContractAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import { BigNumber } from 'ethers'
 import { useEffect, useState } from 'react'
+import { OriginationService } from 'services/origination'
 import { ICreateTokenSaleData } from 'types'
-import { getDurationSecStr, getMetamaskError } from 'utils'
+import { getDurationSec, getMetamaskError } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,6 +56,7 @@ export const InitSection = (props: IProps) => {
     if (!account || !provider) {
       return
     }
+
     try {
       setState((prev) => ({
         ...prev,
@@ -61,39 +64,46 @@ export const InitSection = (props: IProps) => {
       }))
 
       const saleParams = {
-        offerToken: data.offerToken?.address,
-        purchaseToken: data.purchaseToken?.address,
-        startingPrice: BigNumber.from(data.startingPrice),
-        endingPrice: BigNumber.from(data.endingPrice),
-        saleDuration: BigNumber.from(
-          getDurationSecStr(
-            data.offeringPeriod,
-            data.offeringPeriodUnit.toString()
-          )
+        offerToken: data.offerToken?.address as string,
+        purchaseToken: data.purchaseToken?.address as string,
+        startingPrice: data.startingPrice,
+        endingPrice: data.endingPrice,
+        saleDuration: getDurationSec(
+          data.offeringPeriod,
+          data.offeringPeriodUnit.toString()
         ),
 
-        totalOfferingAmount: BigNumber.from(data.offerTokenAmount),
-        reserveAmount: BigNumber.from(data.reserveOfferTokenAmount),
-        vestingPeriod: BigNumber.from(
-          getDurationSecStr(
-            Number(data.vestingPeriod),
-            data.vestingPeriodUnit.toString()
-          )
+        totalOfferingAmount: data.offerTokenAmount,
+        reserveAmount: data.reserveOfferTokenAmount,
+        vestingPeriod: getDurationSec(
+          Number(data.vestingPeriod),
+          data.vestingPeriodUnit.toString()
         ),
-        cliffPeriod: BigNumber.from(
-          getDurationSecStr(
-            Number(data.cliffPeriod),
-            data.cliffPeriodUnit.toString()
-          )
+        cliffPeriod: getDurationSec(
+          Number(data.cliffPeriod),
+          data.cliffPeriodUnit.toString()
         ),
       }
-      const txId =
-        '0x8978e74a425212a30ef9328bef8ed9a6778233950c9f762a8e94f22f89e4e3af'
-      const finalTxId =
-        '0x8978e74a425212a30ef9328bef8ed9a6778233950c9f762a8e94f22f89e4e3af'
 
+      const originationAddress = getContractAddress(
+        'origination',
+        provider.network.chainId
+      )
+
+      const origination = new OriginationService(
+        provider,
+        account,
+        originationAddress
+      )
+
+      const payableAmount = 0.01
+
+      const txId = await origination.createFungibleListing(
+        payableAmount,
+        saleParams
+      )
+      const finalTxId = await origination.waitUntilCreateFungibleListing(txId)
       setTxId(finalTxId)
-
       setTimeout(() => {
         setState((prev) => ({
           ...prev,
