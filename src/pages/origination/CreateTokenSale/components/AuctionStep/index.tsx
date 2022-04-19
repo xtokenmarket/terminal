@@ -1,7 +1,7 @@
+import { Description, InfoText, EPricingFormula } from 'utils/enums'
 import { Button, Grid, makeStyles } from '@material-ui/core'
 import { ICreateTokenSaleData } from 'types'
 import { InputDescription } from '../InputDescription'
-import { Description, InfoText, EPricingFormula } from 'utils/enums'
 import { Input } from '../Input'
 import { Radio } from '../Radio'
 
@@ -19,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
   },
   inputContainer: {
     marginBottom: 61,
+  },
+  nextButton: {
+    marginTop: 'auto',
   },
 }))
 
@@ -47,47 +50,19 @@ export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
   const handlePricingFormulaChange = (
     newPricingFormula: EPricingFormula[keyof EPricingFormula]
   ) => {
-    if (
-      data.pricingFormula !== newPricingFormula &&
-      newPricingFormula === EPricingFormula.Standard
-    ) {
-      const price = data.startingPrice ? data.startingPrice : data.endingPrice
+    if (newPricingFormula === data.pricingFormula) {
+      return
+    }
 
-      return updateData({
+    if (newPricingFormula === EPricingFormula.Standard) {
+      updateData({
+        startingPrice: '',
+        endingPrice: '',
         pricingFormula: newPricingFormula,
-        startingPrice: price,
-        endingPrice: price,
       })
+    } else {
+      updateData({ pricingFormula: newPricingFormula })
     }
-
-    updateData({ pricingFormula: newPricingFormula })
-  }
-
-  const handleStartingPriceChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const startingPriceValue = e.target.value
-
-    if (data.pricingFormula === EPricingFormula.Standard) {
-      return updateData({
-        startingPrice: startingPriceValue,
-        endingPrice: startingPriceValue,
-      })
-    }
-    updateData({ startingPrice: startingPriceValue })
-  }
-
-  const handleEndingPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const endingPriceValue = e.target.value
-
-    if (data.pricingFormula === EPricingFormula.Standard) {
-      return updateData({
-        startingPrice: endingPriceValue,
-        endingPrice: endingPriceValue,
-      })
-    }
-
-    updateData({ endingPrice: endingPriceValue })
   }
 
   const isNextBtnDisabled = !(
@@ -111,33 +86,54 @@ export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
         selectedItem={data.pricingFormula}
         onChange={handlePricingFormulaChange}
       />
-      <Grid container>
-        <Grid item xs={12} md={6}>
-          <div className={classes.inputContainer}>
-            <Input
-              label={`Starting Price - ${data.purchaseToken?.symbol} per ${data.offerToken?.symbol}`}
-              value={data.startingPrice}
-              onChange={handleStartingPriceChange}
-            />
-
-            <InputDescription className={classes.inputDescription}>
-              {Description.StartingPrice}
-            </InputDescription>
-          </div>
-          <div className={classes.inputContainer}>
-            <Input
-              label={`Ending Price - ${data.purchaseToken?.symbol} per ${data.offerToken?.symbol}`}
-              value={data.endingPrice}
-              onChange={handleEndingPriceChange}
-            />
-            <InputDescription className={classes.inputDescription}>
-              {Description.EndingPrice}
-            </InputDescription>
-          </div>
+      {data.pricingFormula && (
+        <Grid container>
+          <Grid item xs={12} md={6}>
+            {data.pricingFormula === EPricingFormula.Standard ? (
+              <div className={classes.inputContainer}>
+                <Input
+                  label={`Price per token - ${data.purchaseToken?.symbol} per ${data.offerToken?.symbol}`}
+                  value={data.startingPrice}
+                  onChange={(event) => {
+                    const price = event.target.value
+                    updateData({ startingPrice: price, endingPrice: price })
+                  }}
+                />
+              </div>
+            ) : (
+              <>
+                <div className={classes.inputContainer}>
+                  <Input
+                    label={`Starting Price - ${data.purchaseToken?.symbol} per ${data.offerToken?.symbol}`}
+                    value={data.startingPrice}
+                    onChange={(event) =>
+                      updateData({ startingPrice: event.target.value })
+                    }
+                  />
+                  <InputDescription className={classes.inputDescription}>
+                    {Description.StartingPrice}
+                  </InputDescription>
+                </div>
+                <div className={classes.inputContainer}>
+                  <Input
+                    label={`Ending Price - ${data.purchaseToken?.symbol} per ${data.offerToken?.symbol}`}
+                    value={data.endingPrice}
+                    onChange={(event) =>
+                      updateData({ endingPrice: event.target.value })
+                    }
+                  />
+                  <InputDescription className={classes.inputDescription}>
+                    {Description.EndingPrice}
+                  </InputDescription>
+                </div>
+              </>
+            )}
+          </Grid>
         </Grid>
-      </Grid>
+      )}
 
       <Button
+        className={classes.nextButton}
         color="primary"
         fullWidth
         onClick={onNext}
