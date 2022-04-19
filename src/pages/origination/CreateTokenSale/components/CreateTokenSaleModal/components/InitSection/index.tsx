@@ -53,7 +53,7 @@ export const InitSection = (props: IProps) => {
   }, [state.isCompleted])
 
   const onCreateTokenSale = async () => {
-    if (!account || !provider) {
+    if (!account || !provider || !data.offerToken || !data.purchaseToken) {
       return
     }
 
@@ -64,8 +64,8 @@ export const InitSection = (props: IProps) => {
       }))
 
       const saleParams = {
-        offerToken: data.offerToken?.address as string,
-        purchaseToken: data.purchaseToken?.address as string,
+        offerToken: data.offerToken.address,
+        purchaseToken: data.purchaseToken.address,
         startingPrice: parseUnits(
           data.startingPrice,
           data.purchaseToken?.decimals
