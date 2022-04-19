@@ -97,6 +97,7 @@ export const OfferingStep: React.FC<IProps> = ({
             />
           </div>
           <DetailedTokenSelect
+            includeETH={true}
             token={data.purchaseToken}
             hasPlaceholderTokenIcon={false}
             onChange={(purchaseToken) => updateData({ purchaseToken })}
