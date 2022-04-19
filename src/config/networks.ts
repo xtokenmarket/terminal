@@ -147,6 +147,20 @@ const networks: { [K in ChainId]: INetwork } = {
 }
 
 export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
+  eth: {
+    name: 'Ethereum',
+    symbol: 'ETH',
+    addresses: {
+      [ChainId.Mainnet]: '',
+      [ChainId.Arbitrum]: '',
+      [ChainId.Optimism]: '',
+      [ChainId.Polygon]: '',
+      [ChainId.Kovan]: '',
+      // [ChainId.Rinkeby]: '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa',
+    },
+    decimals: 18,
+    image: '/assets/tokens/eth.png',
+  },
   dai: {
     name: 'DAI',
     symbol: 'DAI',
