@@ -1,6 +1,14 @@
+import clsx from 'clsx'
 import { makeStyles, Typography } from '@material-ui/core'
 import { OfferingTd } from '../table'
 import { NavLink } from 'react-router-dom'
+import { ITokenOffer } from 'types'
+import {
+  formatBigNumber,
+  numberWithCommas,
+  parseDurationSec,
+  parseRemainingDurationSec,
+} from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,8 +46,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   item: {
-    color: theme.colors.purple0,
-    fontSize: 11,
+    color: theme.colors.primary100,
+    fontSize: 16,
     display: 'flex',
     alignItems: 'center',
   },
@@ -58,48 +66,24 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
     textTransform: 'capitalize',
   },
-  apr: {
-    backgroundColor: theme.colors.primary200,
-    color: theme.colors.white,
-    height: 24,
-    display: 'flex',
-    alignItems: 'center',
-    fontSize: 12,
-    fontWeight: 700,
-    padding: '0 16px',
-    borderRadius: 20,
-  },
-  networkIcon: {
-    borderRadius: '50%',
-  },
-  allocationItem: {
-    display: 'flex',
-    flexDirection: 'column',
-    color: theme.colors.white,
-    fontWeight: 700,
-    '& span': {
-      fontWeight: 400,
-      color: theme.colors.primary100,
-      fontSize: 14,
-    },
-  },
 }))
 
 interface IProps {
-  // TODO: fix typing
-  offering: any
+  offering: ITokenOffer
 }
 
-export const OfferingTableRow = ({ offering }: IProps) => {
-  const {
-    maxOffering,
-    remainingOffering,
+export const OfferingTableRow = ({
+  offering: {
+    totalOfferingAmount,
+    offerToken,
+    remainingOfferingAmount,
     pricePerToken,
+    purchaseToken,
     timeRemaining,
     vestingPeriod,
-    vestingCliff,
-  } = offering
-
+    cliffPeriod,
+  },
+}: IProps) => {
   const cl = useStyles()
 
   const renderContent = () => (
@@ -109,40 +93,45 @@ export const OfferingTableRow = ({ offering }: IProps) => {
           <img
             alt="offerToken"
             className={cl.tokenIcon}
-            src={offering.offerToken.image}
+            src={offerToken.image}
           />
         </div>
       </OfferingTd>
 
       <OfferingTd type="maxOffering">
-        <div className={cl.item}>
-          <Typography className={cl.label}>{maxOffering}</Typography>
-        </div>
+        <Typography className={cl.item}>
+          {numberWithCommas(
+            formatBigNumber(totalOfferingAmount, offerToken.decimals)
+          )}
+        </Typography>
       </OfferingTd>
       <OfferingTd type="remainingOffering">
-        <div className={cl.item}>
-          <Typography className={cl.label}>{remainingOffering}</Typography>
-        </div>
+        <Typography className={cl.item}>
+          {numberWithCommas(
+            formatBigNumber(remainingOfferingAmount, offerToken.decimals)
+          )}
+        </Typography>
       </OfferingTd>
       <OfferingTd type="pricePerToken">
-        <div className={cl.item}>
-          <Typography className={cl.label}>{pricePerToken}</Typography>
-        </div>
+        <Typography className={clsx(cl.item, cl.label)}>
+          {formatBigNumber(pricePerToken, purchaseToken.decimals)}{' '}
+          {purchaseToken.symbol}
+        </Typography>
       </OfferingTd>
       <OfferingTd type="timeRemaining">
-        <div className={cl.item}>
-          <Typography className={cl.label}>{timeRemaining}</Typography>
-        </div>
+        <Typography className={clsx(cl.item, cl.label)}>
+          {parseRemainingDurationSec(timeRemaining)}
+        </Typography>
       </OfferingTd>
       <OfferingTd type="vestingPeriod">
-        <div className={cl.item}>
-          <Typography className={cl.label}>{vestingPeriod}</Typography>
-        </div>
+        <Typography className={clsx(cl.item, cl.label)}>
+          {parseDurationSec(vestingPeriod)}
+        </Typography>
       </OfferingTd>
       <OfferingTd type="vestingCliff">
-        <div className={cl.item}>
-          <Typography className={cl.label}>{vestingCliff}</Typography>
-        </div>
+        <Typography className={clsx(cl.item, cl.label)}>
+          {parseDurationSec(cliffPeriod)}
+        </Typography>
       </OfferingTd>
     </NavLink>
   )

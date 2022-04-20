@@ -1,14 +1,15 @@
 import axios from 'axios'
 import { TERMINAL_API_URL } from 'config/constants'
 import { useNetworkContext } from 'contexts/networkContext'
+import { BigNumber } from 'ethers'
 import { useEffect, useState } from 'react'
-import { ITerminalPool } from 'types'
+import { ITokenOffer } from 'types'
 import { Network } from 'utils/enums'
-import { isTestnet } from 'utils/network'
+import { isTestnet, isTestNetwork } from 'utils/network'
 
 interface IState {
   isLoading: boolean
-  tokenOffers: ITerminalPool[]
+  tokenOffers: ITokenOffer[]
 }
 
 const offerings = [
@@ -28,16 +29,16 @@ const offerings = [
       name: 'DAI',
       symbol: 'DAI',
     },
-    maxOffering: '1500000',
-    remainingOffering: '497303',
-    pricePerToken: '1.25',
-    timeRemaining: '6D 19H 30M',
-    vestingPeriod: '1 Year',
-    vestingCliff: '3 Months',
+    totalOfferingAmount: BigNumber.from('1500000000000'),
+    remainingOfferingAmount: BigNumber.from('497303000000'),
+    pricePerToken: BigNumber.from('1250000000000000000'),
+    timeRemaining: 23420,
+    vestingPeriod: 31622400,
+    cliffPeriod: 7890000,
   },
 ]
 
-const getTokenOffers = async (): Promise<{ data: any }> => {
+const getTokenOffers = async (): Promise<{ data: ITokenOffer[] }> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({ data: offerings })
@@ -53,34 +54,30 @@ export const useTokenOffers = () => {
   })
   const { chainId } = useNetworkContext()
 
-  useEffect(() => {
-    const loadTokenOffers = async () => {
-      setState((prev) => ({ ...prev, isLoading: true }))
+  const getFilteredOffers = (offers: ITokenOffer[] = []) =>
+    offers.filter((offer: ITokenOffer) =>
+      isTestnet(chainId)
+        ? isTestNetwork(offer.network)
+        : !isTestNetwork(offer.network)
+    )
 
-      try {
-        const { data: tokenOffers } = await getTokenOffers()
+  const loadTokenOffers = async () => {
+    setState((prev) => ({ ...prev, isLoading: true }))
 
-        const testNetworks = [Network.KOVAN, Network.RINKEBY]
-        // TODO fix typing
-        const filteredOffers = isTestnet(chainId)
-          ? tokenOffers.filter((offer: any) =>
-              testNetworks.includes(offer.network as Network)
-            )
-          : tokenOffers.filter(
-              (offer: any) => !testNetworks.includes(offer.network as Network)
-            )
+    try {
+      const { data: tokenOffers } = await getTokenOffers()
 
-        setState((prev) => ({
-          ...prev,
-          tokenOffers: filteredOffers,
-          isLoading: false,
-        }))
-      } catch (error) {
-        setState((prev) => ({ ...prev, isLoading: false }))
-      }
+      setState((prev) => ({
+        ...prev,
+        tokenOffers: getFilteredOffers(tokenOffers),
+        isLoading: false,
+      }))
+    } catch (error) {
+      setState((prev) => ({ ...prev, isLoading: false }))
     }
+  }
 
-    setState((prev) => ({ ...prev, tokenOffers: [], isLoading: true }))
+  useEffect(() => {
     loadTokenOffers()
   }, [chainId])
 
