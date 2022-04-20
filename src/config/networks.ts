@@ -1,4 +1,4 @@
-import { BigNumber, providers } from 'ethers'
+import { BigNumber, providers, constants } from 'ethers'
 import { entries } from 'utils/type-utils'
 import {
   IKnownTokenData,
@@ -126,6 +126,20 @@ const networks: { [K in ChainId]: INetwork } = {
 }
 
 export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
+  eth: {
+    name: 'Ethereum',
+    symbol: 'ETH',
+    addresses: {
+      [ChainId.Mainnet]: constants.AddressZero,
+      [ChainId.Arbitrum]: constants.AddressZero,
+      [ChainId.Optimism]: constants.AddressZero,
+      [ChainId.Polygon]: constants.AddressZero,
+      [ChainId.Kovan]: constants.AddressZero,
+      // [ChainId.Rinkeby]: '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa',
+    },
+    decimals: 18,
+    image: '/assets/tokens/eth.png',
+  },
   dai: {
     name: 'DAI',
     symbol: 'DAI',
