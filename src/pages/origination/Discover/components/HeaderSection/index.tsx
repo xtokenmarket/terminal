@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export const HeaderSection: React.FC = () => {
+export const HeaderSection = () => {
   const cl = useStyles()
   const { account } = useConnectedWeb3Context()
   const isConnected = !!account
