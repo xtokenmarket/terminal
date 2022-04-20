@@ -4,6 +4,8 @@ import moment from 'moment'
 
 const { formatUnits } = utils
 
+const secondsIn1Day = 24 * 60 * 60
+
 export const shortenAddress = (address: string) => {
   return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`
 }
@@ -207,19 +209,59 @@ export const getMetamaskError = (error: any) => {
 
 export const getDurationSec = (amount: number, unit: string) => {
   let durationSec = 0
-  const secondsIn1Day = 24 * 60 * 60 
-  if(unit === 'Days') {
+
+  if (unit === 'Days') {
     durationSec = amount * secondsIn1Day
   }
-  if(unit === 'Weeks') {
+  if (unit === 'Weeks') {
     durationSec = amount * secondsIn1Day * 7
   }
-  if(unit === 'Months') {
+  if (unit === 'Months') {
     durationSec = amount * secondsIn1Day * 7 * 4
   }
-  if(unit === 'Years') {
+  if (unit === 'Years') {
     durationSec = amount * secondsIn1Day * 7 * 4 * 365
   }
 
   return durationSec
-} 
+}
+
+export const parseDurationSec = (amount: number) => {
+  const unitNames = ['Year', 'Month', 'Week', 'Day']
+  const amountByUnit = [
+    amount / (secondsIn1Day * 7 * 4 * 365),
+    amount / (secondsIn1Day * 7 * 4),
+    amount / (secondsIn1Day * 7),
+    amount / secondsIn1Day,
+  ].map(Math.floor)
+  const applicableUnitIndex = amountByUnit.findIndex((amount) => amount > 0)
+  const getUnitEnding = (unitAmount: number) => (unitAmount > 1 ? 's' : '')
+
+  return `${amountByUnit[applicableUnitIndex]} ${
+    unitNames[applicableUnitIndex]
+  }${getUnitEnding(amountByUnit[applicableUnitIndex])}`
+}
+
+export const parseRemainingDurationSec = (
+  amount: number,
+  unitPrecision = 3
+) => {
+  const duration = moment.duration(amount * 1000)
+
+  return [
+    { Y: duration.years() },
+    { M: duration.months() },
+    { W: duration.weeks() },
+    // for some reason, moment keeps days and weeks irrespective of each other
+    { D: Math.max(duration.days() - duration.weeks() * 7, 0) },
+    { H: duration.hours() },
+    { M: duration.minutes() },
+  ]
+    .filter((unit) => Object.values(unit)[0] > 0)
+    .map((unit) => {
+      const [key, value] = Object.entries(unit)[0]
+      return `${value.toString()}${key}`
+    })
+    .filter((_, i) => i < unitPrecision)
+    .join(' ')
+}

@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/core'
 import { transparentize } from 'polished'
+import { ITokenOffer } from 'types'
 import { OfferingTableHeader, OfferingTableRow } from '../table'
 
 const useStyles = makeStyles((theme) => ({
@@ -18,8 +19,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  // TODO: fix typing
-  offerings: any[]
+  offerings: ITokenOffer[]
 }
 
 export const OfferingTable = ({ offerings }: IProps) => {
@@ -31,7 +31,7 @@ export const OfferingTable = ({ offerings }: IProps) => {
       <div>
         {offerings.map((offering, index) => (
           <OfferingTableRow
-            key={`${offering.poolAddress}-${index}`}
+            key={`${offering.offerToken.address}-${offering.purchaseToken.address}-${index}`}
             offering={offering}
           />
         ))}
