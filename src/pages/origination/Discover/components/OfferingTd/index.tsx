@@ -1,7 +1,7 @@
-import { makeStyles } from '@material-ui/core'
 import clsx from 'clsx'
+import { makeStyles } from '@material-ui/core'
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles = makeStyles(() => ({
   root: {
     '&.offerToken': { width: '12%' },
     '&.remainingOffering': { width: '12%' },
@@ -27,11 +27,10 @@ interface IProps {
     | 'timeRemaining'
     | 'vestingPeriod'
     | 'vestingCliff'
-    | 'network'
   children: React.ReactNode | React.ReactNode[]
 }
 
-export const PoolTd: React.FC<IProps> = ({ type, children }) => {
+export const OfferingTd = ({ type, children }: IProps) => {
   const cl = useStyles()
 
   return <div className={clsx(cl.root, type)}>{children}</div>

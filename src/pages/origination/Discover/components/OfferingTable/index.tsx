@@ -1,10 +1,11 @@
 import { makeStyles } from '@material-ui/core'
 import { transparentize } from 'polished'
-import { PoolTableHeader, PoolTableItem } from '../table'
+import { PoolTableHeader, OfferingTableItem } from '../table'
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  content: {
     paddingBottom: 10,
+    minWidth: 1000,
     overflowX: 'auto',
     '&::-webkit-scrollbar': {
       backgroundColor: transparentize(0.6, theme.colors.primary),
@@ -14,27 +15,26 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.colors.primary,
     },
   },
-  content: {
-    minWidth: 1000,
-  },
 }))
 
 interface IProps {
-  pools: any[]
+  // TODO: fix typing
+  offerings: any[]
 }
 
-export const PoolTable: React.FC<IProps> = ({ pools }) => {
+export const OfferingTable = ({ offerings }: IProps) => {
   const cl = useStyles()
 
   return (
-    <div className={cl.root}>
-      <div className={cl.content}>
-        <PoolTableHeader />
-        <div>
-          {pools.map((pool, index) => (
-            <PoolTableItem key={`${pool.poolAddress}-${index}`} pool={pool} />
-          ))}
-        </div>
+    <div className={cl.content}>
+      <PoolTableHeader />
+      <div>
+        {offerings.map((offering, index) => (
+          <OfferingTableItem
+            key={`${offering.poolAddress}-${index}`}
+            offering={offering}
+          />
+        ))}
       </div>
     </div>
   )
