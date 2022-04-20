@@ -30,10 +30,7 @@ export const OfferingTableHeader = () => {
         <div className={classes.item}>Remaining Offering</div>
       </OfferingTd>
       <OfferingTd type="pricePerToken">
-        <div className={classes.item}>
-          Price Per Token
-          <SortButton />
-        </div>
+        <div className={classes.item}>Price Per Token</div>
       </OfferingTd>
       <OfferingTd type="timeRemaining">
         <div className={classes.item}>
