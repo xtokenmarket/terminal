@@ -1,5 +1,5 @@
 export * from './OfferingTable'
-export * from './OfferingTableItem'
+export * from './OfferingTableRow'
 export * from './OfferingTd'
 export * from './TableHeader'
 export * from './HeaderSection'

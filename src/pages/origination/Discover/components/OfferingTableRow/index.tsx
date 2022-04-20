@@ -43,13 +43,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
-  itemAlignRight: {
-    color: theme.colors.purple0,
-    fontSize: 11,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
   tokenIcon: {
     width: 48,
     height: 48,
@@ -97,7 +90,7 @@ interface IProps {
   offering: any
 }
 
-export const OfferingTableItem = ({ offering }: IProps) => {
+export const OfferingTableRow = ({ offering }: IProps) => {
   const {
     maxOffering,
     remainingOffering,
@@ -132,22 +125,22 @@ export const OfferingTableItem = ({ offering }: IProps) => {
         </div>
       </OfferingTd>
       <OfferingTd type="pricePerToken">
-        <div className={cl.itemAlignRight}>
+        <div className={cl.item}>
           <Typography className={cl.label}>{pricePerToken}</Typography>
         </div>
       </OfferingTd>
       <OfferingTd type="timeRemaining">
-        <div className={cl.itemAlignRight}>
+        <div className={cl.item}>
           <Typography className={cl.label}>{timeRemaining}</Typography>
         </div>
       </OfferingTd>
       <OfferingTd type="vestingPeriod">
-        <div className={cl.itemAlignRight}>
+        <div className={cl.item}>
           <Typography className={cl.label}>{vestingPeriod}</Typography>
         </div>
       </OfferingTd>
       <OfferingTd type="vestingCliff">
-        <div className={cl.itemAlignRight}>
+        <div className={cl.item}>
           <Typography className={cl.label}>{vestingCliff}</Typography>
         </div>
       </OfferingTd>
