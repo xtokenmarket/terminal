@@ -13,13 +13,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
-  // itemAlignRight: {
-  //   color: theme.colors.purple0,
-  //   fontSize: 11,
-  //   display: 'flex',
-  //   alignItems: 'center',
-  //   justifyContent: 'flex-end',
-  // },
 }))
 
 export const OfferingTableHeader = () => {
@@ -34,7 +27,7 @@ export const OfferingTableHeader = () => {
         <div className={classes.item}>Max Offering</div>
       </OfferingTd>
       <OfferingTd type="remainingOffering">
-        <div className={classes.item}>Remaining Offering&nbsp;</div>
+        <div className={classes.item}>Remaining Offering</div>
       </OfferingTd>
       <OfferingTd type="pricePerToken">
         <div className={classes.item}>
