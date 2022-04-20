@@ -10,7 +10,6 @@ const useStyles = makeStyles(() => ({
     '&.timeRemaining': { width: '12%' },
     '&.vestingPeriod': { width: '12%' },
     '&.vestingCliff': { width: '12%' },
-    '&.network': { width: '12%' },
     '&+&': { paddingLeft: 16 },
     '&:last-child': {
       textAlign: 'right',
