@@ -13,16 +13,16 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
-  itemAlignRight: {
-    color: theme.colors.purple0,
-    fontSize: 11,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-  },
+  // itemAlignRight: {
+  //   color: theme.colors.purple0,
+  //   fontSize: 11,
+  //   display: 'flex',
+  //   alignItems: 'center',
+  //   justifyContent: 'flex-end',
+  // },
 }))
 
-export const PoolTableHeader = () => {
+export const OfferingTableHeader = () => {
   const classes = useStyles()
 
   return (
@@ -37,22 +37,22 @@ export const PoolTableHeader = () => {
         <div className={classes.item}>Remaining Offering&nbsp;</div>
       </OfferingTd>
       <OfferingTd type="pricePerToken">
-        <div className={classes.itemAlignRight}>
+        <div className={classes.item}>
           Price Per Token
           <SortButton />
         </div>
       </OfferingTd>
       <OfferingTd type="timeRemaining">
-        <div className={classes.itemAlignRight}>
+        <div className={classes.item}>
           Time Remaining
           <SortButton />
         </div>
       </OfferingTd>
       <OfferingTd type="vestingPeriod">
-        <div className={classes.itemAlignRight}>Vesting Period</div>
+        <div className={classes.item}>Vesting Period</div>
       </OfferingTd>
       <OfferingTd type="vestingCliff">
-        <div className={classes.itemAlignRight}>
+        <div className={classes.item}>
           Vesting Cliff
           <SortButton />
         </div>
