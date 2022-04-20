@@ -1,5 +1,5 @@
 import { LoadingScreen } from 'components'
-import { MainLayout, TerminalLayout } from 'layouts'
+import { MainLayout, TerminalLayout, OriginationLayout } from 'layouts'
 import React, { Fragment, Suspense, lazy } from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
 
@@ -16,11 +16,6 @@ const routes = [
       {
         exact: true,
         path: '/native',
-        component: lazy(() => import('pages/ComingSoon')),
-      },
-      {
-        exact: true,
-        path: '/origination',
         component: lazy(() => import('pages/ComingSoon')),
       },
       {
@@ -67,6 +62,32 @@ const routes = [
             path: '*',
             // eslint-disable-next-line
             component: () => <Redirect to="/mining/discover" />,
+          },
+        ],
+      },
+      {
+        path: '/origination',
+        layout: OriginationLayout,
+        routes: [
+          {
+            exact: true,
+            path: '/origination/discover',
+            component: lazy(() => import('pages/origination/Discover')),
+          },
+          {
+            exact: true,
+            path: '/origination/my-offers',
+            component: lazy(() => import('pages/origination/MyOffers')),
+          },
+          {
+            exact: true,
+            path: '/origination/about',
+            component: lazy(() => import('pages/About')),
+          },
+          {
+            path: '*',
+            // eslint-disable-next-line
+            component: () => <Redirect to="/origination/discover" />,
           },
         ],
       },
