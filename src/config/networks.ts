@@ -1,4 +1,4 @@
-import { BigNumber, providers } from 'ethers'
+import { BigNumber, providers, constants } from 'ethers'
 import { entries } from 'utils/type-utils'
 import {
   IKnownTokenData,
@@ -151,11 +151,11 @@ export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
     name: 'Ethereum',
     symbol: 'ETH',
     addresses: {
-      [ChainId.Mainnet]: '',
-      [ChainId.Arbitrum]: '',
-      [ChainId.Optimism]: '',
-      [ChainId.Polygon]: '',
-      [ChainId.Kovan]: '',
+      [ChainId.Mainnet]: constants.AddressZero,
+      [ChainId.Arbitrum]: constants.AddressZero,
+      [ChainId.Optimism]: constants.AddressZero,
+      [ChainId.Polygon]: constants.AddressZero,
+      [ChainId.Kovan]: constants.AddressZero,
       // [ChainId.Rinkeby]: '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa',
     },
     decimals: 18,
