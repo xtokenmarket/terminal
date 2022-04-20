@@ -75,7 +75,6 @@ export const InitSection = (props: IProps) => {
           data.offeringPeriod,
           data.offeringPeriodUnit.toString()
         ),
-
         totalOfferingAmount: parseUnits(
           data.offerTokenAmount,
           data.offerToken?.decimals

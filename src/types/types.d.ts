@@ -236,13 +236,25 @@ export interface ICreateTokenSaleData {
 }
 
 export interface ISaleParams {
-offerToken: string
-purchaseToken: string
-startingPrice: BigNumber
-endingPrice: BigNumber
-saleDuration: number
-totalOfferingAmount: BigNumber
-reserveAmount: BigNumber
-vestingPeriod: number
-cliffPeriod: number
+  offerToken: string
+  purchaseToken: string
+  startingPrice: BigNumber
+  endingPrice: BigNumber
+  saleDuration: number
+  totalOfferingAmount: BigNumber
+  reserveAmount: BigNumber
+  vestingPeriod: number
+  cliffPeriod: number
+}
+
+export interface ITokenOffer {
+  network?: Network
+  offerToken: IToken
+  purchaseToken: IToken
+  totalOfferingAmount: BigNumber
+  remainingOfferingAmount: BigNumber
+  pricePerToken: BigNumber
+  timeRemaining: number
+  vestingPeriod: number
+  cliffPeriod: number
 }
