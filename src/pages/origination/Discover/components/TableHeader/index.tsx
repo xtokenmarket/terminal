@@ -1,8 +1,8 @@
-import { makeStyles, Tooltip } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core'
 import { SortButton } from 'components'
-import { PoolTd } from '../table'
+import { OfferingTd } from '../table'
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     marginBottom: 12,
@@ -27,42 +27,36 @@ export const PoolTableHeader = () => {
 
   return (
     <div className={classes.root}>
-      <PoolTd type="offerToken">
+      <OfferingTd type="offerToken">
         <div className={classes.item}>Offer Token</div>
-      </PoolTd>
-      <PoolTd type="maxOffering">
+      </OfferingTd>
+      <OfferingTd type="maxOffering">
         <div className={classes.item}>Max Offering</div>
-      </PoolTd>
-      <PoolTd type="remainingOffering">
+      </OfferingTd>
+      <OfferingTd type="remainingOffering">
         <div className={classes.item}>Remaining Offering&nbsp;</div>
-      </PoolTd>
-      <PoolTd type="pricePerToken">
+      </OfferingTd>
+      <OfferingTd type="pricePerToken">
         <div className={classes.itemAlignRight}>
           Price Per Token
           <SortButton />
         </div>
-      </PoolTd>
-      <PoolTd type="timeRemaining">
+      </OfferingTd>
+      <OfferingTd type="timeRemaining">
         <div className={classes.itemAlignRight}>
           Time Remaining
           <SortButton />
         </div>
-      </PoolTd>
-      <PoolTd type="vestingPeriod">
+      </OfferingTd>
+      <OfferingTd type="vestingPeriod">
         <div className={classes.itemAlignRight}>Vesting Period</div>
-      </PoolTd>
-      <PoolTd type="vestingCliff">
+      </OfferingTd>
+      <OfferingTd type="vestingCliff">
         <div className={classes.itemAlignRight}>
           Vesting Cliff
           <SortButton />
         </div>
-      </PoolTd>
-      <PoolTd type="network">
-        <div className={classes.itemAlignRight}>
-          NETWORK
-          <SortButton />
-        </div>
-      </PoolTd>
+      </OfferingTd>
     </div>
   )
 }
