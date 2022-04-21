@@ -4,9 +4,8 @@ import { ITokenOffer } from 'types'
 import { OfferingTableHeader, OfferingTableRow } from '../table'
 
 const useStyles = makeStyles((theme) => ({
-  content: {
+  root: {
     paddingBottom: 10,
-    minWidth: 1000,
     overflowX: 'auto',
     '&::-webkit-scrollbar': {
       backgroundColor: transparentize(0.6, theme.colors.primary),
@@ -15,6 +14,9 @@ const useStyles = makeStyles((theme) => ({
     '&::-webkit-scrollbar-thumb': {
       backgroundColor: theme.colors.primary,
     },
+  },
+  content: {
+    minWidth: 1000,
   },
 }))
 
@@ -26,15 +28,17 @@ export const OfferingTable = ({ offerings }: IProps) => {
   const cl = useStyles()
 
   return (
-    <div className={cl.content}>
-      <OfferingTableHeader />
-      <div>
-        {offerings.map((offering, index) => (
-          <OfferingTableRow
-            key={`${offering.offerToken.address}-${offering.purchaseToken.address}-${index}`}
-            offering={offering}
-          />
-        ))}
+    <div className={cl.root}>
+      <div className={cl.content}>
+        <OfferingTableHeader />
+        <div>
+          {offerings.map((offering, index) => (
+            <OfferingTableRow
+              key={`${offering.offerToken.address}-${offering.purchaseToken.address}-${index}`}
+              offering={offering}
+            />
+          ))}
+        </div>
       </div>
     </div>
   )

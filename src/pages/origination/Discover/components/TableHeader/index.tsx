@@ -1,5 +1,5 @@
+import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core'
-import { SortButton } from 'components'
 import { OfferingTd } from '../table'
 
 const useStyles = makeStyles((theme) => ({
@@ -9,9 +9,12 @@ const useStyles = makeStyles((theme) => ({
   },
   item: {
     color: theme.colors.purple0,
-    fontSize: 11,
+    fontSize: 12,
     display: 'flex',
     alignItems: 'center',
+  },
+  itemAlignRight: {
+    justifyContent: 'flex-end',
   },
 }))
 
@@ -33,18 +36,14 @@ export const OfferingTableHeader = () => {
         <div className={classes.item}>Price Per Token</div>
       </OfferingTd>
       <OfferingTd type="timeRemaining">
-        <div className={classes.item}>
-          Time Remaining
-          <SortButton />
-        </div>
+        <div className={classes.item}>Time Remaining</div>
       </OfferingTd>
       <OfferingTd type="vestingPeriod">
         <div className={classes.item}>Vesting Period</div>
       </OfferingTd>
       <OfferingTd type="vestingCliff">
-        <div className={classes.item}>
+        <div className={clsx(classes.item, classes.itemAlignRight)}>
           Vesting Cliff
-          <SortButton />
         </div>
       </OfferingTd>
     </div>
