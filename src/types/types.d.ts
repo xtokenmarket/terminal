@@ -198,13 +198,14 @@ export interface ISaleParams {
 
 export interface ITokenOffer {
   network?: Network
-  poolAddress: string
+  poolAddress?: string
   offerToken: IToken
   purchaseToken: IToken
   totalOfferingAmount: BigNumber
-  remainingOfferingAmount: BigNumber
-  pricePerToken: BigNumber
-  timeRemaining: number
-  vestingPeriod: number
-  cliffPeriod: number
+  offerTokenAmountSold: BigNumber
+  startingPrice: BigNumber
+  endingPrice: BigNumber
+  saleEndTimestamp: BigNumber
+  vestingPeriod: BigNumber
+  cliffPeriod: BigNumber
 }

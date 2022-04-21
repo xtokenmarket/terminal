@@ -9,6 +9,7 @@ import {
   parseDurationSec,
   parseRemainingDurationSec,
 } from 'utils'
+import moment from 'moment'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,17 +77,19 @@ export const OfferingTableRow = ({
   offering: {
     network,
     poolAddress,
-    totalOfferingAmount,
     offerToken,
-    remainingOfferingAmount,
-    pricePerToken,
     purchaseToken,
-    timeRemaining,
+    totalOfferingAmount,
+    offerTokenAmountSold,
+    startingPrice,
+    saleEndTimestamp,
     vestingPeriod,
     cliffPeriod,
   },
 }: IProps) => {
   const cl = useStyles()
+  const remainingOfferingAmount = totalOfferingAmount.sub(offerTokenAmountSold)
+  const timeRemaining = saleEndTimestamp.toNumber() - moment().unix()
 
   const renderContent = () => (
     <NavLink
@@ -117,9 +120,10 @@ export const OfferingTableRow = ({
           )}
         </Typography>
       </OfferingTd>
+      {/* TODO: replace this with true pricePerToken */}
       <OfferingTd type="pricePerToken">
         <Typography className={clsx(cl.item, cl.label)}>
-          {formatBigNumber(pricePerToken, purchaseToken.decimals)}{' '}
+          {formatBigNumber(startingPrice, purchaseToken.decimals)}{' '}
           {purchaseToken.symbol}
         </Typography>
       </OfferingTd>
@@ -130,12 +134,12 @@ export const OfferingTableRow = ({
       </OfferingTd>
       <OfferingTd type="vestingPeriod">
         <Typography className={clsx(cl.item, cl.label)}>
-          {parseDurationSec(vestingPeriod)}
+          {parseDurationSec(vestingPeriod.toNumber())}
         </Typography>
       </OfferingTd>
       <OfferingTd type="vestingCliff">
         <Typography className={clsx(cl.item, cl.label)}>
-          {parseDurationSec(cliffPeriod)}
+          {parseDurationSec(cliffPeriod.toNumber())}
         </Typography>
       </OfferingTd>
     </NavLink>

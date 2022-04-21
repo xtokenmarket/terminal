@@ -31,11 +31,12 @@ const offerings = [
       symbol: 'DAI',
     },
     totalOfferingAmount: BigNumber.from('1500000000000'),
-    remainingOfferingAmount: BigNumber.from('497303000000'),
-    pricePerToken: BigNumber.from('1250000000000000000'),
-    timeRemaining: 23420,
-    vestingPeriod: 31622400,
-    cliffPeriod: 7890000,
+    offerTokenAmountSold: BigNumber.from('1002697000000'),
+    startingPrice: BigNumber.from('1250000000000000000'),
+    endingPrice: BigNumber.from('1250000000000000000'),
+    saleEndTimestamp: BigNumber.from('1653141257'),
+    vestingPeriod: BigNumber.from('31622400'),
+    cliffPeriod: BigNumber.from('7890000'),
   },
 ]
 
