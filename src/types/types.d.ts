@@ -250,17 +250,30 @@ export interface ISaleParams {
 export interface ITokenOffer {
   network?: Network
 <<<<<<< HEAD
+<<<<<<< HEAD
   offerToken?: IToken
   purchaseToken?: IToken
 =======
   poolAddress: string
+=======
+  poolAddress?: string
+>>>>>>> 399d09b (Fixed discover page data wiring setup)
   offerToken: IToken
   purchaseToken: IToken
 >>>>>>> 34f2682 (Bootstrapped token offer details page)
   totalOfferingAmount: BigNumber
+<<<<<<< HEAD
   remainingOfferingAmount: BigNumber
   pricePerToken: BigNumber
   timeRemaining: BigNumber
   vestingPeriod: number
   cliffPeriod: number
+=======
+  offerTokenAmountSold: BigNumber
+  startingPrice: BigNumber
+  endingPrice: BigNumber
+  saleEndTimestamp: BigNumber
+  vestingPeriod: BigNumber
+  cliffPeriod: BigNumber
+>>>>>>> 399d09b (Fixed discover page data wiring setup)
 }
