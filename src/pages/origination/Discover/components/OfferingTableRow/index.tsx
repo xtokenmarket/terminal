@@ -56,6 +56,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
+  itemAlignRight: {
+    justifyContent: 'flex-end',
+  },
   tokenIcon: {
     width: 48,
     height: 48,
@@ -221,7 +224,7 @@ export const OfferingTableRow = ({
         </Typography>
       </OfferingTd>
       <OfferingTd type="vestingCliff">
-        <Typography className={clsx(cl.item, cl.label)}>
+        <Typography className={clsx(cl.item, cl.label, cl.itemAlignRight)}>
           {parseDurationSec(cliffPeriod.toNumber())}
         </Typography>
       </OfferingTd>
