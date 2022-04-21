@@ -4,6 +4,7 @@ import { History, ITerminalPool } from 'types'
 import { formatBigNumber, numberWithCommas } from 'utils'
 import { getEtherscanUri } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
+import { MINING_EVENTS } from 'config/constants'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,6 +73,9 @@ const useStyles = makeStyles((theme) => ({
   },
   rewardAmounts: {
     display: 'inline-block',
+    '& + &': {
+      marginLeft: 4,
+    },
   },
 }))
 
@@ -94,7 +98,10 @@ export const HistorySection = (props: IProps) => {
   }
 
   const renderValue = (item: History) => {
-    if (item.action === 'Deposit' || item.action === 'Withdraw') {
+    if (
+      item.action === MINING_EVENTS.Deposit ||
+      item.action === MINING_EVENTS.Withdraw
+    ) {
       return (
         <td>
           <span>
@@ -113,7 +120,7 @@ export const HistorySection = (props: IProps) => {
       )
     }
 
-    if (item.action === 'Claim') {
+    if (item.action === MINING_EVENTS.RewardClaimed) {
       return (
         <td>
           <span>
@@ -126,7 +133,7 @@ export const HistorySection = (props: IProps) => {
       )
     }
 
-    if (item.action === 'Initiate Rewards') {
+    if (item.action === MINING_EVENTS.InitiatedRewardsProgram) {
       return (
         <td>
           {item.totalRewardAmounts.map((amount, index) => (
@@ -140,14 +147,14 @@ export const HistorySection = (props: IProps) => {
                 )}
               </span>{' '}
               {item.rewardTokens[index].symbol}{' '}
-              {index !== item.totalRewardAmounts.length - 1 && `/ `}
+              {index !== item.totalRewardAmounts.length - 1 && `/`}
             </div>
           ))}
         </td>
       )
     }
 
-    if (item.action === 'Vest') {
+    if (item.action === MINING_EVENTS.Vested) {
       return (
         <td>
           <span>
@@ -158,7 +165,7 @@ export const HistorySection = (props: IProps) => {
       )
     }
 
-    if (item.action === 'Reinvest') {
+    if (item.action === MINING_EVENTS.Collect) {
       return (
         <td>
           <span>

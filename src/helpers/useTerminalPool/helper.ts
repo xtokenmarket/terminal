@@ -1,5 +1,9 @@
 import Abi from 'abis'
 import { MulticallService } from 'services'
+import { BigNumber } from '@ethersproject/bignumber'
+import { ZERO } from 'utils/number'
+import { IToken } from 'types'
+import { MINING_EVENTS } from 'config/constants'
 
 export const getCoinGeckoIDs = async (tokens: string[]) => {
   const url = 'https://api.coingecko.com/api/v3/coins/list'
@@ -112,4 +116,130 @@ export const getPoolDataMulticall = async (
   } catch (error) {
     console.error(error)
   }
+}
+
+export const EVENTS_HISTORY_QUERY = `
+query ($poolAddress: String!, $userAddress: String!) {
+  deposits(where: { pool: $poolAddress, user: $userAddress }) {
+    id
+    amount0
+    amount1
+    timestamp
+  }
+  withdrawals(where: { pool: $poolAddress, user: $userAddress }) {
+    id
+    amount0
+    amount1
+    timestamp
+  }
+  rewardClaims(where: { pool: $poolAddress, user: $userAddress }) {
+    id
+    amount
+    timestamp
+    token {
+      id
+    }
+    txHash
+  }
+  rewardInitiations(where: { pool: $poolAddress, user: $userAddress }) {
+    id
+    amounts
+    duration
+    timestamp
+    tokens {
+      id
+    }
+  }
+  vests(where: { pool: $poolAddress, beneficiary: $userAddress }) {
+    id
+    period
+    timestamp
+    token {
+      id
+    }
+    txHash
+    value
+  }
+  collects(where: { pool: $poolAddress }) {
+    id
+    timestamp
+    token0Fee
+    token1Fee
+  }
+}
+`
+
+export const parseEventsHistory = (
+  data: any,
+  rewardTokens: any,
+  isOwnerOrManager: boolean
+) => {
+  return [
+    ...data.deposits.map((deposit: any) =>
+      _parseEventHistory(deposit, MINING_EVENTS.Deposit, rewardTokens)
+    ),
+    ...data.withdrawals.map((withdrawal: any) =>
+      _parseEventHistory(withdrawal, MINING_EVENTS.Withdraw, rewardTokens)
+    ),
+    ...data.rewardClaims.map((claim: any) =>
+      _parseEventHistory(claim, MINING_EVENTS.RewardClaimed, rewardTokens)
+    ),
+    ...data.rewardInitiations.map((reward: any) =>
+      _parseEventHistory(
+        reward,
+        MINING_EVENTS.InitiatedRewardsProgram,
+        rewardTokens
+      )
+    ),
+    ...data.vests.map((reward: any) =>
+      _parseEventHistory(reward, MINING_EVENTS.Vested, rewardTokens)
+    ),
+    ...(isOwnerOrManager
+      ? data.collects.map((reward: any) =>
+          _parseEventHistory(reward, MINING_EVENTS.Collect, rewardTokens)
+        )
+      : []),
+  ]
+}
+
+const _parseEventHistory = (data: any, action: string, rewardTokens: any) => {
+  const token = rewardTokens.find(
+    (token: IToken) =>
+      token.address.toLowerCase() === data?.token?.id?.toLowerCase()
+  )
+
+  return {
+    action,
+    amount0: data.token0Fee
+      ? BigNumber.from(data.token0Fee)
+      : data.amount0
+      ? BigNumber.from(data.amount0)
+      : ZERO,
+    amount1: data.token1Fee
+      ? BigNumber.from(data.token1Fee)
+      : data.amount1
+      ? BigNumber.from(data.amount1)
+      : ZERO,
+    tx: _getTxHash(data, action),
+    rewardAmount:
+      action === MINING_EVENTS.RewardClaimed
+        ? BigNumber.from(data.amount)
+        : ZERO,
+    symbol: token ? token.symbol : '',
+    decimals: token ? Number(token.decimals) : 0,
+    value: data.value,
+    timestamp: data.timestamp,
+    totalRewardAmounts:
+      action === MINING_EVENTS.InitiatedRewardsProgram
+        ? data.amounts.map((amount: string) => BigNumber.from(amount))
+        : [],
+    rewardTokens,
+  }
+}
+
+const _getTxHash = (data: any, action: string) => {
+  return action === MINING_EVENTS.RewardClaimed ||
+    action === MINING_EVENTS.Vested
+    ? data.txHash
+    : data.id
 }
