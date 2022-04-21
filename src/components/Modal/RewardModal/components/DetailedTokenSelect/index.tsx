@@ -50,6 +50,7 @@ interface IDetailedTokenSelect {
   isDisabled?: boolean
   token?: IToken
   hasPlaceholderTokenIcon?: boolean
+  includeETH?: boolean
   onChange: (_: IToken) => void
 }
 
@@ -57,6 +58,7 @@ export const DetailedTokenSelect = ({
   token,
   hasPlaceholderTokenIcon = true,
   isDisabled = false,
+  includeETH = false,
   onChange,
   className,
 }: IDetailedTokenSelect) => {
@@ -72,6 +74,7 @@ export const DetailedTokenSelect = ({
           onChange(token)
           setModalVisible(false)
         }}
+        includeETH={includeETH}
       />
       <div
         className={clsx(classes.root, className)}
