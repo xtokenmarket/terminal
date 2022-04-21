@@ -74,6 +74,8 @@ interface IProps {
 
 export const OfferingTableRow = ({
   offering: {
+    network,
+    poolAddress,
     totalOfferingAmount,
     offerToken,
     remainingOfferingAmount,
@@ -87,7 +89,10 @@ export const OfferingTableRow = ({
   const cl = useStyles()
 
   const renderContent = () => (
-    <NavLink className={cl.content} to={`/mining/pools/`}>
+    <NavLink
+      className={cl.content}
+      to={`/origination/token-offers/${network}/${poolAddress}`}
+    >
       <OfferingTd type="offerToken">
         <div className={cl.item}>
           <img

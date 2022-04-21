@@ -198,6 +198,7 @@ export interface ISaleParams {
 
 export interface ITokenOffer {
   network?: Network
+  poolAddress: string
   offerToken: IToken
   purchaseToken: IToken
   totalOfferingAmount: BigNumber

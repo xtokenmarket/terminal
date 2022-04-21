@@ -39,6 +39,11 @@ const routes = [
         component: lazy(() => import('pages/mining/PoolDetails')),
       },
       {
+        exact: true,
+        path: '/origination/token-offers/:network/:poolAddress',
+        component: lazy(() => import('pages/origination/TokenOfferDetails')),
+      },
+      {
         path: '/mining',
         layout: TerminalLayout,
         routes: [
