@@ -52,6 +52,7 @@ export const useTokenOffers = () => {
     tokenOffers: [],
     isLoading: true,
   })
+
   const { chainId } = useNetworkContext()
 
   const getFilteredOffers = (offers: ITokenOffer[] = []) =>
