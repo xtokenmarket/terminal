@@ -1,21 +1,31 @@
+import { useEffect, useState } from 'react'
 import Abi from 'abis'
 import axios from 'axios'
+<<<<<<< HEAD
 <<<<<<< HEAD
 import { getNetworkProvider, getTokenFromAddress } from 'config/networks'
 =======
 >>>>>>> 34f2682 (Bootstrapped token offer details page)
+=======
+import { constants } from 'ethers'
+import { knownTokens } from 'config/networks'
+>>>>>>> 399d09b (Fixed discover page data wiring setup)
 import { useConnectedWeb3Context } from 'contexts'
+import { useNetworkContext } from 'contexts/networkContext'
 import { useServices } from 'helpers'
-import { useEffect, useState } from 'react'
 import { Network } from 'utils/enums'
+import { fetchUnknownToken } from 'utils/token'
 import { getOffersDataMulticall } from './helper'
+<<<<<<< HEAD
 import { BigNumber, constants } from 'ethers'
 import moment from 'moment'
 import { ETH } from 'config/constants'
+=======
+import { IToken, ITokenOffer } from 'types'
+>>>>>>> 399d09b (Fixed discover page data wiring setup)
 
 interface IState {
-  // todo: fix typing
-  tokenOffer?: any
+  tokenOffer?: ITokenOffer
   loading: boolean
 }
 
@@ -23,17 +33,50 @@ export const useTokenOffer = (
   tokenOfferPoolAddress?: string,
   network?: Network
 ) => {
-  const [state, setState] = useState<IState>({
-    loading: true,
-    tokenOffer: undefined,
-  })
-  const { account, networkId } = useConnectedWeb3Context()
+  const { account, networkId, library: provider } = useConnectedWeb3Context()
+  const { chainId } = useNetworkContext()
   const { multicall } = useServices(network)
+
+  const [state, setState] = useState<IState>({ loading: true })
+
+  const getContractTokenOfferData = async (
+    poolAddress: string
+  ): Promise<ITokenOffer> => {
+    const contractOferingData = await getOffersDataMulticall(
+      poolAddress,
+      multicall
+    )
+    const tokens = await Promise.all([
+      fetchUnknownToken(
+        provider,
+        chainId,
+        contractOferingData?.offerToken,
+        multicall
+      ),
+      fetchUnknownToken(
+        provider,
+        chainId,
+        contractOferingData?.purchaseToken,
+        multicall
+      ),
+    ])
+    const defaultToken: IToken = {
+      ...knownTokens.eth,
+      address: constants.AddressZero,
+    }
+
+    return {
+      ...contractOferingData,
+      offerToken: tokens[0] ? tokens[0] : defaultToken,
+      purchaseToken: tokens[1] ? tokens[1] : defaultToken,
+    }
+  }
 
   const loadInfo = async () => {
     if (!tokenOfferPoolAddress) return
 
     setState((prev) => ({ ...prev, loading: true }))
+<<<<<<< HEAD
 
 <<<<<<< HEAD
     if ((!tokenOffer && tokenOfferAddress) || isReloadTokenOffer) {
@@ -138,6 +181,31 @@ export const useTokenOffer = (
       tokenOffer,
     })
 >>>>>>> 34f2682 (Bootstrapped token offer details page)
+=======
+    try {
+      // try {
+      // pool = (
+      //   await axios.get(
+      //     `${TERMINAL_API_URL}/pool/${getAddress(tokenOfferAddress as string)}`,
+      //     {
+      //       params: {
+      //         network,
+      //       },
+      //     }
+      //   )
+      // ).data
+      // } catch (e) {
+      // console.error('Error fetching token offer details', e)
+      // Fallback in case API doesn't return token offer details
+      const offerData = await getContractTokenOfferData(tokenOfferPoolAddress)
+      setState({
+        loading: false,
+        tokenOffer: offerData,
+      })
+    } catch (e) {
+      setState((prev) => ({ ...prev, loading: false }))
+    }
+>>>>>>> 399d09b (Fixed discover page data wiring setup)
   }
 
   useEffect(() => {

@@ -9,7 +9,11 @@ import {
   parseDurationSec,
   parseRemainingDurationSec,
 } from 'utils'
+<<<<<<< HEAD
 import { useTokenOffer } from 'helpers/useTokenOffer'
+=======
+import moment from 'moment'
+>>>>>>> 399d09b (Fixed discover page data wiring setup)
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -81,19 +85,24 @@ export const OfferingTableRow = ({
   offering: {
     network,
     poolAddress,
-    totalOfferingAmount,
     offerToken,
-    remainingOfferingAmount,
-    pricePerToken,
     purchaseToken,
-    timeRemaining,
+    totalOfferingAmount,
+    offerTokenAmountSold,
+    startingPrice,
+    saleEndTimestamp,
     vestingPeriod,
     cliffPeriod,
   },
 }: IProps) => {
 >>>>>>> 34f2682 (Bootstrapped token offer details page)
   const cl = useStyles()
+<<<<<<< HEAD
   const { loading, tokenOffer } = useTokenOffer(null, offering)
+=======
+  const remainingOfferingAmount = totalOfferingAmount.sub(offerTokenAmountSold)
+  const timeRemaining = saleEndTimestamp.toNumber() - moment().unix()
+>>>>>>> 399d09b (Fixed discover page data wiring setup)
 
 <<<<<<< HEAD
   const renderContent = () => {
@@ -117,6 +126,7 @@ export const OfferingTableRow = ({
       </OfferingTd>
 >>>>>>> 34f2682 (Bootstrapped token offer details page)
 
+<<<<<<< HEAD
     const {
       totalOfferingAmount,
       offerToken,
@@ -178,6 +188,46 @@ export const OfferingTableRow = ({
       </NavLink>
     )
   }
+=======
+      <OfferingTd type="maxOffering">
+        <Typography className={cl.item}>
+          {numberWithCommas(
+            formatBigNumber(totalOfferingAmount, offerToken.decimals)
+          )}
+        </Typography>
+      </OfferingTd>
+      <OfferingTd type="remainingOffering">
+        <Typography className={cl.item}>
+          {numberWithCommas(
+            formatBigNumber(remainingOfferingAmount, offerToken.decimals)
+          )}
+        </Typography>
+      </OfferingTd>
+      {/* TODO: replace this with true pricePerToken */}
+      <OfferingTd type="pricePerToken">
+        <Typography className={clsx(cl.item, cl.label)}>
+          {formatBigNumber(startingPrice, purchaseToken.decimals)}{' '}
+          {purchaseToken.symbol}
+        </Typography>
+      </OfferingTd>
+      <OfferingTd type="timeRemaining">
+        <Typography className={clsx(cl.item, cl.label)}>
+          {parseRemainingDurationSec(timeRemaining)}
+        </Typography>
+      </OfferingTd>
+      <OfferingTd type="vestingPeriod">
+        <Typography className={clsx(cl.item, cl.label)}>
+          {parseDurationSec(vestingPeriod.toNumber())}
+        </Typography>
+      </OfferingTd>
+      <OfferingTd type="vestingCliff">
+        <Typography className={clsx(cl.item, cl.label)}>
+          {parseDurationSec(cliffPeriod.toNumber())}
+        </Typography>
+      </OfferingTd>
+    </NavLink>
+  )
+>>>>>>> 399d09b (Fixed discover page data wiring setup)
 
   return (
     <div className={cl.root}>
