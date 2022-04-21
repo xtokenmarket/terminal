@@ -74,14 +74,48 @@ interface IProps {
   offering: string
 }
 
+<<<<<<< HEAD
 export const OfferingTableRow = ({ offering }: IProps) => {
+=======
+export const OfferingTableRow = ({
+  offering: {
+    network,
+    poolAddress,
+    totalOfferingAmount,
+    offerToken,
+    remainingOfferingAmount,
+    pricePerToken,
+    purchaseToken,
+    timeRemaining,
+    vestingPeriod,
+    cliffPeriod,
+  },
+}: IProps) => {
+>>>>>>> 34f2682 (Bootstrapped token offer details page)
   const cl = useStyles()
   const { loading, tokenOffer } = useTokenOffer(null, offering)
 
+<<<<<<< HEAD
   const renderContent = () => {
     if (!tokenOffer) {
       return null
     }
+=======
+  const renderContent = () => (
+    <NavLink
+      className={cl.content}
+      to={`/origination/token-offers/${network}/${poolAddress}`}
+    >
+      <OfferingTd type="offerToken">
+        <div className={cl.item}>
+          <img
+            alt="offerToken"
+            className={cl.tokenIcon}
+            src={offerToken.image}
+          />
+        </div>
+      </OfferingTd>
+>>>>>>> 34f2682 (Bootstrapped token offer details page)
 
     const {
       totalOfferingAmount,

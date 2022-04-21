@@ -198,8 +198,14 @@ export interface ISaleParams {
 
 export interface ITokenOffer {
   network?: Network
+<<<<<<< HEAD
   offerToken?: IToken
   purchaseToken?: IToken
+=======
+  poolAddress: string
+  offerToken: IToken
+  purchaseToken: IToken
+>>>>>>> 34f2682 (Bootstrapped token offer details page)
   totalOfferingAmount: BigNumber
   remainingOfferingAmount: BigNumber
   pricePerToken: BigNumber
