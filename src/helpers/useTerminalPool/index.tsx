@@ -3,6 +3,7 @@ import axios from 'axios'
 import {
   ChainId,
   ETHER_DECIMAL,
+  GRAPHQL_URLS,
   POLL_API_DATA,
   TERMINAL_API_URL,
 } from 'config/constants'
@@ -29,16 +30,19 @@ import {
   getTimeRemainingUnits,
 } from 'utils'
 import { ERewardStep, Network } from 'utils/enums'
-import { getIdFromNetwork } from 'utils/network'
+import { getIdFromNetwork, isTestnet } from 'utils/network'
 import { formatDuration, ONE_ETHER, ZERO } from 'utils/number'
 import _ from 'lodash'
 
 import {
+  EVENTS_HISTORY_QUERY,
   getCoinGeckoIDs,
   getPoolDataMulticall,
   getTokenExchangeRate,
+  parseEventsHistory,
 } from './helper'
 import { ethers, Contract } from 'ethers'
+import { fetchQuery } from 'utils/thegraph'
 
 interface IState {
   pool?: ITerminalPool
@@ -53,7 +57,7 @@ export const useTerminalPool = (
 ) => {
   const [state, setState] = useState<IState>({ loading: true, pool: undefined })
   const { account, library: provider, networkId } = useConnectedWeb3Context()
-  const { multicall, rewardEscrow, lmService } = useServices(network)
+  const { multicall, rewardEscrow } = useServices(network)
 
   let readonlyProvider = provider
 
@@ -125,8 +129,12 @@ export const useTerminalPool = (
           getTokenDetails(pool.stakedToken.address),
         ])
 
-        const ids = await getCoinGeckoIDs([token0.symbol, token1.symbol])
-        const rates = await getTokenExchangeRate(ids)
+        let rates = undefined
+        if (!isTestnet(readonlyProvider?.network.chainId as ChainId)) {
+          const ids = await getCoinGeckoIDs([token0.symbol, token1.symbol])
+          rates = await getTokenExchangeRate(ids)
+        }
+
         pool.token0.price = rates && rates[0] ? rates[0].toString() : '0'
         pool.token1.price = rates && rates[1] ? rates[1].toString() : '0'
 
@@ -232,134 +240,36 @@ export const useTerminalPool = (
 
       // Fetch events history, reward tokens and deposit amounts of user
       if (isPoolDetails && account) {
-        const nonfungiblePositionManagerAddress = getContractAddress(
-          'uniPositionManager',
-          readonlyProvider?.network.chainId
-        )
+        const isOwnerOrManager = [
+          pool.owner.toLowerCase(),
+          pool.manager.toLowerCase(),
+        ].includes(account.toLowerCase())
 
-        const nonfungiblePositionManagerContract = new Contract(
-          nonfungiblePositionManagerAddress,
-          Abi.UniswapV3Position,
-          provider
-        )
+        // Fetch pool events history from subgraph
+        try {
+          const graphqlUrl = GRAPHQL_URLS[network as Network]
+          const eventVariables = {
+            poolAddress: pool.poolAddress.toLowerCase(),
+            userAddress: account.toLowerCase(),
+          }
 
-        if (
-          readonlyProvider?.network.chainId !== ChainId.Optimism &&
-          readonlyProvider?.network.chainId !== ChainId.Arbitrum
-        ) {
-          const from = 0
-          const to = 'latest'
-          // if (readonlyProvider?.network.chainId === ChainId.Optimism) {
-          //   const blockNumber = await readonlyProvider?.getBlockNumber()
-
-          //   if (blockNumber) {
-          //     from = blockNumber - 9500
-          //   }
-          // }
-
-          const depositFilter = clr.contract.filters.Deposit(account)
-          const withdrawFilter = clr.contract.filters.Withdraw(account)
-          const rewardClaimedFilter =
-            clr.contract.filters.RewardClaimed(account)
-          const initiatedRewardsFilter =
-            lmService.contract.filters.InitiatedRewardsProgram(poolAddress)
-          const vestedFilter = rewardEscrow.contract.filters.Vested(poolAddress)
-          const collectFilter =
-            nonfungiblePositionManagerContract.filters.Collect(pool.tokenId)
-          const reinvestFilter = clr.contract.filters.Reinvest()
-
-          const [
-            depositHistory,
-            withdrawHistory,
-            rewardClaimedHistory,
-            initiatedRewardsHistory,
-            vestHistory,
-            collectHistory,
-            reinvestHistory,
-          ] = await Promise.all([
-            clr.contract.queryFilter(depositFilter, from, to),
-            clr.contract.queryFilter(withdrawFilter, from, to),
-            clr.contract.queryFilter(rewardClaimedFilter, from, to),
-            lmService.contract.queryFilter(initiatedRewardsFilter, from, to),
-            rewardEscrow.contract.queryFilter(vestedFilter, from, to),
-            nonfungiblePositionManagerContract.queryFilter(collectFilter),
-            clr.contract.queryFilter(reinvestFilter, from, to),
-          ])
-
-          const filterUserHistory = [...initiatedRewardsHistory, ...vestHistory]
-
-          const transactions = await Promise.all(
-            filterUserHistory.map((x) => x.getTransaction())
+          const eventsHistory = await fetchQuery(
+            EVENTS_HISTORY_QUERY,
+            eventVariables,
+            graphqlUrl
           )
 
-          const userInitiatedRewardsVestHistory = filterUserHistory.filter(
-            (x, index) =>
-              transactions[index].from.toLowerCase() === account.toLowerCase()
+          history = _.orderBy(
+            parseEventsHistory(
+              eventsHistory,
+              pool.rewardTokens,
+              isOwnerOrManager
+            ),
+            'timestamp',
+            'desc'
           )
-
-          // Filter reinvest history from collect history and user
-          const filterCollectHistory = collectHistory.filter((history) =>
-            reinvestHistory
-              .map((history) => history.transactionHash)
-              .includes(history.transactionHash)
-          )
-
-          const collectTransactions = await Promise.all(
-            filterCollectHistory.map((x) => x.getTransaction())
-          )
-
-          const userCollectHistory = filterCollectHistory.filter(
-            (x, index) =>
-              collectTransactions[index].from.toLowerCase() ===
-              account.toLowerCase()
-          )
-
-          const allHistory = [
-            ...depositHistory,
-            ...withdrawHistory,
-            ...rewardClaimedHistory,
-            ...userInitiatedRewardsVestHistory,
-            ...userCollectHistory,
-          ]
-
-          const blockInfos = await Promise.all(
-            allHistory.map((x) => x.getBlock())
-          )
-
-          const eventHistory = allHistory.map((x, index) => {
-            const timestamp = blockInfos[index].timestamp
-
-            const eventName: {
-              [key: string]: string
-            } = {
-              RewardClaimed: 'Claim',
-              Deposit: 'Deposit',
-              Withdraw: 'Withdraw',
-              InitiatedRewardsProgram: 'Initiate Rewards',
-              Vested: 'Vest',
-              Collect: 'Reinvest',
-            }
-
-            const token = pool.rewardTokens.find(
-              (token: IToken) => token.address === x.args?.token
-            )
-
-            return {
-              action: x.event ? eventName[x.event] : '',
-              amount0: x.args?.amount0 || ZERO,
-              amount1: x.args?.amount1 || ZERO,
-              tx: x.transactionHash,
-              rewardAmount: x.args?.rewardAmount || ZERO,
-              symbol: token ? token.symbol : '',
-              decimals: token ? Number(token.decimals) : 0,
-              value: x.args?.value,
-              timestamp,
-              totalRewardAmounts: x.args?.totalRewardAmounts || [],
-              rewardTokens: pool.rewardTokens,
-            }
-          })
-
-          history = _.orderBy(eventHistory, 'timestamp', 'desc')
+        } catch (e) {
+          console.error('Error while trying to fetch pool history', e)
         }
 
         earnedTokens = await Promise.all(
@@ -449,11 +359,17 @@ export const useTerminalPool = (
         )
 
         // Get collectable fees
-        if (
-          account.toLowerCase() === pool.owner.toLowerCase() ||
-          account.toLowerCase() === pool.manager.toLowerCase()
-        ) {
+        if (isOwnerOrManager) {
           const MAX_UINT128 = BigNumber.from(2).pow(128).sub(1)
+          const nonfungiblePositionManagerAddress = getContractAddress(
+            'uniPositionManager',
+            readonlyProvider?.network.chainId
+          )
+          const nonfungiblePositionManagerContract = new Contract(
+            nonfungiblePositionManagerAddress,
+            Abi.UniswapV3Position,
+            provider
+          )
 
           const feesInfo =
             await nonfungiblePositionManagerContract.callStatic.collect({

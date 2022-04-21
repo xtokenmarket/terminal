@@ -2,17 +2,9 @@ import { Network } from 'utils/enums'
 import { AddressZero } from '@ethersproject/constants'
 import { getAddress } from 'ethers/lib/utils'
 
-export const GRAPHQL_URLS = [
-  'https://api.thegraph.com/subgraphs/name/miracle-arrow/terminal-mainnet',
-  'https://api.thegraph.com/subgraphs/name/miracle-arrow/terminal-arbitrum',
-  'https://api.thegraph.com/subgraphs/name/miracle-arrow/terminal-optimism',
-  'https://api.thegraph.com/subgraphs/name/miracle-arrow/terminal-polygon',
-  'https://api.thegraph.com/subgraphs/name/miracle-arrow/terminal-kovan',
-]
-
 export const POOLS_QUERY = `
 query {
-  pools(first: 1000) {
+  pools(first: 1000, orderBy: createdAt, orderDirection: desc) {
       id
       token0 {
         id
@@ -60,14 +52,6 @@ query {
     }
 }
 `
-
-export const NETWORKS = [
-  Network.MAINNET,
-  Network.ARBITRUM,
-  Network.OPTIMISM,
-  Network.POLYGON,
-  Network.KOVAN,
-]
 
 export const parsePools = (data: any, network: Network) => {
   return data.errors

@@ -208,3 +208,26 @@ export const PROD_TESTNET_DISCOVER_PAGE_SIZE = 5
 
 export const INSUFFICIENT_FUNDS_ERROR =
   'Insufficient funds to process the transaction'
+
+export const GRAPHQL_URLS: Record<Network, string> = {
+  [Network.MAINNET]:
+    'https://api.thegraph.com/subgraphs/name/miracle-arrow/terminal-mainnet',
+  [Network.ARBITRUM]:
+    'https://api.thegraph.com/subgraphs/name/miracle-arrow/terminal-arbitrum',
+  [Network.OPTIMISM]:
+    'https://api.thegraph.com/subgraphs/name/miracle-arrow/terminal-optimism',
+  [Network.POLYGON]:
+    'https://api.thegraph.com/subgraphs/name/miracle-arrow/terminal-polygon',
+  [Network.KOVAN]:
+    'https://api.thegraph.com/subgraphs/name/miracle-arrow/terminal-kovan',
+  [Network.RINKEBY]: '',
+}
+
+export const MINING_EVENTS = {
+  Collect: 'Reinvest',
+  Deposit: 'Deposit',
+  InitiatedRewardsProgram: 'Initiate Rewards',
+  RewardClaimed: 'Claim',
+  Vested: 'Vest',
+  Withdraw: 'Withdraw',
+}

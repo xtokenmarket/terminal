@@ -1,12 +1,12 @@
 import axios from 'axios'
-import { TERMINAL_API_URL } from 'config/constants'
+import { GRAPHQL_URLS, TERMINAL_API_URL } from 'config/constants'
 import { useNetworkContext } from 'contexts/networkContext'
 import { useEffect, useState } from 'react'
 import { ITerminalPool } from 'types'
 import { Network } from 'utils/enums'
 import { isTestnet } from 'utils/network'
 import { fetchQuery } from 'utils/thegraph'
-import { GRAPHQL_URLS, NETWORKS, parsePools, POOLS_QUERY } from './helper'
+import { parsePools, POOLS_QUERY } from './helper'
 
 interface IState {
   isLoading: boolean
@@ -38,11 +38,17 @@ export const useTerminalPools = () => {
       }))
     } catch (error) {
       try {
+        const graphqlUrls = Object.values(GRAPHQL_URLS).filter(
+          (url: string) => !!url
+        )
         let pools = await Promise.all(
-          GRAPHQL_URLS.map((url: string) => fetchQuery(POOLS_QUERY, {}, url))
+          graphqlUrls.map((url: string) => fetchQuery(POOLS_QUERY, {}, url))
         )
         pools = pools
-          .map((p: any, index: number) => parsePools(p, NETWORKS[index]))
+          .map((p: any, index: number) => {
+            const _network = graphqlUrls[index].split('terminal-')[1]
+            return parsePools(p, _network as Network)
+          })
           .flat()
         const filteredPools = isTestnet(chainId)
           ? pools.filter((pool) =>
