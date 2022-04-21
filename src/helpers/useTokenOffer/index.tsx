@@ -1,50 +1,41 @@
 import Abi from 'abis'
 import axios from 'axios'
+<<<<<<< HEAD
 import { getNetworkProvider, getTokenFromAddress } from 'config/networks'
+=======
+>>>>>>> 34f2682 (Bootstrapped token offer details page)
 import { useConnectedWeb3Context } from 'contexts'
 import { useServices } from 'helpers'
 import { useEffect, useState } from 'react'
-import { ITokenOffer } from 'types'
 import { Network } from 'utils/enums'
-import { getIdFromNetwork } from 'utils/network'
-import _ from 'lodash'
 import { getOffersDataMulticall } from './helper'
 import { BigNumber, constants } from 'ethers'
 import moment from 'moment'
 import { ETH } from 'config/constants'
 
 interface IState {
-  tokenOffer?: ITokenOffer
+  // todo: fix typing
+  tokenOffer?: any
   loading: boolean
 }
 
 export const useTokenOffer = (
-  tokenOffer?: any,
-  tokenOfferAddress?: string,
-  network?: Network,
-  isTokenOfferDetails = false
+  tokenOfferPoolAddress?: string,
+  network?: Network
 ) => {
   const [state, setState] = useState<IState>({
     loading: true,
     tokenOffer: undefined,
   })
-  const { account, library: provider, networkId } = useConnectedWeb3Context()
+  const { account, networkId } = useConnectedWeb3Context()
   const { multicall } = useServices(network)
 
-  let readonlyProvider = provider
-
-  const isWrongNetwork = networkId !== getIdFromNetwork(network)
-  if (isWrongNetwork) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    readonlyProvider = getNetworkProvider(network)
-  }
-
-  const loadInfo = async (isReloadTokenOffer = false) => {
-    if (!tokenOffer && !tokenOfferAddress) return
+  const loadInfo = async () => {
+    if (!tokenOfferPoolAddress) return
 
     setState((prev) => ({ ...prev, loading: true }))
 
+<<<<<<< HEAD
     if ((!tokenOffer && tokenOfferAddress) || isReloadTokenOffer) {
       try {
         // pool = (
@@ -121,16 +112,40 @@ export const useTokenOffer = (
       setState(() => ({ loading: false }))
     }
     // console.timeEnd(`loadInfo ${tokenOfferAddress}`)
+=======
+    // try {
+    // pool = (
+    //   await axios.get(
+    //     `${TERMINAL_API_URL}/pool/${getAddress(tokenOfferAddress as string)}`,
+    //     {
+    //       params: {
+    //         network,
+    //       },
+    //     }
+    //   )
+    // ).data
+    // } catch (e) {
+    // console.error('Error fetching token offer details', e)
+    // Fallback in case API doesn't return token offer details
+    const tokenOffer = await getOffersDataMulticall(
+      tokenOfferPoolAddress,
+      multicall
+    )
+    // }
+
+    setState({
+      loading: false,
+      tokenOffer,
+    })
+>>>>>>> 34f2682 (Bootstrapped token offer details page)
   }
 
   useEffect(() => {
     loadInfo()
-    const interval = setInterval(() => loadInfo(true))
+    const interval = setInterval(loadInfo, 2 * 1000)
 
-    return () => {
-      clearInterval(interval)
-    }
-  }, [networkId, tokenOffer, tokenOfferAddress, account])
+    return () => clearInterval(interval)
+  }, [networkId, tokenOfferPoolAddress, account])
 
   return { ...state, loadInfo }
 }

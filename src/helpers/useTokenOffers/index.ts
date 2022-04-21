@@ -19,6 +19,7 @@ interface IState {
 const offerings = [
   {
     network: Network.KOVAN,
+    poolAddress: '0x21bf5edacb55697b6f1352e453a42b0f6c2cf87e',
     offerToken: {
       address: '0x016750ac630f711882812f24dba6c95b9d35856d',
       decimals: 6,
