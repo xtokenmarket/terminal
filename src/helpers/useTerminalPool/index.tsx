@@ -43,6 +43,7 @@ import {
 } from './helper'
 import { ethers, Contract } from 'ethers'
 import { fetchQuery } from 'utils/thegraph'
+import moment from 'moment'
 
 interface IState {
   pool?: ITerminalPool
@@ -384,11 +385,17 @@ export const useTerminalPool = (
         }
       }
 
+      const apr = moment(new Date(Number(pool.periodFinish) * 1000)).isBefore(
+        new Date()
+      )
+        ? '0'
+        : pool.apr || 'N/A'
+
       setState({
         loading: false,
         pool: {
           address: pool.poolAddress,
-          apr: pool.apr || 'N/A',
+          apr: apr.toString(),
           manager: pool.manager.toLowerCase(),
           network: pool.network || network,
           owner: pool.owner.toLowerCase(),
