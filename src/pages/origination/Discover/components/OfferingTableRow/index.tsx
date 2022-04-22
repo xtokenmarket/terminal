@@ -9,6 +9,7 @@ import {
   parseDurationSec,
   parseRemainingDurationSec,
 } from 'utils'
+import { useTokenOffer } from 'helpers/useTokenOffer'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -69,72 +70,80 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  offering: ITokenOffer
+  // offering: ITokenOffer
+  offering: string
 }
 
-export const OfferingTableRow = ({
-  offering: {
-    totalOfferingAmount,
-    offerToken,
-    remainingOfferingAmount,
-    pricePerToken,
-    purchaseToken,
-    timeRemaining,
-    vestingPeriod,
-    cliffPeriod,
-  },
-}: IProps) => {
+export const OfferingTableRow = ({ offering }: IProps) => {
   const cl = useStyles()
+  const { loading, tokenOffer } = useTokenOffer(null, offering)
 
-  const renderContent = () => (
-    <NavLink className={cl.content} to={`/mining/pools/`}>
-      <OfferingTd type="offerToken">
-        <div className={cl.item}>
-          <img
-            alt="offerToken"
-            className={cl.tokenIcon}
-            src={offerToken.image}
-          />
-        </div>
-      </OfferingTd>
+  const renderContent = () => {
+    if (!tokenOffer) {
+      return null
+    }
 
-      <OfferingTd type="maxOffering">
-        <Typography className={cl.item}>
-          {numberWithCommas(
-            formatBigNumber(totalOfferingAmount, offerToken.decimals)
-          )}
-        </Typography>
-      </OfferingTd>
-      <OfferingTd type="remainingOffering">
-        <Typography className={cl.item}>
-          {numberWithCommas(
-            formatBigNumber(remainingOfferingAmount, offerToken.decimals)
-          )}
-        </Typography>
-      </OfferingTd>
-      <OfferingTd type="pricePerToken">
-        <Typography className={clsx(cl.item, cl.label)}>
-          {formatBigNumber(pricePerToken, purchaseToken.decimals)}{' '}
-          {purchaseToken.symbol}
-        </Typography>
-      </OfferingTd>
-      <OfferingTd type="timeRemaining">
-        <Typography className={clsx(cl.item, cl.label)}>
-          {parseRemainingDurationSec(timeRemaining)}
-        </Typography>
-      </OfferingTd>
-      <OfferingTd type="vestingPeriod">
-        <Typography className={clsx(cl.item, cl.label)}>
-          {parseDurationSec(vestingPeriod)}
-        </Typography>
-      </OfferingTd>
-      <OfferingTd type="vestingCliff">
-        <Typography className={clsx(cl.item, cl.label)}>
-          {parseDurationSec(cliffPeriod)}
-        </Typography>
-      </OfferingTd>
-    </NavLink>
-  )
+    const {
+      totalOfferingAmount,
+      offerToken,
+      remainingOfferingAmount,
+      pricePerToken,
+      purchaseToken,
+      timeRemaining,
+      vestingPeriod,
+      cliffPeriod,
+    } = tokenOffer as any
+
+    return (
+      <NavLink className={cl.content} to={`/mining/pools/`}>
+        <OfferingTd type="offerToken">
+          <div className={cl.item}>
+            <img
+              alt="offerToken"
+              className={cl.tokenIcon}
+              src={offerToken.image}
+            />
+          </div>
+        </OfferingTd>
+
+        <OfferingTd type="maxOffering">
+          <Typography className={cl.item}>
+            {numberWithCommas(
+              formatBigNumber(totalOfferingAmount, offerToken.decimals)
+            )}
+          </Typography>
+        </OfferingTd>
+        <OfferingTd type="remainingOffering">
+          <Typography className={cl.item}>
+            {numberWithCommas(
+              formatBigNumber(remainingOfferingAmount, offerToken.decimals)
+            )}
+          </Typography>
+        </OfferingTd>
+        <OfferingTd type="pricePerToken">
+          <Typography className={clsx(cl.item, cl.label)}>
+            {formatBigNumber(pricePerToken, purchaseToken.decimals)}{' '}
+            {purchaseToken.symbol}
+          </Typography>
+        </OfferingTd>
+        <OfferingTd type="timeRemaining">
+          <Typography className={clsx(cl.item, cl.label)}>
+            {parseRemainingDurationSec(timeRemaining)}
+          </Typography>
+        </OfferingTd>
+        <OfferingTd type="vestingPeriod">
+          <Typography className={clsx(cl.item, cl.label)}>
+            {parseDurationSec(vestingPeriod.toNumber())}
+          </Typography>
+        </OfferingTd>
+        <OfferingTd type="vestingCliff">
+          <Typography className={clsx(cl.item, cl.label)}>
+            {parseDurationSec(cliffPeriod.toNumber())}
+          </Typography>
+        </OfferingTd>
+      </NavLink>
+    )
+  }
 
   return (
     <div className={cl.root}>
