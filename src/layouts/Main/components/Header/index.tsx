@@ -1,5 +1,4 @@
 import { makeStyles, Button } from '@material-ui/core'
-
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet'
 import { matchPath, useHistory } from 'react-router'
 import { useEffect, useMemo, useState } from 'react'
@@ -12,6 +11,7 @@ import { useScrollYPosition } from 'helpers'
 import clsx from 'clsx'
 import connectors from 'utils/connectors'
 import { STORAGE_KEY_CONNECTOR } from 'config/constants'
+import colors from 'theme/colors'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -136,7 +136,7 @@ export const Header = () => {
         <img alt="logo" src="/assets/logo.png" />
       </div>
       <div className={classes.title}>
-        {Icon && <Icon />}
+        {Icon && <Icon fill={colors[0].colors.white} />}
         <span>
           xtoken <span>{selectedMenuItem?.label}</span>
         </span>
