@@ -3,13 +3,13 @@ import { makeStyles } from '@material-ui/core'
 
 const useStyles = makeStyles(() => ({
   root: {
-    '&.offerToken': { width: '12%' },
-    '&.remainingOffering': { width: '12%' },
-    '&.maxOffering': { width: '12%' },
-    '&.pricePerToken': { flex: 1 },
-    '&.timeRemaining': { width: '12%' },
-    '&.vestingPeriod': { width: '12%' },
-    '&.vestingCliff': { width: '12%' },
+    '&.offerToken': { width: '14%' },
+    '&.remainingOffering': { width: '14%' },
+    '&.maxOffering': { width: '14%' },
+    '&.pricePerToken': { width: '14%' },
+    '&.timeRemaining': { width: '14%' },
+    '&.vestingPeriod': { width: '14%' },
+    '&.vestingCliff': { width: '14%' },
     '&+&': { paddingLeft: 16 },
     '&:last-child': {
       textAlign: 'right',

@@ -43,7 +43,7 @@ export type NetworkId = 1 | 10 | 42 | 137 | 42161
 
 export type KnownContracts = keyof INetwork['contracts']
 
-export type KnownToken = 'dai' | 'weth' | 'usdt' | 'usdc'
+export type KnownToken = 'dai' | 'weth' | 'usdt' | 'usdc' | 'eth'
 
 export interface IKnownTokenData {
   name: string
@@ -198,12 +198,16 @@ export interface ISaleParams {
 
 export interface ITokenOffer {
   network?: Network
-  offerToken?: IToken
-  purchaseToken?: IToken
+  poolAddress?: string
+  offerToken: IToken
+  purchaseToken: IToken
   totalOfferingAmount: BigNumber
-  remainingOfferingAmount: BigNumber
-  pricePerToken: BigNumber
-  timeRemaining: BigNumber
-  vestingPeriod: number
-  cliffPeriod: number
+  offerTokenAmountSold: BigNumber
+  startingPrice: BigNumber
+  endingPrice: BigNumber
+  saleDuration: BigNumber
+  saleInitiatedTimestamp: BigNumber
+  saleEndTimestamp: BigNumber
+  vestingPeriod: BigNumber
+  cliffPeriod: BigNumber
 }

@@ -1,54 +1,16 @@
 import axios from 'axios'
-import { TERMINAL_API_URL } from 'config/constants'
 import { getContractAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import { useNetworkContext } from 'contexts/networkContext'
-import { BigNumber } from 'ethers'
 import { useEffect, useState } from 'react'
 import { OriginationService } from 'services'
 import { ITokenOffer } from 'types'
-import { Network } from 'utils/enums'
 import { isTestnet, isTestNetwork } from 'utils/network'
 
 interface IState {
   isLoading: boolean
   // tokenOffers: ITokenOffer[]
   tokenOffers: string[]
-}
-
-const offerings = [
-  {
-    network: Network.KOVAN,
-    offerToken: {
-      address: '0x016750ac630f711882812f24dba6c95b9d35856d',
-      decimals: 6,
-      image: '/assets/tokens/usdt.png',
-      name: 'Tether USD',
-      symbol: 'USDT',
-    },
-    purchaseToken: {
-      address: '0x90410304D88E333710703aF6Ed6A14d5ef74575F',
-      decimals: 18,
-      image: '/assets/tokens/dai.png',
-      name: 'DAI',
-      symbol: 'DAI',
-    },
-    totalOfferingAmount: BigNumber.from('1500000000000'),
-    remainingOfferingAmount: BigNumber.from('497303000000'),
-    pricePerToken: BigNumber.from('1250000000000000000'),
-    timeRemaining: BigNumber.from('23420'),
-    vestingPeriod: 31622400,
-    cliffPeriod: 7890000,
-  },
-]
-
-const getTokenOffers = async (): Promise<{ data: ITokenOffer[] }> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ data: offerings })
-    }, 2 * 1000)
-  })
-  // await axios.get<ITerminalPool[]>(`${TERMINAL_API_URL}/token-offers`)
 }
 
 export const useTokenOffers = () => {
@@ -77,7 +39,7 @@ export const useTokenOffers = () => {
       const readonlyProvider = provider
       const originationAddress = getContractAddress(
         'origination',
-        readonlyProvider?.network.chainId
+        readonlyProvider?.network?.chainId
       )
       const origination = new OriginationService(
         provider,
@@ -90,7 +52,6 @@ export const useTokenOffers = () => {
         createFungibleListingFilter
       )
       const tokenOfferAddresses = tokenOffers.map((offer) => offer.args?.pool)
-
       setState((prev) => ({
         ...prev,
         tokenOffers: tokenOfferAddresses,

@@ -10,6 +10,7 @@ import {
   parseRemainingDurationSec,
 } from 'utils'
 import { useTokenOffer } from 'helpers/useTokenOffer'
+import moment from 'moment'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,6 +53,9 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
+  itemAlignRight: {
+    justifyContent: 'flex-end',
+  },
   tokenIcon: {
     width: 48,
     height: 48,
@@ -67,16 +71,21 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
     textTransform: 'capitalize',
   },
+  offerTokenLabel: {
+    color: theme.colors.white,
+    textTransform: 'capitalize',
+    fontWeight: 800,
+    marginLeft: theme.spacing(2),
+  },
 }))
 
 interface IProps {
-  // offering: ITokenOffer
   offering: string
 }
 
 export const OfferingTableRow = ({ offering }: IProps) => {
   const cl = useStyles()
-  const { loading, tokenOffer } = useTokenOffer(null, offering)
+  const { tokenOffer } = useTokenOffer(offering)
 
   const renderContent = () => {
     if (!tokenOffer) {
@@ -84,18 +93,35 @@ export const OfferingTableRow = ({ offering }: IProps) => {
     }
 
     const {
-      totalOfferingAmount,
+      network,
       offerToken,
-      remainingOfferingAmount,
-      pricePerToken,
       purchaseToken,
-      timeRemaining,
+      totalOfferingAmount,
+      offerTokenAmountSold,
+      saleInitiatedTimestamp,
+      startingPrice,
       vestingPeriod,
       cliffPeriod,
-    } = tokenOffer as any
+    } = tokenOffer
+
+    const isSaleInitiated = !saleInitiatedTimestamp.isZero()
+    const elapsedTime = moment()
+      .subtract(tokenOffer.saleInitiatedTimestamp.toString())
+      .toString()
+    const timeRemaining = isSaleInitiated
+      ? moment(tokenOffer.saleDuration.toString())
+          .subtract(elapsedTime)
+          .toString()
+      : tokenOffer.saleDuration.toString()
+
+    const remainingOfferingAmount =
+      totalOfferingAmount.sub(offerTokenAmountSold)
 
     return (
-      <NavLink className={cl.content} to={`/mining/pools/`}>
+      <NavLink
+        className={cl.content}
+        to={`/origination/token-offers/${network}/${offering}`}
+      >
         <OfferingTd type="offerToken">
           <div className={cl.item}>
             <img
@@ -103,6 +129,9 @@ export const OfferingTableRow = ({ offering }: IProps) => {
               className={cl.tokenIcon}
               src={offerToken.image}
             />
+            <Typography className={cl.offerTokenLabel}>
+              {offerToken.symbol}
+            </Typography>
           </div>
         </OfferingTd>
 
@@ -120,15 +149,16 @@ export const OfferingTableRow = ({ offering }: IProps) => {
             )}
           </Typography>
         </OfferingTd>
+        {/* TODO: replace this with true pricePerToken */}
         <OfferingTd type="pricePerToken">
           <Typography className={clsx(cl.item, cl.label)}>
-            {formatBigNumber(pricePerToken, purchaseToken.decimals)}{' '}
+            {formatBigNumber(startingPrice, purchaseToken.decimals)}{' '}
             {purchaseToken.symbol}
           </Typography>
         </OfferingTd>
         <OfferingTd type="timeRemaining">
           <Typography className={clsx(cl.item, cl.label)}>
-            {parseRemainingDurationSec(timeRemaining)}
+            {parseRemainingDurationSec(parseInt(timeRemaining))}
           </Typography>
         </OfferingTd>
         <OfferingTd type="vestingPeriod">
@@ -137,7 +167,7 @@ export const OfferingTableRow = ({ offering }: IProps) => {
           </Typography>
         </OfferingTd>
         <OfferingTd type="vestingCliff">
-          <Typography className={clsx(cl.item, cl.label)}>
+          <Typography className={clsx(cl.item, cl.label, cl.itemAlignRight)}>
             {parseDurationSec(cliffPeriod.toNumber())}
           </Typography>
         </OfferingTd>

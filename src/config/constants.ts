@@ -209,11 +209,3 @@ export const PROD_TESTNET_DISCOVER_PAGE_SIZE = 5
 
 export const INSUFFICIENT_FUNDS_ERROR =
   'Insufficient funds to process the transaction'
-
-export const ETH = {
-  name: 'Ethereum',
-  symbol: 'ETH',
-  decimals: 18,
-  image: '/assets/tokens/eth.png',
-  address: constants.AddressZero,
-}

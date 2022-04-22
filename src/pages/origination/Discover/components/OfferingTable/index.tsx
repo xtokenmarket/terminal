@@ -1,12 +1,10 @@
 import { makeStyles } from '@material-ui/core'
 import { transparentize } from 'polished'
-import { ITokenOffer } from 'types'
 import { OfferingTableHeader, OfferingTableRow } from '../table'
 
 const useStyles = makeStyles((theme) => ({
-  content: {
+  root: {
     paddingBottom: 10,
-    minWidth: 1000,
     overflowX: 'auto',
     '&::-webkit-scrollbar': {
       backgroundColor: transparentize(0.6, theme.colors.primary),
@@ -16,10 +14,12 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.colors.primary,
     },
   },
+  content: {
+    minWidth: 1000,
+  },
 }))
 
 interface IProps {
-  // offerings: ITokenOffer[]
   offerings: string[]
 }
 

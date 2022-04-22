@@ -1,58 +1,68 @@
 import Abi from 'abis'
+import { BigNumber } from 'ethers'
 import { MulticallService } from 'services'
+interface ITokenOfferDetails {
+  offerToken: string
+  purchaseToken: string
+  totalOfferingAmount: BigNumber
+  offerTokenAmountSold: BigNumber
+  startingPrice: BigNumber
+  endingPrice: BigNumber
+  saleDuration: BigNumber
+  saleInitiatedTimestamp: BigNumber
+  saleEndTimestamp: BigNumber
+  vestingPeriod: BigNumber
+  cliffPeriod: BigNumber
+}
 
 export const getOffersDataMulticall = async (
-    tokenOfferAddress: string,
-    multicall: MulticallService
-  ) => {
-    try {
-      // console.time(`loadInfo multicall ${tokenOfferAddress}`)
-      const calls = [
-        'totalOfferingAmount',
-        'offerTokenAmountSold',
-        'startingPrice',
-        'endingPrice',
-        'saleDuration',
-        'saleEndTimestamp',
-        'saleInitiatedTimestamp',
-        'vestingPeriod ',
-        'cliffPeriod',
-        'offerToken',
-        'purchaseToken'
-      ].map((method) => ({
-        name: method,
-        address: tokenOfferAddress,
-        params: [],
-      }))
-      const [
-        [totalOfferingAmount],
-        [offerTokenAmountSold],
-        [startingPrice],
-        [endingPrice],
-        [saleDuration],
-        [saleEndTimestamp],
-        [saleInitiatedTimestamp],
-        [vestingPeriod ],
-        [cliffPeriod],
-        [offerToken],
-        [purchaseToken]
-      ] = await multicall.multicallv2(Abi.OriginationPool, calls, {
-        requireSuccess: false,
-      })
-      return {
-        totalOfferingAmount,
-        offerTokenAmountSold,
-        startingPrice,
-        endingPrice,
-        saleDuration,
-        saleEndTimestamp,
-        saleInitiatedTimestamp,
-        vestingPeriod,
-        cliffPeriod,
-        offerToken,
-        purchaseToken
-      }
-    } catch (error) {
-      console.error('getOffersDataMulticall', error)
-    }
+  tokenOfferPoolAddress: string,
+  multicall: MulticallService
+): Promise<ITokenOfferDetails> => {
+  const calls = [
+    'offerToken',
+    'purchaseToken',
+    'totalOfferingAmount',
+    'offerTokenAmountSold',
+    'startingPrice',
+    'endingPrice',
+    'saleDuration',
+    'saleInitiatedTimestamp',
+    'saleEndTimestamp',
+    'vestingPeriod ',
+    'cliffPeriod',
+  ].map((method) => ({
+    name: method,
+    address: tokenOfferPoolAddress,
+    params: [],
+  }))
+  const [
+    [offerToken],
+    [purchaseToken],
+    [totalOfferingAmount],
+    [offerTokenAmountSold],
+    [startingPrice],
+    [endingPrice],
+    [saleDuration],
+    [saleInitiatedTimestamp],
+    [saleEndTimestamp],
+    [vestingPeriod],
+    [cliffPeriod],
+  ] = await multicall.multicallv2(Abi.OriginationPool, calls, {
+    requireSuccess: false,
+  })
+
+  return {
+    offerToken,
+    purchaseToken,
+    totalOfferingAmount,
+    offerTokenAmountSold,
+    startingPrice,
+    endingPrice,
+    saleDuration,
+    saleEndTimestamp,
+    saleInitiatedTimestamp,
+    vestingPeriod,
+    cliffPeriod,
   }
+}

@@ -1,17 +1,14 @@
+import { useEffect, useState } from 'react'
 import Abi from 'abis'
 import axios from 'axios'
-import { getNetworkProvider, getTokenFromAddress } from 'config/networks'
+import { constants } from 'ethers'
+import { knownTokens, getTokenFromAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
+import { useNetworkContext } from 'contexts/networkContext'
 import { useServices } from 'helpers'
-import { useEffect, useState } from 'react'
-import { ITokenOffer } from 'types'
 import { Network } from 'utils/enums'
-import { getIdFromNetwork } from 'utils/network'
-import _ from 'lodash'
 import { getOffersDataMulticall } from './helper'
-import { BigNumber, constants } from 'ethers'
-import moment from 'moment'
-import { ETH } from 'config/constants'
+import { IToken, ITokenOffer } from 'types'
 
 interface IState {
   tokenOffer?: ITokenOffer
@@ -19,118 +16,75 @@ interface IState {
 }
 
 export const useTokenOffer = (
-  tokenOffer?: any,
-  tokenOfferAddress?: string,
-  network?: Network,
-  isTokenOfferDetails = false
+  tokenOfferPoolAddress?: string,
+  network?: Network
 ) => {
-  const [state, setState] = useState<IState>({
-    loading: true,
-    tokenOffer: undefined,
-  })
-  const { account, library: provider, networkId } = useConnectedWeb3Context()
+  const { account, networkId, library: provider } = useConnectedWeb3Context()
+  const { chainId } = useNetworkContext()
   const { multicall } = useServices(network)
 
-  let readonlyProvider = provider
+  const [state, setState] = useState<IState>({ loading: true })
 
-  const isWrongNetwork = networkId !== getIdFromNetwork(network)
-  if (isWrongNetwork) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    readonlyProvider = getNetworkProvider(network)
+  const getContractTokenOfferData = async (
+    poolAddress: string
+  ): Promise<ITokenOffer> => {
+    const contractOferingData = await getOffersDataMulticall(
+      poolAddress,
+      multicall
+    )
+    const tokens = await Promise.all([
+      getTokenFromAddress(contractOferingData?.offerToken, networkId),
+      getTokenFromAddress(contractOferingData?.purchaseToken, networkId),
+    ])
+    const ETH: IToken = {
+      ...knownTokens.eth,
+      address: constants.AddressZero,
+    }
+
+    return {
+      ...contractOferingData,
+      // TODO: remove this hardcoded value
+      network: Network.KOVAN,
+      offerToken: tokens[0] ? tokens[0] : ETH,
+      purchaseToken: tokens[1] ? tokens[1] : ETH,
+    }
   }
 
-  const loadInfo = async (isReloadTokenOffer = false) => {
-    if (!tokenOffer && !tokenOfferAddress) return
+  const loadInfo = async () => {
+    if (!tokenOfferPoolAddress) return
 
     setState((prev) => ({ ...prev, loading: true }))
-
-    if ((!tokenOffer && tokenOfferAddress) || isReloadTokenOffer) {
-      try {
-        // pool = (
-        //   await axios.get(
-        //     `${TERMINAL_API_URL}/pool/${getAddress(tokenOfferAddress as string)}`,
-        //     {
-        //       params: {
-        //         network,
-        //       },
-        //     }
-        //   )
-        // ).data
-
-        // TODO: force-fallback can be removed later
-        tokenOffer = await getOffersDataMulticall(
-          tokenOfferAddress as string,
-          multicall
-        )
-      } catch (e) {
-        console.error('Error fetching token offer details', e)
-        // Fallback in case API doesn't return token offer details
-        tokenOffer = await getOffersDataMulticall(
-          tokenOfferAddress as string,
-          multicall
-        )
-      }
-    }
-
-    let timeRemaining = BigNumber.from(0)
-    let remainingOfferingAmount = BigNumber.from(0)
-    let purchaseToken
-
-    // Fetch offer details if API fails
-    const isSaleInitiated = !tokenOffer.saleInitiatedTimestamp.isZero()
-
-    const elapsedTime = moment()
-      .subtract(tokenOffer.saleInitiatedTimestamp.toString())
-      .toString()
-
-    timeRemaining = isSaleInitiated
-      ? moment(tokenOffer.saleDuration.toString())
-          .subtract(elapsedTime)
-          .toString()
-      : tokenOffer.saleDuration.toString()
-
-    remainingOfferingAmount = tokenOffer.totalOfferingAmount.sub(
-      tokenOffer.offerTokenAmountSold
-    )
-
-    const offerToken = getTokenFromAddress(tokenOffer.offerToken, networkId)
-
-    if (tokenOffer.purchaseToken !== constants.AddressZero) {
-      purchaseToken = getTokenFromAddress(tokenOffer.purchaseToken, networkId)
-    } else {
-      purchaseToken = ETH
-    }
-
     try {
+      // try {
+      // pool = (
+      //   await axios.get(
+      //     `${TERMINAL_API_URL}/pool/${getAddress(tokenOfferAddress as string)}`,
+      //     {
+      //       params: {
+      //         network,
+      //       },
+      //     }
+      //   )
+      // ).data
+      // } catch (e) {
+      // console.error('Error fetching token offer details', e)
+      // Fallback in case API doesn't return token offer details
+      const offerData = await getContractTokenOfferData(tokenOfferPoolAddress)
       setState({
         loading: false,
-        tokenOffer: {
-          totalOfferingAmount: tokenOffer.totalOfferingAmount,
-          offerToken,
-          remainingOfferingAmount,
-          pricePerToken: tokenOffer.endingPrice,
-          purchaseToken,
-          timeRemaining,
-          vestingPeriod: tokenOffer.vestingPeriod,
-          cliffPeriod: tokenOffer.cliffPeriod,
-        },
+        tokenOffer: offerData,
       })
-    } catch (error) {
-      console.error(error)
-      setState(() => ({ loading: false }))
+    } catch (e) {
+      setState((prev) => ({ ...prev, loading: false }))
     }
-    // console.timeEnd(`loadInfo ${tokenOfferAddress}`)
   }
 
   useEffect(() => {
     loadInfo()
-    const interval = setInterval(() => loadInfo(true))
+    const interval = setInterval(loadInfo, 2 * 1000)
 
-    return () => {
-      clearInterval(interval)
-    }
-  }, [networkId, tokenOffer, tokenOfferAddress, account])
+    return () => clearInterval(interval)
+  }, [networkId, tokenOfferPoolAddress, account])
 
   return { ...state, loadInfo }
 }
