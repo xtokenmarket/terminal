@@ -9,7 +9,6 @@ import { ReactComponent as NativeIcon } from 'assets/svgs/native.svg'
 import { ReactComponent as OriginationIcon } from 'assets/svgs/origination.svg'
 import { ReactComponent as TwitterIcon } from 'assets/svgs/twitter.svg'
 import { IToken } from 'types'
-import { constants } from 'ethers'
 
 // Enable testnet chain support for Vercel deployment
 export const IS_PROD =
