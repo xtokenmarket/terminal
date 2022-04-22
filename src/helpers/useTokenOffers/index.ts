@@ -1,15 +1,19 @@
 import axios from 'axios'
 import { TERMINAL_API_URL } from 'config/constants'
+import { getContractAddress } from 'config/networks'
+import { useConnectedWeb3Context } from 'contexts'
 import { useNetworkContext } from 'contexts/networkContext'
 import { BigNumber } from 'ethers'
 import { useEffect, useState } from 'react'
+import { OriginationService } from 'services'
 import { ITokenOffer } from 'types'
 import { Network } from 'utils/enums'
 import { isTestnet, isTestNetwork } from 'utils/network'
 
 interface IState {
   isLoading: boolean
-  tokenOffers: ITokenOffer[]
+  // tokenOffers: ITokenOffer[]
+  tokenOffers: string[]
 }
 
 const offerings = [
@@ -32,7 +36,7 @@ const offerings = [
     totalOfferingAmount: BigNumber.from('1500000000000'),
     remainingOfferingAmount: BigNumber.from('497303000000'),
     pricePerToken: BigNumber.from('1250000000000000000'),
-    timeRemaining: 23420,
+    timeRemaining: BigNumber.from('23420'),
     vestingPeriod: 31622400,
     cliffPeriod: 7890000,
   },
@@ -54,6 +58,7 @@ export const useTokenOffers = () => {
   })
 
   const { chainId } = useNetworkContext()
+  const { account, library: provider } = useConnectedWeb3Context()
 
   const getFilteredOffers = (offers: ITokenOffer[] = []) =>
     offers.filter((offer: ITokenOffer) =>
@@ -66,11 +71,29 @@ export const useTokenOffers = () => {
     setState((prev) => ({ ...prev, isLoading: true }))
 
     try {
-      const { data: tokenOffers } = await getTokenOffers()
+      // const { data: tokenOffers } = await getTokenOffers()
+
+      // TODO: offers data pull from the contract, can be deleted after api is ready
+      const readonlyProvider = provider
+      const originationAddress = getContractAddress(
+        'origination',
+        readonlyProvider?.network.chainId
+      )
+      const origination = new OriginationService(
+        provider,
+        account,
+        originationAddress
+      )
+      const createFungibleListingFilter =
+        origination.contract.filters.CreateFungibleListing()
+      const tokenOffers = await origination.contract.queryFilter(
+        createFungibleListingFilter
+      )
+      const tokenOfferAddresses = tokenOffers.map((offer) => offer.args?.pool)
 
       setState((prev) => ({
         ...prev,
-        tokenOffers: getFilteredOffers(tokenOffers),
+        tokenOffers: tokenOfferAddresses,
         isLoading: false,
       }))
     } catch (error) {

@@ -9,14 +9,16 @@ export const getOffersDataMulticall = async (
       // console.time(`loadInfo multicall ${tokenOfferAddress}`)
       const calls = [
         'totalOfferingAmount',
-        'offerTokenAmountPurchased',
+        'offerTokenAmountSold',
         'startingPrice',
         'endingPrice',
         'saleDuration',
         'saleEndTimestamp',
         'saleInitiatedTimestamp',
         'vestingPeriod ',
-        'cliffPeriod'
+        'cliffPeriod',
+        'offerToken',
+        'purchaseToken'
       ].map((method) => ({
         name: method,
         address: tokenOfferAddress,
@@ -24,20 +26,22 @@ export const getOffersDataMulticall = async (
       }))
       const [
         [totalOfferingAmount],
-        [offerTokenAmountPurchased],
+        [offerTokenAmountSold],
         [startingPrice],
         [endingPrice],
         [saleDuration],
         [saleEndTimestamp],
         [saleInitiatedTimestamp],
         [vestingPeriod ],
-        [cliffPeriod]
-      ] = await multicall.multicallv2(Abi.OriginationCore, calls, {
+        [cliffPeriod],
+        [offerToken],
+        [purchaseToken]
+      ] = await multicall.multicallv2(Abi.OriginationPool, calls, {
         requireSuccess: false,
       })
       return {
         totalOfferingAmount,
-        offerTokenAmountPurchased,
+        offerTokenAmountSold,
         startingPrice,
         endingPrice,
         saleDuration,
@@ -45,8 +49,10 @@ export const getOffersDataMulticall = async (
         saleInitiatedTimestamp,
         vestingPeriod,
         cliffPeriod,
+        offerToken,
+        purchaseToken
       }
     } catch (error) {
-      console.error(error)
+      console.error('getOffersDataMulticall', error)
     }
   }
