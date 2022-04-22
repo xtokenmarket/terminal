@@ -10,6 +10,7 @@ import { NetworkSelector } from '../NetworkSelector'
 import { ENetwork } from 'utils/enums'
 import { useScrollYPosition } from 'helpers'
 import clsx from 'clsx'
+import colors from 'theme/colors'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -112,7 +113,7 @@ export const Header = () => {
         <img alt="logo" src="/assets/logo.png" />
       </div>
       <div className={classes.title}>
-        {Icon && <Icon />}
+        {Icon && <Icon fill={colors[0].colors.white} />}
         <span>
           xtoken <span>{selectedMenuItem?.label}</span>
         </span>

@@ -3,6 +3,8 @@ import Tooltip from '@material-ui/core/Tooltip'
 import clsx from 'clsx'
 import { MENU_ITEMS, SOCIAL_ITEMS } from 'config/layout'
 import { NavLink, useHistory, matchPath } from 'react-router-dom'
+import { ReactComponent as OriginationIcon } from 'assets/svgs/origination.svg'
+import colors from 'theme/colors'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -148,9 +150,21 @@ export const Sidebar = () => {
           </div>
           <div className={classes.body}>
             {MENU_ITEMS.map(({ icon: Icon, href, enabled }) => {
+              const getIsActive = () =>
+                !!matchPath(history.location.pathname, {
+                  path: href,
+                  exact: false,
+                })
+
               const content = (
                 <div className="menu-item-icon-wrapper">
-                  <Icon />
+                  <Icon
+                    fill={
+                      getIsActive()
+                        ? colors[0].colors.white
+                        : colors[0].colors.primary100
+                    }
+                  />
                 </div>
               )
 
@@ -173,12 +187,7 @@ export const Sidebar = () => {
 
               return (
                 <NavLink
-                  isActive={() =>
-                    !!matchPath(history.location.pathname, {
-                      path: href,
-                      exact: false,
-                    })
-                  }
+                  isActive={getIsActive}
                   to={href}
                   key={href}
                   className={classes.item}
@@ -201,7 +210,7 @@ export const Sidebar = () => {
                   className={classes.item}
                 >
                   <div className="menu-item-icon-wrapper">
-                    <Icon />
+                    <Icon fill="white" />
                   </div>
                 </a>
               )
