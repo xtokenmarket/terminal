@@ -9,6 +9,7 @@ import { ReactComponent as NativeIcon } from 'assets/svgs/native.svg'
 import { ReactComponent as OriginationIcon } from 'assets/svgs/origination.svg'
 import { ReactComponent as TwitterIcon } from 'assets/svgs/twitter.svg'
 import { IToken } from 'types'
+import { constants } from 'ethers'
 
 // Enable testnet chain support for Vercel deployment
 export const IS_PROD =
@@ -208,3 +209,11 @@ export const PROD_TESTNET_DISCOVER_PAGE_SIZE = 5
 
 export const INSUFFICIENT_FUNDS_ERROR =
   'Insufficient funds to process the transaction'
+
+export const ETH = {
+  name: 'Ethereum',
+  symbol: 'ETH',
+  decimals: 18,
+  image: '/assets/tokens/eth.png',
+  address: constants.AddressZero,
+}

@@ -19,7 +19,8 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  offerings: ITokenOffer[]
+  // offerings: ITokenOffer[]
+  offerings: string[]
 }
 
 export const OfferingTable = ({ offerings }: IProps) => {
@@ -30,10 +31,7 @@ export const OfferingTable = ({ offerings }: IProps) => {
       <OfferingTableHeader />
       <div>
         {offerings.map((offering, index) => (
-          <OfferingTableRow
-            key={`${offering.offerToken.address}-${offering.purchaseToken.address}-${index}`}
-            offering={offering}
-          />
+          <OfferingTableRow key={`${offering}-${index}`} offering={offering} />
         ))}
       </div>
     </div>
