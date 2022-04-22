@@ -249,12 +249,12 @@ export interface ISaleParams {
 
 export interface ITokenOffer {
   network?: Network
-  offerToken: IToken
-  purchaseToken: IToken
+  offerToken?: IToken
+  purchaseToken?: IToken
   totalOfferingAmount: BigNumber
   remainingOfferingAmount: BigNumber
   pricePerToken: BigNumber
-  timeRemaining: number
+  timeRemaining: BigNumber
   vestingPeriod: number
   cliffPeriod: number
 }
