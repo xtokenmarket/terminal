@@ -205,6 +205,8 @@ export interface ITokenOffer {
   offerTokenAmountSold: BigNumber
   startingPrice: BigNumber
   endingPrice: BigNumber
+  saleDuration: BigNumber
+  saleInitiatedTimestamp: BigNumber
   saleEndTimestamp: BigNumber
   vestingPeriod: BigNumber
   cliffPeriod: BigNumber

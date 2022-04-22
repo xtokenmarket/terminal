@@ -9,6 +9,7 @@ import {
   parseDurationSec,
   parseRemainingDurationSec,
 } from 'utils'
+import { useTokenOffer } from 'helpers/useTokenOffer'
 import moment from 'moment'
 
 const useStyles = makeStyles((theme) => ({
@@ -70,83 +71,109 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
     textTransform: 'capitalize',
   },
+  offerTokenLabel: {
+    color: theme.colors.white,
+    textTransform: 'capitalize',
+    fontWeight: 800,
+    marginLeft: theme.spacing(2),
+  },
 }))
 
 interface IProps {
-  offering: ITokenOffer
+  offering: string
 }
 
-export const OfferingTableRow = ({
-  offering: {
-    network,
-    poolAddress,
-    offerToken,
-    purchaseToken,
-    totalOfferingAmount,
-    offerTokenAmountSold,
-    startingPrice,
-    saleEndTimestamp,
-    vestingPeriod,
-    cliffPeriod,
-  },
-}: IProps) => {
+export const OfferingTableRow = ({ offering }: IProps) => {
   const cl = useStyles()
-  const remainingOfferingAmount = totalOfferingAmount.sub(offerTokenAmountSold)
-  const timeRemaining = saleEndTimestamp.toNumber() - moment().unix()
+  const { tokenOffer } = useTokenOffer(offering)
 
-  const renderContent = () => (
-    <NavLink
-      className={cl.content}
-      to={`/origination/token-offers/${network}/${poolAddress}`}
-    >
-      <OfferingTd type="offerToken">
-        <div className={cl.item}>
-          <img
-            alt="offerToken"
-            className={cl.tokenIcon}
-            src={offerToken.image}
-          />
-        </div>
-      </OfferingTd>
+  const renderContent = () => {
+    if (!tokenOffer) {
+      return null
+    }
 
-      <OfferingTd type="maxOffering">
-        <Typography className={cl.item}>
-          {numberWithCommas(
-            formatBigNumber(totalOfferingAmount, offerToken.decimals)
-          )}
-        </Typography>
-      </OfferingTd>
-      <OfferingTd type="remainingOffering">
-        <Typography className={cl.item}>
-          {numberWithCommas(
-            formatBigNumber(remainingOfferingAmount, offerToken.decimals)
-          )}
-        </Typography>
-      </OfferingTd>
-      {/* TODO: replace this with true pricePerToken */}
-      <OfferingTd type="pricePerToken">
-        <Typography className={clsx(cl.item, cl.label)}>
-          {formatBigNumber(startingPrice, purchaseToken.decimals)}{' '}
-          {purchaseToken.symbol}
-        </Typography>
-      </OfferingTd>
-      <OfferingTd type="timeRemaining">
-        <Typography className={clsx(cl.item, cl.label)}>
-          {parseRemainingDurationSec(timeRemaining)}
-        </Typography>
-      </OfferingTd>
-      <OfferingTd type="vestingPeriod">
-        <Typography className={clsx(cl.item, cl.label)}>
-          {parseDurationSec(vestingPeriod.toNumber())}
-        </Typography>
-      </OfferingTd>
-      <OfferingTd type="vestingCliff">
-        <Typography className={clsx(cl.item, cl.label, cl.itemAlignRight)}>
-          {parseDurationSec(cliffPeriod.toNumber())}
-        </Typography>
-      </OfferingTd>
-    </NavLink>
-  )
+    const {
+      network,
+      offerToken,
+      purchaseToken,
+      totalOfferingAmount,
+      offerTokenAmountSold,
+      saleInitiatedTimestamp,
+      startingPrice,
+      vestingPeriod,
+      cliffPeriod,
+    } = tokenOffer
+
+    const isSaleInitiated = !saleInitiatedTimestamp.isZero()
+    const elapsedTime = moment()
+      .subtract(tokenOffer.saleInitiatedTimestamp.toString())
+      .toString()
+    const timeRemaining = isSaleInitiated
+      ? moment(tokenOffer.saleDuration.toString())
+          .subtract(elapsedTime)
+          .toString()
+      : tokenOffer.saleDuration.toString()
+
+    const remainingOfferingAmount =
+      totalOfferingAmount.sub(offerTokenAmountSold)
+
+    return (
+      <NavLink
+        className={cl.content}
+        to={`/origination/token-offers/${network}/${offering}`}
+      >
+        <OfferingTd type="offerToken">
+          <div className={cl.item}>
+            <img
+              alt="offerToken"
+              className={cl.tokenIcon}
+              src={offerToken.image}
+            />
+            <Typography className={cl.offerTokenLabel}>
+              {offerToken.symbol}
+            </Typography>
+          </div>
+        </OfferingTd>
+
+        <OfferingTd type="maxOffering">
+          <Typography className={cl.item}>
+            {numberWithCommas(
+              formatBigNumber(totalOfferingAmount, offerToken.decimals)
+            )}
+          </Typography>
+        </OfferingTd>
+        <OfferingTd type="remainingOffering">
+          <Typography className={cl.item}>
+            {numberWithCommas(
+              formatBigNumber(remainingOfferingAmount, offerToken.decimals)
+            )}
+          </Typography>
+        </OfferingTd>
+        {/* TODO: replace this with true pricePerToken */}
+        <OfferingTd type="pricePerToken">
+          <Typography className={clsx(cl.item, cl.label)}>
+            {formatBigNumber(startingPrice, purchaseToken.decimals)}{' '}
+            {purchaseToken.symbol}
+          </Typography>
+        </OfferingTd>
+        <OfferingTd type="timeRemaining">
+          <Typography className={clsx(cl.item, cl.label)}>
+            {parseRemainingDurationSec(parseInt(timeRemaining))}
+          </Typography>
+        </OfferingTd>
+        <OfferingTd type="vestingPeriod">
+          <Typography className={clsx(cl.item, cl.label)}>
+            {parseDurationSec(vestingPeriod.toNumber())}
+          </Typography>
+        </OfferingTd>
+        <OfferingTd type="vestingCliff">
+          <Typography className={clsx(cl.item, cl.label, cl.itemAlignRight)}>
+            {parseDurationSec(cliffPeriod.toNumber())}
+          </Typography>
+        </OfferingTd>
+      </NavLink>
+    )
+  }
 
   return (
     <div className={cl.root}>

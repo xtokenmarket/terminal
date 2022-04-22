@@ -1,7 +1,6 @@
 import Abi from 'abis'
 import { BigNumber } from 'ethers'
 import { MulticallService } from 'services'
-
 interface ITokenOfferDetails {
   offerToken: string
   purchaseToken: string
@@ -9,6 +8,8 @@ interface ITokenOfferDetails {
   offerTokenAmountSold: BigNumber
   startingPrice: BigNumber
   endingPrice: BigNumber
+  saleDuration: BigNumber
+  saleInitiatedTimestamp: BigNumber
   saleEndTimestamp: BigNumber
   vestingPeriod: BigNumber
   cliffPeriod: BigNumber
@@ -25,6 +26,8 @@ export const getOffersDataMulticall = async (
     'offerTokenAmountSold',
     'startingPrice',
     'endingPrice',
+    'saleDuration',
+    'saleInitiatedTimestamp',
     'saleEndTimestamp',
     'vestingPeriod ',
     'cliffPeriod',
@@ -40,6 +43,8 @@ export const getOffersDataMulticall = async (
     [offerTokenAmountSold],
     [startingPrice],
     [endingPrice],
+    [saleDuration],
+    [saleInitiatedTimestamp],
     [saleEndTimestamp],
     [vestingPeriod],
     [cliffPeriod],
@@ -54,7 +59,9 @@ export const getOffersDataMulticall = async (
     offerTokenAmountSold,
     startingPrice,
     endingPrice,
+    saleDuration,
     saleEndTimestamp,
+    saleInitiatedTimestamp,
     vestingPeriod,
     cliffPeriod,
   }

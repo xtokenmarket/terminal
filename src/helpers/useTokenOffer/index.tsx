@@ -2,12 +2,11 @@ import { useEffect, useState } from 'react'
 import Abi from 'abis'
 import axios from 'axios'
 import { constants } from 'ethers'
-import { knownTokens } from 'config/networks'
+import { knownTokens, getTokenFromAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import { useNetworkContext } from 'contexts/networkContext'
 import { useServices } from 'helpers'
 import { Network } from 'utils/enums'
-import { fetchUnknownToken } from 'utils/token'
 import { getOffersDataMulticall } from './helper'
 import { IToken, ITokenOffer } from 'types'
 
@@ -34,28 +33,20 @@ export const useTokenOffer = (
       multicall
     )
     const tokens = await Promise.all([
-      fetchUnknownToken(
-        provider,
-        chainId,
-        contractOferingData?.offerToken,
-        multicall
-      ),
-      fetchUnknownToken(
-        provider,
-        chainId,
-        contractOferingData?.purchaseToken,
-        multicall
-      ),
+      getTokenFromAddress(contractOferingData?.offerToken, networkId),
+      getTokenFromAddress(contractOferingData?.purchaseToken, networkId),
     ])
-    const defaultToken: IToken = {
+    const ETH: IToken = {
       ...knownTokens.eth,
       address: constants.AddressZero,
     }
 
     return {
       ...contractOferingData,
-      offerToken: tokens[0] ? tokens[0] : defaultToken,
-      purchaseToken: tokens[1] ? tokens[1] : defaultToken,
+      // TODO: remove this hardcoded value
+      network: Network.KOVAN,
+      offerToken: tokens[0] ? tokens[0] : ETH,
+      purchaseToken: tokens[1] ? tokens[1] : ETH,
     }
   }
 
