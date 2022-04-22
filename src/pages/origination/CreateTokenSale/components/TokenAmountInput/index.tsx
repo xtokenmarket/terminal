@@ -124,7 +124,7 @@ interface IProps {
   className?: string
   value: string
   token?: IToken
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onChange: (_: string) => void
   label?: string
   tokenDetailsPlaceholder?: string
   disabled?: boolean
@@ -176,7 +176,13 @@ export const TokenAmountInput: React.FC<IProps> = ({
           variant="outlined"
           value={value}
           placeholder={token ? 'Input amount' : 'Amount'}
-          onChange={onChange}
+          onChange={(event) => {
+            let newValue = event.target.value
+            if (Number(newValue || '0') < 0) {
+              newValue = '0'
+            }
+            onChange(newValue)
+          }}
           InputProps={{
             classes: {
               notchedOutline: classes.notchedOutline,
