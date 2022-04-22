@@ -1,11 +1,12 @@
-import { SimpleLoader, HeaderSection, PoolTable } from 'components'
-import { useMyTerminalPools } from 'helpers'
+import { SimpleLoader } from 'components'
 import { makeStyles, Button } from '@material-ui/core'
 import { useHistory } from 'react-router'
 import { useConnectedWeb3Context } from 'contexts'
 import { useNetworkContext } from 'contexts/networkContext'
 import { IS_PROD } from 'config/constants'
 import { isTestnet } from 'utils/network'
+import { useMyTokenOffers } from 'helpers/useMyTokenOffers'
+import { OfferingTable, HeaderSection } from '../Discover/components/table'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,23 +38,21 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const MyOffers = () => {
-  const { pools, loading } = useMyTerminalPools()
-  const history = useHistory()
-  const classes = useStyles()
-  const isLoading = loading && pools.length === 0
-
+  const { tokenOffers, isLoading } = useMyTokenOffers()
   const { account, setWalletConnectModalOpened } = useConnectedWeb3Context()
+  const { chainId } = useNetworkContext()
+  const loading = isLoading && tokenOffers.length === 0
+  const isProdTestNet = IS_PROD && isTestnet(chainId)
+  const classes = useStyles()
+  const history = useHistory()
   const isConnected = !!account
 
-  const { chainId } = useNetworkContext()
-  const isProdTestNet = IS_PROD && isTestnet(chainId)
-
-  const onCreatePool = () => {
-    history.push('/mining/new-pool')
+  const onCreateTokenSale = () => {
+    history.push('/origination/new-token-sale')
   }
 
-  const onBrowsePool = () => {
-    history.push('/mining/discover')
+  const onBrowseSales = () => {
+    history.push('/origination/discover')
   }
 
   const NoTestNetSupport = () => (
@@ -64,29 +63,29 @@ const MyOffers = () => {
 
   const NoPools = () => (
     <div className={classes.root}>
-      <div className={classes.title}>You have no pools yet.</div>{' '}
+      <div className={classes.title}>You have no sales yet.</div>{' '}
       <div className={classes.description}>
-        Browse pools, add liquidity and earn rewards, or Create your own pool.
+        Browse token offers, or Create your own sales.
       </div>
       <div>
         <Button
           className={classes.button}
           color="secondary"
           fullWidth
-          onClick={onBrowsePool}
+          onClick={onBrowseSales}
           variant="contained"
         >
-          BROWSE POOLS
+          BROWSE OFFERS
         </Button>
         {isConnected && (
           <Button
             className={classes.button}
             color="primary"
             fullWidth
-            onClick={onCreatePool}
+            onClick={onCreateTokenSale}
             variant="contained"
           >
-            CREATE POOL
+            CREATE SALE
           </Button>
         )}
       </div>
@@ -117,12 +116,12 @@ const MyOffers = () => {
           {isConnected ? (
             <>
               <HeaderSection />
-              {isLoading ? (
+              {loading ? (
                 <SimpleLoader />
-              ) : pools.length === 0 ? (
+              ) : tokenOffers.length === 0 ? (
                 <NoPools />
               ) : (
-                <PoolTable pools={pools} />
+                <OfferingTable offerings={tokenOffers} />
               )}
             </>
           ) : (
