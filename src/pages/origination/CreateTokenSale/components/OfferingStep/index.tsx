@@ -120,7 +120,7 @@ export const OfferingStep: React.FC<IProps> = ({
             label="Offer Token Amount"
             token={data.offerToken}
             value={data.offerTokenAmount}
-            onChange={(e) => updateData({ offerTokenAmount: e.target.value })}
+            onChange={(value) => updateData({ offerTokenAmount: value })}
             infoText={InfoText.OfferTokenAmount}
             tokenDetailsPlaceholder={Description.OfferTokenAmount}
           />
@@ -130,9 +130,7 @@ export const OfferingStep: React.FC<IProps> = ({
             label="Reserve Offer Token Amount"
             token={data.offerToken}
             value={data.reserveOfferTokenAmount}
-            onChange={(e) =>
-              updateData({ reserveOfferTokenAmount: e.target.value })
-            }
+            onChange={(value) => updateData({ reserveOfferTokenAmount: value })}
             infoText={InfoText.ReserveOfferTokenAmount}
             tokenDetailsPlaceholder={Description.ReserveOfferTokenAmount}
           />
