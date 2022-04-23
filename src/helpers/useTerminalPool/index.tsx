@@ -384,11 +384,16 @@ export const useTerminalPool = (
         }
       }
 
+      const apr =
+        Number(pool.periodFinish) * 1000 > Number(Date.now())
+          ? pool.apr || 'N/A'
+          : '0'
+
       setState({
         loading: false,
         pool: {
           address: pool.poolAddress,
-          apr: pool.apr || 'N/A',
+          apr: apr.toString(),
           manager: pool.manager.toLowerCase(),
           network: pool.network || network,
           owner: pool.owner.toLowerCase(),
