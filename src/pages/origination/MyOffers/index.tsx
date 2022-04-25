@@ -5,7 +5,7 @@ import { useConnectedWeb3Context } from 'contexts'
 import { useNetworkContext } from 'contexts/networkContext'
 import { IS_PROD } from 'config/constants'
 import { isTestnet } from 'utils/network'
-import { useMyTokenOffers } from 'helpers/useMyTokenOffers'
+import { useMyTokenOffers } from 'helpers/useMyOriginationPools'
 import { OfferingTable, HeaderSection } from '../Discover/components/table'
 
 const useStyles = makeStyles((theme) => ({
