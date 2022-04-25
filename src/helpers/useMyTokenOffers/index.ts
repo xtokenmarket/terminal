@@ -45,7 +45,7 @@ export const useMyTokenOffers = () => {
       )
 
       const userTokenOffers = tokenOffers.filter(
-        (offer) => offer.args?.owner === account
+        (offer) => offer.args?.owner.toLowerCase() === account?.toLowerCase()
       )
 
       const userTokenOfferAddresses = userTokenOffers.map(
