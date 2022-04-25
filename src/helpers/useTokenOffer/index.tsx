@@ -73,9 +73,14 @@ export const useTokenOffer = (poolAddress?: string, network?: Network) => {
       ..._offerData,
       // TODO: remove this hardcoded value
       network: Network.KOVAN,
+<<<<<<< HEAD
       offerToken: tokens[0] ? tokens[0] : ETH,
       purchaseToken: tokens[1] ? tokens[1] : ETH,
 >>>>>>> a6636ac (fix: rename contractOfferingData to _offerData)
+=======
+      offerToken: tokens[0] || ETH,
+      purchaseToken: tokens[1] || ETH,
+>>>>>>> 9afa986 (fix: simplify ternary operator to or operator)
     }
   }
 
