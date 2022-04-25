@@ -39,8 +39,8 @@ export const useTokenOffer = (poolAddress?: string, network?: Network) => {
       ..._offerData,
       // TODO: remove this hardcoded value
       network: Network.KOVAN,
-      offerToken: tokens[0] ? tokens[0] : ETH,
-      purchaseToken: tokens[1] ? tokens[1] : ETH,
+      offerToken: tokens[0] || ETH,
+      purchaseToken: tokens[1] || ETH,
     }
   }
 
