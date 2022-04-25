@@ -20,6 +20,7 @@ interface IState {
   tokenOffers: string[]
 }
 
+<<<<<<< HEAD:src/helpers/useTokenOffers/index.ts
 const offerings = [
   {
     network: Network.KOVAN,
@@ -66,6 +67,9 @@ const getTokenOffers = async (): Promise<{ data: ITokenOffer[] }> => {
 }
 
 export const useTokenOffers = () => {
+=======
+export const useOriginationPools = () => {
+>>>>>>> 68a7ccc (refactor: rename useTokenOffer to useOriginationPool for keeping it generic between both type of sales):src/helpers/useOriginationPools/index.ts
   const [state, setState] = useState<IState>({
     tokenOffers: [],
     isLoading: true,
