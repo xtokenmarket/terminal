@@ -16,7 +16,7 @@ interface ITokenOfferDetails {
 }
 
 export const getOffersDataMulticall = async (
-  tokenOfferPoolAddress: string,
+  poolAddress: string,
   multicall: MulticallService
 ): Promise<ITokenOfferDetails> => {
   const calls = [
@@ -33,7 +33,7 @@ export const getOffersDataMulticall = async (
     'cliffPeriod',
   ].map((method) => ({
     name: method,
-    address: tokenOfferPoolAddress,
+    address: poolAddress,
     params: [],
   }))
   const [
