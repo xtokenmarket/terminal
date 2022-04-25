@@ -1,5 +1,5 @@
 import { PageWrapper, PageHeader, PageContent, SimpleLoader } from 'components'
-import { useTokenOffer } from 'helpers/useTokenOffer'
+import { useOriginationPool } from 'helpers/useOriginationPool'
 import { useHistory, useParams } from 'react-router'
 
 type RouteParams = {
@@ -10,7 +10,7 @@ type RouteParams = {
 const TokenSaleDetails = () => {
   const history = useHistory()
   const { poolAddress } = useParams<RouteParams>()
-  const { tokenOffer } = useTokenOffer(poolAddress)
+  const { tokenOffer } = useOriginationPool(poolAddress)
 
   return (
     <PageWrapper>
