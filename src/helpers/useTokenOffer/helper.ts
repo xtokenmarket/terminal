@@ -16,6 +16,7 @@ interface ITokenOfferDetails {
 
 export const getOffersDataMulticall = async (
 <<<<<<< HEAD
+<<<<<<< HEAD
     tokenOfferAddress: string,
     multicall: MulticallService
   ) => {
@@ -70,6 +71,9 @@ export const getOffersDataMulticall = async (
       console.error('getOffersDataMulticall', error)
 =======
   tokenOfferPoolAddress: string,
+=======
+  poolAddress: string,
+>>>>>>> d5228be (fix: rename tokenOfferPoolAddress to poolAddress for it to be commonly used on both Token Sale and NFT Mint)
   multicall: MulticallService
 <<<<<<< HEAD
 ) => {
@@ -130,7 +134,7 @@ export const getOffersDataMulticall = async (
     'cliffPeriod',
   ].map((method) => ({
     name: method,
-    address: tokenOfferPoolAddress,
+    address: poolAddress,
     params: [],
   }))
   const [
