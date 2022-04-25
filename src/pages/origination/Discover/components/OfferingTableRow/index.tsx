@@ -10,8 +10,12 @@ import {
   parseRemainingDurationSec,
 } from 'utils'
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { useTokenOffer } from 'helpers/useTokenOffer'
 =======
+=======
+import { useOriginationPool } from 'helpers/useOriginationPool'
+>>>>>>> 68a7ccc (refactor: rename useTokenOffer to useOriginationPool for keeping it generic between both type of sales)
 import moment from 'moment'
 >>>>>>> 399d09b (Fixed discover page data wiring setup)
 
@@ -101,11 +105,15 @@ export const OfferingTableRow = ({
 >>>>>>> 34f2682 (Bootstrapped token offer details page)
   const cl = useStyles()
 <<<<<<< HEAD
+<<<<<<< HEAD
   const { loading, tokenOffer } = useTokenOffer(null, offering)
 =======
   const remainingOfferingAmount = totalOfferingAmount.sub(offerTokenAmountSold)
   const timeRemaining = saleEndTimestamp.toNumber() - moment().unix()
 >>>>>>> 399d09b (Fixed discover page data wiring setup)
+=======
+  const { tokenOffer } = useOriginationPool(offering)
+>>>>>>> 68a7ccc (refactor: rename useTokenOffer to useOriginationPool for keeping it generic between both type of sales)
 
 <<<<<<< HEAD
   const renderContent = () => {
