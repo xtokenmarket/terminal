@@ -29,10 +29,7 @@ interface IState {
   loading: boolean
 }
 
-export const useTokenOffer = (
-  tokenOfferPoolAddress?: string,
-  network?: Network
-) => {
+export const useTokenOffer = (poolAddress?: string, network?: Network) => {
   const { account, networkId, library: provider } = useConnectedWeb3Context()
   const { chainId } = useNetworkContext()
   const { multicall } = useServices(network)
@@ -83,7 +80,7 @@ export const useTokenOffer = (
   }
 
   const loadInfo = async () => {
-    if (!tokenOfferPoolAddress) return
+    if (!poolAddress) return
 
     setState((prev) => ({ ...prev, loading: true }))
 <<<<<<< HEAD
@@ -207,7 +204,7 @@ export const useTokenOffer = (
       // } catch (e) {
       // console.error('Error fetching token offer details', e)
       // Fallback in case API doesn't return token offer details
-      const offerData = await getContractTokenOfferData(tokenOfferPoolAddress)
+      const offerData = await getContractTokenOfferData(poolAddress)
       setState({
         loading: false,
         tokenOffer: offerData,
@@ -223,7 +220,7 @@ export const useTokenOffer = (
     const interval = setInterval(loadInfo, 2 * 1000)
 
     return () => clearInterval(interval)
-  }, [networkId, tokenOfferPoolAddress, account])
+  }, [networkId, poolAddress, account])
 
   return { ...state, loadInfo }
 }
