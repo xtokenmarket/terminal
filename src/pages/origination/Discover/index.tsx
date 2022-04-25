@@ -3,10 +3,10 @@ import { SimpleLoader } from 'components'
 import { IS_PROD, PROD_TESTNET_DISCOVER_PAGE_SIZE } from 'config/constants'
 import { useNetworkContext } from 'contexts/networkContext'
 import { isTestnet } from 'utils/network'
-import { useTokenOffers } from 'helpers/useTokenOffers'
+import { useOriginationPools } from 'helpers/useOriginationPools'
 
 const Discover = () => {
-  const { tokenOffers, isLoading } = useTokenOffers()
+  const { tokenOffers, isLoading } = useOriginationPools()
   const loading = isLoading && tokenOffers.length === 0
 
   const { chainId } = useNetworkContext()

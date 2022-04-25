@@ -14,7 +14,7 @@ interface IState {
   tokenOffers: string[]
 }
 
-export const useTokenOffers = () => {
+export const useOriginationPools = () => {
   const [state, setState] = useState<IState>({
     tokenOffers: [],
     isLoading: true,

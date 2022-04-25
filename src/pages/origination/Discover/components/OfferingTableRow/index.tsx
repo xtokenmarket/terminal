@@ -9,7 +9,7 @@ import {
   parseDurationSec,
   parseRemainingDurationSec,
 } from 'utils'
-import { useTokenOffer } from 'helpers/useTokenOffer'
+import { useOriginationPool } from 'helpers/useOriginationPool'
 import moment from 'moment'
 
 const useStyles = makeStyles((theme) => ({
@@ -85,7 +85,7 @@ interface IProps {
 
 export const OfferingTableRow = ({ offering }: IProps) => {
   const cl = useStyles()
-  const { tokenOffer } = useTokenOffer(offering)
+  const { tokenOffer } = useOriginationPool(offering)
 
   const renderContent = () => {
     if (!tokenOffer) {
