@@ -3,7 +3,11 @@ import { TERMINAL_API_URL } from 'config/constants'
 import { getContractAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import { useNetworkContext } from 'contexts/networkContext'
+<<<<<<< HEAD
 import { BigNumber } from 'ethers'
+=======
+import { useServices } from 'helpers'
+>>>>>>> 2db2c06 (fix: use originationService from useService)
 import { useEffect, useState } from 'react'
 import { OriginationService } from 'services'
 import { ITokenOffer } from 'types'
@@ -69,6 +73,7 @@ export const useTokenOffers = () => {
 
   const { chainId } = useNetworkContext()
   const { account, library: provider } = useConnectedWeb3Context()
+  const { originationService } = useServices()
 
   const getFilteredOffers = (offers: ITokenOffer[] = []) =>
     offers.filter((offer: ITokenOffer) =>
@@ -85,6 +90,7 @@ export const useTokenOffers = () => {
 
       // TODO: offers data pull from the contract, can be deleted after api is ready
       const readonlyProvider = provider
+<<<<<<< HEAD
       const originationAddress = getContractAddress(
         'origination',
         readonlyProvider?.network.chainId
@@ -94,9 +100,12 @@ export const useTokenOffers = () => {
         account,
         originationAddress
       )
+=======
+
+>>>>>>> 2db2c06 (fix: use originationService from useService)
       const createFungibleListingFilter =
-        origination.contract.filters.CreateFungibleListing()
-      const tokenOffers = await origination.contract.queryFilter(
+        originationService.contract.filters.CreateFungibleListing()
+      const tokenOffers = await originationService.contract.queryFilter(
         createFungibleListingFilter
       )
       const tokenOfferAddresses = tokenOffers.map((offer) => offer.args?.pool)

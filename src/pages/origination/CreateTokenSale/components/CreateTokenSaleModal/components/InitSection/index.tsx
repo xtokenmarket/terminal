@@ -7,6 +7,7 @@ import { OriginationService } from 'services/origination'
 import { ICreateTokenSaleData } from 'types'
 import { getDurationSec, getMetamaskError } from 'utils'
 import { parseUnits } from 'ethers/lib/utils'
+import { useServices } from 'helpers'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,6 +46,7 @@ export const InitSection = (props: IProps) => {
   })
 
   const { onNext, data, onClose, setTxId } = props
+  const { originationService } = useServices()
 
   useEffect(() => {
     if (state.isCompleted) {
@@ -93,19 +95,8 @@ export const InitSection = (props: IProps) => {
         ),
       }
 
-      const originationAddress = getContractAddress(
-        'origination',
-        provider.network.chainId
-      )
-
-      const origination = new OriginationService(
-        provider,
-        account,
-        originationAddress
-      )
-
-      const txId = await origination.createFungibleListing(saleParams)
-      const finalTxId = await origination.waitUntilCreateFungibleListing(
+      const txId = await originationService.createFungibleListing(saleParams)
+      const finalTxId = await originationService.waitUntilCreateFungibleListing(
         account,
         txId
       )
