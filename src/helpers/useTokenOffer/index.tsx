@@ -28,13 +28,10 @@ export const useTokenOffer = (
   const getContractTokenOfferData = async (
     poolAddress: string
   ): Promise<ITokenOffer> => {
-    const contractOferingData = await getOffersDataMulticall(
-      poolAddress,
-      multicall
-    )
+    const _offerData = await getOffersDataMulticall(poolAddress, multicall)
     const tokens = await Promise.all([
-      getTokenFromAddress(contractOferingData?.offerToken, networkId),
-      getTokenFromAddress(contractOferingData?.purchaseToken, networkId),
+      getTokenFromAddress(_offerData?.offerToken, networkId),
+      getTokenFromAddress(_offerData?.purchaseToken, networkId),
     ])
     const ETH: IToken = {
       ...knownTokens.eth,
@@ -42,7 +39,7 @@ export const useTokenOffer = (
     }
 
     return {
-      ...contractOferingData,
+      ..._offerData,
       // TODO: remove this hardcoded value
       network: Network.KOVAN,
       offerToken: tokens[0] ? tokens[0] : ETH,
