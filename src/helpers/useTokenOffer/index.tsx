@@ -42,11 +42,9 @@ export const useTokenOffer = (
   const getContractTokenOfferData = async (
     poolAddress: string
   ): Promise<ITokenOffer> => {
-    const contractOferingData = await getOffersDataMulticall(
-      poolAddress,
-      multicall
-    )
+    const _offerData = await getOffersDataMulticall(poolAddress, multicall)
     const tokens = await Promise.all([
+<<<<<<< HEAD
       fetchUnknownToken(
         provider,
         chainId,
@@ -59,6 +57,10 @@ export const useTokenOffer = (
         contractOferingData?.purchaseToken,
         multicall
       ),
+=======
+      getTokenFromAddress(_offerData?.offerToken, networkId),
+      getTokenFromAddress(_offerData?.purchaseToken, networkId),
+>>>>>>> a6636ac (fix: rename contractOfferingData to _offerData)
     ])
     const defaultToken: IToken = {
       ...knownTokens.eth,
@@ -66,9 +68,17 @@ export const useTokenOffer = (
     }
 
     return {
+<<<<<<< HEAD
       ...contractOferingData,
       offerToken: tokens[0] ? tokens[0] : defaultToken,
       purchaseToken: tokens[1] ? tokens[1] : defaultToken,
+=======
+      ..._offerData,
+      // TODO: remove this hardcoded value
+      network: Network.KOVAN,
+      offerToken: tokens[0] ? tokens[0] : ETH,
+      purchaseToken: tokens[1] ? tokens[1] : ETH,
+>>>>>>> a6636ac (fix: rename contractOfferingData to _offerData)
     }
   }
 
