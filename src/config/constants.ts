@@ -9,6 +9,7 @@ import { ReactComponent as NativeIcon } from 'assets/svgs/native.svg'
 import { ReactComponent as OriginationIcon } from 'assets/svgs/origination.svg'
 import { ReactComponent as TwitterIcon } from 'assets/svgs/twitter.svg'
 import { IToken } from 'types'
+import { ethers } from 'ethers'
 
 // Enable testnet chain support for Vercel deployment
 export const IS_PROD =
@@ -246,5 +247,5 @@ export const ETH = {
   symbol: 'ETH',
   decimals: 18,
   image: '/assets/tokens/eth.png',
-  address: constants.AddressZero,
+  address: ethers.constants.AddressZero,
 }
