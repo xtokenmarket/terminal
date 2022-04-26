@@ -68,6 +68,12 @@ export const useTerminalPool = (
     readonlyProvider = getNetworkProvider(network)
   }
 
+  const clr = new CLRService(
+    readonlyProvider,
+    isWrongNetwork ? null : account,
+    poolAddress as string
+  )
+
   const getTokenDetails = async (addr: string) => {
     try {
       return getTokenFromAddress(addr, readonlyProvider?.network.chainId)
@@ -98,6 +104,15 @@ export const useTerminalPool = (
             }
           )
         ).data
+
+        // Get `owner` and `manager` address off of contract
+        const [owner, manager] = await Promise.all([
+          clr.contract.owner(),
+          clr.contract.manager(),
+        ])
+
+        pool.owner = owner
+        pool.manager = manager
       } catch (e) {
         console.error('Error fetching pool details', e)
         // Fallback in case API doesn't return pool details
@@ -109,12 +124,6 @@ export const useTerminalPool = (
       // console.time(`loadInfo token details ${pool.poolAddress}`)
       let { token0, token1, stakedToken } = pool
       let tvl = '0'
-
-      const clr = new CLRService(
-        readonlyProvider,
-        isWrongNetwork ? null : account,
-        pool.poolAddress
-      )
 
       const balance = await clr.contract.getStakedTokenBalance()
 
