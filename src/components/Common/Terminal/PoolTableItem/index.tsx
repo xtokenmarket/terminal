@@ -13,7 +13,8 @@ import { parseDuration, ZERO } from 'utils/number'
 import moment from 'moment'
 import { NavLink } from 'react-router-dom'
 import { Network, NetworkIcon } from 'utils/enums'
-import { DEFAULT_NETWORK } from 'config/constants'
+import { DEFAULT_NETWORK, ETHER_DECIMAL } from 'config/constants'
+import { ITerminalPool } from 'types'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -107,7 +108,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  pool: any
+  pool: ITerminalPool
   className?: string
 }
 
@@ -116,7 +117,7 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
 
   const { loading, pool: poolData } = useTerminalPool(
     pool,
-    pool.poolAddress,
+    pool.address,
     pool.network as Network
   )
 
@@ -175,7 +176,7 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
         <PoolTd type="tvl">
           <div className={cl.itemAlignRight}>
             <Typography className={cl.label}>{`$${numberWithCommas(
-              poolData.tvl
+              formatBigNumber(poolData.tvl, ETHER_DECIMAL)
             )}`}</Typography>
           </div>
         </PoolTd>

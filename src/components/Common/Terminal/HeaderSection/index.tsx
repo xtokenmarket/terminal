@@ -9,6 +9,8 @@ import AddIcon from '@material-ui/icons/Add'
 import SearchIcon from '@material-ui/icons/Search'
 import { useConnectedWeb3Context } from 'contexts'
 import { NavLink } from 'react-router-dom'
+import React, { useCallback } from 'react'
+import _ from 'lodash'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -60,14 +62,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export const HeaderSection: React.FC = () => {
+interface IProps {
+  onSearch: (value: string) => void
+}
+
+export const HeaderSection: React.FC<IProps> = ({ onSearch }) => {
   const cl = useStyles()
   const { account } = useConnectedWeb3Context()
   const isConnected = !!account
 
+  const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChangeDebounced(e.target.value)
+  }
+
+  const onChangeDebounced = useCallback(
+    _.debounce((value: string) => {
+      onSearch(value)
+    }, 1000),
+    []
+  )
+
   return (
     <div className={cl.root}>
-      {/*<TextField
+      <TextField
         className={cl.input}
         InputProps={{
           disableUnderline: true,
@@ -77,10 +94,11 @@ export const HeaderSection: React.FC = () => {
             </InputAdornment>
           ),
         }}
+        onChange={onChangeInput}
         variant="standard"
         color="primary"
         placeholder="Search by token name, symbol, or address"
-      />*/}
+      />
       <div className={cl.bottomSection}>
         {/*<FormControlLabel
           className={cl.checkLabel}

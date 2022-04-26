@@ -23,17 +23,23 @@ export const useTerminalPools = () => {
     setState((prev) => ({ ...prev, isLoading: true }))
 
     try {
-      const { data: pools } = await axios.get<ITerminalPool[]>(
+      const { data: pools } = await axios.get<any[]>(
         `${TERMINAL_API_URL}/pools`
       )
-      const filteredPools = isTestnet(chainId)
+
+      // Filter testnet pools on production and parse API data
+      let filteredPools = isTestnet(chainId)
         ? pools.filter((pool) => testNetworks.includes(pool.network as Network))
         : pools.filter(
             (pool) => !testNetworks.includes(pool.network as Network)
           )
+      filteredPools = filteredPools.map(
+        ({ poolAddress: address, ...pool }) => ({ address, ...pool })
+      )
+
       setState((prev) => ({
         ...prev,
-        pools: filteredPools,
+        pools: filteredPools as ITerminalPool[],
         isLoading: false,
       }))
     } catch (error) {

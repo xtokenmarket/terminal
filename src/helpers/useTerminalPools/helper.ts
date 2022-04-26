@@ -25,14 +25,15 @@ query {
       manager {
         id
       }
-      rewardTokens {
-        id
-        symbol
-        name
-        decimals
+      rewards {
+        token {
+          id
+          name
+          symbol
+          decimals
+        }
+        amount
       }
-      rewardAmounts
-      rewardAmountsPerWeek
       rewardsAreEscrowed
       rewardDuration
       tokenId
@@ -57,14 +58,14 @@ export const parsePools = (data: any, network: Network) => {
   return data.errors
     ? []
     : data.pools.map((pool: any) => ({
-        poolAddress: getAddress(pool.id),
+        address: getAddress(pool.id),
         network,
         manager: pool.manager ? getAddress(pool.manager.id) : AddressZero,
         owner: pool.owner ? getAddress(pool.owner.id) : AddressZero,
         periodFinish: pool.periodFinish || '0',
         poolFee: pool.poolFee.toString(),
         rewardProgramDuration: pool.rewardDuration,
-        rewardTokens: pool.rewardTokens.map((token: any) =>
+        rewardTokens: pool.rewards.map(({ token }: any) =>
           _parseTokenDetails(token)
         ),
         rewardsAreEscrowed: pool.rewardsAreEscrowed,
@@ -76,8 +77,9 @@ export const parsePools = (data: any, network: Network) => {
           tick0: pool.ticks[0],
           tick1: pool.ticks[1],
         },
-        totalRewardAmounts: pool.rewardAmounts || [],
+        totalRewardAmounts: pool.rewards.map(({ amount }: any) => amount) || [],
         tradeFee: pool.tradeFee,
+        tvl: '0',
         uniswapPool: pool.uniswapPool
           ? getAddress(pool.uniswapPool.id)
           : AddressZero,

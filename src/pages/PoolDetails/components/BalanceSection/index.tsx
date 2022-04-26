@@ -106,7 +106,9 @@ export const BalanceSection = (props: IProps) => {
           <Typography className={classes.dollar}>
             ~ $
             {numberWithCommas(
-              isDeposit ? tokenTvl || '0' : (token.tvl as string)
+              isDeposit
+                ? tokenTvl || '0'
+                : formatBigNumber(token.tvl as string, ETHER_DECIMAL)
             )}
           </Typography>
         </div>

@@ -78,6 +78,7 @@ const useStyles = makeStyles((theme) => ({
   },
   logo: {
     marginRight: theme.spacing(2),
+    width: 32,
   },
   amount: {
     color: theme.colors.white,

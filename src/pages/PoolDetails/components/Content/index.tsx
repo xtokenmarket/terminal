@@ -4,7 +4,6 @@ import {
   makeStyles,
   Tooltip,
   Typography,
-  ButtonBase,
 } from '@material-ui/core'
 import TouchRipple from '@material-ui/core/ButtonBase/TouchRipple'
 import { useConnectedWeb3Context } from 'contexts'
@@ -33,6 +32,7 @@ import {
 import { RewardVestSection } from '../RewardVestSection'
 import { VestAllModal } from '../VestAllModal'
 import { PoolShareSection } from '../PoolShareSection'
+import { ETHER_DECIMAL } from 'config/constants'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -494,7 +494,9 @@ export const Content = (props: IProps) => {
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
               <InfoSection
                 label="TVL"
-                value={`$${numberWithCommas(poolData.tvl)}`}
+                value={`$${numberWithCommas(
+                  formatBigNumber(poolData.tvl, ETHER_DECIMAL)
+                )}`}
               />
             </Grid>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>

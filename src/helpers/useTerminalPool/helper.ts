@@ -89,10 +89,10 @@ export const getPoolDataMulticall = async (
       requireSuccess: false,
     })
     return {
+      address: poolAddress,
       manager,
       owner,
       periodFinish: periodFinish.toString(),
-      poolAddress,
       poolFee,
       rewardsAreEscrowed,
       rewardProgramDuration: rewardsDuration.toString(),
@@ -143,12 +143,14 @@ query ($poolAddress: String!, $userAddress: String!) {
   }
   rewardInitiations(where: { pool: $poolAddress, user: $userAddress }) {
     id
-    amounts
     duration
-    timestamp
-    tokens {
-      id
+    rewards {
+      token {
+        id
+      }
+      amount
     }
+    timestamp
   }
   vests(where: { pool: $poolAddress, beneficiary: $userAddress }) {
     id
@@ -208,6 +210,18 @@ const _parseEventHistory = (data: any, action: string, rewardTokens: any) => {
       token.address.toLowerCase() === data?.token?.id?.toLowerCase()
   )
 
+  // Sort `rewards` in the order of `rewardTokens` for `InitiatedRewards` event
+  if (action === MINING_EVENTS.InitiatedRewardsProgram) {
+    const rewardTokensOrder = rewardTokens.map((t: IToken) =>
+      t.address.toLowerCase()
+    )
+    data.rewards = data.rewards.sort(
+      (a: any, b: any) =>
+        rewardTokensOrder.indexOf(a.token.id.toLowerCase()) -
+        rewardTokensOrder.indexOf(b.token.id.toLowerCase())
+    )
+  }
+
   return {
     action,
     amount0: data.token0Fee
@@ -231,7 +245,7 @@ const _parseEventHistory = (data: any, action: string, rewardTokens: any) => {
     timestamp: data.timestamp,
     totalRewardAmounts:
       action === MINING_EVENTS.InitiatedRewardsProgram
-        ? data.amounts.map((amount: string) => BigNumber.from(amount))
+        ? data.rewards.map(({ amount }: any) => BigNumber.from(amount))
         : [],
     rewardTokens,
   }

@@ -6,6 +6,7 @@ import { useConnectedWeb3Context } from 'contexts'
 import { useNetworkContext } from 'contexts/networkContext'
 import { IS_PROD } from 'config/constants'
 import { isTestnet } from 'utils/network'
+import { useState } from 'react'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,15 +38,15 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const MyPools = () => {
+  const [search, setSearch] = useState('')
   const { pools, loading } = useMyTerminalPools()
+  const { account, setWalletConnectModalOpened } = useConnectedWeb3Context()
+  const { chainId } = useNetworkContext()
   const history = useHistory()
   const classes = useStyles()
+
   const isLoading = loading && pools.length === 0
-
-  const { account, setWalletConnectModalOpened } = useConnectedWeb3Context()
   const isConnected = !!account
-
-  const { chainId } = useNetworkContext()
   const isProdTestNet = IS_PROD && isTestnet(chainId)
 
   const onCreatePool = () => {
@@ -116,13 +117,13 @@ const MyPools = () => {
         <>
           {isConnected ? (
             <>
-              <HeaderSection />
+              <HeaderSection onSearch={setSearch} />
               {isLoading ? (
                 <SimpleLoader />
               ) : pools.length === 0 ? (
                 <NoPools />
               ) : (
-                <PoolTable pools={pools} />
+                <PoolTable pools={pools} search={search} />
               )}
             </>
           ) : (
