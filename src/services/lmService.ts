@@ -487,7 +487,7 @@ class LMService {
     const { logs } = await this.contract.provider.getTransactionReceipt(txId)
 
     const filteredLogs = logs.filter(
-      (log) => log.address === this.contract.address
+      (log) => log.address.toLowerCase() === this.contract.address.toLowerCase()
     )
 
     const uniPositionInterface = new Interface(Abi.LMTerminal)
