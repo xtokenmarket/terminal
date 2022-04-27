@@ -211,3 +211,16 @@ export interface ITokenOffer {
   vestingPeriod: BigNumber
   cliffPeriod: BigNumber
 }
+
+export interface IOfferingOverview {
+  label: string
+  offerToken: IToken
+  purchaseToken: IToken
+  offeringStatus: string
+  offeringReserve: string
+  vestingPeriod: string
+  cliffPeriod: string
+  salesBegin: string
+  salesEnd: string
+  salesPeriod: string
+}

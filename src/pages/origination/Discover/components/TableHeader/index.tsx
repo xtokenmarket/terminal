@@ -1,6 +1,7 @@
 import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core'
 import { OfferingTd } from '../table'
+import { OriginationLabels } from 'utils/enums'
 
 const useStyles = makeStyles((theme) => ({
   root: {
