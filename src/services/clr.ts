@@ -2,6 +2,7 @@ import { BigNumber, Contract, Wallet, ethers } from 'ethers'
 import { Maybe } from 'types'
 import Abi from 'abis'
 import { Interface } from '@ethersproject/abi'
+import { getContractAddress } from 'config/networks'
 
 const xAssetCLRAbi = Abi.xAssetCLR
 
@@ -38,10 +39,7 @@ class CLRService {
     return this.contract.getLiquidityForAmounts(amount0, amount1)
   }
 
-  deposit = async (
-    inputAsset: number,
-    amount: BigNumber
-  ) => {
+  deposit = async (inputAsset: number, amount: BigNumber) => {
     return this.contract.deposit(inputAsset, amount)
   }
 
@@ -94,9 +92,19 @@ class CLRService {
     liquidity: BigNumber
   } | null> => {
     const { logs } = await this.contract.provider.getTransactionReceipt(txId)
+
+    const address = getContractAddress(
+      'uniPositionManager',
+      this.provider.networkId
+    )
+
+    const filteredLogs = logs.filter(
+      (log) => log.address.toLowerCase() === address.toLowerCase()
+    )
+
     const uniPositionInterface = new Interface(Abi.UniswapV3Position)
-    for (let index = 0; index < logs.length; index++) {
-      const log = logs[index]
+    for (let index = 0; index < filteredLogs.length; index++) {
+      const log = filteredLogs[index]
       try {
         const parsed = uniPositionInterface.parseLog(log)
         if (parsed.name === 'IncreaseLiquidity') {
@@ -113,25 +121,17 @@ class CLRService {
     return null
   }
 
-  withdrawAndClaimReward = async (
-    amount: BigNumber
-  ): Promise<string> => {
-    
-    
-    const transactionObject = await this.contract.withdrawAndClaimReward(
-      amount
+  withdrawAndClaimReward = async (amount: BigNumber): Promise<string> => {
+    const transactionObject = await this.contract.withdrawAndClaimReward(amount)
+    console.log(
+      `withdrawAndClaimReward transaction hash: ${transactionObject.hash}`
     )
-    console.log(`withdrawAndClaimReward transaction hash: ${transactionObject.hash}`)
 
     return transactionObject.hash
   }
 
-  withdraw = async (
-    amount: BigNumber
-  ): Promise<string> => {
-    const transactionObject = await this.contract.withdraw(
-      amount
-    )
+  withdraw = async (amount: BigNumber): Promise<string> => {
+    const transactionObject = await this.contract.withdraw(amount)
     console.log(`withdraw transaction hash: ${transactionObject.hash}`)
 
     return transactionObject.hash
@@ -145,9 +145,19 @@ class CLRService {
     liquidity: BigNumber
   } | null> => {
     const { logs } = await this.contract.provider.getTransactionReceipt(txId)
+
+    const address = getContractAddress(
+      'uniPositionManager',
+      this.provider.networkId
+    )
+
+    const filteredLogs = logs.filter(
+      (log) => log.address.toLowerCase() === address.toLowerCase()
+    )
+
     const uniPositionInterface = new Interface(Abi.UniswapV3Position)
-    for (let index = 0; index < logs.length; index++) {
-      const log = logs[index]
+    for (let index = 0; index < filteredLogs.length; index++) {
+      const log = filteredLogs[index]
       try {
         const parsed = uniPositionInterface.parseLog(log)
         if (parsed.name === 'DecreaseLiquidity') {
@@ -173,9 +183,14 @@ class CLRService {
       [key: string]: BigNumber
     } = {}
     const { logs } = await this.contract.provider.getTransactionReceipt(txId)
+
+    const filteredLogs = logs.filter(
+      (log) => log.address.toLowerCase() === this.contract.address.toLowerCase()
+    )
+
     const uniPositionInterface = new Interface(Abi.xAssetCLR)
-    for (let index = 0; index < logs.length; index++) {
-      const log = logs[index]
+    for (let index = 0; index < filteredLogs.length; index++) {
+      const log = filteredLogs[index]
       try {
         const parsed = uniPositionInterface.parseLog(log)
         if (parsed.name === 'RewardClaimed') {
@@ -257,33 +272,27 @@ class CLRService {
 
   earned = async (
     account: Maybe<string>,
-    tokenAddress: string,
+    tokenAddress: string
   ): Promise<BigNumber> => {
     return this.contract.earned(account, tokenAddress)
   }
 
-  reinvest = async (
-  ): Promise<string> => {
+  reinvest = async (): Promise<string> => {
     const transactionObject = await this.contract.collectAndReinvest()
     console.log(`reinvest transaction hash: ${transactionObject.hash}`)
 
     return transactionObject.hash
   }
 
-  waitUntilReinvest = async (
-    txId: string
-  ): Promise<string> => {
+  waitUntilReinvest = async (txId: string): Promise<string> => {
     let resolved = false
     return new Promise((resolve) => {
-      this.contract.on(
-        'Reinvest',
-        (...rest) => {
-          if (!resolved) {
-            resolved = true
-            resolve(rest[0].transactionHash)
-          }
+      this.contract.on('Reinvest', (...rest) => {
+        if (!resolved) {
+          resolved = true
+          resolve(rest[0].transactionHash)
         }
-      )
+      })
 
       this.contract.provider.waitForTransaction(txId).then(() => {
         if (!resolved) {
