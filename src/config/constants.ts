@@ -182,7 +182,7 @@ export const FEE_TIERS = [
   },
   {
     value: BigNumber.from(3000),
-    label: 'Best for most pairs',
+    label: 'Best for many pairs',
   },
   {
     value: BigNumber.from(10000),
