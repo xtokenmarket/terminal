@@ -116,7 +116,7 @@ export const RewardsStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
   const [isRewardsModalVisible, setIsRewardsModalVisible] = useState(false)
 
   const feeLabel = FEE_TIERS.find((fee) => fee.value.eq(data.tier))?.label
-  const priceLabel = `${data.token0.symbol.toUpperCase()} per ${data.token1.symbol.toUpperCase()}`
+  const priceLabel = `${data.token1.symbol.toUpperCase()} per ${data.token0.symbol.toUpperCase()}`
   const feeTip = FEE_TIPS[chainId]
 
   const toggleCreateModal = () =>
