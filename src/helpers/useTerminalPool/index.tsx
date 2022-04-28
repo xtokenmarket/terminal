@@ -271,11 +271,6 @@ export const useTerminalPool = (
 
         earnedTokens = await Promise.all(
           pool.rewardTokens.map(async (token: IToken) => {
-            const clr = new CLRService(
-              readonlyProvider,
-              account,
-              poolAddress as string
-            )
             const amount = await clr.earned(account, token.address)
             return {
               ...token,
