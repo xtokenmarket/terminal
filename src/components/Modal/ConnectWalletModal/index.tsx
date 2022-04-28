@@ -115,6 +115,7 @@ export const ConnectWalletModal = (props: IProps) => {
       ) {
         currentConnector.walletConnectProvider = undefined
       }
+
       try {
         if (window.ethereum) {
           const chainId = await window.ethereum.request({
@@ -206,7 +207,6 @@ export const ConnectWalletModal = (props: IProps) => {
                   text="Metamask"
                 />
                 <ConnectWalletItem
-                  disabled={disableMetamask}
                   icon={WALLET_ICONS[ConnectorNames.TrustWallet]}
                   onClick={() => {
                     onClick(ConnectorNames.TrustWallet)
@@ -214,7 +214,6 @@ export const ConnectWalletModal = (props: IProps) => {
                   text="Trust Wallet"
                 />
                 <ConnectWalletItem
-                  disabled={disableMetamask}
                   icon={WALLET_ICONS[ConnectorNames.WalletConnect]}
                   onClick={() => {
                     onClick(ConnectorNames.WalletConnect)
@@ -222,7 +221,6 @@ export const ConnectWalletModal = (props: IProps) => {
                   text="Wallet Connect"
                 />
                 <ConnectWalletItem
-                  disabled={disableMetamask}
                   icon={WALLET_ICONS[ConnectorNames.Coinbase]}
                   onClick={() => {
                     onClick(ConnectorNames.Coinbase)
