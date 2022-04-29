@@ -100,7 +100,6 @@ export const ConnectWalletModal = (props: IProps) => {
   }
 
   const isMetamaskEnabled = 'ethereum' in window || 'web3' in window
-  const isTrustWalletEnabled = isMetamaskEnabled && window.ethereum.isTrust
 
   const onClick = async (wallet: ConnectorNames) => {
     const currentConnector = connectors[wallet]
@@ -123,14 +122,6 @@ export const ConnectWalletModal = (props: IProps) => {
           })
 
           if (!supportedNetworkIds.includes(Number(chainId) as any)) {
-            if (isTrustWalletEnabled) {
-              enqueueSnackbar('Please switch to Binance Network', {
-                variant: 'error',
-              })
-              onClose()
-              return
-            }
-
             try {
               await window.ethereum.request({
                 method: 'wallet_switchEthereumChain',
@@ -205,13 +196,6 @@ export const ConnectWalletModal = (props: IProps) => {
                     onClick(ConnectorNames.Injected)
                   }}
                   text="Metamask"
-                />
-                <ConnectWalletItem
-                  icon={WALLET_ICONS[ConnectorNames.TrustWallet]}
-                  onClick={() => {
-                    onClick(ConnectorNames.TrustWallet)
-                  }}
-                  text="Trust Wallet"
                 />
                 <ConnectWalletItem
                   icon={WALLET_ICONS[ConnectorNames.WalletConnect]}
