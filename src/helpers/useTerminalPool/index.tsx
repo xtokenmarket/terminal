@@ -4,7 +4,6 @@ import {
   ChainId,
   ETHER_DECIMAL,
   GRAPHQL_URLS,
-  POLL_API_DATA,
   TERMINAL_API_URL,
 } from 'config/constants'
 import {
@@ -120,10 +119,8 @@ export const useTerminalPool = (
       let { token0, token1, stakedToken } = pool
       let tvl = pool.tvl
 
-      const balance = await clr.contract.getStakedTokenBalance()
-
-      const token0Balance = balance.amount0
-      const token1Balance = balance.amount1
+      const { amount0: token0Balance, amount1: token1Balance } =
+        await clr.contract.getStakedTokenBalance()
 
       // Fetch token details and relevant data, if API fails
       if (!pool.token0.price || !pool.token1.price) {
@@ -428,11 +425,11 @@ export const useTerminalPool = (
 
   useEffect(() => {
     loadInfo()
-    const interval = setInterval(() => loadInfo(true), POLL_API_DATA)
+    // const interval = setInterval(() => loadInfo(true), POLL_API_DATA)
 
-    return () => {
-      clearInterval(interval)
-    }
+    // return () => {
+    //   clearInterval(interval)
+    // }
   }, [networkId, pool, poolAddress, account])
 
   return { ...state, loadInfo }
