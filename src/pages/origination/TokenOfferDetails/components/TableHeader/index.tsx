@@ -2,6 +2,7 @@ import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core'
 import { Td } from '../Td'
 import {
+  MyPosition,
   OfferingOverview,
   OriginationLabels,
   PublicSale,
@@ -112,6 +113,25 @@ export const TableHeader = (props: IProps) => {
         </Td>
         <Td type={PublicSale.SalesPeriod} label={props.label}>
           <div className={classes.item}>Sales Period</div>
+        </Td>
+      </div>
+    )
+  }
+
+  if (props.label === OriginationLabels.MyPosition) {
+    return (
+      <div className={classes.root}>
+        <Td type={MyPosition.TokenPurchased} label={props.label}>
+          <div className={classes.item}>Token Purchased</div>
+        </Td>
+        <Td type={MyPosition.AmountInvested} label={props.label}>
+          <div className={classes.item}>Amount Invested</div>
+        </Td>
+        <Td type={MyPosition.Amountvested} label={props.label}>
+          <div className={classes.item}>Amount Vested</div>
+        </Td>
+        <Td type={MyPosition.AmountAvailableToVest} label={props.label}>
+          <div className={classes.item}>Amount Available To Vest</div>
         </Td>
       </div>
     )

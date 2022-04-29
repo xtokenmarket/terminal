@@ -213,7 +213,7 @@ export interface ITokenOffer {
 }
 
 interface Label {
-  label: string
+  label: OriginationLabels
 }
 
 export interface IOfferingOverview extends Label {
@@ -246,7 +246,15 @@ export interface IPublicSale extends Label {
   salesPeriod: string
 }
 
+export interface IMyPosition extends Label {
+  tokenPurchased: string
+  amountInvested: string
+  amountvested: string
+  amountAvailableToVest: string
+}
+
 export type OriginationDetailItem =
   | IOfferingOverview
   | IWhitelistSale
   | IPublicSale
+  | IMyPosition

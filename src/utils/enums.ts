@@ -224,8 +224,8 @@ export enum PublicSale {
 }
 
 export enum MyPosition {
-  TokenPurchased = 'TokenPurchased',
-  AmountInvested = 'AmountInvested',
-  Amountvested = 'Amountvested',
-  AmountAvailableToVest = 'AmountAvailableToVest',
+  TokenPurchased = 'tokenPurchased',
+  AmountInvested = 'amountInvested',
+  Amountvested = 'amountvested',
+  AmountAvailableToVest = 'amountAvailableToVest',
 }

@@ -54,6 +54,14 @@ const PublicSale = {
   salesPeriod: '1 Week',
 }
 
+const MyPosition = {
+  label: OriginationLabels.MyPosition,
+  tokenPurchased: '912 XTK',
+  amountInvested: '1,219 USDC',
+  amountvested: '0 XTK',
+  amountAvailableToVest: '0 XTK button',
+}
+
 const TokenSaleDetails = () => {
   const history = useHistory()
   const { poolAddress } = useParams<RouteParams>()
@@ -74,6 +82,7 @@ const TokenSaleDetails = () => {
             <Table item={OfferingOverview} label={'Offering Overview'} />
             <Table item={WhitelistSale} label={'Whitelist Sale'} />
             <Table item={PublicSale} label={'Public Sale'} />
+            <Table item={MyPosition} label={'My Position'} />
           </div>
         )}
       </PageContent>

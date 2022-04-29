@@ -49,10 +49,10 @@ const useStyles = makeStyles(() => ({
     },
   },
   myPosition: {
-    '&.TokenPurchased': { width: '14%' },
-    '&.AmountInvested': { width: '14%' },
-    '&.Amountvested': { width: '14%' },
-    '&.AmountAvailableToVest': { width: '14%' },
+    '&.tokenPurchased': { width: '14%' },
+    '&.amountInvested': { width: '14%' },
+    '&.amountvested': { width: '14%' },
+    '&.amountAvailableToVest': { width: '14%' },
     '&+&': { paddingLeft: 16 },
     '&:last-child': {
       textAlign: 'right',
