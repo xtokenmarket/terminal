@@ -16,7 +16,7 @@ const useStyles = makeStyles(() => ({
     '&.offeringReserve': { width: '10%' },
     '&.vestingPeriod': { width: '10%' },
     '&.cliffPeriod': { width: '10%' },
-    '&.salesBegin': { width: '10%' },
+    '&.salesBegin': { width: '15%' },
     '&.salesEnd': { width: '10%' },
     '&.salesPeriod': { width: '10%' },
     '&+&': { paddingLeft: 16 },

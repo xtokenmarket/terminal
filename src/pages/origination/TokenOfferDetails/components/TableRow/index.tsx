@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { makeStyles, Typography } from '@material-ui/core'
+import { Button, makeStyles, Typography } from '@material-ui/core'
 import { Td } from '../Td'
 import {
   MyPosition,
@@ -12,7 +12,6 @@ import {
   IMyPosition,
   IOfferingOverview,
   IPublicSale,
-  IToken,
   IWhitelistSale,
 } from 'types'
 
@@ -29,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '20px 0',
   },
   content: {
+    border: `1px solid ${theme.colors.primary200}`,
     cursor: 'pointer',
     padding: 16,
     display: 'flex',
@@ -80,6 +80,21 @@ const useStyles = makeStyles((theme) => ({
     textTransform: 'capitalize',
     fontWeight: 800,
     marginLeft: theme.spacing(2),
+  },
+  button: {
+    height: 33,
+    '&:hover': {
+      opacity: 0.7,
+      backgroundColor: theme.colors.secondary,
+    },
+    padding: '8px 15px',
+    backgroundColor: theme.colors.secondary,
+    borderRadius: 4,
+  },
+  text: {
+    color: theme.colors.primary700,
+    fontSize: 14,
+    fontWeight: 600,
   },
 }))
 
@@ -145,7 +160,18 @@ export const TableRow = ({ item }: IProps) => {
           </Td>
           <Td type={OfferingOverview.SalesBegin} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.salesBegin}
+              {item.salesBegin === 'INITIATE SALE' ? (
+                <Button
+                  className={cl.button}
+                  onClick={() => {
+                    console.log('onClick')
+                  }}
+                >
+                  <Typography className={cl.text}>SET WHITELIST</Typography>
+                </Button>
+              ) : (
+                item.salesBegin
+              )}
             </Typography>
           </Td>
           <Td type={OfferingOverview.SalesEnd} label={item.label}>
@@ -166,49 +192,56 @@ export const TableRow = ({ item }: IProps) => {
       item = whitelistSale
 
       return (
-        <div className={cl.content}>
-          <Td type={WhitelistSale.CurrentPrice} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label)}>
-              {item.currentPrice}
-            </Typography>
-          </Td>
+        <>
+          <div className={cl.content}>
+            <Td type={WhitelistSale.CurrentPrice} label={item.label}>
+              <Typography className={clsx(cl.item, cl.label)}>
+                {item.currentPrice}
+              </Typography>
+            </Td>
 
-          <Td type={WhitelistSale.PricingFormular} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label)}>
-              {item.pricingFormular}
-            </Typography>
-          </Td>
+            <Td type={WhitelistSale.PricingFormular} label={item.label}>
+              <Typography className={clsx(cl.item, cl.label)}>
+                {item.pricingFormular}
+              </Typography>
+            </Td>
 
-          <Td type={WhitelistSale.StartingEndingPrice} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label)}>
-              {item.startingEndingPrice}
-            </Typography>
-          </Td>
+            <Td type={WhitelistSale.StartingEndingPrice} label={item.label}>
+              <Typography className={clsx(cl.item, cl.label)}>
+                {item.startingEndingPrice}
+              </Typography>
+            </Td>
 
-          <Td type={WhitelistSale.Whitelist} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label)}>
-              {item.whitelist}
-            </Typography>
-          </Td>
+            <Td type={WhitelistSale.Whitelist} label={item.label}>
+              <Button
+                className={cl.button}
+                onClick={() => {
+                  console.log('onClick')
+                }}
+              >
+                <Typography className={cl.text}>SET WHITELIST</Typography>
+              </Button>
+            </Td>
 
-          <Td type={WhitelistSale.AddressCap} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label)}>
-              {item.addressCap}
-            </Typography>
-          </Td>
+            <Td type={WhitelistSale.AddressCap} label={item.label}>
+              <Typography className={clsx(cl.item, cl.label)}>
+                {item.addressCap}
+              </Typography>
+            </Td>
 
-          <Td type={WhitelistSale.TimeRemaining} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label)}>
-              {item.timeRemaining}
-            </Typography>
-          </Td>
+            <Td type={WhitelistSale.TimeRemaining} label={item.label}>
+              <Typography className={clsx(cl.item, cl.label)}>
+                {item.timeRemaining}
+              </Typography>
+            </Td>
 
-          <Td type={WhitelistSale.SalesPeriod} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label)}>
-              {item.salesPeriod}
-            </Typography>
-          </Td>
-        </div>
+            <Td type={WhitelistSale.SalesPeriod} label={item.label}>
+              <Typography className={clsx(cl.item, cl.label)}>
+                {item.salesPeriod}
+              </Typography>
+            </Td>
+          </div>
+        </>
       )
     }
 
