@@ -118,10 +118,12 @@ export const Header = () => {
         </span>
       </div>
       <div className={classes.right}>
-        <NetworkSelector
-          className={classes.networkWrapper}
-          network={ENetwork.Ethereum}
-        />
+        {account && (
+          <NetworkSelector
+            className={classes.networkWrapper}
+            network={ENetwork.Ethereum}
+          />
+        )}
         <Button
           className={classes.connect}
           color="primary"

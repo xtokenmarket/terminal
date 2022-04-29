@@ -119,7 +119,7 @@ export const RewardVestSection: React.FC<IProps> = ({
   if (pool) {
     const hasNoVisibleVesting =
       !pool.vestingTokens ||
-      pool.vestingTokens.every((token) => token.amount.isZero)
+      pool.vestingTokens.every((token) => token.amount.isZero())
     const hasNoVisibleRewards =
       !pool.earnedTokens ||
       pool.earnedTokens.every((token) => token.amount.isZero())

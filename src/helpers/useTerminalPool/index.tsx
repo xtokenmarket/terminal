@@ -4,7 +4,6 @@ import {
   ChainId,
   ETHER_DECIMAL,
   GRAPHQL_URLS,
-  POLL_API_DATA,
   TERMINAL_API_URL,
 } from 'config/constants'
 import {
@@ -24,11 +23,7 @@ import { useEffect, useState } from 'react'
 import { CLRService, ERC20Service } from 'services'
 import { History, ITerminalPool, IToken } from 'types'
 import { BigNumber } from '@ethersproject/bignumber'
-import {
-  formatBigNumber,
-  getCurrentTimeStamp,
-  getTimeRemainingUnits,
-} from 'utils'
+import { getCurrentTimeStamp, getTimeRemainingUnits } from 'utils'
 import { ERewardStep, Network } from 'utils/enums'
 import { getIdFromNetwork, isTestnet } from 'utils/network'
 import { formatDuration, ONE_ETHER, ZERO } from 'utils/number'
@@ -91,6 +86,7 @@ export const useTerminalPool = (
     if (!pool && !poolAddress) return
 
     setState((prev) => ({ ...prev, loading: true }))
+    // console.time(`loadInfo token details ${poolAddress}`)
 
     if ((!pool && poolAddress) || isReloadPool) {
       try {
@@ -106,13 +102,12 @@ export const useTerminalPool = (
         ).data
 
         // Get `owner` and `manager` address off of contract
-        const [owner, manager] = await Promise.all([
+        /*const [owner, manager] = await Promise.all([
           clr.contract.owner(),
           clr.contract.manager(),
         ])
-
         pool.owner = owner
-        pool.manager = manager
+        pool.manager = manager*/
       } catch (e) {
         console.error('Error fetching pool details', e)
         // Fallback in case API doesn't return pool details
@@ -121,14 +116,11 @@ export const useTerminalPool = (
     }
 
     try {
-      // console.time(`loadInfo token details ${pool.poolAddress}`)
       let { token0, token1, stakedToken } = pool
-      let tvl = '0'
+      let tvl = pool.tvl
 
-      const balance = await clr.contract.getStakedTokenBalance()
-
-      const token0Balance = balance.amount0
-      const token1Balance = balance.amount1
+      const { amount0: token0Balance, amount1: token1Balance } =
+        await clr.contract.getStakedTokenBalance()
 
       // Fetch token details and relevant data, if API fails
       if (!pool.token0.price || !pool.token1.price) {
@@ -154,10 +146,9 @@ export const useTerminalPool = (
           .mul(parseEther(pool.token1.price))
           .div(ONE_ETHER)
 
-        token0.tvl = formatBigNumber(token0tvl, ETHER_DECIMAL)
-        token1.tvl = formatBigNumber(token1tvl, ETHER_DECIMAL)
-
-        tvl = (Number(token0.tvl) + Number(token1.tvl)).toString()
+        token0.tvl = token0tvl.toString()
+        token1.tvl = token1tvl.toString()
+        tvl = token0tvl.add(token1tvl).toString()
 
         const token0Percent =
           Number(tvl) === 0 ? 0 : (Number(token0.tvl) / Number(tvl)) * 100
@@ -187,14 +178,9 @@ export const useTerminalPool = (
         token0.price = token0.price.toString()
         token1.price = token1.price.toString()
 
-        token0.percent = token0.percent.toString()
-        token1.percent = token1.percent.toString()
-
-        token0.tvl = formatBigNumber(token0.tvl, ETHER_DECIMAL)
-        token1.tvl = formatBigNumber(token1.tvl, ETHER_DECIMAL)
-        tvl = formatBigNumber(pool.tvl, 18)
+        token0.percent = token0.percent ? token0.percent.toString() : '0'
+        token1.percent = token1.percent ? token1.percent.toString() : '0'
       }
-      // console.timeEnd(`loadInfo token details ${poolAddress}`)
 
       // Set staked balances
       token0.balance = token0Balance
@@ -202,10 +188,9 @@ export const useTerminalPool = (
 
       if (pool.vestingPeriod == null) {
         pool.vestingPeriod = (
-          await rewardEscrow.clrPoolVestingPeriod(pool.poolAddress)
+          await rewardEscrow.clrPoolVestingPeriod(poolAddress as string)
         ).toString()
       }
-      // console.timeEnd(`loadInfo vesting period ${poolAddress}`)
 
       if (pool.rewardTokens.length !== 0 && !pool.rewardTokens[0].price) {
         pool.rewardTokens = (await Promise.all(
@@ -218,7 +203,7 @@ export const useTerminalPool = (
       if (pool.totalRewardAmounts == null) {
         const rewardCalls = pool.rewardTokens.map((token: IToken) => ({
           name: 'rewardInfo',
-          address: pool.poolAddress,
+          address: poolAddress as string,
           params: [token.address],
         }))
         const rewardsResponse = await multicall.multicallv2(
@@ -258,7 +243,7 @@ export const useTerminalPool = (
         try {
           const graphqlUrl = GRAPHQL_URLS[network as Network]
           const eventVariables = {
-            poolAddress: pool.poolAddress.toLowerCase(),
+            poolAddress: (poolAddress as string).toLowerCase(),
             userAddress: account.toLowerCase(),
           }
 
@@ -283,11 +268,6 @@ export const useTerminalPool = (
 
         earnedTokens = await Promise.all(
           pool.rewardTokens.map(async (token: IToken) => {
-            const clr = new CLRService(
-              readonlyProvider,
-              account,
-              pool.poolAddress
-            )
             const amount = await clr.earned(account, token.address)
             return {
               ...token,
@@ -401,7 +381,7 @@ export const useTerminalPool = (
       setState({
         loading: false,
         pool: {
-          address: pool.poolAddress,
+          address: poolAddress as string,
           apr: apr.toString(),
           manager: pool.manager.toLowerCase(),
           network: pool.network || network,
@@ -439,16 +419,17 @@ export const useTerminalPool = (
       console.error(error)
       setState(() => ({ loading: false }))
     }
-    // console.timeEnd(`loadInfo ${poolAddress}`)
+
+    // console.timeEnd(`loadInfo token details ${poolAddress}`)
   }
 
   useEffect(() => {
     loadInfo()
-    const interval = setInterval(() => loadInfo(true), POLL_API_DATA)
+    // const interval = setInterval(() => loadInfo(true), POLL_API_DATA)
 
-    return () => {
-      clearInterval(interval)
-    }
+    // return () => {
+    //   clearInterval(interval)
+    // }
   }, [networkId, pool, poolAddress, account])
 
   return { ...state, loadInfo }

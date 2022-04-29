@@ -3,10 +3,11 @@ import { useConnectedWeb3Context } from 'contexts'
 import { useEffect, useState } from 'react'
 import { waitSeconds } from 'utils'
 import { TERMINAL_API_URL } from 'config/constants'
+import { ITerminalPool } from 'types'
 
 interface IState {
   loading: boolean
-  pools: any[]
+  pools: ITerminalPool[]
 }
 
 export const useMyTerminalPools = () => {
@@ -17,14 +18,21 @@ export const useMyTerminalPools = () => {
     setState((prev) => ({ ...prev, loading: true }))
     try {
       await waitSeconds(1)
+
       if (account) {
-        const userPools = await axios.get(
-          `${TERMINAL_API_URL}/pools?userAddress=${account}`
-        )
+        let userPools = (
+          await axios.get<any[]>(
+            `${TERMINAL_API_URL}/pools?userAddress=${account}`
+          )
+        ).data
+        userPools = userPools.map(({ poolAddress: address, ...pool }) => ({
+          address,
+          ...pool,
+        }))
 
         setState((prev) => ({
           ...prev,
-          pools: userPools.data,
+          pools: userPools as ITerminalPool[],
           loading: false,
         }))
       } else {

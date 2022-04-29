@@ -1,5 +1,5 @@
 import { INSUFFICIENT_FUNDS_ERROR } from 'config/constants'
-import { BigNumber, utils } from 'ethers'
+import { BigNumber, BigNumberish, utils } from 'ethers'
 import moment from 'moment'
 
 const { formatUnits } = utils
@@ -9,7 +9,7 @@ export const shortenAddress = (address: string) => {
 }
 
 export const formatBigNumber = (
-  value: BigNumber,
+  value: BigNumberish,
   decimals: number,
   precision = 2
 ): string => Number(formatUnits(value, decimals)).toFixed(precision)
