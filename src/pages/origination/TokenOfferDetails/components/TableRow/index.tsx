@@ -1,8 +1,13 @@
 import clsx from 'clsx'
 import { makeStyles, Typography } from '@material-ui/core'
 import { Td } from '../Td'
-import { OfferingOverview, OriginationLabels, WhitelistSale } from 'utils/enums'
-import { IOfferingOverview, IToken, IWhitelistSale } from 'types'
+import {
+  OfferingOverview,
+  OriginationLabels,
+  PublicSale,
+  WhitelistSale,
+} from 'utils/enums'
+import { IOfferingOverview, IPublicSale, IToken, IWhitelistSale } from 'types'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  item: IOfferingOverview | IWhitelistSale
+  item: IOfferingOverview | IWhitelistSale | IPublicSale
 }
 
 export const TableRow = ({ item }: IProps) => {
@@ -81,6 +86,8 @@ export const TableRow = ({ item }: IProps) => {
   const renderContent = () => {
     const offeringOverview = item as IOfferingOverview
     const whitelistSale = item as IWhitelistSale
+    const publicSale = item as IPublicSale
+
     if (item.label === OriginationLabels.OfferingOverview) {
       item = offeringOverview
       return (
@@ -236,6 +243,51 @@ export const TableRow = ({ item }: IProps) => {
           <Td
             type={WhitelistSale.SalesPeriod}
             label={OriginationLabels.WhitelistSale}
+          >
+            <Typography className={clsx(cl.item, cl.label)}>
+              {item.salesPeriod}
+            </Typography>
+          </Td>
+        </div>
+      )
+    }
+
+    if (item.label === OriginationLabels.PublicSale) {
+      item = publicSale
+      return (
+        <div className={cl.content}>
+          <Td
+            type={PublicSale.CurrentPrice}
+            label={OriginationLabels.PublicSale}
+          >
+            <Typography className={clsx(cl.item, cl.label)}>
+              {item.currentPrice}
+            </Typography>
+          </Td>
+          <Td
+            type={PublicSale.PricingFormular}
+            label={OriginationLabels.PublicSale}
+          >
+            <Typography className={clsx(cl.item, cl.label)}>
+              {item.pricingFormular}
+            </Typography>
+          </Td>
+          <Td type={PublicSale.Price} label={OriginationLabels.PublicSale}>
+            <Typography className={clsx(cl.item, cl.label)}>
+              {item.price}
+            </Typography>
+          </Td>
+          <Td
+            type={PublicSale.TimeRemaining}
+            label={OriginationLabels.PublicSale}
+          >
+            <Typography className={clsx(cl.item, cl.label)}>
+              {item.timeRemaining}
+            </Typography>
+          </Td>
+          <Td
+            type={PublicSale.SalesPeriod}
+            label={OriginationLabels.PublicSale}
           >
             <Typography className={clsx(cl.item, cl.label)}>
               {item.salesPeriod}

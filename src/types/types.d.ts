@@ -212,8 +212,11 @@ export interface ITokenOffer {
   cliffPeriod: BigNumber
 }
 
-export interface IOfferingOverview {
+interface Label {
   label: string
+}
+
+export interface IOfferingOverview extends Label {
   offerToken: IToken
   purchaseToken: IToken
   offeringStatus: string
@@ -225,8 +228,7 @@ export interface IOfferingOverview {
   salesPeriod: string
 }
 
-export interface IWhitelistSale {
-  label: string
+export interface IWhitelistSale extends Label {
   currentPrice: string
   pricingFormular: string
   startingEndingPrice: string
@@ -236,4 +238,15 @@ export interface IWhitelistSale {
   salesPeriod: string
 }
 
-export type OriginationDetailItem = IOfferingOverview | IWhitelistSale
+export interface IPublicSale extends Label {
+  currentPrice: string
+  pricingFormular: string
+  price: string
+  timeRemaining: string
+  salesPeriod: string
+}
+
+export type OriginationDetailItem =
+  | IOfferingOverview
+  | IWhitelistSale
+  | IPublicSale

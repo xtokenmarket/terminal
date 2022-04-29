@@ -45,6 +45,15 @@ const WhitelistSale = {
   salesPeriod: '1 Week',
 }
 
+const PublicSale = {
+  label: OriginationLabels.PublicSale,
+  currentPrice: '1.25 USDC',
+  pricingFormular: 'Standard',
+  price: '1.25 USDC',
+  timeRemaining: '6D: 14H: 37M',
+  salesPeriod: '1 Week',
+}
+
 const TokenSaleDetails = () => {
   const history = useHistory()
   const { poolAddress } = useParams<RouteParams>()
@@ -64,6 +73,7 @@ const TokenSaleDetails = () => {
           <div>
             <Table item={OfferingOverview} label={'Offering Overview'} />
             <Table item={WhitelistSale} label={'Whitelist Sale'} />
+            <Table item={PublicSale} label={'Public Sale'} />
           </div>
         )}
       </PageContent>

@@ -1,11 +1,6 @@
 import { makeStyles, Typography } from '@material-ui/core'
 import { transparentize } from 'polished'
-import {
-  IOfferingOverview,
-  IToken,
-  IWhitelistSale,
-  OriginationDetailItem,
-} from 'types'
+import { OriginationDetailItem } from 'types'
 import { TableHeader } from '../TableHeader'
 import { TableRow } from '../TableRow'
 

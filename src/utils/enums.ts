@@ -194,7 +194,7 @@ export enum OriginationLabels {
 }
 
 export enum OfferingOverview {
-  OfferToken = 'offerToken',
+  OfferToken = 'OfferToken',
   PurchaseToken = 'purchaseToken',
   OfferingStatus = 'offeringStatus',
   OfferingReserve = 'offeringReserve',

@@ -1,7 +1,12 @@
 import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core'
 import { Td } from '../Td'
-import { OfferingOverview, OriginationLabels, WhitelistSale } from 'utils/enums'
+import {
+  OfferingOverview,
+  OriginationLabels,
+  PublicSale,
+  WhitelistSale,
+} from 'utils/enums'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,58 +34,31 @@ export const TableHeader = (props: IProps) => {
   if (props.label === OriginationLabels.OfferingOverview) {
     return (
       <div className={classes.root}>
-        <Td
-          type={OfferingOverview.OfferToken}
-          label={OriginationLabels.OfferingOverview}
-        >
+        <Td type={OfferingOverview.OfferToken} label={props.label}>
           <div className={classes.item}>Offer Token</div>
         </Td>
-        <Td
-          type={OfferingOverview.PurchaseToken}
-          label={OriginationLabels.OfferingOverview}
-        >
+        <Td type={OfferingOverview.PurchaseToken} label={props.label}>
           <div className={classes.item}>Purchase Token</div>
         </Td>
-        <Td
-          type={OfferingOverview.OfferingStatus}
-          label={OriginationLabels.OfferingOverview}
-        >
+        <Td type={OfferingOverview.OfferingStatus} label={props.label}>
           <div className={classes.item}>Offering Status</div>
         </Td>
-        <Td
-          type={OfferingOverview.OfferingReserve}
-          label={OriginationLabels.OfferingOverview}
-        >
+        <Td type={OfferingOverview.OfferingReserve} label={props.label}>
           <div className={classes.item}>Offering Reserve</div>
         </Td>
-        <Td
-          type={OfferingOverview.VestingPeriod}
-          label={OriginationLabels.OfferingOverview}
-        >
+        <Td type={OfferingOverview.VestingPeriod} label={props.label}>
           <div className={classes.item}>Vesting Period</div>
         </Td>
-        <Td
-          type={OfferingOverview.CliffPeriod}
-          label={OriginationLabels.OfferingOverview}
-        >
+        <Td type={OfferingOverview.CliffPeriod} label={props.label}>
           <div className={classes.item}>Cliff Period</div>
         </Td>
-        <Td
-          type={OfferingOverview.SalesBegin}
-          label={OriginationLabels.OfferingOverview}
-        >
+        <Td type={OfferingOverview.SalesBegin} label={props.label}>
           <div className={classes.item}>Sales Begin</div>
         </Td>
-        <Td
-          type={OfferingOverview.SalesEnd}
-          label={OriginationLabels.OfferingOverview}
-        >
+        <Td type={OfferingOverview.SalesEnd} label={props.label}>
           <div className={classes.item}>Sales End</div>
         </Td>
-        <Td
-          type={OfferingOverview.SalesPeriod}
-          label={OriginationLabels.OfferingOverview}
-        >
+        <Td type={OfferingOverview.SalesPeriod} label={props.label}>
           <div className={clsx(classes.item, classes.itemAlignRight)}>
             Sales Period
           </div>
@@ -92,46 +70,47 @@ export const TableHeader = (props: IProps) => {
   if (props.label === OriginationLabels.WhitelistSale) {
     return (
       <div className={classes.root}>
-        <Td
-          type={WhitelistSale.CurrentPrice}
-          label={OriginationLabels.WhitelistSale}
-        >
+        <Td type={WhitelistSale.CurrentPrice} label={props.label}>
           <div className={classes.item}>Current Price</div>
         </Td>
-        <Td
-          type={WhitelistSale.PricingFormular}
-          label={OriginationLabels.WhitelistSale}
-        >
+        <Td type={WhitelistSale.PricingFormular} label={props.label}>
           <div className={classes.item}>Pricing Formular</div>
         </Td>
-        <Td
-          type={WhitelistSale.StartingEndingPrice}
-          label={OriginationLabels.WhitelistSale}
-        >
+        <Td type={WhitelistSale.StartingEndingPrice} label={props.label}>
           <div className={classes.item}>Starting / Ending Price</div>
         </Td>
-        <Td
-          type={WhitelistSale.Whitelist}
-          label={OriginationLabels.WhitelistSale}
-        >
+        <Td type={WhitelistSale.Whitelist} label={props.label}>
           <div className={classes.item}>Whitelist</div>
         </Td>
-        <Td
-          type={WhitelistSale.AddressCap}
-          label={OriginationLabels.WhitelistSale}
-        >
+        <Td type={WhitelistSale.AddressCap} label={props.label}>
           <div className={classes.item}>Address Cap</div>
         </Td>
-        <Td
-          type={WhitelistSale.TimeRemaining}
-          label={OriginationLabels.WhitelistSale}
-        >
+        <Td type={WhitelistSale.TimeRemaining} label={props.label}>
           <div className={classes.item}>Time Remaining</div>
         </Td>
-        <Td
-          type={WhitelistSale.SalesPeriod}
-          label={OriginationLabels.WhitelistSale}
-        >
+        <Td type={WhitelistSale.SalesPeriod} label={props.label}>
+          <div className={classes.item}>Sales Period</div>
+        </Td>
+      </div>
+    )
+  }
+
+  if (props.label === OriginationLabels.PublicSale) {
+    return (
+      <div className={classes.root}>
+        <Td type={PublicSale.CurrentPrice} label={props.label}>
+          <div className={classes.item}>Current Price</div>
+        </Td>
+        <Td type={PublicSale.PricingFormular} label={props.label}>
+          <div className={classes.item}>Pricing Formular</div>
+        </Td>
+        <Td type={PublicSale.Price} label={props.label}>
+          <div className={classes.item}>Price</div>
+        </Td>
+        <Td type={PublicSale.TimeRemaining} label={props.label}>
+          <div className={classes.item}>Time Remaining</div>
+        </Td>
+        <Td type={PublicSale.SalesPeriod} label={props.label}>
           <div className={classes.item}>Sales Period</div>
         </Td>
       </div>
