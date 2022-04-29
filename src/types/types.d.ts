@@ -224,3 +224,16 @@ export interface IOfferingOverview {
   salesEnd: string
   salesPeriod: string
 }
+
+export interface IWhitelistSale {
+  label: string
+  currentPrice: string
+  pricingFormular: string
+  startingEndingPrice: string
+  whitelist: string
+  addressCap: string
+  timeRemaining: string
+  salesPeriod: string
+}
+
+export type OriginationDetailItem = IOfferingOverview | IWhitelistSale

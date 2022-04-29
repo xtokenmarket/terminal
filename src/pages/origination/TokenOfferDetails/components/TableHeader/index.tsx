@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core'
 import { Td } from '../Td'
-import { OfferingOverview, OriginationLabels } from 'utils/enums'
+import { OfferingOverview, OriginationLabels, WhitelistSale } from 'utils/enums'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -84,6 +84,55 @@ export const TableHeader = (props: IProps) => {
           <div className={clsx(classes.item, classes.itemAlignRight)}>
             Sales Period
           </div>
+        </Td>
+      </div>
+    )
+  }
+
+  if (props.label === OriginationLabels.WhitelistSale) {
+    return (
+      <div className={classes.root}>
+        <Td
+          type={WhitelistSale.CurrentPrice}
+          label={OriginationLabels.WhitelistSale}
+        >
+          <div className={classes.item}>Current Price</div>
+        </Td>
+        <Td
+          type={WhitelistSale.PricingFormular}
+          label={OriginationLabels.WhitelistSale}
+        >
+          <div className={classes.item}>Pricing Formular</div>
+        </Td>
+        <Td
+          type={WhitelistSale.StartingEndingPrice}
+          label={OriginationLabels.WhitelistSale}
+        >
+          <div className={classes.item}>Starting / Ending Price</div>
+        </Td>
+        <Td
+          type={WhitelistSale.Whitelist}
+          label={OriginationLabels.WhitelistSale}
+        >
+          <div className={classes.item}>Whitelist</div>
+        </Td>
+        <Td
+          type={WhitelistSale.AddressCap}
+          label={OriginationLabels.WhitelistSale}
+        >
+          <div className={classes.item}>Address Cap</div>
+        </Td>
+        <Td
+          type={WhitelistSale.TimeRemaining}
+          label={OriginationLabels.WhitelistSale}
+        >
+          <div className={classes.item}>Time Remaining</div>
+        </Td>
+        <Td
+          type={WhitelistSale.SalesPeriod}
+          label={OriginationLabels.WhitelistSale}
+        >
+          <div className={classes.item}>Sales Period</div>
         </Td>
       </div>
     )

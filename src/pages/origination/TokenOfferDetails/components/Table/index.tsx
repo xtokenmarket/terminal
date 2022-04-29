@@ -1,6 +1,11 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles, Typography } from '@material-ui/core'
 import { transparentize } from 'polished'
-import { IOfferingOverview, IToken } from 'types'
+import {
+  IOfferingOverview,
+  IToken,
+  IWhitelistSale,
+  OriginationDetailItem,
+} from 'types'
 import { TableHeader } from '../TableHeader'
 import { TableRow } from '../TableRow'
 
@@ -18,22 +23,34 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     minWidth: 1000,
+    marginTop: 15,
+  },
+  label: {
+    fontWeight: 700,
+    lineHeight: '19.2px',
+    marginBottom: 3,
+    color: theme.colors.white,
+    marginTop: 24,
   },
 }))
 
 interface IProps {
-  item: IOfferingOverview
+  item: OriginationDetailItem
+  label: string
 }
 
-export const Table = ({ item }: IProps) => {
+export const Table = ({ item, label }: IProps) => {
   const cl = useStyles()
 
   return (
-    <div className={cl.content}>
-      <TableHeader label={item.label} />
-      <div>
-        <TableRow item={item} />
+    <>
+      <Typography className={cl.label}>{label}</Typography>
+      <div className={cl.content}>
+        <TableHeader label={item.label} />
+        <div>
+          <TableRow item={item} />
+        </div>
       </div>
-    </div>
+    </>
   )
 }

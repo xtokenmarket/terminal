@@ -1,8 +1,8 @@
 import clsx from 'clsx'
 import { makeStyles, Typography } from '@material-ui/core'
 import { Td } from '../Td'
-import { OfferingOverview, OriginationLabels } from 'utils/enums'
-import { IOfferingOverview, IToken } from 'types'
+import { OfferingOverview, OriginationLabels, WhitelistSale } from 'utils/enums'
+import { IOfferingOverview, IToken, IWhitelistSale } from 'types'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,14 +72,17 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  item: IOfferingOverview
+  item: IOfferingOverview | IWhitelistSale
 }
 
 export const TableRow = ({ item }: IProps) => {
   const cl = useStyles()
 
   const renderContent = () => {
+    const offeringOverview = item as IOfferingOverview
+    const whitelistSale = item as IWhitelistSale
     if (item.label === OriginationLabels.OfferingOverview) {
+      item = offeringOverview
       return (
         <div className={cl.content}>
           <Td
@@ -164,6 +167,77 @@ export const TableRow = ({ item }: IProps) => {
             label={OriginationLabels.OfferingOverview}
           >
             <Typography className={clsx(cl.item, cl.label, cl.itemAlignRight)}>
+              {item.salesPeriod}
+            </Typography>
+          </Td>
+        </div>
+      )
+    }
+
+    if (item.label === OriginationLabels.WhitelistSale) {
+      item = whitelistSale
+
+      return (
+        <div className={cl.content}>
+          <Td
+            type={WhitelistSale.CurrentPrice}
+            label={OriginationLabels.WhitelistSale}
+          >
+            <Typography className={clsx(cl.item, cl.label)}>
+              {item.currentPrice}
+            </Typography>
+          </Td>
+
+          <Td
+            type={WhitelistSale.PricingFormular}
+            label={OriginationLabels.WhitelistSale}
+          >
+            <Typography className={clsx(cl.item, cl.label)}>
+              {item.pricingFormular}
+            </Typography>
+          </Td>
+
+          <Td
+            type={WhitelistSale.StartingEndingPrice}
+            label={OriginationLabels.WhitelistSale}
+          >
+            <Typography className={clsx(cl.item, cl.label)}>
+              {item.startingEndingPrice}
+            </Typography>
+          </Td>
+
+          <Td
+            type={WhitelistSale.Whitelist}
+            label={OriginationLabels.WhitelistSale}
+          >
+            <Typography className={clsx(cl.item, cl.label)}>
+              {item.whitelist}
+            </Typography>
+          </Td>
+
+          <Td
+            type={WhitelistSale.AddressCap}
+            label={OriginationLabels.WhitelistSale}
+          >
+            <Typography className={clsx(cl.item, cl.label)}>
+              {item.addressCap}
+            </Typography>
+          </Td>
+
+          <Td
+            type={WhitelistSale.TimeRemaining}
+            label={OriginationLabels.WhitelistSale}
+          >
+            <Typography className={clsx(cl.item, cl.label)}>
+              {item.timeRemaining}
+            </Typography>
+          </Td>
+
+          <Td
+            type={WhitelistSale.SalesPeriod}
+            label={OriginationLabels.WhitelistSale}
+          >
+            <Typography className={clsx(cl.item, cl.label)}>
               {item.salesPeriod}
             </Typography>
           </Td>
