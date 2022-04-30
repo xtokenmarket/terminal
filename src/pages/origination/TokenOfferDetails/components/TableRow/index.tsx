@@ -142,25 +142,29 @@ export const TableRow = ({ item }: IProps) => {
           </Td>
 
           <Td type={OfferingOverview.OfferingStatus} label={item.label}>
-            <Typography className={cl.item}>{item.offeringStatus}</Typography>
+            <Typography
+              className={cl.item}
+            >{`${item.offerTokenAmountSold.toString()}/${item.totalOfferingAmount.toString()}`}</Typography>
           </Td>
           <Td type={OfferingOverview.OfferingReserve} label={item.label}>
-            <Typography className={cl.item}>{item.offeringReserve}</Typography>
+            <Typography className={cl.item}>
+              {item.offeringReserve.toString()}
+            </Typography>
           </Td>
 
           <Td type={OfferingOverview.VestingPeriod} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.vestingPeriod}
+              {item.vestingPeriod.toString()}
             </Typography>
           </Td>
           <Td type={OfferingOverview.CliffPeriod} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.cliffPeriod}
+              {item.cliffPeriod.toString()}
             </Typography>
           </Td>
           <Td type={OfferingOverview.SalesBegin} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.salesBegin === 'INITIATE SALE' ? (
+              {!item.salesBegin.isZero() ? (
                 <Button
                   className={cl.button}
                   onClick={() => {
@@ -170,18 +174,18 @@ export const TableRow = ({ item }: IProps) => {
                   <Typography className={cl.text}>INITIATE SALE</Typography>
                 </Button>
               ) : (
-                item.salesBegin
+                item.salesBegin.toString()
               )}
             </Typography>
           </Td>
           <Td type={OfferingOverview.SalesEnd} label={item.label}>
             <Typography className={clsx(cl.item, cl.label, cl.itemAlignRight)}>
-              {item.salesEnd}
+              {item.salesEnd.toString()}
             </Typography>
           </Td>
           <Td type={OfferingOverview.SalesPeriod} label={item.label}>
             <Typography className={clsx(cl.item, cl.label, cl.itemAlignRight)}>
-              {item.salesPeriod}
+              {item.salesPeriod.toString()}
             </Typography>
           </Td>
         </div>

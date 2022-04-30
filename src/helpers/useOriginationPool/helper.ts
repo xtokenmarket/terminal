@@ -13,6 +13,7 @@ interface ITokenOfferDetails {
   saleEndTimestamp: BigNumber
   vestingPeriod: BigNumber
   cliffPeriod: BigNumber
+  reserveAmount: BigNumber
 }
 
 export const getOffersDataMulticall = async (
@@ -31,6 +32,7 @@ export const getOffersDataMulticall = async (
     'saleEndTimestamp',
     'vestingPeriod ',
     'cliffPeriod',
+    'reserveAmount',
   ].map((method) => ({
     name: method,
     address: poolAddress,
@@ -48,6 +50,7 @@ export const getOffersDataMulticall = async (
     [saleEndTimestamp],
     [vestingPeriod],
     [cliffPeriod],
+    [reserveAmount],
   ] = await multicall.multicallv2(Abi.OriginationPool, calls, {
     requireSuccess: false,
   })
@@ -64,5 +67,6 @@ export const getOffersDataMulticall = async (
     saleInitiatedTimestamp,
     vestingPeriod,
     cliffPeriod,
+    reserveAmount,
   }
 }
