@@ -119,9 +119,6 @@ export const useTerminalPool = (
       let { token0, token1, stakedToken } = pool
       let tvl = pool.tvl
 
-      const { amount0: token0Balance, amount1: token1Balance } =
-        await clr.contract.getStakedTokenBalance()
-
       // Fetch token details and relevant data, if API fails
       if (!pool.token0.price || !pool.token1.price) {
         ;[token0, token1, stakedToken] = await Promise.all([
@@ -139,6 +136,9 @@ export const useTerminalPool = (
         pool.token0.price = rates && rates[0] ? rates[0].toString() : '0'
         pool.token1.price = rates && rates[1] ? rates[1].toString() : '0'
 
+        const { amount0: token0Balance, amount1: token1Balance } =
+          await clr.contract.getStakedTokenBalance()
+
         const token0tvl = token0Balance
           .mul(parseEther(pool.token0.price))
           .div(ONE_ETHER)
@@ -146,6 +146,8 @@ export const useTerminalPool = (
           .mul(parseEther(pool.token1.price))
           .div(ONE_ETHER)
 
+        token0.balance = token0Balance
+        token1.balance = token1Balance
         token0.tvl = token0tvl.toString()
         token1.tvl = token1tvl.toString()
         tvl = token0tvl.add(token1tvl).toString()
@@ -178,13 +180,12 @@ export const useTerminalPool = (
         token0.price = token0.price.toString()
         token1.price = token1.price.toString()
 
+        token0.balance = BigNumber.from(token0.balance || '0')
+        token1.balance = BigNumber.from(token1.balance || '0')
+
         token0.percent = token0.percent ? token0.percent.toString() : '0'
         token1.percent = token1.percent ? token1.percent.toString() : '0'
       }
-
-      // Set staked balances
-      token0.balance = token0Balance
-      token1.balance = token1Balance
 
       if (pool.vestingPeriod == null) {
         pool.vestingPeriod = (
@@ -321,10 +322,10 @@ export const useTerminalPool = (
 
         user.stakedTokenBalance = stakedTokenBalance
 
-        user.token0Deposit = token0Balance
+        user.token0Deposit = token0.balance
           .mul(stakedTokenBalance)
           .div(totalSupply)
-        user.token1Deposit = token1Balance
+        user.token1Deposit = token1.balance
           .mul(stakedTokenBalance)
           .div(totalSupply)
 
@@ -338,7 +339,7 @@ export const useTerminalPool = (
           ETHER_DECIMAL
         )
 
-        const totalBalance = token0Balance.add(token1Balance)
+        const totalBalance = token0.balance.add(token1.balance)
 
         poolShare = formatEther(
           user.token0Deposit
