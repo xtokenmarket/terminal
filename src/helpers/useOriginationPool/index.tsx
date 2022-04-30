@@ -6,7 +6,7 @@ import { knownTokens, getTokenFromAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import { useNetworkContext } from 'contexts/networkContext'
 import { useServices } from 'helpers'
-import { Network } from 'utils/enums'
+import { Network, OriginationLabels } from 'utils/enums'
 import { getOffersDataMulticall } from './helper'
 import { IToken, ITokenOffer } from 'types'
 
@@ -35,12 +35,41 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
       address: constants.AddressZero,
     }
 
-    return {
-      ..._offerData,
-      // TODO: remove this hardcoded value
-      network: Network.KOVAN,
+    const {
+      offerTokenAmountSold,
+      totalOfferingAmount,
+      reserveAmount,
+      vestingPeriod,
+      cliffPeriod,
+      saleInitiatedTimestamp,
+      saleEndTimestamp,
+      saleDuration,
+      startingPrice,
+    } = _offerData
+
+    const offeringOverview = {
+      label: OriginationLabels.OfferingOverview,
       offerToken: tokens[0] || ETH,
       purchaseToken: tokens[1] || ETH,
+      offeringReserve: reserveAmount,
+      vestingPeriod: vestingPeriod,
+      cliffPeriod: cliffPeriod,
+      salesBegin: saleInitiatedTimestamp,
+      salesEnd: saleEndTimestamp,
+      salesPeriod: saleDuration,
+      offerTokenAmountSold,
+      totalOfferingAmount,
+    }
+
+    return {
+      offeringOverview,
+      originationRow: {
+        ...offeringOverview,
+        startingPrice,
+        saleDuration,
+      },
+      // TODO: remove this hardcoded value
+      network: Network.KOVAN,
     }
   }
 

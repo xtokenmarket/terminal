@@ -85,33 +85,31 @@ interface IProps {
 export const OfferingTableRow = ({ offering }: IProps) => {
   const cl = useStyles()
   const { tokenOffer } = useOriginationPool(offering)
+  const _originationRow = tokenOffer?.originationRow
 
   const renderContent = () => {
-    if (!tokenOffer) {
+    if (!tokenOffer || !_originationRow) {
       return null
     }
 
     const {
-      network,
       offerToken,
       purchaseToken,
       totalOfferingAmount,
       offerTokenAmountSold,
-      saleInitiatedTimestamp,
+      salesBegin,
       startingPrice,
       vestingPeriod,
       cliffPeriod,
-    } = tokenOffer
+      salesPeriod,
+      saleDuration,
+    } = _originationRow
 
-    const isSaleInitiated = !saleInitiatedTimestamp.isZero()
-    const elapsedTime = moment()
-      .subtract(tokenOffer.saleInitiatedTimestamp.toString())
-      .toString()
+    const isSaleInitiated = !salesBegin.isZero()
+    const elapsedTime = moment().subtract(salesBegin.toString()).toString()
     const timeRemaining = isSaleInitiated
-      ? moment(tokenOffer.saleDuration.toString())
-          .subtract(elapsedTime)
-          .toString()
-      : tokenOffer.saleDuration.toString()
+      ? moment(salesPeriod.toString()).subtract(elapsedTime).toString()
+      : saleDuration?.toString()
 
     const remainingOfferingAmount =
       totalOfferingAmount.sub(offerTokenAmountSold)
@@ -119,7 +117,7 @@ export const OfferingTableRow = ({ offering }: IProps) => {
     return (
       <NavLink
         className={cl.content}
-        to={`/origination/token-offers/${network}/${offering}`}
+        to={`/origination/token-offers/${tokenOffer.network}/${offering}`}
       >
         <OfferingTd type="offerToken">
           <div className={cl.item}>
