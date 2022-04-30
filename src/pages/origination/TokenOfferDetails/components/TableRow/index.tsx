@@ -167,7 +167,7 @@ export const TableRow = ({ item }: IProps) => {
                     console.log('onClick')
                   }}
                 >
-                  <Typography className={cl.text}>SET WHITELIST</Typography>
+                  <Typography className={cl.text}>INITIATE SALE</Typography>
                 </Button>
               ) : (
                 item.salesBegin
