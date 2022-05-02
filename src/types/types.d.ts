@@ -211,3 +211,50 @@ export interface ITokenOffer {
   vestingPeriod: BigNumber
   cliffPeriod: BigNumber
 }
+
+interface Label {
+  label: OriginationLabels
+}
+
+export interface IOfferingOverview extends Label {
+  offerToken: IToken
+  purchaseToken: IToken
+  offeringStatus: string
+  offeringReserve: string
+  vestingPeriod: string
+  cliffPeriod: string
+  salesBegin: string
+  salesEnd: string
+  salesPeriod: string
+}
+
+export interface IWhitelistSale extends Label {
+  currentPrice: string
+  pricingFormular: string
+  startingEndingPrice: string
+  whitelist: string
+  addressCap: string
+  timeRemaining: string
+  salesPeriod: string
+}
+
+export interface IPublicSale extends Label {
+  currentPrice: string
+  pricingFormular: string
+  price: string
+  timeRemaining: string
+  salesPeriod: string
+}
+
+export interface IMyPosition extends Label {
+  tokenPurchased: string
+  amountInvested: string
+  amountvested: string
+  amountAvailableToVest: string
+}
+
+export type OriginationDetailItem =
+  | IOfferingOverview
+  | IWhitelistSale
+  | IPublicSale
+  | IMyPosition
