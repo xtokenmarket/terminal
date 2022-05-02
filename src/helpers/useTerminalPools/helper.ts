@@ -1,6 +1,7 @@
 import { Network } from 'utils/enums'
 import { AddressZero } from '@ethersproject/constants'
 import { getAddress } from 'ethers/lib/utils'
+import { BigNumber } from 'ethers'
 
 export const POOLS_QUERY = `
 query {
@@ -70,8 +71,14 @@ export const parsePools = (data: any, network: Network) => {
         ),
         rewardsAreEscrowed: pool.rewardsAreEscrowed,
         stakedToken: _parseTokenDetails(pool.stakedToken),
-        token0: _parseTokenDetails(pool.token0),
-        token1: _parseTokenDetails(pool.token1),
+        token0: _parseTokenDetails(
+          pool.token0,
+          pool.stakedTokenBalance ? pool.stakedTokenBalance[0] : undefined
+        ),
+        token1: _parseTokenDetails(
+          pool.token1,
+          pool.stakedTokenBalance ? pool.stakedTokenBalance[1] : undefined
+        ),
         tokenId: pool.tokenId,
         ticks: {
           tick0: pool.ticks[0],
@@ -87,11 +94,12 @@ export const parsePools = (data: any, network: Network) => {
       }))
 }
 
-const _parseTokenDetails = (token: any) => {
+const _parseTokenDetails = (token: any, balance?: string) => {
   return {
     address: token.id,
     decimals: token.decimals,
     name: token.name,
     symbol: token.symbol,
+    balance: balance ? BigNumber.from(balance) : undefined,
   }
 }
