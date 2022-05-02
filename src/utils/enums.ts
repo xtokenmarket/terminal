@@ -186,3 +186,47 @@ export enum EVestingOption {
   Yes = 'Yes',
   No = 'No',
 }
+
+export enum OriginationLabels {
+  OfferingOverview = 'offeringOverview',
+  WhitelistSale = 'whitelistSale',
+  PublicSale = 'publicSale',
+  MyPosition = 'myPosition',
+}
+
+export enum OfferingOverview {
+  OfferToken = 'offerToken',
+  PurchaseToken = 'purchaseToken',
+  OfferingStatus = 'offeringStatus',
+  OfferingReserve = 'offeringReserve',
+  VestingPeriod = 'vestingPeriod',
+  CliffPeriod = 'cliffPeriod',
+  SalesBegin = 'salesBegin',
+  SalesEnd = 'salesEnd',
+  SalesPeriod = 'salesPeriod',
+}
+
+export enum WhitelistSale {
+  CurrentPrice = 'currentPrice',
+  PricingFormular = 'pricingFormular',
+  StartingEndingPrice = 'startingEndingPrice',
+  Whitelist = 'whitelist',
+  AddressCap = 'addressCap',
+  TimeRemaining = 'timeRemaining',
+  SalesPeriod = 'salesPeriod',
+}
+
+export enum PublicSale {
+  CurrentPrice = 'currentPrice',
+  PricingFormular = 'pricingFormular',
+  Price = 'price',
+  TimeRemaining = 'timeRemaining',
+  SalesPeriod = 'salesPeriod',
+}
+
+export enum MyPosition {
+  TokenPurchased = 'tokenPurchased',
+  AmountInvested = 'amountInvested',
+  Amountvested = 'amountvested',
+  AmountAvailableToVest = 'amountAvailableToVest',
+}
