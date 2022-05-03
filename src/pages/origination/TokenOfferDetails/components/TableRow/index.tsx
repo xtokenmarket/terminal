@@ -147,7 +147,7 @@ export const TableRow = ({ item }: IProps) => {
           </Td>
 
           <Td type={OfferingOverview.OfferingStatus} label={item.label}>
-            <Typography className={cl.item}>
+            <div className={cl.item}>
               {`${formatBigNumber(
                 item.totalOfferingAmount.sub(item.offerTokenAmountSold),
                 item.offerToken.decimals
@@ -158,15 +158,20 @@ export const TableRow = ({ item }: IProps) => {
               <Typography className={cl.symbol}>
                 {item.offerToken.symbol}
               </Typography>
-            </Typography>
+            </div>
           </Td>
           <Td type={OfferingOverview.OfferingReserve} label={item.label}>
-            <Typography className={cl.item}>
-              {formatBigNumber(item.offeringReserve, item.offerToken.decimals)}
-            </Typography>
-            <Typography className={cl.symbol}>
-              {item.offerToken.symbol}
-            </Typography>
+            <div className={cl.item}>
+              <Typography>
+                {formatBigNumber(
+                  item.offeringReserve,
+                  item.offerToken.decimals
+                )}
+              </Typography>
+              <Typography className={cl.symbol}>
+                {item.offerToken.symbol}
+              </Typography>
+            </div>
           </Td>
 
           <Td type={OfferingOverview.VestingPeriod} label={item.label}>
