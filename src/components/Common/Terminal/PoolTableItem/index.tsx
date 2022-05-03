@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme) => ({
   },
   apr: {
     backgroundColor: theme.colors.primary200,
-    color: theme.colors.white,
+    color: theme.colors.yellow,
     height: 24,
     display: 'flex',
     alignItems: 'center',
