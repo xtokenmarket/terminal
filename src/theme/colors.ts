@@ -4,6 +4,7 @@ const colors = [
   {
     name: ETHEME.Black,
     colors: {
+      yellow: '#feff00',
       transparent: '#0000',
       default: '#000',
       reverse: '#FFF',
@@ -48,6 +49,7 @@ const colors = [
   {
     name: ETHEME.White,
     colors: {
+      yellow: '#feff00',
       transparent: '#0000',
       default: '#000',
       reverse: '#FFF',

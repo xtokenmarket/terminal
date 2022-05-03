@@ -13,6 +13,7 @@ declare module '@material-ui/core/styles/createTheme' {
       xsss: number
     }
     colors: {
+      yellow: string
       transparent: string
       default: string
       reverse: string
