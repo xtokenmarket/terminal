@@ -155,7 +155,9 @@ export const OfferingTableRow = ({ offering }: IProps) => {
         </OfferingTd>
         <OfferingTd type="timeRemaining">
           <Typography className={clsx(cl.item, cl.label)}>
-            {parseRemainingDurationSec(parseInt(timeRemaining))}
+            {timeRemaining
+              ? parseRemainingDurationSec(parseInt(timeRemaining))
+              : 'N/A'}
           </Typography>
         </OfferingTd>
         <OfferingTd type="vestingPeriod">

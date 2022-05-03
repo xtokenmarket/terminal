@@ -8,65 +8,84 @@ interface ITokenOfferDetails {
   offerTokenAmountSold: BigNumber
   startingPrice: BigNumber
   endingPrice: BigNumber
-  saleDuration: BigNumber
   saleInitiatedTimestamp: BigNumber
   saleEndTimestamp: BigNumber
   vestingPeriod: BigNumber
   cliffPeriod: BigNumber
   reserveAmount: BigNumber
+  whitelistStartingPrice: BigNumber
+  whitelistEndingPrice: BigNumber
+  whitelistSaleDuration: BigNumber
+  whitelist: BigNumber
+  publicSaleDuration: BigNumber
 }
 
 export const getOffersDataMulticall = async (
   poolAddress: string,
   multicall: MulticallService
-): Promise<ITokenOfferDetails> => {
-  const calls = [
-    'offerToken',
-    'purchaseToken',
-    'totalOfferingAmount',
-    'offerTokenAmountSold',
-    'startingPrice',
-    'endingPrice',
-    'saleDuration',
-    'saleInitiatedTimestamp',
-    'saleEndTimestamp',
-    'vestingPeriod ',
-    'cliffPeriod',
-    'reserveAmount',
-  ].map((method) => ({
-    name: method,
-    address: poolAddress,
-    params: [],
-  }))
-  const [
-    [offerToken],
-    [purchaseToken],
-    [totalOfferingAmount],
-    [offerTokenAmountSold],
-    [startingPrice],
-    [endingPrice],
-    [saleDuration],
-    [saleInitiatedTimestamp],
-    [saleEndTimestamp],
-    [vestingPeriod],
-    [cliffPeriod],
-    [reserveAmount],
-  ] = await multicall.multicallv2(Abi.OriginationPool, calls, {
-    requireSuccess: false,
-  })
+): Promise<ITokenOfferDetails | undefined> => {
+  try {
+    const calls = [
+      'offerToken',
+      'purchaseToken',
+      'totalOfferingAmount',
+      'offerTokenAmountSold',
+      'startingPrice',
+      'endingPrice',
+      'saleInitiatedTimestamp',
+      'saleEndTimestamp',
+      'vestingPeriod ',
+      'cliffPeriod',
+      'reserveAmount',
+      'whitelistStartingPrice',
+      'whitelistEndingPrice',
+      'whitelistSaleDuration',
+      'publicSaleDuration',
+    ].map((method) => ({
+      name: method,
+      address: poolAddress,
+      params: [],
+    }))
 
-  return {
-    offerToken,
-    purchaseToken,
-    totalOfferingAmount,
-    offerTokenAmountSold,
-    startingPrice,
-    endingPrice,
-    saleDuration,
-    saleEndTimestamp,
-    saleInitiatedTimestamp,
-    vestingPeriod,
-    cliffPeriod,
-    reserveAmount,
+    const [
+      [offerToken],
+      [purchaseToken],
+      [totalOfferingAmount],
+      [offerTokenAmountSold],
+      [startingPrice],
+      [endingPrice],
+      [saleInitiatedTimestamp],
+      [saleEndTimestamp],
+      [vestingPeriod],
+      [cliffPeriod],
+      [reserveAmount],
+      whitelistStartingPrice,
+      whitelistEndingPrice,
+      whitelistSaleDuration,
+      whitelist,
+      publicSaleDuration,
+    ] = await multicall.multicallv2(Abi.OriginationPool, calls, {
+      requireSuccess: false,
+    })
+    return {
+      offerToken,
+      purchaseToken,
+      totalOfferingAmount,
+      offerTokenAmountSold,
+      startingPrice,
+      endingPrice,
+      saleEndTimestamp,
+      saleInitiatedTimestamp,
+      vestingPeriod,
+      cliffPeriod,
+      reserveAmount,
+      whitelistStartingPrice,
+      whitelistEndingPrice,
+      whitelistSaleDuration,
+      whitelist,
+      publicSaleDuration,
+    }
+  } catch (error) {
+    console.log('error', error)
   }
 }

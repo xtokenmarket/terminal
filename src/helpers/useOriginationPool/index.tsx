@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import Abi from 'abis'
 import axios from 'axios'
-import { constants } from 'ethers'
+import { BigNumber, constants } from 'ethers'
 import { knownTokens, getTokenFromAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import { useNetworkContext } from 'contexts/networkContext'
@@ -24,8 +24,10 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
 
   const getContractTokenOfferData = async (
     poolAddress: string
-  ): Promise<ITokenOffer> => {
+  ): Promise<ITokenOffer | undefined> => {
     const _offerData = await getOffersDataMulticall(poolAddress, multicall)
+
+    if (!_offerData) return
     const tokens = await Promise.all([
       getTokenFromAddress(_offerData?.offerToken, networkId),
       getTokenFromAddress(_offerData?.purchaseToken, networkId),
@@ -43,8 +45,12 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
       cliffPeriod,
       saleInitiatedTimestamp,
       saleEndTimestamp,
-      saleDuration,
       startingPrice,
+      whitelistStartingPrice,
+      whitelistEndingPrice,
+      whitelistSaleDuration,
+      whitelist,
+      publicSaleDuration,
     } = _offerData
 
     const offeringOverview = {
@@ -56,7 +62,7 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
       cliffPeriod: cliffPeriod,
       salesBegin: saleInitiatedTimestamp,
       salesEnd: saleEndTimestamp,
-      salesPeriod: saleDuration,
+      salesPeriod: publicSaleDuration,
       offerTokenAmountSold,
       totalOfferingAmount,
     }
@@ -66,7 +72,7 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
       originationRow: {
         ...offeringOverview,
         startingPrice,
-        saleDuration,
+        saleDuration: publicSaleDuration,
       },
       // TODO: remove this hardcoded value
       network: Network.KOVAN,

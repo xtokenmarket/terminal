@@ -209,7 +209,9 @@ export const TableRow = ({ item }: IProps) => {
           </Td>
           <Td type={OfferingOverview.SalesPeriod} label={item.label}>
             <Typography className={clsx(cl.item, cl.label, cl.itemAlignRight)}>
-              {parseDurationSec(item.salesPeriod.toNumber())}
+              {item.salesPeriod
+                ? parseDurationSec(item.salesPeriod.toNumber())
+                : 'N/A'}
             </Typography>
           </Td>
         </div>
