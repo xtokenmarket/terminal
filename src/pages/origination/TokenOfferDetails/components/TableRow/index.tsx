@@ -105,9 +105,10 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   item: IOfferingOverview | IWhitelistSale | IPublicSale | IMyPosition
+  toggleModal?: () => void
 }
 
-export const TableRow = ({ item }: IProps) => {
+export const TableRow = ({ item, toggleModal }: IProps) => {
   const cl = useStyles()
 
   const renderContent = () => {
@@ -246,7 +247,7 @@ export const TableRow = ({ item }: IProps) => {
               <Button
                 className={cl.button}
                 onClick={() => {
-                  console.log('onClick')
+                  toggleModal && toggleModal()
                 }}
               >
                 <Typography className={cl.text}>SET WHITELIST</Typography>
