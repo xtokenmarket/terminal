@@ -110,9 +110,6 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
 
   useEffect(() => {
     loadInfo()
-    const interval = setInterval(loadInfo, 2 * 1000)
-
-    return () => clearInterval(interval)
   }, [networkId, poolAddress, account])
 
   return { ...state, loadInfo }
