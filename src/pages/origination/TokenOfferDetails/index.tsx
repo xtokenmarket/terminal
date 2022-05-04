@@ -3,8 +3,8 @@ import { PageWrapper, PageHeader, PageContent, SimpleLoader } from 'components'
 import { useOriginationPool } from 'helpers/useOriginationPool'
 import { useState } from 'react'
 import { useHistory, useParams } from 'react-router'
-import { OriginationLabels } from 'utils/enums'
 import { transparentize } from 'polished'
+import { OriginationLabels } from 'utils/enums'
 
 import { InitiateSaleModal } from './components/InitiateSaleModal'
 import { SetWhitelistModal } from './components/SetWhitelistModal'
@@ -112,6 +112,21 @@ const TokenSaleDetails = () => {
     open: false,
   })
 
+  const onInitiateSuccess = async () => {
+    setState((prev) => ({
+      ...prev,
+      isInitiateSaleModalOpen: false,
+    }))
+    await loadInfo()
+  }
+
+  const toggleInitiateSaleModal = () => {
+    setState((prev) => ({
+      ...prev,
+      isInitiateSaleModalOpen: !state.isInitiateSaleModalOpen,
+    }))
+  }
+
   const onClose = () => {
     setState((prev) => ({
       ...prev,
@@ -127,25 +142,10 @@ const TokenSaleDetails = () => {
     await loadInfo()
   }
 
-  const onInitiateSuccess = async () => {
-    setState((prev) => ({
-      ...prev,
-      isInitiateSaleModalOpen: false,
-    }))
-    await loadInfo()
-  }
-
   const toggleSetWhitelistModal = () => {
     setState((prev) => ({
       ...prev,
       open: !state.open,
-    }))
-  }
-
-  const toggleInitiateSaleModal = () => {
-    setState((prev) => ({
-      ...prev,
-      isInitiateSaleModalOpen: !state.isInitiateSaleModalOpen,
     }))
   }
 
