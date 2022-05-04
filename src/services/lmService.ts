@@ -358,9 +358,14 @@ class LMService {
 
   parsePoolCreatedTx = async (txId: string): Promise<string> => {
     const { logs } = await this.contract.provider.getTransactionReceipt(txId)
+
+    const filteredLogs = logs.filter(
+      (log) => log.address.toLowerCase() === this.contract.address.toLowerCase()
+    )
+
     const uniPositionInterface = new Interface(Abi.LMTerminal)
-    for (let index = 0; index < logs.length; index++) {
-      const log = logs[index]
+    for (let index = 0; index < filteredLogs.length; index++) {
+      const log = filteredLogs[index]
       try {
         const parsed = uniPositionInterface.parseLog(log)
         if (parsed.name === 'DeployedUniV3Pool') {
