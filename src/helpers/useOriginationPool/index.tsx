@@ -25,57 +25,64 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
   const getContractTokenOfferData = async (
     poolAddress: string
   ): Promise<ITokenOffer | undefined> => {
-    const _offerData = await getOffersDataMulticall(poolAddress, multicall)
+    try {
+      const _offerData = await getOffersDataMulticall(poolAddress, multicall)
 
-    if (!_offerData) return
-    const tokens = await Promise.all([
-      getTokenFromAddress(_offerData?.offerToken, networkId),
-      getTokenFromAddress(_offerData?.purchaseToken, networkId),
-    ])
-    const ETH: IToken = {
-      ...knownTokens.eth,
-      address: constants.AddressZero,
-    }
+      if (!_offerData) {
+        throw new Error('no offerData')
+      }
 
-    const {
-      offerTokenAmountSold,
-      totalOfferingAmount,
-      reserveAmount,
-      vestingPeriod,
-      cliffPeriod,
-      saleInitiatedTimestamp,
-      saleEndTimestamp,
-      startingPrice,
-      whitelistStartingPrice,
-      whitelistEndingPrice,
-      whitelistSaleDuration,
-      whitelist,
-      publicSaleDuration,
-    } = _offerData
+      const tokens = await Promise.all([
+        getTokenFromAddress(_offerData?.offerToken, networkId),
+        getTokenFromAddress(_offerData?.purchaseToken, networkId),
+      ])
+      const ETH: IToken = {
+        ...knownTokens.eth,
+        address: constants.AddressZero,
+      }
 
-    const offeringOverview = {
-      label: OriginationLabels.OfferingOverview,
-      offerToken: tokens[0] || ETH,
-      purchaseToken: tokens[1] || ETH,
-      offeringReserve: reserveAmount,
-      vestingPeriod: vestingPeriod,
-      cliffPeriod: cliffPeriod,
-      salesBegin: saleInitiatedTimestamp,
-      salesEnd: saleEndTimestamp,
-      salesPeriod: publicSaleDuration,
-      offerTokenAmountSold,
-      totalOfferingAmount,
-    }
-
-    return {
-      offeringOverview,
-      originationRow: {
-        ...offeringOverview,
+      const {
+        offerTokenAmountSold,
+        totalOfferingAmount,
+        reserveAmount,
+        vestingPeriod,
+        cliffPeriod,
+        saleInitiatedTimestamp,
+        saleEndTimestamp,
         startingPrice,
-        saleDuration: publicSaleDuration,
-      },
-      // TODO: remove this hardcoded value
-      network: Network.KOVAN,
+        whitelistStartingPrice,
+        whitelistEndingPrice,
+        whitelistSaleDuration,
+        whitelist,
+        publicSaleDuration,
+      } = _offerData
+
+      const offeringOverview = {
+        label: OriginationLabels.OfferingOverview,
+        offerToken: tokens[0] || ETH,
+        purchaseToken: tokens[1] || ETH,
+        offeringReserve: reserveAmount,
+        vestingPeriod: vestingPeriod,
+        cliffPeriod: cliffPeriod,
+        salesBegin: saleInitiatedTimestamp,
+        salesEnd: saleEndTimestamp,
+        salesPeriod: publicSaleDuration,
+        offerTokenAmountSold,
+        totalOfferingAmount,
+      }
+
+      return {
+        offeringOverview,
+        originationRow: {
+          ...offeringOverview,
+          startingPrice,
+          saleDuration: publicSaleDuration,
+        },
+        // TODO: remove this hardcoded value
+        network: Network.KOVAN,
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 

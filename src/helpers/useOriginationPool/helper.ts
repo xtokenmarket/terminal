@@ -34,7 +34,7 @@ export const getOffersDataMulticall = async (
       'endingPrice',
       'saleInitiatedTimestamp',
       'saleEndTimestamp',
-      'vestingPeriod ',
+      'vestingPeriod',
       'cliffPeriod',
       'reserveAmount',
       'whitelistStartingPrice',
