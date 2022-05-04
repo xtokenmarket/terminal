@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, useState, useRef } from 'react'
 import {
   makeStyles,
   Typography,
@@ -85,6 +85,9 @@ const useStyles = makeStyles((theme) => ({
     left: '50%',
     transform: 'translateX(-50%)',
   },
+  file: {
+    display: 'none',
+  },
 }))
 
 interface IProps {
@@ -96,7 +99,7 @@ interface IProps {
 interface IState {
   setWhitelistTx: string
   txState: TxState
-  whitelist: string[]
+  whitelistFile: File | null
   value: string
 }
 
@@ -108,10 +111,11 @@ export const SetWhitelistModal: React.FC<IProps> = ({
   const classes = useStyles()
   const { account, library: provider } = useConnectedWeb3Context()
   const { originationService } = useServices()
+  const hiddenFileInput = useRef<HTMLInputElement>(null)
   const [state, setState] = useState<IState>({
     setWhitelistTx: '',
     txState: TxState.None,
-    whitelist: [],
+    whitelistFile: null,
     value: '',
   })
 
@@ -127,6 +131,10 @@ export const SetWhitelistModal: React.FC<IProps> = ({
     if (state.txState === TxState.Complete) {
       _clearTxState()
     }
+    setState((prev) => ({
+      ...prev,
+      whitelistFile: null,
+    }))
     onClose()
   }
 
@@ -140,7 +148,8 @@ export const SetWhitelistModal: React.FC<IProps> = ({
         txState: TxState.InProgress,
       }))
 
-      const txId = await originationService.setWhitelist(state.whitelist)
+      // TODO: whitelist format need to be handled
+      const txId = await originationService.setWhitelist(['test'])
 
       const finalTxId = await originationService.waitUntilSetWhitelist(
         account,
@@ -161,8 +170,6 @@ export const SetWhitelistModal: React.FC<IProps> = ({
     }
   }
 
-  const isDisable = state.whitelist.length === 0
-
   const resetTxState = () => {
     setState((prev) => ({
       ...prev,
@@ -170,15 +177,27 @@ export const SetWhitelistModal: React.FC<IProps> = ({
     }))
   }
 
-  const onPlus = (event: ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.files)
-  }
-
   const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setState((prev) => ({
       ...prev,
       value: event.target.value,
     }))
+  }
+
+  const onFileInputClick = () => {
+    if (!hiddenFileInput.current) return
+    hiddenFileInput.current.click()
+  }
+
+  const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return
+    const fileUploaded = event.target?.files[0]
+    setState((prev) => ({
+      ...prev,
+      whitelistFile: fileUploaded,
+    }))
+
+    // TODO: whitelist format need to be handled
   }
 
   return (
@@ -200,19 +219,40 @@ export const SetWhitelistModal: React.FC<IProps> = ({
           <Typography className={classes.title}>SET WHITELIST</Typography>
           <div className={classes.underline} />
           {!(state.txState === TxState.InProgress) && (
-            <IconButton className={classes.closeButton} onClick={onClose}>
+            <IconButton className={classes.closeButton} onClick={_onClose}>
               <CloseOutlinedIcon />
             </IconButton>
           )}
           <div className={classes.plusWrapper}>
-            <img
-              alt="plus"
-              className={classes.plus}
-              src="/assets/icons/plus.svg"
-            />
-            <Typography className={classes.text}>
-              Upload a CSV File with Whitelist addresses
-            </Typography>
+            <Button onClick={onFileInputClick} disableRipple>
+              <img
+                alt="plus"
+                className={classes.plus}
+                src="/assets/icons/plus.svg"
+              />
+              <input
+                type="file"
+                onChange={handleFileInputChange}
+                className={classes.file}
+                ref={hiddenFileInput}
+              />
+              {state.whitelistFile ? (
+                <>
+                  <img
+                    alt="plus"
+                    className={classes.plus}
+                    src="/assets/icons/file.svg"
+                  />
+                  <Typography className={classes.text}>
+                    {state.whitelistFile.name}
+                  </Typography>
+                </>
+              ) : (
+                <Typography className={classes.text}>
+                  Upload a CSV File with Whitelist addresses
+                </Typography>
+              )}
+            </Button>
           </div>
 
           <div className={classes.inputWrapper}>
@@ -221,7 +261,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
 
           <div className={classes.buttonWrapper}>
             <Button
-              disabled={isDisable}
+              disabled={!state.whitelistFile}
               fullWidth
               color="primary"
               variant="contained"
