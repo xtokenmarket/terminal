@@ -10,6 +10,7 @@ export enum ConnectorNames {
   TrustWallet = 'trustwallet',
   WalletConnect = 'walletconnect',
   Coinbase = 'coinbase',
+  UD = 'uauth',
 }
 
 export enum ETHEME {
