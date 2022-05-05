@@ -3,6 +3,7 @@ import { useConnectedWeb3Context } from 'contexts'
 import { getEtherscanUri } from 'config/networks'
 import { formatUnits } from 'ethers/lib/utils'
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
+import { formatDurationUnits } from 'utils'
 import { toUsd } from 'utils/number'
 import { ITerminalPool, PoolService } from 'types'
 
@@ -181,13 +182,6 @@ export const RewardVestSection: React.FC<IProps> = ({
           N/A
         </Typography>
       )
-    }
-
-    const formatDurationUnits = (duration: string[]) => {
-      const primary = duration[0] || ''
-      const rest = duration.slice(1, duration.length)
-      rest.splice(0, 0, '')
-      return { primary, rest: rest.join(' — ') }
     }
 
     return (

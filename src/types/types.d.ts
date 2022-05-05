@@ -259,16 +259,17 @@ interface Label {
 }
 
 export interface IOfferingOverview extends Label {
-  offerToken: IToken
-  purchaseToken: IToken
-  offeringReserve: BigNumber
-  vestingPeriod: BigNumber
   cliffPeriod: BigNumber
+  offeringReserve: BigNumber
+  offerToken: IToken
+  offerTokenAmountSold: BigNumber
+  poolAddress: string
+  purchaseToken: IToken
   salesBegin: BigNumber
   salesEnd: BigNumber
   salesPeriod: BigNumber
-  offerTokenAmountSold: BigNumber
   totalOfferingAmount: BigNumber
+  vestingPeriod: BigNumber
 }
 
 export interface IOriginationRow extends IOfferingOverview {
