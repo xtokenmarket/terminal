@@ -1,5 +1,6 @@
 export * from './clr'
 export * from './erc20'
+export * from './fungiblePool'
 export * from './lmService'
 export * from './multicall'
 export * from './origination'

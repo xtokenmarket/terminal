@@ -228,7 +228,7 @@ export const getDurationSec = (amount: number, unit: string) => {
 
 export const parseDurationSec = (amount: number) => {
   if (amount === 0) return '0 day'
-  
+
   const unitNames = ['Year', 'Month', 'Week', 'Day']
   const amountByUnit = [
     amount / (secondsIn1Day * 7 * 4 * 365),
@@ -266,4 +266,11 @@ export const parseRemainingDurationSec = (
     })
     .filter((_, i) => i < unitPrecision)
     .join(' ')
+}
+
+export const formatDurationUnits = (duration: string[]) => {
+  const primary = duration[0] || ''
+  const rest = duration.slice(1, duration.length)
+  rest.splice(0, 0, '')
+  return { primary, rest: rest.join(' — ') }
 }

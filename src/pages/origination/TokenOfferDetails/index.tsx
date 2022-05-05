@@ -3,10 +3,12 @@ import { PageWrapper, PageHeader, PageContent, SimpleLoader } from 'components'
 import { useOriginationPool } from 'helpers/useOriginationPool'
 import { useState } from 'react'
 import { useHistory, useParams } from 'react-router'
-import { OriginationLabels, TxState } from 'utils/enums'
+import { OriginationLabels } from 'utils/enums'
+import { transparentize } from 'polished'
+
+import { InitiateSaleModal } from './components/InitiateSaleModal'
 import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
-import { transparentize } from 'polished'
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -96,17 +98,19 @@ const MyPosition = {
 }
 
 interface IState {
+  isInitiateSaleModalOpen: boolean
   open: boolean
 }
 
 const TokenSaleDetails = () => {
+  const cl = useStyles()
   const history = useHistory()
   const { poolAddress } = useParams<RouteParams>()
   const { tokenOffer, loadInfo } = useOriginationPool(poolAddress)
   const [state, setState] = useState<IState>({
+    isInitiateSaleModalOpen: false,
     open: false,
   })
-  const cl = useStyles()
 
   const onClose = () => {
     setState((prev) => ({
@@ -123,10 +127,25 @@ const TokenSaleDetails = () => {
     await loadInfo()
   }
 
+  const onInitiateSuccess = async () => {
+    setState((prev) => ({
+      ...prev,
+      isInitiateSaleModalOpen: false,
+    }))
+    await loadInfo()
+  }
+
   const toggleSetWhitelistModal = () => {
     setState((prev) => ({
       ...prev,
       open: !state.open,
+    }))
+  }
+
+  const toggleInitiateSaleModal = () => {
+    setState((prev) => ({
+      ...prev,
+      isInitiateSaleModalOpen: !state.isInitiateSaleModalOpen,
     }))
   }
 
@@ -150,6 +169,7 @@ const TokenSaleDetails = () => {
             <Table
               item={tokenOffer.offeringOverview}
               label={'Offering Overview'}
+              toggleModal={toggleInitiateSaleModal}
             />
             <Table
               item={WhitelistSale}
@@ -174,6 +194,12 @@ const TokenSaleDetails = () => {
               <Typography className={cl.text}>INVEST</Typography>
             </Button>
             <Table item={MyPosition} label={'My Position'} />
+            <InitiateSaleModal
+              offerData={tokenOffer.offeringOverview}
+              onClose={toggleInitiateSaleModal}
+              onSuccess={onInitiateSuccess}
+              open={state.isInitiateSaleModalOpen}
+            />
           </div>
         )}
       </PageContent>

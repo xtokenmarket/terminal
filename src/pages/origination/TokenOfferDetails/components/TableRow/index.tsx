@@ -14,11 +14,7 @@ import {
   IPublicSale,
   IWhitelistSale,
 } from 'types'
-import {
-  formatBigNumber,
-  parseDurationSec,
-  parseRemainingDurationSec,
-} from 'utils'
+import { formatBigNumber, parseDurationSec } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -188,12 +184,7 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
           <Td type={OfferingOverview.SalesBegin} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
               {item.salesBegin.isZero() ? (
-                <Button
-                  className={cl.button}
-                  onClick={() => {
-                    console.log('onClick')
-                  }}
-                >
+                <Button className={cl.button} onClick={toggleModal}>
                   <Typography className={cl.text}>INITIATE SALE</Typography>
                 </Button>
               ) : (
