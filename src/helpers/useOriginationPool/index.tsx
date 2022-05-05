@@ -58,13 +58,14 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         offerToken: tokens[0] || ETH,
         purchaseToken: tokens[1] || ETH,
         offeringReserve: reserveAmount,
-        vestingPeriod: vestingPeriod,
-        cliffPeriod: cliffPeriod,
+        vestingPeriod,
+        cliffPeriod,
         salesBegin: saleInitiatedTimestamp,
         salesEnd: saleEndTimestamp,
         salesPeriod: publicSaleDuration,
         offerTokenAmountSold,
         totalOfferingAmount,
+        poolAddress,
       }
 
       return {
