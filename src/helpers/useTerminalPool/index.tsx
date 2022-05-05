@@ -322,12 +322,12 @@ export const useTerminalPool = (
 
         user.stakedTokenBalance = stakedTokenBalance
 
-        user.token0Deposit = token0.balance
-          .mul(stakedTokenBalance)
-          .div(totalSupply)
-        user.token1Deposit = token1.balance
-          .mul(stakedTokenBalance)
-          .div(totalSupply)
+        user.token0Deposit = _totalSupply.isZero()
+          ? ZERO
+          : token0.balance.mul(stakedTokenBalance).div(_totalSupply)
+        user.token1Deposit = _totalSupply.isZero()
+          ? ZERO
+          : token1.balance.mul(stakedTokenBalance).div(_totalSupply)
 
         user.token0Tvl = formatUnits(
           user.token0Deposit.mul(parseEther(pool.token0.price)).div(ONE_ETHER),
@@ -341,12 +341,14 @@ export const useTerminalPool = (
 
         const totalBalance = token0.balance.add(token1.balance)
 
-        poolShare = formatEther(
-          user.token0Deposit
-            .add(user.token1Deposit)
-            .mul(ONE_ETHER)
-            .div(totalBalance)
-        )
+        if (!totalBalance.isZero()) {
+          poolShare = formatEther(
+            user.token0Deposit
+              .add(user.token1Deposit)
+              .mul(ONE_ETHER)
+              .div(totalBalance)
+          )
+        }
 
         // Get collectable fees
         if (isOwnerOrManager) {
