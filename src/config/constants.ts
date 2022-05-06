@@ -153,6 +153,7 @@ export const WALLET_ICONS: { [key in ConnectorNames]: string } = {
   [ConnectorNames.TrustWallet]: '/assets/wallets/trust-wallet.svg',
   [ConnectorNames.WalletConnect]: '/assets/wallets/wallet-connect.svg',
   [ConnectorNames.Coinbase]: '/assets/wallets/coinbase.svg',
+  [ConnectorNames.UD]: '/assets/wallets/ud-default.png',
 }
 
 export const SvgIcons = {

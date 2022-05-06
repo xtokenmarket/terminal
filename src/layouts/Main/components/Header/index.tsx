@@ -2,7 +2,7 @@ import { makeStyles, Button } from '@material-ui/core'
 
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet'
 import { matchPath, useHistory } from 'react-router'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { MENU_ITEMS } from 'config/layout'
 import { useConnectedWeb3Context } from 'contexts'
 import { shortenAddress } from 'utils'
@@ -10,6 +10,8 @@ import { NetworkSelector } from '../NetworkSelector'
 import { ENetwork } from 'utils/enums'
 import { useScrollYPosition } from 'helpers'
 import clsx from 'clsx'
+import connectors from 'utils/connectors'
+import { STORAGE_KEY_CONNECTOR } from 'config/constants'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -91,6 +93,8 @@ export const Header = () => {
   const history = useHistory()
   const { account, setWalletConnectModalOpened, onDisconnect } =
     useConnectedWeb3Context()
+  const [user, setUser] = useState('')
+
   const yPosition = useScrollYPosition()
 
   const selectedMenuItem = useMemo(() => {
@@ -103,6 +107,26 @@ export const Header = () => {
     )
     return item
   }, [history.location.pathname])
+
+  useEffect(() => {
+    setUser('')
+    const getUDUser = async () => {
+      const connector = localStorage.getItem(STORAGE_KEY_CONNECTOR)
+
+      const currentConnector = connectors['uauth']
+
+      if (account && connector === 'uauth') {
+        try {
+          const _user = await currentConnector.uauth.user()
+          setUser(_user.sub)
+        } catch (error) {
+          console.log('getUDUser error', error)
+        }
+      }
+    }
+
+    getUDUser()
+  }, [account])
 
   const Icon = selectedMenuItem?.icon
 
@@ -133,7 +157,8 @@ export const Header = () => {
           }
         >
           {account && <AccountBalanceWalletIcon />}
-          {account ? shortenAddress(account) : 'CONNECT WALLET'}
+          &nbsp;&nbsp;
+          {account ? (user ? user : shortenAddress(account)) : 'CONNECT WALLET'}
         </Button>
       </div>
     </div>

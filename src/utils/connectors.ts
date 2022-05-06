@@ -3,6 +3,8 @@ import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { WalletLinkConnector } from '@web3-react/walletlink-connector'
 import { ChainId } from 'config/constants'
 import { supportedNetworkIds, supportedNetworkURLs } from 'config/networks'
+import { UAuthConnector } from '@uauth/web3-react'
+import UAuth from '@uauth/js'
 
 const POLLING_INTERVAL = 12000
 
@@ -30,9 +32,21 @@ export const walletlink = new WalletLinkConnector({
   supportedChainIds: supportedNetworkIds,
 })
 
+export const uauth = new UAuthConnector({
+  uauth: new UAuth({
+    clientID: process.env.REACT_APP_UD_CLIENT_ID as string,
+    redirectUri: process.env.REACT_APP_UD_REDIRECT_URI as string,
+    scope: 'openid wallet',
+  }),
+
+  // Injected and walletconnect connectors are required.
+  connectors: { injected, walletconnect },
+})
+
 export default {
   injected,
   trustwallet: injected,
   walletconnect,
   coinbase: walletlink,
+  uauth,
 }

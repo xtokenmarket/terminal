@@ -227,6 +227,13 @@ export const ConnectWalletModal = (props: IProps) => {
                   }}
                   text="Coinbase"
                 />
+                <ConnectWalletItem
+                  icon={WALLET_ICONS[ConnectorNames.UD]}
+                  onClick={() => {
+                    onClick(ConnectorNames.UD)
+                  }}
+                  text="Unstoppable Wallet"
+                />
               </>
             )}
           </div>
