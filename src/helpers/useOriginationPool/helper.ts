@@ -1,7 +1,7 @@
 import Abi from 'abis'
 import { BigNumber } from 'ethers'
 import { MulticallService } from 'services'
-interface ITokenOfferDetails {
+export interface ITokenOfferDetails {
   offerToken: string
   purchaseToken: string
   totalOfferingAmount: BigNumber

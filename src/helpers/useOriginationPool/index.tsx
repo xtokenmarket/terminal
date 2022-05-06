@@ -7,7 +7,7 @@ import { useConnectedWeb3Context } from 'contexts'
 import { useNetworkContext } from 'contexts/networkContext'
 import { useServices } from 'helpers'
 import { Network, OriginationLabels } from 'utils/enums'
-import { getOffersDataMulticall } from './helper'
+import { getOffersDataMulticall, ITokenOfferDetails } from './helper'
 import { IToken, ITokenOffer } from 'types'
 
 interface IState {
@@ -28,13 +28,9 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
     try {
       const _offerData = await getOffersDataMulticall(poolAddress, multicall)
 
-      if (!_offerData) {
-        throw new Error('no offerData')
-      }
-
       const tokens = await Promise.all([
-        getTokenFromAddress(_offerData?.offerToken, networkId),
-        getTokenFromAddress(_offerData?.purchaseToken, networkId),
+        getTokenFromAddress(_offerData?.offerToken as string, networkId),
+        getTokenFromAddress(_offerData?.purchaseToken as string, networkId),
       ])
       const ETH: IToken = {
         ...knownTokens.eth,
@@ -55,7 +51,7 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         whitelistSaleDuration,
         whitelist,
         publicSaleDuration,
-      } = _offerData
+      } = _offerData as ITokenOfferDetails
 
       const offeringOverview = {
         label: OriginationLabels.OfferingOverview,
