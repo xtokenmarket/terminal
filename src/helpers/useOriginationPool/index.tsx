@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import Abi from 'abis'
 import axios from 'axios'
-import { constants } from 'ethers'
+import { BigNumber, constants } from 'ethers'
 import { knownTokens, getTokenFromAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import { useNetworkContext } from 'contexts/networkContext'
 import { useServices } from 'helpers'
-import { Network } from 'utils/enums'
-import { getOffersDataMulticall } from './helper'
+import { Network, OriginationLabels } from 'utils/enums'
+import { getOffersDataMulticall, ITokenOfferDetails } from './helper'
 import { IToken, ITokenOffer } from 'types'
 
 interface IState {
@@ -24,23 +24,61 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
 
   const getContractTokenOfferData = async (
     poolAddress: string
-  ): Promise<ITokenOffer> => {
-    const _offerData = await getOffersDataMulticall(poolAddress, multicall)
-    const tokens = await Promise.all([
-      getTokenFromAddress(_offerData?.offerToken, networkId),
-      getTokenFromAddress(_offerData?.purchaseToken, networkId),
-    ])
-    const ETH: IToken = {
-      ...knownTokens.eth,
-      address: constants.AddressZero,
-    }
+  ): Promise<ITokenOffer | undefined> => {
+    try {
+      const _offerData = await getOffersDataMulticall(poolAddress, multicall)
 
-    return {
-      ..._offerData,
-      // TODO: remove this hardcoded value
-      network: Network.KOVAN,
-      offerToken: tokens[0] || ETH,
-      purchaseToken: tokens[1] || ETH,
+      const tokens = await Promise.all([
+        getTokenFromAddress(_offerData?.offerToken as string, networkId),
+        getTokenFromAddress(_offerData?.purchaseToken as string, networkId),
+      ])
+      const ETH: IToken = {
+        ...knownTokens.eth,
+        address: constants.AddressZero,
+      }
+
+      const {
+        offerTokenAmountSold,
+        totalOfferingAmount,
+        reserveAmount,
+        vestingPeriod,
+        cliffPeriod,
+        saleInitiatedTimestamp,
+        saleEndTimestamp,
+        startingPrice,
+        whitelistStartingPrice,
+        whitelistEndingPrice,
+        whitelistSaleDuration,
+        whitelist,
+        publicSaleDuration,
+      } = _offerData as ITokenOfferDetails
+
+      const offeringOverview = {
+        label: OriginationLabels.OfferingOverview,
+        offerToken: tokens[0] || ETH,
+        purchaseToken: tokens[1] || ETH,
+        offeringReserve: reserveAmount,
+        vestingPeriod: vestingPeriod,
+        cliffPeriod: cliffPeriod,
+        salesBegin: saleInitiatedTimestamp,
+        salesEnd: saleEndTimestamp,
+        salesPeriod: publicSaleDuration,
+        offerTokenAmountSold,
+        totalOfferingAmount,
+      }
+
+      return {
+        offeringOverview,
+        originationRow: {
+          ...offeringOverview,
+          startingPrice,
+          saleDuration: publicSaleDuration,
+        },
+        // TODO: remove this hardcoded value
+        network: Network.KOVAN,
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 
