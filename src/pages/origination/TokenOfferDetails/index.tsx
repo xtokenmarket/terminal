@@ -99,7 +99,10 @@ const TokenSaleDetails = () => {
           <SimpleLoader />
         ) : (
           <div>
-            <Table item={OfferingOverview} label={'Offering Overview'} />
+            <Table
+              item={tokenOffer.offeringOverview}
+              label={'Offering Overview'}
+            />
             <Table item={WhitelistSale} label={'Whitelist Sale'} />
             <Button
               className={cl.button}
