@@ -250,17 +250,8 @@ export interface ISaleParams {
 export interface ITokenOffer {
   network?: Network
   poolAddress?: string
-  offerToken: IToken
-  purchaseToken: IToken
-  totalOfferingAmount: BigNumber
-  offerTokenAmountSold: BigNumber
-  startingPrice: BigNumber
-  endingPrice: BigNumber
-  saleDuration: BigNumber
-  saleInitiatedTimestamp: BigNumber
-  saleEndTimestamp: BigNumber
-  vestingPeriod: BigNumber
-  cliffPeriod: BigNumber
+  offeringOverview: IOfferingOverview
+  originationRow: IOriginationRow
 }
 
 interface Label {
@@ -270,13 +261,19 @@ interface Label {
 export interface IOfferingOverview extends Label {
   offerToken: IToken
   purchaseToken: IToken
-  offeringStatus: string
-  offeringReserve: string
-  vestingPeriod: string
-  cliffPeriod: string
-  salesBegin: string
-  salesEnd: string
-  salesPeriod: string
+  offeringReserve: BigNumber
+  vestingPeriod: BigNumber
+  cliffPeriod: BigNumber
+  salesBegin: BigNumber
+  salesEnd: BigNumber
+  salesPeriod: BigNumber
+  offerTokenAmountSold: BigNumber
+  totalOfferingAmount: BigNumber
+}
+
+export interface IOriginationRow extends IOfferingOverview {
+  startingPrice: BigNumber
+  saleDuration: BigNumber
 }
 
 export interface IWhitelistSale extends Label {
@@ -295,6 +292,13 @@ export interface IPublicSale extends Label {
   price: string
   timeRemaining: string
   salesPeriod: string
+}
+
+export interface IMyPosition extends Label {
+  tokenPurchased: string
+  amountInvested: string
+  amountvested: string
+  amountAvailableToVest: string
 }
 
 export interface IMyPosition extends Label {
