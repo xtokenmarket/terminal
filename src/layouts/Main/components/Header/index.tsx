@@ -116,8 +116,12 @@ export const Header = () => {
       const currentConnector = connectors['uauth']
 
       if (account && connector === 'uauth') {
-        const _user = await currentConnector.uauth.user()
-        setUser(_user.sub)
+        try {
+          const _user = await currentConnector.uauth.user()
+          setUser(_user.sub)
+        } catch (error) {
+          console.log('getUDUser error', error)
+        }
       }
     }
 
