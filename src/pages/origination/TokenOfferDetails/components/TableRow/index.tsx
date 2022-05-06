@@ -14,6 +14,11 @@ import {
   IPublicSale,
   IWhitelistSale,
 } from 'types'
+import {
+  formatBigNumber,
+  parseDurationSec,
+  parseRemainingDurationSec,
+} from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,12 +79,12 @@ const useStyles = makeStyles((theme) => ({
   label: {
     color: theme.colors.white,
     textTransform: 'capitalize',
+    display: 'flex',
   },
-  offerTokenLabel: {
+  symbol: {
     color: theme.colors.white,
-    textTransform: 'capitalize',
     fontWeight: 800,
-    marginLeft: theme.spacing(2),
+    marginLeft: 7,
   },
   button: {
     height: 33,
@@ -122,7 +127,7 @@ export const TableRow = ({ item }: IProps) => {
                 className={cl.tokenIcon}
                 src={item.offerToken.image}
               />
-              <Typography className={cl.offerTokenLabel}>
+              <Typography className={cl.symbol}>
                 {item.offerToken.symbol}
               </Typography>
             </div>
@@ -135,32 +140,53 @@ export const TableRow = ({ item }: IProps) => {
                 className={cl.tokenIcon}
                 src={item.purchaseToken.image}
               />
-              <Typography className={cl.offerTokenLabel}>
+              <Typography className={cl.symbol}>
                 {item.purchaseToken.symbol}
               </Typography>
             </div>
           </Td>
 
           <Td type={OfferingOverview.OfferingStatus} label={item.label}>
-            <Typography className={cl.item}>{item.offeringStatus}</Typography>
+            <div className={cl.item}>
+              {`${formatBigNumber(
+                item.totalOfferingAmount.sub(item.offerTokenAmountSold),
+                item.offerToken.decimals
+              )}/${formatBigNumber(
+                item.totalOfferingAmount,
+                item.offerToken.decimals
+              )}`}
+              <Typography className={cl.symbol}>
+                {item.offerToken.symbol}
+              </Typography>
+            </div>
           </Td>
           <Td type={OfferingOverview.OfferingReserve} label={item.label}>
-            <Typography className={cl.item}>{item.offeringReserve}</Typography>
+            <div className={cl.item}>
+              <Typography>
+                {formatBigNumber(
+                  item.offeringReserve,
+                  item.offerToken.decimals
+                )}
+              </Typography>
+              <Typography className={cl.symbol}>
+                {item.offerToken.symbol}
+              </Typography>
+            </div>
           </Td>
 
           <Td type={OfferingOverview.VestingPeriod} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.vestingPeriod}
+              {parseDurationSec(item.vestingPeriod.toNumber())}
             </Typography>
           </Td>
           <Td type={OfferingOverview.CliffPeriod} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.cliffPeriod}
+              {parseDurationSec(item.cliffPeriod.toNumber())}
             </Typography>
           </Td>
           <Td type={OfferingOverview.SalesBegin} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.salesBegin === 'INITIATE SALE' ? (
+              {item.salesBegin.isZero() ? (
                 <Button
                   className={cl.button}
                   onClick={() => {
@@ -170,18 +196,22 @@ export const TableRow = ({ item }: IProps) => {
                   <Typography className={cl.text}>INITIATE SALE</Typography>
                 </Button>
               ) : (
-                item.salesBegin
+                item.salesBegin.toString()
               )}
             </Typography>
           </Td>
           <Td type={OfferingOverview.SalesEnd} label={item.label}>
             <Typography className={clsx(cl.item, cl.label, cl.itemAlignRight)}>
-              {item.salesEnd}
+              {item.salesEnd.isZero()
+                ? 'N/A'
+                : parseDurationSec(item.salesEnd.toNumber())}
             </Typography>
           </Td>
           <Td type={OfferingOverview.SalesPeriod} label={item.label}>
             <Typography className={clsx(cl.item, cl.label, cl.itemAlignRight)}>
-              {item.salesPeriod}
+              {item.salesPeriod
+                ? parseDurationSec(item.salesPeriod.toNumber())
+                : 'N/A'}
             </Typography>
           </Td>
         </div>
