@@ -35,7 +35,7 @@ export const walletlink = new WalletLinkConnector({
 export const uauth = new UAuthConnector({
   uauth: new UAuth({
     clientID: process.env.REACT_APP_UD_CLIENT_ID as string,
-    redirectUri: process.env.REACT_APP_UD_REDIRECT_URI as string,
+    redirectUri: 'https://app.xtokenterminal.io',
     scope: 'openid wallet',
   }),
 
