@@ -9,6 +9,7 @@ import { OriginationLabels } from 'utils/enums'
 import { InitiateSaleModal } from './components/InitiateSaleModal'
 import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
+import { transparentize } from 'polished'
 
 const useStyles = makeStyles((theme) => ({
   button: {
