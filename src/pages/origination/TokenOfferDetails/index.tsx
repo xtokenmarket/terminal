@@ -6,6 +6,7 @@ import { useHistory, useParams } from 'react-router'
 import { OriginationLabels, TxState } from 'utils/enums'
 import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
+import { transparentize } from 'polished'
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -22,6 +23,17 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.primary700,
     fontSize: 14,
     fontWeight: 600,
+  },
+  root: {
+    paddingBottom: 10,
+    overflowX: 'auto',
+    '&::-webkit-scrollbar': {
+      backgroundColor: transparentize(0.6, theme.colors.primary),
+      height: 12,
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: theme.colors.primary,
+    },
   },
 }))
 
@@ -129,7 +141,7 @@ const TokenSaleDetails = () => {
         {!tokenOffer ? (
           <SimpleLoader />
         ) : (
-          <div>
+          <div className={cl.root}>
             <SetWhitelistModal
               open={state.open}
               onClose={onClose}
