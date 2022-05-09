@@ -48,11 +48,25 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white1,
   },
   button: {
-    height: 48,
-    minWidth: 132,
-    '&.pending': {
-      color: theme.colors.white,
+    marginTop: 14,
+    '&:hover': {
+      opacity: 0.7,
+      backgroundColor: theme.colors.secondary,
     },
+    '&.pending': {
+      color: theme.colors.primary700,
+    },
+    '&.disabled': {
+      opacity: 0.3,
+      backgroundColor: theme.colors.secondary,
+    },
+    padding: '8px 20px',
+    backgroundColor: theme.colors.secondary,
+    borderRadius: 4,
+  },
+  buttonText: {
+    color: theme.colors.primary700,
+    fontWeight: 600,
   },
   progress: { color: theme.colors.white },
   buttonWrapper: {
@@ -262,18 +276,22 @@ export const SetWhitelistModal: React.FC<IProps> = ({
           <div className={classes.buttonWrapper}>
             <Button
               disabled={!state.whitelistFile}
-              fullWidth
               color="primary"
               variant="contained"
               className={clsx(
                 classes.button,
-                state.txState === TxState.InProgress && 'pending'
+                state.txState === TxState.InProgress && 'pending',
+                !state.whitelistFile && 'disabled'
               )}
               onClick={onSetWhitelist}
             >
-              {state.txState === TxState.InProgress
-                ? 'Pending'
-                : 'SET WHITELIST'}
+              <Typography className={classes.buttonText}>
+                {state.txState === TxState.InProgress
+                  ? 'Pending'
+                  : state.whitelistFile
+                  ? 'SET WHITELIST'
+                  : 'Approve  WHITELIST'}
+              </Typography>
               {state.txState === TxState.InProgress && (
                 <>
                   &nbsp;
