@@ -11,43 +11,31 @@ type IProps = React.PropsWithChildren<{
   React.HTMLAttributes<HTMLDivElement>
 
 export const Modal: React.FC<IProps> = (props) => {
-  const { open, disableEscapeKeyDown, onClose, ...rest } = props
-  const ModalMigrate = ({
-    children,
-    disableBackdropClick,
-    disableEscapeKeyDown,
-    onClose,
-    ...rest
-  }: IProps) => {
-    const handleClose = (event: Event, reason: string) => {
-      if (disableBackdropClick && reason === 'backdropClick') {
-        return false
-      }
+  const { open, disableEscapeKeyDown, onClose, disableBackdropClick, ...rest } =
+    props
 
-      if (disableEscapeKeyDown && reason === 'escapeKeyDown') {
-        return false
-      }
-
-      if (typeof onClose === 'function') {
-        onClose()
-      }
+  const handleClose = (event: Event, reason: string) => {
+    if (disableBackdropClick && reason === 'backdropClick') {
+      return false
     }
 
-    return (
-      <MaterialModal onClose={handleClose} {...rest}>
-        {children}
-      </MaterialModal>
-    )
+    if (disableEscapeKeyDown && reason === 'escapeKeyDown') {
+      return false
+    }
+
+    if (typeof onClose === 'function') {
+      onClose()
+    }
   }
 
   return (
-    <ModalMigrate
+    <MaterialModal
+      onClose={handleClose}
       open={open}
       disableEscapeKeyDown={disableEscapeKeyDown}
-      onClose={onClose}
       {...rest}
     >
       {props.children}
-    </ModalMigrate>
+    </MaterialModal>
   )
 }
