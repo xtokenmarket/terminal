@@ -270,7 +270,11 @@ export const SetWhitelistModal: React.FC<IProps> = ({
           </div>
 
           <div className={classes.inputWrapper}>
-            <Input value={state.value} onChange={onInputChange} />
+            <Input
+              inputLabel="Max Sale Per whitelist address"
+              value={state.value}
+              onChange={onInputChange}
+            />
           </div>
 
           <div className={classes.buttonWrapper}>
