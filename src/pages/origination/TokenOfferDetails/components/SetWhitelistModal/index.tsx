@@ -76,6 +76,15 @@ const useStyles = makeStyles((theme) => ({
   inputWrapper: {
     margin: 32,
   },
+  underline: {
+    height: 1,
+    width: '90%',
+    background: theme.colors.primary200,
+    position: 'absolute',
+    top: '82px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+  },
 }))
 
 interface IProps {
@@ -189,6 +198,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
       ) : (
         <div className={classes.content}>
           <Typography className={classes.title}>SET WHITELIST</Typography>
+          <div className={classes.underline} />
           {!(state.txState === TxState.InProgress) && (
             <IconButton className={classes.closeButton} onClick={onClose}>
               <CloseOutlinedIcon />
