@@ -252,6 +252,7 @@ export interface ITokenOffer {
   poolAddress?: string
   offeringOverview: IOfferingOverview
   originationRow: IOriginationRow
+  whitelist: IWhitelistSale
 }
 
 interface Label {
@@ -267,24 +268,26 @@ export interface IOfferingOverview extends Label {
   purchaseToken: IToken
   salesBegin: BigNumber
   salesEnd: BigNumber
-  salesPeriod: BigNumber
+  salesPeriod?: BigNumber
   totalOfferingAmount: BigNumber
   vestingPeriod: BigNumber
 }
 
 export interface IOriginationRow extends IOfferingOverview {
   startingPrice: BigNumber
-  saleDuration: BigNumber
+  saleDuration?: BigNumber
 }
 
 export interface IWhitelistSale extends Label {
   currentPrice: string
   pricingFormular: string
-  startingEndingPrice: string
-  whitelist: string
+  startingPrice?: BigNumber
+  endingPrice?: BigNumber
+  whitelist?: string[]
   addressCap: string
   timeRemaining: string
-  salesPeriod: string
+  salesPeriod?: BigNumber
+  offerToken: IToken
 }
 
 export interface IPublicSale extends Label {

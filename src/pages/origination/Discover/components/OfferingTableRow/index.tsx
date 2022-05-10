@@ -108,7 +108,9 @@ export const OfferingTableRow = ({ offering }: IProps) => {
     const isSaleInitiated = !salesBegin.isZero()
     const elapsedTime = moment().subtract(salesBegin.toString()).toString()
     const timeRemaining = isSaleInitiated
-      ? moment(salesPeriod.toString()).subtract(elapsedTime).toString()
+      ? moment(salesPeriod ? salesPeriod.toString() : '0')
+          .subtract(elapsedTime)
+          .toString()
       : saleDuration?.toString()
 
     const remainingOfferingAmount =
