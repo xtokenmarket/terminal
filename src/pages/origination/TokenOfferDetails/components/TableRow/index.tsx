@@ -218,19 +218,27 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
           <div className={cl.content}>
             <Td type={WhitelistSale.CurrentPrice} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {item.currentPrice}
+                {item.currentPrice || 'N/A'}
               </Typography>
             </Td>
 
             <Td type={WhitelistSale.PricingFormular} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {item.pricingFormular}
+                {item.pricingFormular || 'N/A'}
               </Typography>
             </Td>
 
             <Td type={WhitelistSale.StartingEndingPrice} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {item.startingEndingPrice}
+                {item.startingPrice && item.endingPrice
+                  ? `${formatBigNumber(
+                      item.startingPrice,
+                      item.offerToken.decimals
+                    )}/${formatBigNumber(
+                      item.endingPrice,
+                      item.offerToken.decimals
+                    )}`
+                  : 'N/A'}
               </Typography>
             </Td>
 
@@ -247,19 +255,19 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
 
             <Td type={WhitelistSale.AddressCap} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {item.addressCap}
+                {item.addressCap || 'N/A'}
               </Typography>
             </Td>
 
             <Td type={WhitelistSale.TimeRemaining} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {item.timeRemaining}
+                {item.timeRemaining || 'N/A'}
               </Typography>
             </Td>
 
             <Td type={WhitelistSale.SalesPeriod} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {item.salesPeriod}
+                {item.salesPeriod || 'N/A'}
               </Typography>
             </Td>
           </div>
