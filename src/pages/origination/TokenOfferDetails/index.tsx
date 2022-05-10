@@ -42,42 +42,6 @@ type RouteParams = {
   poolAddress: string
 }
 
-const OfferingOverview = {
-  label: OriginationLabels.OfferingOverview,
-  offerToken: {
-    address: '0x016750ac630f711882812f24dba6c95b9d35856d',
-    decimals: 6,
-    image: '/assets/tokens/usdt.png',
-    name: 'Tether USD',
-    symbol: 'USDT',
-  },
-  purchaseToken: {
-    address: '0x90410304D88E333710703aF6Ed6A14d5ef74575F',
-    decimals: 18,
-    image: '/assets/tokens/dai.png',
-    name: 'DAI',
-    symbol: 'DAI',
-  },
-  offeringStatus: '21K/100k XTK',
-  offeringReserve: '80,000 XTK',
-  vestingPeriod: '1  Year',
-  cliffPeriod: '6 Months',
-  salesBegin: 'INITIATE SALE',
-  salesEnd: 'April 20 ,2022',
-  salesPeriod: '2 Weeks',
-}
-
-const WhitelistSale = {
-  label: OriginationLabels.WhitelistSale,
-  currentPrice: '1.21 USDC',
-  pricingFormular: 'Descending',
-  startingEndingPrice: '1.25/0.75 USDC',
-  whitelist: 'SET WHITELIST',
-  addressCap: '1,000 XTK',
-  timeRemaining: '6D:14H:37M',
-  salesPeriod: '1 Week',
-}
-
 const PublicSale = {
   label: OriginationLabels.PublicSale,
   currentPrice: '1.25 USDC',
@@ -152,7 +116,7 @@ const TokenSaleDetails = () => {
               label={'Offering Overview'}
             />
             <Table
-              item={WhitelistSale}
+              item={tokenOffer.whitelist}
               label={'Whitelist Sale'}
               toggleModal={toggleSetWhitelistModal}
             />
