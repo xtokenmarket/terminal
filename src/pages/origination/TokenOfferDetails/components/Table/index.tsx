@@ -32,9 +32,10 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   item: OriginationDetailItem
   label: string
+  toggleModal?: () => void
 }
 
-export const Table = ({ item, label }: IProps) => {
+export const Table = ({ item, label, toggleModal }: IProps) => {
   const cl = useStyles()
 
   return (
@@ -43,7 +44,7 @@ export const Table = ({ item, label }: IProps) => {
       <div className={cl.content}>
         <TableHeader label={item.label} />
         <div>
-          <TableRow item={item} />
+          <TableRow item={item} toggleModal={toggleModal} />
         </div>
       </div>
     </>

@@ -1,9 +1,12 @@
 import { Button, makeStyles, Typography } from '@material-ui/core'
 import { PageWrapper, PageHeader, PageContent, SimpleLoader } from 'components'
 import { useOriginationPool } from 'helpers/useOriginationPool'
+import { useState } from 'react'
 import { useHistory, useParams } from 'react-router'
-import { OriginationLabels } from 'utils/enums'
+import { OriginationLabels, TxState } from 'utils/enums'
+import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
+import { transparentize } from 'polished'
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -20,6 +23,17 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.primary700,
     fontSize: 14,
     fontWeight: 600,
+  },
+  root: {
+    paddingBottom: 10,
+    overflowX: 'auto',
+    '&::-webkit-scrollbar': {
+      backgroundColor: transparentize(0.6, theme.colors.primary),
+      height: 12,
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: theme.colors.primary,
+    },
   },
 }))
 
@@ -81,11 +95,40 @@ const MyPosition = {
   amountAvailableToVest: '0 XTK button',
 }
 
+interface IState {
+  open: boolean
+}
+
 const TokenSaleDetails = () => {
   const history = useHistory()
   const { poolAddress } = useParams<RouteParams>()
-  const { tokenOffer } = useOriginationPool(poolAddress)
+  const { tokenOffer, loadInfo } = useOriginationPool(poolAddress)
+  const [state, setState] = useState<IState>({
+    open: false,
+  })
   const cl = useStyles()
+
+  const onClose = () => {
+    setState((prev) => ({
+      ...prev,
+      open: false,
+    }))
+  }
+
+  const onSuccess = async () => {
+    setState((prev) => ({
+      ...prev,
+      open: false,
+    }))
+    await loadInfo()
+  }
+
+  const toggleSetWhitelistModal = () => {
+    setState((prev) => ({
+      ...prev,
+      open: !state.open,
+    }))
+  }
 
   return (
     <PageWrapper>
@@ -98,12 +141,21 @@ const TokenSaleDetails = () => {
         {!tokenOffer ? (
           <SimpleLoader />
         ) : (
-          <div>
+          <div className={cl.root}>
+            <SetWhitelistModal
+              open={state.open}
+              onClose={onClose}
+              onSuccess={onSuccess}
+            />
             <Table
               item={tokenOffer.offeringOverview}
               label={'Offering Overview'}
             />
-            <Table item={WhitelistSale} label={'Whitelist Sale'} />
+            <Table
+              item={WhitelistSale}
+              label={'Whitelist Sale'}
+              toggleModal={toggleSetWhitelistModal}
+            />
             <Button
               className={cl.button}
               onClick={() => {
