@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState, useRef } from 'react'
+import React, { ChangeEvent, useState, useRef, useReducer } from 'react'
 import {
   makeStyles,
   Typography,
@@ -132,12 +132,19 @@ export const SetWhitelistModal: React.FC<IProps> = ({
   const { account, networkId, library: provider } = useConnectedWeb3Context()
 
   const hiddenFileInput = useRef<HTMLInputElement>(null)
-  const [state, setState] = useState<IState>({
-    setWhitelistTx: '',
-    txState: TxState.None,
-    whitelistFile: null,
-    value: '',
-  })
+  const [state, setState] = useReducer(
+    (prevState: IState, newState: Partial<IState>) => ({
+      ...prevState,
+      ...newState,
+    }),
+    {
+      setWhitelistTx: '',
+      txState: TxState.None,
+      whitelistFile: null,
+      value: '',
+    }
+  )
+
   const fungibleOriginationPool = new FungibleOriginationPoolService(
     provider,
     account,
@@ -168,22 +175,14 @@ export const SetWhitelistModal: React.FC<IProps> = ({
     return merkleRoot
   }
 
-  const _clearTxState = () => {
-    setState((prev) => ({
-      ...prev,
-      setWhitelistTx: '',
-      txState: TxState.None,
-    }))
-  }
+  const _clearTxState = () =>
+    setState({ setWhitelistTx: '', txState: TxState.None })
 
   const _onClose = () => {
     if (state.txState === TxState.Complete) {
       _clearTxState()
     }
-    setState((prev) => ({
-      ...prev,
-      whitelistFile: null,
-    }))
+    setState({ whitelistFile: null })
     onClose()
   }
 
@@ -192,10 +191,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
       return
     }
 
-    setState((prev) => ({
-      ...prev,
-      txState: TxState.InProgress,
-    }))
+    setState({ txState: TxState.InProgress })
 
     const signedPoolAddress = await provider
       .getSigner()
@@ -206,43 +202,24 @@ export const SetWhitelistModal: React.FC<IProps> = ({
       merkleTreeRoot = await generateMerkleTreeRoot(signedPoolAddress)
     } catch (error: any) {
       enqueueSnackbar(error.message, { variant: 'error' })
-      setState((prev) => ({
-        ...prev,
-        txState: TxState.None,
-      }))
+      resetTxState()
 
       return
     }
 
     try {
       const txHash = await fungibleOriginationPool.setWhitelist(merkleTreeRoot)
-      setState((prev) => ({
-        ...prev,
-        txState: TxState.Complete,
-        setWhitelistTx: txHash,
-      }))
+      setState({ txState: TxState.Complete, setWhitelistTx: txHash })
     } catch (err) {
       enqueueSnackbar('Transaction execution failed', { variant: 'error' })
-      setState((prev) => ({
-        ...prev,
-        txState: TxState.None,
-      }))
+      resetTxState()
     }
   }
 
-  const resetTxState = () => {
-    setState((prev) => ({
-      ...prev,
-      txState: TxState.None,
-    }))
-  }
+  const resetTxState = () => setState({ txState: TxState.None })
 
-  const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setState((prev) => ({
-      ...prev,
-      value: event.target.value,
-    }))
-  }
+  const onInputChange = (event: ChangeEvent<HTMLInputElement>) =>
+    setState({ value: event.target.value })
 
   const onFileInputClick = () => {
     if (!hiddenFileInput.current) return
@@ -253,10 +230,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
     if (!event.target.files) return
     const fileUploaded = event.target?.files[0]
 
-    setState((prev) => ({
-      ...prev,
-      whitelistFile: fileUploaded,
-    }))
+    setState({ whitelistFile: fileUploaded })
   }
 
   const canSetWhitelist = () => {
