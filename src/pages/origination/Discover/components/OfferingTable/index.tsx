@@ -27,12 +27,17 @@ export const OfferingTable = ({ offerings }: IProps) => {
   const cl = useStyles()
 
   return (
-    <div className={cl.content}>
-      <OfferingTableHeader />
-      <div>
-        {offerings.map((offering, index) => (
-          <OfferingTableRow key={`${offering}-${index}`} offering={offering} />
-        ))}
+    <div className={cl.root}>
+      <div className={cl.content}>
+        <OfferingTableHeader />
+        <div>
+          {offerings.map((offering, index) => (
+            <OfferingTableRow
+              key={`${offering}-${index}`}
+              offering={offering}
+            />
+          ))}
+        </div>
       </div>
     </div>
   )
