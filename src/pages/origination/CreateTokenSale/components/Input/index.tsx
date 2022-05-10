@@ -77,6 +77,9 @@ const useStyles = makeStyles((theme) => ({
   tooltipQuestion: {
     marginLeft: 10,
   },
+  inputLabel: {
+    color: `${theme.colors.white} !important`,
+  },
 }))
 
 interface IProps {
@@ -86,6 +89,7 @@ interface IProps {
   label?: string
   disabled?: boolean
   infoText?: string
+  inputLabel?: string
 }
 
 export const Input: React.FC<IProps> = ({
@@ -95,6 +99,7 @@ export const Input: React.FC<IProps> = ({
   label,
   disabled,
   infoText,
+  inputLabel,
 }) => {
   const classes = useStyles()
   const commonClasses = useCommonStyles()
@@ -116,6 +121,7 @@ export const Input: React.FC<IProps> = ({
       )}
 
       <TextField
+        label={inputLabel}
         fullWidth
         className={classes.input}
         type="number"
@@ -123,6 +129,10 @@ export const Input: React.FC<IProps> = ({
         value={value}
         placeholder="Amount"
         onChange={onChange}
+        InputLabelProps={{
+          className: classes.inputLabel,
+          shrink: true,
+        }}
         InputProps={{
           classes: {
             notchedOutline: classes.notchedOutline,
