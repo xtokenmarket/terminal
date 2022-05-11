@@ -9,7 +9,6 @@ import { OriginationLabels } from 'utils/enums'
 import { InitiateSaleModal } from './components/InitiateSaleModal'
 import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
-import { transparentize } from 'polished'
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -118,6 +117,7 @@ const TokenSaleDetails = () => {
         ) : (
           <div className={cl.root}>
             <SetWhitelistModal
+              poolAddress={poolAddress}
               open={state.open}
               onClose={onClose}
               onSuccess={onSuccess}
