@@ -11,6 +11,7 @@ import xAssetCLRAbi from './xAssetCLR.json'
 // Origination
 import OriginationCoreAbi from './origination/OriginationCore.json'
 import OriginationPoolAbi from './origination/OriginationPool.json'
+import FungibleOriginationpoolAbi from './origination/FungibleOriginationPool.json'
 
 const Abi = {
   ERC20: ERC20Abi,
@@ -26,6 +27,7 @@ const Abi = {
   // Origination
   OriginationCore: OriginationCoreAbi,
   OriginationPool: OriginationPoolAbi,
+  FungibleOriginationPool: FungibleOriginationpoolAbi,
 }
 
 export default Abi
