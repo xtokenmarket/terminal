@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { Button, makeStyles, Typography } from '@material-ui/core'
+import { Button, makeStyles, Tooltip, Typography } from '@material-ui/core'
 import { Td } from '../Td'
 import {
   MyPosition,
@@ -20,6 +20,10 @@ import {
   parseDurationSec,
   parseRemainingDurationSec,
 } from 'utils'
+import { useParams } from 'react-router-dom'
+import { useConnectedWeb3Context } from 'contexts'
+import { FungibleOriginationPoolService } from 'services/fungibleOriginationPool'
+import { useEffect, useState } from 'react'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -93,6 +97,9 @@ const useStyles = makeStyles((theme) => ({
       opacity: 0.7,
       backgroundColor: theme.colors.secondary,
     },
+    '&:disabled': {
+      backgroundColor: theme.colors.primary200,
+    },
     padding: '8px 15px',
     backgroundColor: theme.colors.secondary,
     borderRadius: 4,
@@ -110,6 +117,22 @@ interface IProps {
 }
 
 export const TableRow = ({ item, toggleModal }: IProps) => {
+  const { account, library: provider } = useConnectedWeb3Context()
+  const { poolAddress } = useParams<{ poolAddress: string }>()
+  const [saleInitiated, setSaleInitiated] = useState(false)
+
+  useEffect(() => {
+    const fungibleOriginationPool = new FungibleOriginationPoolService(
+      provider,
+      account,
+      poolAddress
+    )
+
+    fungibleOriginationPool
+      .isSaleInitiated()
+      .then((initiated) => setSaleInitiated(initiated))
+  }, [account, provider, poolAddress])
+
   const cl = useStyles()
 
   const renderContent = () => {
@@ -254,14 +277,23 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
             </Td>
 
             <Td type={WhitelistSale.Whitelist} label={item.label}>
-              <Button
-                className={cl.button}
-                onClick={() => {
-                  toggleModal && toggleModal()
-                }}
+              <Tooltip
+                arrow
+                title={saleInitiated ? '' : 'Sale should be initiated'}
+                placement="top"
               >
-                <Typography className={cl.text}>SET WHITELIST</Typography>
-              </Button>
+                <span>
+                  <Button
+                    className={cl.button}
+                    disabled={!saleInitiated}
+                    onClick={() => {
+                      toggleModal && toggleModal()
+                    }}
+                  >
+                    <Typography className={cl.text}>SET WHITELIST</Typography>
+                  </Button>
+                </span>
+              </Tooltip>
             </Td>
 
             <Td type={WhitelistSale.AddressCap} label={item.label}>

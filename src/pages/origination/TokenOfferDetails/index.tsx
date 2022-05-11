@@ -3,7 +3,7 @@ import { PageWrapper, PageHeader, PageContent, SimpleLoader } from 'components'
 import { useOriginationPool } from 'helpers/useOriginationPool'
 import { useState } from 'react'
 import { useHistory, useParams } from 'react-router'
-import { OriginationLabels, TxState } from 'utils/enums'
+import { OriginationLabels } from 'utils/enums'
 import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
 import { transparentize } from 'polished'
@@ -98,6 +98,7 @@ const TokenSaleDetails = () => {
         ) : (
           <div className={cl.root}>
             <SetWhitelistModal
+              poolAddress={poolAddress}
               open={state.open}
               onClose={onClose}
               onSuccess={onSuccess}
