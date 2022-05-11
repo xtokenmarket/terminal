@@ -202,6 +202,7 @@ export interface ITokenOffer {
   offeringOverview: IOfferingOverview
   originationRow: IOriginationRow
   whitelist: IWhitelistSale
+  publicSale: IPublicSale
 }
 
 interface Label {
@@ -242,8 +243,8 @@ export interface IPublicSale extends Label {
   currentPrice: string
   pricingFormular: string
   price: string
-  timeRemaining: string
-  salesPeriod: string
+  salesPeriod?: BigNumber
+  saleEndTimestamp: BigNumber
 }
 
 export interface IMyPosition extends Label {

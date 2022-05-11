@@ -14,7 +14,9 @@ export const formatBigNumber = (
   value: BigNumber,
   decimals: number,
   precision = 2
-): string => Number(formatUnits(value, decimals)).toFixed(precision)
+): string => {
+  return Number(formatUnits(value, decimals)).toFixed(precision)
+}
 
 export const numberWithCommas = (
   x: string,
@@ -248,6 +250,8 @@ export const parseRemainingDurationSec = (
   amount: number,
   unitPrecision = 3
 ) => {
+  if (amount === 0) return '0D:00H:00M'
+
   const duration = moment.duration(amount * 1000)
 
   return [
@@ -266,4 +270,11 @@ export const parseRemainingDurationSec = (
     })
     .filter((_, i) => i < unitPrecision)
     .join(' ')
+}
+
+export const getRemainingTime = (endingTime: BigNumber) => {
+  if (endingTime.toString() === '0') return 0
+
+  const remainingTime = Date.now() - Number(endingTime.toString())
+  return remainingTime
 }

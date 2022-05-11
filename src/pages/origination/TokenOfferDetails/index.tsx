@@ -42,15 +42,6 @@ type RouteParams = {
   poolAddress: string
 }
 
-const PublicSale = {
-  label: OriginationLabels.PublicSale,
-  currentPrice: '1.25 USDC',
-  pricingFormular: 'Standard',
-  price: '1.25 USDC',
-  timeRemaining: '6D: 14H: 37M',
-  salesPeriod: '1 Week',
-}
-
 const MyPosition = {
   label: OriginationLabels.MyPosition,
   tokenPurchased: '912 XTK',
@@ -128,7 +119,7 @@ const TokenSaleDetails = () => {
             >
               <Typography className={cl.text}>INVEST</Typography>
             </Button>
-            <Table item={PublicSale} label={'Public Sale'} />
+            <Table item={tokenOffer.publicSale} label={'Public Sale'} />
             <Button
               className={cl.button}
               onClick={() => {

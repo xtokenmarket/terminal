@@ -80,9 +80,19 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         offerToken: tokens[0] || ETH,
       }
 
+      const publicSale = {
+        label: OriginationLabels.PublicSale,
+        currentPrice: '',
+        pricingFormular: '',
+        price: '',
+        salesPeriod: publicSaleDuration,
+        saleEndTimestamp,
+      }
+
       return {
         whitelist: _whitelist,
         offeringOverview,
+        publicSale,
         originationRow: {
           ...offeringOverview,
           startingPrice: publicStartingPrice,

@@ -16,6 +16,7 @@ import {
 } from 'types'
 import {
   formatBigNumber,
+  getRemainingTime,
   parseDurationSec,
   parseRemainingDurationSec,
 } from 'utils'
@@ -164,10 +165,11 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
           <Td type={OfferingOverview.OfferingReserve} label={item.label}>
             <div className={cl.item}>
               <Typography>
-                {formatBigNumber(
-                  item.offeringReserve,
-                  item.offerToken.decimals
-                )}
+                {item.offeringReserve &&
+                  formatBigNumber(
+                    item.offeringReserve,
+                    item.offerToken.decimals
+                  )}
               </Typography>
               <Typography className={cl.symbol}>
                 {item.offerToken.symbol}
@@ -290,27 +292,33 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
         <div className={cl.content}>
           <Td type={PublicSale.CurrentPrice} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.currentPrice}
+              {item.currentPrice || 'N/A'}
             </Typography>
           </Td>
           <Td type={PublicSale.PricingFormular} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.pricingFormular}
+              {item.pricingFormular || 'N/A'}
             </Typography>
           </Td>
           <Td type={PublicSale.Price} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.price}
+              {item.price || 'N/A'}
             </Typography>
           </Td>
           <Td type={PublicSale.TimeRemaining} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.timeRemaining}
+              {item.saleEndTimestamp
+                ? `${parseRemainingDurationSec(
+                    getRemainingTime(item.saleEndTimestamp)
+                  )}`
+                : 'N/A'}
             </Typography>
           </Td>
           <Td type={PublicSale.SalesPeriod} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.salesPeriod}
+              {item.salesPeriod
+                ? parseDurationSec(item.salesPeriod?.toNumber())
+                : 'N/A'}
             </Typography>
           </Td>
         </div>
