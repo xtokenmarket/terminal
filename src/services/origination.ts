@@ -65,38 +65,6 @@ class OriginationService {
       })
     })
   }
-
-  setWhitelist = async (whitelist: string[]): Promise<string> => {
-    const transactionObject = await this.contract.setWhitelist(whitelist)
-    console.log(`setWhitelist transaction hash: ${transactionObject.hash}`)
-
-    return transactionObject.hash
-  }
-
-  waitUntilSetWhitelist = async (
-    account: string,
-    txId: string
-  ): Promise<string> => {
-    let resolved = false
-    return new Promise((resolve) => {
-      this.contract.on(
-        'CreateFungibleListing',
-        (_: string, sender: any, transactionDetails: any) => {
-          if (account.toLowerCase() === sender.toLowerCase() && !resolved) {
-            resolved = true
-            resolve(transactionDetails.transactionHash)
-          }
-        }
-      )
-
-      this.contract.provider.waitForTransaction(txId).then(() => {
-        if (!resolved) {
-          resolved = true
-          resolve(txId)
-        }
-      })
-    })
-  }
 }
 
 export { OriginationService }

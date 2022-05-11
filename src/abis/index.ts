@@ -13,6 +13,7 @@ import NonRewardPoolAbi from './NonRewardPool.json'
 // Origination
 import OriginationCoreAbi from './origination/OriginationCore.json'
 import OriginationPoolAbi from './origination/OriginationPool.json'
+import FungibleOriginationpoolAbi from './origination/FungibleOriginationPool.json'
 
 const Abi = {
   CLRV0: CLRV0Abi,
@@ -30,6 +31,7 @@ const Abi = {
   // Origination
   OriginationCore: OriginationCoreAbi,
   OriginationPool: OriginationPoolAbi,
+  FungibleOriginationPool: FungibleOriginationpoolAbi,
 }
 
 export default Abi
