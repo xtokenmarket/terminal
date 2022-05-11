@@ -157,18 +157,16 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
             <div className={cl.allocation}>
               <Typography className={cl.allocationItem}>
                 {poolData.token0.symbol}&nbsp;
-                <span>{`${getFloatDecimalNumber(
-                  poolData.token0.percent as string,
-                  2
-                )}%`}</span>
+                <span>{`${
+                  Number(poolData.token0.percent).toFixed() as string
+                }%`}</span>
               </Typography>
               &nbsp; &nbsp;
               <Typography className={cl.allocationItem}>
                 {poolData.token1.symbol}&nbsp;
-                <span>{`${getFloatDecimalNumber(
-                  poolData.token1.percent as string,
-                  2
-                )}%`}</span>
+                <span>{`${
+                  Number(poolData.token1.percent).toFixed() as string
+                }%`}</span>
               </Typography>
             </div>
           </div>
