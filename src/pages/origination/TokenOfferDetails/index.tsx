@@ -9,6 +9,8 @@ import { transparentize } from 'polished'
 import { InitiateSaleModal } from './components/InitiateSaleModal'
 import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
+import { ClaimModal } from '../CreateTokenSale/components/ClaimModal'
+import { BigNumber } from 'ethers'
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -100,6 +102,7 @@ const MyPosition = {
 interface IState {
   isInitiateSaleModalOpen: boolean
   open: boolean
+  isClaimModalOpen: boolean
 }
 
 const TokenSaleDetails = () => {
@@ -110,6 +113,7 @@ const TokenSaleDetails = () => {
   const [state, setState] = useState<IState>({
     isInitiateSaleModalOpen: false,
     open: false,
+    isClaimModalOpen: false,
   })
 
   const onClose = () => {
@@ -146,6 +150,13 @@ const TokenSaleDetails = () => {
     setState((prev) => ({
       ...prev,
       isInitiateSaleModalOpen: !state.isInitiateSaleModalOpen,
+    }))
+  }
+
+  const toggleClaimModal = () => {
+    setState((prev) => ({
+      ...prev,
+      isClaimModalOpen: !state.isClaimModalOpen,
     }))
   }
 
@@ -193,12 +204,24 @@ const TokenSaleDetails = () => {
             >
               <Typography className={cl.text}>INVEST</Typography>
             </Button>
-            <Table item={MyPosition} label={'My Position'} />
+            <Table
+              item={MyPosition}
+              label={'My Position'}
+              toggleModal={toggleClaimModal}
+            />
             <InitiateSaleModal
               offerData={tokenOffer.offeringOverview}
               onClose={toggleInitiateSaleModal}
               onSuccess={onInitiateSuccess}
               open={state.isInitiateSaleModalOpen}
+            />
+            <ClaimModal
+              isOpen={state.isClaimModalOpen}
+              onClose={toggleClaimModal}
+              data={{
+                token: tokenOffer.offeringOverview.purchaseToken,
+                amount: BigNumber.from('0'),
+              }}
             />
           </div>
         )}

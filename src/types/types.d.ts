@@ -263,3 +263,8 @@ export type OriginationDetailItem =
   | IWhitelistSale
   | IPublicSale
   | IMyPosition
+
+export interface IClaimData {
+  token: IToken
+  amount: BigNumber
+}
