@@ -376,6 +376,9 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
               {item.amountAvailableToVest}
             </Typography>
           </Td>
+          <Button className={cl.button} onClick={toggleModal}>
+            <Typography className={cl.text}>CLAIM</Typography>
+          </Button>
         </div>
       )
     }
