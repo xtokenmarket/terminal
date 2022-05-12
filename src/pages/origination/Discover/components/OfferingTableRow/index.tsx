@@ -151,7 +151,9 @@ export const OfferingTableRow = ({ offering }: IProps) => {
         {/* TODO: replace this with true pricePerToken */}
         <OfferingTd type="pricePerToken">
           <Typography className={clsx(cl.item, cl.label)}>
-            {formatBigNumber(startingPrice, purchaseToken.decimals)}{' '}
+            {startingPrice
+              ? formatBigNumber(startingPrice, purchaseToken.decimals)
+              : '0'}{' '}
             {purchaseToken.symbol}
           </Typography>
         </OfferingTd>
