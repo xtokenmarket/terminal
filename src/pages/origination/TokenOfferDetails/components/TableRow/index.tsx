@@ -299,13 +299,19 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
 
             <Td type={WhitelistSale.TimeRemaining} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {item.timeRemaining || 'N/A'}
+                {item.timeRemaining
+                  ? `${parseRemainingDurationSec(
+                      item.timeRemaining.toNumber()
+                    )}`
+                  : 'N/A'}
               </Typography>
             </Td>
 
             <Td type={WhitelistSale.SalesPeriod} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {item.salesPeriod || 'N/A'}
+                {item.salesPeriod
+                  ? parseDurationSec(item.salesPeriod?.toNumber())
+                  : 'N/A'}
               </Typography>
             </Td>
           </div>
@@ -334,10 +340,8 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
           </Td>
           <Td type={PublicSale.TimeRemaining} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.saleEndTimestamp
-                ? `${parseRemainingDurationSec(
-                    getRemainingTime(item.saleEndTimestamp)
-                  )}`
+              {item.timeRemaining
+                ? `${parseRemainingDurationSec(item.timeRemaining.toNumber())}`
                 : 'N/A'}
             </Typography>
           </Td>
