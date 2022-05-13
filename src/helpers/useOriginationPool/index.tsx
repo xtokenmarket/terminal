@@ -71,13 +71,15 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
       }
 
       const endOfWhitelistPeriod = saleInitiatedTimestamp.add(
-        whitelistSaleDuration as BigNumber
+        (whitelistSaleDuration as BigNumber) || BigNumber.from(0)
       )
-      const whitelistTimeRemaining = endOfWhitelistPeriod.sub(
-        BigNumber.from(Date.now())
-      )
+      const whitelistTimeRemaining = !endOfWhitelistPeriod.isZero()
+        ? endOfWhitelistPeriod.sub(BigNumber.from(Date.now()))
+        : BigNumber.from('0')
 
-      const timeRemaining = saleEndTimestamp.sub(BigNumber.from(Date.now()))
+      const timeRemaining = !saleEndTimestamp.isZero()
+        ? saleEndTimestamp.sub(BigNumber.from(Date.now()))
+        : BigNumber.from('0')
 
       const _whitelist = {
         label: OriginationLabels.WhitelistSale,
