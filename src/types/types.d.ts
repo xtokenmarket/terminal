@@ -229,23 +229,23 @@ export interface IOriginationRow extends IOfferingOverview {
 }
 
 export interface IWhitelistSale extends Label {
-  currentPrice: string
+  currentPrice: BigNumber
   pricingFormular: string
   startingPrice?: BigNumber
   endingPrice?: BigNumber
   whitelist?: string[]
   addressCap: string
-  timeRemaining: string
+  timeRemaining: BigNumber
   salesPeriod?: BigNumber
   offerToken: IToken
 }
 
 export interface IPublicSale extends Label {
-  currentPrice: string
+  currentPrice: BigNumber
   pricingFormular: string
   price: string
   salesPeriod?: BigNumber
-  saleEndTimestamp: BigNumber
+  timeRemaining: BigNumber
 }
 
 export interface IMyPosition extends Label {

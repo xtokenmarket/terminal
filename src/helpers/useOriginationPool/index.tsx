@@ -51,6 +51,8 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         whitelistSaleDuration,
         publicSaleDuration,
         whitelistMerkleRoot,
+        getOfferTokenPrice,
+        publicEndingPrice,
       } = _offerData as ITokenOfferDetails
 
       const offeringOverview = {
@@ -68,26 +70,41 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         poolAddress,
       }
 
+      const endOfWhitelistPeriod = saleInitiatedTimestamp.add(
+        whitelistSaleDuration as BigNumber
+      )
+      const whitelistTimeRemaining = endOfWhitelistPeriod.sub(
+        BigNumber.from(Date.now())
+      )
+
+      const timeRemaining = saleEndTimestamp.sub(BigNumber.from(Date.now()))
+
       const _whitelist = {
         label: OriginationLabels.WhitelistSale,
-        currentPrice: '',
-        pricingFormular: '',
+        currentPrice: getOfferTokenPrice,
+        pricingFormular: whitelistStartingPrice?.gt(
+          whitelistEndingPrice as BigNumber
+        )
+          ? 'Ascending'
+          : 'Descending',
         startingPrice: whitelistStartingPrice,
         endingPrice: whitelistEndingPrice,
         whitelist: whitelistMerkleRoot,
         addressCap: '',
-        timeRemaining: '',
+        timeRemaining: whitelistTimeRemaining,
         salesPeriod: whitelistSaleDuration,
         offerToken: tokens[0] || ETH,
       }
 
       const publicSale = {
         label: OriginationLabels.PublicSale,
-        currentPrice: '',
-        pricingFormular: '',
+        currentPrice: getOfferTokenPrice,
+        pricingFormular: publicStartingPrice?.gt(publicEndingPrice as BigNumber)
+          ? 'Ascending'
+          : 'Descending',
         price: '',
         salesPeriod: publicSaleDuration,
-        saleEndTimestamp,
+        timeRemaining,
       }
 
       return {

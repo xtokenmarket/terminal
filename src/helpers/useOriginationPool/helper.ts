@@ -18,6 +18,7 @@ export interface ITokenOfferDetails {
   whitelistSaleDuration?: BigNumber
   publicSaleDuration?: BigNumber
   whitelistMerkleRoot?: string[]
+  getOfferTokenPrice: BigNumber
 }
 
 export const getOffersDataMulticall = async (
@@ -42,6 +43,7 @@ export const getOffersDataMulticall = async (
       'whitelistSaleDuration',
       'publicSaleDuration',
       'whitelistMerkleRoot',
+      'getOfferTokenPrice',
     ].map((method) => ({
       name: method,
       address: poolAddress,
@@ -65,6 +67,7 @@ export const getOffersDataMulticall = async (
       whitelistSaleDuration,
       publicSaleDuration,
       whitelistMerkleRoot,
+      getOfferTokenPrice,
     ] = await multicall.multicallv2(Abi.OriginationPool, calls, {
       requireSuccess: false,
     })
@@ -85,6 +88,7 @@ export const getOffersDataMulticall = async (
       whitelistSaleDuration,
       publicSaleDuration,
       whitelistMerkleRoot,
+      getOfferTokenPrice,
     }
   } catch (error) {
     console.log('error', error)
