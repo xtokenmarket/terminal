@@ -3,8 +3,8 @@ import { PageWrapper, PageHeader, PageContent, SimpleLoader } from 'components'
 import { useOriginationPool } from 'helpers/useOriginationPool'
 import { useState } from 'react'
 import { useHistory, useParams } from 'react-router'
-import { OriginationLabels } from 'utils/enums'
 import { transparentize } from 'polished'
+import { OriginationLabels } from 'utils/enums'
 
 import { InitiateSaleModal } from './components/InitiateSaleModal'
 import { SetWhitelistModal } from './components/SetWhitelistModal'
@@ -44,51 +44,6 @@ type RouteParams = {
   poolAddress: string
 }
 
-const OfferingOverview = {
-  label: OriginationLabels.OfferingOverview,
-  offerToken: {
-    address: '0x016750ac630f711882812f24dba6c95b9d35856d',
-    decimals: 6,
-    image: '/assets/tokens/usdt.png',
-    name: 'Tether USD',
-    symbol: 'USDT',
-  },
-  purchaseToken: {
-    address: '0x90410304D88E333710703aF6Ed6A14d5ef74575F',
-    decimals: 18,
-    image: '/assets/tokens/dai.png',
-    name: 'DAI',
-    symbol: 'DAI',
-  },
-  offeringStatus: '21K/100k XTK',
-  offeringReserve: '80,000 XTK',
-  vestingPeriod: '1  Year',
-  cliffPeriod: '6 Months',
-  salesBegin: 'INITIATE SALE',
-  salesEnd: 'April 20 ,2022',
-  salesPeriod: '2 Weeks',
-}
-
-const WhitelistSale = {
-  label: OriginationLabels.WhitelistSale,
-  currentPrice: '1.21 USDC',
-  pricingFormular: 'Descending',
-  startingEndingPrice: '1.25/0.75 USDC',
-  whitelist: 'SET WHITELIST',
-  addressCap: '1,000 XTK',
-  timeRemaining: '6D:14H:37M',
-  salesPeriod: '1 Week',
-}
-
-const PublicSale = {
-  label: OriginationLabels.PublicSale,
-  currentPrice: '1.25 USDC',
-  pricingFormular: 'Standard',
-  price: '1.25 USDC',
-  timeRemaining: '6D: 14H: 37M',
-  salesPeriod: '1 Week',
-}
-
 const MyPosition = {
   label: OriginationLabels.MyPosition,
   tokenPurchased: '912 XTK',
@@ -112,6 +67,21 @@ const TokenSaleDetails = () => {
     open: false,
   })
 
+  const onInitiateSuccess = async () => {
+    setState((prev) => ({
+      ...prev,
+      isInitiateSaleModalOpen: false,
+    }))
+    await loadInfo()
+  }
+
+  const toggleInitiateSaleModal = () => {
+    setState((prev) => ({
+      ...prev,
+      isInitiateSaleModalOpen: !state.isInitiateSaleModalOpen,
+    }))
+  }
+
   const onClose = () => {
     setState((prev) => ({
       ...prev,
@@ -127,25 +97,10 @@ const TokenSaleDetails = () => {
     await loadInfo()
   }
 
-  const onInitiateSuccess = async () => {
-    setState((prev) => ({
-      ...prev,
-      isInitiateSaleModalOpen: false,
-    }))
-    await loadInfo()
-  }
-
   const toggleSetWhitelistModal = () => {
     setState((prev) => ({
       ...prev,
       open: !state.open,
-    }))
-  }
-
-  const toggleInitiateSaleModal = () => {
-    setState((prev) => ({
-      ...prev,
-      isInitiateSaleModalOpen: !state.isInitiateSaleModalOpen,
     }))
   }
 
@@ -162,6 +117,7 @@ const TokenSaleDetails = () => {
         ) : (
           <div className={cl.root}>
             <SetWhitelistModal
+              poolAddress={poolAddress}
               open={state.open}
               onClose={onClose}
               onSuccess={onSuccess}
@@ -172,7 +128,7 @@ const TokenSaleDetails = () => {
               toggleModal={toggleInitiateSaleModal}
             />
             <Table
-              item={WhitelistSale}
+              item={tokenOffer.whitelist}
               label={'Whitelist Sale'}
               toggleModal={toggleSetWhitelistModal}
             />
@@ -184,7 +140,7 @@ const TokenSaleDetails = () => {
             >
               <Typography className={cl.text}>INVEST</Typography>
             </Button>
-            <Table item={PublicSale} label={'Public Sale'} />
+            <Table item={tokenOffer.publicSale} label={'Public Sale'} />
             <Button
               className={cl.button}
               onClick={() => {

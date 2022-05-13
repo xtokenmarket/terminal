@@ -108,7 +108,9 @@ export const OfferingTableRow = ({ offering }: IProps) => {
     const isSaleInitiated = !salesBegin.isZero()
     const elapsedTime = moment().subtract(salesBegin.toString()).toString()
     const timeRemaining = isSaleInitiated
-      ? moment(salesPeriod.toString()).subtract(elapsedTime).toString()
+      ? moment(salesPeriod ? salesPeriod.toString() : '0')
+          .subtract(elapsedTime)
+          .toString()
       : saleDuration?.toString()
 
     const remainingOfferingAmount =
@@ -149,7 +151,9 @@ export const OfferingTableRow = ({ offering }: IProps) => {
         {/* TODO: replace this with true pricePerToken */}
         <OfferingTd type="pricePerToken">
           <Typography className={clsx(cl.item, cl.label)}>
-            {formatBigNumber(startingPrice, purchaseToken.decimals)}{' '}
+            {startingPrice
+              ? formatBigNumber(startingPrice, purchaseToken.decimals)
+              : '0'}{' '}
             {purchaseToken.symbol}
           </Typography>
         </OfferingTd>

@@ -6,18 +6,18 @@ export interface ITokenOfferDetails {
   purchaseToken: string
   totalOfferingAmount: BigNumber
   offerTokenAmountSold: BigNumber
-  startingPrice: BigNumber
-  endingPrice: BigNumber
+  publicStartingPrice: BigNumber
+  publicEndingPrice: BigNumber
   saleInitiatedTimestamp: BigNumber
   saleEndTimestamp: BigNumber
   vestingPeriod: BigNumber
   cliffPeriod: BigNumber
   reserveAmount: BigNumber
-  whitelistStartingPrice: BigNumber
-  whitelistEndingPrice: BigNumber
-  whitelistSaleDuration: BigNumber
-  whitelist: BigNumber
-  publicSaleDuration: BigNumber
+  whitelistStartingPrice?: BigNumber
+  whitelistEndingPrice?: BigNumber
+  whitelistSaleDuration?: BigNumber
+  publicSaleDuration?: BigNumber
+  whitelistMerkleRoot?: string[]
 }
 
 export const getOffersDataMulticall = async (
@@ -30,8 +30,8 @@ export const getOffersDataMulticall = async (
       'purchaseToken',
       'totalOfferingAmount',
       'offerTokenAmountSold',
-      'startingPrice',
-      'endingPrice',
+      'publicStartingPrice',
+      'publicEndingPrice',
       'saleInitiatedTimestamp',
       'saleEndTimestamp',
       'vestingPeriod',
@@ -41,6 +41,7 @@ export const getOffersDataMulticall = async (
       'whitelistEndingPrice',
       'whitelistSaleDuration',
       'publicSaleDuration',
+      'whitelistMerkleRoot',
     ].map((method) => ({
       name: method,
       address: poolAddress,
@@ -52,8 +53,8 @@ export const getOffersDataMulticall = async (
       [purchaseToken],
       [totalOfferingAmount],
       [offerTokenAmountSold],
-      [startingPrice],
-      [endingPrice],
+      publicStartingPrice,
+      publicEndingPrice,
       [saleInitiatedTimestamp],
       [saleEndTimestamp],
       [vestingPeriod],
@@ -62,8 +63,8 @@ export const getOffersDataMulticall = async (
       whitelistStartingPrice,
       whitelistEndingPrice,
       whitelistSaleDuration,
-      whitelist,
       publicSaleDuration,
+      whitelistMerkleRoot,
     ] = await multicall.multicallv2(Abi.OriginationPool, calls, {
       requireSuccess: false,
     })
@@ -72,8 +73,8 @@ export const getOffersDataMulticall = async (
       purchaseToken,
       totalOfferingAmount,
       offerTokenAmountSold,
-      startingPrice,
-      endingPrice,
+      publicStartingPrice,
+      publicEndingPrice,
       saleEndTimestamp,
       saleInitiatedTimestamp,
       vestingPeriod,
@@ -82,8 +83,8 @@ export const getOffersDataMulticall = async (
       whitelistStartingPrice,
       whitelistEndingPrice,
       whitelistSaleDuration,
-      whitelist,
       publicSaleDuration,
+      whitelistMerkleRoot,
     }
   } catch (error) {
     console.log('error', error)

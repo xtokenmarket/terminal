@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState, useRef } from 'react'
+import React, { ChangeEvent, useState, useRef, useReducer } from 'react'
 import {
   makeStyles,
   Typography,
@@ -12,8 +12,11 @@ import clsx from 'clsx'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { SuccessSection } from './SuccessSection'
 import { Modal } from 'components/Common/Modal'
-import { useServices } from 'helpers'
 import { Input } from 'pages/origination/CreateTokenSale/components'
+import { ChainId, CHAIN_NAMES, ORIGINATION_API_URL } from 'config/constants'
+import { useSnackbar } from 'notistack'
+import axios from 'axios'
+import { FungibleOriginationPoolService } from 'services/fungibleOriginationPool'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -105,6 +108,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
+  poolAddress: string
   open: boolean
   onClose: () => void
   onSuccess: () => Promise<void>
@@ -118,85 +122,104 @@ interface IState {
 }
 
 export const SetWhitelistModal: React.FC<IProps> = ({
+  poolAddress,
   open,
   onClose,
   onSuccess,
 }) => {
   const classes = useStyles()
-  const { account, library: provider } = useConnectedWeb3Context()
-  const { originationService } = useServices()
-  const hiddenFileInput = useRef<HTMLInputElement>(null)
-  const [state, setState] = useState<IState>({
-    setWhitelistTx: '',
-    txState: TxState.None,
-    whitelistFile: null,
-    value: '',
-  })
+  const { enqueueSnackbar } = useSnackbar()
+  const { account, networkId, library: provider } = useConnectedWeb3Context()
 
-  const _clearTxState = () => {
-    setState((prev) => ({
-      ...prev,
+  const hiddenFileInput = useRef<HTMLInputElement>(null)
+  const [state, setState] = useReducer(
+    (prevState: IState, newState: Partial<IState>) => ({
+      ...prevState,
+      ...newState,
+    }),
+    {
       setWhitelistTx: '',
       txState: TxState.None,
-    }))
+      whitelistFile: null,
+      value: '',
+    }
+  )
+
+  const fungibleOriginationPool = new FungibleOriginationPoolService(
+    provider,
+    account,
+    poolAddress
+  )
+
+  const generateMerkleTreeRoot = async (signedPoolAddress: string) => {
+    const requestData = new FormData()
+    requestData.append('file', state.whitelistFile as File)
+    requestData.append('poolAddress', poolAddress)
+    requestData.append(
+      'network',
+      CHAIN_NAMES[networkId as ChainId]?.toLowerCase()
+    )
+    requestData.append('maxAmountPerAddress', state.value)
+    requestData.append('signedPoolAddress', signedPoolAddress)
+
+    const { merkleRoot } = await axios
+      .post(`${ORIGINATION_API_URL}/generateMerkleRoot`, requestData)
+      .then((response) => response.data)
+      .catch(({ response }) => {
+        throw Error(
+          response.data.error ||
+            'Unknown error occurred while registering whitelist'
+        )
+      })
+
+    return merkleRoot
   }
+
+  const _clearTxState = () =>
+    setState({ setWhitelistTx: '', txState: TxState.None })
 
   const _onClose = () => {
     if (state.txState === TxState.Complete) {
       _clearTxState()
     }
-    setState((prev) => ({
-      ...prev,
-      whitelistFile: null,
-    }))
+    setState({ whitelistFile: null })
     onClose()
   }
 
-  const onSetWhitelist = async () => {
-    if (!account || !provider) {
+  const handleSetWhitelistClick = async () => {
+    if (!account || !provider || !canSetWhitelist()) {
       return
     }
+
+    setState({ txState: TxState.InProgress })
+
+    const signedPoolAddress = await provider
+      .getSigner()
+      .signMessage(poolAddress)
+
+    let merkleTreeRoot
     try {
-      setState((prev) => ({
-        ...prev,
-        txState: TxState.InProgress,
-      }))
+      merkleTreeRoot = await generateMerkleTreeRoot(signedPoolAddress)
+    } catch (error: any) {
+      enqueueSnackbar(error.message, { variant: 'error' })
+      resetTxState()
 
-      // TODO: whitelist format need to be handled
-      const txId = await originationService.setWhitelist(['test'])
+      return
+    }
 
-      const finalTxId = await originationService.waitUntilSetWhitelist(
-        account,
-        txId
-      )
-
-      setState((prev) => ({
-        ...prev,
-        txState: TxState.Complete,
-        setWhitelistTx: finalTxId,
-      }))
-    } catch (error) {
-      console.error(error)
-      setState((prev) => ({
-        ...prev,
-        txState: TxState.None,
-      }))
+    try {
+      const txHash = await fungibleOriginationPool.setWhitelist(merkleTreeRoot)
+      setState({ txState: TxState.Complete, setWhitelistTx: txHash })
+    } catch (err) {
+      enqueueSnackbar('Transaction execution failed', { variant: 'error' })
+      resetTxState()
     }
   }
 
-  const resetTxState = () => {
-    setState((prev) => ({
-      ...prev,
-      txState: TxState.None,
-    }))
-  }
+  const resetTxState = () => setState({ txState: TxState.None })
 
-  const onInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setState((prev) => ({
-      ...prev,
-      value: event.target.value,
-    }))
-  }
+  const onInputChange = (event: ChangeEvent<HTMLInputElement>) =>
+    setState({ value: event.target.value })
 
   const onFileInputClick = () => {
     if (!hiddenFileInput.current) return
@@ -206,12 +229,12 @@ export const SetWhitelistModal: React.FC<IProps> = ({
   const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return
     const fileUploaded = event.target?.files[0]
-    setState((prev) => ({
-      ...prev,
-      whitelistFile: fileUploaded,
-    }))
 
-    // TODO: whitelist format need to be handled
+    setState({ whitelistFile: fileUploaded })
+  }
+
+  const canSetWhitelist = () => {
+    return state.whitelistFile && state.value && parseFloat(state.value) > 0
   }
 
   return (
@@ -285,9 +308,9 @@ export const SetWhitelistModal: React.FC<IProps> = ({
               className={clsx(
                 classes.button,
                 state.txState === TxState.InProgress && 'pending',
-                !state.whitelistFile && 'disabled'
+                !canSetWhitelist() && 'disabled'
               )}
-              onClick={onSetWhitelist}
+              onClick={handleSetWhitelistClick}
             >
               <Typography className={classes.buttonText}>
                 {state.txState === TxState.InProgress

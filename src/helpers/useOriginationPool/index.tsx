@@ -45,12 +45,12 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         cliffPeriod,
         saleInitiatedTimestamp,
         saleEndTimestamp,
-        startingPrice,
+        publicStartingPrice,
         whitelistStartingPrice,
         whitelistEndingPrice,
         whitelistSaleDuration,
-        whitelist,
         publicSaleDuration,
+        whitelistMerkleRoot,
       } = _offerData as ITokenOfferDetails
 
       const offeringOverview = {
@@ -68,11 +68,35 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         poolAddress,
       }
 
+      const _whitelist = {
+        label: OriginationLabels.WhitelistSale,
+        currentPrice: '',
+        pricingFormular: '',
+        startingPrice: whitelistStartingPrice,
+        endingPrice: whitelistEndingPrice,
+        whitelist: whitelistMerkleRoot,
+        addressCap: '',
+        timeRemaining: '',
+        salesPeriod: whitelistSaleDuration,
+        offerToken: tokens[0] || ETH,
+      }
+
+      const publicSale = {
+        label: OriginationLabels.PublicSale,
+        currentPrice: '',
+        pricingFormular: '',
+        price: '',
+        salesPeriod: publicSaleDuration,
+        saleEndTimestamp,
+      }
+
       return {
+        whitelist: _whitelist,
         offeringOverview,
+        publicSale,
         originationRow: {
           ...offeringOverview,
-          startingPrice,
+          startingPrice: publicStartingPrice,
           saleDuration: publicSaleDuration,
         },
         // TODO: remove this hardcoded value
