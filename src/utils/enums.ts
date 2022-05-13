@@ -230,3 +230,8 @@ export enum MyPosition {
   Amountvested = 'amountvested',
   AmountAvailableToVest = 'amountAvailableToVest',
 }
+
+export enum EClaimModalStep {
+  Init = 'Init',
+  Success = 'Success',
+}
