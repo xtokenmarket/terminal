@@ -140,7 +140,8 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit }) => {
                   <div className="content">
                     <p className="title">Offering Period</p>
                     <p className="data">
-                      {data.offeringPeriod} {data.offeringPeriodUnit}
+                      {data.publicOfferingPeriod}{' '}
+                      {data.publicOfferingPeriodUnit}
                     </p>
                   </div>
                 </Grid>
