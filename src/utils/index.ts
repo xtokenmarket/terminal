@@ -225,7 +225,7 @@ export const getDurationSec = (amount: number, unit: string) => {
     durationSec = amount * secondsIn1Day * 7 * 4 * 365
   }
 
-  return durationSec
+  return BigNumber.from(durationSec.toString())
 }
 
 export const parseDurationSec = (amount: number) => {

@@ -87,13 +87,13 @@ export const PricingFormulaTable: React.FC<IProps> = ({ data }) => {
                 <img src={data.offerToken?.image} style={{ marginRight: 8 }} />
                 <div>
                   <Typography className={cl.bodyRowText}>
-                    {data.startingPrice}
+                    {data.publicStartingPrice}
                   </Typography>
                   {offerToken && (
                     <TokenAmountPriceEstimation
                       className={cl.priceEstimation}
                       token={offerToken}
-                      tokenAmount={Number(data.startingPrice)}
+                      tokenAmount={Number(data.publicStartingPrice)}
                     />
                   )}
                 </div>
@@ -102,13 +102,13 @@ export const PricingFormulaTable: React.FC<IProps> = ({ data }) => {
             <TableCell className={cl.tableCell}>
               <>
                 <Typography className={cl.bodyRowText}>
-                  {data.endingPrice}
+                  {data.publicEndingPrice}
                 </Typography>
                 {offerToken && (
                   <TokenAmountPriceEstimation
                     className={cl.priceEstimation}
                     token={offerToken}
-                    tokenAmount={Number(data.endingPrice)}
+                    tokenAmount={Number(data.publicEndingPrice)}
                   />
                 )}
               </>
