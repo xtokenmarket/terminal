@@ -86,13 +86,20 @@ const useStyles = makeStyles((theme) => ({
       height: 36,
     },
   },
+  userWrapper: {
+    marginLeft: 5,
+  },
 }))
 
 export const Header = () => {
   const classes = useStyles()
   const history = useHistory()
-  const { account, setWalletConnectModalOpened, onDisconnect } =
-    useConnectedWeb3Context()
+  const {
+    account,
+    setWalletConnectModalOpened,
+    onDisconnect,
+    library: provider,
+  } = useConnectedWeb3Context()
   const [user, setUser] = useState('')
 
   const yPosition = useScrollYPosition()
@@ -110,22 +117,28 @@ export const Header = () => {
 
   useEffect(() => {
     setUser('')
-    const getUDUser = async () => {
+    const setUserName = async () => {
       const connector = localStorage.getItem(STORAGE_KEY_CONNECTOR)
-
       const currentConnector = connectors['uauth']
 
-      if (account && connector === 'uauth') {
-        try {
+      try {
+        if (account && connector === 'uauth') {
           const _user = await currentConnector.uauth.user()
           setUser(_user.sub)
-        } catch (error) {
-          console.log('getUDUser error', error)
+        } else {
+          if (provider && account) {
+            const ensName = await provider?.lookupAddress(account || '')
+            if (ensName) {
+              setUser(ensName)
+            }
+          }
         }
+      } catch (error) {
+        console.log('setUserName error', error)
       }
     }
 
-    getUDUser()
+    setUserName()
   }, [account])
 
   const Icon = selectedMenuItem?.icon
@@ -157,8 +170,13 @@ export const Header = () => {
           }
         >
           {account && <AccountBalanceWalletIcon />}
-          &nbsp;&nbsp;
-          {account ? (user ? user : shortenAddress(account)) : 'CONNECT WALLET'}
+          {account ? (
+            <div className={classes.userWrapper}>
+              {user ? user : shortenAddress(account)}
+            </div>
+          ) : (
+            'CONNECT WALLET'
+          )}
         </Button>
       </div>
     </div>
