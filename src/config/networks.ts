@@ -30,6 +30,7 @@ const networks: { [K in ChainId]: INetwork } = {
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
+      vestingEntryNFT: '0x4912b8afa0045d0B676A53Bf5f80a44587b12674',
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -51,6 +52,7 @@ const networks: { [K in ChainId]: INetwork } = {
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
+      vestingEntryNFT: '0x4912b8afa0045d0B676A53Bf5f80a44587b12674',
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -72,6 +74,7 @@ const networks: { [K in ChainId]: INetwork } = {
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
+      vestingEntryNFT: '0x4912b8afa0045d0B676A53Bf5f80a44587b12674',
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -93,6 +96,7 @@ const networks: { [K in ChainId]: INetwork } = {
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
+      vestingEntryNFT: '0x4912b8afa0045d0B676A53Bf5f80a44587b12674',
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -108,12 +112,13 @@ const networks: { [K in ChainId]: INetwork } = {
     contracts: {
       LM: '0x2F6Cd810537f81423a5dfEc957DC7B98AB420BD7',
       multicall: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
-      origination: '0x918FFf7b2e9AB9929D0A2eaD13f2b141d2CeE680',
+      origination: '0x7059B4aF6D613811c56d9d66eC1440091Df0eC5d',
       rewardEscrow: '0x0956636dF01cA07e3101F300602f9D4DDA6deD66',
       uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
+      vestingEntryNFT: '0x4912b8afa0045d0B676A53Bf5f80a44587b12674',
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
