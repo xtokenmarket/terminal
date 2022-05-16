@@ -45,10 +45,10 @@ interface IState extends Omit<ICreateTokenSaleData, 'token0' | 'token1'> {
 const initialState: IState = {
   offerTokenAmount: '',
   reserveOfferTokenAmount: '',
-  offeringPeriod: 0,
+  publicOfferingPeriod: 0,
   pricingFormula: undefined,
-  startingPrice: '',
-  endingPrice: '',
+  publicStartingPrice: '',
+  publicEndingPrice: '',
   vestingEnabled: undefined,
   vestingPeriod: 0,
   vestingPeriodUnit: '',
@@ -57,7 +57,12 @@ const initialState: IState = {
   offerToken: undefined,
   purchaseToken: undefined,
   step: ECreareTokenSaleStep.Offering,
-  offeringPeriodUnit: EPeriods.Weeks,
+  publicOfferingPeriodUnit: EPeriods.Weeks,
+
+  whitelistStartingPrice: '',
+  whitelistEndingPrice: '',
+  whitelistOfferingPeriod: 0,
+  whitelistOfferingPeriodUnit: '',
 }
 
 const CreareTokenSale = () => {

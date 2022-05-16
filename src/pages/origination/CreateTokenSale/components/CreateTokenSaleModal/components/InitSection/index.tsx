@@ -8,6 +8,7 @@ import { ICreateTokenSaleData } from 'types'
 import { getDurationSec, getMetamaskError } from 'utils'
 import { parseUnits } from 'ethers/lib/utils'
 import { useServices } from 'helpers'
+import { BigNumber, ethers } from 'ethers'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,14 +69,17 @@ export const InitSection = (props: IProps) => {
       const saleParams = {
         offerToken: data.offerToken.address,
         purchaseToken: data.purchaseToken.address,
-        startingPrice: parseUnits(
-          data.startingPrice,
+        publicStartingPrice: parseUnits(
+          data.publicStartingPrice,
           data.purchaseToken?.decimals
         ),
-        endingPrice: parseUnits(data.endingPrice, data.purchaseToken?.decimals),
-        saleDuration: getDurationSec(
-          data.offeringPeriod,
-          data.offeringPeriodUnit.toString()
+        publicEndingPrice: parseUnits(
+          data.publicEndingPrice,
+          data.purchaseToken?.decimals
+        ),
+        publicSaleDuration: getDurationSec(
+          data.publicOfferingPeriod,
+          data.publicOfferingPeriodUnit.toString()
         ),
         totalOfferingAmount: parseUnits(
           data.offerTokenAmount,
@@ -93,6 +97,10 @@ export const InitSection = (props: IProps) => {
           Number(data.cliffPeriod),
           data.cliffPeriodUnit.toString()
         ),
+        //TODO: duplicating from public sale for now
+        whitelistStartingPrice: BigNumber.from(0),
+        whitelistEndingPrice: BigNumber.from(0),
+        whitelistSaleDuration: BigNumber.from(0),
       }
 
       const txId = await originationService.createFungibleListing(saleParams)
