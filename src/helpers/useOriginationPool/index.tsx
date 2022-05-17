@@ -143,6 +143,7 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         price: '',
         salesPeriod: publicSaleDuration,
         timeRemaining,
+        offerToken: token0 || ETH,
       }
 
       const myPosition = {
