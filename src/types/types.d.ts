@@ -242,7 +242,7 @@ export interface IWhitelistSale extends Label {
   pricingFormular: string
   startingPrice?: BigNumber
   endingPrice?: BigNumber
-  whitelist?: string[]
+  whitelist?: boolean
   addressCap: string
   timeRemaining: BigNumber
   salesPeriod?: BigNumber
