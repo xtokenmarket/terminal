@@ -1,5 +1,9 @@
-import { makeStyles, Typography } from '@material-ui/core'
+import { Button, makeStyles, Tooltip, Typography } from '@material-ui/core'
+import { useConnectedWeb3Context } from 'contexts'
 import { transparentize } from 'polished'
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { FungibleOriginationPoolService } from 'services/fungibleOriginationPool'
 import { OriginationDetailItem } from 'types'
 import { TableHeader } from '../TableHeader'
 import { TableRow } from '../TableRow'
@@ -27,6 +31,31 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
     marginTop: 24,
   },
+  button: {
+    marginTop: 24,
+    height: 33,
+    '&:hover': {
+      opacity: 0.7,
+      backgroundColor: theme.colors.secondary,
+    },
+    '&:disabled': {
+      backgroundColor: theme.colors.primary200,
+    },
+    padding: '8px 15px',
+    backgroundColor: theme.colors.secondary,
+    borderRadius: 4,
+  },
+  text: {
+    color: theme.colors.primary700,
+    fontSize: 14,
+    fontWeight: 600,
+  },
+  labelWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 16,
+  },
 }))
 
 interface IProps {
@@ -36,11 +65,48 @@ interface IProps {
 }
 
 export const Table = ({ item, label, toggleModal }: IProps) => {
+  const [saleInitiated, setSaleInitiated] = useState(false)
+  const { account, library: provider } = useConnectedWeb3Context()
+  const { poolAddress } = useParams<{ poolAddress: string }>()
+  useEffect(() => {
+    const fungibleOriginationPool = new FungibleOriginationPoolService(
+      provider,
+      account,
+      poolAddress
+    )
+
+    fungibleOriginationPool
+      .isSaleInitiated()
+      .then((initiated) => setSaleInitiated(initiated))
+  }, [account, provider, poolAddress])
   const cl = useStyles()
 
   return (
     <>
-      <Typography className={cl.label}>{label}</Typography>
+      {label === 'Whitelist Sale' ? (
+        <div className={cl.labelWrapper}>
+          <Typography className={cl.label}>{label}</Typography>
+          <Tooltip
+            arrow
+            title={saleInitiated ? '' : 'Sale should be initiated'}
+            placement="top"
+          >
+            <span>
+              <Button
+                className={cl.button}
+                disabled={!saleInitiated}
+                onClick={() => {
+                  toggleModal && toggleModal()
+                }}
+              >
+                <Typography className={cl.text}>SET WHITELIST</Typography>
+              </Button>
+            </span>
+          </Tooltip>
+        </div>
+      ) : (
+        <Typography className={cl.label}>{label}</Typography>
+      )}
       <div className={cl.content}>
         <TableHeader label={item.label} />
         <div>

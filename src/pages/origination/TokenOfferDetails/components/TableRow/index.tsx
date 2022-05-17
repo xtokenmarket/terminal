@@ -118,22 +118,6 @@ interface IProps {
 }
 
 export const TableRow = ({ item, toggleModal }: IProps) => {
-  const { account, library: provider } = useConnectedWeb3Context()
-  const { poolAddress } = useParams<{ poolAddress: string }>()
-  const [saleInitiated, setSaleInitiated] = useState(false)
-
-  useEffect(() => {
-    const fungibleOriginationPool = new FungibleOriginationPoolService(
-      provider,
-      account,
-      poolAddress
-    )
-
-    fungibleOriginationPool
-      .isSaleInitiated()
-      .then((initiated) => setSaleInitiated(initiated))
-  }, [account, provider, poolAddress])
-
   const cl = useStyles()
 
   const renderContent = () => {
