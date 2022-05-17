@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Button, CircularProgress, makeStyles } from '@material-ui/core'
 import { WarningInfo } from 'components/Common/WarningInfo'
-import { getContractAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
-import { OriginationService } from 'services/origination'
 import { ICreateTokenSaleData } from 'types'
 import { getDurationSec, getMetamaskError } from 'utils'
 import { parseUnits } from 'ethers/lib/utils'
 import { useServices } from 'helpers'
-import { BigNumber, ethers } from 'ethers'
+import { BigNumber } from 'ethers'
 
 const useStyles = makeStyles((theme) => ({
   root: {

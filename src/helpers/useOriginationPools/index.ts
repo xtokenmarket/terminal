@@ -1,10 +1,8 @@
 import axios from 'axios'
-import { getContractAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import { useNetworkContext } from 'contexts/networkContext'
 import { useServices } from 'helpers'
 import { useEffect, useState } from 'react'
-import { OriginationService } from 'services'
 import { ITokenOffer } from 'types'
 import { isTestnet, isTestNetwork } from 'utils/network'
 
