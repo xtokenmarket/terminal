@@ -40,7 +40,7 @@ const useStyles = makeStyles(() => ({
   publicSale: {
     '&.currentPrice': { width: '14%' },
     '&.pricingFormular': { width: '14%' },
-    '&.price': { width: '14%' },
+    '&.startingEndingPrice': { width: '14%' },
     '&.timeRemaining': { width: '14%' },
     '&.salesPeriod': { width: '14%' },
     '&+&': { paddingLeft: 16 },

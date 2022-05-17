@@ -266,10 +266,10 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
                 {item.startingPrice && item.endingPrice
                   ? `${formatBigNumber(
                       item.startingPrice,
-                      item.offerToken.decimals
+                      item.purchaseToken.decimals
                     )}/${formatBigNumber(
                       item.endingPrice,
-                      item.offerToken.decimals
+                      item.purchaseToken.decimals
                     )} ${item.purchaseToken.symbol}`
                   : 'N/A'}
               </Typography>
@@ -331,7 +331,7 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
             <Typography className={clsx(cl.item, cl.label)}>
               {`${formatBigNumber(
                 item.currentPrice,
-                item.offerToken.decimals
+                item.purchaseToken.decimals
               )} ${item.purchaseToken.symbol}` || 'N/A'}
             </Typography>
           </Td>
@@ -340,9 +340,17 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
               {item.pricingFormular || 'N/A'}
             </Typography>
           </Td>
-          <Td type={PublicSale.Price} label={item.label}>
+          <Td type={PublicSale.StartingEndingPrice} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.price || 'N/A'}
+              {item.startingPrice && item.endingPrice
+                ? `${formatBigNumber(
+                    item.startingPrice,
+                    item.purchaseToken.decimals
+                  )}/${formatBigNumber(
+                    item.endingPrice,
+                    item.purchaseToken.decimals
+                  )} ${item.purchaseToken.symbol}`
+                : 'N/A'}
             </Typography>
           </Td>
           <Td type={PublicSale.TimeRemaining} label={item.label}>
