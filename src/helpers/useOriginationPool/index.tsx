@@ -143,11 +143,12 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         pricingFormular: publicStartingPrice?.gt(publicEndingPrice as BigNumber)
           ? 'Ascending'
           : 'Descending',
-        price: '',
         salesPeriod: publicSaleDuration,
         timeRemaining,
         offerToken: token0,
         purchaseToken: token1 || ETH,
+        startingPrice: publicStartingPrice,
+        endingPrice: publicEndingPrice,
       }
 
       const myPosition = {

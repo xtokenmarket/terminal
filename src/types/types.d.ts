@@ -253,11 +253,12 @@ export interface IWhitelistSale extends Label {
 export interface IPublicSale extends Label {
   currentPrice: BigNumber
   pricingFormular: string
-  price: string
   salesPeriod?: BigNumber
   timeRemaining: BigNumber
   offerToken: IToken
   purchaseToken: IToken
+  startingPrice: BigNumber
+  endingPrice: BigNumber
 }
 
 export interface IMyPosition extends Label {

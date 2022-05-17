@@ -105,8 +105,8 @@ export const TableHeader = (props: IProps) => {
         <Td type={PublicSale.PricingFormular} label={props.label}>
           <div className={classes.item}>Pricing Formular</div>
         </Td>
-        <Td type={PublicSale.Price} label={props.label}>
-          <div className={classes.item}>Price</div>
+        <Td type={PublicSale.StartingEndingPrice} label={props.label}>
+          <div className={classes.item}>Starting / Ending Price</div>
         </Td>
         <Td type={PublicSale.TimeRemaining} label={props.label}>
           <div className={classes.item}>Time Remaining</div>
