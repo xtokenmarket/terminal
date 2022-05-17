@@ -276,23 +276,9 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
             </Td>
 
             <Td type={WhitelistSale.Whitelist} label={item.label}>
-              <Tooltip
-                arrow
-                title={saleInitiated ? '' : 'Sale should be initiated'}
-                placement="top"
-              >
-                <span>
-                  <Button
-                    className={cl.button}
-                    disabled={!saleInitiated}
-                    onClick={() => {
-                      toggleModal && toggleModal()
-                    }}
-                  >
-                    <Typography className={cl.text}>SET WHITELIST</Typography>
-                  </Button>
-                </span>
-              </Tooltip>
+              <Typography className={clsx(cl.item, cl.label)}>
+                {item.whitelist ? 'SET' : 'NOT SET'}
+              </Typography>
             </Td>
 
             <Td type={WhitelistSale.AddressCap} label={item.label}>
