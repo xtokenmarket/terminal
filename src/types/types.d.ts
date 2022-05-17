@@ -298,6 +298,7 @@ export interface IWhitelistSale extends Label {
   timeRemaining: BigNumber
   salesPeriod?: BigNumber
   offerToken: IToken
+  purchaseToken: IToken
 }
 
 export interface IPublicSale extends Label {
@@ -307,6 +308,7 @@ export interface IPublicSale extends Label {
   salesPeriod?: BigNumber
   timeRemaining: BigNumber
   offerToken: IToken
+  purchaseToken: IToken
 }
 
 export interface IMyPosition extends Label {

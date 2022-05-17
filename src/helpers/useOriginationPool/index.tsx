@@ -134,6 +134,7 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         timeRemaining: whitelistTimeRemaining,
         salesPeriod: whitelistSaleDuration,
         offerToken: token0,
+        purchaseToken: token1 || ETH,
       }
 
       const publicSale = {
@@ -146,6 +147,7 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         salesPeriod: publicSaleDuration,
         timeRemaining,
         offerToken: token0,
+        purchaseToken: token1 || ETH,
       }
 
       const myPosition = {
