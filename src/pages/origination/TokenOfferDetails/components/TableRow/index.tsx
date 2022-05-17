@@ -231,7 +231,7 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
           <Td type={OfferingOverview.SalesPeriod} label={item.label}>
             <Typography className={clsx(cl.item, cl.label, cl.itemAlignRight)}>
               {item.salesPeriod
-                ? parseDurationSec(item.salesPeriod.toNumber())
+                ? parseDurationSec(Number(item.salesPeriod.toString()))
                 : 'N/A'}
             </Typography>
           </Td>
@@ -247,7 +247,8 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
           <div className={cl.content}>
             <Td type={WhitelistSale.CurrentPrice} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {item.currentPrice || 'N/A'}
+                {formatBigNumber(item.currentPrice, item.offerToken.decimals) ||
+                  'N/A'}
               </Typography>
             </Td>
 
@@ -325,7 +326,8 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
         <div className={cl.content}>
           <Td type={PublicSale.CurrentPrice} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.currentPrice || 'N/A'}
+              {formatBigNumber(item.currentPrice, item.offerToken.decimals) ||
+                'N/A'}
             </Typography>
           </Td>
           <Td type={PublicSale.PricingFormular} label={item.label}>
@@ -348,7 +350,7 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
           <Td type={PublicSale.SalesPeriod} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
               {item.salesPeriod
-                ? parseDurationSec(item.salesPeriod?.toNumber())
+                ? parseDurationSec(Number(item.salesPeriod?.toString()))
                 : 'N/A'}
             </Typography>
           </Td>
