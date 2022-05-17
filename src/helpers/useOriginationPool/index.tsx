@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import Abi from 'abis'
 import axios from 'axios'
-import { BigNumber, constants, Contract } from 'ethers'
+import { BigNumber, constants, Contract, ethers } from 'ethers'
 import {
   knownTokens,
   getTokenFromAddress,
@@ -119,6 +119,17 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         ? saleEndTimestamp.sub(BigNumber.from(Date.now()))
         : BigNumber.from('0')
 
+      const isSetWhitelist = () => {
+        if (
+          whitelistMerkleRoot &&
+          whitelistMerkleRoot.some((x) => x !== ethers.constants.AddressZero)
+        ) {
+          return true
+        }
+
+        return false
+      }
+
       const _whitelist = {
         label: OriginationLabels.WhitelistSale,
         currentPrice: getOfferTokenPrice,
@@ -129,7 +140,7 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
           : 'Descending',
         startingPrice: whitelistStartingPrice,
         endingPrice: whitelistEndingPrice,
-        whitelist: whitelistMerkleRoot,
+        whitelist: isSetWhitelist(),
         addressCap: '',
         timeRemaining: whitelistTimeRemaining,
         salesPeriod: whitelistSaleDuration,
