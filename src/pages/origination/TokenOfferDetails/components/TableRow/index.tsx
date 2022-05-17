@@ -248,8 +248,10 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
           <div className={cl.content}>
             <Td type={WhitelistSale.CurrentPrice} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {formatBigNumber(item.currentPrice, item.offerToken.decimals) ||
-                  'N/A'}
+                {`${formatBigNumber(
+                  item.currentPrice,
+                  item.offerToken.decimals
+                )} ${item.purchaseToken.symbol}` || 'N/A'}
               </Typography>
             </Td>
 
@@ -268,7 +270,7 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
                     )}/${formatBigNumber(
                       item.endingPrice,
                       item.offerToken.decimals
-                    )}`
+                    )} ${item.purchaseToken.symbol}`
                   : 'N/A'}
               </Typography>
             </Td>
@@ -327,8 +329,10 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
         <div className={cl.content}>
           <Td type={PublicSale.CurrentPrice} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {formatBigNumber(item.currentPrice, item.offerToken.decimals) ||
-                'N/A'}
+              {`${formatBigNumber(
+                item.currentPrice,
+                item.offerToken.decimals
+              )} ${item.purchaseToken.symbol}` || 'N/A'}
             </Typography>
           </Td>
           <Td type={PublicSale.PricingFormular} label={item.label}>
