@@ -306,6 +306,7 @@ export interface IPublicSale extends Label {
   price: string
   salesPeriod?: BigNumber
   timeRemaining: BigNumber
+  offerToken: IToken
 }
 
 export interface IMyPosition extends Label {
