@@ -68,6 +68,8 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         entryId
       )
 
+      const { tokenAmount, tokenAmountClaimed } = nftInfo
+
       const ETH: IToken = {
         ...knownTokens.eth,
         address: constants.AddressZero,
@@ -131,7 +133,7 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         addressCap: '',
         timeRemaining: whitelistTimeRemaining,
         salesPeriod: whitelistSaleDuration,
-        offerToken: token0 || ETH,
+        offerToken: token0,
       }
 
       const publicSale = {
@@ -143,15 +145,17 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         price: '',
         salesPeriod: publicSaleDuration,
         timeRemaining,
-        offerToken: token0 || ETH,
+        offerToken: token0,
       }
 
       const myPosition = {
         label: OriginationLabels.MyPosition,
         tokenPurchased: offerTokenAmountPurchased,
         amountInvested: purchaseTokenContribution,
-        amountvested: 'string',
-        amountAvailableToVest: 'string',
+        amountvested: tokenAmountClaimed,
+        amountAvailableToVest: tokenAmount.sub(tokenAmountClaimed),
+        offerToken: token0,
+        purchaseToken: token1 || ETH,
       }
 
       return {

@@ -17,6 +17,7 @@ import {
 import {
   formatBigNumber,
   getRemainingTime,
+  numberWithCommas,
   parseDurationSec,
   parseRemainingDurationSec,
 } from 'utils'
@@ -364,22 +365,26 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
         <div className={cl.content}>
           <Td type={MyPosition.TokenPurchased} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.tokenPurchased}
+              {numberWithCommas(item.tokenPurchased.toString())}{' '}
+              {item.offerToken.symbol}
             </Typography>
           </Td>
           <Td type={MyPosition.AmountInvested} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.amountInvested}
+              {numberWithCommas(item.amountInvested.toString())}{' '}
+              {item.purchaseToken.symbol}
             </Typography>
           </Td>
           <Td type={MyPosition.Amountvested} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.amountvested}
+              {numberWithCommas(item.amountvested.toString())}{' '}
+              {item.offerToken.symbol}
             </Typography>
           </Td>
           <Td type={MyPosition.AmountAvailableToVest} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.amountAvailableToVest}
+              {numberWithCommas(item.amountAvailableToVest.toString())}{' '}
+              {item.offerToken.symbol}
             </Typography>
           </Td>
           <Button className={cl.button} onClick={toggleModal}>
