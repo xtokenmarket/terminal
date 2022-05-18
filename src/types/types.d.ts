@@ -230,13 +230,13 @@ export interface ICreateTokenSaleData {
   whitelistStartingPrice: string
   whitelistEndingPrice: string
   vestingEnabled?: VestingOption
-  vestingPeriod?: number
+  vestingPeriod: string
   vestingPeriodUnit: PeriodUnit
-  cliffPeriod?: number
+  cliffPeriod: string
   cliffPeriodUnit: PeriodUnit
-  publicOfferingPeriod: number
+  publicOfferingPeriod: string
   publicOfferingPeriodUnit: PeriodUnit
-  whitelistOfferingPeriod: number
+  whitelistOfferingPeriod: string
   whitelistOfferingPeriodUnit: PeriodUnit
 }
 
