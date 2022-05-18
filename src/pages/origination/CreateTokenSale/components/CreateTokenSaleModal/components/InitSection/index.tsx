@@ -21,6 +21,7 @@ interface IProps {
   onClose: () => void
   data: ICreateTokenSaleData
   setTxId: (txId: string) => void
+  setPoolAddress: (address: string) => void
 }
 
 interface IState {
@@ -44,7 +45,7 @@ export const InitSection = (props: IProps) => {
     poolAddress: '',
   })
 
-  const { onNext, data, onClose, setTxId } = props
+  const { onNext, data, onClose, setTxId, setPoolAddress } = props
   const { originationService } = useServices()
 
   useEffect(() => {
@@ -106,6 +107,9 @@ export const InitSection = (props: IProps) => {
         account,
         txId
       )
+      const poolAddress =
+        await originationService.parseFungibleListingCreatedTx(finalTxId)
+      setPoolAddress(poolAddress)
       setTxId(finalTxId)
 
       setTimeout(() => {
