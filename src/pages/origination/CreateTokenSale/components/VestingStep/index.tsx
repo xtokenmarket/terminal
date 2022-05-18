@@ -42,9 +42,9 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
     if (!data.vestingEnabled) {
       // clear previously inserted data if the user selects 'No' option
       updateData({
-        vestingPeriod: 0,
+        vestingPeriod: '',
         vestingPeriodUnit: EPeriods.Weeks,
-        cliffPeriod: 0,
+        cliffPeriod: '',
         cliffPeriodUnit: EPeriods.Weeks,
       })
     }
@@ -76,9 +76,9 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
     cliffPeriod &&
     cliffPeriodUnit &&
     validInsertedVestingConfig(
-      vestingPeriod,
+      Number(vestingPeriod),
       vestingPeriodUnit,
-      cliffPeriod,
+      Number(cliffPeriod),
       cliffPeriodUnit
     )
 

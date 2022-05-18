@@ -77,7 +77,7 @@ export const InitSection = (props: IProps) => {
           data.purchaseToken?.decimals
         ),
         publicSaleDuration: getDurationSec(
-          data.publicOfferingPeriod,
+          Number(data.publicOfferingPeriod),
           data.publicOfferingPeriodUnit.toString()
         ),
         totalOfferingAmount: parseUnits(
