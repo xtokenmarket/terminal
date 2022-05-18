@@ -143,7 +143,7 @@ export const InitSection = (props: IProps) => {
     <div className={classes.root}>
       <WarningInfo
         title="Important"
-        description="This will transfer the tokens from your address to the Terminal contract. This action cannot be undone or reversed."
+        description="This will deploy your token sale contract. This action cannot be undone or reversed."
       />
 
       <Button
