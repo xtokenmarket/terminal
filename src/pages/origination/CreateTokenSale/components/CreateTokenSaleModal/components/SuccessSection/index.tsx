@@ -56,8 +56,6 @@ export const SuccessSection = (props: IProps) => {
   const classes = useStyles()
   const { data, onClose } = props
 
-  const tokenSale = `${data.offerToken?.symbol}/${data.purchaseToken?.symbol}`
-
   return (
     <div className={classes.root}>
       <div className={classes.header}>
@@ -67,10 +65,11 @@ export const SuccessSection = (props: IProps) => {
           className={classes.img}
         />
         <Typography className={classes.title}>
-          {tokenSale} token sale created!
+          {data.offerToken?.symbol} token sale created!
         </Typography>
         <Typography className={classes.description}>
-          You have successfully created {tokenSale} token sale.
+          You have successfully created a {data.offerToken?.symbol} for{' '}
+          {data.purchaseToken?.symbol} offering.
         </Typography>
       </div>
       <div className={classes.actions}>
