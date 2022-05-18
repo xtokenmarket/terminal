@@ -53,6 +53,22 @@ const useStyles = makeStyles((theme) => ({
       marginRight: 'auto',
     },
   },
+  backWrapper: {
+    marginRight: 20,
+    display: 'flex',
+    cursor: 'pointer',
+    transition: 'all 0.4s',
+    '&:hover': {
+      opacity: 0.7,
+    },
+    [theme.breakpoints.down('sm')]: {
+      margin: 20,
+    },
+  },
+  backText: {
+    color: theme.colors.primary100,
+    marginLeft: 16,
+  },
 }))
 
 interface IProps {
@@ -73,6 +89,16 @@ export const CreareTokenSaleHeader = ({ step, onCancel }: IProps) => {
     >
       <Typography className={classes.title}>Token Sale</Typography>
       <div className={classes.headerDataContainer}>
+        <div
+          className={classes.backWrapper}
+          onClick={() => {
+            //props.onBack
+            console.log('back!!')
+          }}
+        >
+          <img alt="icon" src="/assets/icons/back.svg" />
+          <span className={classes.backText}>Back</span>
+        </div>
         <CreateTokenSaleStepper step={step} />
         {!isFirstStep && (
           <span className={classes.cancel} onClick={onCancel}>
