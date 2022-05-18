@@ -1,6 +1,8 @@
 import { Contract, Wallet, ethers } from 'ethers'
 import { ISaleParams, Maybe } from 'types'
 import Abi from 'abis'
+import { Interface } from 'ethers/lib/utils'
+import { NULL_ADDRESS } from 'config/constants'
 
 class OriginationService {
   provider: any
@@ -64,6 +66,28 @@ class OriginationService {
         }
       })
     })
+  }
+
+  parseFungibleListingCreatedTx = async (txId: string): Promise<string> => {
+    const { logs } = await this.contract.provider.getTransactionReceipt(txId)
+
+    const filteredLogs = logs.filter(
+      (log) => log.address.toLowerCase() === this.contract.address.toLowerCase()
+    )
+
+    const uniPositionInterface = new Interface(Abi.OriginationCore)
+    for (let index = 0; index < filteredLogs.length; index++) {
+      const log = filteredLogs[index]
+      try {
+        const parsed = uniPositionInterface.parseLog(log)
+        if (parsed.name === 'CreateFungibleListing') {
+          return parsed.args[0]
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    return NULL_ADDRESS
   }
 }
 
