@@ -1,14 +1,15 @@
+import { useState } from 'react'
+import { BigNumber } from 'ethers'
+import { transparentize } from 'polished'
+import { useHistory, useParams } from 'react-router'
+import { useConnectedWeb3Context } from 'contexts'
 import { Button, makeStyles, Typography } from '@material-ui/core'
 import { PageWrapper, PageHeader, PageContent, SimpleLoader } from 'components'
 import { useOriginationPool } from 'helpers/useOriginationPool'
-import { useState } from 'react'
-import { useHistory, useParams } from 'react-router'
-import { transparentize } from 'polished'
 import { InitiateSaleModal } from './components/InitiateSaleModal'
 import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
-import { ClaimModal } from '../CreateTokenSale/components/ClaimModal'
-import { BigNumber } from 'ethers'
+import { ClaimModal } from './components/ClaimModal'
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -55,6 +56,8 @@ const TokenSaleDetails = () => {
   const history = useHistory()
   const { poolAddress } = useParams<RouteParams>()
   const { tokenOffer, loadInfo } = useOriginationPool(poolAddress)
+  const { account, networkId, library: provider } = useConnectedWeb3Context()
+
   const [state, setState] = useState<IState>({
     isInitiateSaleModalOpen: false,
     open: false,
@@ -99,6 +102,7 @@ const TokenSaleDetails = () => {
   }
 
   const toggleClaimModal = () => {
+    console.log('Toggle open:', !state.isClaimModalOpen)
     setState((prev) => ({
       ...prev,
       isClaimModalOpen: !state.isClaimModalOpen,
@@ -162,11 +166,12 @@ const TokenSaleDetails = () => {
               open={state.isInitiateSaleModalOpen}
             />
             <ClaimModal
+              poolAddress={poolAddress}
               isOpen={state.isClaimModalOpen}
               onClose={toggleClaimModal}
               data={{
-                token: tokenOffer.offeringOverview.purchaseToken,
-                amount: BigNumber.from('0'),
+                token: tokenOffer.offeringOverview.offerToken,
+                amount: BigNumber.from(tokenOffer.myPosition.tokenPurchased),
               }}
             />
           </div>
