@@ -16,15 +16,10 @@ import {
 } from 'types'
 import {
   formatBigNumber,
-  getRemainingTime,
   numberWithCommas,
   parseDurationSec,
   parseRemainingDurationSec,
 } from 'utils'
-import { useParams } from 'react-router-dom'
-import { useConnectedWeb3Context } from 'contexts'
-import { FungibleOriginationPoolService } from 'services/fungibleOriginationPool'
-import { useEffect, useState } from 'react'
 import moment from 'moment'
 
 const useStyles = makeStyles((theme) => ({
@@ -277,9 +272,7 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
             <Td type={WhitelistSale.TimeRemaining} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
                 {item.timeRemaining
-                  ? `${parseRemainingDurationSec(
-                      item.timeRemaining.toNumber()
-                    )}`
+                  ? parseRemainingDurationSec(item.timeRemaining.toNumber())
                   : 'N/A'}
               </Typography>
             </Td>
