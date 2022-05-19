@@ -9,6 +9,7 @@ import { IToken } from 'types'
 import { TokenIcon } from 'components'
 import { formatBigNumber } from 'utils'
 import { ZERO } from 'utils/number'
+import { BigNumber } from 'ethers'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -66,12 +67,20 @@ interface IProps {
   actionPending: boolean
   onConfirm: () => Promise<void>
   token: IToken
+  amount: BigNumber
 }
 
 export const TokenInfo = (props: IProps) => {
   const classes = useStyles()
-  const { title, token, actionLabel, actionDone, actionPending, onConfirm } =
-    props
+  const {
+    title,
+    token,
+    actionLabel,
+    actionDone,
+    actionPending,
+    onConfirm,
+    amount,
+  } = props
 
   return (
     <div className={clsx(classes.root)}>
@@ -83,7 +92,7 @@ export const TokenInfo = (props: IProps) => {
           </div>
           &nbsp;&nbsp;
           <Typography className={classes.amount}>
-            {formatBigNumber(ZERO, token.decimals, 4)}
+            {formatBigNumber(amount, token.decimals, 4)}
             &nbsp;
             <span>~ $13.009</span>
           </Typography>
