@@ -265,7 +265,9 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
 
             <Td type={WhitelistSale.AddressCap} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {item.addressCap || 'N/A'}
+                {item.addressCap
+                  ? formatBigNumber(item.addressCap, item.offerToken.decimals)
+                  : 'N/A'}
               </Typography>
             </Td>
 

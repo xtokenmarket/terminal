@@ -14,8 +14,8 @@ import { Network, OriginationLabels } from 'utils/enums'
 import { getOffersDataMulticall, ITokenOfferDetails } from './helper'
 import { IToken, ITokenOffer } from 'types'
 import { FungiblePoolService } from 'services'
-import moment from 'moment'
 import { getRemainingTimeSec } from 'utils'
+import { ORIGINATION_API_URL } from 'config/constants'
 
 interface IState {
   tokenOffer?: ITokenOffer
@@ -33,6 +33,14 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
     poolAddress: string
   ): Promise<ITokenOffer | undefined> => {
     try {
+      // `maxContributionAmount` doesn't exist on contract level. Can only get from API.
+      // TODO: network is hardcoded for now
+      const whitelistAccountDetail = await axios.get(
+        `${ORIGINATION_API_URL}/whitelistedAcccountDetails/?accountAddress=${account}&poolAddress=${poolAddress}&network=kovan`
+      )
+
+      const addressCap = whitelistAccountDetail.data.maxContributionAmount
+
       const _offerData = await getOffersDataMulticall(poolAddress, multicall)
 
       const fungiblePool = new FungiblePoolService(
@@ -143,7 +151,7 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         startingPrice: whitelistStartingPrice,
         endingPrice: whitelistEndingPrice,
         whitelist: isSetWhitelist(),
-        addressCap: '',
+        addressCap,
         timeRemaining: whitelistTimeRemaining,
         salesPeriod: whitelistSaleDuration,
         offerToken: token0,
