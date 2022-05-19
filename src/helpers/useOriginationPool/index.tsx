@@ -14,6 +14,8 @@ import { Network, OriginationLabels } from 'utils/enums'
 import { getOffersDataMulticall, ITokenOfferDetails } from './helper'
 import { IToken, ITokenOffer } from 'types'
 import { FungiblePoolService } from 'services'
+import moment from 'moment'
+import { getRemainingTimeSec } from 'utils'
 
 interface IState {
   tokenOffer?: ITokenOffer
@@ -112,11 +114,11 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         (whitelistSaleDuration as BigNumber) || BigNumber.from(0)
       )
       const whitelistTimeRemaining = !endOfWhitelistPeriod.isZero()
-        ? endOfWhitelistPeriod.sub(BigNumber.from(Date.now()))
+        ? getRemainingTimeSec(endOfWhitelistPeriod)
         : BigNumber.from('0')
 
       const timeRemaining = !saleEndTimestamp.isZero()
-        ? saleEndTimestamp.sub(BigNumber.from(Date.now()))
+        ? getRemainingTimeSec(saleEndTimestamp)
         : BigNumber.from('0')
 
       const isSetWhitelist = () => {
