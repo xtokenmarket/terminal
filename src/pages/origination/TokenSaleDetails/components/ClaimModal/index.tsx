@@ -1,12 +1,11 @@
+import React, { useEffect, useState } from 'react'
 import clsx from 'clsx'
 import { makeStyles, Modal } from '@material-ui/core'
-import React, { useEffect, useState } from 'react'
 import { EClaimModalStep } from 'utils/enums'
 import { InitSection, SuccessSection } from './components'
 import { IClaimData } from 'types'
 import useCommonStyles from 'style/common'
 import { useConnectedWeb3Context } from 'contexts'
-import { useHistory } from 'react-router'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,19 +27,24 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
+  poolAddress: string
   className?: string
   isOpen: boolean
   onClose: () => void
   data: IClaimData
 }
 
-export const ClaimModal = (props: IProps) => {
-  const history = useHistory()
+export const ClaimModal = ({
+  className,
+  isOpen,
+  onClose,
+  data,
+  poolAddress,
+}: IProps) => {
   const classes = useStyles()
   const commonClasses = useCommonStyles()
-  const { account, networkId } = useConnectedWeb3Context()
+  const { account } = useConnectedWeb3Context()
 
-  const { onClose, data } = props
   const [step, setStep] = useState<EClaimModalStep>(EClaimModalStep.Init)
   const [txId, setTxId] = useState('')
 
@@ -48,7 +52,7 @@ export const ClaimModal = (props: IProps) => {
     if (!account) {
       onClose()
     }
-  }, [account])
+  }, [account, onClose])
 
   const onNextStep = () => {
     switch (step) {
@@ -65,43 +69,31 @@ export const ClaimModal = (props: IProps) => {
     onClose()
   }
 
-  const onSuccessClose = () => {
-    history.push('/origination')
-  }
-
-  const renderContent = () => {
-    switch (step) {
-      case EClaimModalStep.Init:
-        return (
+  return (
+    <Modal open={isOpen} onClose={onCreateTokenSaleSectionClose}>
+      <div
+        className={clsx(
+          classes.root,
+          commonClasses.scroll,
+          className,
+          step === EClaimModalStep.Success ? 'transparent' : ''
+        )}
+      >
+        {step === EClaimModalStep.Init ? (
           <InitSection
+            poolAddress={poolAddress}
             onNext={onNextStep}
             onClose={onClose}
             data={data}
             setTxId={setTxId}
           />
-        )
-      default:
-        return (
+        ) : (
           <SuccessSection
-            onClose={onSuccessClose}
-            data={props.data}
+            data={data}
             txId={txId}
+            onClose={onCreateTokenSaleSectionClose}
           />
-        )
-    }
-  }
-
-  return (
-    <Modal open={props.isOpen} onClose={onCreateTokenSaleSectionClose}>
-      <div
-        className={clsx(
-          classes.root,
-          commonClasses.scroll,
-          props.className,
-          step === EClaimModalStep.Success ? 'transparent' : ''
         )}
-      >
-        {renderContent()}
       </div>
     </Modal>
   )
