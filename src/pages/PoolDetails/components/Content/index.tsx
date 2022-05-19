@@ -283,9 +283,7 @@ export const Content = (props: IProps) => {
     (token) => token.vestedAmount.gt(0) && token.durationRemaining.length === 0
   )
   const shouldDisplayVestButton =
-    isDeposited &&
-    Number(poolData.rewardState.vesting) > 0 &&
-    readyToVest.length !== 0
+    Number(poolData.rewardState.vesting) > 0 && readyToVest.length !== 0
 
   const getRewardsPerWeek = () => {
     const { duration, amounts } = poolData.rewardState
