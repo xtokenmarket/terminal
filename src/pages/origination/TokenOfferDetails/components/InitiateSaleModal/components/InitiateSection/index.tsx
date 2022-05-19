@@ -221,6 +221,7 @@ export const InitiateSection = (props: IProps) => {
             actionPending={state.isApproving}
             actionDone={state.isApproved}
             token={offerData.offerToken}
+            amount={offerData.totalOfferingAmount}
           />
           <Button
             color="primary"
