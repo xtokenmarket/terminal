@@ -25,6 +25,7 @@ import { useParams } from 'react-router-dom'
 import { useConnectedWeb3Context } from 'contexts'
 import { FungibleOriginationPoolService } from 'services/fungibleOriginationPool'
 import { useEffect, useState } from 'react'
+import moment from 'moment'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -202,7 +203,7 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
                   <Typography className={cl.text}>INITIATE SALE</Typography>
                 </Button>
               ) : (
-                item.salesBegin.toString()
+                moment.unix(item.salesBegin.toNumber()).format('MMM DD[,] YYYY')
               )}
             </Typography>
           </Td>
@@ -210,7 +211,9 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
             <Typography className={clsx(cl.item, cl.label, cl.itemAlignRight)}>
               {item.salesEnd.isZero()
                 ? 'N/A'
-                : parseDurationSec(item.salesEnd.toNumber())}
+                : moment
+                    .unix(item.salesEnd.toNumber())
+                    .format('MMM DD[,] YYYY')}
             </Typography>
           </Td>
           <Td type={OfferingOverview.SalesPeriod} label={item.label}>
