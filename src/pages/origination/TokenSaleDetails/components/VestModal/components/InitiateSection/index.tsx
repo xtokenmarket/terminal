@@ -20,14 +20,13 @@ const useStyles = makeStyles((theme) => ({
     padding: 32,
     position: 'relative',
     paddingBottom: 16,
-    display: 'flex',
     backgroundColor: theme.colors.primary500,
   },
   title: {
     color: theme.colors.white,
     fontWeight: 600,
     fontSize: 22,
-    marginBottom: 8,
+    marginBottom: 5,
   },
   content: {
     padding: 32,
@@ -75,12 +74,17 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 32,
   },
   progress: { color: theme.colors.white },
+  subTitle: {
+    color: theme.colors.white,
+    marginBottom: 10,
+  },
 }))
 
 interface IProps {
   onClose: () => void
   offerData: IOfferingOverview
   updateState: (e: any) => void
+  onNext: () => void
 }
 
 interface IState {
@@ -95,7 +99,7 @@ export const InitiateSection = (props: IProps) => {
   const classes = useStyles()
   const { account, library: provider } = useConnectedWeb3Context()
   const isMountedRef = useIsMountedRef()
-  const { offerData, onClose, updateState } = props
+  const { offerData, onClose, updateState, onNext } = props
 
   const [state, setState] = useState<IState>({
     isApproved: false,
@@ -194,6 +198,7 @@ export const InitiateSection = (props: IProps) => {
         isInitiated: true,
         txHash: finalTxId,
       }))
+      onNext()
     } catch (error) {
       console.error(error)
       setState((prev) => ({
@@ -207,6 +212,9 @@ export const InitiateSection = (props: IProps) => {
     <div className={classes.root}>
       <div className={classes.header}>
         <Typography className={classes.title}>Vest XTK tokens</Typography>
+        <Typography className={classes.subTitle}>
+          Please complete the transaction to approve vesting process.
+        </Typography>
         {!state.isApproving && (
           <IconButton className={classes.closeButton} onClick={onClose}>
             <CloseOutlinedIcon />

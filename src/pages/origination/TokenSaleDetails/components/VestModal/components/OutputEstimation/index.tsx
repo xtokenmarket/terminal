@@ -8,23 +8,27 @@ import {
   getCurrentTimeStamp,
   getTimeRemainingUnits,
 } from 'utils'
+import { VestStep } from 'utils/enums'
 import { ONE_ETHER } from 'utils/number'
+import { VestState } from '../..'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
   estimation: {
     backgroundColor: theme.colors.primary400,
-    padding: '24px 32px',
+    padding: '24px 32px 1px 32px',
   },
   label: {
     color: theme.colors.primary100,
-    marginBottom: 8,
+    marginBottom: 6,
+    fontSize: 10,
+    fontWeight: 400,
   },
   infoRow: {
     margin: '0 -4px',
-    display: 'flex',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 20,
+    display: 'flex',
   },
   tokenIcon: {
     width: 36,
@@ -35,6 +39,11 @@ const useStyles = makeStyles((theme) => ({
       position: 'relative',
       left: -12,
     },
+  },
+  tokenIconSmall: {
+    width: 26,
+    height: 26,
+    border: `4px solid ${theme.colors.transparent}`,
   },
   amount: {
     fontSize: 24,
@@ -48,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
   },
   period: {
     backgroundColor: theme.colors.primary500,
-    padding: '24px 32px',
+    padding: '24px 32px 1px 32px',
   },
   wrapper: {
     display: 'flex',
@@ -64,19 +73,29 @@ const useStyles = makeStyles((theme) => ({
   },
   whiteText: {
     color: theme.colors.white,
-    fontSize: 12,
+    fontSize: 20,
     fontWeight: 400,
+  },
+  amountSmall: {
+    fontSize: 20,
+    fontWeight: 400,
+    color: theme.colors.white,
+    '& span': {
+      fontSize: 12,
+      color: theme.colors.primary100,
+    },
   },
 }))
 
 interface IProps {
   className?: string
   offerData: IOfferingOverview
+  vestState: VestState
 }
 
 export const OutputEstimation = (props: IProps) => {
   const classes = useStyles()
-  const { offerData } = props
+  const { offerData, vestState } = props
 
   const now = getCurrentTimeStamp()
   const diff = (Number(offerData.salesEnd) - now) * 1000
@@ -86,7 +105,11 @@ export const OutputEstimation = (props: IProps) => {
   return (
     <div className={clsx(classes.root, props.className)}>
       <div className={classes.estimation}>
-        <Typography className={classes.label}>TOTAL OFFERING</Typography>
+        <Typography className={classes.label}>
+          {vestState.step === VestStep.Info
+            ? 'AVAILABLE TO VEST'
+            : 'YOU VESTED'}
+        </Typography>
         <div className={classes.infoRow}>
           <TokenIcon
             token={offerData.offerToken}
@@ -95,7 +118,7 @@ export const OutputEstimation = (props: IProps) => {
           &nbsp;&nbsp;
           <Typography className={classes.amount}>
             {formatBigNumber(ONE_ETHER, offerData.offerToken.decimals, 4)}
-            &nbsp;
+            &nbsp; <span>~ $ 309,73</span>
             {/*{offerData.offerToken.price && (
               <span>
                 ~ $
@@ -108,9 +131,34 @@ export const OutputEstimation = (props: IProps) => {
             )}*/}
           </Typography>
         </div>
+        {vestState.step === VestStep.Info && (
+          <div className={classes.infoRow}>
+            <div>
+              <Typography className={classes.label}>VESTING PERIOD</Typography>
+              <Typography className={classes.amount}>6 weeks</Typography>
+            </div>
+          </div>
+        )}
       </div>
       <div className={classes.period}>
-        <Typography className={classes.label}>SALES PERIOD</Typography>
+        <Typography className={classes.label}>
+          {vestState.step === VestStep.Info
+            ? 'ALREADY VESTING'
+            : `TOTAL VESTING ${offerData.offerToken.symbol}`}
+        </Typography>
+        <div className={classes.infoRow}>
+          <TokenIcon
+            token={offerData.offerToken}
+            className={classes.tokenIconSmall}
+          />
+          &nbsp;&nbsp;
+          <Typography className={classes.amountSmall}>
+            {formatBigNumber(ONE_ETHER, offerData.offerToken.decimals, 4)}
+            &nbsp;
+            <span>~ $ 309,73</span>
+          </Typography>
+        </div>
+        <Typography className={classes.label}>REMAINING PERIOD</Typography>
         <div className={classes.infoRow}>
           {durationRemaining.length === 0 ? (
             <div className={classes.wrapper}>

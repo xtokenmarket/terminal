@@ -1,9 +1,8 @@
-import { Button, makeStyles, Typography } from '@material-ui/core'
-import { ViewTransaction } from 'components'
+import { Button, IconButton, makeStyles, Typography } from '@material-ui/core'
 import { IOfferingOverview } from 'types'
-import { VestState } from '../..'
-
 import { OutputEstimation } from '../index'
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
+import { VestState } from '../..'
 
 const ICON_SIZE = 150
 
@@ -14,12 +13,11 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: '90vw',
   },
   header: {
-    backgroundColor: theme.colors.primary500,
     padding: 32,
-    paddingBottom: 16,
-    paddingTop: ICON_SIZE / 2,
-    textAlign: 'center',
     position: 'relative',
+    paddingBottom: 16,
+    display: 'flex',
+    backgroundColor: theme.colors.primary500,
   },
   img: {
     width: ICON_SIZE,
@@ -31,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   title: {
     color: theme.colors.white,
     fontWeight: 600,
-    fontSize: 28,
+    fontSize: 22,
     marginBottom: 24,
   },
   description: {
@@ -54,46 +52,50 @@ const useStyles = makeStyles((theme) => ({
   button: {
     marginTop: 20,
   },
+  closeButton: {
+    padding: 0,
+    color: theme.colors.white1,
+    position: 'absolute',
+    right: 24,
+    top: 36,
+    [theme.breakpoints.down('xs')]: {
+      top: 12,
+      right: 12,
+    },
+  },
 }))
 
 interface IProps {
   offerData: IOfferingOverview
+  onNext: () => void
   onClose: () => void
-  txHash: string
   vestState: VestState
 }
 
-export const SuccessSection = (props: IProps) => {
+export const InfoSection = (props: IProps) => {
   const classes = useStyles()
-  const { offerData, onClose, txHash, vestState } = props
+  const { offerData, onNext, onClose, vestState } = props
 
   return (
     <div className={classes.root}>
       <div className={classes.header}>
-        <img
-          alt="check"
-          src="/assets/icons/confirmed.png"
-          className={classes.img}
-        />
-        <Typography className={classes.title}>Vest confirmed!</Typography>
-        <Typography className={classes.description}>
-          You have successfully finished your vest process! Below you can see
-          details of your transaction.
+        <Typography className={classes.title}>
+          Vest {offerData.offerToken.symbol} tokens
         </Typography>
+        <IconButton className={classes.closeButton} onClick={onClose}>
+          <CloseOutlinedIcon />
+        </IconButton>
       </div>
       <OutputEstimation offerData={offerData} vestState={vestState} />
       <div className={classes.actions}>
-        <div className={classes.transaction}>
-          <ViewTransaction txId={txHash} />
-        </div>
         <Button
           color="primary"
           variant="contained"
           fullWidth
           className={classes.deposit}
-          onClick={onClose}
+          onClick={onNext}
         >
-          DONE
+          VEST
         </Button>
       </div>
     </div>
