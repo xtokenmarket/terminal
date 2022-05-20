@@ -69,8 +69,8 @@ export const OfferingStep: React.FC<IProps> = ({
     data.purchaseToken &&
     data.offerTokenAmount &&
     data.reserveOfferTokenAmount &&
-    data.offeringPeriod &&
-    data.offeringPeriodUnit &&
+    data.publicOfferingPeriod &&
+    data.publicOfferingPeriodUnit &&
     data.offerToken.address !== data.purchaseToken.address &&
     Number(data.offerTokenAmount) >= Number(data.reserveOfferTokenAmount)
   )
@@ -147,12 +147,12 @@ export const OfferingStep: React.FC<IProps> = ({
 
           <Selector
             onSelectorChange={(e) =>
-              updateData({ offeringPeriodUnit: e.target.value })
+              updateData({ publicOfferingPeriodUnit: e.target.value })
             }
-            selectorValue={`${data.offeringPeriodUnit}`}
-            inputValue={`${data.offeringPeriod}`}
+            selectorValue={`${data.publicOfferingPeriodUnit}`}
+            inputValue={`${data.publicOfferingPeriod}`}
             onChangeinput={(e) => {
-              updateData({ offeringPeriod: e.target.value })
+              updateData({ publicOfferingPeriod: e.target.value })
             }}
           />
         </Grid>

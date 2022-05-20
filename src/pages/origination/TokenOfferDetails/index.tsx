@@ -4,8 +4,6 @@ import { useOriginationPool } from 'helpers/useOriginationPool'
 import { useState } from 'react'
 import { useHistory, useParams } from 'react-router'
 import { transparentize } from 'polished'
-import { OriginationLabels } from 'utils/enums'
-
 import { InitiateSaleModal } from './components/InitiateSaleModal'
 import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
@@ -44,14 +42,6 @@ const useStyles = makeStyles((theme) => ({
 type RouteParams = {
   network: string
   poolAddress: string
-}
-
-const MyPosition = {
-  label: OriginationLabels.MyPosition,
-  tokenPurchased: '912 XTK',
-  amountInvested: '1,219 USDC',
-  amountvested: '0 XTK',
-  amountAvailableToVest: '0 XTK button',
 }
 
 interface IState {
@@ -161,7 +151,7 @@ const TokenSaleDetails = () => {
               <Typography className={cl.text}>INVEST</Typography>
             </Button>
             <Table
-              item={MyPosition}
+              item={tokenOffer.myPosition}
               label={'My Position'}
               toggleModal={toggleClaimModal}
             />

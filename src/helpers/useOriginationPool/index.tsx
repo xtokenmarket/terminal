@@ -1,14 +1,21 @@
 import { useEffect, useState } from 'react'
 import Abi from 'abis'
 import axios from 'axios'
-import { BigNumber, constants } from 'ethers'
-import { knownTokens, getTokenFromAddress } from 'config/networks'
+import { BigNumber, constants, Contract, ethers } from 'ethers'
+import {
+  knownTokens,
+  getTokenFromAddress,
+  getContractAddress,
+} from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import { useNetworkContext } from 'contexts/networkContext'
 import { useServices } from 'helpers'
 import { Network, OriginationLabels } from 'utils/enums'
 import { getOffersDataMulticall, ITokenOfferDetails } from './helper'
 import { IToken, ITokenOffer } from 'types'
+import { FungiblePoolService } from 'services'
+import { getRemainingTimeSec } from 'utils'
+import { ORIGINATION_API_URL } from 'config/constants'
 
 interface IState {
   tokenOffer?: ITokenOffer
@@ -26,12 +33,53 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
     poolAddress: string
   ): Promise<ITokenOffer | undefined> => {
     try {
+      // `maxContributionAmount` doesn't exist on contract level. Can only get from API.
+      // TODO: network is hardcoded for now
+      const whitelistAccountDetail = await axios.get(
+        `${ORIGINATION_API_URL}/whitelistedAcccountDetails/?accountAddress=${account}&poolAddress=${poolAddress}&network=kovan`
+      )
+
+      const addressCap = whitelistAccountDetail.data.maxContributionAmount
+
       const _offerData = await getOffersDataMulticall(poolAddress, multicall)
 
-      const tokens = await Promise.all([
+      const fungiblePool = new FungiblePoolService(
+        provider,
+        account,
+        poolAddress
+      )
+
+      const nonfungiblePositionManagerAddress = getContractAddress(
+        'vestingEntryNFT',
+        provider?.network.chainId
+      )
+
+      const vestingEntryNFTContract = new Contract(
+        nonfungiblePositionManagerAddress,
+        Abi.vestingEntryNFT,
+        provider
+      )
+
+      const [
+        token0,
+        token1,
+        offerTokenAmountPurchased,
+        purchaseTokenContribution,
+        entryId,
+      ] = await Promise.all([
         getTokenFromAddress(_offerData?.offerToken as string, networkId),
         getTokenFromAddress(_offerData?.purchaseToken as string, networkId),
+        fungiblePool.contract.offerTokenAmountPurchased(account),
+        fungiblePool.contract.purchaseTokenContribution(account),
+        fungiblePool.contract.userToVestingId(account),
       ])
+
+      const nftInfo = await vestingEntryNFTContract.tokenIdVestingAmounts(
+        entryId
+      )
+
+      const { tokenAmount, tokenAmountClaimed } = nftInfo
+
       const ETH: IToken = {
         ...knownTokens.eth,
         address: constants.AddressZero,
@@ -51,12 +99,14 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         whitelistSaleDuration,
         publicSaleDuration,
         whitelistMerkleRoot,
+        getOfferTokenPrice,
+        publicEndingPrice,
       } = _offerData as ITokenOfferDetails
 
       const offeringOverview = {
         label: OriginationLabels.OfferingOverview,
-        offerToken: tokens[0] || ETH,
-        purchaseToken: tokens[1] || ETH,
+        offerToken: token0 || ETH,
+        purchaseToken: token1 || ETH,
         offeringReserve: reserveAmount,
         vestingPeriod,
         cliffPeriod,
@@ -68,29 +118,65 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         poolAddress,
       }
 
+      const endOfWhitelistPeriod = saleInitiatedTimestamp.add(
+        whitelistSaleDuration || BigNumber.from(0)
+      )
+      const whitelistTimeRemaining = !endOfWhitelistPeriod.isZero()
+        ? getRemainingTimeSec(endOfWhitelistPeriod)
+        : BigNumber.from('0')
+
+      const timeRemaining = !saleEndTimestamp.isZero()
+        ? getRemainingTimeSec(saleEndTimestamp)
+        : BigNumber.from('0')
+
+      const isSetWhitelist = () =>
+        whitelistMerkleRoot &&
+        whitelistMerkleRoot.some((x) => x !== ethers.constants.AddressZero)
+
       const _whitelist = {
         label: OriginationLabels.WhitelistSale,
-        currentPrice: '',
-        pricingFormular: '',
+        currentPrice: getOfferTokenPrice,
+        pricingFormular: whitelistStartingPrice?.gt(
+          whitelistEndingPrice as BigNumber
+        )
+          ? 'Ascending'
+          : 'Descending',
         startingPrice: whitelistStartingPrice,
         endingPrice: whitelistEndingPrice,
-        whitelist: whitelistMerkleRoot,
-        addressCap: '',
-        timeRemaining: '',
+        whitelist: isSetWhitelist(),
+        addressCap,
+        timeRemaining: whitelistTimeRemaining,
         salesPeriod: whitelistSaleDuration,
-        offerToken: tokens[0] || ETH,
+        offerToken: token0,
+        purchaseToken: token1 || ETH,
       }
 
       const publicSale = {
         label: OriginationLabels.PublicSale,
-        currentPrice: '',
-        pricingFormular: '',
-        price: '',
+        currentPrice: getOfferTokenPrice,
+        pricingFormular: publicStartingPrice?.gt(publicEndingPrice as BigNumber)
+          ? 'Ascending'
+          : 'Descending',
         salesPeriod: publicSaleDuration,
-        saleEndTimestamp,
+        timeRemaining,
+        offerToken: token0,
+        purchaseToken: token1 || ETH,
+        startingPrice: publicStartingPrice,
+        endingPrice: publicEndingPrice,
+      }
+
+      const myPosition = {
+        label: OriginationLabels.MyPosition,
+        tokenPurchased: offerTokenAmountPurchased,
+        amountInvested: purchaseTokenContribution,
+        amountvested: tokenAmountClaimed,
+        amountAvailableToVest: tokenAmount.sub(tokenAmountClaimed),
+        offerToken: token0,
+        purchaseToken: token1 || ETH,
       }
 
       return {
+        myPosition,
         whitelist: _whitelist,
         offeringOverview,
         publicSale,

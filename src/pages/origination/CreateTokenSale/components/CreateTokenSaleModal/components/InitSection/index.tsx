@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Button, CircularProgress, makeStyles } from '@material-ui/core'
 import { WarningInfo } from 'components/Common/WarningInfo'
-import { getContractAddress } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
-import { OriginationService } from 'services/origination'
 import { ICreateTokenSaleData } from 'types'
 import { getDurationSec, getMetamaskError } from 'utils'
 import { parseUnits } from 'ethers/lib/utils'
 import { useServices } from 'helpers'
+import { BigNumber } from 'ethers'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,6 +21,7 @@ interface IProps {
   onClose: () => void
   data: ICreateTokenSaleData
   setTxId: (txId: string) => void
+  setPoolAddress: (address: string) => void
 }
 
 interface IState {
@@ -45,7 +45,7 @@ export const InitSection = (props: IProps) => {
     poolAddress: '',
   })
 
-  const { onNext, data, onClose, setTxId } = props
+  const { onNext, data, onClose, setTxId, setPoolAddress } = props
   const { originationService } = useServices()
 
   useEffect(() => {
@@ -68,14 +68,17 @@ export const InitSection = (props: IProps) => {
       const saleParams = {
         offerToken: data.offerToken.address,
         purchaseToken: data.purchaseToken.address,
-        startingPrice: parseUnits(
-          data.startingPrice,
+        publicStartingPrice: parseUnits(
+          data.publicStartingPrice,
           data.purchaseToken?.decimals
         ),
-        endingPrice: parseUnits(data.endingPrice, data.purchaseToken?.decimals),
-        saleDuration: getDurationSec(
-          data.offeringPeriod,
-          data.offeringPeriodUnit.toString()
+        publicEndingPrice: parseUnits(
+          data.publicEndingPrice,
+          data.purchaseToken?.decimals
+        ),
+        publicSaleDuration: getDurationSec(
+          Number(data.publicOfferingPeriod),
+          data.publicOfferingPeriodUnit.toString()
         ),
         totalOfferingAmount: parseUnits(
           data.offerTokenAmount,
@@ -93,6 +96,10 @@ export const InitSection = (props: IProps) => {
           Number(data.cliffPeriod),
           data.cliffPeriodUnit.toString()
         ),
+        //TODO: duplicating from public sale for now
+        whitelistStartingPrice: BigNumber.from(0),
+        whitelistEndingPrice: BigNumber.from(0),
+        whitelistSaleDuration: BigNumber.from(0),
       }
 
       const txId = await originationService.createFungibleListing(saleParams)
@@ -100,6 +107,9 @@ export const InitSection = (props: IProps) => {
         account,
         txId
       )
+      const poolAddress =
+        await originationService.parseFungibleListingCreatedTx(finalTxId)
+      setPoolAddress(poolAddress)
       setTxId(finalTxId)
 
       setTimeout(() => {
@@ -137,7 +147,7 @@ export const InitSection = (props: IProps) => {
     <div className={classes.root}>
       <WarningInfo
         title="Important"
-        description="This will transfer the tokens from your address to the Terminal contract. This action cannot be undone or reversed."
+        description="This will deploy your token sale contract. This action cannot be undone or reversed."
       />
 
       <Button

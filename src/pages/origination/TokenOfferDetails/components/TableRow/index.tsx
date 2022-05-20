@@ -16,14 +16,11 @@ import {
 } from 'types'
 import {
   formatBigNumber,
-  getRemainingTime,
+  numberWithCommas,
   parseDurationSec,
   parseRemainingDurationSec,
 } from 'utils'
-import { useParams } from 'react-router-dom'
-import { useConnectedWeb3Context } from 'contexts'
-import { FungibleOriginationPoolService } from 'services/fungibleOriginationPool'
-import { useEffect, useState } from 'react'
+import moment from 'moment'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -117,22 +114,6 @@ interface IProps {
 }
 
 export const TableRow = ({ item, toggleModal }: IProps) => {
-  const { account, library: provider } = useConnectedWeb3Context()
-  const { poolAddress } = useParams<{ poolAddress: string }>()
-  const [saleInitiated, setSaleInitiated] = useState(false)
-
-  useEffect(() => {
-    const fungibleOriginationPool = new FungibleOriginationPoolService(
-      provider,
-      account,
-      poolAddress
-    )
-
-    fungibleOriginationPool
-      .isSaleInitiated()
-      .then((initiated) => setSaleInitiated(initiated))
-  }, [account, provider, poolAddress])
-
   const cl = useStyles()
 
   const renderContent = () => {
@@ -217,7 +198,7 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
                   <Typography className={cl.text}>INITIATE SALE</Typography>
                 </Button>
               ) : (
-                item.salesBegin.toString()
+                moment.unix(item.salesBegin.toNumber()).format('MMM DD[,] YYYY')
               )}
             </Typography>
           </Td>
@@ -225,13 +206,15 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
             <Typography className={clsx(cl.item, cl.label, cl.itemAlignRight)}>
               {item.salesEnd.isZero()
                 ? 'N/A'
-                : parseDurationSec(item.salesEnd.toNumber())}
+                : moment
+                    .unix(item.salesEnd.toNumber())
+                    .format('MMM DD[,] YYYY')}
             </Typography>
           </Td>
           <Td type={OfferingOverview.SalesPeriod} label={item.label}>
             <Typography className={clsx(cl.item, cl.label, cl.itemAlignRight)}>
               {item.salesPeriod
-                ? parseDurationSec(item.salesPeriod.toNumber())
+                ? parseDurationSec(Number(item.salesPeriod.toString()))
                 : 'N/A'}
             </Typography>
           </Td>
@@ -247,7 +230,10 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
           <div className={cl.content}>
             <Td type={WhitelistSale.CurrentPrice} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {item.currentPrice || 'N/A'}
+                {`${formatBigNumber(
+                  item.currentPrice,
+                  item.offerToken.decimals
+                )} ${item.purchaseToken.symbol}` || 'N/A'}
               </Typography>
             </Td>
 
@@ -262,50 +248,42 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
                 {item.startingPrice && item.endingPrice
                   ? `${formatBigNumber(
                       item.startingPrice,
-                      item.offerToken.decimals
+                      item.purchaseToken.decimals
                     )}/${formatBigNumber(
                       item.endingPrice,
-                      item.offerToken.decimals
-                    )}`
+                      item.purchaseToken.decimals
+                    )} ${item.purchaseToken.symbol}`
                   : 'N/A'}
               </Typography>
             </Td>
 
             <Td type={WhitelistSale.Whitelist} label={item.label}>
-              <Tooltip
-                arrow
-                title={saleInitiated ? '' : 'Sale should be initiated'}
-                placement="top"
-              >
-                <span>
-                  <Button
-                    className={cl.button}
-                    disabled={!saleInitiated}
-                    onClick={() => {
-                      toggleModal && toggleModal()
-                    }}
-                  >
-                    <Typography className={cl.text}>SET WHITELIST</Typography>
-                  </Button>
-                </span>
-              </Tooltip>
+              <Typography className={clsx(cl.item, cl.label)}>
+                {item.whitelist ? 'SET' : 'NOT SET'}
+              </Typography>
             </Td>
 
             <Td type={WhitelistSale.AddressCap} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {item.addressCap || 'N/A'}
+                {item.addressCap
+                  ? formatBigNumber(item.addressCap, item.offerToken.decimals)
+                  : 'N/A'}
               </Typography>
             </Td>
 
             <Td type={WhitelistSale.TimeRemaining} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {item.timeRemaining || 'N/A'}
+                {item.timeRemaining
+                  ? parseRemainingDurationSec(item.timeRemaining.toNumber())
+                  : 'N/A'}
               </Typography>
             </Td>
 
             <Td type={WhitelistSale.SalesPeriod} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {item.salesPeriod || 'N/A'}
+                {item.salesPeriod
+                  ? parseDurationSec(item.salesPeriod?.toNumber())
+                  : 'N/A'}
               </Typography>
             </Td>
           </div>
@@ -319,7 +297,10 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
         <div className={cl.content}>
           <Td type={PublicSale.CurrentPrice} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.currentPrice || 'N/A'}
+              {`${formatBigNumber(
+                item.currentPrice,
+                item.purchaseToken.decimals
+              )} ${item.purchaseToken.symbol}` || 'N/A'}
             </Typography>
           </Td>
           <Td type={PublicSale.PricingFormular} label={item.label}>
@@ -327,24 +308,30 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
               {item.pricingFormular || 'N/A'}
             </Typography>
           </Td>
-          <Td type={PublicSale.Price} label={item.label}>
+          <Td type={PublicSale.StartingEndingPrice} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.price || 'N/A'}
+              {item.startingPrice && item.endingPrice
+                ? `${formatBigNumber(
+                    item.startingPrice,
+                    item.purchaseToken.decimals
+                  )}/${formatBigNumber(
+                    item.endingPrice,
+                    item.purchaseToken.decimals
+                  )} ${item.purchaseToken.symbol}`
+                : 'N/A'}
             </Typography>
           </Td>
           <Td type={PublicSale.TimeRemaining} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.saleEndTimestamp
-                ? `${parseRemainingDurationSec(
-                    getRemainingTime(item.saleEndTimestamp)
-                  )}`
+              {item.timeRemaining
+                ? `${parseRemainingDurationSec(item.timeRemaining.toNumber())}`
                 : 'N/A'}
             </Typography>
           </Td>
           <Td type={PublicSale.SalesPeriod} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
               {item.salesPeriod
-                ? parseDurationSec(item.salesPeriod?.toNumber())
+                ? parseDurationSec(Number(item.salesPeriod?.toString()))
                 : 'N/A'}
             </Typography>
           </Td>
@@ -358,22 +345,26 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
         <div className={cl.content}>
           <Td type={MyPosition.TokenPurchased} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.tokenPurchased}
+              {numberWithCommas(item.tokenPurchased.toString())}{' '}
+              {item.offerToken.symbol}
             </Typography>
           </Td>
           <Td type={MyPosition.AmountInvested} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.amountInvested}
+              {numberWithCommas(item.amountInvested.toString())}{' '}
+              {item.purchaseToken.symbol}
             </Typography>
           </Td>
           <Td type={MyPosition.Amountvested} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.amountvested}
+              {numberWithCommas(item.amountvested.toString())}{' '}
+              {item.offerToken.symbol}
             </Typography>
           </Td>
           <Td type={MyPosition.AmountAvailableToVest} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.amountAvailableToVest}
+              {numberWithCommas(item.amountAvailableToVest.toString())}{' '}
+              {item.offerToken.symbol}
             </Typography>
           </Td>
           <Button className={cl.button} onClick={toggleModal}>

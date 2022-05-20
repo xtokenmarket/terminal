@@ -29,6 +29,7 @@ export interface INetwork {
     uniRouter: string
     uniQuoter: string
     uniPositionManager: string
+    vestingEntryNFT: string
   }
   terminal: {
     tradeFee: BigNumber
@@ -170,30 +171,37 @@ type VestingOption = EVestingOption[keyof EVestingOption]
 export interface ICreateTokenSaleData {
   offerTokenAmount: string
   reserveOfferTokenAmount: string
-  offeringPeriod: number
   offerToken?: IToken
   purchaseToken?: IToken
   pricingFormula?: EPricingFormula
-  startingPrice: string
-  endingPrice: string
+  publicStartingPrice: string
+  publicEndingPrice: string
+  whitelistStartingPrice: string
+  whitelistEndingPrice: string
   vestingEnabled?: VestingOption
-  vestingPeriod?: number
+  vestingPeriod: string
   vestingPeriodUnit: PeriodUnit
-  cliffPeriod?: number
+  cliffPeriod: string
   cliffPeriodUnit: PeriodUnit
-  offeringPeriodUnit: PeriodUnit
+  publicOfferingPeriod: string
+  publicOfferingPeriodUnit: PeriodUnit
+  whitelistOfferingPeriod: string
+  whitelistOfferingPeriodUnit: PeriodUnit
 }
 
 export interface ISaleParams {
   offerToken: string
   purchaseToken: string
-  startingPrice: BigNumber
-  endingPrice: BigNumber
-  saleDuration: number
   totalOfferingAmount: BigNumber
   reserveAmount: BigNumber
-  vestingPeriod: number
-  cliffPeriod: number
+  vestingPeriod: BigNumber
+  cliffPeriod: BigNumber
+  publicStartingPrice: BigNumber
+  publicEndingPrice: BigNumber
+  whitelistStartingPrice: BigNumber
+  whitelistEndingPrice: BigNumber
+  publicSaleDuration: BigNumber
+  whitelistSaleDuration: BigNumber
 }
 
 export interface ITokenOffer {
@@ -203,6 +211,7 @@ export interface ITokenOffer {
   originationRow: IOriginationRow
   whitelist: IWhitelistSale
   publicSale: IPublicSale
+  myPosition: IMyPosition
 }
 
 interface Label {
@@ -229,23 +238,27 @@ export interface IOriginationRow extends IOfferingOverview {
 }
 
 export interface IWhitelistSale extends Label {
-  currentPrice: string
+  currentPrice: BigNumber
   pricingFormular: string
   startingPrice?: BigNumber
   endingPrice?: BigNumber
-  whitelist?: string[]
+  whitelist?: boolean
   addressCap: string
-  timeRemaining: string
+  timeRemaining: BigNumber
   salesPeriod?: BigNumber
   offerToken: IToken
+  purchaseToken: IToken
 }
 
 export interface IPublicSale extends Label {
-  currentPrice: string
+  currentPrice: BigNumber
   pricingFormular: string
-  price: string
   salesPeriod?: BigNumber
-  saleEndTimestamp: BigNumber
+  timeRemaining: BigNumber
+  offerToken: IToken
+  purchaseToken: IToken
+  startingPrice: BigNumber
+  endingPrice: BigNumber
 }
 
 export interface IMyPosition extends Label {
@@ -260,6 +273,8 @@ export interface IMyPosition extends Label {
   amountInvested: string
   amountvested: string
   amountAvailableToVest: string
+  offerToken: IToken
+  purchaseToken: IToken
 }
 
 export type OriginationDetailItem =

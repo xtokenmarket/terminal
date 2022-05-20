@@ -45,19 +45,24 @@ interface IState extends Omit<ICreateTokenSaleData, 'token0' | 'token1'> {
 const initialState: IState = {
   offerTokenAmount: '',
   reserveOfferTokenAmount: '',
-  offeringPeriod: 0,
+  publicOfferingPeriod: '',
   pricingFormula: undefined,
-  startingPrice: '',
-  endingPrice: '',
+  publicStartingPrice: '',
+  publicEndingPrice: '',
   vestingEnabled: undefined,
-  vestingPeriod: 0,
+  vestingPeriod: '',
   vestingPeriodUnit: '',
-  cliffPeriod: 0,
+  cliffPeriod: '',
   cliffPeriodUnit: '',
   offerToken: undefined,
   purchaseToken: undefined,
   step: ECreareTokenSaleStep.Offering,
-  offeringPeriodUnit: EPeriods.Weeks,
+  publicOfferingPeriodUnit: EPeriods.Weeks,
+
+  whitelistStartingPrice: '',
+  whitelistEndingPrice: '',
+  whitelistOfferingPeriod: '',
+  whitelistOfferingPeriodUnit: '',
 }
 
 const CreareTokenSale = () => {
@@ -68,9 +73,9 @@ const CreareTokenSale = () => {
 
   const [state, setState] = useState<IState>(initialState)
 
-  const onBack = () => {
+  const onCancel = () => {
     setState(initialState)
-    history.push('/mining/discover')
+    history.push('/origination/discover')
   }
 
   const updateData = (e: any) => {
@@ -89,7 +94,7 @@ const CreareTokenSale = () => {
         setState((prev) => ({ ...prev, step: ECreareTokenSaleStep.Confirm }))
         break
       default:
-        onBack()
+        onCancel()
         break
     }
   }
@@ -100,7 +105,24 @@ const CreareTokenSale = () => {
         setState((prev) => ({ ...prev, step: ECreareTokenSaleStep.Offering }))
         break
       default:
-        onBack()
+        onCancel()
+        break
+    }
+  }
+
+  const onBack = () => {
+    switch (state.step) {
+      case ECreareTokenSaleStep.Auction:
+        setState((prev) => ({ ...prev, step: ECreareTokenSaleStep.Offering }))
+        break
+      case ECreareTokenSaleStep.Vesting:
+        setState((prev) => ({ ...prev, step: ECreareTokenSaleStep.Auction }))
+        break
+      case ECreareTokenSaleStep.Confirm:
+        setState((prev) => ({ ...prev, step: ECreareTokenSaleStep.Vesting }))
+        break
+      default:
+        onCancel()
         break
     }
   }
@@ -156,7 +178,11 @@ const CreareTokenSale = () => {
 
   return (
     <PageWrapper className={classes.pageWrapper}>
-      <CreareTokenSaleHeader step={state.step} onCancel={onBack} />
+      <CreareTokenSaleHeader
+        step={state.step}
+        onCancel={onCancel}
+        onBack={onBack}
+      />
       <PageContent>
         <div className={classes.content}>{renderContent()}</div>
       </PageContent>

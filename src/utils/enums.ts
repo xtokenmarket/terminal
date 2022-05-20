@@ -219,9 +219,9 @@ export enum WhitelistSale {
 export enum PublicSale {
   CurrentPrice = 'currentPrice',
   PricingFormular = 'pricingFormular',
-  Price = 'price',
   TimeRemaining = 'timeRemaining',
   SalesPeriod = 'salesPeriod',
+  StartingEndingPrice = 'startingEndingPrice',
 }
 
 export enum MyPosition {

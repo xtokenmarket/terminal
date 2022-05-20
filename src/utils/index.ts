@@ -225,7 +225,7 @@ export const getDurationSec = (amount: number, unit: string) => {
     durationSec = amount * secondsIn1Day * 7 * 4 * 365
   }
 
-  return durationSec
+  return BigNumber.from(durationSec.toString())
 }
 
 export const parseDurationSec = (amount: number) => {
@@ -279,7 +279,11 @@ export const formatDurationUnits = (duration: string[]) => {
   return { primary, rest: rest.join(' — ') }
 }
 
-export const getRemainingTime = (endingTime: BigNumber) => {
-  if (endingTime.toString() === '0') return 0
-  return Date.now() - Number(endingTime.toString())
+export const getRemainingTimeSec = (endingTime: BigNumber) => {
+  if (endingTime.toString() === '0') return BigNumber.from(0)
+  let remainingTime = BigNumber.from(Number(endingTime.toString()) * 1000).sub(
+    BigNumber.from(Date.now().toString())
+  )
+  remainingTime = BigNumber.from((Number(remainingTime) / 1000).toFixed())
+  return Number(remainingTime) < 0 ? BigNumber.from(0) : remainingTime
 }

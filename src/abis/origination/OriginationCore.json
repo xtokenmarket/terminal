@@ -1,9 +1,5 @@
 [
-  {
-    "inputs": [],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
+  { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
   {
     "anonymous": false,
     "inputs": [
@@ -76,11 +72,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_feeToken",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "_feeToken", "type": "address" }
     ],
     "name": "claimFees",
     "outputs": [],
@@ -103,17 +95,32 @@
           },
           {
             "internalType": "uint256",
-            "name": "startingPrice",
+            "name": "publicStartingPrice",
             "type": "uint256"
           },
           {
             "internalType": "uint256",
-            "name": "endingPrice",
+            "name": "publicEndingPrice",
             "type": "uint256"
           },
           {
             "internalType": "uint256",
-            "name": "saleDuration",
+            "name": "whitelistStartingPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "whitelistEndingPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "publicSaleDuration",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "whitelistSaleDuration",
             "type": "uint256"
           },
           {
@@ -163,23 +170,38 @@
           },
           {
             "internalType": "uint256",
-            "name": "maxMintablePerAddress",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
             "name": "maxWhitelistMintable",
             "type": "uint256"
           },
           {
-            "internalType": "uint256[]",
-            "name": "startingPrices",
-            "type": "uint256[]"
+            "internalType": "uint256",
+            "name": "maxMintablePerWhitelistedAddress",
+            "type": "uint256"
           },
           {
-            "internalType": "uint256[]",
-            "name": "endingPrices",
-            "type": "uint256[]"
+            "internalType": "address",
+            "name": "purchaseToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "publicStartingPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "publicEndingPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "whitelistStartingPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "whitelistEndingPrice",
+            "type": "uint256"
           },
           {
             "internalType": "uint256",
@@ -203,12 +225,41 @@
     "type": "function"
   },
   {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "customListingFee",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "customListingFeeEnabled",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_listingFee",
-        "type": "uint256"
-      },
+      { "internalType": "address", "name": "deployer", "type": "address" }
+    ],
+    "name": "disableCustomListingFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "deployer", "type": "address" },
+      { "internalType": "uint256", "name": "feeAmount", "type": "uint256" }
+    ],
+    "name": "enableCustomListingFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "_listingFee", "type": "uint256" },
       {
         "internalType": "uint256",
         "name": "_originationFee",
@@ -223,6 +274,16 @@
         "internalType": "contract IPoolDeployer",
         "name": "_poolDeployer",
         "type": "address"
+      },
+      {
+        "internalType": "contract INFTDeployer",
+        "name": "_nftDeployer",
+        "type": "address"
+      },
+      {
+        "internalType": "contract IOriginationProxyAdmin",
+        "name": "_proxyAdmin",
+        "type": "address"
       }
     ],
     "name": "initialize",
@@ -233,12 +294,15 @@
   {
     "inputs": [],
     "name": "listingFee",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "nftDeployer",
     "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+      { "internalType": "contract INFTDeployer", "name": "", "type": "address" }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -246,26 +310,14 @@
   {
     "inputs": [],
     "name": "originationFee",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "owner",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -287,7 +339,7 @@
     "name": "proxyAdmin",
     "outputs": [
       {
-        "internalType": "contract OriginationProxyAdmin",
+        "internalType": "contract IOriginationProxyAdmin",
         "name": "",
         "type": "address"
       }
@@ -311,11 +363,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_listingFee",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "_listingFee", "type": "uint256" }
     ],
     "name": "setListingFee",
     "outputs": [],
@@ -324,11 +372,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "newOwner", "type": "address" }
     ],
     "name": "transferOwnership",
     "outputs": [],

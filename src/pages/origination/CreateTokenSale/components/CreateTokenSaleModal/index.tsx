@@ -3,10 +3,12 @@ import { makeStyles, Modal } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import { ECreateTokenSaleModalStep } from 'utils/enums'
 import { InitSection, SuccessSection } from './components'
-import { ICreateTokenSaleData } from 'types'
+import { ICreateTokenSaleData, NetworkId } from 'types'
 import useCommonStyles from 'style/common'
 import { useConnectedWeb3Context } from 'contexts'
 import { useHistory } from 'react-router'
+import { getNetworkFromId } from 'utils/network'
+import { DEFAULT_NETWORK_ID } from 'config/constants'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,6 +47,7 @@ export const CreateTokenSaleModal = (props: IProps) => {
     ECreateTokenSaleModalStep.Init
   )
   const [txId, setTxId] = useState('')
+  const [poolAddress, setPoolAddress] = useState('')
 
   useEffect(() => {
     if (!account) {
@@ -68,7 +71,11 @@ export const CreateTokenSaleModal = (props: IProps) => {
   }
 
   const onSuccessClose = () => {
-    history.push('/origination')
+    history.push(
+      `/origination/token-offers/${getNetworkFromId(
+        (networkId || DEFAULT_NETWORK_ID) as NetworkId
+      )}/${poolAddress}`
+    )
   }
 
   const renderContent = () => {
@@ -80,6 +87,7 @@ export const CreateTokenSaleModal = (props: IProps) => {
             onClose={onClose}
             data={data}
             setTxId={setTxId}
+            setPoolAddress={setPoolAddress}
           />
         )
       default:

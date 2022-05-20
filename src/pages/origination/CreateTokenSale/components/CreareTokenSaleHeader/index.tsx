@@ -29,11 +29,6 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
     },
   },
-  firstStepHeader: {
-    [theme.breakpoints.up('lg')]: {
-      paddingRight: 110,
-    },
-  },
   title: {
     fontSize: 18,
     color: theme.colors.white,
@@ -53,32 +48,50 @@ const useStyles = makeStyles((theme) => ({
       marginRight: 'auto',
     },
   },
+  backWrapper: {
+    margin: 20,
+    display: 'flex',
+    cursor: 'pointer',
+    transition: 'all 0.4s',
+    '&:hover': {
+      opacity: 0.7,
+    },
+  },
+  backText: {
+    color: theme.colors.primary100,
+    marginLeft: 16,
+  },
 }))
 
 interface IProps {
   step: ECreareTokenSaleStep
   onCancel: () => void
+  onBack: () => void
 }
 
-export const CreareTokenSaleHeader = ({ step, onCancel }: IProps) => {
+export const CreareTokenSaleHeader = ({ step, onCancel, onBack }: IProps) => {
   const classes = useStyles()
   const isFirstStep = step === ECreareTokenSaleStep.Offering
 
   return (
-    <div
-      className={clsx(
-        classes.headerTop,
-        isFirstStep && classes.firstStepHeader
-      )}
-    >
+    <div className={clsx(classes.headerTop)}>
       <Typography className={classes.title}>Token Sale</Typography>
       <div className={classes.headerDataContainer}>
-        <CreateTokenSaleStepper step={step} />
         {!isFirstStep && (
-          <span className={classes.cancel} onClick={onCancel}>
-            Cancel
-          </span>
+          <div
+            className={classes.backWrapper}
+            onClick={() => {
+              onBack()
+            }}
+          >
+            <img alt="icon" src="/assets/icons/back.svg" />
+            <span className={classes.backText}>Back</span>
+          </div>
         )}
+        <CreateTokenSaleStepper step={step} />
+        <span className={classes.cancel} onClick={onCancel}>
+          Cancel
+        </span>
       </div>
     </div>
   )

@@ -37,11 +37,13 @@ export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
   const validPricingDetailsSet = () => {
     switch (data.pricingFormula) {
       case EPricingFormula.Ascending:
-        return Number(data.startingPrice) < Number(data.endingPrice)
+        return Number(data.publicStartingPrice) < Number(data.publicEndingPrice)
       case EPricingFormula.Descending:
-        return Number(data.startingPrice) > Number(data.endingPrice)
+        return Number(data.publicStartingPrice) > Number(data.publicEndingPrice)
       case EPricingFormula.Standard:
-        return Number(data.startingPrice) === Number(data.endingPrice)
+        return (
+          Number(data.publicStartingPrice) === Number(data.publicEndingPrice)
+        )
       default:
         return false
     }
@@ -56,8 +58,8 @@ export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
 
     if (newPricingFormula === EPricingFormula.Standard) {
       updateData({
-        startingPrice: '',
-        endingPrice: '',
+        publicStartingPrice: '',
+        publicEndingPrice: '',
         pricingFormula: newPricingFormula,
       })
     } else {
@@ -67,8 +69,8 @@ export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
 
   const isNextBtnDisabled = !(
     data.pricingFormula &&
-    data.startingPrice &&
-    data.endingPrice &&
+    data.publicStartingPrice &&
+    data.publicEndingPrice &&
     validPricingDetailsSet()
   )
 
@@ -93,10 +95,13 @@ export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
               <div className={classes.inputContainer}>
                 <Input
                   label={`Price per token - ${data.purchaseToken?.symbol} per ${data.offerToken?.symbol}`}
-                  value={data.startingPrice}
+                  value={data.publicStartingPrice}
                   onChange={(event) => {
                     const price = event.target.value
-                    updateData({ startingPrice: price, endingPrice: price })
+                    updateData({
+                      publicStartingPrice: price,
+                      publicEndingPrice: price,
+                    })
                   }}
                 />
               </div>
@@ -105,9 +110,9 @@ export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
                 <div className={classes.inputContainer}>
                   <Input
                     label={`Starting Price - ${data.purchaseToken?.symbol} per ${data.offerToken?.symbol}`}
-                    value={data.startingPrice}
+                    value={data.publicStartingPrice}
                     onChange={(event) =>
-                      updateData({ startingPrice: event.target.value })
+                      updateData({ publicStartingPrice: event.target.value })
                     }
                   />
                   <InputDescription className={classes.inputDescription}>
@@ -117,9 +122,9 @@ export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
                 <div className={classes.inputContainer}>
                   <Input
                     label={`Ending Price - ${data.purchaseToken?.symbol} per ${data.offerToken?.symbol}`}
-                    value={data.endingPrice}
+                    value={data.publicEndingPrice}
                     onChange={(event) =>
-                      updateData({ endingPrice: event.target.value })
+                      updateData({ publicEndingPrice: event.target.value })
                     }
                   />
                   <InputDescription className={classes.inputDescription}>
