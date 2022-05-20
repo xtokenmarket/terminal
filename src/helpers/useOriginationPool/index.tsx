@@ -119,7 +119,7 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
       }
 
       const endOfWhitelistPeriod = saleInitiatedTimestamp.add(
-        (whitelistSaleDuration as BigNumber) || BigNumber.from(0)
+        whitelistSaleDuration || BigNumber.from(0)
       )
       const whitelistTimeRemaining = !endOfWhitelistPeriod.isZero()
         ? getRemainingTimeSec(endOfWhitelistPeriod)
@@ -129,16 +129,9 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         ? getRemainingTimeSec(saleEndTimestamp)
         : BigNumber.from('0')
 
-      const isSetWhitelist = () => {
-        if (
-          whitelistMerkleRoot &&
-          whitelistMerkleRoot.some((x) => x !== ethers.constants.AddressZero)
-        ) {
-          return true
-        }
-
-        return false
-      }
+      const isSetWhitelist = () =>
+        whitelistMerkleRoot &&
+        whitelistMerkleRoot.some((x) => x !== ethers.constants.AddressZero)
 
       const _whitelist = {
         label: OriginationLabels.WhitelistSale,
