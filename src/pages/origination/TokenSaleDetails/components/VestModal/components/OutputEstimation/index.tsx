@@ -13,7 +13,6 @@ import { ONE_ETHER } from 'utils/number'
 import { VestState } from '../..'
 
 const useStyles = makeStyles((theme) => ({
-  root: {},
   estimation: {
     backgroundColor: theme.colors.primary400,
     padding: '24px 32px 1px 32px',
@@ -103,7 +102,7 @@ export const OutputEstimation = (props: IProps) => {
   const { primary, rest } = formatDurationUnits(durationRemaining)
 
   return (
-    <div className={clsx(classes.root, props.className)}>
+    <div className={clsx(props.className)}>
       <div className={classes.estimation}>
         <Typography className={classes.label}>
           {vestState.step === VestStep.Info

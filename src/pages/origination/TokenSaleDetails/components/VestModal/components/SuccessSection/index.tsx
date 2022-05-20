@@ -39,8 +39,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 24,
     color: theme.colors.white,
   },
-  deposit: {},
-  buy: { marginTop: 8 },
   actions: {
     padding: 32,
     paddingTop: 0,
@@ -50,9 +48,6 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     display: 'flex',
     justifyContent: 'center',
-  },
-  button: {
-    marginTop: 20,
   },
 }))
 
@@ -86,13 +81,7 @@ export const SuccessSection = (props: IProps) => {
         <div className={classes.transaction}>
           <ViewTransaction txId={txHash} />
         </div>
-        <Button
-          color="primary"
-          variant="contained"
-          fullWidth
-          className={classes.deposit}
-          onClick={onClose}
-        >
+        <Button color="primary" variant="contained" fullWidth onClick={onClose}>
           DONE
         </Button>
       </div>

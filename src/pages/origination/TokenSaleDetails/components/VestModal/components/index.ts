@@ -1,5 +1,4 @@
 export * from './InitiateSection'
 export * from './SuccessSection'
-export * from './OutputEstimationInfo'
 export * from './OutputEstimation'
 export * from './TokenInfo'

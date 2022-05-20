@@ -15,7 +15,6 @@ import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { TokenInfo } from '../index'
 
 const useStyles = makeStyles((theme) => ({
-  root: {},
   header: {
     padding: 32,
     position: 'relative',
@@ -37,27 +36,8 @@ const useStyles = makeStyles((theme) => ({
     minHeight: '20vh',
     maxHeight: '50vh',
   },
-  warning: {
-    padding: '16px !important',
-    '& div': {
-      '&:first-child': {
-        marginTop: 0,
-        marginRight: 16,
-      },
-      '& p': {
-        fontSize: 14,
-        marginTop: 3,
-        '&:first-child': { fontSize: 16, marginTop: 0 },
-      },
-    },
-  },
   actions: {
     marginTop: 32,
-  },
-  tokenIcon: {
-    width: 24,
-    height: 24,
-    borderRadius: '50%',
   },
   closeButton: {
     padding: 0,
@@ -209,9 +189,11 @@ export const InitiateSection = (props: IProps) => {
   }
 
   return (
-    <div className={classes.root}>
+    <div>
       <div className={classes.header}>
-        <Typography className={classes.title}>Vest XTK tokens</Typography>
+        <Typography className={classes.title}>
+          Vest {offerData.offerToken.symbol} tokens
+        </Typography>
         <Typography className={classes.subTitle}>
           Please complete the transaction to approve vesting process.
         </Typography>
