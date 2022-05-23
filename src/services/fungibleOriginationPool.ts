@@ -49,6 +49,22 @@ class FungibleOriginationPoolService {
   }
 
   isSaleInitiated = async () => this.contract.saleInitiated()
+
+  /*
+   * Claim purchased tokens
+   */
+  claimTokens = async (): Promise<string> => {
+    const transactionObject = await this.contract.claimTokens()
+
+    console.log('Claim tokens transaction hash:', transactionObject.hash)
+
+    return transactionObject.hash
+  }
+
+  waitUntilClaimTokens = async (txId: string): Promise<string> =>
+    new Promise((resolve) => {
+      this.contract.provider.waitForTransaction(txId).then(() => resolve(txId))
+    })
 }
 
 export { FungibleOriginationPoolService }

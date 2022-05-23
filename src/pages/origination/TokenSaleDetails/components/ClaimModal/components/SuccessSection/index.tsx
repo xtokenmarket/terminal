@@ -48,15 +48,19 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  onClose: () => void
+  onClose?: () => void
   data: IClaimData
   txId: string
 }
 
-export const SuccessSection = (props: IProps) => {
+export const SuccessSection = ({
+  data,
+  onClose = () => {
+    return
+  },
+  txId,
+}: IProps) => {
   const classes = useStyles()
-  const { data, onClose } = props
-  console.log('data', data)
 
   return (
     <div className={classes.root}>
@@ -71,12 +75,13 @@ export const SuccessSection = (props: IProps) => {
         </Typography>
         <Typography className={classes.description}>
           You have successfully claimed{' '}
-          {formatBigNumber(data.amount, data.token.decimals)} USDC
+          {formatBigNumber(data.amount, data.token.decimals)}{' '}
+          {data.token.symbol}
         </Typography>
       </div>
       <div className={classes.actions}>
         <div className={classes.transaction}>
-          <ViewTransaction txId={props.txId} />
+          <ViewTransaction txId={txId} />
         </div>
         <Button
           color="primary"
