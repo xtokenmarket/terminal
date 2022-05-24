@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     paddingTop: theme.spacing(3),
-    paddingBottom: 66,
+    paddingBottom: 44,
     display: 'flex',
     flexDirection: 'column',
     minHeight: 700,
@@ -56,13 +56,14 @@ const initialState: IState = {
   cliffPeriodUnit: '',
   offerToken: undefined,
   purchaseToken: undefined,
-  step: ECreareTokenSaleStep.Offering,
+  step: ECreareTokenSaleStep.Auction,
   publicOfferingPeriodUnit: EPeriods.Weeks,
-
   whitelistStartingPrice: '',
   whitelistEndingPrice: '',
   whitelistOfferingPeriod: '',
   whitelistOfferingPeriodUnit: '',
+  publicSaleEnabled: false,
+  whitelistSaleEnabled: false,
 }
 
 const CreareTokenSale = () => {
