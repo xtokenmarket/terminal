@@ -200,6 +200,7 @@ const TokenSaleDetails = () => {
               onClose={toggleVestModal}
               onSuccess={onVestSuccess}
               open={state.isVestModalOpen}
+              myPositionData={tokenOffer.myPosition}
             />
           </div>
         )}

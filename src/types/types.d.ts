@@ -275,6 +275,7 @@ export interface IMyPosition extends Label {
   amountAvailableToVest: string
   offerToken: IToken
   purchaseToken: IToken
+  vestableTokenAmount: BigNumber
 }
 
 export type OriginationDetailItem =

@@ -1,12 +1,13 @@
 import { makeStyles, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import { TokenIcon } from 'components'
-import { IOfferingOverview } from 'types'
+import { IMyPosition, IOfferingOverview } from 'types'
 import {
   formatBigNumber,
   formatDurationUnits,
   getCurrentTimeStamp,
   getTimeRemainingUnits,
+  parseDurationSec,
 } from 'utils'
 import { VestStep } from 'utils/enums'
 import { ONE_ETHER } from 'utils/number'
@@ -90,15 +91,25 @@ interface IProps {
   className?: string
   offerData: IOfferingOverview
   vestState: VestState
+  myPositionData: IMyPosition
 }
 
 export const OutputEstimation = (props: IProps) => {
   const classes = useStyles()
-  const { offerData, vestState } = props
+  const { offerData, vestState, myPositionData } = props
 
   const now = getCurrentTimeStamp()
-  const diff = (Number(offerData.salesEnd) - now) * 1000
-  const durationRemaining = getTimeRemainingUnits(diff)
+
+  const getRemainingSec = () => {
+    const vestEndSec = Number(offerData.salesEnd)
+
+    const remainingPeriod =
+      vestEndSec + offerData.vestingPeriod.toNumber() / 1000 - now
+
+    return remainingPeriod * 1000
+  }
+
+  const durationRemaining = getTimeRemainingUnits(getRemainingSec())
   const { primary, rest } = formatDurationUnits(durationRemaining)
 
   return (
@@ -116,7 +127,11 @@ export const OutputEstimation = (props: IProps) => {
           />
           &nbsp;&nbsp;
           <Typography className={classes.amount}>
-            {formatBigNumber(ONE_ETHER, offerData.offerToken.decimals, 4)}
+            {formatBigNumber(
+              myPositionData.amountAvailableToVest,
+              offerData.offerToken.decimals,
+              4
+            )}
             &nbsp; <span>~ $ 309,73</span>
             {/*{offerData.offerToken.price && (
               <span>
@@ -134,7 +149,9 @@ export const OutputEstimation = (props: IProps) => {
           <div className={classes.infoRow}>
             <div>
               <Typography className={classes.label}>VESTING PERIOD</Typography>
-              <Typography className={classes.amount}>6 weeks</Typography>
+              <Typography className={classes.amount}>
+                {parseDurationSec(offerData.vestingPeriod.toNumber())}
+              </Typography>
             </div>
           </div>
         )}
@@ -152,7 +169,11 @@ export const OutputEstimation = (props: IProps) => {
           />
           &nbsp;&nbsp;
           <Typography className={classes.amountSmall}>
-            {formatBigNumber(ONE_ETHER, offerData.offerToken.decimals, 4)}
+            {formatBigNumber(
+              myPositionData.amountInvested,
+              offerData.offerToken.decimals,
+              4
+            )}
             &nbsp;
             <span>~ $ 309,73</span>
           </Typography>

@@ -1,6 +1,6 @@
 import { Button, makeStyles, Typography } from '@material-ui/core'
 import { ViewTransaction } from 'components'
-import { IOfferingOverview } from 'types'
+import { IMyPosition, IOfferingOverview } from 'types'
 import { VestState } from '../..'
 
 import { OutputEstimation } from '../index'
@@ -56,11 +56,12 @@ interface IProps {
   onClose: () => void
   txHash: string
   vestState: VestState
+  myPositionData: IMyPosition
 }
 
 export const SuccessSection = (props: IProps) => {
   const classes = useStyles()
-  const { offerData, onClose, txHash, vestState } = props
+  const { offerData, onClose, txHash, vestState, myPositionData } = props
 
   return (
     <div className={classes.root}>
@@ -76,7 +77,11 @@ export const SuccessSection = (props: IProps) => {
           details of your transaction.
         </Typography>
       </div>
-      <OutputEstimation offerData={offerData} vestState={vestState} />
+      <OutputEstimation
+        offerData={offerData}
+        vestState={vestState}
+        myPositionData={myPositionData}
+      />
       <div className={classes.actions}>
         <div className={classes.transaction}>
           <ViewTransaction txId={txHash} />
