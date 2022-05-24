@@ -105,6 +105,7 @@ export const VestModal: React.FC<IProps> = ({
             offerData={offerData}
             updateState={updateState}
             onNext={onNextStep}
+            myPositionData={myPositionData}
           />
         )
       default:

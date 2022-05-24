@@ -169,11 +169,19 @@ export const OutputEstimation = (props: IProps) => {
           />
           &nbsp;&nbsp;
           <Typography className={classes.amountSmall}>
-            {formatBigNumber(
-              myPositionData.amountInvested,
-              offerData.offerToken.decimals,
-              4
-            )}
+            {vestState.step === VestStep.Info
+              ? formatBigNumber(
+                  myPositionData.amountvested,
+                  offerData.offerToken.decimals,
+                  4
+                )
+              : formatBigNumber(
+                  myPositionData.amountvested.add(
+                    myPositionData.amountAvailableToVest
+                  ),
+                  offerData.offerToken.decimals,
+                  4
+                )}
             &nbsp;
             <span>~ $ 309,73</span>
           </Typography>
