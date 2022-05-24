@@ -10,6 +10,7 @@ import { InitiateSaleModal } from './components/InitiateSaleModal'
 import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
 import { ClaimModal } from './components/ClaimModal'
+import { VestModal } from './components/VestModal'
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -49,6 +50,7 @@ interface IState {
   isInitiateSaleModalOpen: boolean
   open: boolean
   isClaimModalOpen: boolean
+  isVestModalOpen: boolean
 }
 
 const TokenSaleDetails = () => {
@@ -62,12 +64,21 @@ const TokenSaleDetails = () => {
     isInitiateSaleModalOpen: false,
     open: false,
     isClaimModalOpen: false,
+    isVestModalOpen: false,
   })
 
   const onInitiateSuccess = async () => {
     setState((prev) => ({
       ...prev,
       isInitiateSaleModalOpen: false,
+    }))
+    await loadInfo()
+  }
+
+  const onVestSuccess = async () => {
+    setState((prev) => ({
+      ...prev,
+      isVestModalOpen: false,
     }))
     await loadInfo()
   }
@@ -106,6 +117,13 @@ const TokenSaleDetails = () => {
     setState((prev) => ({
       ...prev,
       isClaimModalOpen: !state.isClaimModalOpen,
+    }))
+  }
+
+  const toggleVestModal = () => {
+    setState((prev) => ({
+      ...prev,
+      isVestModalOpen: !state.isVestModalOpen,
     }))
   }
 
@@ -159,6 +177,9 @@ const TokenSaleDetails = () => {
               label={'My Position'}
               toggleModal={toggleClaimModal}
             />
+            <Button className={cl.button} onClick={toggleVestModal}>
+              <Typography className={cl.text}>VEST</Typography>
+            </Button>
             <InitiateSaleModal
               offerData={tokenOffer.offeringOverview}
               onClose={toggleInitiateSaleModal}
@@ -173,6 +194,12 @@ const TokenSaleDetails = () => {
                 token: tokenOffer.offeringOverview.offerToken,
                 amount: BigNumber.from(tokenOffer.myPosition.tokenPurchased),
               }}
+            />
+            <VestModal
+              offerData={tokenOffer.offeringOverview}
+              onClose={toggleVestModal}
+              onSuccess={onVestSuccess}
+              open={state.isVestModalOpen}
             />
           </div>
         )}
