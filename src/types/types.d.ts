@@ -187,6 +187,8 @@ export interface ICreateTokenSaleData {
   publicOfferingPeriodUnit: PeriodUnit
   whitelistOfferingPeriod: string
   whitelistOfferingPeriodUnit: PeriodUnit
+  publicSaleEnabled?: boolean
+  whitelistSaleEnabled?: boolean
 }
 
 export interface ISaleParams {
