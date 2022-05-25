@@ -1,18 +1,20 @@
+import clsx from 'clsx'
 import { useState } from 'react'
 import { BigNumber } from 'ethers'
 import { transparentize } from 'polished'
 import { useHistory, useParams } from 'react-router'
-import { useConnectedWeb3Context } from 'contexts'
+// import { useConnectedWeb3Context } from 'contexts'
 import { Button, makeStyles, Typography } from '@material-ui/core'
 import { PageWrapper, PageHeader, PageContent, SimpleLoader } from 'components'
-import { useOriginationPool } from 'helpers/useOriginationPool'
+import { useOriginationPool } from 'helpers'
+import { getCurrentTimeStamp, getRemainingTimeSec } from 'utils'
+
+import { ClaimModal } from './components/ClaimModal'
 import { InitiateSaleModal } from './components/InitiateSaleModal'
+import { InvestModal } from './components/InvestModal'
 import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
-import { ClaimModal } from './components/ClaimModal'
 import { VestModal } from './components/VestModal'
-import { getCurrentTimeStamp, getRemainingTimeSec } from 'utils'
-import clsx from 'clsx'
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -52,10 +54,11 @@ type RouteParams = {
 }
 
 interface IState {
-  isInitiateSaleModalOpen: boolean
-  open: boolean
   isClaimModalOpen: boolean
+  isInitiateSaleModalOpen: boolean
+  isInvestModalOpen: boolean
   isVestModalOpen: boolean
+  open: boolean
 }
 
 const TokenSaleDetails = () => {
@@ -63,13 +66,14 @@ const TokenSaleDetails = () => {
   const history = useHistory()
   const { poolAddress } = useParams<RouteParams>()
   const { tokenOffer, loadInfo } = useOriginationPool(poolAddress)
-  const { account, networkId, library: provider } = useConnectedWeb3Context()
+  // const { account, networkId, library: provider } = useConnectedWeb3Context()
 
   const [state, setState] = useState<IState>({
-    isInitiateSaleModalOpen: false,
-    open: false,
     isClaimModalOpen: false,
+    isInitiateSaleModalOpen: false,
+    isInvestModalOpen: false,
     isVestModalOpen: false,
+    open: false,
   })
 
   const onInitiateSuccess = async () => {
@@ -130,6 +134,21 @@ const TokenSaleDetails = () => {
       ...prev,
       isVestModalOpen: !state.isVestModalOpen,
     }))
+  }
+
+  const toggleInvestModal = () => {
+    setState((prev) => ({
+      ...prev,
+      isInvestModalOpen: !state.isInvestModalOpen,
+    }))
+  }
+
+  const onInvestSuccess = async () => {
+    setState((prev) => ({
+      ...prev,
+      isInvestModalOpen: false,
+    }))
+    await loadInfo()
   }
 
   const isCliffPeriodPassed = () => {
@@ -211,12 +230,7 @@ const TokenSaleDetails = () => {
                     tokenOffer.offeringOverview.isOwnerOrManager
                   }
                 />
-                <Button
-                  className={cl.button}
-                  onClick={() => {
-                    console.log('onClick')
-                  }}
-                >
+                <Button className={cl.button} onClick={toggleInvestModal}>
                   <Typography className={cl.text}>INVEST</Typography>
                 </Button>
               </>
@@ -225,16 +239,12 @@ const TokenSaleDetails = () => {
             {!isSaleCompleted && (
               <>
                 <Table item={tokenOffer.publicSale} label={'Public Sale'} />
-                <Button
-                  className={cl.button}
-                  onClick={() => {
-                    console.log('onClick')
-                  }}
-                >
+                <Button className={cl.button} onClick={toggleInvestModal}>
                   <Typography className={cl.text}>INVEST</Typography>
                 </Button>
               </>
             )}
+
             <Table
               item={tokenOffer.myPosition}
               label={'My Position'}
@@ -268,6 +278,12 @@ const TokenSaleDetails = () => {
                 token: tokenOffer.offeringOverview.offerToken,
                 amount: BigNumber.from(tokenOffer.myPosition.tokenPurchased),
               }}
+            />
+            <InvestModal
+              offerData={tokenOffer.offeringOverview}
+              onClose={toggleInvestModal}
+              onSuccess={onInvestSuccess}
+              open={state.isInvestModalOpen}
             />
             <VestModal
               offerData={tokenOffer.offeringOverview}

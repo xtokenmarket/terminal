@@ -1,26 +1,27 @@
 import Abi from 'abis'
 import { BigNumber } from 'ethers'
 import { MulticallService } from 'services'
+
 export interface ITokenOfferDetails {
-  offerToken: string
-  purchaseToken: string
-  totalOfferingAmount: BigNumber
-  offerTokenAmountSold: BigNumber
-  publicStartingPrice: BigNumber
-  publicEndingPrice: BigNumber
-  saleInitiatedTimestamp: BigNumber
-  saleEndTimestamp: BigNumber
-  vestingPeriod: BigNumber
   cliffPeriod: BigNumber
-  reserveAmount: BigNumber
-  whitelistStartingPrice?: BigNumber
-  whitelistEndingPrice?: BigNumber
-  whitelistSaleDuration?: BigNumber
-  publicSaleDuration?: BigNumber
-  whitelistMerkleRoot?: string[]
   getOfferTokenPrice: BigNumber
-  vestableTokenAmount: BigNumber
+  offerToken: string
+  offerTokenAmountSold: BigNumber
+  publicEndingPrice: BigNumber
+  publicSaleDuration?: BigNumber
+  publicStartingPrice: BigNumber
+  purchaseToken: string
   purchaseTokensAcquired: BigNumber
+  reserveAmount: BigNumber
+  saleEndTimestamp: BigNumber
+  saleInitiatedTimestamp: BigNumber
+  totalOfferingAmount: BigNumber
+  vestableTokenAmount: BigNumber
+  vestingPeriod: BigNumber
+  whitelistEndingPrice?: BigNumber
+  whitelistMerkleRoot?: string[]
+  whitelistSaleDuration?: BigNumber
+  whitelistStartingPrice?: BigNumber
 }
 
 export const getOffersDataMulticall = async (
