@@ -180,6 +180,9 @@ const TokenSaleDetails = () => {
             <Button className={cl.button} onClick={toggleVestModal}>
               <Typography className={cl.text}>VEST</Typography>
             </Button>
+            <Button className={cl.button} onClick={toggleClaimModal}>
+              <Typography className={cl.text}>CLAIM</Typography>
+            </Button>
             <InitiateSaleModal
               offerData={tokenOffer.offeringOverview}
               onClose={toggleInitiateSaleModal}
