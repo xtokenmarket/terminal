@@ -296,7 +296,7 @@ export interface IWhitelistSale extends Label {
   startingPrice?: BigNumber
   endingPrice?: BigNumber
   whitelist?: boolean
-  addressCap: string
+  addressCap: BigNumber
   timeRemaining: BigNumber
   salesPeriod?: BigNumber
   offerToken: IToken
