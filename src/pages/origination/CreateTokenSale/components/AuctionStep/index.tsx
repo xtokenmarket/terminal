@@ -2,8 +2,8 @@ import { ETokenSalePhase } from 'utils/enums'
 import { Button, makeStyles } from '@material-ui/core'
 import { ICreateTokenSaleData } from 'types'
 import { useState } from 'react'
-import { WhitelistPhaseForm } from '../WhitelistPhaseForm.tsx'
-import { PublicSaleForm } from '../PublicSalePhaseForm'
+import { WhitelistSaleForm } from '../WhitelistSaleForm.tsx'
+import { PublicSaleForm } from '../PublicSaleForm'
 
 const useStyles = makeStyles(() => ({
   saleTypeToggle: {
@@ -23,6 +23,16 @@ export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
     ETokenSalePhase.Whitelist
   )
   const classes = useStyles()
+  const { whitelistSale, publicSale } = data
+
+  const handlePublicSaleSubmit = () => {
+    if (!whitelistSale.enabled && !publicSale.enabled) {
+      setTokenSalePhase(ETokenSalePhase.Whitelist)
+      return
+    }
+
+    onNext()
+  }
 
   return (
     <>
@@ -46,18 +56,16 @@ export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
       </div>
 
       {tokenSalePhase === ETokenSalePhase.Whitelist ? (
-        <WhitelistPhaseForm
-          tokenSalePhase={tokenSalePhase}
+        <WhitelistSaleForm
           data={data}
           updateData={updateData}
           onNext={() => setTokenSalePhase(ETokenSalePhase.Public)}
         />
       ) : (
         <PublicSaleForm
-          tokenSalePhase={tokenSalePhase}
           data={data}
           updateData={updateData}
-          onNext={onNext}
+          onNext={handlePublicSaleSubmit}
         />
       )}
     </>

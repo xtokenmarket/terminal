@@ -1,9 +1,5 @@
-import {
-  Description,
-  InfoText,
-  EPricingFormula,
-  ETokenSalePhase,
-} from 'utils/enums'
+import React from 'react'
+import { Description, InfoText, EPricingFormula } from 'utils/enums'
 import {
   Button,
   FormControl,
@@ -14,13 +10,13 @@ import {
   Typography,
 } from '@material-ui/core'
 import RadioItem from '@material-ui/core/Radio'
-import { ICreateTokenSaleData } from 'types'
 import { InputDescription } from '../InputDescription'
 import { Input } from '../Input'
 import { Radio } from '../Radio'
 import { QuestionTooltip } from '../QuestionTooltip'
 import { Selector } from '../Selector'
 import clsx from 'clsx'
+import { IToken, PeriodUnit, SaleData } from 'types'
 
 const useStyles = makeStyles((theme) => ({
   label: {
@@ -78,60 +74,49 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  tokenSalePhase: ETokenSalePhase
-  data: ICreateTokenSaleData
-  updateData: (_: any) => void
-  onNext: () => void
+  purchaseToken?: IToken
+  offerToken?: IToken
+  saleData: SaleData
+  updateSaleData: (_: Partial<SaleData>) => void
+  onSubmit: () => void
+  submitDisabled: boolean
 }
 
-export const WhitelistPhaseForm: React.FC<IProps> = ({
-  tokenSalePhase,
-  data,
-  updateData,
-  onNext,
-}) => {
+export const SaleForm = ({
+  purchaseToken,
+  offerToken,
+  saleData,
+  updateSaleData,
+  onSubmit,
+  submitDisabled,
+}: IProps) => {
   const classes = useStyles()
-  const { whitelistSaleEnabled } = data
-
-  const validPricingDetailsSet = () => {
-    switch (data.pricingFormula) {
-      case EPricingFormula.Ascending:
-        return Number(data.publicStartingPrice) < Number(data.publicEndingPrice)
-      case EPricingFormula.Descending:
-        return Number(data.publicStartingPrice) > Number(data.publicEndingPrice)
-      case EPricingFormula.Standard:
-        return (
-          Number(data.publicStartingPrice) === Number(data.publicEndingPrice)
-        )
-      default:
-        return false
-    }
-  }
+  const {
+    pricingFormula,
+    startingPrice,
+    endingPrice,
+    offeringPeriod,
+    offeringPeriodUnit,
+    enabled,
+  } = saleData
 
   const handlePricingFormulaChange = (
     newPricingFormula: EPricingFormula[keyof EPricingFormula]
   ) => {
-    if (newPricingFormula === data.pricingFormula) {
+    if (newPricingFormula === pricingFormula) {
       return
     }
 
     if (newPricingFormula === EPricingFormula.Standard) {
-      updateData({
-        publicStartingPrice: '',
-        publicEndingPrice: '',
+      updateSaleData({
+        startingPrice: '',
+        endingPrice: '',
         pricingFormula: newPricingFormula,
       })
     } else {
-      updateData({ pricingFormula: newPricingFormula })
+      updateSaleData({ pricingFormula: newPricingFormula as EPricingFormula })
     }
   }
-
-  const isNextBtnDisabled = !(
-    data.pricingFormula &&
-    data.publicStartingPrice &&
-    data.publicEndingPrice &&
-    validPricingDetailsSet()
-  )
 
   return (
     <>
@@ -143,10 +128,9 @@ export const WhitelistPhaseForm: React.FC<IProps> = ({
             </div>
             <RadioGroup
               name="sale-period"
-              value={data.whitelistSaleEnabled?.toString()}
               onChange={(event) =>
-                updateData({
-                  whitelistSaleEnabled: event.target.value === 'true',
+                updateSaleData({
+                  enabled: event.target.value === 'true',
                 })
               }
             >
@@ -170,7 +154,7 @@ export const WhitelistPhaseForm: React.FC<IProps> = ({
             md={7}
             className={clsx(
               classes.offeringPeriod,
-              !whitelistSaleEnabled && classes.sectionDisabled
+              !enabled && classes.sectionDisabled
             )}
           >
             <div className={classes.labelWarpper}>
@@ -185,12 +169,14 @@ export const WhitelistPhaseForm: React.FC<IProps> = ({
 
             <Selector
               onSelectorChange={(e) =>
-                updateData({ publicOfferingPeriodUnit: e.target.value })
+                updateSaleData({
+                  offeringPeriodUnit: e.target.value as PeriodUnit,
+                })
               }
-              selectorValue={`${data.publicOfferingPeriodUnit}`}
-              inputValue={`${data.publicOfferingPeriod}`}
+              selectorValue={`${offeringPeriodUnit}`}
+              inputValue={`${offeringPeriod}`}
               onChangeinput={(e) => {
-                updateData({ publicOfferingPeriod: e.target.value })
+                updateSaleData({ offeringPeriod: e.target.value })
               }}
             />
           </Grid>
@@ -199,7 +185,7 @@ export const WhitelistPhaseForm: React.FC<IProps> = ({
           item
           xs={12}
           md={6}
-          className={clsx(!whitelistSaleEnabled && classes.sectionDisabled)}
+          className={clsx(!enabled && classes.sectionDisabled)}
         >
           <Radio
             label="Choose the Pricing formula for this offering"
@@ -209,22 +195,22 @@ export const WhitelistPhaseForm: React.FC<IProps> = ({
               InfoText.Descending,
             ])}
             items={Object.values(EPricingFormula)}
-            selectedItem={data.pricingFormula}
+            selectedItem={pricingFormula}
             onChange={handlePricingFormulaChange}
             className={classes.pricingFormula}
           />
-          {data.pricingFormula && (
+          {pricingFormula && (
             <>
-              {data.pricingFormula === EPricingFormula.Standard ? (
+              {pricingFormula === EPricingFormula.Standard ? (
                 <div className={classes.inputContainer}>
                   <Input
-                    label={`Price per token - ${data.purchaseToken?.symbol} per ${data.offerToken?.symbol}`}
-                    value={data.publicStartingPrice}
+                    label={`Price per token - ${purchaseToken?.symbol} per ${offerToken?.symbol}`}
+                    value={startingPrice}
                     onChange={(event) => {
                       const price = event.target.value
-                      updateData({
-                        publicStartingPrice: price,
-                        publicEndingPrice: price,
+                      updateSaleData({
+                        startingPrice: price,
+                        endingPrice: price,
                       })
                     }}
                   />
@@ -233,11 +219,11 @@ export const WhitelistPhaseForm: React.FC<IProps> = ({
                 <>
                   <div className={classes.inputContainer}>
                     <Input
-                      label={`Starting Price - ${data.purchaseToken?.symbol} per ${data.offerToken?.symbol}`}
-                      value={data.publicStartingPrice}
+                      label={`Starting Price - ${purchaseToken?.symbol} per ${offerToken?.symbol}`}
+                      value={startingPrice}
                       onChange={(event) =>
-                        updateData({
-                          publicStartingPrice: event.target.value,
+                        updateSaleData({
+                          startingPrice: event.target.value,
                         })
                       }
                     />
@@ -247,10 +233,10 @@ export const WhitelistPhaseForm: React.FC<IProps> = ({
                   </div>
                   <div className={classes.inputContainer}>
                     <Input
-                      label={`Ending Price - ${data.purchaseToken?.symbol} per ${data.offerToken?.symbol}`}
-                      value={data.publicEndingPrice}
+                      label={`Ending Price - ${purchaseToken?.symbol} per ${offerToken?.symbol}`}
+                      value={endingPrice}
                       onChange={(event) =>
-                        updateData({ publicEndingPrice: event.target.value })
+                        updateSaleData({ endingPrice: event.target.value })
                       }
                     />
                     <InputDescription className={classes.inputDescription}>
@@ -268,9 +254,9 @@ export const WhitelistPhaseForm: React.FC<IProps> = ({
         className={classes.nextButton}
         color="primary"
         fullWidth
-        onClick={onNext}
+        onClick={onSubmit}
         variant="contained"
-        disabled={isNextBtnDisabled}
+        disabled={submitDisabled}
       >
         Next
       </Button>

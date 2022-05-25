@@ -219,27 +219,27 @@ export type PeriodUnit = EPeriods[keyof EPeriods]
 
 type VestingOption = EVestingOption[keyof EVestingOption]
 
+export type SaleData = {
+  enabled: boolean | null
+  offeringPeriod: string
+  offeringPeriodUnit: PeriodUnit
+  startingPrice: string
+  endingPrice: string
+  pricingFormula?: EPricingFormula
+}
+
 export interface ICreateTokenSaleData {
   offerTokenAmount: string
   reserveOfferTokenAmount: string
   offerToken?: IToken
   purchaseToken?: IToken
-  pricingFormula?: EPricingFormula
-  publicStartingPrice: string
-  publicEndingPrice: string
-  whitelistStartingPrice: string
-  whitelistEndingPrice: string
   vestingEnabled?: VestingOption
   vestingPeriod: string
   vestingPeriodUnit: PeriodUnit
   cliffPeriod: string
   cliffPeriodUnit: PeriodUnit
-  publicOfferingPeriod: string
-  publicOfferingPeriodUnit: PeriodUnit
-  whitelistOfferingPeriod: string
-  whitelistOfferingPeriodUnit: PeriodUnit
-  publicSaleEnabled?: boolean
-  whitelistSaleEnabled?: boolean
+  whitelistSale: SaleData
+  publicSale: SaleData
 }
 
 export interface ISaleParams {
