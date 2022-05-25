@@ -1,3 +1,4 @@
+import clsx from 'clsx'
 import { ETokenSalePhase } from 'utils/enums'
 import { Button, makeStyles } from '@material-ui/core'
 import { ICreateTokenSaleData } from 'types'
@@ -5,10 +6,19 @@ import { useState } from 'react'
 import { WhitelistSaleForm } from '../WhitelistSaleForm.tsx'
 import { PublicSaleForm } from '../PublicSaleForm'
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   saleTypeToggle: {
     display: 'flex',
     marginBottom: 46,
+  },
+  btnInactive: {
+    boxShadow: 'none',
+    backgroundColor: 'rgba(0, 0, 0, 0.12)',
+    color: '#fff3',
+
+    '&:hover': {
+      color: theme.colors.white,
+    },
   },
 }))
 
@@ -34,6 +44,12 @@ export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
     onNext()
   }
 
+  const handleWhitelistSaleClick = () => {
+    if (tokenSalePhase !== ETokenSalePhase.Whitelist) {
+      setTokenSalePhase(ETokenSalePhase.Whitelist)
+    }
+  }
+
   return (
     <>
       <div className={classes.saleTypeToggle}>
@@ -41,7 +57,10 @@ export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
           color="primary"
           fullWidth
           variant="contained"
-          disabled={tokenSalePhase !== ETokenSalePhase.Whitelist}
+          onClick={handleWhitelistSaleClick}
+          className={clsx(
+            tokenSalePhase != ETokenSalePhase.Whitelist && classes.btnInactive
+          )}
         >
           Whitelist Sale
         </Button>
