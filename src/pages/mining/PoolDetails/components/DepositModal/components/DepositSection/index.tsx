@@ -1,8 +1,7 @@
 import { makeStyles, Typography, IconButton } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
-import { ViewTransaction } from 'components'
+import { ViewTransaction, WarningInfo } from 'components'
 import { useIsMountedRef } from 'helpers'
-import { IDepositState } from 'pages/mining/PoolDetails/components/index'
 import { useEffect, useState } from 'react'
 import { ERC20Service } from 'services'
 import { ITerminalPool, PoolService } from 'types'
@@ -16,7 +15,8 @@ import {
   ONE_MINUTE_IN_MS,
 } from 'config/constants'
 
-import { ActionStepRow, WarningInfo } from '../index'
+import { ActionStepRow } from '../index'
+import { IDepositState } from '../../index'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },

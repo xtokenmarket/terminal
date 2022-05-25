@@ -9,7 +9,7 @@ import { ZERO } from 'utils/number'
 import { useEffect, useState } from 'react'
 import _ from 'lodash'
 
-import { OutputEstimation, OutputEstimationInfo } from '..'
+import { OutputEstimation, OutputEstimationInfo } from '../index'
 import { IDepositState } from '../../index'
 
 const useStyles = makeStyles((theme) => ({

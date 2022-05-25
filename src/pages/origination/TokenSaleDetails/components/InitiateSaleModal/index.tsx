@@ -2,11 +2,10 @@ import { makeStyles } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import { Modal } from 'components'
 import { InitiateSection, SuccessSection } from './components'
-import useCommonStyles from 'style/common'
 import { useConnectedWeb3Context } from 'contexts'
 import { IOfferingOverview } from 'types'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   modal: {
     display: 'flex',
     alignItems: 'center',
