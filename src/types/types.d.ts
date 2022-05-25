@@ -283,6 +283,7 @@ export interface IOfferingOverview extends Label {
   salesPeriod?: BigNumber
   totalOfferingAmount: BigNumber
   vestingPeriod: BigNumber
+  isOwnerOrManager: boolean
 }
 
 export interface IOriginationRow extends IOfferingOverview {

@@ -58,12 +58,14 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         offerTokenAmountPurchased,
         purchaseTokenContribution,
         entryId,
+        isOwnerOrManager,
       ] = await Promise.all([
         getTokenFromAddress(_offerData?.offerToken as string, networkId),
         getTokenFromAddress(_offerData?.purchaseToken as string, networkId),
         fungiblePool.contract.offerTokenAmountPurchased(account),
         fungiblePool.contract.purchaseTokenContribution(account),
         fungiblePool.contract.userToVestingId(account),
+        fungiblePool.contract.isOwnerOrManager(account),
       ])
 
       const nftInfo = await vestingEntryNFTContract.tokenIdVestingAmounts(
@@ -109,6 +111,7 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         offerTokenAmountSold,
         totalOfferingAmount,
         poolAddress,
+        isOwnerOrManager,
       }
 
       const endOfWhitelistPeriod = saleInitiatedTimestamp.add(
