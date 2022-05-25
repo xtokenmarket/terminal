@@ -128,6 +128,7 @@ export const SaleForm = ({
             </div>
             <RadioGroup
               name="sale-period"
+              value={enabled?.toString()}
               onChange={(event) =>
                 updateSaleData({
                   enabled: event.target.value === 'true',
