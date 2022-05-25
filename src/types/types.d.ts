@@ -315,19 +315,13 @@ export interface IPublicSale extends Label {
 }
 
 export interface IMyPosition extends Label {
-  tokenPurchased: string
-  amountInvested: string
-  amountvested: string
-  amountAvailableToVest: string
-}
-
-export interface IMyPosition extends Label {
-  tokenPurchased: string
-  amountInvested: string
-  amountvested: string
-  amountAvailableToVest: string
+  tokenPurchased: BigNumber
+  amountInvested: BigNumber
+  amountvested: BigNumber
+  amountAvailableToVest: BigNumber
   offerToken: IToken
   purchaseToken: IToken
+  vestableTokenAmount: BigNumber
 }
 
 export type OriginationDetailItem =
