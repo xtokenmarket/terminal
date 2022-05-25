@@ -235,3 +235,9 @@ export enum EClaimModalStep {
   Init = 'Init',
   Success = 'Success',
 }
+
+export enum VestStep {
+  Info = 'Info',
+  Vest = 'Vest',
+  Success = 'Success',
+}

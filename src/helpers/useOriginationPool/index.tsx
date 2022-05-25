@@ -101,6 +101,7 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         whitelistMerkleRoot,
         getOfferTokenPrice,
         publicEndingPrice,
+        vestableTokenAmount,
       } = _offerData as ITokenOfferDetails
 
       const offeringOverview = {
@@ -173,6 +174,7 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         amountAvailableToVest: tokenAmount.sub(tokenAmountClaimed),
         offerToken: token0,
         purchaseToken: token1 || ETH,
+        vestableTokenAmount,
       }
 
       return {
