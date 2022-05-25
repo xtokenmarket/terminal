@@ -193,13 +193,11 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
           </Td>
           <Td type={OfferingOverview.SalesBegin} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.salesBegin.isZero() ? (
-                <Button className={cl.button} onClick={toggleModal}>
-                  <Typography className={cl.text}>INITIATE SALE</Typography>
-                </Button>
-              ) : (
-                moment.unix(item.salesBegin.toNumber()).format('MMM DD[,] YYYY')
-              )}
+              {item.salesBegin.isZero()
+                ? 'Not started'
+                : moment
+                    .unix(item.salesBegin.toNumber())
+                    .format('MMM DD[,] YYYY')}
             </Typography>
           </Td>
           <Td type={OfferingOverview.SalesEnd} label={item.label}>
@@ -259,7 +257,7 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
 
             <Td type={WhitelistSale.Whitelist} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {item.whitelist ? 'SET' : 'NOT SET'}
+                {item.whitelist ? 'Set' : 'Not Set'}
               </Typography>
             </Td>
 
