@@ -62,9 +62,15 @@ interface IProps {
   item: OriginationDetailItem
   label: string
   toggleModal?: () => void
+  isOwnerOrManager?: boolean
 }
 
-export const Table = ({ item, label, toggleModal }: IProps) => {
+export const Table = ({
+  item,
+  label,
+  toggleModal,
+  isOwnerOrManager,
+}: IProps) => {
   const [saleInitiated, setSaleInitiated] = useState(false)
   const { account, library: provider } = useConnectedWeb3Context()
   const { poolAddress } = useParams<{ poolAddress: string }>()
@@ -87,32 +93,36 @@ export const Table = ({ item, label, toggleModal }: IProps) => {
         return (
           <div className={cl.labelWrapper}>
             <Typography className={cl.label}>{label}</Typography>
-            <Tooltip
-              arrow
-              title={saleInitiated ? '' : 'Sale should be initiated'}
-              placement="top"
-            >
-              <span>
-                <Button
-                  className={cl.button}
-                  disabled={!saleInitiated}
-                  onClick={() => {
-                    toggleModal && toggleModal()
-                  }}
-                >
-                  <Typography className={cl.text}>SET WHITELIST</Typography>
-                </Button>
-              </span>
-            </Tooltip>
+            {isOwnerOrManager && (
+              <Tooltip
+                arrow
+                title={saleInitiated ? '' : 'Sale should be initiated'}
+                placement="top"
+              >
+                <span>
+                  <Button
+                    className={cl.button}
+                    disabled={!saleInitiated}
+                    onClick={() => {
+                      toggleModal && toggleModal()
+                    }}
+                  >
+                    <Typography className={cl.text}>SET WHITELIST</Typography>
+                  </Button>
+                </span>
+              </Tooltip>
+            )}
           </div>
         )
       case 'Offering Overview':
         return (
           <div className={cl.labelWrapper}>
             <Typography className={cl.label}>{label}</Typography>
-            <Button className={cl.button} onClick={toggleModal}>
-              <Typography className={cl.text}>INITIATE SALE</Typography>
-            </Button>
+            {isOwnerOrManager && (
+              <Button className={cl.button} onClick={toggleModal}>
+                <Typography className={cl.text}>INITIATE SALE</Typography>
+              </Button>
+            )}
           </div>
         )
       default:

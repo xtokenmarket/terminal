@@ -149,11 +149,13 @@ const TokenSaleDetails = () => {
               item={tokenOffer.offeringOverview}
               label={'Offering Overview'}
               toggleModal={toggleInitiateSaleModal}
+              isOwnerOrManager={tokenOffer.offeringOverview.isOwnerOrManager}
             />
             <Table
               item={tokenOffer.whitelist}
               label={'Whitelist Sale'}
               toggleModal={toggleSetWhitelistModal}
+              isOwnerOrManager={tokenOffer.offeringOverview.isOwnerOrManager}
             />
             <Button
               className={cl.button}
