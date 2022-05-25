@@ -11,6 +11,7 @@ import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
 import { ClaimModal } from './components/ClaimModal'
 import { VestModal } from './components/VestModal'
+import { getRemainingTimeSec } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -153,32 +154,41 @@ const TokenSaleDetails = () => {
             />
             {tokenOffer.whitelist.startingPrice &&
               tokenOffer.whitelist.startingPrice.gt(0) && (
-                <Table
-                  item={tokenOffer.whitelist}
-                  label={'Whitelist Sale'}
-                  toggleModal={toggleSetWhitelistModal}
-                  isOwnerOrManager={
-                    tokenOffer.offeringOverview.isOwnerOrManager
-                  }
-                />
+                <>
+                  <Table
+                    item={tokenOffer.whitelist}
+                    label={'Whitelist Sale'}
+                    toggleModal={toggleSetWhitelistModal}
+                    isOwnerOrManager={
+                      tokenOffer.offeringOverview.isOwnerOrManager
+                    }
+                  />
+                  <Button
+                    className={cl.button}
+                    onClick={() => {
+                      console.log('onClick')
+                    }}
+                  >
+                    <Typography className={cl.text}>INVEST</Typography>
+                  </Button>
+                </>
               )}
-            <Button
-              className={cl.button}
-              onClick={() => {
-                console.log('onClick')
-              }}
-            >
-              <Typography className={cl.text}>INVEST</Typography>
-            </Button>
-            <Table item={tokenOffer.publicSale} label={'Public Sale'} />
-            <Button
-              className={cl.button}
-              onClick={() => {
-                console.log('onClick')
-              }}
-            >
-              <Typography className={cl.text}>INVEST</Typography>
-            </Button>
+
+            {getRemainingTimeSec(tokenOffer.offeringOverview.salesEnd).gt(
+              0
+            ) && (
+              <>
+                <Table item={tokenOffer.publicSale} label={'Public Sale'} />
+                <Button
+                  className={cl.button}
+                  onClick={() => {
+                    console.log('onClick')
+                  }}
+                >
+                  <Typography className={cl.text}>INVEST</Typography>
+                </Button>
+              </>
+            )}
             <Table
               item={tokenOffer.myPosition}
               label={'My Position'}
