@@ -151,12 +151,17 @@ const TokenSaleDetails = () => {
               toggleModal={toggleInitiateSaleModal}
               isOwnerOrManager={tokenOffer.offeringOverview.isOwnerOrManager}
             />
-            <Table
-              item={tokenOffer.whitelist}
-              label={'Whitelist Sale'}
-              toggleModal={toggleSetWhitelistModal}
-              isOwnerOrManager={tokenOffer.offeringOverview.isOwnerOrManager}
-            />
+            {tokenOffer.whitelist.startingPrice &&
+              tokenOffer.whitelist.startingPrice.gt(0) && (
+                <Table
+                  item={tokenOffer.whitelist}
+                  label={'Whitelist Sale'}
+                  toggleModal={toggleSetWhitelistModal}
+                  isOwnerOrManager={
+                    tokenOffer.offeringOverview.isOwnerOrManager
+                  }
+                />
+              )}
             <Button
               className={cl.button}
               onClick={() => {
