@@ -365,9 +365,6 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
               {item.offerToken.symbol}
             </Typography>
           </Td>
-          <Button className={cl.button} onClick={toggleModal}>
-            <Typography className={cl.text}>CLAIM</Typography>
-          </Button>
         </div>
       )
     }
