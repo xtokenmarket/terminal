@@ -1,8 +1,7 @@
 import { makeStyles, Typography, IconButton } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
-import { ViewTransaction } from 'components'
+import { ViewTransaction, WarningInfo } from 'components'
 import { useIsMountedRef } from 'helpers'
-import { IDepositState } from 'pages/mining/PoolDetails/components/index'
 import { useEffect, useState } from 'react'
 import { ERC20Service, CLRService } from 'services'
 import { ITerminalPool } from 'types'
@@ -12,7 +11,8 @@ import ClockIcon from '@material-ui/icons/AccessTime'
 import { useCountdown } from 'helpers/useCountdownClock'
 import { FIVE_MINUTES_IN_MS, LOCKED_STARTING_TIME } from 'config/constants'
 
-import { ActionStepRow, WarningInfo } from '../index'
+import { ActionStepRow } from '../index'
+import { IDepositState } from '../../index'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },

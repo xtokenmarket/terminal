@@ -6,13 +6,14 @@ import { DefaultReadonlyProvider } from 'config/networks'
 import { WarningInfo } from 'components/Common/WarningInfo'
 import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef, useTokenBalance } from 'helpers'
-import { IDepositState } from 'pages/mining/PoolDetails/components/index'
 import { CLRService } from 'services'
 import { ITerminalPool } from 'types'
 import { ZERO } from 'utils/number'
-import { OutputEstimation, OutputEstimationInfo } from '../index'
 import { useEffect, useState } from 'react'
 import _ from 'lodash'
+
+import { OutputEstimation, OutputEstimationInfo } from '../index'
+import { IDepositState } from '../../index'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },

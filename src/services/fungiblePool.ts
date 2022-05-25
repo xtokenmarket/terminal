@@ -1,6 +1,8 @@
-import { Contract, Wallet, ethers } from 'ethers'
+import axios from 'axios'
+import { Contract, Wallet, ethers, BigNumber } from 'ethers'
 import { Maybe } from 'types'
 import Abi from 'abis'
+import { CHAIN_NAMES, ChainId, ORIGINATION_API_URL } from 'config/constants'
 
 class FungiblePoolService {
   provider: any
@@ -51,6 +53,71 @@ class FungiblePoolService {
         }
       })
     })
+  }
+
+  getPurchaseAmountFromOfferAmount = async (
+    offerAmount: BigNumber
+  ): Promise<BigNumber> => {
+    return this.contract.getPurchaseAmountFromOfferAmount(offerAmount)
+  }
+
+  purchase = async (offerAmount: BigNumber): Promise<string> => {
+    const tx = await this.contract.purchase(offerAmount)
+    console.log(`public purchase transaction hash: ${tx.hash}`)
+    return tx.hash
+  }
+
+  whitelistPurchase = async (
+    account: string,
+    poolAddress: string,
+    offerAmount: BigNumber
+  ): Promise<string> => {
+    // TODO: Add `addressCap`
+    const merkleProof = await this.generateMerkleProof(account, poolAddress)
+    const tx = await this.contract.whitelistPurchase(merkleProof, offerAmount)
+    console.log(`whitelist purchase transaction hash: ${tx.hash}`)
+    return tx.hash
+  }
+
+  waitUntilPurchase = async (txId: string): Promise<string> => {
+    let resolved = false
+    return new Promise((resolve) => {
+      this.contract.on('Purchase', (...rest) => {
+        if (!resolved) {
+          resolved = true
+          resolve(rest[0].transactionHash)
+        }
+      })
+
+      this.contract.provider.waitForTransaction(txId).then(() => {
+        if (!resolved) {
+          resolved = true
+          resolve(txId)
+        }
+      })
+    })
+  }
+
+  private generateMerkleProof = async (
+    account: string,
+    poolAddress: string
+  ) => {
+    const { hexProof } = await axios
+      .post(`${ORIGINATION_API_URL}/generateProof`, {
+        accountAddress: account,
+        network:
+          CHAIN_NAMES[this.provider.network.chainId as ChainId]?.toLowerCase(),
+        poolAddress,
+      })
+      .then((response) => response.data)
+      .catch(({ response }) => {
+        throw Error(
+          response.data.error ||
+            'Unknown error occurred while generating merkle proof'
+        )
+      })
+
+    return hexProof
   }
 }
 

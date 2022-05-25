@@ -1,5 +1,9 @@
 [
-  { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
+  {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
   {
     "anonymous": false,
     "inputs": [
@@ -72,7 +76,11 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "_feeToken", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "_feeToken",
+        "type": "address"
+      }
     ],
     "name": "claimFees",
     "outputs": [],
@@ -225,22 +233,50 @@
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "name": "customListingFee",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "name": "customListingFeeEnabled",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "deployer", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "customListingFeeEnabled",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "deployer",
+        "type": "address"
+      }
     ],
     "name": "disableCustomListingFee",
     "outputs": [],
@@ -249,8 +285,16 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "deployer", "type": "address" },
-      { "internalType": "uint256", "name": "feeAmount", "type": "uint256" }
+      {
+        "internalType": "address",
+        "name": "deployer",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "feeAmount",
+        "type": "uint256"
+      }
     ],
     "name": "enableCustomListingFee",
     "outputs": [],
@@ -259,7 +303,11 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_listingFee", "type": "uint256" },
+      {
+        "internalType": "uint256",
+        "name": "_listingFee",
+        "type": "uint256"
+      },
       {
         "internalType": "uint256",
         "name": "_originationFee",
@@ -294,7 +342,13 @@
   {
     "inputs": [],
     "name": "listingFee",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -302,7 +356,11 @@
     "inputs": [],
     "name": "nftDeployer",
     "outputs": [
-      { "internalType": "contract INFTDeployer", "name": "", "type": "address" }
+      {
+        "internalType": "contract INFTDeployer",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -310,14 +368,26 @@
   {
     "inputs": [],
     "name": "originationFee",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "owner",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -363,7 +433,11 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_listingFee", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_listingFee",
+        "type": "uint256"
+      }
     ],
     "name": "setListingFee",
     "outputs": [],
@@ -372,7 +446,11 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "newOwner", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
     ],
     "name": "transferOwnership",
     "outputs": [],

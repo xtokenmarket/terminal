@@ -8,7 +8,6 @@ import clsx from 'clsx'
 import { IToken } from 'types'
 import { TokenIcon } from 'components'
 import { formatBigNumber } from 'utils'
-import { ZERO } from 'utils/number'
 import { BigNumber } from 'ethers'
 
 const useStyles = makeStyles((theme) => ({

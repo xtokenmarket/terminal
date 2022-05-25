@@ -258,6 +258,12 @@ export enum ETokenSalePhase {
 
 export enum VestStep {
   Info = 'Info',
+  Success = 'Success',
   Vest = 'Vest',
+}
+
+export enum EInvestModalStep {
+  Input = 'Input',
+  Invest = 'Invest',
   Success = 'Success',
 }
