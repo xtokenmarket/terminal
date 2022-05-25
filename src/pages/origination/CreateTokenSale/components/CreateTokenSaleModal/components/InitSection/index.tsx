@@ -5,6 +5,7 @@ import { useConnectedWeb3Context } from 'contexts'
 import { ICreateTokenSaleData } from 'types'
 import { getDurationSec, getMetamaskError } from 'utils'
 import { parseUnits } from 'ethers/lib/utils'
+import { BigNumber } from 'ethers'
 import { useServices } from 'helpers'
 
 const useStyles = makeStyles((theme) => ({
@@ -59,6 +60,48 @@ export const InitSection = (props: IProps) => {
       return
     }
 
+    const publicSaleParams = publicSale.enabled
+      ? {
+          publicStartingPrice: parseUnits(
+            publicSale.startingPrice,
+            purchaseToken.decimals
+          ),
+          publicEndingPrice: parseUnits(
+            publicSale.endingPrice,
+            purchaseToken.decimals
+          ),
+          publicSaleDuration: getDurationSec(
+            Number(publicSale.offeringPeriod),
+            publicSale.offeringPeriodUnit.toString()
+          ),
+        }
+      : {
+          publicStartingPrice: BigNumber.from(0),
+          publicEndingPrice: BigNumber.from(0),
+          publicSaleDuration: BigNumber.from(0),
+        }
+
+    const whitelistSaleParams = whitelistSale.enabled
+      ? {
+          whitelistStartingPrice: parseUnits(
+            whitelistSale.startingPrice,
+            purchaseToken.decimals
+          ),
+          whitelistEndingPrice: parseUnits(
+            whitelistSale.endingPrice,
+            purchaseToken.decimals
+          ),
+          whitelistSaleDuration: getDurationSec(
+            Number(whitelistSale.offeringPeriod),
+            whitelistSale.offeringPeriodUnit.toString()
+          ),
+        }
+      : {
+          whitelistStartingPrice: BigNumber.from(0),
+          whitelistEndingPrice: BigNumber.from(0),
+          whitelistSaleDuration: BigNumber.from(0),
+        }
+
     try {
       setState((prev) => ({
         ...prev,
@@ -66,20 +109,10 @@ export const InitSection = (props: IProps) => {
       }))
 
       const saleParams = {
+        ...publicSaleParams,
+        ...whitelistSaleParams,
         offerToken: offerToken.address,
         purchaseToken: purchaseToken.address,
-        publicStartingPrice: parseUnits(
-          publicSale.startingPrice,
-          purchaseToken.decimals
-        ),
-        publicEndingPrice: parseUnits(
-          publicSale.endingPrice,
-          purchaseToken.decimals
-        ),
-        publicSaleDuration: getDurationSec(
-          Number(publicSale.offeringPeriod),
-          publicSale.offeringPeriodUnit.toString()
-        ),
         totalOfferingAmount: parseUnits(
           data.offerTokenAmount,
           offerToken.decimals
@@ -95,18 +128,6 @@ export const InitSection = (props: IProps) => {
         cliffPeriod: getDurationSec(
           Number(data.cliffPeriod),
           data.cliffPeriodUnit.toString()
-        ),
-        whitelistStartingPrice: parseUnits(
-          whitelistSale.startingPrice,
-          purchaseToken.decimals
-        ),
-        whitelistEndingPrice: parseUnits(
-          whitelistSale.endingPrice,
-          purchaseToken.decimals
-        ),
-        whitelistSaleDuration: getDurationSec(
-          Number(whitelistSale.offeringPeriod),
-          whitelistSale.offeringPeriodUnit.toString()
         ),
       }
 
