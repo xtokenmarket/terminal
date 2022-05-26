@@ -192,7 +192,7 @@ const TokenSaleDetails = () => {
               </>
             )}
 
-            {isSaleCompleted && (
+            {!isSaleCompleted && (
               <>
                 <Table item={tokenOffer.publicSale} label={'Public Sale'} />
                 <Button
