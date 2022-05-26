@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core'
 import {
   MyPosition,
   OfferingOverview,
+  OfferingSummary,
   OriginationLabels,
   PublicSale,
   WhitelistSale,
@@ -59,11 +60,30 @@ const useStyles = makeStyles(() => ({
     },
     '&.narrow': { width: '10% !important' },
   },
+  offeringSummary: {
+    '&.offerToken': { width: '10%' },
+    '&.purchaseToken': { width: '10%' },
+    '&.tokensSold': { width: '15%' },
+    '&.amountsRaised': { width: '15%' },
+    '&.vestingPeriod': { width: '10%' },
+    '&.cliffPeriod': { width: '10%' },
+    '&.salesCompleted': { width: '10%' },
+    '&.timeSinceCompleted': { width: '11%' },
+    '&+&': { paddingLeft: 16 },
+    '&:last-child': {
+      textAlign: 'right',
+    },
+  },
 }))
 
 interface IProps {
   label: OriginationLabels
-  type: OfferingOverview | WhitelistSale | PublicSale | MyPosition
+  type:
+    | OfferingOverview
+    | WhitelistSale
+    | PublicSale
+    | MyPosition
+    | OfferingSummary
   children: React.ReactNode | React.ReactNode[]
   isVestedPropertiesShow?: boolean
 }

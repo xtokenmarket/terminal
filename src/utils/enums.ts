@@ -193,6 +193,7 @@ export enum OriginationLabels {
   WhitelistSale = 'whitelistSale',
   PublicSale = 'publicSale',
   MyPosition = 'myPosition',
+  OfferingSummary = 'offeringSummary',
 }
 
 export enum OfferingOverview {
@@ -230,6 +231,17 @@ export enum MyPosition {
   AmountInvested = 'amountInvested',
   Amountvested = 'amountvested',
   AmountAvailableToVest = 'amountAvailableToVest',
+}
+
+export enum OfferingSummary {
+  OfferToken = 'offerToken',
+  PurchaseToken = 'purchaseToken',
+  TokensSold = 'tokensSold',
+  AmountsRaised = 'amountsRaised',
+  VestingPeriod = 'vestingPeriod',
+  CliffPeriod = 'cliffPeriod',
+  SalesCompleted = 'salesCompleted',
+  TimeSinceCompleted = 'timeSinceCompleted',
 }
 
 export enum EClaimModalStep {

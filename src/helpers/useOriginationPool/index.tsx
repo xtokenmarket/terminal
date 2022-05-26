@@ -14,7 +14,7 @@ import { Network, OriginationLabels } from 'utils/enums'
 import { getOffersDataMulticall, ITokenOfferDetails } from './helper'
 import { IToken, ITokenOffer } from 'types'
 import { FungiblePoolService } from 'services'
-import { getRemainingTimeSec } from 'utils'
+import { getCurrentTimeStamp, getRemainingTimeSec } from 'utils'
 import { NULL_ADDRESS_WHITELIST, ORIGINATION_API_URL } from 'config/constants'
 
 interface IState {
@@ -187,7 +187,22 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         vestableTokenAmount,
       }
 
+      const offeringSummary = {
+        label: OriginationLabels.OfferingSummary,
+        offerToken: token0,
+        purchaseToken: token1 || ETH,
+        tokensSold: offerTokenAmountSold,
+        amountsRaised: offerTokenAmountSold,
+        vestingPeriod,
+        cliffPeriod,
+        salesCompleted: saleEndTimestamp,
+        timeSinceCompleted: BigNumber.from(getCurrentTimeStamp()).sub(
+          saleEndTimestamp
+        ),
+      }
+
       return {
+        offeringSummary,
         myPosition,
         whitelist: _whitelist,
         offeringOverview,

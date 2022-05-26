@@ -11,6 +11,7 @@ import {
 import {
   IMyPosition,
   IOfferingOverview,
+  IOfferingSummary,
   IPublicSale,
   IWhitelistSale,
 } from 'types'
@@ -109,7 +110,12 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  item: IOfferingOverview | IWhitelistSale | IPublicSale | IMyPosition
+  item:
+    | IOfferingOverview
+    | IWhitelistSale
+    | IPublicSale
+    | IMyPosition
+    | IOfferingSummary
   toggleModal?: () => void
   isVestedPropertiesShow?: boolean
 }
