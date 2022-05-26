@@ -236,6 +236,11 @@ export enum EClaimModalStep {
   Success = 'Success',
 }
 
+export enum ETokenSalePhase {
+  Whitelist = 'Whitelist',
+  Public = 'Public',
+}
+
 export enum VestStep {
   Info = 'Info',
   Vest = 'Vest',

@@ -5,8 +5,8 @@ import { useConnectedWeb3Context } from 'contexts'
 import { ICreateTokenSaleData } from 'types'
 import { getDurationSec, getMetamaskError } from 'utils'
 import { parseUnits } from 'ethers/lib/utils'
-import { useServices } from 'helpers'
 import { BigNumber } from 'ethers'
+import { useServices } from 'helpers'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,17 +47,60 @@ export const InitSection = (props: IProps) => {
 
   const { onNext, data, onClose, setTxId, setPoolAddress } = props
   const { originationService } = useServices()
+  const { whitelistSale, publicSale, purchaseToken, offerToken } = data
 
   useEffect(() => {
     if (state.isCompleted) {
       onNext()
     }
-  }, [state.isCompleted])
+  }, [onNext, state.isCompleted])
 
   const onCreateTokenSale = async () => {
-    if (!account || !provider || !data.offerToken || !data.purchaseToken) {
+    if (!account || !provider || !offerToken || !purchaseToken) {
       return
     }
+
+    const publicSaleParams = publicSale.enabled
+      ? {
+          publicStartingPrice: parseUnits(
+            publicSale.startingPrice,
+            purchaseToken.decimals
+          ),
+          publicEndingPrice: parseUnits(
+            publicSale.endingPrice,
+            purchaseToken.decimals
+          ),
+          publicSaleDuration: getDurationSec(
+            Number(publicSale.offeringPeriod),
+            publicSale.offeringPeriodUnit.toString()
+          ),
+        }
+      : {
+          publicStartingPrice: BigNumber.from(0),
+          publicEndingPrice: BigNumber.from(0),
+          publicSaleDuration: BigNumber.from(0),
+        }
+
+    const whitelistSaleParams = whitelistSale.enabled
+      ? {
+          whitelistStartingPrice: parseUnits(
+            whitelistSale.startingPrice,
+            purchaseToken.decimals
+          ),
+          whitelistEndingPrice: parseUnits(
+            whitelistSale.endingPrice,
+            purchaseToken.decimals
+          ),
+          whitelistSaleDuration: getDurationSec(
+            Number(whitelistSale.offeringPeriod),
+            whitelistSale.offeringPeriodUnit.toString()
+          ),
+        }
+      : {
+          whitelistStartingPrice: BigNumber.from(0),
+          whitelistEndingPrice: BigNumber.from(0),
+          whitelistSaleDuration: BigNumber.from(0),
+        }
 
     try {
       setState((prev) => ({
@@ -66,27 +109,17 @@ export const InitSection = (props: IProps) => {
       }))
 
       const saleParams = {
-        offerToken: data.offerToken.address,
-        purchaseToken: data.purchaseToken.address,
-        publicStartingPrice: parseUnits(
-          data.publicStartingPrice,
-          data.purchaseToken?.decimals
-        ),
-        publicEndingPrice: parseUnits(
-          data.publicEndingPrice,
-          data.purchaseToken?.decimals
-        ),
-        publicSaleDuration: getDurationSec(
-          Number(data.publicOfferingPeriod),
-          data.publicOfferingPeriodUnit.toString()
-        ),
+        ...publicSaleParams,
+        ...whitelistSaleParams,
+        offerToken: offerToken.address,
+        purchaseToken: purchaseToken.address,
         totalOfferingAmount: parseUnits(
           data.offerTokenAmount,
-          data.offerToken?.decimals
+          offerToken.decimals
         ),
         reserveAmount: parseUnits(
           data.reserveOfferTokenAmount,
-          data.offerToken?.decimals
+          offerToken.decimals
         ),
         vestingPeriod: getDurationSec(
           Number(data.vestingPeriod),
@@ -96,10 +129,6 @@ export const InitSection = (props: IProps) => {
           Number(data.cliffPeriod),
           data.cliffPeriodUnit.toString()
         ),
-        //TODO: duplicating from public sale for now
-        whitelistStartingPrice: BigNumber.from(0),
-        whitelistEndingPrice: BigNumber.from(0),
-        whitelistSaleDuration: BigNumber.from(0),
       }
 
       const txId = await originationService.createFungibleListing(saleParams)

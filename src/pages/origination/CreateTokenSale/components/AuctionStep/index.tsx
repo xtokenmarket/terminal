@@ -1,27 +1,24 @@
-import { Description, InfoText, EPricingFormula } from 'utils/enums'
-import { Button, Grid, makeStyles } from '@material-ui/core'
+import clsx from 'clsx'
+import { ETokenSalePhase } from 'utils/enums'
+import { Button, makeStyles } from '@material-ui/core'
 import { ICreateTokenSaleData } from 'types'
-import { InputDescription } from '../InputDescription'
-import { Input } from '../Input'
-import { Radio } from '../Radio'
+import { useState } from 'react'
+import { WhitelistSaleForm } from '../WhitelistSaleForm.tsx'
+import { PublicSaleForm } from '../PublicSaleForm'
 
 const useStyles = makeStyles((theme) => ({
-  label: {
-    color: theme.colors.white,
-    marginBottom: theme.spacing(2),
+  saleTypeToggle: {
+    display: 'flex',
+    marginBottom: 46,
   },
-  radio: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(7),
-  },
-  inputDescription: {
-    marginTop: theme.spacing(1),
-  },
-  inputContainer: {
-    marginBottom: 61,
-  },
-  nextButton: {
-    marginTop: 'auto',
+  btnInactive: {
+    boxShadow: 'none',
+    backgroundColor: 'rgba(0, 0, 0, 0.12)',
+    color: '#fff3',
+
+    '&:hover': {
+      color: theme.colors.white,
+    },
   },
 }))
 
@@ -32,121 +29,64 @@ interface IProps {
 }
 
 export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
+  const [tokenSalePhase, setTokenSalePhase] = useState(
+    ETokenSalePhase.Whitelist
+  )
   const classes = useStyles()
+  const { whitelistSale, publicSale } = data
 
-  const validPricingDetailsSet = () => {
-    switch (data.pricingFormula) {
-      case EPricingFormula.Ascending:
-        return Number(data.publicStartingPrice) < Number(data.publicEndingPrice)
-      case EPricingFormula.Descending:
-        return Number(data.publicStartingPrice) > Number(data.publicEndingPrice)
-      case EPricingFormula.Standard:
-        return (
-          Number(data.publicStartingPrice) === Number(data.publicEndingPrice)
-        )
-      default:
-        return false
-    }
-  }
-
-  const handlePricingFormulaChange = (
-    newPricingFormula: EPricingFormula[keyof EPricingFormula]
-  ) => {
-    if (newPricingFormula === data.pricingFormula) {
+  const handlePublicSaleSubmit = () => {
+    if (!whitelistSale.enabled && !publicSale.enabled) {
+      setTokenSalePhase(ETokenSalePhase.Whitelist)
       return
     }
 
-    if (newPricingFormula === EPricingFormula.Standard) {
-      updateData({
-        publicStartingPrice: '',
-        publicEndingPrice: '',
-        pricingFormula: newPricingFormula,
-      })
-    } else {
-      updateData({ pricingFormula: newPricingFormula })
+    onNext()
+  }
+
+  const handleWhitelistSaleClick = () => {
+    if (tokenSalePhase !== ETokenSalePhase.Whitelist) {
+      setTokenSalePhase(ETokenSalePhase.Whitelist)
     }
   }
 
-  const isNextBtnDisabled = !(
-    data.pricingFormula &&
-    data.publicStartingPrice &&
-    data.publicEndingPrice &&
-    validPricingDetailsSet()
-  )
-
   return (
     <>
-      <Radio
-        label="Choose the Pricing formula for this offering"
-        infoText={Object.values([
-          InfoText.Standard,
-          InfoText.Ascending,
-          InfoText.Descending,
-        ])}
-        className={classes.radio}
-        items={Object.values(EPricingFormula)}
-        selectedItem={data.pricingFormula}
-        onChange={handlePricingFormulaChange}
-      />
-      {data.pricingFormula && (
-        <Grid container>
-          <Grid item xs={12} md={6}>
-            {data.pricingFormula === EPricingFormula.Standard ? (
-              <div className={classes.inputContainer}>
-                <Input
-                  label={`Price per token - ${data.purchaseToken?.symbol} per ${data.offerToken?.symbol}`}
-                  value={data.publicStartingPrice}
-                  onChange={(event) => {
-                    const price = event.target.value
-                    updateData({
-                      publicStartingPrice: price,
-                      publicEndingPrice: price,
-                    })
-                  }}
-                />
-              </div>
-            ) : (
-              <>
-                <div className={classes.inputContainer}>
-                  <Input
-                    label={`Starting Price - ${data.purchaseToken?.symbol} per ${data.offerToken?.symbol}`}
-                    value={data.publicStartingPrice}
-                    onChange={(event) =>
-                      updateData({ publicStartingPrice: event.target.value })
-                    }
-                  />
-                  <InputDescription className={classes.inputDescription}>
-                    {Description.StartingPrice}
-                  </InputDescription>
-                </div>
-                <div className={classes.inputContainer}>
-                  <Input
-                    label={`Ending Price - ${data.purchaseToken?.symbol} per ${data.offerToken?.symbol}`}
-                    value={data.publicEndingPrice}
-                    onChange={(event) =>
-                      updateData({ publicEndingPrice: event.target.value })
-                    }
-                  />
-                  <InputDescription className={classes.inputDescription}>
-                    {Description.EndingPrice}
-                  </InputDescription>
-                </div>
-              </>
-            )}
-          </Grid>
-        </Grid>
-      )}
+      <div className={classes.saleTypeToggle}>
+        <Button
+          color="primary"
+          fullWidth
+          variant="contained"
+          onClick={handleWhitelistSaleClick}
+          className={clsx(
+            tokenSalePhase != ETokenSalePhase.Whitelist && classes.btnInactive
+          )}
+        >
+          Whitelist Sale
+        </Button>
+        <Button
+          color="primary"
+          fullWidth
+          variant="contained"
+          disabled={tokenSalePhase !== ETokenSalePhase.Public}
+        >
+          Public Sale
+        </Button>
+      </div>
 
-      <Button
-        className={classes.nextButton}
-        color="primary"
-        fullWidth
-        onClick={onNext}
-        variant="contained"
-        disabled={isNextBtnDisabled}
-      >
-        Next
-      </Button>
+      {tokenSalePhase === ETokenSalePhase.Whitelist ? (
+        <WhitelistSaleForm
+          data={data}
+          updateData={updateData}
+          onNext={() => setTokenSalePhase(ETokenSalePhase.Public)}
+        />
+      ) : (
+        <PublicSaleForm
+          data={data}
+          updateData={updateData}
+          onNext={handlePublicSaleSubmit}
+        />
+      )}
     </>
   )
 }

@@ -4,14 +4,13 @@ import { ICreateTokenSaleData } from 'types'
 import { Description, InfoText } from 'utils/enums'
 import { InputDescription } from '../InputDescription'
 import { QuestionTooltip } from '../QuestionTooltip'
-import { Selector } from '../Selector'
 import { TokenAmountInput } from '../TokenAmountInput'
 
 const useStyles = makeStyles((theme) => ({
   label: {
     color: theme.colors.white,
     fontFamily: 'Gilmer',
-    fontWeight: 700,
+    fontWeight: 664,
     fontSize: 14,
   },
   tooltipQuestion: {
@@ -33,7 +32,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   tokenInputsContainer: {
-    paddingBottom: theme.spacing(7),
     '&>:not(:last-child)': {
       marginBottom: 22,
     },
@@ -69,8 +67,6 @@ export const OfferingStep: React.FC<IProps> = ({
     data.purchaseToken &&
     data.offerTokenAmount &&
     data.reserveOfferTokenAmount &&
-    data.publicOfferingPeriod &&
-    data.publicOfferingPeriodUnit &&
     data.offerToken.address !== data.purchaseToken.address &&
     Number(data.offerTokenAmount) >= Number(data.reserveOfferTokenAmount)
   )
@@ -133,27 +129,6 @@ export const OfferingStep: React.FC<IProps> = ({
             onChange={(value) => updateData({ reserveOfferTokenAmount: value })}
             infoText={InfoText.ReserveOfferTokenAmount}
             tokenDetailsPlaceholder={Description.ReserveOfferTokenAmount}
-          />
-        </Grid>
-
-        <Grid item xs={12} md={6}>
-          <div className={classes.labelWarpper}>
-            <Typography className={classes.label}>Offering Period</Typography>
-            <QuestionTooltip
-              title={InfoText.OfferingPeriod}
-              className={classes.tooltipQuestion}
-            />
-          </div>
-
-          <Selector
-            onSelectorChange={(e) =>
-              updateData({ publicOfferingPeriodUnit: e.target.value })
-            }
-            selectorValue={`${data.publicOfferingPeriodUnit}`}
-            inputValue={`${data.publicOfferingPeriod}`}
-            onChangeinput={(e) => {
-              updateData({ publicOfferingPeriod: e.target.value })
-            }}
           />
         </Grid>
       </Grid>

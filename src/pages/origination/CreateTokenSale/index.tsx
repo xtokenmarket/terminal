@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     paddingTop: theme.spacing(3),
-    paddingBottom: 66,
+    paddingBottom: 44,
     display: 'flex',
     flexDirection: 'column',
     minHeight: 700,
@@ -45,10 +45,6 @@ interface IState extends Omit<ICreateTokenSaleData, 'token0' | 'token1'> {
 const initialState: IState = {
   offerTokenAmount: '',
   reserveOfferTokenAmount: '',
-  publicOfferingPeriod: '',
-  pricingFormula: undefined,
-  publicStartingPrice: '',
-  publicEndingPrice: '',
   vestingEnabled: undefined,
   vestingPeriod: '',
   vestingPeriodUnit: '',
@@ -57,12 +53,22 @@ const initialState: IState = {
   offerToken: undefined,
   purchaseToken: undefined,
   step: ECreareTokenSaleStep.Offering,
-  publicOfferingPeriodUnit: EPeriods.Weeks,
-
-  whitelistStartingPrice: '',
-  whitelistEndingPrice: '',
-  whitelistOfferingPeriod: '',
-  whitelistOfferingPeriodUnit: '',
+  whitelistSale: {
+    enabled: null,
+    offeringPeriod: '',
+    offeringPeriodUnit: EPeriods.Weeks,
+    startingPrice: '',
+    endingPrice: '',
+    pricingFormula: undefined,
+  },
+  publicSale: {
+    enabled: null,
+    offeringPeriod: '',
+    offeringPeriodUnit: EPeriods.Weeks,
+    startingPrice: '',
+    endingPrice: '',
+    pricingFormula: undefined,
+  },
 }
 
 const CreareTokenSale = () => {

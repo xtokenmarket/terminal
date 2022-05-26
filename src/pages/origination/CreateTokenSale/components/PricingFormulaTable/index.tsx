@@ -51,7 +51,7 @@ interface IProps {
 
 export const PricingFormulaTable: React.FC<IProps> = ({ data }) => {
   const cl = useStyles()
-  const { offerToken } = data
+  const { offerToken, publicSale } = data
 
   return (
     <TableContainer>
@@ -87,13 +87,13 @@ export const PricingFormulaTable: React.FC<IProps> = ({ data }) => {
                 <img src={data.offerToken?.image} style={{ marginRight: 8 }} />
                 <div>
                   <Typography className={cl.bodyRowText}>
-                    {data.publicStartingPrice}
+                    {publicSale.startingPrice}
                   </Typography>
                   {offerToken && (
                     <TokenAmountPriceEstimation
                       className={cl.priceEstimation}
                       token={offerToken}
-                      tokenAmount={Number(data.publicStartingPrice)}
+                      tokenAmount={Number(publicSale.startingPrice)}
                     />
                   )}
                 </div>
@@ -102,13 +102,13 @@ export const PricingFormulaTable: React.FC<IProps> = ({ data }) => {
             <TableCell className={cl.tableCell}>
               <>
                 <Typography className={cl.bodyRowText}>
-                  {data.publicEndingPrice}
+                  {publicSale.endingPrice}
                 </Typography>
                 {offerToken && (
                   <TokenAmountPriceEstimation
                     className={cl.priceEstimation}
                     token={offerToken}
-                    tokenAmount={Number(data.publicEndingPrice)}
+                    tokenAmount={Number(publicSale.endingPrice)}
                   />
                 )}
               </>
