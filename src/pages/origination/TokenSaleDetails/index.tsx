@@ -139,6 +139,14 @@ const TokenSaleDetails = () => {
     return tokenOffer?.myPosition.amountvested.gt(0) && isTimeForVest
   }
 
+  const isWhitelistSaleConfigured =
+    tokenOffer?.whitelist.startingPrice &&
+    tokenOffer?.whitelist.startingPrice.gt(0)
+
+  const isSaleCompleted =
+    tokenOffer &&
+    getRemainingTimeSec(tokenOffer?.offeringOverview.salesEnd).isZero()
+
   return (
     <PageWrapper>
       <PageHeader
@@ -163,31 +171,28 @@ const TokenSaleDetails = () => {
               toggleModal={toggleInitiateSaleModal}
               isOwnerOrManager={tokenOffer.offeringOverview.isOwnerOrManager}
             />
-            {tokenOffer.whitelist.startingPrice &&
-              tokenOffer.whitelist.startingPrice.gt(0) && (
-                <>
-                  <Table
-                    item={tokenOffer.whitelist}
-                    label={'Whitelist Sale'}
-                    toggleModal={toggleSetWhitelistModal}
-                    isOwnerOrManager={
-                      tokenOffer.offeringOverview.isOwnerOrManager
-                    }
-                  />
-                  <Button
-                    className={cl.button}
-                    onClick={() => {
-                      console.log('onClick')
-                    }}
-                  >
-                    <Typography className={cl.text}>INVEST</Typography>
-                  </Button>
-                </>
-              )}
+            {isWhitelistSaleConfigured && (
+              <>
+                <Table
+                  item={tokenOffer.whitelist}
+                  label={'Whitelist Sale'}
+                  toggleModal={toggleSetWhitelistModal}
+                  isOwnerOrManager={
+                    tokenOffer.offeringOverview.isOwnerOrManager
+                  }
+                />
+                <Button
+                  className={cl.button}
+                  onClick={() => {
+                    console.log('onClick')
+                  }}
+                >
+                  <Typography className={cl.text}>INVEST</Typography>
+                </Button>
+              </>
+            )}
 
-            {getRemainingTimeSec(tokenOffer.offeringOverview.salesEnd).gt(
-              0
-            ) && (
+            {isSaleCompleted && (
               <>
                 <Table item={tokenOffer.publicSale} label={'Public Sale'} />
                 <Button
