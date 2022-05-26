@@ -14,8 +14,8 @@ import { Network, OriginationLabels } from 'utils/enums'
 import { getOffersDataMulticall, ITokenOfferDetails } from './helper'
 import { IToken, ITokenOffer } from 'types'
 import { FungiblePoolService } from 'services'
-import { getRemainingTimeSec } from 'utils'
-import { ORIGINATION_API_URL } from 'config/constants'
+import { getCurrentTimeStamp, getRemainingTimeSec } from 'utils'
+import { NULL_ADDRESS_WHITELIST, ORIGINATION_API_URL } from 'config/constants'
 
 interface IState {
   tokenOffer?: ITokenOffer
@@ -33,14 +33,6 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
     poolAddress: string
   ): Promise<ITokenOffer | undefined> => {
     try {
-      // `maxContributionAmount` doesn't exist on contract level. Can only get from API.
-      // TODO: network is hardcoded for now
-      const whitelistAccountDetail = await axios.get(
-        `${ORIGINATION_API_URL}/whitelistedAcccountDetails/?accountAddress=${account}&poolAddress=${poolAddress}&network=kovan`
-      )
-
-      const addressCap = whitelistAccountDetail.data.maxContributionAmount
-
       const _offerData = await getOffersDataMulticall(poolAddress, multicall)
 
       const fungiblePool = new FungiblePoolService(
@@ -66,12 +58,14 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         offerTokenAmountPurchased,
         purchaseTokenContribution,
         entryId,
+        isOwnerOrManager,
       ] = await Promise.all([
         getTokenFromAddress(_offerData?.offerToken as string, networkId),
         getTokenFromAddress(_offerData?.purchaseToken as string, networkId),
         fungiblePool.contract.offerTokenAmountPurchased(account),
         fungiblePool.contract.purchaseTokenContribution(account),
         fungiblePool.contract.userToVestingId(account),
+        fungiblePool.contract.isOwnerOrManager(account),
       ])
 
       const nftInfo = await vestingEntryNFTContract.tokenIdVestingAmounts(
@@ -117,6 +111,7 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         offerTokenAmountSold,
         totalOfferingAmount,
         poolAddress,
+        isOwnerOrManager,
       }
 
       const endOfWhitelistPeriod = saleInitiatedTimestamp.add(
@@ -132,7 +127,22 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
 
       const isSetWhitelist = () =>
         whitelistMerkleRoot &&
-        whitelistMerkleRoot.some((x) => x !== ethers.constants.AddressZero)
+        whitelistMerkleRoot.some(
+          (x) =>
+            x !== ethers.constants.AddressZero && x !== NULL_ADDRESS_WHITELIST
+        )
+
+      let addressCap = BigNumber.from(0)
+
+      if (isSetWhitelist()) {
+        // `maxContributionAmount` doesn't exist on contract level. Can only get from API.
+        // TODO: network is hardcoded for now
+        const whitelistAccountDetail = await axios.get(
+          `${ORIGINATION_API_URL}/whitelistedAcccountDetails/?accountAddress=${account}&poolAddress=${poolAddress}&network=kovan`
+        )
+
+        addressCap = whitelistAccountDetail.data.maxContributionAmount
+      }
 
       const _whitelist = {
         label: OriginationLabels.WhitelistSale,
@@ -177,7 +187,22 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         vestableTokenAmount,
       }
 
+      const offeringSummary = {
+        label: OriginationLabels.OfferingSummary,
+        offerToken: token0,
+        purchaseToken: token1 || ETH,
+        tokensSold: offerTokenAmountSold,
+        amountsRaised: offerTokenAmountSold,
+        vestingPeriod,
+        cliffPeriod,
+        salesCompleted: saleEndTimestamp,
+        timeSinceCompleted: BigNumber.from(getCurrentTimeStamp()).sub(
+          saleEndTimestamp
+        ),
+      }
+
       return {
+        offeringSummary,
         myPosition,
         whitelist: _whitelist,
         offeringOverview,

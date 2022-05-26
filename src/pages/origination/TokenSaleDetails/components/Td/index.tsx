@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core'
 import {
   MyPosition,
   OfferingOverview,
+  OfferingSummary,
   OriginationLabels,
   PublicSale,
   WhitelistSale,
@@ -57,17 +58,49 @@ const useStyles = makeStyles(() => ({
     '&:last-child': {
       textAlign: 'right',
     },
+    '&.narrow': { width: '10% !important' },
+  },
+  offeringSummary: {
+    '&.offerToken': { width: '10%' },
+    '&.purchaseToken': { width: '10%' },
+    '&.tokensSold': { width: '15%' },
+    '&.amountsRaised': { width: '15%' },
+    '&.vestingPeriod': { width: '10%' },
+    '&.cliffPeriod': { width: '10%' },
+    '&.salesCompleted': { width: '10%' },
+    '&.timeSinceCompleted': { width: '11%' },
+    '&+&': { paddingLeft: 16 },
+    '&:last-child': {
+      textAlign: 'right',
+    },
   },
 }))
 
 interface IProps {
   label: OriginationLabels
-  type: OfferingOverview | WhitelistSale | PublicSale | MyPosition
+  type:
+    | OfferingOverview
+    | WhitelistSale
+    | PublicSale
+    | MyPosition
+    | OfferingSummary
   children: React.ReactNode | React.ReactNode[]
+  isVestedPropertiesShow?: boolean
 }
 
-export const Td = ({ type, label, children }: IProps) => {
+export const Td = ({
+  type,
+  label,
+  children,
+  isVestedPropertiesShow,
+}: IProps) => {
   const cl = useStyles()
 
-  return <div className={clsx(cl[label], type)}>{children}</div>
+  return (
+    <div
+      className={clsx(cl[label], type, [!isVestedPropertiesShow && 'narrow'])}
+    >
+      {children}
+    </div>
+  )
 }

@@ -11,6 +11,7 @@ import {
 import {
   IMyPosition,
   IOfferingOverview,
+  IOfferingSummary,
   IPublicSale,
   IWhitelistSale,
 } from 'types'
@@ -109,11 +110,21 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  item: IOfferingOverview | IWhitelistSale | IPublicSale | IMyPosition
+  item:
+    | IOfferingOverview
+    | IWhitelistSale
+    | IPublicSale
+    | IMyPosition
+    | IOfferingSummary
   toggleModal?: () => void
+  isVestedPropertiesShow?: boolean
 }
 
-export const TableRow = ({ item, toggleModal }: IProps) => {
+export const TableRow = ({
+  item,
+  toggleModal,
+  isVestedPropertiesShow,
+}: IProps) => {
   const cl = useStyles()
 
   const renderContent = () => {
@@ -193,13 +204,11 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
           </Td>
           <Td type={OfferingOverview.SalesBegin} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.salesBegin.isZero() ? (
-                <Button className={cl.button} onClick={toggleModal}>
-                  <Typography className={cl.text}>INITIATE SALE</Typography>
-                </Button>
-              ) : (
-                moment.unix(item.salesBegin.toNumber()).format('MMM DD[,] YYYY')
-              )}
+              {item.salesBegin.isZero()
+                ? 'Not started'
+                : moment
+                    .unix(item.salesBegin.toNumber())
+                    .format('MMM DD[,] YYYY')}
             </Typography>
           </Td>
           <Td type={OfferingOverview.SalesEnd} label={item.label}>
@@ -259,7 +268,7 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
 
             <Td type={WhitelistSale.Whitelist} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {item.whitelist ? 'SET' : 'NOT SET'}
+                {item.whitelist ? 'Set' : 'Not Set'}
               </Typography>
             </Td>
 
@@ -343,7 +352,11 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
       item = myPosition
       return (
         <div className={cl.content}>
-          <Td type={MyPosition.TokenPurchased} label={item.label}>
+          <Td
+            type={MyPosition.TokenPurchased}
+            label={item.label}
+            isVestedPropertiesShow={isVestedPropertiesShow}
+          >
             <Typography className={clsx(cl.item, cl.label)}>
               {numberWithCommas(item.tokenPurchased.toString())}{' '}
               {item.offerToken.symbol}
@@ -355,21 +368,22 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
               {item.purchaseToken.symbol}
             </Typography>
           </Td>
-          <Td type={MyPosition.Amountvested} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label)}>
-              {numberWithCommas(item.amountvested.toString())}{' '}
-              {item.offerToken.symbol}
-            </Typography>
-          </Td>
-          <Td type={MyPosition.AmountAvailableToVest} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label)}>
-              {numberWithCommas(item.amountAvailableToVest.toString())}{' '}
-              {item.offerToken.symbol}
-            </Typography>
-          </Td>
-          <Button className={cl.button} onClick={toggleModal}>
-            <Typography className={cl.text}>CLAIM</Typography>
-          </Button>
+          {isVestedPropertiesShow && (
+            <>
+              <Td type={MyPosition.Amountvested} label={item.label}>
+                <Typography className={clsx(cl.item, cl.label)}>
+                  {numberWithCommas(item.amountvested.toString())}{' '}
+                  {item.offerToken.symbol}
+                </Typography>
+              </Td>
+              <Td type={MyPosition.AmountAvailableToVest} label={item.label}>
+                <Typography className={clsx(cl.item, cl.label)}>
+                  {numberWithCommas(item.amountAvailableToVest.toString())}{' '}
+                  {item.offerToken.symbol}
+                </Typography>
+              </Td>
+            </>
+          )}
         </div>
       )
     }

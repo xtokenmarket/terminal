@@ -62,9 +62,17 @@ interface IProps {
   item: OriginationDetailItem
   label: string
   toggleModal?: () => void
+  isOwnerOrManager?: boolean
+  isVestedPropertiesShow?: boolean
 }
 
-export const Table = ({ item, label, toggleModal }: IProps) => {
+export const Table = ({
+  item,
+  label,
+  toggleModal,
+  isOwnerOrManager,
+  isVestedPropertiesShow,
+}: IProps) => {
   const [saleInitiated, setSaleInitiated] = useState(false)
   const { account, library: provider } = useConnectedWeb3Context()
   const { poolAddress } = useParams<{ poolAddress: string }>()
@@ -81,36 +89,63 @@ export const Table = ({ item, label, toggleModal }: IProps) => {
   }, [account, provider, poolAddress])
   const cl = useStyles()
 
+  const renderLabel = (label: string) => {
+    switch (label) {
+      case 'Whitelist Sale':
+        return (
+          <div className={cl.labelWrapper}>
+            <Typography className={cl.label}>{label}</Typography>
+            {isOwnerOrManager && (
+              <Tooltip
+                arrow
+                title={saleInitiated ? '' : 'Sale should be initiated'}
+                placement="top"
+              >
+                <span>
+                  <Button
+                    className={cl.button}
+                    disabled={!saleInitiated}
+                    onClick={() => {
+                      toggleModal && toggleModal()
+                    }}
+                  >
+                    <Typography className={cl.text}>SET WHITELIST</Typography>
+                  </Button>
+                </span>
+              </Tooltip>
+            )}
+          </div>
+        )
+      case 'Offering Overview':
+        return (
+          <div className={cl.labelWrapper}>
+            <Typography className={cl.label}>{label}</Typography>
+            {isOwnerOrManager && (
+              <Button className={cl.button} onClick={toggleModal}>
+                <Typography className={cl.text}>INITIATE SALE</Typography>
+              </Button>
+            )}
+          </div>
+        )
+      default:
+        return <Typography className={cl.label}>{label}</Typography>
+    }
+  }
+
   return (
     <>
-      {label === 'Whitelist Sale' ? (
-        <div className={cl.labelWrapper}>
-          <Typography className={cl.label}>{label}</Typography>
-          <Tooltip
-            arrow
-            title={saleInitiated ? '' : 'Sale should be initiated'}
-            placement="top"
-          >
-            <span>
-              <Button
-                className={cl.button}
-                disabled={!saleInitiated}
-                onClick={() => {
-                  toggleModal && toggleModal()
-                }}
-              >
-                <Typography className={cl.text}>SET WHITELIST</Typography>
-              </Button>
-            </span>
-          </Tooltip>
-        </div>
-      ) : (
-        <Typography className={cl.label}>{label}</Typography>
-      )}
+      {renderLabel(label)}
       <div className={cl.content}>
-        <TableHeader label={item.label} />
+        <TableHeader
+          label={item.label}
+          isVestedPropertiesShow={isVestedPropertiesShow}
+        />
         <div>
-          <TableRow item={item} toggleModal={toggleModal} />
+          <TableRow
+            item={item}
+            toggleModal={toggleModal}
+            isVestedPropertiesShow={isVestedPropertiesShow}
+          />
         </div>
       </div>
     </>

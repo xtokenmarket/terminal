@@ -11,6 +11,7 @@ import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
 import { ClaimModal } from './components/ClaimModal'
 import { VestModal } from './components/VestModal'
+import { getCurrentTimeStamp, getRemainingTimeSec } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -127,6 +128,25 @@ const TokenSaleDetails = () => {
     }))
   }
 
+  // TODO: user own at least 1 vesting entry nft
+  const isVestButtonShow = () => {
+    if (!tokenOffer) return false
+    const now = BigNumber.from(getCurrentTimeStamp())
+    const cliffPeriodEnd = tokenOffer?.offeringOverview.salesEnd.add(
+      tokenOffer.offeringOverview.cliffPeriod
+    )
+    const isTimeForVest = now.gt(cliffPeriodEnd)
+    return tokenOffer?.myPosition.amountvested.gt(0) && isTimeForVest
+  }
+
+  const isWhitelistSaleConfigured =
+    tokenOffer?.whitelist.startingPrice &&
+    tokenOffer?.whitelist.startingPrice.gt(0)
+
+  const isSaleCompleted =
+    tokenOffer &&
+    getRemainingTimeSec(tokenOffer?.offeringOverview.salesEnd).isZero()
+
   return (
     <PageWrapper>
       <PageHeader
@@ -149,36 +169,55 @@ const TokenSaleDetails = () => {
               item={tokenOffer.offeringOverview}
               label={'Offering Overview'}
               toggleModal={toggleInitiateSaleModal}
+              isOwnerOrManager={tokenOffer.offeringOverview.isOwnerOrManager}
             />
-            <Table
-              item={tokenOffer.whitelist}
-              label={'Whitelist Sale'}
-              toggleModal={toggleSetWhitelistModal}
-            />
-            <Button
-              className={cl.button}
-              onClick={() => {
-                console.log('onClick')
-              }}
-            >
-              <Typography className={cl.text}>INVEST</Typography>
-            </Button>
-            <Table item={tokenOffer.publicSale} label={'Public Sale'} />
-            <Button
-              className={cl.button}
-              onClick={() => {
-                console.log('onClick')
-              }}
-            >
-              <Typography className={cl.text}>INVEST</Typography>
-            </Button>
+            {isWhitelistSaleConfigured && (
+              <>
+                <Table
+                  item={tokenOffer.whitelist}
+                  label={'Whitelist Sale'}
+                  toggleModal={toggleSetWhitelistModal}
+                  isOwnerOrManager={
+                    tokenOffer.offeringOverview.isOwnerOrManager
+                  }
+                />
+                <Button
+                  className={cl.button}
+                  onClick={() => {
+                    console.log('onClick')
+                  }}
+                >
+                  <Typography className={cl.text}>INVEST</Typography>
+                </Button>
+              </>
+            )}
+
+            {!isSaleCompleted && (
+              <>
+                <Table item={tokenOffer.publicSale} label={'Public Sale'} />
+                <Button
+                  className={cl.button}
+                  onClick={() => {
+                    console.log('onClick')
+                  }}
+                >
+                  <Typography className={cl.text}>INVEST</Typography>
+                </Button>
+              </>
+            )}
             <Table
               item={tokenOffer.myPosition}
               label={'My Position'}
               toggleModal={toggleClaimModal}
+              isVestedPropertiesShow={isVestButtonShow()}
             />
-            <Button className={cl.button} onClick={toggleVestModal}>
-              <Typography className={cl.text}>VEST</Typography>
+            {isVestButtonShow() && (
+              <Button className={cl.button} onClick={toggleVestModal}>
+                <Typography className={cl.text}>VEST</Typography>
+              </Button>
+            )}
+            <Button className={cl.button} onClick={toggleClaimModal}>
+              <Typography className={cl.text}>CLAIM</Typography>
             </Button>
             <InitiateSaleModal
               offerData={tokenOffer.offeringOverview}
