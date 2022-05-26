@@ -57,8 +57,7 @@ const useStyles = makeStyles(() => ({
     '&:last-child': {
       textAlign: 'right',
     },
-    '&.tokenPurchasedNarrow': { width: '10%' },
-    '&.amountInvestedNarrow': { width: '10%' },
+    '&.narrow': { width: '10% !important' },
   },
 }))
 
@@ -79,10 +78,7 @@ export const Td = ({
 
   return (
     <div
-      className={clsx(
-        cl[label],
-        `${type}${isVestedPropertiesShow && 'Narrow'}`
-      )}
+      className={clsx(cl[label], type, [!isVestedPropertiesShow && 'narrow'])}
     >
       {children}
     </div>
