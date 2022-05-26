@@ -212,6 +212,7 @@ export interface ITokenOffer {
   whitelist: IWhitelistSale
   publicSale: IPublicSale
   myPosition: IMyPosition
+  offeringSummary: IOfferingSummary
 }
 
 interface Label {
@@ -272,11 +273,23 @@ export interface IMyPosition extends Label {
   vestableTokenAmount: BigNumber
 }
 
+export interface IOfferingSummary extends Label {
+  offerToken: IToken
+  purchaseToken: IToken
+  tokensSold: BigNumber
+  amountsRaised: BigNumber
+  vestingPeriod: BigNumber
+  cliffPeriod: BigNumber
+  salesCompleted: BigNumber
+  timeSinceCompleted: BigNumber
+}
+
 export type OriginationDetailItem =
   | IOfferingOverview
   | IWhitelistSale
   | IPublicSale
   | IMyPosition
+  | IOfferingSummary
 
 export interface IClaimData {
   token: IToken
