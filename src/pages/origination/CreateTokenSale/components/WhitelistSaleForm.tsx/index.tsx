@@ -31,13 +31,21 @@ export const WhitelistSaleForm: React.FC<IProps> = ({
   onNext,
 }) => {
   const { whitelistSale } = data
-  const { pricingFormula, startingPrice, endingPrice } = whitelistSale
+  const {
+    pricingFormula,
+    startingPrice,
+    endingPrice,
+    offeringPeriod,
+    offeringPeriodUnit,
+  } = whitelistSale
   const isNextBtnDisabled =
     (whitelistSale.enabled == undefined || !!whitelistSale.enabled) &&
     !(
       pricingFormula &&
       startingPrice &&
       endingPrice &&
+      offeringPeriod &&
+      offeringPeriodUnit &&
       validPricingDetailsSet(
         pricingFormula,
         Number(startingPrice),
