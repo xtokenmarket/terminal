@@ -63,6 +63,7 @@ interface IProps {
   label: string
   toggleModal?: () => void
   isOwnerOrManager?: boolean
+  isVestedPropertiesShow?: boolean
 }
 
 export const Table = ({
@@ -70,6 +71,7 @@ export const Table = ({
   label,
   toggleModal,
   isOwnerOrManager,
+  isVestedPropertiesShow,
 }: IProps) => {
   const [saleInitiated, setSaleInitiated] = useState(false)
   const { account, library: provider } = useConnectedWeb3Context()
@@ -134,9 +136,16 @@ export const Table = ({
     <>
       {renderLabel(label)}
       <div className={cl.content}>
-        <TableHeader label={item.label} />
+        <TableHeader
+          label={item.label}
+          isVestedPropertiesShow={isVestedPropertiesShow}
+        />
         <div>
-          <TableRow item={item} toggleModal={toggleModal} />
+          <TableRow
+            item={item}
+            toggleModal={toggleModal}
+            isVestedPropertiesShow={isVestedPropertiesShow}
+          />
         </div>
       </div>
     </>
