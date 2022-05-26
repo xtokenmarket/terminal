@@ -145,6 +145,7 @@ const TokenSaleDetails = () => {
 
   const isSaleCompleted =
     tokenOffer &&
+    !tokenOffer.offeringOverview.salesBegin.isZero() &&
     getRemainingTimeSec(tokenOffer?.offeringOverview.salesEnd).isZero()
 
   return (
@@ -165,12 +166,19 @@ const TokenSaleDetails = () => {
               onClose={onClose}
               onSuccess={onSuccess}
             />
-            <Table
-              item={tokenOffer.offeringOverview}
-              label={'Offering Overview'}
-              toggleModal={toggleInitiateSaleModal}
-              isOwnerOrManager={tokenOffer.offeringOverview.isOwnerOrManager}
-            />
+            {isSaleCompleted ? (
+              <Table
+                item={tokenOffer.offeringSummary}
+                label={'Offering Summary'}
+              />
+            ) : (
+              <Table
+                item={tokenOffer.offeringOverview}
+                label={'Offering Overview'}
+                toggleModal={toggleInitiateSaleModal}
+                isOwnerOrManager={tokenOffer.offeringOverview.isOwnerOrManager}
+              />
+            )}
             {isWhitelistSaleConfigured && (
               <>
                 <Table
