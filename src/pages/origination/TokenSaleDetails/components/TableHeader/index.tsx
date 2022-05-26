@@ -142,5 +142,36 @@ export const TableHeader = (props: IProps) => {
     )
   }
 
+  if (props.label === OriginationLabels.OfferingSummary) {
+    return (
+      <div className={classes.root}>
+        <Td type={OfferingOverview.OfferToken} label={props.label}>
+          <div className={classes.item}>Offer Token</div>
+        </Td>
+        <Td type={OfferingOverview.PurchaseToken} label={props.label}>
+          <div className={classes.item}>Purchase Token</div>
+        </Td>
+        <Td type={OfferingOverview.OfferingStatus} label={props.label}>
+          <div className={classes.item}>Tokens Sold</div>
+        </Td>
+        <Td type={OfferingOverview.OfferingReserve} label={props.label}>
+          <div className={classes.item}>Amounts Raised</div>
+        </Td>
+        <Td type={OfferingOverview.VestingPeriod} label={props.label}>
+          <div className={classes.item}>Vesting Period</div>
+        </Td>
+        <Td type={OfferingOverview.CliffPeriod} label={props.label}>
+          <div className={classes.item}>Cliff Period</div>
+        </Td>
+        <Td type={OfferingOverview.SalesBegin} label={props.label}>
+          <div className={classes.item}>Sales Completed</div>
+        </Td>
+        <Td type={OfferingOverview.SalesEnd} label={props.label}>
+          <div className={classes.item}>Time Since Completed</div>
+        </Td>
+      </div>
+    )
+  }
+
   return <></>
 }

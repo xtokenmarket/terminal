@@ -4,6 +4,7 @@ import { Td } from '../Td'
 import {
   MyPosition,
   OfferingOverview,
+  OfferingSummary,
   OriginationLabels,
   PublicSale,
   WhitelistSale,
@@ -132,6 +133,7 @@ export const TableRow = ({
     const whitelistSale = item as IWhitelistSale
     const publicSale = item as IPublicSale
     const myPosition = item as IMyPosition
+    const offeringSummary = item as IOfferingSummary
 
     if (item.label === OriginationLabels.OfferingOverview) {
       item = offeringOverview
@@ -384,6 +386,81 @@ export const TableRow = ({
               </Td>
             </>
           )}
+        </div>
+      )
+    }
+
+    if (item.label === OriginationLabels.OfferingSummary) {
+      item = offeringSummary
+      return (
+        <div className={cl.content}>
+          <Td type={OfferingSummary.OfferToken} label={item.label}>
+            <div className={cl.item}>
+              <img
+                alt="offerToken"
+                className={cl.tokenIcon}
+                src={item.offerToken.image}
+              />
+              <Typography className={cl.symbol}>
+                {item.offerToken.symbol}
+              </Typography>
+            </div>
+          </Td>
+
+          <Td type={OfferingSummary.PurchaseToken} label={item.label}>
+            <div className={cl.item}>
+              <img
+                alt="purchaseToken"
+                className={cl.tokenIcon}
+                src={item.purchaseToken.image}
+              />
+              <Typography className={cl.symbol}>
+                {item.purchaseToken.symbol}
+              </Typography>
+            </div>
+          </Td>
+
+          <Td type={OfferingSummary.TokensSold} label={item.label}>
+            <div className={cl.item}>
+              {formatBigNumber(item.tokensSold, item.offerToken.decimals)}
+              <Typography className={cl.symbol}>
+                {item.offerToken.symbol}
+              </Typography>
+            </div>
+          </Td>
+          <Td type={OfferingSummary.AmountsRaised} label={item.label}>
+            <div className={cl.item}>
+              <Typography>
+                {formatBigNumber(item.amountsRaised, item.offerToken.decimals)}
+              </Typography>
+              <Typography className={cl.symbol}>
+                {item.offerToken.symbol}
+              </Typography>
+            </div>
+          </Td>
+
+          <Td type={OfferingSummary.VestingPeriod} label={item.label}>
+            <Typography className={clsx(cl.item, cl.label)}>
+              {parseDurationSec(item.vestingPeriod.toNumber())}
+            </Typography>
+          </Td>
+          <Td type={OfferingSummary.CliffPeriod} label={item.label}>
+            <Typography className={clsx(cl.item, cl.label)}>
+              {parseDurationSec(item.cliffPeriod.toNumber())}
+            </Typography>
+          </Td>
+          <Td type={OfferingSummary.SalesCompleted} label={item.label}>
+            <Typography className={clsx(cl.item, cl.label)}>
+              {moment
+                .unix(item.salesCompleted.toNumber())
+                .format('MMM DD[,] YYYY')}
+            </Typography>
+          </Td>
+          <Td type={OfferingSummary.TimeSinceCompleted} label={item.label}>
+            <Typography className={clsx(cl.item, cl.label, cl.itemAlignRight)}>
+              {parseDurationSec(Number(item.timeSinceCompleted.toString()))}
+            </Typography>
+          </Td>
         </div>
       )
     }
