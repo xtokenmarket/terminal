@@ -96,6 +96,7 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         getOfferTokenPrice,
         publicEndingPrice,
         vestableTokenAmount,
+        purchaseTokensAcquired,
       } = _offerData as ITokenOfferDetails
 
       const offeringOverview = {
@@ -192,7 +193,7 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         offerToken: token0,
         purchaseToken: token1 || ETH,
         tokensSold: offerTokenAmountSold,
-        amountsRaised: offerTokenAmountSold,
+        amountsRaised: purchaseTokensAcquired,
         vestingPeriod,
         cliffPeriod,
         salesCompleted: saleEndTimestamp,
