@@ -14,7 +14,13 @@ export const PublicSaleForm: React.FC<IProps> = ({
   onNext,
 }) => {
   const { publicSale, whitelistSale } = data
-  const { pricingFormula, startingPrice, endingPrice } = publicSale
+  const {
+    pricingFormula,
+    startingPrice,
+    endingPrice,
+    offeringPeriod,
+    offeringPeriodUnit,
+  } = publicSale
   const isNextBtnDisabled =
     (!whitelistSale.enabled && !publicSale.enabled) ||
     (!!publicSale.enabled &&
@@ -22,6 +28,8 @@ export const PublicSaleForm: React.FC<IProps> = ({
         pricingFormula &&
         startingPrice &&
         endingPrice &&
+        offeringPeriod &&
+        offeringPeriodUnit &&
         validPricingDetailsSet(
           pricingFormula,
           Number(startingPrice),

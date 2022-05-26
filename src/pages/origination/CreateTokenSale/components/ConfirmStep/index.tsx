@@ -1,28 +1,34 @@
 import { useState } from 'react'
 import { Button, Grid, Typography, makeStyles } from '@material-ui/core'
+import clsx from 'clsx'
 import { ICreateTokenSaleData } from 'types'
 import { CreateTokenSaleModal } from '../CreateTokenSaleModal'
 import { PricingFormulaTable } from '../PricingFormulaTable'
+import { getDurationSec, parseDurationSec } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   label: {
     color: theme.colors.white,
     marginBottom: theme.spacing(2),
+    fontWeight: 700,
+    fontSize: 18,
   },
   editWrapper: {
     borderRadius: 4,
-    backgroundColor: theme.colors.primary400,
-    padding: theme.spacing(2),
+    backgroundColor: theme.colors.primary600,
+    padding: '16px 32px 36px 32px',
+    marginRight: 6,
   },
-  logos: {
+  tokenLogo: {
     display: 'flex',
     lineHeight: '48px',
     verticalAlign: 'middle',
+    marginBottom: 20,
   },
   tokenIcon: {
     width: 48,
     height: 48,
-    border: `6px solid ${theme.colors.primary400}`,
+    marginRight: theme.spacing(1),
     position: 'relative',
     borderRadius: '50%',
     '&+&': {
@@ -31,13 +37,12 @@ const useStyles = makeStyles((theme) => ({
   },
   tokenSymbols: {
     color: theme.colors.white,
-    fontSize: 22,
+    fontSize: 28,
     fontWeight: 700,
     lineHeight: '48px',
   },
   detailsWrapper: {
-    marginTop: 38,
-    marginBottom: theme.spacing(1),
+    marginTop: 10,
     [theme.breakpoints.up('sm')]: {
       display: 'flex',
       justifyContent: 'space-between',
@@ -64,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
       margin: 0,
       fontSize: 14,
       fontWeight: 700,
-      marginBottom: 5,
+      marginBottom: 4,
     },
 
     '& .data': {
@@ -84,6 +89,16 @@ const useStyles = makeStyles((theme) => ({
   nextButton: {
     marginTop: 'auto',
   },
+  invisible: {
+    visibility: 'hidden',
+  },
+  whitelistSaleSummary: {
+    marginBottom: theme.spacing(3),
+  },
+  editBtn: {
+    marginTop: theme.spacing(3.3),
+    border: `1px solid ${theme.colors.primary200}`,
+  },
 }))
 
 interface IProps {
@@ -93,11 +108,25 @@ interface IProps {
 }
 
 export const ConfirmStep: React.FC<IProps> = ({ data, onEdit }) => {
+  const { offerToken } = data
   const classes = useStyles()
   const [isSellTokenModalVisible, setIsSellTokenModalVisible] = useState(false)
 
   const toggleSellTokenModal = () =>
     setIsSellTokenModalVisible((prevState) => !prevState)
+
+  const getOfferingPeriod = () => {
+    const whitelistSaleSec = getDurationSec(
+      Number(data.whitelistSale.offeringPeriod || 0),
+      data.whitelistSale.offeringPeriodUnit.toString()
+    ).toNumber()
+    const publicSaleSec = getDurationSec(
+      Number(data.publicSale.offeringPeriod || 0),
+      data.publicSale.offeringPeriodUnit.toString()
+    ).toNumber()
+
+    return parseDurationSec(whitelistSaleSec + publicSaleSec)
+  }
 
   return (
     <>
@@ -105,53 +134,69 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit }) => {
         <Grid item xs={12} md={6}>
           <div className={classes.editWrapper}>
             <Grid item xs={12}>
-              <div className={classes.logos}>
-                {[data.offerToken?.image, data.purchaseToken?.image].map(
-                  (img, index) => (
-                    <img
-                      className={classes.tokenIcon}
-                      src={img}
-                      key={`${img}-${index}`}
-                    />
-                  )
-                )}
+              <div className={classes.tokenLogo}>
+                <img className={classes.tokenIcon} src={offerToken?.image} />
                 <Typography className={classes.tokenSymbols}>
-                  {`${data.offerToken?.symbol.toUpperCase()}/${data.purchaseToken?.symbol.toUpperCase()}`}
+                  {offerToken?.symbol.toUpperCase()}
                 </Typography>
               </div>
               <Grid container className={classes.detailsWrapper}>
                 <Grid item xs={12} sm={3} className={classes.section}>
                   <div className="content">
                     <p className="title">Offer token amount</p>
-                    <p className="data">{data.offerTokenAmount}</p>
-                    <p className="description">{`${data.offerToken?.symbol} per ${data.purchaseToken?.symbol}`}</p>
+                    <p className="data">
+                      {data.offerTokenAmount} {offerToken?.symbol.toUpperCase()}
+                    </p>
                   </div>
                 </Grid>
                 <span className="separator" />
                 <Grid item xs={12} sm={4} className={classes.section}>
                   <div className="content">
-                    <p className="title">Reserve offer token amount</p>
-                    <p className="data">{data.reserveOfferTokenAmount}</p>
-                    <p className="description">{`${data.offerToken?.symbol} per ${data.purchaseToken?.symbol}`}</p>
+                    <p className="title">Reserve amount</p>
+                    <p className="data">
+                      {data.reserveOfferTokenAmount}{' '}
+                      {offerToken?.symbol.toUpperCase()}
+                    </p>
                   </div>
                 </Grid>
                 <span className="separator" />
                 <Grid item xs={12} sm={3} className={classes.section}>
                   <div className="content">
                     <p className="title">Offering Period</p>
-                    <p className="data">
-                      {data.publicSale.offeringPeriod}{' '}
-                      {data.publicSale.offeringPeriodUnit}
-                    </p>
+                    <p className="data">{getOfferingPeriod()}</p>
                   </div>
                 </Grid>
               </Grid>
+              {data.vestingPeriod && (
+                <Grid container className={classes.detailsWrapper}>
+                  <Grid item xs={12} sm={3} className={classes.section}>
+                    <div className="content">
+                      <p className="title">Vesting Period</p>
+                      <p className="data">
+                        {data.vestingPeriod} {data.vestingPeriodUnit}
+                      </p>
+                    </div>
+                  </Grid>
+                  <span className="separator" />
+                  <Grid item xs={12} sm={4} className={classes.section}>
+                    <div className="content">
+                      <p className="title">Cliff Period</p>
+                      <p className="data">
+                        {data.cliffPeriod} {data.cliffPeriodUnit}
+                      </p>
+                    </div>
+                  </Grid>
+                  <span className={clsx('separator', classes.invisible)} />
+                  <Grid item xs={12} sm={3} className={classes.section}></Grid>
+                </Grid>
+              )}
 
               <Button
                 color="secondary"
                 fullWidth
                 onClick={onEdit}
                 variant="contained"
+                className={classes.editBtn}
               >
                 EDIT
               </Button>
@@ -160,10 +205,29 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit }) => {
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <Typography className={classes.label}>
-            Standard Pricing Formula
-          </Typography>
-          <PricingFormulaTable data={data} />
+          {data.whitelistSale.enabled && offerToken && (
+            <div className={classes.whitelistSaleSummary}>
+              <Typography className={classes.label}>
+                Whitelist Sale Summary
+              </Typography>
+              <PricingFormulaTable
+                saleData={data.whitelistSale}
+                offerToken={offerToken}
+              />
+            </div>
+          )}
+
+          {data.publicSale.enabled && offerToken && (
+            <>
+              <Typography className={classes.label}>
+                Public Sale Summary
+              </Typography>
+              <PricingFormulaTable
+                saleData={data.publicSale}
+                offerToken={offerToken}
+              />
+            </>
+          )}
         </Grid>
       </Grid>
 
