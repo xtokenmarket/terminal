@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   label: string
+  isVestedPropertiesShow?: boolean
 }
 
 export const TableHeader = (props: IProps) => {
@@ -127,12 +128,16 @@ export const TableHeader = (props: IProps) => {
         <Td type={MyPosition.AmountInvested} label={props.label}>
           <div className={classes.item}>Amount Invested</div>
         </Td>
-        <Td type={MyPosition.Amountvested} label={props.label}>
-          <div className={classes.item}>Amount Vested</div>
-        </Td>
-        <Td type={MyPosition.AmountAvailableToVest} label={props.label}>
-          <div className={classes.item}>Amount Available To Vest</div>
-        </Td>
+        {props.isVestedPropertiesShow && (
+          <>
+            <Td type={MyPosition.Amountvested} label={props.label}>
+              <div className={classes.item}>Amount Vested</div>
+            </Td>
+            <Td type={MyPosition.AmountAvailableToVest} label={props.label}>
+              <div className={classes.item}>Amount Available To Vest</div>
+            </Td>
+          </>
+        )}
       </div>
     )
   }

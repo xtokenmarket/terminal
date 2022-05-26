@@ -204,6 +204,7 @@ const TokenSaleDetails = () => {
               item={tokenOffer.myPosition}
               label={'My Position'}
               toggleModal={toggleClaimModal}
+              isVestedPropertiesShow={isVestButtonShow()}
             />
             {isVestButtonShow() && (
               <Button className={cl.button} onClick={toggleVestModal}>

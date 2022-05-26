@@ -111,9 +111,14 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   item: IOfferingOverview | IWhitelistSale | IPublicSale | IMyPosition
   toggleModal?: () => void
+  isVestedPropertiesShow?: boolean
 }
 
-export const TableRow = ({ item, toggleModal }: IProps) => {
+export const TableRow = ({
+  item,
+  toggleModal,
+  isVestedPropertiesShow,
+}: IProps) => {
   const cl = useStyles()
 
   const renderContent = () => {
@@ -341,7 +346,11 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
       item = myPosition
       return (
         <div className={cl.content}>
-          <Td type={MyPosition.TokenPurchased} label={item.label}>
+          <Td
+            type={MyPosition.TokenPurchased}
+            label={item.label}
+            isVestedPropertiesShow={isVestedPropertiesShow}
+          >
             <Typography className={clsx(cl.item, cl.label)}>
               {numberWithCommas(item.tokenPurchased.toString())}{' '}
               {item.offerToken.symbol}
@@ -353,18 +362,22 @@ export const TableRow = ({ item, toggleModal }: IProps) => {
               {item.purchaseToken.symbol}
             </Typography>
           </Td>
-          <Td type={MyPosition.Amountvested} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label)}>
-              {numberWithCommas(item.amountvested.toString())}{' '}
-              {item.offerToken.symbol}
-            </Typography>
-          </Td>
-          <Td type={MyPosition.AmountAvailableToVest} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label)}>
-              {numberWithCommas(item.amountAvailableToVest.toString())}{' '}
-              {item.offerToken.symbol}
-            </Typography>
-          </Td>
+          {isVestedPropertiesShow && (
+            <>
+              <Td type={MyPosition.Amountvested} label={item.label}>
+                <Typography className={clsx(cl.item, cl.label)}>
+                  {numberWithCommas(item.amountvested.toString())}{' '}
+                  {item.offerToken.symbol}
+                </Typography>
+              </Td>
+              <Td type={MyPosition.AmountAvailableToVest} label={item.label}>
+                <Typography className={clsx(cl.item, cl.label)}>
+                  {numberWithCommas(item.amountAvailableToVest.toString())}{' '}
+                  {item.offerToken.symbol}
+                </Typography>
+              </Td>
+            </>
+          )}
         </div>
       )
     }
