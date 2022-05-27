@@ -12,6 +12,7 @@ import { Table } from './components/Table'
 import { ClaimModal } from './components/ClaimModal'
 import { VestModal } from './components/VestModal'
 import { getCurrentTimeStamp, getRemainingTimeSec } from 'utils'
+import clsx from 'clsx'
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -39,6 +40,9 @@ const useStyles = makeStyles((theme) => ({
     '&::-webkit-scrollbar-thumb': {
       backgroundColor: theme.colors.primary,
     },
+  },
+  marginLeft: {
+    marginLeft: 10,
   },
 }))
 
@@ -128,16 +132,20 @@ const TokenSaleDetails = () => {
     }))
   }
 
-  // TODO: user own at least 1 vesting entry nft
-  const isVestButtonShow = () => {
+  const isCliffPeriodPassed = () => {
     if (!tokenOffer) return false
     const now = BigNumber.from(getCurrentTimeStamp())
     const cliffPeriodEnd = tokenOffer?.offeringOverview.salesEnd.add(
       tokenOffer.offeringOverview.cliffPeriod
     )
-    const isTimeForVest = now.gt(cliffPeriodEnd)
-    return tokenOffer?.myPosition.amountvested.gt(0) && isTimeForVest
+    return now.gt(cliffPeriodEnd)
   }
+
+  // TODO: user own at least 1 vesting entry nft
+  const isVestButtonShow =
+    tokenOffer &&
+    tokenOffer?.myPosition.amountvested.gt(0) &&
+    isCliffPeriodPassed()
 
   const isWhitelistSaleConfigured =
     tokenOffer &&
@@ -155,6 +163,11 @@ const TokenSaleDetails = () => {
     tokenOffer.offeringOverview.offeringReserve.gt(
       tokenOffer.offeringSummary.amountsRaised
     )
+
+  const isClaimButtonShow =
+    tokenOffer &&
+    tokenOffer.myPosition.tokenPurchased.gt(0) &&
+    isCliffPeriodPassed()
 
   return (
     <PageWrapper>
@@ -226,16 +239,21 @@ const TokenSaleDetails = () => {
               item={tokenOffer.myPosition}
               label={'My Position'}
               toggleModal={toggleClaimModal}
-              isVestedPropertiesShow={isVestButtonShow()}
+              isVestedPropertiesShow={isVestButtonShow}
             />
-            {isVestButtonShow() && (
-              <Button className={cl.button} onClick={toggleVestModal}>
+            {isVestButtonShow && (
+              <Button
+                className={clsx(cl.button, cl.marginLeft)}
+                onClick={toggleVestModal}
+              >
                 <Typography className={cl.text}>VEST</Typography>
               </Button>
             )}
-            <Button className={cl.button} onClick={toggleClaimModal}>
-              <Typography className={cl.text}>CLAIM</Typography>
-            </Button>
+            {isClaimButtonShow && (
+              <Button className={cl.button} onClick={toggleClaimModal}>
+                <Typography className={cl.text}>CLAIM</Typography>
+              </Button>
+            )}
             <InitiateSaleModal
               offerData={tokenOffer.offeringOverview}
               onClose={toggleInitiateSaleModal}
