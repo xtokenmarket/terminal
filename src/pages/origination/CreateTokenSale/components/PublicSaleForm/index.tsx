@@ -1,6 +1,7 @@
 import { ICreateTokenSaleData, SaleData } from 'types'
 import { validPricingDetailsSet } from '../WhitelistSaleForm.tsx'
 import { SaleForm } from '../SaleForm'
+import { ETokenSalePhase } from 'utils/enums'
 
 interface IProps {
   data: ICreateTokenSaleData
@@ -14,7 +15,13 @@ export const PublicSaleForm: React.FC<IProps> = ({
   onNext,
 }) => {
   const { publicSale, whitelistSale } = data
-  const { pricingFormula, startingPrice, endingPrice } = publicSale
+  const {
+    pricingFormula,
+    startingPrice,
+    endingPrice,
+    offeringPeriod,
+    offeringPeriodUnit,
+  } = publicSale
   const isNextBtnDisabled =
     (!whitelistSale.enabled && !publicSale.enabled) ||
     (!!publicSale.enabled &&
@@ -22,6 +29,8 @@ export const PublicSaleForm: React.FC<IProps> = ({
         pricingFormula &&
         startingPrice &&
         endingPrice &&
+        offeringPeriod &&
+        offeringPeriodUnit &&
         validPricingDetailsSet(
           pricingFormula,
           Number(startingPrice),
@@ -31,6 +40,7 @@ export const PublicSaleForm: React.FC<IProps> = ({
 
   return (
     <SaleForm
+      tokenSalePhase={ETokenSalePhase.Public}
       purchaseToken={data.purchaseToken}
       offerToken={data.offerToken}
       saleData={data.publicSale}
