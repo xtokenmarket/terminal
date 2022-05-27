@@ -6,6 +6,7 @@ import {
   knownTokens,
   getTokenFromAddress,
   getContractAddress,
+  getNetworkProvider,
 } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import { useNetworkContext } from 'contexts/networkContext'
@@ -13,10 +14,11 @@ import { useServices } from 'helpers'
 import { Network, OriginationLabels } from 'utils/enums'
 import { getOffersDataMulticall, ITokenOfferDetails } from './helper'
 import { IToken, ITokenOffer } from 'types'
-import { FungiblePoolService } from 'services'
+import { ERC20Service, FungiblePoolService } from 'services'
 import { getCurrentTimeStamp, getRemainingTimeSec } from 'utils'
 import { NULL_ADDRESS_WHITELIST, ORIGINATION_API_URL } from 'config/constants'
 import { ZERO } from 'utils/number'
+import { getIdFromNetwork } from 'utils/network'
 
 interface IState {
   tokenOffer?: ITokenOffer
@@ -29,6 +31,28 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
   const { multicall } = useServices(network)
 
   const [state, setState] = useState<IState>({ loading: true })
+
+  let readonlyProvider = provider
+
+  const isWrongNetwork = networkId !== getIdFromNetwork(network)
+  if (isWrongNetwork) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    readonlyProvider = getNetworkProvider(network)
+  }
+
+  const getTokenDetails = async (address: string) => {
+    try {
+      return getTokenFromAddress(address, readonlyProvider?.network.chainId)
+    } catch (error) {
+      const erc20 = new ERC20Service(
+        readonlyProvider,
+        isWrongNetwork ? null : account,
+        address
+      )
+      return erc20.getDetails()
+    }
+  }
 
   const getContractTokenOfferData = async (
     poolAddress: string
@@ -61,8 +85,8 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
         entryId,
         isOwnerOrManager,
       ] = await Promise.all([
-        getTokenFromAddress(_offerData?.offerToken as string, networkId),
-        getTokenFromAddress(_offerData?.purchaseToken as string, networkId),
+        getTokenDetails(_offerData?.offerToken as string),
+        getTokenDetails(_offerData?.purchaseToken as string),
         fungiblePool.contract.offerTokenAmountPurchased(account),
         fungiblePool.contract.purchaseTokenContribution(account),
         fungiblePool.contract.userToVestingId(account),
