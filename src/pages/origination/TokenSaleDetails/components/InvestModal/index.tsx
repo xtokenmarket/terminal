@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
+  isWhitelist: boolean
   offerData: IOfferingOverview
   onClose: () => void
   onSuccess: () => Promise<void>
@@ -43,6 +44,7 @@ const DEFAULT_STATE = {
 }
 
 export const InvestModal: React.FC<IProps> = ({
+  isWhitelist,
   offerData,
   onClose,
   onSuccess,
@@ -99,6 +101,7 @@ export const InvestModal: React.FC<IProps> = ({
       case EInvestModalStep.Invest:
         return (
           <InvestSection
+            isWhitelist={isWhitelist}
             offerAmount={state.offerAmount}
             offerData={offerData}
             onNext={onNextStep}
