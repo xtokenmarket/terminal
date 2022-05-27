@@ -1,4 +1,4 @@
-import { EPricingFormula } from 'utils/enums'
+import { EPricingFormula, ETokenSalePhase } from 'utils/enums'
 import { ICreateTokenSaleData, SaleData } from 'types'
 import { SaleForm } from '../SaleForm'
 
@@ -55,6 +55,7 @@ export const WhitelistSaleForm: React.FC<IProps> = ({
 
   return (
     <SaleForm
+      tokenSalePhase={ETokenSalePhase.Whitelist}
       purchaseToken={data.purchaseToken}
       offerToken={data.offerToken}
       saleData={data.whitelistSale}
