@@ -1,7 +1,7 @@
 import { Button, makeStyles } from '@material-ui/core'
 import { WarningInfo } from 'components'
 import { IOfferingOverview } from 'types'
-import { useEffect, useState } from 'react'
+import { useEffect, useReducer } from 'react'
 import { useConnectedWeb3Context } from 'contexts'
 import { FungiblePoolService } from 'services'
 import { BigNumber } from 'ethers'
@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
+  isWhitelist: boolean
   onNext: () => void
   onClose: () => void
   offerAmount: BigNumber
@@ -33,12 +34,20 @@ export const InvestSection = (props: IProps) => {
   const classes = useStyles()
   const { account, library: provider } = useConnectedWeb3Context()
 
-  const { offerAmount, offerData, onClose, onNext, updateState } = props
-  const [state, setState] = useState<IState>({
-    isPurchased: false,
-    isPurchasing: false,
-    txHash: '',
-  })
+  const { isWhitelist, offerAmount, offerData, onClose, onNext, updateState } =
+    props
+
+  const [state, setState] = useReducer(
+    (prevState: IState, newState: Partial<IState>) => ({
+      ...prevState,
+      ...newState,
+    }),
+    {
+      isPurchased: false,
+      isPurchasing: false,
+      txHash: '',
+    }
+  )
 
   useEffect(() => {
     if (state.isPurchased) {
@@ -61,30 +70,29 @@ export const InvestSection = (props: IProps) => {
     )
 
     try {
-      setState((prev) => ({
-        ...prev,
-        isPurchasing: true,
-      }))
+      setState({ isPurchasing: true })
 
-      const txId = await fungiblePool.whitelistPurchase(
-        account,
-        offerData.poolAddress,
-        offerAmount
-      )
+      let txId
+      if (isWhitelist) {
+        txId = await fungiblePool.whitelistPurchase(
+          account,
+          offerData.poolAddress,
+          offerAmount
+        )
+      } else {
+        txId = await fungiblePool.purchase(offerAmount)
+      }
+
       const finalTxId = await fungiblePool.waitUntilPurchase(txId)
 
-      setState((prev) => ({
-        ...prev,
+      setState({
         isPurchasing: false,
         isPurchased: true,
         txHash: finalTxId,
-      }))
+      })
     } catch (error) {
-      console.error(error)
-      setState((prev) => ({
-        ...prev,
-        isPurchasing: false,
-      }))
+      console.error('Error when trying invest', error)
+      setState({ isPurchasing: false })
     }
   }
 

@@ -1,6 +1,6 @@
 import { makeStyles, Typography, IconButton, Button } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
-import { useState } from 'react'
+import { useReducer } from 'react'
 import { FungiblePoolService } from 'services'
 import { IOfferingOverview } from 'types'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
@@ -89,11 +89,17 @@ export const InputSection = (props: IProps) => {
   const { account, library: provider } = useConnectedWeb3Context()
   const { offerData, onClose, onNext, updateState } = props
 
-  const [state, setState] = useState<IState>({
-    isEstimating: false,
-    offerAmount: ZERO,
-    purchaseAmount: ZERO,
-  })
+  const [state, setState] = useReducer(
+    (prevState: IState, newState: Partial<IState>) => ({
+      ...prevState,
+      ...newState,
+    }),
+    {
+      isEstimating: false,
+      offerAmount: ZERO,
+      purchaseAmount: ZERO,
+    }
+  )
 
   const estimatePurchaseAmount = async (offerAmount: BigNumber) => {
     if (!account || !provider) {
@@ -109,12 +115,11 @@ export const InputSection = (props: IProps) => {
     const purchaseAmount = await fungiblePool.getPurchaseAmountFromOfferAmount(
       offerAmount
     )
-    setState((prevState) => ({
-      ...prevState,
+    setState({
       isEstimating: false,
       offerAmount,
       purchaseAmount,
-    }))
+    })
   }
 
   const _onInvest = () => {
@@ -138,9 +143,7 @@ export const InputSection = (props: IProps) => {
           <TokenBalanceInput
             label={'Amount to Invest'}
             onChange={estimatePurchaseAmount}
-            setLoadingStart={() =>
-              setState((prev) => ({ ...prev, isEstimating: true }))
-            }
+            setLoadingStart={() => setState({ isEstimating: true })}
             showSwapCTA={false}
             token={offerData.offerToken}
             value={state.offerAmount}

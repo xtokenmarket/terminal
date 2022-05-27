@@ -235,7 +235,6 @@ const TokenSaleDetails = () => {
                 </Button>
               </>
             )}
-
             {!isSaleCompleted && (
               <>
                 <Table item={tokenOffer.publicSale} label={'Public Sale'} />
@@ -244,7 +243,6 @@ const TokenSaleDetails = () => {
                 </Button>
               </>
             )}
-
             <Table
               item={tokenOffer.myPosition}
               label={'My Position'}
@@ -280,6 +278,7 @@ const TokenSaleDetails = () => {
               }}
             />
             <InvestModal
+              isWhitelist={Boolean(isWhitelistSaleConfigured)}
               offerData={tokenOffer.offeringOverview}
               onClose={toggleInvestModal}
               onSuccess={onInvestSuccess}
