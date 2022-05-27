@@ -122,12 +122,14 @@ interface IProps {
     | IOfferingSummary
   toggleModal?: () => void
   isVestedPropertiesShow?: boolean
+  isOfferUnsuccessful?: boolean
 }
 
 export const TableRow = ({
   item,
   toggleModal,
   isVestedPropertiesShow,
+  isOfferUnsuccessful,
 }: IProps) => {
   const cl = useStyles()
 
@@ -422,48 +424,71 @@ export const TableRow = ({
               </Typography>
             </div>
           </Td>
+          {isOfferUnsuccessful && (
+            <>
+              <Td type={OfferingSummary.OfferingStatus} label={item.label}>
+                <Typography className={clsx(cl.item)}>Unsuccessful</Typography>
+              </Td>
+              <Td type={OfferingSummary.SalesEnded} label={item.label}>
+                <Typography className={clsx(cl.item, cl.label)}>
+                  {moment
+                    .unix(item.salesCompleted.toNumber())
+                    .format('MMM DD[,] YYYY')}
+                </Typography>
+              </Td>
+            </>
+          )}
 
-          <Td type={OfferingSummary.TokensSold} label={item.label}>
-            <div className={cl.item}>
-              {formatBigNumber(item.tokensSold, item.offerToken.decimals)}
-              <Typography className={cl.symbol}>
-                {item.offerToken.symbol}
-              </Typography>
-            </div>
-          </Td>
-          <Td type={OfferingSummary.AmountsRaised} label={item.label}>
-            <div className={cl.item}>
-              <Typography>
-                {formatBigNumber(item.amountsRaised, item.offerToken.decimals)}
-              </Typography>
-              <Typography className={cl.symbol}>
-                {item.offerToken.symbol}
-              </Typography>
-            </div>
-          </Td>
+          {!isOfferUnsuccessful && (
+            <>
+              <Td type={OfferingSummary.TokensSold} label={item.label}>
+                <div className={cl.item}>
+                  {formatBigNumber(item.tokensSold, item.offerToken.decimals)}
+                  <Typography className={cl.symbol}>
+                    {item.offerToken.symbol}
+                  </Typography>
+                </div>
+              </Td>
+              <Td type={OfferingSummary.AmountsRaised} label={item.label}>
+                <div className={cl.item}>
+                  <Typography>
+                    {formatBigNumber(
+                      item.amountsRaised,
+                      item.offerToken.decimals
+                    )}
+                  </Typography>
+                  <Typography className={cl.symbol}>
+                    {item.offerToken.symbol}
+                  </Typography>
+                </div>
+              </Td>
 
-          <Td type={OfferingSummary.VestingPeriod} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label)}>
-              {parseDurationSec(item.vestingPeriod.toNumber())}
-            </Typography>
-          </Td>
-          <Td type={OfferingSummary.CliffPeriod} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label)}>
-              {parseDurationSec(item.cliffPeriod.toNumber())}
-            </Typography>
-          </Td>
-          <Td type={OfferingSummary.SalesCompleted} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label)}>
-              {moment
-                .unix(item.salesCompleted.toNumber())
-                .format('MMM DD[,] YYYY')}
-            </Typography>
-          </Td>
-          <Td type={OfferingSummary.TimeSinceCompleted} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label, cl.itemAlignCenter)}>
-              {parseDurationSec(Number(item.timeSinceCompleted.toString()))}
-            </Typography>
-          </Td>
+              <Td type={OfferingSummary.VestingPeriod} label={item.label}>
+                <Typography className={clsx(cl.item, cl.label)}>
+                  {parseDurationSec(item.vestingPeriod.toNumber())}
+                </Typography>
+              </Td>
+              <Td type={OfferingSummary.CliffPeriod} label={item.label}>
+                <Typography className={clsx(cl.item, cl.label)}>
+                  {parseDurationSec(item.cliffPeriod.toNumber())}
+                </Typography>
+              </Td>
+              <Td type={OfferingSummary.SalesCompleted} label={item.label}>
+                <Typography className={clsx(cl.item, cl.label)}>
+                  {moment
+                    .unix(item.salesCompleted.toNumber())
+                    .format('MMM DD[,] YYYY')}
+                </Typography>
+              </Td>
+              <Td type={OfferingSummary.TimeSinceCompleted} label={item.label}>
+                <Typography
+                  className={clsx(cl.item, cl.label, cl.itemAlignCenter)}
+                >
+                  {parseDurationSec(Number(item.timeSinceCompleted.toString()))}
+                </Typography>
+              </Td>
+            </>
+          )}
         </div>
       )
     }

@@ -69,6 +69,8 @@ const useStyles = makeStyles(() => ({
     '&.cliffPeriod': { width: '12%' },
     '&.salesCompleted': { width: '12%' },
     '&.timeSinceCompleted': { width: '15%' },
+    '&.offeringStatus': { width: '15%' },
+    '&.salesEnded': { width: '15%' },
     '&+&': { paddingLeft: 16 },
     '&:last-child': {
       textAlign: 'right',
