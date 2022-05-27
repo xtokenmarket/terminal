@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   label: string
   isVestedPropertiesShow?: boolean
+  isOfferUnsuccessful?: boolean
 }
 
 export const TableHeader = (props: IProps) => {
@@ -152,24 +153,38 @@ export const TableHeader = (props: IProps) => {
         <Td type={OfferingSummary.PurchaseToken} label={props.label}>
           <div className={classes.item}>Purchase Token</div>
         </Td>
-        <Td type={OfferingSummary.TokensSold} label={props.label}>
-          <div className={classes.item}>Tokens Sold</div>
-        </Td>
-        <Td type={OfferingSummary.AmountsRaised} label={props.label}>
-          <div className={classes.item}>Amounts Raised</div>
-        </Td>
-        <Td type={OfferingSummary.VestingPeriod} label={props.label}>
-          <div className={classes.item}>Vesting Period</div>
-        </Td>
-        <Td type={OfferingSummary.CliffPeriod} label={props.label}>
-          <div className={classes.item}>Cliff Period</div>
-        </Td>
-        <Td type={OfferingSummary.SalesCompleted} label={props.label}>
-          <div className={classes.item}>Sales Completed</div>
-        </Td>
-        <Td type={OfferingSummary.TimeSinceCompleted} label={props.label}>
-          <div className={classes.item}>Time Since Completed</div>
-        </Td>
+        {props.isOfferUnsuccessful && (
+          <>
+            <Td type={OfferingSummary.OfferingStatus} label={props.label}>
+              <div className={classes.item}>Offering Status</div>
+            </Td>
+            <Td type={OfferingSummary.SalesEnded} label={props.label}>
+              <div className={classes.item}>Sales Ended</div>
+            </Td>
+          </>
+        )}
+        {!props.isOfferUnsuccessful && (
+          <>
+            <Td type={OfferingSummary.TokensSold} label={props.label}>
+              <div className={classes.item}>Tokens Sold</div>
+            </Td>
+            <Td type={OfferingSummary.AmountsRaised} label={props.label}>
+              <div className={classes.item}>Amounts Raised</div>
+            </Td>
+            <Td type={OfferingSummary.VestingPeriod} label={props.label}>
+              <div className={classes.item}>Vesting Period</div>
+            </Td>
+            <Td type={OfferingSummary.CliffPeriod} label={props.label}>
+              <div className={classes.item}>Cliff Period</div>
+            </Td>
+            <Td type={OfferingSummary.SalesCompleted} label={props.label}>
+              <div className={classes.item}>Sales Completed</div>
+            </Td>
+            <Td type={OfferingSummary.TimeSinceCompleted} label={props.label}>
+              <div className={classes.item}>Time Since Completed</div>
+            </Td>
+          </>
+        )}
       </div>
     )
   }
