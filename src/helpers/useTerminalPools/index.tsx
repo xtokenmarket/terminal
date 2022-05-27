@@ -31,7 +31,10 @@ export const useTerminalPools = () => {
       let filteredPools = isTestnet(chainId)
         ? pools.filter((pool) => testNetworks.includes(pool.network as Network))
         : pools.filter(
-            (pool) => !testNetworks.includes(pool.network as Network)
+            (pool) =>
+              !testNetworks.includes(pool.network as Network) &&
+              pool.poolAddress.toLowerCase() !==
+                '0x6148a1bd2be586e981115f9c0b16a09bbc271e2c' // CitaDAO pool
           )
       filteredPools = filteredPools.map(
         ({ poolAddress: address, ...pool }) => ({ address, ...pool })
@@ -61,7 +64,10 @@ export const useTerminalPools = () => {
               testNetworks.includes(pool.network as Network)
             )
           : pools.filter(
-              (pool) => !testNetworks.includes(pool.network as Network)
+              (pool) =>
+                !testNetworks.includes(pool.network as Network) &&
+                pool.address.toLowerCase() !==
+                  '0x6148a1bd2be586e981115f9c0b16a09bbc271e2c' // CitaDAO pool
             )
         setState((prev) => ({
           ...prev,
