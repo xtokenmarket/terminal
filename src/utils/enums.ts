@@ -241,6 +241,8 @@ export enum OfferingSummary {
   CliffPeriod = 'cliffPeriod',
   SalesCompleted = 'salesCompleted',
   TimeSinceCompleted = 'timeSinceCompleted',
+  OfferingStatus = 'offeringStatus',
+  SalesEnded = 'salesEnded',
 }
 
 export enum EClaimModalStep {

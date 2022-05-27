@@ -140,13 +140,21 @@ const TokenSaleDetails = () => {
   }
 
   const isWhitelistSaleConfigured =
-    tokenOffer?.whitelist.startingPrice &&
-    tokenOffer?.whitelist.startingPrice.gt(0)
+    tokenOffer &&
+    tokenOffer.whitelist.startingPrice &&
+    tokenOffer.whitelist.startingPrice.gt(0)
 
   const isSaleCompleted =
     tokenOffer &&
     !tokenOffer.offeringOverview.salesBegin.isZero() &&
     getRemainingTimeSec(tokenOffer?.offeringOverview.salesEnd).isZero()
+
+  const isOfferUnsuccessful =
+    tokenOffer &&
+    isSaleCompleted &&
+    tokenOffer.offeringOverview.offeringReserve.gt(
+      tokenOffer.offeringSummary.amountsRaised
+    )
 
   return (
     <PageWrapper>
@@ -170,6 +178,7 @@ const TokenSaleDetails = () => {
               <Table
                 item={tokenOffer.offeringSummary}
                 label={'Offering Summary'}
+                isOfferUnsuccessful={isOfferUnsuccessful}
               />
             ) : (
               <Table
