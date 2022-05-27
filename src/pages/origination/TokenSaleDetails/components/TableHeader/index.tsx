@@ -4,6 +4,7 @@ import { Td } from '../Td'
 import {
   MyPosition,
   OfferingOverview,
+  OfferingSummary,
   OriginationLabels,
   PublicSale,
   WhitelistSale,
@@ -145,28 +146,28 @@ export const TableHeader = (props: IProps) => {
   if (props.label === OriginationLabels.OfferingSummary) {
     return (
       <div className={classes.root}>
-        <Td type={OfferingOverview.OfferToken} label={props.label}>
+        <Td type={OfferingSummary.OfferToken} label={props.label}>
           <div className={classes.item}>Offer Token</div>
         </Td>
-        <Td type={OfferingOverview.PurchaseToken} label={props.label}>
+        <Td type={OfferingSummary.PurchaseToken} label={props.label}>
           <div className={classes.item}>Purchase Token</div>
         </Td>
-        <Td type={OfferingOverview.OfferingStatus} label={props.label}>
+        <Td type={OfferingSummary.TokensSold} label={props.label}>
           <div className={classes.item}>Tokens Sold</div>
         </Td>
-        <Td type={OfferingOverview.OfferingReserve} label={props.label}>
+        <Td type={OfferingSummary.AmountsRaised} label={props.label}>
           <div className={classes.item}>Amounts Raised</div>
         </Td>
-        <Td type={OfferingOverview.VestingPeriod} label={props.label}>
+        <Td type={OfferingSummary.VestingPeriod} label={props.label}>
           <div className={classes.item}>Vesting Period</div>
         </Td>
-        <Td type={OfferingOverview.CliffPeriod} label={props.label}>
+        <Td type={OfferingSummary.CliffPeriod} label={props.label}>
           <div className={classes.item}>Cliff Period</div>
         </Td>
-        <Td type={OfferingOverview.SalesBegin} label={props.label}>
+        <Td type={OfferingSummary.SalesCompleted} label={props.label}>
           <div className={classes.item}>Sales Completed</div>
         </Td>
-        <Td type={OfferingOverview.SalesEnd} label={props.label}>
+        <Td type={OfferingSummary.TimeSinceCompleted} label={props.label}>
           <div className={classes.item}>Time Since Completed</div>
         </Td>
       </div>

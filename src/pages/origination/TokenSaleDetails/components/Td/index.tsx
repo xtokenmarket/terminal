@@ -63,12 +63,12 @@ const useStyles = makeStyles(() => ({
   offeringSummary: {
     '&.offerToken': { width: '10%' },
     '&.purchaseToken': { width: '10%' },
-    '&.tokensSold': { width: '15%' },
-    '&.amountsRaised': { width: '15%' },
-    '&.vestingPeriod': { width: '10%' },
-    '&.cliffPeriod': { width: '10%' },
-    '&.salesCompleted': { width: '10%' },
-    '&.timeSinceCompleted': { width: '11%' },
+    '&.tokensSold': { width: '12%' },
+    '&.amountsRaised': { width: '12%' },
+    '&.vestingPeriod': { width: '12%' },
+    '&.cliffPeriod': { width: '12%' },
+    '&.salesCompleted': { width: '12%' },
+    '&.timeSinceCompleted': { width: '15%' },
     '&+&': { paddingLeft: 16 },
     '&:last-child': {
       textAlign: 'right',
@@ -98,7 +98,11 @@ export const Td = ({
 
   return (
     <div
-      className={clsx(cl[label], type, [!isVestedPropertiesShow && 'narrow'])}
+      className={clsx(cl[label], type, [
+        label === OriginationLabels.MyPosition &&
+          !isVestedPropertiesShow &&
+          'narrow',
+      ])}
     >
       {children}
     </div>

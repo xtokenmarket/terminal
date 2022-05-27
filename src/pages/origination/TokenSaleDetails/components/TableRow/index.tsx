@@ -69,6 +69,9 @@ const useStyles = makeStyles((theme) => ({
   itemAlignRight: {
     justifyContent: 'flex-end',
   },
+  itemAlignCenter: {
+    justifyContent: 'center',
+  },
   tokenIcon: {
     width: 48,
     height: 48,
@@ -457,7 +460,7 @@ export const TableRow = ({
             </Typography>
           </Td>
           <Td type={OfferingSummary.TimeSinceCompleted} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label, cl.itemAlignRight)}>
+            <Typography className={clsx(cl.item, cl.label, cl.itemAlignCenter)}>
               {parseDurationSec(Number(item.timeSinceCompleted.toString()))}
             </Typography>
           </Td>
