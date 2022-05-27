@@ -62,7 +62,7 @@ const useStyles = makeStyles(() => ({
   },
   offeringSummary: {
     '&.offerToken': { width: '10%' },
-    '&.purchaseToken': { width: '10%' },
+    '&.purchaseToken': { width: '15%' },
     '&.tokensSold': { width: '12%' },
     '&.amountsRaised': { width: '12%' },
     '&.vestingPeriod': { width: '12%' },
