@@ -16,6 +16,7 @@ import { IToken, ITokenOffer } from 'types'
 import { FungiblePoolService } from 'services'
 import { getCurrentTimeStamp, getRemainingTimeSec } from 'utils'
 import { NULL_ADDRESS_WHITELIST, ORIGINATION_API_URL } from 'config/constants'
+import { ZERO } from 'utils/number'
 
 interface IState {
   tokenOffer?: ITokenOffer
@@ -80,23 +81,23 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
       }
 
       const {
-        offerTokenAmountSold,
-        totalOfferingAmount,
-        reserveAmount,
-        vestingPeriod,
         cliffPeriod,
-        saleInitiatedTimestamp,
-        saleEndTimestamp,
-        publicStartingPrice,
-        whitelistStartingPrice,
-        whitelistEndingPrice,
-        whitelistSaleDuration,
-        publicSaleDuration,
-        whitelistMerkleRoot,
         getOfferTokenPrice,
+        offerTokenAmountSold,
         publicEndingPrice,
-        vestableTokenAmount,
+        publicSaleDuration,
+        publicStartingPrice,
         purchaseTokensAcquired,
+        reserveAmount,
+        saleEndTimestamp,
+        saleInitiatedTimestamp,
+        totalOfferingAmount,
+        vestableTokenAmount,
+        vestingPeriod,
+        whitelistEndingPrice,
+        whitelistMerkleRoot,
+        whitelistSaleDuration,
+        whitelistStartingPrice,
       } = _offerData as ITokenOfferDetails
 
       const offeringOverview = {
@@ -133,16 +134,22 @@ export const useOriginationPool = (poolAddress?: string, network?: Network) => {
             x !== ethers.constants.AddressZero && x !== NULL_ADDRESS_WHITELIST
         )
 
-      let addressCap = BigNumber.from(0)
+      let addressCap = ZERO
 
       if (isSetWhitelist()) {
-        // `maxContributionAmount` doesn't exist on contract level. Can only get from API.
-        // TODO: network is hardcoded for now
-        const whitelistAccountDetail = await axios.get(
-          `${ORIGINATION_API_URL}/whitelistedAcccountDetails/?accountAddress=${account}&poolAddress=${poolAddress}&network=kovan`
-        )
-
-        addressCap = whitelistAccountDetail.data.maxContributionAmount
+        try {
+          // `maxContributionAmount` doesn't exist on contract level. Can only get from API.
+          // TODO: network is hardcoded for now
+          addressCap = BigNumber.from(
+            (
+              await axios.get(
+                `${ORIGINATION_API_URL}/whitelistedAcccountDetails/?accountAddress=${account}&poolAddress=${poolAddress}&network=kovan`
+              )
+            ).data.maxContributionAmount
+          )
+        } catch (e) {
+          // Whitelist detail for pool is missing
+        }
       }
 
       const _whitelist = {

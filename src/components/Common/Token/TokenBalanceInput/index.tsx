@@ -31,15 +31,20 @@ const useStyles = makeStyles((theme) => ({
         borderWidth: 1,
       },
     },
+    '& .Mui-disabled': {
+      '& .MuiOutlinedInput-notchedOutline': {
+        borderColor: theme.colors.primary100,
+      },
+    },
   },
   inputBox: { paddingRight: 60, fontWeight: 700 },
   inputBoxDisabled: {
     paddingRight: 60,
     fontWeight: 700,
-    color: theme.colors.gray2,
+    color: theme.colors.primary100,
   },
   inputLabel: { color: `${theme.colors.white} !important` },
-  inputLabelDisabled: { color: `${theme.colors.gray2} !important` },
+  inputLabelDisabled: { color: `${theme.colors.primary100} !important` },
   notchedOutline: {
     borderColor: theme.colors.primary200,
   },
@@ -129,26 +134,32 @@ type Variant = 'normal' | 'rewardToken'
 
 interface IProps {
   className?: string
-  variant?: Variant
+  isDisabled?: boolean
+  label?: string
+  loading?: boolean
+  onChange: (_: BigNumber, balance: BigNumber, token: IToken) => void
   rewardFeePercent?: number
+  setLoadingStart?: () => void
+  showAvailableBalance?: boolean
+  showSwapCTA?: boolean
   token: IToken
   value: BigNumber
-  onChange: (_: BigNumber, balance: BigNumber, token: IToken) => void
-  isDisabled?: boolean
-  loading?: boolean
-  setLoadingStart?: () => void
+  variant?: Variant
 }
 
 export const TokenBalanceInput: React.FC<IProps> = ({
-  token,
-  value,
-  onChange,
-  variant = 'normal',
-  rewardFeePercent,
   className,
   isDisabled = false,
+  label,
   loading,
+  onChange,
+  rewardFeePercent,
   setLoadingStart,
+  showAvailableBalance = true,
+  showSwapCTA = true,
+  token,
+  value,
+  variant = 'normal',
 }) => {
   const classes = useStyles()
   const commonClasses = useCommonStyles()
@@ -220,7 +231,7 @@ export const TokenBalanceInput: React.FC<IProps> = ({
         variant="outlined"
         fullWidth
         type="number"
-        label={`${token.symbol.toUpperCase()} amount`}
+        label={label || `${token.symbol.toUpperCase()} amount`}
         disabled={isDisabled}
       />
       <div className={classes.token}>
@@ -237,15 +248,20 @@ export const TokenBalanceInput: React.FC<IProps> = ({
         <span className={classes.tokenLabel}>{token.symbol}</span>
       </div>
       <div className={classes.bottomRow}>
-        <Typography
-          className={clsx(classes.balance, isBalanceDisabled ? 'disabled' : '')}
-          onClick={isBalanceDisabled ? undefined : onClickAvailable}
-        >
-          Available -{' '}
-          <b>
-            {formatBigNumber(balance, token.decimals, 4)} {token.symbol}
-          </b>
-        </Typography>
+        {showAvailableBalance && (
+          <Typography
+            className={clsx(
+              classes.balance,
+              isBalanceDisabled ? 'disabled' : ''
+            )}
+            onClick={isBalanceDisabled ? undefined : onClickAvailable}
+          >
+            Available -{' '}
+            <b>
+              {formatBigNumber(balance, token.decimals, 4)} {token.symbol}
+            </b>
+          </Typography>
+        )}
         {variant === 'rewardToken' && rewardFeePercent && (
           <Typography className={classes.balance}>
             Total rewards (incl. {rewardFeePercent * 100}% fee) -{' '}
@@ -254,7 +270,7 @@ export const TokenBalanceInput: React.FC<IProps> = ({
             </b>
           </Typography>
         )}
-        <TokenSwapCTA token={token} />
+        {showSwapCTA && <TokenSwapCTA token={token} />}
       </div>
     </div>
   )

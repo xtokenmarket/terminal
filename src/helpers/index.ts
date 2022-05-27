@@ -1,5 +1,7 @@
 export * from './useIsMountedRef'
 export * from './useMyTerminalPools'
+export * from './useOriginationPool'
+export * from './useOriginationPools'
 export * from './useScrollPosition'
 export * from './useServices'
 export * from './useTerminalPool'
