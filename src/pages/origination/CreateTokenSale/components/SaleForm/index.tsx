@@ -1,5 +1,10 @@
 import React from 'react'
-import { Description, InfoText, EPricingFormula } from 'utils/enums'
+import {
+  Description,
+  InfoText,
+  EPricingFormula,
+  ETokenSalePhase,
+} from 'utils/enums'
 import {
   Button,
   FormControl,
@@ -74,6 +79,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
+  tokenSalePhase: ETokenSalePhase
   purchaseToken?: IToken
   offerToken?: IToken
   saleData: SaleData
@@ -83,6 +89,7 @@ interface IProps {
 }
 
 export const SaleForm = ({
+  tokenSalePhase,
   purchaseToken,
   offerToken,
   saleData,
@@ -100,6 +107,10 @@ export const SaleForm = ({
     enabled,
   } = saleData
 
+  const saleDisplayName =
+    tokenSalePhase == ETokenSalePhase.Whitelist
+      ? 'Whitelist Sale'
+      : 'Public Sale'
   const handlePricingFormulaChange = (
     newPricingFormula: EPricingFormula[keyof EPricingFormula]
   ) => {
@@ -124,7 +135,7 @@ export const SaleForm = ({
         <Grid item xs={12} md={6}>
           <FormControl component="fieldset">
             <div className={clsx(classes.label, classes.labelWarpper)}>
-              Will your Offering have a whitelist period?
+              {`Will your Offering have a ${saleDisplayName} period?`}
             </div>
             <RadioGroup
               name="sale-period"
@@ -160,7 +171,7 @@ export const SaleForm = ({
           >
             <div className={classes.labelWarpper}>
               <Typography className={classes.label}>
-                Whitelist sale offering period
+                {`${saleDisplayName} offering period`}
               </Typography>
               <QuestionTooltip
                 title={InfoText.OfferingPeriod}

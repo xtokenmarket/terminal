@@ -1,6 +1,7 @@
 import { ICreateTokenSaleData, SaleData } from 'types'
 import { validPricingDetailsSet } from '../WhitelistSaleForm.tsx'
 import { SaleForm } from '../SaleForm'
+import { ETokenSalePhase } from 'utils/enums'
 
 interface IProps {
   data: ICreateTokenSaleData
@@ -39,6 +40,7 @@ export const PublicSaleForm: React.FC<IProps> = ({
 
   return (
     <SaleForm
+      tokenSalePhase={ETokenSalePhase.Public}
       purchaseToken={data.purchaseToken}
       offerToken={data.offerToken}
       saleData={data.publicSale}
