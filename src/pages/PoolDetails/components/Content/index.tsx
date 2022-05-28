@@ -244,6 +244,11 @@ export const Content = (props: IProps) => {
   const rippleRef = useRef(null)
   const buttonRef = useRef(null)
 
+  // CitaDAO pool
+  const isDepositDisabled =
+    poolData.address.toLowerCase() ===
+    '0x6148a1bd2be586e981115f9c0b16a09bbc271e2c'
+
   useEffect(() => {
     const timer = (ms: number) => new Promise((res) => setTimeout(res, ms))
 
@@ -546,6 +551,7 @@ export const Content = (props: IProps) => {
           <Button
             className={classes.button}
             color="primary"
+            disabled={isDepositDisabled}
             onClick={() =>
               account
                 ? setDepositModalVisible(true)
