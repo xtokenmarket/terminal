@@ -136,8 +136,15 @@ export const useTerminalPool = (
         pool.token0.price = rates && rates[0] ? rates[0].toString() : '0'
         pool.token1.price = rates && rates[1] ? rates[1].toString() : '0'
 
-        const { amount0: token0Balance, amount1: token1Balance } =
-          await clr.contract.getStakedTokenBalance()
+        const { amount0, amount1 } = await clr.contract.getStakedTokenBalance()
+        const token0Balance =
+          token0.decimals === 18
+            ? amount0
+            : parseEther(formatUnits(amount0, token0.decimals))
+        const token1Balance =
+          token1.decimals === 18
+            ? amount1
+            : parseEther(formatUnits(amount1, token1.decimals))
 
         const token0tvl = token0Balance
           .mul(parseEther(pool.token0.price))
@@ -180,8 +187,16 @@ export const useTerminalPool = (
         token0.price = token0.price.toString()
         token1.price = token1.price.toString()
 
-        token0.balance = BigNumber.from(token0.balance || '0')
-        token1.balance = BigNumber.from(token1.balance || '0')
+        token0.balance = token0.balance
+          ? token0.decimals === 18
+            ? BigNumber.from(token0.balance)
+            : parseEther(formatUnits(token0.balance, token0.decimals))
+          : ZERO
+        token1.balance = token1.balance
+          ? token1.decimals === 18
+            ? BigNumber.from(token1.balance)
+            : parseEther(formatUnits(token1.balance, token1.decimals))
+          : ZERO
 
         token0.percent = token0.percent ? token0.percent.toString() : '0'
         token1.percent = token1.percent ? token1.percent.toString() : '0'

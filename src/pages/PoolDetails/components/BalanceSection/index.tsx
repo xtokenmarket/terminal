@@ -6,6 +6,7 @@ import { getEtherscanUri } from 'config/networks'
 import { BigNumber } from 'ethers'
 import { IToken } from 'types'
 import { ETHER_DECIMAL } from 'config/constants'
+import { ZERO } from 'utils/number'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -90,9 +91,7 @@ export const BalanceSection = (props: IProps) => {
           <Typography className={classes.balance}>
             {numberWithCommas(
               formatBigNumber(
-                isDeposit
-                  ? deposit || BigNumber.from(0)
-                  : token.balance || BigNumber.from(0),
+                isDeposit ? deposit || ZERO : token.balance || ZERO,
                 ETHER_DECIMAL // `getStakedTokenBalance` returns the amounts in 18 decimals
               )
             )}{' '}

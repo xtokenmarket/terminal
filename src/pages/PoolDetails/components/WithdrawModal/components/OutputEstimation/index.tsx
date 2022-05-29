@@ -69,14 +69,18 @@ export const OutputEstimation = (props: IProps) => {
           <TokenIcon token={poolData.token0} className={classes.tokenIcon} />
           &nbsp;&nbsp;
           <Typography className={classes.amount}>
-            {formatBigNumber(amount0, poolData.token0.decimals, 4)}
+            {formatBigNumber(
+              amount0,
+              isEstimation ? 18 : poolData.token0.decimals,
+              4
+            )}
             &nbsp;
             {poolData.token0.symbol}
             {poolData.token0.price && (
               <span>
                 {` ~ $${getTotalTokenPrice(
                   amount0,
-                  poolData.token0.decimals,
+                  isEstimation ? 18 : poolData.token0.decimals,
                   poolData.token0.price
                 )}`}
               </span>
@@ -87,14 +91,18 @@ export const OutputEstimation = (props: IProps) => {
           <TokenIcon token={poolData.token1} className={classes.tokenIcon} />
           &nbsp;&nbsp;
           <Typography className={classes.amount}>
-            {formatBigNumber(amount1, poolData.token1.decimals, 4)}
+            {formatBigNumber(
+              amount1,
+              isEstimation ? 18 : poolData.token1.decimals,
+              4
+            )}
             &nbsp;
             {poolData.token1.symbol}
             {poolData.token1.price && (
               <span>
                 {` ~ $${getTotalTokenPrice(
                   amount1,
-                  poolData.token1.decimals,
+                  isEstimation ? 18 : poolData.token1.decimals,
                   poolData.token1.price
                 )}`}
               </span>
