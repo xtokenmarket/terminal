@@ -103,9 +103,9 @@ const networks: { [K in ChainId]: INetwork } = {
     label: CHAIN_NAMES[ChainId.Kovan],
     url: 'https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
     contracts: {
-      LM: '0x2F6Cd810537f81423a5dfEc957DC7B98AB420BD7',
+      LM: '0x7d5B01A58b21B237a7822321957680aA50899f18',
       multicall: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
-      rewardEscrow: '0x0956636dF01cA07e3101F300602f9D4DDA6deD66',
+      rewardEscrow: '0x0Ae68a1F7BC94689BED577101d7E594aB70faA93',
       uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',

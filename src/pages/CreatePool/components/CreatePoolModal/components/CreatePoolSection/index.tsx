@@ -235,8 +235,6 @@ export const CreatePoolSection = (props: IProps) => {
   }
 
   const onCreatePool = async () => {
-    // TODO: Disable pool creation temporarily
-    return
     if (!account || !provider) {
       return
     }
