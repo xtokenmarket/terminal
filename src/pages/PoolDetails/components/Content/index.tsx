@@ -292,23 +292,23 @@ export const Content = (props: IProps) => {
 
   const getRewardsPerWeek = () => {
     const { duration, amounts } = poolData.rewardState
+
     const isInitiateRewardsPending = duration === '0'
+    if (isInitiateRewardsPending) {
+      return 'N/A'
+    }
 
     const rewards = poolData.rewardState.tokens.map((rewardToken, index) => {
-      if (isInitiateRewardsPending) {
-        return 'N/A'
-      } else {
-        const durationInfo = getTimeDurationUnitInfo(Number(duration))
-        const uintAmount = amounts[index]
-          ? amounts[index].mul(durationInfo.unit).div(Number(duration))
-          : ZERO
-        return `${formatToShortNumber(
-          formatBigNumber(uintAmount, rewardToken.decimals)
-        )}
+      const durationInfo = getTimeDurationUnitInfo(Number(duration))
+      const uintAmount = amounts[index]
+        ? amounts[index].mul(durationInfo.unit).div(Number(duration))
+        : ZERO
+      return `${formatToShortNumber(
+        formatBigNumber(uintAmount, rewardToken.decimals)
+      )}
               ${rewardToken.symbol} ${
-          index !== poolData.rewardState.tokens.length - 1 ? ' / ' : ''
-        }`
-      }
+        index !== poolData.rewardState.tokens.length - 1 ? ' / ' : ''
+      }`
     })
     return rewards.join('')
   }
