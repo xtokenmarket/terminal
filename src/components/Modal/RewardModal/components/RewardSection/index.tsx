@@ -112,7 +112,7 @@ export const RewardSection = (props: IProps) => {
   })
 
   const { multicall, lmService } = useServices()
-  const { account, library: provider } = useConnectedWeb3Context()
+  const { account, library: provider, networkId } = useConnectedWeb3Context()
 
   const getNextApproveIndex = (approved: boolean[]) => {
     let index = 0
@@ -201,7 +201,7 @@ export const RewardSection = (props: IProps) => {
   }
 
   const onApprove = async (index: number) => {
-    if (!account || !provider) {
+    if (!account || !provider || !networkId) {
       return
     }
     try {
@@ -213,7 +213,7 @@ export const RewardSection = (props: IProps) => {
           eIndex === index ? true : element
         ),
       }))
-      const txHash = await token.approveUnlimited(lmService.address)
+      const txHash = await token.approveUnlimited(lmService.address, networkId)
       const finalHash = await token.waitUntilApproved(
         account,
         lmService.address,
