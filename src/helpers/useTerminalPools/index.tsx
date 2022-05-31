@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { GRAPHQL_URLS, TERMINAL_API_URL } from 'config/constants'
+import { ChainId, GRAPHQL_URLS, TERMINAL_API_URL } from 'config/constants'
 import { useNetworkContext } from 'contexts/networkContext'
 import { useEffect, useState } from 'react'
 import { ITerminalPool } from 'types'
@@ -27,18 +27,7 @@ export const useTerminalPools = () => {
         `${TERMINAL_API_URL}/pools`
       )
 
-      // Filter testnet pools on production and parse API data
-      let filteredPools = isTestnet(chainId)
-        ? pools.filter((pool) => testNetworks.includes(pool.network as Network))
-        : pools.filter(
-            (pool) =>
-              !testNetworks.includes(pool.network as Network) &&
-              pool.poolAddress.toLowerCase() !==
-                '0x6148a1bd2be586e981115f9c0b16a09bbc271e2c' // CitaDAO pool
-          )
-      filteredPools = filteredPools.map(
-        ({ poolAddress: address, ...pool }) => ({ address, ...pool })
-      )
+      const filteredPools = getFilteredPools(pools, chainId, true)
 
       setState((prev) => ({
         ...prev,
@@ -59,16 +48,7 @@ export const useTerminalPools = () => {
             return parsePools(p, _network as Network)
           })
           .flat()
-        const filteredPools = isTestnet(chainId)
-          ? pools.filter((pool) =>
-              testNetworks.includes(pool.network as Network)
-            )
-          : pools.filter(
-              (pool) =>
-                !testNetworks.includes(pool.network as Network) &&
-                pool.address.toLowerCase() !==
-                  '0x6148a1bd2be586e981115f9c0b16a09bbc271e2c' // CitaDAO pool
-            )
+        const filteredPools = getFilteredPools(pools, chainId, false)
         setState((prev) => ({
           ...prev,
           pools: filteredPools,
@@ -86,4 +66,32 @@ export const useTerminalPools = () => {
   }, [chainId])
 
   return state
+}
+
+const getFilteredPools = (
+  pools: any[],
+  chainId: ChainId,
+  isApiData: boolean
+) => {
+  if (isApiData) {
+    pools = pools.map(({ poolAddress: address, ...pool }) => ({
+      address,
+      ...pool,
+    }))
+  }
+  // Filter testnet pools on production and parse pool data
+  let filteredPools = isTestnet(chainId)
+    ? pools.filter((pool) => testNetworks.includes(pool.network as Network))
+    : pools.filter((pool) => !testNetworks.includes(pool.network as Network))
+  if (!isTestnet(chainId)) {
+    filteredPools = filteredPools.filter(
+      (pool) =>
+        !(
+          pool.network === Network.MAINNET &&
+          pool.address.toLowerCase() ===
+            '0x6148a1bd2be586e981115f9c0b16a09bbc271e2c'
+        ) // CitaDAO Mainnet pool
+    )
+  }
+  return filteredPools
 }
