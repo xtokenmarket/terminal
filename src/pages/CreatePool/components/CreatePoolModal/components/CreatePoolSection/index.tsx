@@ -169,7 +169,7 @@ export const CreatePoolSection = (props: IProps) => {
   }, [state.isCompleted])
 
   const onApprove0 = async () => {
-    if (!account || !provider) {
+    if (!account || !provider || !networkId) {
       return
     }
 
@@ -183,7 +183,7 @@ export const CreatePoolSection = (props: IProps) => {
         account,
         poolData.token0.address
       )
-      const txHash = await token0.approveUnlimited(terminalAddress)
+      const txHash = await token0.approveUnlimited(terminalAddress, networkId)
 
       await token0.waitUntilApproved(account, terminalAddress, txHash)
 
@@ -202,7 +202,7 @@ export const CreatePoolSection = (props: IProps) => {
   }
 
   const onApprove1 = async () => {
-    if (!account || !provider) {
+    if (!account || !provider || !networkId) {
       return
     }
 
@@ -216,7 +216,7 @@ export const CreatePoolSection = (props: IProps) => {
         account,
         poolData.token1.address
       )
-      const txHash = await token1.approveUnlimited(terminalAddress)
+      const txHash = await token1.approveUnlimited(terminalAddress, networkId)
 
       await token1.waitUntilApproved(account, terminalAddress, txHash)
 

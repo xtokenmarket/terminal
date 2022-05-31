@@ -113,7 +113,7 @@ export const DepositSection = (props: IProps) => {
     step: 1,
   })
   const { onNext, depositState, poolData, updateState, onClose, goBack } = props
-  const { account, library: provider } = useConnectedWeb3Context()
+  const { account, library: provider, networkId } = useConnectedWeb3Context()
 
   const isMountedRef = useIsMountedRef()
 
@@ -166,7 +166,7 @@ export const DepositSection = (props: IProps) => {
   }, [state.depositDone])
 
   const onApprove0 = async () => {
-    if (!account || !provider) {
+    if (!account || !provider || !networkId) {
       return
     }
     try {
@@ -179,7 +179,7 @@ export const DepositSection = (props: IProps) => {
         account,
         poolData.token0.address
       )
-      const txHash = await token0.approveUnlimited(poolData.address)
+      const txHash = await token0.approveUnlimited(poolData.address, networkId)
 
       await token0.waitUntilApproved(account, poolData.address, txHash)
 
@@ -197,7 +197,7 @@ export const DepositSection = (props: IProps) => {
     }
   }
   const onApprove1 = async () => {
-    if (!account || !provider) {
+    if (!account || !provider || !networkId) {
       return
     }
     try {
@@ -210,7 +210,7 @@ export const DepositSection = (props: IProps) => {
         account,
         poolData.token1.address
       )
-      const txHash = await token1.approveUnlimited(poolData.address)
+      const txHash = await token1.approveUnlimited(poolData.address, networkId)
 
       await token1.waitUntilApproved(account, poolData.address, txHash)
 

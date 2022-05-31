@@ -1,3 +1,4 @@
+import { ChainId } from 'config/constants'
 import { BigNumber, Contract, Wallet, ethers, utils } from 'ethers'
 import { hexlify } from 'ethers/lib/utils'
 import { IToken, Maybe } from '../types'
@@ -81,13 +82,16 @@ class ERC20Service {
   /**
    * Approve `spender` to transfer an "unlimited" amount of tokens on behalf of the connected user.
    */
-  approveUnlimited = async (spender: string): Promise<string> => {
+  approveUnlimited = async (
+    spender: string,
+    networkId: number
+  ): Promise<string> => {
     const transactionObject = await this.contract.approve(
       spender,
       ethers.constants.MaxUint256,
       {
         value: '0x0',
-        gasLimit: hexlify(100000),
+        gasLimit: hexlify(networkId === ChainId.Arbitrum ? 600000 : 100000),
       }
     )
     console.log(`Approve unlimited transaction hash: ${transactionObject.hash}`)
