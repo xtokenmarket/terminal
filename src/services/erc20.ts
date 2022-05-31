@@ -87,7 +87,7 @@ class ERC20Service {
       ethers.constants.MaxUint256,
       {
         value: '0x0',
-        gasLimit: hexlify(800000),
+        gasLimit: hexlify(100000),
       }
     )
     console.log(`Approve unlimited transaction hash: ${transactionObject.hash}`)
