@@ -10,6 +10,8 @@ import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
 import { ActionStepRow, WarningInfo } from '..'
+import { useCountdown } from 'helpers/useCountdownClock'
+import { LOCKED_TIME } from 'config/constants'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -74,6 +76,11 @@ const useStyles = makeStyles((theme) => ({
     width: 24,
     height: 24,
   },
+  clockStyle: {
+    color: 'red',
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
 }))
 
 interface IProps {
@@ -98,6 +105,8 @@ interface IState {
   step: number
 }
 
+const targetTime = localStorage.getItem(LOCKED_TIME)
+
 export const DepositSection = (props: IProps) => {
   const classes = useStyles()
   const [state, setState] = useState<IState>({
@@ -116,6 +125,8 @@ export const DepositSection = (props: IProps) => {
   const { account, library: provider } = useConnectedWeb3Context()
 
   const isMountedRef = useIsMountedRef()
+
+  const { minutes, seconds } = useCountdown(Number(targetTime))
 
   const loadInitialInfo = async () => {
     if (!account || !provider) {
@@ -375,6 +386,10 @@ export const DepositSection = (props: IProps) => {
               ) : null
             }
           />
+          <div className={classes.clockStyle}>
+            {minutes + seconds > 0 &&
+              `${minutes}m${seconds}s until address unlocks`}
+          </div>
         </div>
       </div>
     </div>

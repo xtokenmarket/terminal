@@ -9,6 +9,7 @@ import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { getContractAddress } from 'config/networks'
 import { ERC20Service } from 'services'
 import { getMetamaskError } from 'utils'
+import { LOCKED_TIME, TIME_AFTER_FIVE_MINUTES } from 'config/constants'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -266,6 +267,8 @@ export const CreatePoolSection = (props: IProps) => {
       const poolAddress = await lmService.parseTerminalPoolCreatedTx(finalTxId)
       setPoolAddress(poolAddress)
       setTxId(finalTxId)
+
+      localStorage.setItem(LOCKED_TIME, TIME_AFTER_FIVE_MINUTES)
 
       setState((prev) => ({
         ...prev,
