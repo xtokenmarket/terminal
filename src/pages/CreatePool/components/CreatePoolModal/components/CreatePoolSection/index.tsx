@@ -191,7 +191,7 @@ export const CreatePoolSection = (props: IProps) => {
         ...prev,
         token0Approving: false,
         token0Approved: true,
-        step: 2,
+        step: state.token1Approved ? 3 : 2,
       }))
     } catch (error) {
       setState((prev) => ({
