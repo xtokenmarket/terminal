@@ -79,6 +79,7 @@ interface IProps {
   actionDone: boolean
   actionPending: boolean
   onConfirm: () => Promise<void>
+  isLocked?: boolean
 }
 
 export const ActionStepRow = (props: IProps) => {
@@ -94,6 +95,7 @@ export const ActionStepRow = (props: IProps) => {
     actionPending,
     onConfirm,
     rightComponent,
+    isLocked,
   } = props
 
   return (
@@ -115,7 +117,7 @@ export const ActionStepRow = (props: IProps) => {
       ) : (
         <Button
           color="primary"
-          disabled={!isActiveStep || actionPending || actionDone}
+          disabled={!isActiveStep || actionPending || actionDone || isLocked}
           variant="contained"
           className={clsx(
             classes.button,

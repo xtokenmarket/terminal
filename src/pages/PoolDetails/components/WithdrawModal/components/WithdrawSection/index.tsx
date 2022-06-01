@@ -11,6 +11,8 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 
 import { ActionStepRow, WarningInfo } from '..'
+import { FIVE_MINUTES_IN_MS, LOCKED_STARTING_TIME } from 'config/constants'
+import { useCountdown } from 'helpers/useCountdownClock'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -75,6 +77,11 @@ const useStyles = makeStyles((theme) => ({
       right: 12,
     },
   },
+  clockStyle: {
+    color: 'red',
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
 }))
 
 interface IProps {
@@ -104,6 +111,12 @@ export const WithdrawSection = (props: IProps) => {
   const { onNext, withdrawState, poolData, updateState, goBack, onClose } =
     props
   const { account, library: provider } = useConnectedWeb3Context()
+
+  const lockStartingTime = localStorage.getItem(LOCKED_STARTING_TIME) || 0
+  const { minutes, seconds } = useCountdown(
+    Number(lockStartingTime) + FIVE_MINUTES_IN_MS
+  )
+  const isLocked = minutes + seconds > 0 && !state.withdrawDone
 
   useEffect(() => {
     if (state.withdrawDone) {
@@ -164,6 +177,11 @@ export const WithdrawSection = (props: IProps) => {
         withdrawTx: txId,
         withdrawDone: true,
       }))
+
+      localStorage.setItem(
+        LOCKED_STARTING_TIME,
+        new Date().getTime().toString()
+      )
     } catch (error) {
       console.error(error)
       setState((prev) => ({
@@ -204,6 +222,7 @@ export const WithdrawSection = (props: IProps) => {
         />
         <div className={classes.actions}>
           <ActionStepRow
+            isLocked={isLocked}
             step={1}
             isActiveStep={state.step === 1}
             comment="Complete"
@@ -218,6 +237,9 @@ export const WithdrawSection = (props: IProps) => {
               ) : null
             }
           />
+        </div>
+        <div className={classes.clockStyle}>
+          {isLocked && `${minutes}m${seconds}s until address unlocks`}
         </div>
       </div>
     </div>
