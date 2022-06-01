@@ -374,6 +374,7 @@ export const DepositSection = (props: IProps) => {
             }
           />
           <ActionStepRow
+            isLocked={minutes + seconds > 0}
             step={3}
             isActiveStep={state.step === 3}
             comment="Complete"
