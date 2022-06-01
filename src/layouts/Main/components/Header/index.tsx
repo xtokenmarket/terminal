@@ -11,7 +11,7 @@ import { ENetwork } from 'utils/enums'
 import { useScrollYPosition } from 'helpers'
 import clsx from 'clsx'
 import connectors from 'utils/connectors'
-import { STORAGE_KEY_CONNECTOR } from 'config/constants'
+import { ChainId, STORAGE_KEY_CONNECTOR } from 'config/constants'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -99,6 +99,7 @@ export const Header = () => {
     setWalletConnectModalOpened,
     onDisconnect,
     library: provider,
+    networkId,
   } = useConnectedWeb3Context()
   const [user, setUser] = useState('')
 
@@ -126,7 +127,7 @@ export const Header = () => {
           const _user = await currentConnector.uauth.user()
           setUser(_user.sub)
         } else {
-          if (provider && account) {
+          if (provider && account && networkId === ChainId.Mainnet) {
             const ensName = await provider?.lookupAddress(account || '')
             if (ensName) {
               setUser(ensName)
