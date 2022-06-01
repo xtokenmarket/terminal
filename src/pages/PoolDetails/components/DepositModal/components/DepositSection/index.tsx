@@ -11,7 +11,7 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 
 import { ActionStepRow, WarningInfo } from '..'
 import { useCountdown } from 'helpers/useCountdownClock'
-import { LOCKED_TIME } from 'config/constants'
+import { FIVE_MINUTES_IN_MS, LOCKED_STARTING_TIME } from 'config/constants'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -105,8 +105,6 @@ interface IState {
   step: number
 }
 
-const targetTime = localStorage.getItem(LOCKED_TIME)
-
 export const DepositSection = (props: IProps) => {
   const classes = useStyles()
   const [state, setState] = useState<IState>({
@@ -126,7 +124,11 @@ export const DepositSection = (props: IProps) => {
 
   const isMountedRef = useIsMountedRef()
 
-  const { minutes, seconds } = useCountdown(Number(targetTime))
+  const lockStartingTime = localStorage.getItem(LOCKED_STARTING_TIME) || 0
+
+  const { minutes, seconds } = useCountdown(
+    Number(lockStartingTime) + FIVE_MINUTES_IN_MS
+  )
 
   const loadInitialInfo = async () => {
     if (!account || !provider) {

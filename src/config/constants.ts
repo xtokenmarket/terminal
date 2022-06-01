@@ -26,14 +26,9 @@ export const ETHER_DECIMAL = 18
 export const MINT_BURN_SLIPPAGE = BigNumber.from(100)
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000'
 
-export const LOCKED_TIME = 'LOCKED_TIME'
+export const LOCKED_STARTING_TIME = 'LOCKED_STARTING_TIME'
 
-const FIVE_MINUTES_IN_MS = 5 * 60 * 1000
-const NOW_IN_MS = new Date().getTime()
-
-export const TIME_AFTER_FIVE_MINUTES = (
-  NOW_IN_MS + FIVE_MINUTES_IN_MS
-).toString()
+export const FIVE_MINUTES_IN_MS = 5 * 60 * 1000
 
 export enum ChainId {
   Mainnet = 1,

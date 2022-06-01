@@ -9,7 +9,7 @@ import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { getContractAddress } from 'config/networks'
 import { ERC20Service } from 'services'
 import { getMetamaskError } from 'utils'
-import { LOCKED_TIME, TIME_AFTER_FIVE_MINUTES } from 'config/constants'
+import { LOCKED_STARTING_TIME } from 'config/constants'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -268,7 +268,10 @@ export const CreatePoolSection = (props: IProps) => {
       setPoolAddress(poolAddress)
       setTxId(finalTxId)
 
-      localStorage.setItem(LOCKED_TIME, TIME_AFTER_FIVE_MINUTES)
+      localStorage.setItem(
+        LOCKED_STARTING_TIME,
+        new Date().getTime().toString()
+      )
 
       setState((prev) => ({
         ...prev,
