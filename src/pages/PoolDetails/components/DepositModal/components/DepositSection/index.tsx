@@ -125,10 +125,10 @@ export const DepositSection = (props: IProps) => {
   const isMountedRef = useIsMountedRef()
 
   const lockStartingTime = localStorage.getItem(LOCKED_STARTING_TIME) || 0
-
   const { minutes, seconds } = useCountdown(
     Number(lockStartingTime) + FIVE_MINUTES_IN_MS
   )
+  const isLocked = minutes + seconds > 0 && !state.depositDone
 
   const loadInitialInfo = async () => {
     if (!account || !provider) {
@@ -287,6 +287,11 @@ export const DepositSection = (props: IProps) => {
       updateState({
         depositTx: txId.hash,
       })
+
+      localStorage.setItem(
+        LOCKED_STARTING_TIME,
+        new Date().getTime().toString()
+      )
     } catch (error) {
       console.error(error)
       setState((prev) => ({
@@ -374,7 +379,7 @@ export const DepositSection = (props: IProps) => {
             }
           />
           <ActionStepRow
-            isLocked={minutes + seconds > 0}
+            isLocked={isLocked}
             step={3}
             isActiveStep={state.step === 3}
             comment="Complete"
@@ -390,8 +395,7 @@ export const DepositSection = (props: IProps) => {
             }
           />
           <div className={classes.clockStyle}>
-            {minutes + seconds > 0 &&
-              `${minutes}m${seconds}s until address unlocks`}
+            {isLocked && `${minutes}m${seconds}s until address unlocks`}
           </div>
         </div>
       </div>
