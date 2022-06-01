@@ -80,6 +80,8 @@ const useStyles = makeStyles((theme) => ({
     color: 'red',
     display: 'flex',
     justifyContent: 'flex-end',
+    fontSize: 14,
+    marginTop: 10,
   },
 }))
 
