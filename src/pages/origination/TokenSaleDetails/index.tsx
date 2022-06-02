@@ -192,6 +192,11 @@ const TokenSaleDetails = () => {
     tokenOffer.myPosition.tokenPurchased.gt(0) &&
     isCliffPeriodPassed()
 
+  const isMyPositionShow =
+    tokenOffer &&
+    (tokenOffer.myPosition.tokenPurchased.gt(0) ||
+      tokenOffer.myPosition.amountInvested.gt(0))
+
   return (
     <PageWrapper>
       <PageHeader
@@ -247,12 +252,14 @@ const TokenSaleDetails = () => {
                 </Button>
               </>
             )}
-            <Table
-              item={tokenOffer.myPosition}
-              label={'My Position'}
-              toggleModal={toggleClaimModal}
-              isVestedPropertiesShow={isVestButtonShow}
-            />
+            {isMyPositionShow && (
+              <Table
+                item={tokenOffer.myPosition}
+                label={'My Position'}
+                toggleModal={toggleClaimModal}
+                isVestedPropertiesShow={isVestButtonShow}
+              />
+            )}
             {isVestButtonShow && (
               <Button
                 className={clsx(cl.button, cl.marginLeft)}
