@@ -106,7 +106,6 @@ export const Table = ({
                 <span>
                   <Button
                     className={cl.button}
-                    disabled={!saleInitiated}
                     onClick={() => {
                       toggleModal && toggleModal()
                     }}
