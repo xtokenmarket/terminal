@@ -221,6 +221,11 @@ const TokenSaleDetails = () => {
     !tokenOffer?.offeringOverview.salesBegin.gt(0) ||
     !isUserAddressWhitelisted()
 
+  const isInitiateSaleButtonDisabled =
+    tokenOffer &&
+    tokenOffer.whitelist.salesPeriod?.gt(0) &&
+    !tokenOffer.whitelist.whitelist
+
   return (
     <PageWrapper>
       <PageHeader
@@ -251,6 +256,7 @@ const TokenSaleDetails = () => {
                 label={'Offering Overview'}
                 toggleModal={toggleInitiateSaleModal}
                 isOwnerOrManager={tokenOffer.offeringOverview.isOwnerOrManager}
+                isInitiateSaleButtonDisabled={isInitiateSaleButtonDisabled}
               />
             )}
             {isWhitelistSaleConfigured && (

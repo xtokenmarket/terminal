@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.colors.secondary,
     },
     '&:disabled': {
-      backgroundColor: theme.colors.primary200,
+      opacity: 0.3,
     },
     padding: '8px 15px',
     backgroundColor: theme.colors.secondary,
@@ -65,6 +65,7 @@ interface IProps {
   isOwnerOrManager?: boolean
   isVestedPropertiesShow?: boolean
   isOfferUnsuccessful?: boolean
+  isInitiateSaleButtonDisabled?: boolean
 }
 
 export const Table = ({
@@ -74,6 +75,7 @@ export const Table = ({
   isOwnerOrManager,
   isVestedPropertiesShow,
   isOfferUnsuccessful,
+  isInitiateSaleButtonDisabled,
 }: IProps) => {
   const [saleInitiated, setSaleInitiated] = useState(false)
   const { account, library: provider } = useConnectedWeb3Context()
@@ -122,7 +124,11 @@ export const Table = ({
           <div className={cl.labelWrapper}>
             <Typography className={cl.label}>{label}</Typography>
             {isOwnerOrManager && (
-              <Button className={cl.button} onClick={toggleModal}>
+              <Button
+                className={cl.button}
+                onClick={toggleModal}
+                disabled={isInitiateSaleButtonDisabled}
+              >
                 <Typography className={cl.text}>INITIATE SALE</Typography>
               </Button>
             )}
