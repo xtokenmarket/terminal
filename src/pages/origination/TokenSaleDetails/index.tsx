@@ -61,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 14,
     color: theme.colors.warn3,
     marginLeft: 10,
+    fontSize: 14,
   },
 }))
 
