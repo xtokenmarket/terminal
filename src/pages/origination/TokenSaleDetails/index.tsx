@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BigNumber } from 'ethers'
 import { transparentize } from 'polished'
 import { useHistory, useParams } from 'react-router'
@@ -16,6 +16,8 @@ import { InvestModal } from './components/InvestModal'
 import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
 import { VestModal } from './components/VestModal'
+import axios from 'axios'
+import { useGetIsAccountWhitelisted } from 'hooks/useGetIsAccountWhitelisted'
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -76,6 +78,7 @@ interface IState {
   isInvestModalOpen: boolean
   isVestModalOpen: boolean
   open: boolean
+  isAccountWhitelisted: boolean
 }
 
 const TokenSaleDetails = () => {
@@ -94,7 +97,28 @@ const TokenSaleDetails = () => {
     isInvestModalOpen: false,
     isVestModalOpen: false,
     open: false,
+    isAccountWhitelisted: false,
   })
+
+  useEffect(() => {
+    const getIsAccountWhitelisted = async () => {
+      try {
+        // TODO: hardcodeed network
+        const data = await axios.get(
+          `http://originationstage.xtokenapi.link/api/whitelistedAcccountDetails/?accountAddress=${account}&poolAddress=${poolAddress}&network=kovan`
+        )
+
+        setState((prev) => ({
+          ...prev,
+          isAccountWhitelisted: data.data.isAddressWhitelisted,
+        }))
+      } catch (error) {
+        console.log('getIsAccountWhitelisted error', error)
+      }
+    }
+
+    getIsAccountWhitelisted()
+  }, [account])
 
   const onInitiateSuccess = async () => {
     setState((prev) => ({
@@ -213,25 +237,12 @@ const TokenSaleDetails = () => {
     (tokenOffer.myPosition.tokenPurchased.gt(0) ||
       tokenOffer.myPosition.amountInvested.gt(0))
 
-  const isUserAddressWhitelisted = () => {
-    if (!tokenOffer) return
-    const whitelistMerkleRoot = tokenOffer?.whitelist.whitelistMerkleRoot
-
-    const _isUserAddressWhitelisted =
-      whitelistMerkleRoot &&
-      whitelistMerkleRoot.some(
-        (x) => x.toLowerCase() === account?.toLowerCase()
-      )
-
-    return _isUserAddressWhitelisted
-  }
-
   const isPublicSaleInvestDisabled =
     !tokenOffer?.offeringOverview.salesBegin.gt(0)
 
   const iswhitelistSaleInvestDisabled =
     !tokenOffer?.offeringOverview.salesBegin.gt(0) ||
-    !isUserAddressWhitelisted()
+    !state.isAccountWhitelisted
 
   const isInitiateSaleButtonDisabled =
     (tokenOffer &&
@@ -290,7 +301,7 @@ const TokenSaleDetails = () => {
                   >
                     <Typography className={cl.text}>INVEST</Typography>
                   </Button>
-                  {!isUserAddressWhitelisted() && (
+                  {!state.isAccountWhitelisted && (
                     <div className={cl.errorMessageWrapper}>
                       <img alt="info" src="/assets/icons/warning.svg" />
                       &nbsp;&nbsp;
