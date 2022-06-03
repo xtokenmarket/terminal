@@ -234,9 +234,10 @@ const TokenSaleDetails = () => {
     !isUserAddressWhitelisted()
 
   const isInitiateSaleButtonDisabled =
-    tokenOffer &&
-    tokenOffer.whitelist.salesPeriod?.gt(0) &&
-    !tokenOffer.whitelist.whitelist
+    (tokenOffer &&
+      tokenOffer.whitelist.salesPeriod?.gt(0) &&
+      !tokenOffer.whitelist.whitelist) ||
+    tokenOffer?.offeringOverview.salesBegin.gt(0)
 
   return (
     <PageWrapper>
