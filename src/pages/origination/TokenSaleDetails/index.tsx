@@ -17,7 +17,6 @@ import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
 import { VestModal } from './components/VestModal'
 import axios from 'axios'
-import { useGetIsAccountWhitelisted } from 'hooks/useGetIsAccountWhitelisted'
 
 const useStyles = makeStyles((theme) => ({
   button: {
