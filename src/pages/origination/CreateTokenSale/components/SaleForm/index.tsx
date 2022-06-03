@@ -4,6 +4,7 @@ import {
   InfoText,
   EPricingFormula,
   ETokenSalePhase,
+  EPeriods,
 } from 'utils/enums'
 import {
   Button,
@@ -76,6 +77,14 @@ const useStyles = makeStyles((theme) => ({
   pricingFormula: {
     marginBottom: 40,
   },
+  warning: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    width: '100%',
+    color: theme.colors.warn2,
+    fontSize: '14px',
+    marginTop: '10px',
+  },
 }))
 
 interface IProps {
@@ -128,6 +137,10 @@ export const SaleForm = ({
       updateSaleData({ pricingFormula: newPricingFormula as EPricingFormula })
     }
   }
+
+  const isShowOfferingPeriodError =
+    (Number(offeringPeriod) > 4 && offeringPeriodUnit === EPeriods.Weeks) ||
+    (Number(offeringPeriod) > 28 && offeringPeriodUnit === EPeriods.Days)
 
   return (
     <>
@@ -191,6 +204,11 @@ export const SaleForm = ({
                 updateSaleData({ offeringPeriod: e.target.value })
               }}
             />
+            {isShowOfferingPeriodError && (
+              <div className={classes.warning}>
+                Offering period must be less than or equal to 4 weeks
+              </div>
+            )}
           </Grid>
         </Grid>
         <Grid
@@ -268,7 +286,7 @@ export const SaleForm = ({
         fullWidth
         onClick={onSubmit}
         variant="contained"
-        disabled={submitDisabled}
+        disabled={submitDisabled || isShowOfferingPeriodError}
       >
         Next
       </Button>
