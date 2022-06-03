@@ -51,6 +51,17 @@ const useStyles = makeStyles((theme) => ({
   marginLeft: {
     marginLeft: 10,
   },
+  buttonWrapper: {
+    display: 'flex',
+  },
+  errorMessageWrapper: {
+    display: 'flex',
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 14,
+    color: theme.colors.warn3,
+    marginLeft: 10,
+  },
 }))
 
 type RouteParams = {
@@ -269,13 +280,22 @@ const TokenSaleDetails = () => {
                     tokenOffer.offeringOverview.isOwnerOrManager
                   }
                 />
-                <Button
-                  className={cl.button}
-                  onClick={toggleInvestModal}
-                  disabled={iswhitelistSaleInvestDisabled}
-                >
-                  <Typography className={cl.text}>INVEST</Typography>
-                </Button>
+                <div className={cl.buttonWrapper}>
+                  <Button
+                    className={cl.button}
+                    onClick={toggleInvestModal}
+                    disabled={iswhitelistSaleInvestDisabled}
+                  >
+                    <Typography className={cl.text}>INVEST</Typography>
+                  </Button>
+                  {!isUserAddressWhitelisted() && (
+                    <div className={cl.errorMessageWrapper}>
+                      <img alt="info" src="/assets/icons/warning.svg" />
+                      &nbsp;&nbsp;
+                      <div>Unfortunately, your address was not whitelisted</div>
+                    </div>
+                  )}
+                </div>
               </>
             )}
             {!isSaleCompleted && (
