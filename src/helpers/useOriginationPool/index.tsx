@@ -25,9 +25,8 @@ interface IState {
   loading: boolean
 }
 
-export const useOriginationPool = (poolAddress?: string, network?: Network) => {
+export const useOriginationPool = (poolAddress: string, network: Network) => {
   const { account, networkId, library: provider } = useConnectedWeb3Context()
-  const { chainId } = useNetworkContext()
   const { multicall } = useServices(network)
 
   const [state, setState] = useState<IState>({ loading: true })

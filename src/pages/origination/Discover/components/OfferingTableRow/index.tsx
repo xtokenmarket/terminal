@@ -10,6 +10,9 @@ import {
 } from 'utils'
 import { useOriginationPool } from 'helpers/useOriginationPool'
 import moment from 'moment'
+import { useConnectedWeb3Context } from 'contexts'
+import { getNetworkFromId } from 'utils/network'
+import { NetworkId } from 'types'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -84,7 +87,11 @@ interface IProps {
 
 export const OfferingTableRow = ({ offering }: IProps) => {
   const cl = useStyles()
-  const { tokenOffer } = useOriginationPool(offering)
+  const { networkId } = useConnectedWeb3Context()
+  const { tokenOffer } = useOriginationPool(
+    offering,
+    getNetworkFromId(networkId as NetworkId)
+  )
   const _originationRow = tokenOffer?.originationRow
 
   const renderContent = () => {
