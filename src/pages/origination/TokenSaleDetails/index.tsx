@@ -292,6 +292,7 @@ const TokenSaleDetails = () => {
                   isOwnerOrManager={
                     tokenOffer.offeringOverview.isOwnerOrManager
                   }
+                  isWhitelistSet={tokenOffer.whitelist.whitelist}
                 />
                 <div className={cl.buttonWrapper}>
                   <Button

@@ -66,6 +66,7 @@ interface IProps {
   isVestedPropertiesShow?: boolean
   isOfferUnsuccessful?: boolean
   isInitiateSaleButtonDisabled?: boolean
+  isWhitelistSet?: boolean
 }
 
 export const Table = ({
@@ -76,6 +77,7 @@ export const Table = ({
   isVestedPropertiesShow,
   isOfferUnsuccessful,
   isInitiateSaleButtonDisabled,
+  isWhitelistSet,
 }: IProps) => {
   const [saleInitiated, setSaleInitiated] = useState(false)
   const { account, library: provider } = useConnectedWeb3Context()
@@ -107,7 +109,9 @@ export const Table = ({
                     toggleModal && toggleModal()
                   }}
                 >
-                  <Typography className={cl.text}>SET WHITELIST</Typography>
+                  <Typography className={cl.text}>
+                    {isWhitelistSet ? 'UPDATE WHITELIST' : 'SET WHITELIST'}
+                  </Typography>
                 </Button>
               </span>
             )}
