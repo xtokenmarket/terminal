@@ -191,6 +191,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         salesPeriod: whitelistSaleDuration,
         offerToken: token0,
         purchaseToken: token1 || ETH,
+        whitelistMerkleRoot,
       }
 
       const publicSale = {

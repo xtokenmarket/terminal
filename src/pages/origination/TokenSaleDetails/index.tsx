@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { BigNumber } from 'ethers'
 import { transparentize } from 'polished'
 import { useHistory, useParams } from 'react-router'
-// import { useConnectedWeb3Context } from 'contexts'
+import { useConnectedWeb3Context } from 'contexts'
 import { Button, makeStyles, Typography } from '@material-ui/core'
 import { PageWrapper, PageHeader, PageContent, SimpleLoader } from 'components'
 import { useOriginationPool } from 'helpers'
@@ -27,6 +27,10 @@ const useStyles = makeStyles((theme) => ({
     padding: '8px 20px',
     backgroundColor: theme.colors.secondary,
     borderRadius: 4,
+    '&:disabled': {
+      opacity: 0.3,
+      backgroundColor: theme.colors.secondary,
+    },
   },
   text: {
     color: theme.colors.primary700,
@@ -70,7 +74,7 @@ const TokenSaleDetails = () => {
     poolAddress,
     network as Network
   )
-  // const { account, networkId, library: provider } = useConnectedWeb3Context()
+  const { account, networkId, library: provider } = useConnectedWeb3Context()
 
   const [state, setState] = useState<IState>({
     isClaimModalOpen: false,
@@ -197,6 +201,26 @@ const TokenSaleDetails = () => {
     (tokenOffer.myPosition.tokenPurchased.gt(0) ||
       tokenOffer.myPosition.amountInvested.gt(0))
 
+  const isUserAddressWhitelisted = () => {
+    if (!tokenOffer) return
+    const whitelistMerkleRoot = tokenOffer?.whitelist.whitelistMerkleRoot
+
+    const _isUserAddressWhitelisted =
+      whitelistMerkleRoot &&
+      whitelistMerkleRoot.some(
+        (x) => x.toLowerCase() === account?.toLowerCase()
+      )
+
+    return _isUserAddressWhitelisted
+  }
+
+  const isPublicSaleInvestDisabled =
+    !tokenOffer?.offeringOverview.salesBegin.gt(0)
+
+  const iswhitelistSaleInvestDisabled =
+    !tokenOffer?.offeringOverview.salesBegin.gt(0) ||
+    !isUserAddressWhitelisted()
+
   return (
     <PageWrapper>
       <PageHeader
@@ -239,7 +263,11 @@ const TokenSaleDetails = () => {
                     tokenOffer.offeringOverview.isOwnerOrManager
                   }
                 />
-                <Button className={cl.button} onClick={toggleInvestModal}>
+                <Button
+                  className={cl.button}
+                  onClick={toggleInvestModal}
+                  disabled={iswhitelistSaleInvestDisabled}
+                >
                   <Typography className={cl.text}>INVEST</Typography>
                 </Button>
               </>
@@ -247,7 +275,11 @@ const TokenSaleDetails = () => {
             {!isSaleCompleted && (
               <>
                 <Table item={tokenOffer.publicSale} label={'Public Sale'} />
-                <Button className={cl.button} onClick={toggleInvestModal}>
+                <Button
+                  className={cl.button}
+                  onClick={toggleInvestModal}
+                  disabled={isPublicSaleInvestDisabled}
+                >
                   <Typography className={cl.text}>INVEST</Typography>
                 </Button>
               </>
