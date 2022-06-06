@@ -100,22 +100,16 @@ export const Table = ({
           <div className={cl.labelWrapper}>
             <Typography className={cl.label}>{label}</Typography>
             {isOwnerOrManager && (
-              <Tooltip
-                arrow
-                title={saleInitiated ? '' : 'Sale should be initiated'}
-                placement="top"
-              >
-                <span>
-                  <Button
-                    className={cl.button}
-                    onClick={() => {
-                      toggleModal && toggleModal()
-                    }}
-                  >
-                    <Typography className={cl.text}>SET WHITELIST</Typography>
-                  </Button>
-                </span>
-              </Tooltip>
+              <span>
+                <Button
+                  className={cl.button}
+                  onClick={() => {
+                    toggleModal && toggleModal()
+                  }}
+                >
+                  <Typography className={cl.text}>SET WHITELIST</Typography>
+                </Button>
+              </span>
             )}
           </div>
         )
