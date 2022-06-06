@@ -8,6 +8,7 @@ import { Button, makeStyles, Typography } from '@material-ui/core'
 import { PageWrapper, PageHeader, PageContent, SimpleLoader } from 'components'
 import { useOriginationPool } from 'helpers'
 import { getCurrentTimeStamp, getRemainingTimeSec } from 'utils'
+import { Network } from 'utils/enums'
 
 import { ClaimModal } from './components/ClaimModal'
 import { InitiateSaleModal } from './components/InitiateSaleModal'
@@ -64,8 +65,11 @@ interface IState {
 const TokenSaleDetails = () => {
   const cl = useStyles()
   const history = useHistory()
-  const { poolAddress } = useParams<RouteParams>()
-  const { tokenOffer, loadInfo } = useOriginationPool(poolAddress)
+  const { network, poolAddress } = useParams<RouteParams>()
+  const { tokenOffer, loadInfo } = useOriginationPool(
+    poolAddress,
+    network as Network
+  )
   // const { account, networkId, library: provider } = useConnectedWeb3Context()
 
   const [state, setState] = useState<IState>({
