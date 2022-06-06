@@ -89,6 +89,7 @@ const TokenSaleDetails = () => {
     network as Network
   )
   const { account, networkId, library: provider } = useConnectedWeb3Context()
+  const whitelistMerkleRoot = tokenOffer?.whitelist.whitelistMerkleRoot
 
   const [state, setState] = useState<IState>({
     isClaimModalOpen: false,
@@ -117,7 +118,7 @@ const TokenSaleDetails = () => {
     }
 
     getIsAccountWhitelisted()
-  }, [account])
+  }, [account, whitelistMerkleRoot])
 
   const onInitiateSuccess = async () => {
     setState((prev) => ({

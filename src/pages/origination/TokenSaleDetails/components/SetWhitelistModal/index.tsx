@@ -17,6 +17,7 @@ import { ChainId, CHAIN_NAMES, ORIGINATION_API_URL } from 'config/constants'
 import { useSnackbar } from 'notistack'
 import axios from 'axios'
 import { FungibleOriginationPoolService } from 'services/fungibleOriginationPool'
+import { useOriginationPool } from 'helpers'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -130,6 +131,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
   const { account, networkId, library: provider } = useConnectedWeb3Context()
+  const { loadInfo } = useOriginationPool(poolAddress)
 
   const hiddenFileInput = useRef<HTMLInputElement>(null)
   const [state, setState] = useReducer(
@@ -210,6 +212,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
     try {
       const txHash = await fungibleOriginationPool.setWhitelist(merkleTreeRoot)
       setState({ txState: TxState.Complete, setWhitelistTx: txHash })
+      await loadInfo()
     } catch (err) {
       enqueueSnackbar('Transaction execution failed', { variant: 'error' })
       resetTxState()
