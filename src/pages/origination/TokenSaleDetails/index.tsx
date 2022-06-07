@@ -215,6 +215,11 @@ const TokenSaleDetails = () => {
     tokenOffer.whitelist.startingPrice &&
     tokenOffer.whitelist.startingPrice.gt(0)
 
+  const isPublicSaleConfigured =
+    tokenOffer &&
+    tokenOffer.publicSale.startingPrice &&
+    tokenOffer.publicSale.startingPrice.gt(0)
+
   const isSaleCompleted =
     tokenOffer &&
     !tokenOffer.offeringOverview.salesBegin.isZero() &&
@@ -312,7 +317,7 @@ const TokenSaleDetails = () => {
                 </div>
               </>
             )}
-            {!isSaleCompleted && (
+            {!isSaleCompleted && isPublicSaleConfigured && (
               <>
                 <Table item={tokenOffer.publicSale} label={'Public Sale'} />
                 <Button
