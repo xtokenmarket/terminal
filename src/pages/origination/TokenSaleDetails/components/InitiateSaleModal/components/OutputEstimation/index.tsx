@@ -7,6 +7,7 @@ import {
   formatDurationUnits,
   getCurrentTimeStamp,
   getTimeRemainingUnits,
+  parseDurationSec,
   // getTotalTokenPrice,
 } from 'utils'
 import { ONE_ETHER } from 'utils/number'
@@ -20,6 +21,8 @@ const useStyles = makeStyles((theme) => ({
   label: {
     color: theme.colors.primary100,
     marginBottom: 8,
+    fontSize: 12,
+    fontWeight: 600,
   },
   infoRow: {
     margin: '0 -4px',
@@ -65,8 +68,12 @@ const useStyles = makeStyles((theme) => ({
   },
   whiteText: {
     color: theme.colors.white,
-    fontSize: 12,
+    fontSize: 20,
     fontWeight: 400,
+  },
+  midInfo: {
+    backgroundColor: theme.colors.primary500,
+    padding: '24px 32px',
   },
 }))
 
@@ -87,7 +94,7 @@ export const OutputEstimation = (props: IProps) => {
   return (
     <div className={clsx(classes.root, props.className)}>
       <div className={classes.estimation}>
-        <Typography className={classes.label}>TOTAL OFFERING</Typography>
+        <Typography className={classes.label}>YOU OFFERED</Typography>
         <div className={classes.infoRow}>
           <TokenIcon
             token={offerData.offerToken}
@@ -110,22 +117,42 @@ export const OutputEstimation = (props: IProps) => {
           </Typography>
         </div>
       </div>
+      <div className={classes.midInfo}>
+        <Typography className={classes.label}>
+          TOTAL OFFERING {offerData.offerToken.symbol}
+        </Typography>
+
+        <div className={classes.infoRow}>
+          <TokenIcon
+            token={offerData.offerToken}
+            className={classes.tokenIcon}
+          />
+          &nbsp;&nbsp;
+          <Typography className={classes.amount}>
+            {formatBigNumber(
+              offerData.totalOfferingAmount,
+              offerData.offerToken.decimals,
+              4
+            )}
+            &nbsp;
+            {/*{offerData.offerToken.price && (
+              <span>
+                ~ $
+                {getTotalTokenPrice(
+                  amount,
+                  offerData.offerToken.decimals,
+                  offerData.offerToken.price
+                )}
+              </span>
+            )}*/}
+          </Typography>
+        </div>
+      </div>
       <div className={classes.period}>
         <Typography className={classes.label}>SALES PERIOD</Typography>
-        <div className={classes.infoRow}>
-          {durationRemaining.length === 0 ? (
-            <div className={classes.wrapper}>
-              <Typography className={classes.whiteText}>N/A</Typography>
-            </div>
-          ) : (
-            <div className={classes.wrapper}>
-              <Typography className={classes.whiteText}>{primary}</Typography>
-              <Typography className={classes.lightPurpletext}>
-                {rest}
-              </Typography>
-            </div>
-          )}
-        </div>
+        <Typography className={classes.whiteText}>
+          {parseDurationSec(Number(offerData.salesPeriod?.toString()))}
+        </Typography>
       </div>
     </div>
   )
