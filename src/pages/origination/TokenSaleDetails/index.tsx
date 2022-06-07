@@ -371,6 +371,7 @@ const TokenSaleDetails = () => {
               onClose={toggleInvestModal}
               onSuccess={onInvestSuccess}
               open={state.isInvestModalOpen}
+              addressCap={tokenOffer.whitelist.addressCap}
             />
             <VestModal
               offerData={tokenOffer.offeringOverview}
