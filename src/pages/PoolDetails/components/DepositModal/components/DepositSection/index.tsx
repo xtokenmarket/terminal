@@ -8,8 +8,10 @@ import { ERC20Service, CLRService } from 'services'
 import { ITerminalPool } from 'types'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
-
+import ClockIcon from '@material-ui/icons/AccessTime'
 import { ActionStepRow, WarningInfo } from '..'
+import { useCountdown } from 'helpers/useCountdownClock'
+import { FIVE_MINUTES_IN_MS, LOCKED_STARTING_TIME } from 'config/constants'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -74,6 +76,18 @@ const useStyles = makeStyles((theme) => ({
     width: 24,
     height: 24,
   },
+  clockStyle: {
+    color: 'red',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    fontSize: 14,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  clock: {
+    width: 20,
+    marginRight: 5,
+  },
 }))
 
 interface IProps {
@@ -116,6 +130,12 @@ export const DepositSection = (props: IProps) => {
   const { account, library: provider, networkId } = useConnectedWeb3Context()
 
   const isMountedRef = useIsMountedRef()
+
+  const lockStartingTime = localStorage.getItem(LOCKED_STARTING_TIME) || 0
+  const { minutes, seconds } = useCountdown(
+    Number(lockStartingTime) + FIVE_MINUTES_IN_MS
+  )
+  const isLocked = minutes + seconds > 0 && !state.depositDone
 
   const loadInitialInfo = async () => {
     if (!account || !provider) {
@@ -274,6 +294,11 @@ export const DepositSection = (props: IProps) => {
       updateState({
         depositTx: txId.hash,
       })
+
+      localStorage.setItem(
+        LOCKED_STARTING_TIME,
+        new Date().getTime().toString()
+      )
     } catch (error) {
       console.error(error)
       setState((prev) => ({
@@ -361,6 +386,7 @@ export const DepositSection = (props: IProps) => {
             }
           />
           <ActionStepRow
+            isLocked={isLocked}
             step={3}
             isActiveStep={state.step === 3}
             comment="Complete"
@@ -375,6 +401,14 @@ export const DepositSection = (props: IProps) => {
               ) : null
             }
           />
+          <div className={classes.clockStyle}>
+            {isLocked && (
+              <>
+                <ClockIcon className={classes.clock} />
+                {`${minutes}m ${seconds}s until address unlocks`}
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>
