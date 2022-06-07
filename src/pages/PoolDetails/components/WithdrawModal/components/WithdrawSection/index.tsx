@@ -9,7 +9,7 @@ import { ITerminalPool } from 'types'
 import { ZERO } from 'utils/number'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
-
+import ClockIcon from '@material-ui/icons/AccessTime'
 import { ActionStepRow, WarningInfo } from '..'
 import { FIVE_MINUTES_IN_MS, LOCKED_STARTING_TIME } from 'config/constants'
 import { useCountdown } from 'helpers/useCountdownClock'
@@ -83,6 +83,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-end',
     fontSize: 14,
     marginTop: 10,
+    alignItems: 'center',
+  },
+  clock: {
+    width: 20,
+    marginRight: 5,
   },
 }))
 
@@ -241,7 +246,12 @@ export const WithdrawSection = (props: IProps) => {
           />
         </div>
         <div className={classes.clockStyle}>
-          {isLocked && `${minutes}m${seconds}s until address unlocks`}
+          {isLocked && (
+            <>
+              <ClockIcon className={classes.clock} />
+              {`${minutes}m ${seconds}s until address unlocks`}
+            </>
+          )}
         </div>
       </div>
     </div>
