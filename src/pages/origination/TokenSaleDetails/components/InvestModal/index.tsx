@@ -23,6 +23,7 @@ interface IProps {
   onClose: () => void
   onSuccess: () => Promise<void>
   open: boolean
+  addressCap: BigNumber
 }
 
 export interface IState {
@@ -49,6 +50,7 @@ export const InvestModal: React.FC<IProps> = ({
   onClose,
   onSuccess,
   open,
+  addressCap,
 }) => {
   const classes = useStyles()
   const { account } = useConnectedWeb3Context()
@@ -107,6 +109,7 @@ export const InvestModal: React.FC<IProps> = ({
             onNext={onNextStep}
             onClose={_onClose}
             updateState={updateState}
+            maxContributionAmount={addressCap}
           />
         )
       default:
