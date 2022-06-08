@@ -1,9 +1,9 @@
 import clsx from 'clsx'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { BigNumber } from 'ethers'
 import { transparentize } from 'polished'
 import { useHistory, useParams } from 'react-router'
-// import { useConnectedWeb3Context } from 'contexts'
+import { useConnectedWeb3Context } from 'contexts'
 import { Button, makeStyles, Typography } from '@material-ui/core'
 import { PageWrapper, PageHeader, PageContent, SimpleLoader } from 'components'
 import { useOriginationPool } from 'helpers'
@@ -16,6 +16,7 @@ import { InvestModal } from './components/InvestModal'
 import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
 import { VestModal } from './components/VestModal'
+import axios from 'axios'
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -27,6 +28,10 @@ const useStyles = makeStyles((theme) => ({
     padding: '8px 20px',
     backgroundColor: theme.colors.secondary,
     borderRadius: 4,
+    '&:disabled': {
+      opacity: 0.3,
+      backgroundColor: theme.colors.secondary,
+    },
   },
   text: {
     color: theme.colors.primary700,
@@ -46,6 +51,18 @@ const useStyles = makeStyles((theme) => ({
   },
   marginLeft: {
     marginLeft: 10,
+  },
+  buttonWrapper: {
+    display: 'flex',
+  },
+  errorMessageWrapper: {
+    display: 'flex',
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 14,
+    color: theme.colors.warn3,
+    marginLeft: 10,
+    fontSize: 14,
   },
 }))
 
@@ -70,7 +87,8 @@ const TokenSaleDetails = () => {
     poolAddress,
     network as Network
   )
-  // const { account, networkId, library: provider } = useConnectedWeb3Context()
+  const { account, networkId, library: provider } = useConnectedWeb3Context()
+  const whitelistMerkleRoot = tokenOffer?.whitelist.whitelistMerkleRoot
 
   const [state, setState] = useState<IState>({
     isClaimModalOpen: false,
@@ -175,6 +193,11 @@ const TokenSaleDetails = () => {
     tokenOffer.whitelist.startingPrice &&
     tokenOffer.whitelist.startingPrice.gt(0)
 
+  const isPublicSaleConfigured =
+    tokenOffer &&
+    tokenOffer.publicSale.startingPrice &&
+    tokenOffer.publicSale.startingPrice.gt(0)
+
   const isSaleCompleted =
     tokenOffer &&
     !tokenOffer.offeringOverview.salesBegin.isZero() &&
@@ -191,6 +214,24 @@ const TokenSaleDetails = () => {
     tokenOffer &&
     tokenOffer.myPosition.tokenPurchased.gt(0) &&
     isCliffPeriodPassed()
+
+  const isMyPositionShow =
+    tokenOffer &&
+    (tokenOffer.myPosition.tokenPurchased.gt(0) ||
+      tokenOffer.myPosition.amountInvested.gt(0))
+
+  const isPublicSaleInvestDisabled =
+    !tokenOffer?.offeringOverview.salesBegin.gt(0)
+
+  const iswhitelistSaleInvestDisabled =
+    !tokenOffer?.offeringOverview.salesBegin.gt(0) ||
+    !tokenOffer.whitelist.isAddressWhitelisted
+
+  const isInitiateSaleButtonDisabled =
+    (tokenOffer &&
+      tokenOffer.whitelist.salesPeriod?.gt(0) &&
+      !tokenOffer.whitelist.whitelist) ||
+    tokenOffer?.offeringOverview.salesBegin.gt(0)
 
   return (
     <PageWrapper>
@@ -222,37 +263,62 @@ const TokenSaleDetails = () => {
                 label={'Offering Overview'}
                 toggleModal={toggleInitiateSaleModal}
                 isOwnerOrManager={tokenOffer.offeringOverview.isOwnerOrManager}
+                isInitiateSaleButtonDisabled={isInitiateSaleButtonDisabled}
               />
             )}
             {isWhitelistSaleConfigured && (
               <>
                 <Table
+                  isSaleInitiated={tokenOffer.offeringOverview.salesBegin.gt(0)}
                   item={tokenOffer.whitelist}
                   label={'Whitelist Sale'}
                   toggleModal={toggleSetWhitelistModal}
                   isOwnerOrManager={
                     tokenOffer.offeringOverview.isOwnerOrManager
                   }
+                  isWhitelistSet={tokenOffer.whitelist.whitelist}
                 />
-                <Button className={cl.button} onClick={toggleInvestModal}>
-                  <Typography className={cl.text}>INVEST</Typography>
-                </Button>
+                <div className={cl.buttonWrapper}>
+                  <Button
+                    className={cl.button}
+                    onClick={toggleInvestModal}
+                    disabled={iswhitelistSaleInvestDisabled}
+                  >
+                    <Typography className={cl.text}>INVEST</Typography>
+                  </Button>
+                  {!tokenOffer.whitelist.isAddressWhitelisted &&
+                    tokenOffer.whitelist.whitelist && (
+                      <div className={cl.errorMessageWrapper}>
+                        <img alt="info" src="/assets/icons/warning.svg" />
+                        &nbsp;&nbsp;
+                        <div>
+                          Unfortunately, your address was not whitelisted
+                        </div>
+                      </div>
+                    )}
+                </div>
               </>
             )}
-            {!isSaleCompleted && (
+            {!isSaleCompleted && isPublicSaleConfigured && (
               <>
                 <Table item={tokenOffer.publicSale} label={'Public Sale'} />
-                <Button className={cl.button} onClick={toggleInvestModal}>
+                <Button
+                  className={cl.button}
+                  onClick={toggleInvestModal}
+                  disabled={isPublicSaleInvestDisabled}
+                >
                   <Typography className={cl.text}>INVEST</Typography>
                 </Button>
               </>
             )}
-            <Table
-              item={tokenOffer.myPosition}
-              label={'My Position'}
-              toggleModal={toggleClaimModal}
-              isVestedPropertiesShow={isVestButtonShow}
-            />
+            {isMyPositionShow && (
+              <Table
+                item={tokenOffer.myPosition}
+                label={'My Position'}
+                toggleModal={toggleClaimModal}
+                isVestedPropertiesShow={isVestButtonShow}
+              />
+            )}
             {isVestButtonShow && (
               <Button
                 className={clsx(cl.button, cl.marginLeft)}
@@ -287,6 +353,7 @@ const TokenSaleDetails = () => {
               onClose={toggleInvestModal}
               onSuccess={onInvestSuccess}
               open={state.isInvestModalOpen}
+              addressCap={tokenOffer.whitelist.addressCap}
             />
             <VestModal
               offerData={tokenOffer.offeringOverview}

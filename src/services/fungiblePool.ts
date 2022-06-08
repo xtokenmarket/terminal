@@ -70,11 +70,16 @@ class FungiblePoolService {
   whitelistPurchase = async (
     account: string,
     poolAddress: string,
-    offerAmount: BigNumber
+    offerAmount: BigNumber,
+    maxContributionAmount: BigNumber
   ): Promise<string> => {
-    // TODO: Add `addressCap`
     const merkleProof = await this.generateMerkleProof(account, poolAddress)
-    const tx = await this.contract.whitelistPurchase(merkleProof, offerAmount)
+    const tx = await this.contract.whitelistPurchase(
+      merkleProof,
+      offerAmount,
+      maxContributionAmount
+    )
+
     console.log(`whitelist purchase transaction hash: ${tx.hash}`)
     return tx.hash
   }

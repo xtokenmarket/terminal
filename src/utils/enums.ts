@@ -114,8 +114,6 @@ export enum Network {
 export enum EPeriods {
   Days = 'Days',
   Weeks = 'Weeks',
-  Months = 'Months',
-  Years = 'Years',
 }
 
 // uni v3

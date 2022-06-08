@@ -20,6 +20,10 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
     fontSize: 18,
     lineHeight: '25px',
+    width: '55%',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
   },
 }))
 

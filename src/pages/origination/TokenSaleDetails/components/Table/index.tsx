@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.colors.secondary,
     },
     '&:disabled': {
-      backgroundColor: theme.colors.primary200,
+      opacity: 0.3,
     },
     padding: '8px 15px',
     backgroundColor: theme.colors.secondary,
@@ -65,6 +65,9 @@ interface IProps {
   isOwnerOrManager?: boolean
   isVestedPropertiesShow?: boolean
   isOfferUnsuccessful?: boolean
+  isInitiateSaleButtonDisabled?: boolean
+  isWhitelistSet?: boolean
+  isSaleInitiated?: boolean
 }
 
 export const Table = ({
@@ -74,6 +77,9 @@ export const Table = ({
   isOwnerOrManager,
   isVestedPropertiesShow,
   isOfferUnsuccessful,
+  isInitiateSaleButtonDisabled,
+  isWhitelistSet,
+  isSaleInitiated,
 }: IProps) => {
   const [saleInitiated, setSaleInitiated] = useState(false)
   const { account, library: provider } = useConnectedWeb3Context()
@@ -98,23 +104,19 @@ export const Table = ({
           <div className={cl.labelWrapper}>
             <Typography className={cl.label}>{label}</Typography>
             {isOwnerOrManager && (
-              <Tooltip
-                arrow
-                title={saleInitiated ? '' : 'Sale should be initiated'}
-                placement="top"
-              >
-                <span>
-                  <Button
-                    className={cl.button}
-                    disabled={!saleInitiated}
-                    onClick={() => {
-                      toggleModal && toggleModal()
-                    }}
-                  >
-                    <Typography className={cl.text}>SET WHITELIST</Typography>
-                  </Button>
-                </span>
-              </Tooltip>
+              <span>
+                <Button
+                  className={cl.button}
+                  onClick={() => {
+                    toggleModal && toggleModal()
+                  }}
+                  disabled={isSaleInitiated}
+                >
+                  <Typography className={cl.text}>
+                    {isWhitelistSet ? 'UPDATE WHITELIST' : 'SET WHITELIST'}
+                  </Typography>
+                </Button>
+              </span>
             )}
           </div>
         )
@@ -123,7 +125,11 @@ export const Table = ({
           <div className={cl.labelWrapper}>
             <Typography className={cl.label}>{label}</Typography>
             {isOwnerOrManager && (
-              <Button className={cl.button} onClick={toggleModal}>
+              <Button
+                className={cl.button}
+                onClick={toggleModal}
+                disabled={isInitiateSaleButtonDisabled}
+              >
                 <Typography className={cl.text}>INITIATE SALE</Typography>
               </Button>
             )}
