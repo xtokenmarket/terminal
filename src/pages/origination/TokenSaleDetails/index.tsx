@@ -269,6 +269,7 @@ const TokenSaleDetails = () => {
             {isWhitelistSaleConfigured && (
               <>
                 <Table
+                  isSaleInitiated={tokenOffer.offeringOverview.salesBegin.gt(0)}
                   item={tokenOffer.whitelist}
                   label={'Whitelist Sale'}
                   toggleModal={toggleSetWhitelistModal}
@@ -285,13 +286,16 @@ const TokenSaleDetails = () => {
                   >
                     <Typography className={cl.text}>INVEST</Typography>
                   </Button>
-                  {!tokenOffer.whitelist.isAddressWhitelisted && (
-                    <div className={cl.errorMessageWrapper}>
-                      <img alt="info" src="/assets/icons/warning.svg" />
-                      &nbsp;&nbsp;
-                      <div>Unfortunately, your address was not whitelisted</div>
-                    </div>
-                  )}
+                  {!tokenOffer.whitelist.isAddressWhitelisted &&
+                    tokenOffer.whitelist.whitelist && (
+                      <div className={cl.errorMessageWrapper}>
+                        <img alt="info" src="/assets/icons/warning.svg" />
+                        &nbsp;&nbsp;
+                        <div>
+                          Unfortunately, your address was not whitelisted
+                        </div>
+                      </div>
+                    )}
                 </div>
               </>
             )}
