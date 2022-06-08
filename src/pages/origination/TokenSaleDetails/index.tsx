@@ -77,7 +77,6 @@ interface IState {
   isInvestModalOpen: boolean
   isVestModalOpen: boolean
   open: boolean
-  isAccountWhitelisted: boolean
 }
 
 const TokenSaleDetails = () => {
@@ -97,28 +96,7 @@ const TokenSaleDetails = () => {
     isInvestModalOpen: false,
     isVestModalOpen: false,
     open: false,
-    isAccountWhitelisted: false,
   })
-
-  useEffect(() => {
-    const getIsAccountWhitelisted = async () => {
-      try {
-        // TODO: hardcodeed network
-        const data = await axios.get(
-          `http://originationstage.xtokenapi.link/api/whitelistedAcccountDetails/?accountAddress=${account}&poolAddress=${poolAddress}&network=kovan`
-        )
-
-        setState((prev) => ({
-          ...prev,
-          isAccountWhitelisted: data.data.isAddressWhitelisted,
-        }))
-      } catch (error) {
-        console.log('getIsAccountWhitelisted error', error)
-      }
-    }
-
-    getIsAccountWhitelisted()
-  }, [account, whitelistMerkleRoot])
 
   const onInitiateSuccess = async () => {
     setState((prev) => ({
@@ -247,7 +225,7 @@ const TokenSaleDetails = () => {
 
   const iswhitelistSaleInvestDisabled =
     !tokenOffer?.offeringOverview.salesBegin.gt(0) ||
-    !state.isAccountWhitelisted
+    !tokenOffer.whitelist.isAddressWhitelisted
 
   const isInitiateSaleButtonDisabled =
     (tokenOffer &&
@@ -307,7 +285,7 @@ const TokenSaleDetails = () => {
                   >
                     <Typography className={cl.text}>INVEST</Typography>
                   </Button>
-                  {!state.isAccountWhitelisted && (
+                  {!tokenOffer.whitelist.isAddressWhitelisted && (
                     <div className={cl.errorMessageWrapper}>
                       <img alt="info" src="/assets/icons/warning.svg" />
                       &nbsp;&nbsp;

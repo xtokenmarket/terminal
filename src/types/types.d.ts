@@ -253,6 +253,7 @@ export interface IWhitelistSale extends Label {
   offerToken: IToken
   purchaseToken: IToken
   whitelistMerkleRoot?: string[]
+  isAddressWhitelisted: boolean
 }
 
 export interface IPublicSale extends Label {
