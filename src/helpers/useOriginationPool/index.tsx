@@ -123,6 +123,11 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         whitelistStartingPrice,
       } = _offerData as ITokenOfferDetails
 
+      const _publicSaleDuration = BigNumber.from(Number(publicSaleDuration))
+      const _whitelistSaleDuration = BigNumber.from(
+        Number(whitelistSaleDuration)
+      )
+
       const offeringOverview = {
         label: OriginationLabels.OfferingOverview,
         offerToken: token0 || ETH,
@@ -132,7 +137,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         cliffPeriod,
         salesBegin: saleInitiatedTimestamp,
         salesEnd: saleEndTimestamp,
-        salesPeriod: publicSaleDuration,
+        salesPeriod: _publicSaleDuration.add(_whitelistSaleDuration),
         offerTokenAmountSold,
         totalOfferingAmount,
         poolAddress,
@@ -158,6 +163,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         )
 
       let addressCap = ZERO
+      let isAddressWhitelisted = false
 
       if (isSetWhitelist()) {
         try {
@@ -170,6 +176,12 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
               )
             ).data.maxContributionAmount
           )
+
+          isAddressWhitelisted = (
+            await axios.get(
+              `http://originationstage.xtokenapi.link/api/whitelistedAcccountDetails/?accountAddress=${account}&poolAddress=${poolAddress}&network=kovan`
+            )
+          ).data.isAddressWhitelisted
         } catch (e) {
           // Whitelist detail for pool is missing
         }
@@ -191,6 +203,8 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         salesPeriod: whitelistSaleDuration,
         offerToken: token0,
         purchaseToken: token1 || ETH,
+        whitelistMerkleRoot,
+        isAddressWhitelisted,
       }
 
       const publicSale = {

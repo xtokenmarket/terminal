@@ -22,6 +22,7 @@ interface IProps {
   offerAmount: BigNumber
   offerData: IOfferingOverview
   updateState: (e: any) => void
+  maxContributionAmount: BigNumber
 }
 
 interface IState {
@@ -34,8 +35,15 @@ export const InvestSection = (props: IProps) => {
   const classes = useStyles()
   const { account, library: provider } = useConnectedWeb3Context()
 
-  const { isWhitelist, offerAmount, offerData, onClose, onNext, updateState } =
-    props
+  const {
+    isWhitelist,
+    offerAmount,
+    offerData,
+    onClose,
+    onNext,
+    updateState,
+    maxContributionAmount,
+  } = props
 
   const [state, setState] = useReducer(
     (prevState: IState, newState: Partial<IState>) => ({
@@ -77,7 +85,8 @@ export const InvestSection = (props: IProps) => {
         txId = await fungiblePool.whitelistPurchase(
           account,
           offerData.poolAddress,
-          offerAmount
+          offerAmount,
+          maxContributionAmount
         )
       } else {
         txId = await fungiblePool.purchase(offerAmount)

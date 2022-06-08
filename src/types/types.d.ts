@@ -252,6 +252,8 @@ export interface IWhitelistSale extends Label {
   salesPeriod?: BigNumber
   offerToken: IToken
   purchaseToken: IToken
+  whitelistMerkleRoot?: string[]
+  isAddressWhitelisted: boolean
 }
 
 export interface IPublicSale extends Label {

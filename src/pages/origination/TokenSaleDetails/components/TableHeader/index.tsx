@@ -24,6 +24,9 @@ const useStyles = makeStyles((theme) => ({
   itemAlignRight: {
     justifyContent: 'flex-end',
   },
+  itemAlignCenter: {
+    justifyContent: 'center',
+  },
 }))
 
 interface IProps {
@@ -63,7 +66,7 @@ export const TableHeader = (props: IProps) => {
           <div className={classes.item}>Sales End</div>
         </Td>
         <Td type={OfferingOverview.SalesPeriod} label={props.label}>
-          <div className={clsx(classes.item, classes.itemAlignRight)}>
+          <div className={clsx(classes.item, classes.itemAlignCenter)}>
             Sales Period
           </div>
         </Td>

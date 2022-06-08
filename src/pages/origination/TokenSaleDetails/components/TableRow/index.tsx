@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   content: {
     border: `1px solid ${theme.colors.primary200}`,
     cursor: 'pointer',
-    padding: 16,
+    padding: '16px 0',
     display: 'flex',
     alignItems: 'center',
     position: 'relative',
@@ -111,6 +111,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     fontWeight: 600,
   },
+  itemMarginLeft: {
+    marginLeft: 17,
+  },
 }))
 
 interface IProps {
@@ -145,7 +148,7 @@ export const TableRow = ({
       return (
         <div className={cl.content}>
           <Td type={OfferingOverview.OfferToken} label={item.label}>
-            <div className={cl.item}>
+            <div className={clsx(cl.item, cl.itemMarginLeft)}>
               <img
                 alt="offerToken"
                 className={cl.tokenIcon}
@@ -219,7 +222,7 @@ export const TableRow = ({
             </Typography>
           </Td>
           <Td type={OfferingOverview.SalesEnd} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label, cl.itemAlignRight)}>
+            <Typography className={clsx(cl.item, cl.label)}>
               {item.salesEnd.isZero()
                 ? 'N/A'
                 : moment
@@ -228,7 +231,7 @@ export const TableRow = ({
             </Typography>
           </Td>
           <Td type={OfferingOverview.SalesPeriod} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label, cl.itemAlignRight)}>
+            <Typography className={clsx(cl.item, cl.label, cl.itemAlignCenter)}>
               {item.salesPeriod
                 ? parseDurationSec(Number(item.salesPeriod.toString()))
                 : 'N/A'}
@@ -245,7 +248,9 @@ export const TableRow = ({
         <>
           <div className={cl.content}>
             <Td type={WhitelistSale.CurrentPrice} label={item.label}>
-              <Typography className={clsx(cl.item, cl.label)}>
+              <Typography
+                className={clsx(cl.item, cl.label, cl.itemMarginLeft)}
+              >
                 {`${formatBigNumber(
                   item.currentPrice,
                   item.offerToken.decimals
@@ -312,7 +317,7 @@ export const TableRow = ({
       return (
         <div className={cl.content}>
           <Td type={PublicSale.CurrentPrice} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label)}>
+            <Typography className={clsx(cl.item, cl.label, cl.itemMarginLeft)}>
               {`${formatBigNumber(
                 item.currentPrice,
                 item.purchaseToken.decimals

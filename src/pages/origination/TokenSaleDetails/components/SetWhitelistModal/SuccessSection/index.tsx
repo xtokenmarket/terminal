@@ -1,4 +1,5 @@
 import { Button, makeStyles, Typography } from '@material-ui/core'
+import { ViewTransaction } from 'components'
 
 const ICON_SIZE = 150
 
@@ -34,6 +35,12 @@ const useStyles = makeStyles((theme) => ({
     padding: 32,
     backgroundColor: theme.colors.primary500,
   },
+  transaction: {
+    padding: theme.spacing(2),
+    display: 'flex',
+    justifyContent: 'center',
+    backgroundColor: theme.colors.primary500,
+  },
 }))
 
 interface IProps {
@@ -66,7 +73,9 @@ export const SuccessSection = (props: IProps) => {
           can see details of your transaction.
         </Typography>
       </div>
-      {tx}
+      <div className={classes.transaction}>
+        <ViewTransaction txId={tx} />
+      </div>
       <div className={classes.actions}>
         <Button
           color="primary"

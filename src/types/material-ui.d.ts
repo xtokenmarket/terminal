@@ -52,6 +52,7 @@ declare module '@material-ui/core/styles/createTheme' {
       warn: string
       warn1: string
       warn2: string
+      warn3: string
       gradient1: string
     }
   }
@@ -106,6 +107,7 @@ declare module '@material-ui/core/styles/createTheme' {
       warn: string
       warn1: string
       warn2: string
+      warn3: string
       gradient1: string
     }
   }
