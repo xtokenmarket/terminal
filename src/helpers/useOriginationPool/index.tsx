@@ -123,6 +123,11 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         whitelistStartingPrice,
       } = _offerData as ITokenOfferDetails
 
+      const _publicSaleDuration = BigNumber.from(Number(publicSaleDuration))
+      const _whitelistSaleDuration = BigNumber.from(
+        Number(whitelistSaleDuration)
+      )
+
       const offeringOverview = {
         label: OriginationLabels.OfferingOverview,
         offerToken: token0 || ETH,
@@ -132,7 +137,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         cliffPeriod,
         salesBegin: saleInitiatedTimestamp,
         salesEnd: saleEndTimestamp,
-        salesPeriod: publicSaleDuration,
+        salesPeriod: _publicSaleDuration.add(_whitelistSaleDuration),
         offerTokenAmountSold,
         totalOfferingAmount,
         poolAddress,

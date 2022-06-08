@@ -94,34 +94,9 @@ export const OutputEstimation = (props: IProps) => {
   return (
     <div className={clsx(classes.root, props.className)}>
       <div className={classes.estimation}>
-        <Typography className={classes.label}>YOU OFFERED</Typography>
-        <div className={classes.infoRow}>
-          <TokenIcon
-            token={offerData.offerToken}
-            className={classes.tokenIcon}
-          />
-          &nbsp;&nbsp;
-          <Typography className={classes.amount}>
-            {formatBigNumber(ONE_ETHER, offerData.offerToken.decimals, 4)}
-            &nbsp;
-            {/*{offerData.offerToken.price && (
-              <span>
-                ~ $
-                {getTotalTokenPrice(
-                  amount,
-                  offerData.offerToken.decimals,
-                  offerData.offerToken.price
-                )}
-              </span>
-            )}*/}
-          </Typography>
-        </div>
-      </div>
-      <div className={classes.midInfo}>
         <Typography className={classes.label}>
           TOTAL OFFERING {offerData.offerToken.symbol}
         </Typography>
-
         <div className={classes.infoRow}>
           <TokenIcon
             token={offerData.offerToken}
