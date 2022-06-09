@@ -77,6 +77,7 @@ interface IState {
   isInvestModalOpen: boolean
   isVestModalOpen: boolean
   open: boolean
+  isWhitelistInvestClicked: boolean
 }
 
 const TokenSaleDetails = () => {
@@ -96,6 +97,7 @@ const TokenSaleDetails = () => {
     isInvestModalOpen: false,
     isVestModalOpen: false,
     open: false,
+    isWhitelistInvestClicked: false,
   })
 
   const onInitiateSuccess = async () => {
@@ -162,6 +164,15 @@ const TokenSaleDetails = () => {
     setState((prev) => ({
       ...prev,
       isInvestModalOpen: !state.isInvestModalOpen,
+      isWhitelistInvestClicked: false,
+    }))
+  }
+
+  const toggleWhitelistInvestModal = () => {
+    setState((prev) => ({
+      ...prev,
+      isInvestModalOpen: !state.isInvestModalOpen,
+      isWhitelistInvestClicked: true,
     }))
   }
 
@@ -281,7 +292,7 @@ const TokenSaleDetails = () => {
                 <div className={cl.buttonWrapper}>
                   <Button
                     className={cl.button}
-                    onClick={toggleInvestModal}
+                    onClick={toggleWhitelistInvestModal}
                     disabled={iswhitelistSaleInvestDisabled}
                   >
                     <Typography className={cl.text}>INVEST</Typography>
@@ -348,7 +359,7 @@ const TokenSaleDetails = () => {
               }}
             />
             <InvestModal
-              isWhitelist={Boolean(isWhitelistSaleConfigured)}
+              isWhitelist={state.isWhitelistInvestClicked}
               offerData={tokenOffer.offeringOverview}
               onClose={toggleInvestModal}
               onSuccess={onInvestSuccess}

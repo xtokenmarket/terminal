@@ -23,6 +23,7 @@ interface IProps {
   offerData: IOfferingOverview
   updateState: (e: any) => void
   maxContributionAmount: BigNumber
+  purchaseAmount: BigNumber
 }
 
 interface IState {
@@ -43,6 +44,7 @@ export const InvestSection = (props: IProps) => {
     onNext,
     updateState,
     maxContributionAmount,
+    purchaseAmount,
   } = props
 
   const [state, setState] = useReducer(
@@ -85,11 +87,11 @@ export const InvestSection = (props: IProps) => {
         txId = await fungiblePool.whitelistPurchase(
           account,
           offerData.poolAddress,
-          offerAmount,
+          purchaseAmount,
           maxContributionAmount
         )
       } else {
-        txId = await fungiblePool.purchase(offerAmount)
+        txId = await fungiblePool.purchase(purchaseAmount)
       }
 
       const finalTxId = await fungiblePool.waitUntilPurchase(txId)

@@ -110,6 +110,7 @@ export const InvestModal: React.FC<IProps> = ({
             onClose={_onClose}
             updateState={updateState}
             maxContributionAmount={addressCap}
+            purchaseAmount={state.purchaseAmount}
           />
         )
       default:

@@ -61,8 +61,14 @@ class FungiblePoolService {
     return this.contract.getPurchaseAmountFromOfferAmount(offerAmount)
   }
 
-  purchase = async (offerAmount: BigNumber): Promise<string> => {
-    const tx = await this.contract.purchase(offerAmount)
+  getCurrentMintAmount = async (
+    contributionAmount: BigNumber
+  ): Promise<BigNumber> => {
+    return this.contract.getCurrentMintAmount(contributionAmount)
+  }
+
+  purchase = async (contributionAmount: BigNumber): Promise<string> => {
+    const tx = await this.contract.purchase(contributionAmount)
     console.log(`public purchase transaction hash: ${tx.hash}`)
     return tx.hash
   }
@@ -77,7 +83,8 @@ class FungiblePoolService {
     const tx = await this.contract.whitelistPurchase(
       merkleProof,
       offerAmount,
-      maxContributionAmount
+      maxContributionAmount,
+      { value: offerAmount }
     )
 
     console.log(`whitelist purchase transaction hash: ${tx.hash}`)
