@@ -112,7 +112,7 @@ const networks: { [K in ChainId]: INetwork } = {
     contracts: {
       LM: '0x2F6Cd810537f81423a5dfEc957DC7B98AB420BD7',
       multicall: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
-      origination: '0x7059B4aF6D613811c56d9d66eC1440091Df0eC5d',
+      origination: '0x4d3C42aC5E330462d505f464aF0562687705e0f6',
       rewardEscrow: '0x0956636dF01cA07e3101F300602f9D4DDA6deD66',
       uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
