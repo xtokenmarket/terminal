@@ -77,6 +77,11 @@ export const InvestModal: React.FC<IProps> = ({
     onClose()
   }
 
+  const _onSuccess = () => {
+    _clearTxState()
+    onSuccess()
+  }
+
   const onNextStep = () => {
     switch (state.step) {
       case EInvestModalStep.Input:
@@ -137,7 +142,7 @@ export const InvestModal: React.FC<IProps> = ({
         return (
           <SuccessSection
             offerData={offerData}
-            onClose={onSuccess}
+            onClose={_onSuccess}
             txHash={state.txHash}
             purchaseAmount={state.purchaseAmount}
             offerAmount={state.offerAmount}

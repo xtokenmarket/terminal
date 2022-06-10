@@ -1,4 +1,4 @@
-import { Button, makeStyles } from '@material-ui/core'
+import { Button, CircularProgress, makeStyles } from '@material-ui/core'
 import { WarningInfo } from 'components'
 import { IOfferingOverview } from 'types'
 import { useEffect, useReducer } from 'react'
@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
     width: 600,
   },
   button: { height: 48, marginTop: 24 },
+  progress: { color: theme.colors.white },
 }))
 
 interface IProps {
@@ -61,10 +62,8 @@ export const InvestSection = (props: IProps) => {
 
   useEffect(() => {
     if (state.isPurchased) {
-      setTimeout(() => {
-        updateState({ isPurchased: true, txHash: state.txHash })
-        onNext()
-      }, 2000)
+      updateState({ isPurchased: true, txHash: state.txHash })
+      onNext()
     }
   }, [state.isPurchased])
 
@@ -79,6 +78,8 @@ export const InvestSection = (props: IProps) => {
       offerData.poolAddress
     )
 
+    const isPurchaseTokenETH = offerData.purchaseToken.symbol === 'ETH'
+
     try {
       setState({ isPurchasing: true })
 
@@ -89,10 +90,10 @@ export const InvestSection = (props: IProps) => {
           offerData.poolAddress,
           purchaseAmount,
           maxContributionAmount,
-          offerData.purchaseToken.symbol === 'ETH'
+          isPurchaseTokenETH
         )
       } else {
-        txId = await fungiblePool.purchase(purchaseAmount)
+        txId = await fungiblePool.purchase(purchaseAmount, isPurchaseTokenETH)
       }
 
       const finalTxId = await fungiblePool.waitUntilPurchase(txId)
@@ -121,8 +122,16 @@ export const InvestSection = (props: IProps) => {
         fullWidth
         onClick={onInvest}
         variant="contained"
+        disabled={state.isPurchasing || state.isPurchased}
       >
-        INVEST TOKEN
+        {state.isPurchasing ? (
+          <>
+            &nbsp;
+            <CircularProgress className={classes.progress} size={24} />
+          </>
+        ) : (
+          'INVEST TOKEN'
+        )}
       </Button>
       <Button
         className={classes.button}

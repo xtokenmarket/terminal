@@ -100,8 +100,8 @@ export const SuccessSection = (props: IProps) => {
           You have successfully invested{' '}
           {numberWithCommas(
             formatBigNumber(purchaseAmount, offerData.purchaseToken.decimals)
-          )}
-          {offerData.purchaseToken.symbol} for
+          )}{' '}
+          {offerData.purchaseToken.symbol} for{' '}
           {numberWithCommas(
             formatBigNumber(offerAmount, offerData.offerToken.decimals)
           )}{' '}

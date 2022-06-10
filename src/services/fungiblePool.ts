@@ -67,8 +67,16 @@ class FungiblePoolService {
     return this.contract.getCurrentMintAmount(contributionAmount)
   }
 
-  purchase = async (contributionAmount: BigNumber): Promise<string> => {
-    const tx = await this.contract.purchase(contributionAmount)
+  purchase = async (
+    contributionAmount: BigNumber,
+    isPurchaseTokenETH: boolean
+  ): Promise<string> => {
+    const tx = await this.contract.purchase.apply(
+      this,
+      isPurchaseTokenETH
+        ? [contributionAmount, { value: contributionAmount }]
+        : [contributionAmount]
+    )
     console.log(`public purchase transaction hash: ${tx.hash}`)
     return tx.hash
   }
