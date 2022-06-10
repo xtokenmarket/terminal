@@ -264,4 +264,5 @@ export enum EInvestModalStep {
   Input = 'Input',
   Invest = 'Invest',
   Success = 'Success',
+  Approve = 'Approve',
 }

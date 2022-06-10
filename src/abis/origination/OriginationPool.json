@@ -1,10 +1,5 @@
 [
-  {
-    "inputs": [
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
+  { "inputs": [], "stateMutability": "nonpayable", "type": "constructor" },
   {
     "anonymous": false,
     "inputs": [
@@ -139,11 +134,7 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenAmount",
-        "type": "uint256"
-      },
+      { "internalType": "uint256", "name": "tokenAmount", "type": "uint256" },
       {
         "internalType": "uint256",
         "name": "tokenAmountClaimed",
@@ -162,48 +153,32 @@
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "claimPurchaseToken",
-    "outputs": [
-    ],
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "claimTokens",
-    "outputs": [
-    ],
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256[]",
-        "name": "_nftIds",
-        "type": "uint256[]"
-      }
+      { "internalType": "uint256[]", "name": "_nftIds", "type": "uint256[]" }
     ],
     "name": "claimVested",
-    "outputs": [
-    ],
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "cliffPeriod",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -227,8 +202,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "getOfferTokenPrice",
     "outputs": [
       {
@@ -242,19 +216,11 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "offerAmount",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "offerAmount", "type": "uint256" }
     ],
     "name": "getPurchaseAmountFromOfferAmount",
     "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "purchaseAmount",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "purchaseAmount", "type": "uint256" }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -271,11 +237,7 @@
         "name": "_originationCore",
         "type": "address"
       },
-      {
-        "internalType": "address",
-        "name": "_admin",
-        "type": "address"
-      },
+      { "internalType": "address", "name": "_admin", "type": "address" },
       {
         "internalType": "address",
         "name": "_vestingEntryNFT",
@@ -350,84 +312,49 @@
       }
     ],
     "name": "initialize",
-    "outputs": [
-    ],
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "initiateSale",
-    "outputs": [
-    ],
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_address",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "_address", "type": "address" }
     ],
     "name": "isOwnerOrManager",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "isPublicMintPeriod",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "isWhitelistMintPeriod",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "manager",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "offerToken",
     "outputs": [
       {
@@ -440,41 +367,21 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "name": "offerTokenAmountPurchased",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "offerTokenAmountSold",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "originationCore",
     "outputs": [
       {
@@ -487,86 +394,44 @@
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "originationCoreFees",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "originationFee",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "owner",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "publicEndingPrice",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "publicSaleDuration",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "publicStartingPrice",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -579,14 +444,12 @@
       }
     ],
     "name": "purchase",
-    "outputs": [
-    ],
+    "outputs": [],
     "stateMutability": "payable",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "purchaseToken",
     "outputs": [
       {
@@ -599,128 +462,67 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "name": "purchaseTokenContribution",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "purchaseTokensAcquired",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "renounceOwnership",
-    "outputs": [
-    ],
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "reserveAmount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "saleDuration",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "saleEndTimestamp",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "saleInitiated",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "saleInitiatedTimestamp",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_manager",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "_manager", "type": "address" }
     ],
     "name": "setManager",
-    "outputs": [
-    ],
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -733,89 +535,49 @@
       }
     ],
     "name": "setWhitelist",
-    "outputs": [
-    ],
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "sponsorTokensClaimed",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "totalOfferingAmount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "newOwner", "type": "address" }
     ],
     "name": "transferOwnership",
-    "outputs": [
-    ],
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "name": "userToVestingId",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "vestableTokenAmount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "vestingEntryNFT",
     "outputs": [
       {
@@ -828,58 +590,30 @@
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "vestingID",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "vestingPeriod",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "whitelistEndingPrice",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "whitelistMerkleRoot",
-    "outputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
+    "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
     "stateMutability": "view",
     "type": "function"
   },
@@ -902,36 +636,21 @@
       }
     ],
     "name": "whitelistPurchase",
-    "outputs": [
-    ],
+    "outputs": [],
     "stateMutability": "payable",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "whitelistSaleDuration",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-    ],
+    "inputs": [],
     "name": "whitelistStartingPrice",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   }
