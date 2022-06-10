@@ -8,6 +8,7 @@ import { BigNumber } from 'ethers'
 import { ZERO } from 'utils/number'
 
 import { InputSection, InvestSection, SuccessSection } from './components'
+import { ApproveSection } from './components/ApproveSection'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -76,9 +77,23 @@ export const InvestModal: React.FC<IProps> = ({
     onClose()
   }
 
+  const _onSuccess = () => {
+    _clearTxState()
+    onSuccess()
+  }
+
   const onNextStep = () => {
     switch (state.step) {
       case EInvestModalStep.Input:
+        setState((prev) => ({
+          ...prev,
+          step:
+            offerData.purchaseToken.symbol === 'ETH'
+              ? EInvestModalStep.Invest
+              : EInvestModalStep.Approve,
+        }))
+        break
+      case EInvestModalStep.Approve:
         setState((prev) => ({ ...prev, step: EInvestModalStep.Invest }))
         break
       case EInvestModalStep.Invest:
@@ -100,6 +115,16 @@ export const InvestModal: React.FC<IProps> = ({
             updateState={updateState}
           />
         )
+      case EInvestModalStep.Approve:
+        return (
+          <ApproveSection
+            onClose={_onClose}
+            onNext={onNextStep}
+            offerData={offerData}
+            updateState={updateState}
+            purchaseAmount={state.purchaseAmount}
+          />
+        )
       case EInvestModalStep.Invest:
         return (
           <InvestSection
@@ -110,14 +135,17 @@ export const InvestModal: React.FC<IProps> = ({
             onClose={_onClose}
             updateState={updateState}
             maxContributionAmount={addressCap}
+            purchaseAmount={state.purchaseAmount}
           />
         )
       default:
         return (
           <SuccessSection
             offerData={offerData}
-            onClose={onSuccess}
+            onClose={_onSuccess}
             txHash={state.txHash}
+            purchaseAmount={state.purchaseAmount}
+            offerAmount={state.offerAmount}
           />
         )
     }
