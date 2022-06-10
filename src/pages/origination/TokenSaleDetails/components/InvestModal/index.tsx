@@ -139,6 +139,8 @@ export const InvestModal: React.FC<IProps> = ({
             offerData={offerData}
             onClose={onSuccess}
             txHash={state.txHash}
+            purchaseAmount={state.purchaseAmount}
+            offerAmount={state.offerAmount}
           />
         )
     }

@@ -1,6 +1,8 @@
 import { Button, makeStyles, Typography } from '@material-ui/core'
 import { IOfferingOverview } from 'types'
 import { TokenIcon, ViewTransaction } from 'components'
+import { BigNumber } from 'ethers'
+import { formatBigNumber, numberWithCommas } from 'utils'
 
 const ICON_SIZE = 150
 
@@ -64,11 +66,13 @@ interface IProps {
   onClose: () => void
   offerData: IOfferingOverview
   txHash: string
+  purchaseAmount: BigNumber
+  offerAmount: BigNumber
 }
 
 export const SuccessSection = (props: IProps) => {
   const classes = useStyles()
-  const { offerData, onClose, txHash } = props
+  const { offerData, onClose, txHash, purchaseAmount, offerAmount } = props
 
   return (
     <div className={classes.root}>
@@ -93,8 +97,15 @@ export const SuccessSection = (props: IProps) => {
           offering invested!
         </Typography>
         <Typography className={classes.description}>
-          You have successfully invested 100 {offerData.offerToken.symbol} for
-          100 {offerData.purchaseToken?.symbol}.
+          You have successfully invested{' '}
+          {numberWithCommas(
+            formatBigNumber(purchaseAmount, offerData.purchaseToken.decimals)
+          )}
+          {offerData.purchaseToken.symbol} for
+          {numberWithCommas(
+            formatBigNumber(offerAmount, offerData.offerToken.decimals)
+          )}{' '}
+          {offerData.offerToken.symbol}.
         </Typography>
       </div>
       <div className={classes.actions}>
