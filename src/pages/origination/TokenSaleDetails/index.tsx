@@ -232,7 +232,8 @@ const TokenSaleDetails = () => {
       tokenOffer.myPosition.amountInvested.gt(0))
 
   const isPublicSaleInvestDisabled =
-    !tokenOffer?.offeringOverview.salesBegin.gt(0)
+    !tokenOffer?.offeringOverview.salesBegin.gt(0) ||
+    tokenOffer.whitelist.timeRemaining.gt(0)
 
   const iswhitelistSaleInvestDisabled =
     !tokenOffer?.offeringOverview.salesBegin.gt(0) ||
