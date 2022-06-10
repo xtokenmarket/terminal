@@ -77,14 +77,20 @@ class FungiblePoolService {
     account: string,
     poolAddress: string,
     offerAmount: BigNumber,
-    maxContributionAmount: BigNumber
+    maxContributionAmount: BigNumber,
+    isPurchaseTokenETH: boolean
   ): Promise<string> => {
     const merkleProof = await this.generateMerkleProof(account, poolAddress)
-    const tx = await this.contract.whitelistPurchase(
-      merkleProof,
-      offerAmount,
-      maxContributionAmount,
-      { value: offerAmount }
+    const tx = await this.contract.whitelistPurchase.apply(
+      this,
+      isPurchaseTokenETH
+        ? [
+            merkleProof,
+            offerAmount,
+            maxContributionAmount,
+            { value: offerAmount },
+          ]
+        : [merkleProof, offerAmount, maxContributionAmount]
     )
 
     console.log(`whitelist purchase transaction hash: ${tx.hash}`)

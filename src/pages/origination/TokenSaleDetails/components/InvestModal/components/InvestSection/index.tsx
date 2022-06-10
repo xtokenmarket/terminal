@@ -88,7 +88,8 @@ export const InvestSection = (props: IProps) => {
           account,
           offerData.poolAddress,
           purchaseAmount,
-          maxContributionAmount
+          maxContributionAmount,
+          offerData.purchaseToken.symbol === 'ETH'
         )
       } else {
         txId = await fungiblePool.purchase(purchaseAmount)

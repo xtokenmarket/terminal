@@ -8,6 +8,7 @@ import { BigNumber } from 'ethers'
 import { ZERO } from 'utils/number'
 
 import { InputSection, InvestSection, SuccessSection } from './components'
+import { ApproveSection } from './components/ApproveSection'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -79,6 +80,15 @@ export const InvestModal: React.FC<IProps> = ({
   const onNextStep = () => {
     switch (state.step) {
       case EInvestModalStep.Input:
+        setState((prev) => ({
+          ...prev,
+          step:
+            offerData.purchaseToken.symbol === 'ETH'
+              ? EInvestModalStep.Invest
+              : EInvestModalStep.Approve,
+        }))
+        break
+      case EInvestModalStep.Approve:
         setState((prev) => ({ ...prev, step: EInvestModalStep.Invest }))
         break
       case EInvestModalStep.Invest:
@@ -98,6 +108,16 @@ export const InvestModal: React.FC<IProps> = ({
             onNext={onNextStep}
             offerData={offerData}
             updateState={updateState}
+          />
+        )
+      case EInvestModalStep.Approve:
+        return (
+          <ApproveSection
+            onClose={_onClose}
+            onNext={onNextStep}
+            offerData={offerData}
+            updateState={updateState}
+            purchaseAmount={state.purchaseAmount}
           />
         )
       case EInvestModalStep.Invest:
