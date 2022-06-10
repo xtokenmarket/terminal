@@ -101,7 +101,7 @@ export const InputSection = (props: IProps) => {
     }
   )
 
-  const estimatePurchaseAmount = async (offerAmount: BigNumber) => {
+  const estimateOfferAmount = async (purchaseAmount: BigNumber) => {
     if (!account || !provider) {
       return
     }
@@ -112,9 +112,7 @@ export const InputSection = (props: IProps) => {
       offerData.poolAddress
     )
 
-    const purchaseAmount = await fungiblePool.getPurchaseAmountFromOfferAmount(
-      offerAmount
-    )
+    const offerAmount = await fungiblePool.getCurrentMintAmount(purchaseAmount)
     setState({
       isEstimating: false,
       offerAmount,
@@ -142,11 +140,11 @@ export const InputSection = (props: IProps) => {
         <div>
           <TokenBalanceInput
             label={'Amount to Invest'}
-            onChange={estimatePurchaseAmount}
+            onChange={estimateOfferAmount}
             setLoadingStart={() => setState({ isEstimating: true })}
             showSwapCTA={false}
-            token={offerData.offerToken}
-            value={state.offerAmount}
+            token={offerData.purchaseToken}
+            value={state.purchaseAmount}
           />
           <TokenBalanceInput
             isDisabled
@@ -155,8 +153,8 @@ export const InputSection = (props: IProps) => {
             onChange={() => undefined}
             showAvailableBalance={false}
             showSwapCTA={false}
-            token={offerData.purchaseToken}
-            value={state.purchaseAmount}
+            token={offerData.offerToken}
+            value={state.offerAmount}
           />
         </div>
         <div className={classes.actions}>

@@ -370,13 +370,20 @@ export const TableRow = ({
             isVestedPropertiesShow={isVestedPropertiesShow}
           >
             <Typography className={clsx(cl.item, cl.label)}>
-              {numberWithCommas(item.tokenPurchased.toString())}{' '}
+              {numberWithCommas(
+                formatBigNumber(item.tokenPurchased, item.offerToken.decimals)
+              )}{' '}
               {item.offerToken.symbol}
             </Typography>
           </Td>
           <Td type={MyPosition.AmountInvested} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {numberWithCommas(item.amountInvested.toString())}{' '}
+              {numberWithCommas(
+                formatBigNumber(
+                  item.amountInvested,
+                  item.purchaseToken.decimals
+                )
+              )}{' '}
               {item.purchaseToken.symbol}
             </Typography>
           </Td>
