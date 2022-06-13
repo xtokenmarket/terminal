@@ -207,7 +207,9 @@ export const TokenAmountInput: React.FC<IProps> = ({
       </div>
 
       <Typography className={classes.bottomDetails}>
-        {value === '' || !token
+        {label === 'Reserve Purchase Token Raised'
+          ? tokenDetailsPlaceholder
+          : !token
           ? tokenDetailsPlaceholder
           : `Available - ${getFormattedTokenBalance()}`}
       </Typography>
