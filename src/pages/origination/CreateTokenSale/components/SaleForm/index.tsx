@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 10,
   },
   offeringPeriod: {
-    marginTop: 82,
+    marginTop: 70,
   },
   sectionDisabled: {
     opacity: 0.5,
@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
     userSelect: 'none',
   },
   pricingFormula: {
-    marginBottom: 40,
+    marginBottom: 52,
   },
   warning: {
     display: 'flex',
