@@ -65,6 +65,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 16,
     display: 'flex',
     alignItems: 'center',
+    height: 48,
   },
   itemAlignRight: {
     justifyContent: 'flex-end',
@@ -368,7 +369,7 @@ export const TableRow = ({
             label={item.label}
             isVestedPropertiesShow={isVestedPropertiesShow}
           >
-            <Typography className={clsx(cl.item, cl.label)}>
+            <Typography className={clsx(cl.item, cl.label, cl.itemMarginLeft)}>
               {numberWithCommas(
                 formatBigNumber(item.tokenPurchased, item.offerToken.decimals)
               )}{' '}
@@ -411,7 +412,7 @@ export const TableRow = ({
       return (
         <div className={cl.content}>
           <Td type={OfferingSummary.OfferToken} label={item.label}>
-            <div className={cl.item}>
+            <div className={clsx(cl.item, cl.itemMarginLeft)}>
               <img
                 alt="offerToken"
                 className={cl.tokenIcon}
