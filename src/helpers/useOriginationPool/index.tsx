@@ -190,7 +190,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
       const _whitelist = {
         label: OriginationLabels.WhitelistSale,
         currentPrice: getOfferTokenPrice,
-        pricingFormular: whitelistStartingPrice?.gt(
+        pricingFormula: whitelistStartingPrice?.gt(
           whitelistEndingPrice as BigNumber
         )
           ? 'Ascending'
@@ -210,7 +210,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
       const publicSale = {
         label: OriginationLabels.PublicSale,
         currentPrice: getOfferTokenPrice,
-        pricingFormular: publicStartingPrice?.gt(publicEndingPrice as BigNumber)
+        pricingFormula: publicStartingPrice?.gt(publicEndingPrice as BigNumber)
           ? 'Ascending'
           : 'Descending',
         salesPeriod: publicSaleDuration,

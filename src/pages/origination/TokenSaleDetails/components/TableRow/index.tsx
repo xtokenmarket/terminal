@@ -255,9 +255,9 @@ export const TableRow = ({
               </Typography>
             </Td>
 
-            <Td type={WhitelistSale.PricingFormular} label={item.label}>
+            <Td type={WhitelistSale.PricingFormula} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {item.pricingFormular || 'N/A'}
+                {item.pricingFormula || 'N/A'}
               </Typography>
             </Td>
 
@@ -321,9 +321,9 @@ export const TableRow = ({
               )} ${item.purchaseToken.symbol}` || 'N/A'}
             </Typography>
           </Td>
-          <Td type={PublicSale.PricingFormular} label={item.label}>
+          <Td type={PublicSale.PricingFormula} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.pricingFormular || 'N/A'}
+              {item.pricingFormula || 'N/A'}
             </Typography>
           </Td>
           <Td type={PublicSale.StartingEndingPrice} label={item.label}>

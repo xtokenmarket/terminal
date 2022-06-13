@@ -27,7 +27,7 @@ const useStyles = makeStyles(() => ({
   },
   whitelistSale: {
     '&.currentPrice': { width: '10%' },
-    '&.pricingFormular': { width: '10%' },
+    '&.pricingFormula': { width: '10%' },
     '&.startingEndingPrice': { width: '13%' },
     '&.whitelist': { width: '13%' },
     '&.addressCap': { width: '10%' },
@@ -40,7 +40,7 @@ const useStyles = makeStyles(() => ({
   },
   publicSale: {
     '&.currentPrice': { width: '10%' },
-    '&.pricingFormular': { width: '10%' },
+    '&.pricingFormula': { width: '10%' },
     '&.startingEndingPrice': { width: '13%' },
     '&.timeRemaining': { width: '13%' },
     '&.salesPeriod': { width: '10%' },

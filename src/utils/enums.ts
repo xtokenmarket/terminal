@@ -207,7 +207,7 @@ export enum OfferingOverview {
 
 export enum WhitelistSale {
   CurrentPrice = 'currentPrice',
-  PricingFormular = 'pricingFormular',
+  PricingFormula = 'pricingFormula',
   StartingEndingPrice = 'startingEndingPrice',
   Whitelist = 'whitelist',
   AddressCap = 'addressCap',
@@ -217,7 +217,7 @@ export enum WhitelistSale {
 
 export enum PublicSale {
   CurrentPrice = 'currentPrice',
-  PricingFormular = 'pricingFormular',
+  PricingFormula = 'pricingFormula',
   TimeRemaining = 'timeRemaining',
   SalesPeriod = 'salesPeriod',
   StartingEndingPrice = 'startingEndingPrice',
