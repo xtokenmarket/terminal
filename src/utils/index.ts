@@ -13,8 +13,35 @@ export const shortenAddress = (address: string) => {
 export const formatBigNumber = (
   value: BigNumberish,
   decimals: number,
-  precision = 2
+  precision = 2,
+  isShortFormat?: boolean
 ): string => {
+  if (isShortFormat && Number(formatUnits(value, decimals)) >= 1000000000) {
+    return `${Math.floor(Number(formatUnits(value, decimals)) / 1000000000)}B`
+  }
+
+  if (isShortFormat && Number(formatUnits(value, decimals)) >= 1000000) {
+    return `${Math.floor(Number(formatUnits(value, decimals)) / 1000000)}M`
+  }
+
+  if (isShortFormat && Number(formatUnits(value, decimals)) >= 10000) {
+    return `${Math.floor(Number(formatUnits(value, decimals)) / 1000)}k`
+  }
+
+  if (parseInt(formatUnits(value, decimals)) >= 100) {
+    return Number(formatUnits(value, decimals)).toFixed(0)
+  }
+
+  if (parseInt(formatUnits(value, decimals)) >= 10) {
+    return Number(formatUnits(value, decimals)).toFixed(2)
+  }
+
+  if (parseInt(formatUnits(value, decimals)) === 0) {
+    return parseFloat(
+      Number(formatUnits(value, decimals)).toFixed(5)
+    ).toString()
+  }
+
   return Number(formatUnits(value, decimals)).toFixed(precision)
 }
 

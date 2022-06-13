@@ -193,7 +193,9 @@ export const TableRow = ({
                 {item.offeringReserve &&
                   formatBigNumber(
                     item.offeringReserve,
-                    item.offerToken.decimals
+                    item.offerToken.decimals,
+                    2,
+                    true
                   )}
               </Typography>
               <Typography className={cl.symbol}>
