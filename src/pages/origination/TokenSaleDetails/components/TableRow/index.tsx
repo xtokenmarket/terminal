@@ -204,12 +204,16 @@ export const TableRow = ({
 
           <Td type={OfferingOverview.VestingPeriod} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {parseDurationSec(item.vestingPeriod.toNumber())}
+              {item.vestingPeriod.isZero()
+                ? 'None'
+                : parseDurationSec(item.vestingPeriod.toNumber())}
             </Typography>
           </Td>
           <Td type={OfferingOverview.CliffPeriod} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {parseDurationSec(item.cliffPeriod.toNumber())}
+              {item.cliffPeriod.isZero()
+                ? 'None'
+                : parseDurationSec(item.cliffPeriod.toNumber())}
             </Typography>
           </Td>
           <Td type={OfferingOverview.SalesBegin} label={item.label}>
@@ -477,12 +481,16 @@ export const TableRow = ({
 
               <Td type={OfferingSummary.VestingPeriod} label={item.label}>
                 <Typography className={clsx(cl.item, cl.label)}>
-                  {parseDurationSec(item.vestingPeriod.toNumber())}
+                  {item.vestingPeriod.isZero()
+                    ? 'None'
+                    : parseDurationSec(item.vestingPeriod.toNumber())}
                 </Typography>
               </Td>
               <Td type={OfferingSummary.CliffPeriod} label={item.label}>
                 <Typography className={clsx(cl.item, cl.label)}>
-                  {parseDurationSec(item.cliffPeriod.toNumber())}
+                  {item.cliffPeriod.isZero()
+                    ? 'None'
+                    : parseDurationSec(item.cliffPeriod.toNumber())}
                 </Typography>
               </Td>
               <Td type={OfferingSummary.SalesCompleted} label={item.label}>
