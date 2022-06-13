@@ -241,6 +241,8 @@ export const parseDurationSec = (amount: number) => {
   const applicableUnitIndex = amountByUnit.findIndex((amount) => amount > 0)
   const getUnitEnding = (unitAmount: number) => (unitAmount > 1 ? 's' : '')
 
+  if (!amountByUnit[applicableUnitIndex]) return 'None'
+
   return `${amountByUnit[applicableUnitIndex]} ${
     unitNames[applicableUnitIndex]
   }${getUnitEnding(amountByUnit[applicableUnitIndex])}`
