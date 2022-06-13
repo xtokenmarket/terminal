@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IInfoPanel {
-  title: string
+  title?: string
   description: string
   className?: string
 }
@@ -44,7 +44,7 @@ export const InfoPanel = ({ title, description, className }: IInfoPanel) => {
         <InfoOutlinedIcon />
       </div>
       <div>
-        <Typography className={classes.title}>{title}</Typography>
+        {title && <Typography className={classes.title}>{title}</Typography>}
         <Typography className={classes.description}>{description}</Typography>
       </div>
     </div>

@@ -6,6 +6,7 @@ import { EPeriods, EVestingOption } from 'utils/enums'
 import { Radio } from '../Radio'
 import { Selector } from '../Selector'
 import { InfoPanel } from './InfoPanel'
+import { getDurationSec } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   formContainer: {
@@ -56,18 +57,16 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
     cliffPeriod: number,
     cliffPeriodUnit: PeriodUnit
   ) => {
-    const vestingEndDate = moment().add(
-      vestingPeriod,
-      `${vestingPeriodUnit}`.toLowerCase() as unitOfTime.DurationConstructor
-    )
-    const cliffPeriodEndDate = moment().add(
+    const cliffPeriodSec = getDurationSec(
       cliffPeriod,
-      `${cliffPeriodUnit}`.toLowerCase() as unitOfTime.DurationConstructor
+      cliffPeriodUnit as string
+    )
+    const vestingPeriodSec = getDurationSec(
+      vestingPeriod,
+      vestingPeriodUnit as string
     )
 
-    return (
-      vestingPeriod > 0 && cliffPeriodEndDate.isSameOrBefore(vestingEndDate)
-    )
+    return vestingPeriod > 0 && !cliffPeriodSec.gt(vestingPeriodSec)
   }
 
   const validVestingDataInserted =
@@ -129,11 +128,12 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
             disabled={!vestingWanted}
           />
         </Grid>
-        <InfoPanel
-          className={classes.infoPanel}
-          title="Fees"
-          description="Cliff period must be less than or equal to vesting"
-        />
+        {vestingWanted && (
+          <InfoPanel
+            className={classes.infoPanel}
+            description="Cliff period must be less than or equal to vesting"
+          />
+        )}
       </Grid>
 
       <Button
