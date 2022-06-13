@@ -7,7 +7,11 @@ export const getTokenLogo = async (
   network: string
 ): Promise<string | undefined> => {
   // Use fallback logo in case of testnet
-  if ([Network.KOVAN, Network.RINKEBY].includes(network as Network)) {
+  if (
+    [Network.KOVAN, Network.RINKEBY, Network.GOERLI].includes(
+      network as Network
+    )
+  ) {
     return undefined
   }
 

@@ -109,6 +109,7 @@ export enum Network {
   POLYGON = 'polygon',
   KOVAN = 'kovan',
   RINKEBY = 'rinkeby',
+  GOERLI = 'goerli',
 }
 
 // uni v3
@@ -136,4 +137,5 @@ export enum NetworkIcon {
   polygon = 'Polygon',
   kovan = 'Ethereum',
   rinkeby = 'Ethereum',
+  goerli = 'Ethereum',
 }

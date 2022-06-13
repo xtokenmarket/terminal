@@ -139,6 +139,26 @@ const networks: { [K in ChainId]: INetwork } = {
     etherscanUri: 'https://rinkeby.etherscan.io/',
     unigraph: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
   },
+  [ChainId.Goerli]: {
+    label: CHAIN_NAMES[ChainId.Goerli],
+    url: 'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+    contracts: {
+      LM: '0x44a169aE49F253Cd22E523C3A47E27f049EB0600',
+      multicall: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
+      rewardEscrow: '0x6C5758747602Bdc9514841b7BbfCc6b9d27f0707',
+      uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
+      uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
+      uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
+      uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
+    },
+    terminal: {
+      tradeFee: BigNumber.from(1000),
+      rewardFee: BigNumber.from(100),
+      deploymentFee: BigNumber.from(1),
+    },
+    etherscanUri: 'https://goerli.etherscan.io/',
+    unigraph: 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3',
+  },
 }
 
 export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
@@ -152,6 +172,7 @@ export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
       [ChainId.Polygon]: '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
       [ChainId.Kovan]: '0x90410304D88E333710703aF6Ed6A14d5ef74575F',
       [ChainId.Rinkeby]: '0x67571cecddF314645f0148A7De404ebbd109A9B3',
+      [ChainId.Goerli]: '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60',
     },
     decimals: 18,
     image: '/assets/tokens/dai.png',
@@ -166,6 +187,7 @@ export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
       [ChainId.Polygon]: '0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619',
       [ChainId.Kovan]: '0xdfcea9088c8a88a76ff74892c1457c17dfeef9c1',
       [ChainId.Rinkeby]: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
+      [ChainId.Goerli]: '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6',
     },
     decimals: 18,
     image: '/assets/tokens/weth.png',
@@ -180,6 +202,7 @@ export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
       [ChainId.Polygon]: '0xc2132D05D31c914a87C6611C10748AEb04B58e8F',
       [ChainId.Kovan]: '0x016750ac630f711882812f24dba6c95b9d35856d',
       [ChainId.Rinkeby]: '0x3B00Ef435fA4FcFF5C209a37d1f3dcff37c705aD',
+      [ChainId.Goerli]: '0x64Ef393b6846114Bad71E2cB2ccc3e10736b5716',
     },
     decimals: 6,
     image: '/assets/tokens/usdt.png',
@@ -194,6 +217,7 @@ export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
       [ChainId.Polygon]: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
       [ChainId.Kovan]: '0xc2569dd7d0fd715B054fBf16E75B001E5c0C1115',
       [ChainId.Rinkeby]: '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa',
+      [ChainId.Goerli]: '0xD87Ba7A50B2E7E660f678A895E4B72E7CB4CCd9C',
     },
     decimals: 6,
     image: '/assets/tokens/usdc.png',
@@ -210,6 +234,7 @@ export const supportedNetworkIds = [
   ChainId.Polygon,
 
   ChainId.Kovan,
+  ChainId.Goerli,
   // Remove Rinkeby test net if on production
   ...(IS_PROD ? [] : [ChainId.Rinkeby]),
 ]
