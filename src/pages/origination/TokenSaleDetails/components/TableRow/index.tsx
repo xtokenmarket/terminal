@@ -176,7 +176,7 @@ export const TableRow = ({
           <Td type={OfferingOverview.OfferingStatus} label={item.label}>
             <div className={cl.item}>
               {`${formatBigNumber(
-                item.totalOfferingAmount.sub(item.offerTokenAmountSold),
+                item.offerTokenAmountSold,
                 item.offerToken.decimals
               )}/${formatBigNumber(
                 item.totalOfferingAmount,
@@ -232,13 +232,6 @@ export const TableRow = ({
                 : moment
                     .unix(item.salesEnd.toNumber())
                     .format('MMM DD[,] YYYY')}
-            </Typography>
-          </Td>
-          <Td type={OfferingOverview.SalesPeriod} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label, cl.itemAlignCenter)}>
-              {item.salesPeriod
-                ? parseDurationSec(Number(item.salesPeriod.toString()))
-                : 'N/A'}
             </Typography>
           </Td>
         </div>

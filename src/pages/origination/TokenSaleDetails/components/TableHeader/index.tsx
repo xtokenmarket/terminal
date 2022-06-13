@@ -65,11 +65,6 @@ export const TableHeader = (props: IProps) => {
         <Td type={OfferingOverview.SalesEnd} label={props.label}>
           <div className={classes.item}>Sales End</div>
         </Td>
-        <Td type={OfferingOverview.SalesPeriod} label={props.label}>
-          <div className={clsx(classes.item, classes.itemAlignCenter)}>
-            Sales Period
-          </div>
-        </Td>
       </div>
     )
   }
