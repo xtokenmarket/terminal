@@ -197,7 +197,7 @@ export const TableRow = ({
                   )}
               </Typography>
               <Typography className={cl.symbol}>
-                {item.offerToken.symbol}
+                {item.purchaseToken.symbol}
               </Typography>
             </div>
           </Td>

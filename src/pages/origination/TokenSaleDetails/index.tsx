@@ -278,7 +278,7 @@ const TokenSaleDetails = () => {
                 isInitiateSaleButtonDisabled={isInitiateSaleButtonDisabled}
               />
             )}
-            {isWhitelistSaleConfigured && (
+            {!isSaleCompleted && isWhitelistSaleConfigured && (
               <>
                 <Table
                   isSaleInitiated={tokenOffer.offeringOverview.salesBegin.gt(0)}
