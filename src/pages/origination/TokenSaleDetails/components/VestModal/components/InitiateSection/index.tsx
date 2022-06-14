@@ -78,7 +78,7 @@ interface IState {
 
 export const InitiateSection = (props: IProps) => {
   const classes = useStyles()
-  const { account, library: provider } = useConnectedWeb3Context()
+  const { account, library: provider, networkId } = useConnectedWeb3Context()
   const isMountedRef = useIsMountedRef()
   const { offerData, onClose, updateState, onNext, myPositionData } = props
 
@@ -127,7 +127,7 @@ export const InitiateSection = (props: IProps) => {
   }, [state.isInitiated])
 
   const onApprove = async () => {
-    if (!account || !provider) {
+    if (!account || !provider || !networkId) {
       return
     }
 
@@ -137,7 +137,10 @@ export const InitiateSection = (props: IProps) => {
         isApproving: true,
       }))
 
-      const txHash = await erc20Token.approveUnlimited(offerData.poolAddress)
+      const txHash = await erc20Token.approveUnlimited(
+        offerData.poolAddress,
+        networkId
+      )
       await erc20Token.waitUntilApproved(account, offerData.poolAddress, txHash)
 
       setState((prev) => ({
