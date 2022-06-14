@@ -7,7 +7,7 @@ import { makeStyles, TextField, Typography } from '@material-ui/core'
 import useCommonStyles from 'style/common'
 import { QuestionTooltip } from '../QuestionTooltip'
 import { useTokenBalance } from 'helpers'
-import { formatBigNumber } from 'utils'
+import { formatBigNumber, numberWithCommas } from 'utils'
 import { TokenAmountPriceEstimation } from '../TokenAmountPriceEstimation'
 
 const useStyles = makeStyles((theme) => ({
@@ -150,7 +150,9 @@ export const TokenAmountInput: React.FC<IProps> = ({
       return null
     }
 
-    return `${formatBigNumber(balance, token.decimals, 4)} ${token.symbol}`
+    return `${numberWithCommas(formatBigNumber(balance, token.decimals, 4))} ${
+      token.symbol
+    }`
   }
 
   return (
