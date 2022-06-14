@@ -355,8 +355,8 @@ const TokenSaleDetails = () => {
               isOpen={state.isClaimModalOpen}
               onClose={toggleClaimModal}
               data={{
-                token: tokenOffer.offeringOverview.offerToken,
-                amount: BigNumber.from(tokenOffer.myPosition.tokenPurchased),
+                token: tokenOffer.offeringOverview.purchaseToken,
+                amount: BigNumber.from(tokenOffer.myPosition.amountInvested),
               }}
             />
             <InvestModal
