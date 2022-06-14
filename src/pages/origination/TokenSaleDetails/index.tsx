@@ -223,7 +223,7 @@ const TokenSaleDetails = () => {
 
   const isClaimButtonShow =
     tokenOffer &&
-    tokenOffer.myPosition.tokenPurchased.gt(0) &&
+    tokenOffer.myPosition.amountInvested.gt(0) &&
     isCliffPeriodPassed()
 
   const isMyPositionShow =
