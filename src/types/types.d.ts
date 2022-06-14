@@ -33,7 +33,7 @@ export interface INetwork {
   unigraph: string
 }
 
-export type NetworkId = 1 | 4 | 10 | 42 | 137 | 42161
+export type NetworkId = 1 | 4 | 5 | 10 | 42 | 137 | 42161
 
 export type KnownContracts = keyof INetwork['contracts']
 

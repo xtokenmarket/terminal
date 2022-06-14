@@ -16,6 +16,8 @@ export const getNetworkFromId = (networkId?: NetworkId) => {
       return Network.RINKEBY
     case ChainId.Kovan:
       return Network.KOVAN
+    case ChainId.Goerli:
+      return Network.GOERLI
     default:
       return DEFAULT_NETWORK
   }
@@ -35,11 +37,13 @@ export const getIdFromNetwork = (network?: Network): ChainId => {
       return ChainId.Rinkeby
     case Network.KOVAN:
       return ChainId.Kovan
+    case Network.GOERLI:
+      return ChainId.Goerli
     default:
       return DEFAULT_NETWORK_ID
   }
 }
 
 export const isTestnet = (chainId: ChainId): boolean => {
-  return [ChainId.Kovan, ChainId.Rinkeby].includes(chainId)
+  return [ChainId.Kovan, ChainId.Rinkeby, ChainId.Goerli].includes(chainId)
 }

@@ -13,7 +13,7 @@ interface IState {
   pools: ITerminalPool[]
 }
 
-const testNetworks = [Network.KOVAN, Network.RINKEBY]
+const testNetworks = [Network.KOVAN, Network.RINKEBY, Network.GOERLI]
 
 export const useTerminalPools = () => {
   const [state, setState] = useState<IState>({ pools: [], isLoading: true })

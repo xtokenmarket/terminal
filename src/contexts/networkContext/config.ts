@@ -12,6 +12,7 @@ const DEFAULT_CONFIG: Config = {
     ChainId.Polygon,
 
     ChainId.Kovan,
+    ChainId.Goerli,
     // Remove Rinkeby test net if on production
     ...(IS_PROD ? [] : [ChainId.Rinkeby]),
   ],

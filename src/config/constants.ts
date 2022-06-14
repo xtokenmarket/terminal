@@ -40,6 +40,7 @@ export enum ChainId {
   Polygon = 137,
   Kovan = 42,
   Rinkeby = 4,
+  Goerli = 5,
 }
 
 export const CHAIN_NAMES: Record<ChainId, string> = {
@@ -49,6 +50,7 @@ export const CHAIN_NAMES: Record<ChainId, string> = {
   [ChainId.Polygon]: 'Polygon',
   [ChainId.Kovan]: 'Kovan',
   [ChainId.Rinkeby]: 'Rinkeby',
+  [ChainId.Goerli]: 'Goerli',
 }
 
 export const CHAIN_ICONS: Record<ChainId, string> = {
@@ -58,6 +60,7 @@ export const CHAIN_ICONS: Record<ChainId, string> = {
   [ChainId.Polygon]: 'Polygon',
   [ChainId.Kovan]: 'Ethereum',
   [ChainId.Rinkeby]: 'Ethereum',
+  [ChainId.Goerli]: 'Ethereum',
 }
 
 export const COINGECKO_CHAIN_IDS: Record<ChainId, string> = {
@@ -67,6 +70,7 @@ export const COINGECKO_CHAIN_IDS: Record<ChainId, string> = {
   [ChainId.Polygon]: 'polygon-pos',
   [ChainId.Kovan]: Network.KOVAN,
   [ChainId.Rinkeby]: Network.RINKEBY,
+  [ChainId.Goerli]: Network.GOERLI,
 }
 
 export const DEFAULT_NETWORK = Network.MAINNET
@@ -153,6 +157,17 @@ export const CHAIN_PARAMS: Record<ChainId, AddNetworkChainParameters> = {
     rpcUrls: ['https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
     blockExplorerUrls: ['https://rinkeby.etherscan.io'],
   },
+  [ChainId.Goerli]: {
+    chainId: `0x${ChainId.Goerli.toString(16)}`,
+    chainName: 'Goerli Test Network',
+    nativeCurrency: {
+      name: 'Ethereum',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+    rpcUrls: ['https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
+    blockExplorerUrls: ['https://goerli.etherscan.io'],
+  },
 }
 
 export const WALLET_ICONS: { [key in ConnectorNames]: string } = {
@@ -210,6 +225,7 @@ export const FEE_TIPS: Record<ChainId, string> = {
   [ChainId.Polygon]: POLYGON_TIP,
   [ChainId.Kovan]: ETH_TIP,
   [ChainId.Rinkeby]: ETH_TIP,
+  [ChainId.Goerli]: ETH_TIP,
 }
 
 export const PROD_TESTNET_DISCOVER_PAGE_SIZE = 5
@@ -229,6 +245,8 @@ export const GRAPHQL_URLS: Record<Network, string> = {
   [Network.KOVAN]:
     'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-kovan',
   [Network.RINKEBY]: '',
+  [Network.GOERLI]:
+    'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-goerli',
 }
 
 export const MINING_EVENTS = {
