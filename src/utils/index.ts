@@ -13,35 +13,8 @@ export const shortenAddress = (address: string) => {
 export const formatBigNumber = (
   value: BigNumberish,
   decimals: number,
-  precision = 2,
-  isShortFormat?: boolean
+  precision = 2
 ): string => {
-  if (isShortFormat && Number(formatUnits(value, decimals)) >= 1000000000) {
-    return `${Math.floor(Number(formatUnits(value, decimals)) / 1000000000)}B`
-  }
-
-  if (isShortFormat && Number(formatUnits(value, decimals)) >= 1000000) {
-    return `${Math.floor(Number(formatUnits(value, decimals)) / 1000000)}M`
-  }
-
-  if (isShortFormat && Number(formatUnits(value, decimals)) >= 10000) {
-    return `${Math.floor(Number(formatUnits(value, decimals)) / 1000)}k`
-  }
-
-  if (parseInt(formatUnits(value, decimals)) >= 100) {
-    return Number(formatUnits(value, decimals)).toFixed(0)
-  }
-
-  if (parseInt(formatUnits(value, decimals)) >= 10) {
-    return Number(formatUnits(value, decimals)).toFixed(2)
-  }
-
-  if (parseInt(formatUnits(value, decimals)) === 0) {
-    return parseFloat(
-      Number(formatUnits(value, decimals)).toFixed(5)
-    ).toString()
-  }
-
   return Number(formatUnits(value, decimals)).toFixed(precision)
 }
 
@@ -72,14 +45,30 @@ export const formatToShortNumber = (number: string, decimals = 2): string => {
   let unitIndex = 0
   let rNumber = parseFloat(number.split(',').join(''))
 
-  while (rNumber >= 1000 && unitIndex < 4) {
-    unitIndex += 1
-    rNumber = rNumber / 1000
+  if (rNumber >= 1000) {
+    while (rNumber >= 1000 && unitIndex < 4) {
+      unitIndex += 1
+      rNumber = rNumber / 1000
+    }
+
+    return `${Math.round(parseFloat(rNumber.toFixed(decimals)))}${
+      units[unitIndex]
+    }`
   }
 
-  return `${Math.round(parseFloat(rNumber.toFixed(decimals)))}${
-    units[unitIndex]
-  }`
+  if (parseInt(number) >= 100) {
+    return Number(number).toFixed(0)
+  }
+
+  if (parseInt(number) > 0) {
+    return Number(number).toFixed(2)
+  }
+
+  if (parseInt(number) === 0) {
+    return parseFloat(Number(number).toFixed(5)).toString()
+  }
+
+  return '0'
 }
 
 export const hideInsignificantZeros = (x: string) => {

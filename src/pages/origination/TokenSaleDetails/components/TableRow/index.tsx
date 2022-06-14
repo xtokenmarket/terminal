@@ -18,6 +18,7 @@ import {
 } from 'types'
 import {
   formatBigNumber,
+  formatToShortNumber,
   numberWithCommas,
   parseDurationSec,
   parseRemainingDurationSec,
@@ -176,12 +177,16 @@ export const TableRow = ({
 
           <Td type={OfferingOverview.OfferingStatus} label={item.label}>
             <div className={cl.item}>
-              {`${formatBigNumber(
-                item.offerTokenAmountSold,
-                item.offerToken.decimals
-              )}/${formatBigNumber(
-                item.totalOfferingAmount,
-                item.offerToken.decimals
+              {`${formatToShortNumber(
+                formatBigNumber(
+                  item.offerTokenAmountSold,
+                  item.offerToken.decimals
+                )
+              )}/${formatToShortNumber(
+                formatBigNumber(
+                  item.totalOfferingAmount,
+                  item.offerToken.decimals
+                )
               )}`}
               <Typography className={cl.symbol}>
                 {item.offerToken.symbol}
@@ -192,11 +197,11 @@ export const TableRow = ({
             <div className={cl.item}>
               <Typography>
                 {item.offeringReserve &&
-                  formatBigNumber(
-                    item.offeringReserve,
-                    item.offerToken.decimals,
-                    2,
-                    true
+                  formatToShortNumber(
+                    formatBigNumber(
+                      item.offeringReserve,
+                      item.offerToken.decimals
+                    )
                   )}
               </Typography>
               <Typography className={cl.symbol}>
@@ -251,9 +256,8 @@ export const TableRow = ({
               <Typography
                 className={clsx(cl.item, cl.label, cl.itemMarginLeft)}
               >
-                {`${formatBigNumber(
-                  item.currentPrice,
-                  item.offerToken.decimals
+                {`${formatToShortNumber(
+                  formatBigNumber(item.currentPrice, item.offerToken.decimals)
                 )} ${item.purchaseToken.symbol}` || 'N/A'}
               </Typography>
             </Td>
@@ -267,12 +271,16 @@ export const TableRow = ({
             <Td type={WhitelistSale.StartingEndingPrice} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
                 {item.startingPrice && item.endingPrice
-                  ? `${formatBigNumber(
-                      item.startingPrice,
-                      item.purchaseToken.decimals
-                    )}/${formatBigNumber(
-                      item.endingPrice,
-                      item.purchaseToken.decimals
+                  ? `${formatToShortNumber(
+                      formatBigNumber(
+                        item.startingPrice,
+                        item.purchaseToken.decimals
+                      )
+                    )}/${formatToShortNumber(
+                      formatBigNumber(
+                        item.endingPrice,
+                        item.purchaseToken.decimals
+                      )
                     )} ${item.purchaseToken.symbol}`
                   : 'N/A'}
               </Typography>
@@ -287,7 +295,9 @@ export const TableRow = ({
             <Td type={WhitelistSale.AddressCap} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
                 {item.addressCap
-                  ? formatBigNumber(item.addressCap, item.offerToken.decimals)
+                  ? formatToShortNumber(
+                      formatBigNumber(item.addressCap, item.offerToken.decimals)
+                    )
                   : 'N/A'}
               </Typography>
             </Td>
@@ -318,9 +328,8 @@ export const TableRow = ({
         <div className={cl.content}>
           <Td type={PublicSale.CurrentPrice} label={item.label}>
             <Typography className={clsx(cl.item, cl.label, cl.itemMarginLeft)}>
-              {`${formatBigNumber(
-                item.currentPrice,
-                item.purchaseToken.decimals
+              {`${formatToShortNumber(
+                formatBigNumber(item.currentPrice, item.purchaseToken.decimals)
               )} ${item.purchaseToken.symbol}` || 'N/A'}
             </Typography>
           </Td>
@@ -332,12 +341,16 @@ export const TableRow = ({
           <Td type={PublicSale.StartingEndingPrice} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
               {item.startingPrice && item.endingPrice
-                ? `${formatBigNumber(
-                    item.startingPrice,
-                    item.purchaseToken.decimals
-                  )}/${formatBigNumber(
-                    item.endingPrice,
-                    item.purchaseToken.decimals
+                ? `${formatToShortNumber(
+                    formatBigNumber(
+                      item.startingPrice,
+                      item.purchaseToken.decimals
+                    )
+                  )}/${formatToShortNumber(
+                    formatBigNumber(
+                      item.endingPrice,
+                      item.purchaseToken.decimals
+                    )
                   )} ${item.purchaseToken.symbol}`
                 : 'N/A'}
             </Typography>
@@ -370,7 +383,7 @@ export const TableRow = ({
             isVestedPropertiesShow={isVestedPropertiesShow}
           >
             <Typography className={clsx(cl.item, cl.label, cl.itemMarginLeft)}>
-              {numberWithCommas(
+              {formatToShortNumber(
                 formatBigNumber(item.tokenPurchased, item.offerToken.decimals)
               )}{' '}
               {item.offerToken.symbol}
@@ -378,7 +391,7 @@ export const TableRow = ({
           </Td>
           <Td type={MyPosition.AmountInvested} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {numberWithCommas(
+              {formatToShortNumber(
                 formatBigNumber(
                   item.amountInvested,
                   item.purchaseToken.decimals
@@ -455,7 +468,9 @@ export const TableRow = ({
             <>
               <Td type={OfferingSummary.TokensSold} label={item.label}>
                 <div className={cl.item}>
-                  {formatBigNumber(item.tokensSold, item.offerToken.decimals)}
+                  {formatToShortNumber(
+                    formatBigNumber(item.tokensSold, item.offerToken.decimals)
+                  )}
                   <Typography className={cl.symbol}>
                     {item.offerToken.symbol}
                   </Typography>
@@ -464,9 +479,11 @@ export const TableRow = ({
               <Td type={OfferingSummary.AmountsRaised} label={item.label}>
                 <div className={cl.item}>
                   <Typography>
-                    {formatBigNumber(
-                      item.amountsRaised,
-                      item.offerToken.decimals
+                    {formatToShortNumber(
+                      formatBigNumber(
+                        item.amountsRaised,
+                        item.offerToken.decimals
+                      )
                     )}
                   </Typography>
                   <Typography className={cl.symbol}>
