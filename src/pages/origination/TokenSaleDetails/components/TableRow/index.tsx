@@ -127,6 +127,7 @@ interface IProps {
   toggleModal?: () => void
   isVestedPropertiesShow?: boolean
   isOfferUnsuccessful?: boolean
+  isSaleInitiated?: boolean
 }
 
 export const TableRow = ({
@@ -134,6 +135,7 @@ export const TableRow = ({
   toggleModal,
   isVestedPropertiesShow,
   isOfferUnsuccessful,
+  isSaleInitiated,
 }: IProps) => {
   const cl = useStyles()
 
@@ -178,10 +180,14 @@ export const TableRow = ({
             <div className={cl.item}>
               {`${formatBigNumber(
                 item.offerTokenAmountSold,
-                item.offerToken.decimals
+                item.offerToken.decimals,
+                2,
+                true
               )}/${formatBigNumber(
                 item.totalOfferingAmount,
-                item.offerToken.decimals
+                item.offerToken.decimals,
+                2,
+                true
               )}`}
               <Typography className={cl.symbol}>
                 {item.offerToken.symbol}
@@ -253,7 +259,9 @@ export const TableRow = ({
               >
                 {`${formatBigNumber(
                   item.currentPrice,
-                  item.offerToken.decimals
+                  item.offerToken.decimals,
+                  2,
+                  true
                 )} ${item.purchaseToken.symbol}` || 'N/A'}
               </Typography>
             </Td>
@@ -294,9 +302,11 @@ export const TableRow = ({
 
             <Td type={WhitelistSale.TimeRemaining} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {item.timeRemaining
-                  ? parseRemainingDurationSec(item.timeRemaining.toNumber())
-                  : 'N/A'}
+                {!isSaleInitiated && item.timeRemaining.isZero()
+                  ? 'Not Started'
+                  : item.timeRemaining.isZero()
+                  ? 'Ended'
+                  : parseRemainingDurationSec(item.timeRemaining.toNumber())}
               </Typography>
             </Td>
 
@@ -320,7 +330,9 @@ export const TableRow = ({
             <Typography className={clsx(cl.item, cl.label, cl.itemMarginLeft)}>
               {`${formatBigNumber(
                 item.currentPrice,
-                item.purchaseToken.decimals
+                item.purchaseToken.decimals,
+                2,
+                true
               )} ${item.purchaseToken.symbol}` || 'N/A'}
             </Typography>
           </Td>
@@ -344,9 +356,11 @@ export const TableRow = ({
           </Td>
           <Td type={PublicSale.TimeRemaining} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.timeRemaining
-                ? `${parseRemainingDurationSec(item.timeRemaining.toNumber())}`
-                : 'N/A'}
+              {!isSaleInitiated && item.timeRemaining.isZero()
+                ? 'Not Started'
+                : item.timeRemaining.isZero()
+                ? 'Ended'
+                : `${parseRemainingDurationSec(item.timeRemaining.toNumber())}`}
             </Typography>
           </Td>
           <Td type={PublicSale.SalesPeriod} label={item.label}>

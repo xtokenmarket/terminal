@@ -155,6 +155,7 @@ export const Table = ({
             toggleModal={toggleModal}
             isVestedPropertiesShow={isVestedPropertiesShow}
             isOfferUnsuccessful={isOfferUnsuccessful}
+            isSaleInitiated={isSaleInitiated}
           />
         </div>
       </div>
