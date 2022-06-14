@@ -155,7 +155,7 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit }) => {
                     <p className="title">Reserve amount</p>
                     <p className="data">
                       {data.reserveOfferTokenAmount}{' '}
-                      {data.purchaseToken?.symbol.toUpperCase()}
+                      {data.purchaseToken?.symbol}
                     </p>
                   </div>
                 </Grid>
