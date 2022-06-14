@@ -53,12 +53,11 @@ const useStyles = makeStyles(() => ({
     '&.tokenPurchased': { width: '10%' },
     '&.amountInvested': { width: '10%' },
     '&.amountvested': { width: '13%' },
-    '&.amountAvailableToVest': { width: '13%' },
+    '&.amountAvailableToVest': { width: '15%' },
     '&+&': { paddingLeft: 16 },
     '&:last-child': {
       textAlign: 'right',
     },
-    '&.narrow': { width: '10% !important' },
   },
   offeringSummary: {
     '&.offerToken': { width: '10%' },
@@ -87,26 +86,10 @@ interface IProps {
     | MyPosition
     | OfferingSummary
   children: React.ReactNode | React.ReactNode[]
-  isVestedPropertiesShow?: boolean
 }
 
-export const Td = ({
-  type,
-  label,
-  children,
-  isVestedPropertiesShow,
-}: IProps) => {
+export const Td = ({ type, label, children }: IProps) => {
   const cl = useStyles()
 
-  return (
-    <div
-      className={clsx(cl[label], type, [
-        label === OriginationLabels.MyPosition &&
-          !isVestedPropertiesShow &&
-          'narrow',
-      ])}
-    >
-      {children}
-    </div>
-  )
+  return <div className={clsx(cl[label], type)}>{children}</div>
 }

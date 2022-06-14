@@ -377,11 +377,7 @@ export const TableRow = ({
       item = myPosition
       return (
         <div className={cl.content}>
-          <Td
-            type={MyPosition.TokenPurchased}
-            label={item.label}
-            isVestedPropertiesShow={isVestedPropertiesShow}
-          >
+          <Td type={MyPosition.TokenPurchased} label={item.label}>
             <Typography className={clsx(cl.item, cl.label, cl.itemMarginLeft)}>
               {formatToShortNumber(
                 formatBigNumber(item.tokenPurchased, item.offerToken.decimals)
