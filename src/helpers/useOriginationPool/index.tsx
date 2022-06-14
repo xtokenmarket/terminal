@@ -83,6 +83,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         purchaseTokenContribution,
         entryId,
         isOwnerOrManager,
+        userToVestingId, // TODO: need to be refactored later after graph is ready
       ] = await Promise.all([
         getTokenDetails(_offerData?.offerToken as string),
         getTokenDetails(_offerData?.purchaseToken as string),
@@ -90,6 +91,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         fungiblePool.contract.purchaseTokenContribution(account),
         fungiblePool.contract.userToVestingId(account),
         fungiblePool.contract.isOwnerOrManager(account),
+        fungiblePool.contract.userToVestingId(account),
       ])
 
       const nftInfo = await vestingEntryNFTContract.tokenIdVestingAmounts(
@@ -235,6 +237,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         offerToken: token0,
         purchaseToken: token1 || ETH,
         vestableTokenAmount,
+        userToVestingId: [userToVestingId],
       }
 
       const offeringSummary = {
