@@ -1,5 +1,6 @@
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { DetailedTokenSelect } from 'components/Modal/RewardModal/components/DetailedTokenSelect'
+import { useState } from 'react'
 import { ICreateTokenSaleData } from 'types'
 import { Description, InfoText } from 'utils/enums'
 import { InputDescription } from '../InputDescription'
@@ -62,13 +63,16 @@ export const OfferingStep: React.FC<IProps> = ({
   onNext,
 }) => {
   const classes = useStyles()
+  const [isInsufficientBalance, setIsInsufficientBalance] = useState(false)
+
   const isNextBtnDisabled = !(
     data.offerToken &&
     data.purchaseToken &&
     data.offerTokenAmount &&
     data.reserveOfferTokenAmount &&
     data.offerToken.address !== data.purchaseToken.address &&
-    Number(data.offerTokenAmount) >= Number(data.reserveOfferTokenAmount)
+    Number(data.offerTokenAmount) >= Number(data.reserveOfferTokenAmount) &&
+    !isInsufficientBalance
   )
 
   return (
@@ -119,6 +123,7 @@ export const OfferingStep: React.FC<IProps> = ({
             onChange={(value) => updateData({ offerTokenAmount: value })}
             infoText={InfoText.OfferTokenAmount}
             tokenDetailsPlaceholder={Description.OfferTokenAmount}
+            setIsInsufficientBalance={setIsInsufficientBalance}
           />
         </Grid>
         <Grid item xs={12} md={6}>
