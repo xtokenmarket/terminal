@@ -212,9 +212,12 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
       const publicSale = {
         label: OriginationLabels.PublicSale,
         currentPrice: getOfferTokenPrice,
-        pricingFormula: publicStartingPrice?.gt(publicEndingPrice as BigNumber)
-          ? 'Ascending'
-          : 'Descending',
+        pricingFormula:
+          publicStartingPrice.toString() === publicEndingPrice.toString()
+            ? EPricingFormula.Standard
+            : publicStartingPrice?.gt(publicEndingPrice as BigNumber)
+            ? EPricingFormula.Ascending
+            : EPricingFormula.Descending,
         salesPeriod: publicSaleDuration,
         timeRemaining,
         offerToken: token0,
