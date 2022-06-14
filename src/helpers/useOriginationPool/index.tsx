@@ -11,7 +11,7 @@ import {
 import { useConnectedWeb3Context } from 'contexts'
 import { useNetworkContext } from 'contexts/networkContext'
 import { useServices } from 'helpers'
-import { Network, OriginationLabels } from 'utils/enums'
+import { EPricingFormula, Network, OriginationLabels } from 'utils/enums'
 import { getOffersDataMulticall, ITokenOfferDetails } from './helper'
 import { IToken, ITokenOffer } from 'types'
 import { ERC20Service, FungiblePoolService } from 'services'
@@ -190,11 +190,13 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
       const _whitelist = {
         label: OriginationLabels.WhitelistSale,
         currentPrice: getOfferTokenPrice,
-        pricingFormular: whitelistStartingPrice?.gt(
-          whitelistEndingPrice as BigNumber
-        )
-          ? 'Ascending'
-          : 'Descending',
+        pricingFormula:
+          whitelistStartingPrice?.toString() ===
+          whitelistEndingPrice?.toString()
+            ? EPricingFormula.Standard
+            : whitelistStartingPrice?.gt(whitelistEndingPrice as BigNumber)
+            ? EPricingFormula.Ascending
+            : EPricingFormula.Descending,
         startingPrice: whitelistStartingPrice,
         endingPrice: whitelistEndingPrice,
         whitelist: isSetWhitelist(),
@@ -210,7 +212,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
       const publicSale = {
         label: OriginationLabels.PublicSale,
         currentPrice: getOfferTokenPrice,
-        pricingFormular: publicStartingPrice?.gt(publicEndingPrice as BigNumber)
+        pricingFormula: publicStartingPrice?.gt(publicEndingPrice as BigNumber)
           ? 'Ascending'
           : 'Descending',
         salesPeriod: publicSaleDuration,

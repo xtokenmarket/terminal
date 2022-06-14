@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button, Grid, Typography, makeStyles } from '@material-ui/core'
 import clsx from 'clsx'
-import { ICreateTokenSaleData } from 'types'
+import { ICreateTokenSaleData, IToken } from 'types'
 import { CreateTokenSaleModal } from '../CreateTokenSaleModal'
 import { PricingFormulaTable } from '../PricingFormulaTable'
 import { getDurationSec, parseDurationSec } from 'utils'
@@ -155,7 +155,7 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit }) => {
                     <p className="title">Reserve amount</p>
                     <p className="data">
                       {data.reserveOfferTokenAmount}{' '}
-                      {offerToken?.symbol.toUpperCase()}
+                      {data.purchaseToken?.symbol.toUpperCase()}
                     </p>
                   </div>
                 </Grid>
@@ -213,6 +213,7 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit }) => {
               <PricingFormulaTable
                 saleData={data.whitelistSale}
                 offerToken={offerToken}
+                purchaseToken={data.purchaseToken as IToken}
               />
             </div>
           )}
@@ -225,6 +226,7 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit }) => {
               <PricingFormulaTable
                 saleData={data.publicSale}
                 offerToken={offerToken}
+                purchaseToken={data.purchaseToken as IToken}
               />
             </>
           )}

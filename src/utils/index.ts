@@ -45,14 +45,30 @@ export const formatToShortNumber = (number: string, decimals = 2): string => {
   let unitIndex = 0
   let rNumber = parseFloat(number.split(',').join(''))
 
-  while (rNumber >= 1000 && unitIndex < 4) {
-    unitIndex += 1
-    rNumber = rNumber / 1000
+  if (rNumber >= 1000) {
+    while (rNumber >= 1000 && unitIndex < 4) {
+      unitIndex += 1
+      rNumber = rNumber / 1000
+    }
+
+    return `${Math.round(parseFloat(rNumber.toFixed(decimals)))}${
+      units[unitIndex]
+    }`
   }
 
-  return `${Math.round(parseFloat(rNumber.toFixed(decimals)))}${
-    units[unitIndex]
-  }`
+  if (parseInt(number) >= 100) {
+    return Number(number).toFixed(0)
+  }
+
+  if (parseInt(number) > 0) {
+    return Number(number).toFixed(2)
+  }
+
+  if (parseInt(number) === 0) {
+    return parseFloat(Number(number).toFixed(5)).toString()
+  }
+
+  return '0'
 }
 
 export const hideInsignificantZeros = (x: string) => {
@@ -240,6 +256,8 @@ export const parseDurationSec = (amount: number) => {
   ].map(Math.floor)
   const applicableUnitIndex = amountByUnit.findIndex((amount) => amount > 0)
   const getUnitEnding = (unitAmount: number) => (unitAmount > 1 ? 's' : '')
+
+  if (!amountByUnit[applicableUnitIndex]) return 'None'
 
   return `${amountByUnit[applicableUnitIndex]} ${
     unitNames[applicableUnitIndex]

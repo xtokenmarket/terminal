@@ -123,12 +123,14 @@ export const OfferingStep: React.FC<IProps> = ({
         </Grid>
         <Grid item xs={12} md={6}>
           <TokenAmountInput
-            label="Reserve Offer Token Amount"
-            token={data.offerToken}
+            label="Reserve Purchase Token Raised"
+            token={data.purchaseToken}
             value={data.reserveOfferTokenAmount}
             onChange={(value) => updateData({ reserveOfferTokenAmount: value })}
             infoText={InfoText.ReserveOfferTokenAmount}
-            tokenDetailsPlaceholder={Description.ReserveOfferTokenAmount}
+            tokenDetailsPlaceholder={`Minimum amount of ${
+              data.purchaseToken ? data.purchaseToken.symbol : 'purchase token'
+            } raised for successful sale`}
           />
         </Grid>
       </Grid>

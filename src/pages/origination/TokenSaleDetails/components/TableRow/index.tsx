@@ -18,6 +18,7 @@ import {
 } from 'types'
 import {
   formatBigNumber,
+  formatToShortNumber,
   numberWithCommas,
   parseDurationSec,
   parseRemainingDurationSec,
@@ -65,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 16,
     display: 'flex',
     alignItems: 'center',
+    height: 48,
   },
   itemAlignRight: {
     justifyContent: 'flex-end',
@@ -175,12 +177,16 @@ export const TableRow = ({
 
           <Td type={OfferingOverview.OfferingStatus} label={item.label}>
             <div className={cl.item}>
-              {`${formatBigNumber(
-                item.totalOfferingAmount.sub(item.offerTokenAmountSold),
-                item.offerToken.decimals
-              )}/${formatBigNumber(
-                item.totalOfferingAmount,
-                item.offerToken.decimals
+              {`${formatToShortNumber(
+                formatBigNumber(
+                  item.offerTokenAmountSold,
+                  item.offerToken.decimals
+                )
+              )}/${formatToShortNumber(
+                formatBigNumber(
+                  item.totalOfferingAmount,
+                  item.offerToken.decimals
+                )
               )}`}
               <Typography className={cl.symbol}>
                 {item.offerToken.symbol}
@@ -191,25 +197,31 @@ export const TableRow = ({
             <div className={cl.item}>
               <Typography>
                 {item.offeringReserve &&
-                  formatBigNumber(
-                    item.offeringReserve,
-                    item.offerToken.decimals
+                  formatToShortNumber(
+                    formatBigNumber(
+                      item.offeringReserve,
+                      item.offerToken.decimals
+                    )
                   )}
               </Typography>
               <Typography className={cl.symbol}>
-                {item.offerToken.symbol}
+                {item.purchaseToken.symbol}
               </Typography>
             </div>
           </Td>
 
           <Td type={OfferingOverview.VestingPeriod} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {parseDurationSec(item.vestingPeriod.toNumber())}
+              {item.vestingPeriod.isZero()
+                ? 'None'
+                : parseDurationSec(item.vestingPeriod.toNumber())}
             </Typography>
           </Td>
           <Td type={OfferingOverview.CliffPeriod} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {parseDurationSec(item.cliffPeriod.toNumber())}
+              {item.cliffPeriod.isZero()
+                ? 'None'
+                : parseDurationSec(item.cliffPeriod.toNumber())}
             </Typography>
           </Td>
           <Td type={OfferingOverview.SalesBegin} label={item.label}>
@@ -230,13 +242,6 @@ export const TableRow = ({
                     .format('MMM DD[,] YYYY')}
             </Typography>
           </Td>
-          <Td type={OfferingOverview.SalesPeriod} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label, cl.itemAlignCenter)}>
-              {item.salesPeriod
-                ? parseDurationSec(Number(item.salesPeriod.toString()))
-                : 'N/A'}
-            </Typography>
-          </Td>
         </div>
       )
     }
@@ -251,28 +256,31 @@ export const TableRow = ({
               <Typography
                 className={clsx(cl.item, cl.label, cl.itemMarginLeft)}
               >
-                {`${formatBigNumber(
-                  item.currentPrice,
-                  item.offerToken.decimals
+                {`${formatToShortNumber(
+                  formatBigNumber(item.currentPrice, item.offerToken.decimals)
                 )} ${item.purchaseToken.symbol}` || 'N/A'}
               </Typography>
             </Td>
 
-            <Td type={WhitelistSale.PricingFormular} label={item.label}>
+            <Td type={WhitelistSale.PricingFormula} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {item.pricingFormular || 'N/A'}
+                {item.pricingFormula || 'N/A'}
               </Typography>
             </Td>
 
             <Td type={WhitelistSale.StartingEndingPrice} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
                 {item.startingPrice && item.endingPrice
-                  ? `${formatBigNumber(
-                      item.startingPrice,
-                      item.purchaseToken.decimals
-                    )}/${formatBigNumber(
-                      item.endingPrice,
-                      item.purchaseToken.decimals
+                  ? `${formatToShortNumber(
+                      formatBigNumber(
+                        item.startingPrice,
+                        item.purchaseToken.decimals
+                      )
+                    )}/${formatToShortNumber(
+                      formatBigNumber(
+                        item.endingPrice,
+                        item.purchaseToken.decimals
+                      )
                     )} ${item.purchaseToken.symbol}`
                   : 'N/A'}
               </Typography>
@@ -287,7 +295,9 @@ export const TableRow = ({
             <Td type={WhitelistSale.AddressCap} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
                 {item.addressCap
-                  ? formatBigNumber(item.addressCap, item.offerToken.decimals)
+                  ? formatToShortNumber(
+                      formatBigNumber(item.addressCap, item.offerToken.decimals)
+                    )
                   : 'N/A'}
               </Typography>
             </Td>
@@ -318,26 +328,29 @@ export const TableRow = ({
         <div className={cl.content}>
           <Td type={PublicSale.CurrentPrice} label={item.label}>
             <Typography className={clsx(cl.item, cl.label, cl.itemMarginLeft)}>
-              {`${formatBigNumber(
-                item.currentPrice,
-                item.purchaseToken.decimals
+              {`${formatToShortNumber(
+                formatBigNumber(item.currentPrice, item.purchaseToken.decimals)
               )} ${item.purchaseToken.symbol}` || 'N/A'}
             </Typography>
           </Td>
-          <Td type={PublicSale.PricingFormular} label={item.label}>
+          <Td type={PublicSale.PricingFormula} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.pricingFormular || 'N/A'}
+              {item.pricingFormula || 'N/A'}
             </Typography>
           </Td>
           <Td type={PublicSale.StartingEndingPrice} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
               {item.startingPrice && item.endingPrice
-                ? `${formatBigNumber(
-                    item.startingPrice,
-                    item.purchaseToken.decimals
-                  )}/${formatBigNumber(
-                    item.endingPrice,
-                    item.purchaseToken.decimals
+                ? `${formatToShortNumber(
+                    formatBigNumber(
+                      item.startingPrice,
+                      item.purchaseToken.decimals
+                    )
+                  )}/${formatToShortNumber(
+                    formatBigNumber(
+                      item.endingPrice,
+                      item.purchaseToken.decimals
+                    )
                   )} ${item.purchaseToken.symbol}`
                 : 'N/A'}
             </Typography>
@@ -369,8 +382,8 @@ export const TableRow = ({
             label={item.label}
             isVestedPropertiesShow={isVestedPropertiesShow}
           >
-            <Typography className={clsx(cl.item, cl.label)}>
-              {numberWithCommas(
+            <Typography className={clsx(cl.item, cl.label, cl.itemMarginLeft)}>
+              {formatToShortNumber(
                 formatBigNumber(item.tokenPurchased, item.offerToken.decimals)
               )}{' '}
               {item.offerToken.symbol}
@@ -378,7 +391,7 @@ export const TableRow = ({
           </Td>
           <Td type={MyPosition.AmountInvested} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {numberWithCommas(
+              {formatToShortNumber(
                 formatBigNumber(
                   item.amountInvested,
                   item.purchaseToken.decimals
@@ -412,7 +425,7 @@ export const TableRow = ({
       return (
         <div className={cl.content}>
           <Td type={OfferingSummary.OfferToken} label={item.label}>
-            <div className={cl.item}>
+            <div className={clsx(cl.item, cl.itemMarginLeft)}>
               <img
                 alt="offerToken"
                 className={cl.tokenIcon}
@@ -455,7 +468,9 @@ export const TableRow = ({
             <>
               <Td type={OfferingSummary.TokensSold} label={item.label}>
                 <div className={cl.item}>
-                  {formatBigNumber(item.tokensSold, item.offerToken.decimals)}
+                  {formatToShortNumber(
+                    formatBigNumber(item.tokensSold, item.offerToken.decimals)
+                  )}
                   <Typography className={cl.symbol}>
                     {item.offerToken.symbol}
                   </Typography>
@@ -464,9 +479,11 @@ export const TableRow = ({
               <Td type={OfferingSummary.AmountsRaised} label={item.label}>
                 <div className={cl.item}>
                   <Typography>
-                    {formatBigNumber(
-                      item.amountsRaised,
-                      item.offerToken.decimals
+                    {formatToShortNumber(
+                      formatBigNumber(
+                        item.amountsRaised,
+                        item.offerToken.decimals
+                      )
                     )}
                   </Typography>
                   <Typography className={cl.symbol}>
@@ -477,12 +494,16 @@ export const TableRow = ({
 
               <Td type={OfferingSummary.VestingPeriod} label={item.label}>
                 <Typography className={clsx(cl.item, cl.label)}>
-                  {parseDurationSec(item.vestingPeriod.toNumber())}
+                  {item.vestingPeriod.isZero()
+                    ? 'None'
+                    : parseDurationSec(item.vestingPeriod.toNumber())}
                 </Typography>
               </Td>
               <Td type={OfferingSummary.CliffPeriod} label={item.label}>
                 <Typography className={clsx(cl.item, cl.label)}>
-                  {parseDurationSec(item.cliffPeriod.toNumber())}
+                  {item.cliffPeriod.isZero()
+                    ? 'None'
+                    : parseDurationSec(item.cliffPeriod.toNumber())}
                 </Typography>
               </Td>
               <Td type={OfferingSummary.SalesCompleted} label={item.label}>
