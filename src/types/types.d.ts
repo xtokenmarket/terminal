@@ -294,7 +294,7 @@ export interface IOriginationRow extends IOfferingOverview {
 
 export interface IWhitelistSale extends Label {
   currentPrice: BigNumber
-  pricingFormular: string
+  pricingFormula: string
   startingPrice?: BigNumber
   endingPrice?: BigNumber
   whitelist?: boolean
@@ -309,7 +309,7 @@ export interface IWhitelistSale extends Label {
 
 export interface IPublicSale extends Label {
   currentPrice: BigNumber
-  pricingFormular: string
+  pricingFormula: string
   salesPeriod?: BigNumber
   timeRemaining: BigNumber
   offerToken: IToken

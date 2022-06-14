@@ -4,6 +4,7 @@ import { OfferingTd } from '../table'
 import { NavLink } from 'react-router-dom'
 import {
   formatBigNumber,
+  getRemainingTimeSec,
   numberWithCommas,
   parseDurationSec,
   parseRemainingDurationSec,
@@ -108,17 +109,19 @@ export const OfferingTableRow = ({ offering }: IProps) => {
       startingPrice,
       vestingPeriod,
       cliffPeriod,
-      salesPeriod,
-      saleDuration,
+      salesEnd,
     } = _originationRow
 
-    const isSaleInitiated = !salesBegin.isZero()
-    const elapsedTime = moment().subtract(salesBegin.toString()).toString()
-    const timeRemaining = isSaleInitiated
-      ? moment(salesPeriod ? salesPeriod.toString() : '0')
-          .subtract(elapsedTime)
-          .toString()
-      : saleDuration?.toString()
+    const getTimeRemaining = () => {
+      const isSaleInitiated = !salesBegin.isZero()
+      if (!isSaleInitiated) return "Hasn't started"
+      if (getRemainingTimeSec(salesEnd).isZero()) return 'Ended'
+
+      return parseRemainingDurationSec(
+        parseInt(getRemainingTimeSec(salesEnd).toString())
+      )
+    }
+
 
     const remainingOfferingAmount =
       totalOfferingAmount.sub(offerTokenAmountSold)
@@ -166,19 +169,21 @@ export const OfferingTableRow = ({ offering }: IProps) => {
         </OfferingTd>
         <OfferingTd type="timeRemaining">
           <Typography className={clsx(cl.item, cl.label)}>
-            {timeRemaining
-              ? parseRemainingDurationSec(parseInt(timeRemaining))
-              : 'N/A'}
+            {getTimeRemaining()}
           </Typography>
         </OfferingTd>
         <OfferingTd type="vestingPeriod">
           <Typography className={clsx(cl.item, cl.label)}>
-            {parseDurationSec(vestingPeriod.toNumber())}
+            {vestingPeriod.isZero()
+              ? 'None'
+              : parseDurationSec(vestingPeriod.toNumber())}
           </Typography>
         </OfferingTd>
         <OfferingTd type="vestingCliff">
           <Typography className={clsx(cl.item, cl.label, cl.itemAlignRight)}>
-            {parseDurationSec(cliffPeriod.toNumber())}
+            {cliffPeriod.isZero()
+              ? 'None'
+              : parseDurationSec(cliffPeriod.toNumber())}
           </Typography>
         </OfferingTd>
       </NavLink>

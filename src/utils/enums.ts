@@ -176,7 +176,7 @@ export enum InfoText {
 export enum Description {
   PurchaseToken = 'choose what to sell your offer token for',
   OfferTokenAmount = 'Determine the amount of token you want to sell',
-  ReserveOfferTokenAmount = 'Maximum amount of tokens you want to offer',
+  ReserveOfferTokenAmount = 'Minimum amount of purchase token raised for successful sale',
   StartingPrice = 'Determine the price of the token',
   EndingPrice = 'Maximum amount of tokens you want to offer',
 }
@@ -208,7 +208,7 @@ export enum OfferingOverview {
 
 export enum WhitelistSale {
   CurrentPrice = 'currentPrice',
-  PricingFormular = 'pricingFormular',
+  PricingFormula = 'pricingFormula',
   StartingEndingPrice = 'startingEndingPrice',
   Whitelist = 'whitelist',
   AddressCap = 'addressCap',
@@ -218,7 +218,7 @@ export enum WhitelistSale {
 
 export enum PublicSale {
   CurrentPrice = 'currentPrice',
-  PricingFormular = 'pricingFormular',
+  PricingFormula = 'pricingFormula',
   TimeRemaining = 'timeRemaining',
   SalesPeriod = 'salesPeriod',
   StartingEndingPrice = 'startingEndingPrice',

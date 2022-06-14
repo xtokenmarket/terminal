@@ -11,6 +11,8 @@ import {
 } from '@material-ui/core'
 import { IToken, SaleData } from 'types'
 import { TokenAmountPriceEstimation } from '../TokenAmountPriceEstimation'
+import { EPricingFormula } from 'utils/enums'
+import clsx from 'clsx'
 
 const useStyles = makeStyles((theme) => ({
   tableContainer: {},
@@ -45,16 +47,21 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.primary100,
     fontSize: 12,
   },
+  tableCellPrice: {
+    width: '30%',
+  },
 }))
 
 interface IProps {
   offerToken: IToken
   saleData: SaleData
+  purchaseToken: IToken
 }
 
 export const PricingFormulaTable: React.FC<IProps> = ({
   saleData,
   offerToken,
+  purchaseToken,
 }) => {
   const cl = useStyles()
 
@@ -68,16 +75,26 @@ export const PricingFormulaTable: React.FC<IProps> = ({
                 Pricing Formula
               </Typography>
             </TableCell>
-            <TableCell>
-              <Typography variant="h6" className={cl.rowHeader}>
-                Starting Price
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography variant="h6" className={cl.rowHeader}>
-                Ending Price
-              </Typography>
-            </TableCell>
+            {saleData.pricingFormula === EPricingFormula.Standard ? (
+              <TableCell className={cl.tableCellPrice}>
+                <Typography variant="h6" className={cl.rowHeader}>
+                  Price
+                </Typography>
+              </TableCell>
+            ) : (
+              <>
+                <TableCell>
+                  <Typography variant="h6" className={cl.rowHeader}>
+                    Starting Price
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography variant="h6" className={cl.rowHeader}>
+                    Ending Price
+                  </Typography>
+                </TableCell>
+              </>
+            )}
             <TableCell>
               <Typography variant="h6" className={cl.rowHeader}>
                 Sales Period
@@ -92,34 +109,53 @@ export const PricingFormulaTable: React.FC<IProps> = ({
                 {saleData.pricingFormula}
               </Typography>
             </TableCell>
-            <TableCell className={cl.tableCell}>
+            {saleData.pricingFormula === EPricingFormula.Standard ? (
+              <TableCell className={cl.tableCell}>
+                <>
+                  <Typography className={cl.bodyRowText}>
+                    {saleData.startingPrice} {purchaseToken.symbol}
+                  </Typography>
+                  {offerToken && (
+                    <TokenAmountPriceEstimation
+                      className={cl.priceEstimation}
+                      token={offerToken}
+                      tokenAmount={Number(saleData.startingPrice)}
+                    />
+                  )}
+                </>
+              </TableCell>
+            ) : (
               <>
-                <Typography className={cl.bodyRowText}>
-                  {saleData.startingPrice}
-                </Typography>
-                {offerToken && (
-                  <TokenAmountPriceEstimation
-                    className={cl.priceEstimation}
-                    token={offerToken}
-                    tokenAmount={Number(saleData.startingPrice)}
-                  />
-                )}
+                <TableCell className={cl.tableCell}>
+                  <>
+                    <Typography className={cl.bodyRowText}>
+                      {saleData.startingPrice} {purchaseToken.symbol}
+                    </Typography>
+                    {offerToken && (
+                      <TokenAmountPriceEstimation
+                        className={cl.priceEstimation}
+                        token={offerToken}
+                        tokenAmount={Number(saleData.startingPrice)}
+                      />
+                    )}
+                  </>
+                </TableCell>
+                <TableCell className={cl.tableCell}>
+                  <>
+                    <Typography className={cl.bodyRowText}>
+                      {saleData.endingPrice} {purchaseToken.symbol}
+                    </Typography>
+                    {offerToken && (
+                      <TokenAmountPriceEstimation
+                        className={cl.priceEstimation}
+                        token={offerToken}
+                        tokenAmount={Number(saleData.endingPrice)}
+                      />
+                    )}
+                  </>
+                </TableCell>
               </>
-            </TableCell>
-            <TableCell className={cl.tableCell}>
-              <>
-                <Typography className={cl.bodyRowText}>
-                  {saleData.endingPrice}
-                </Typography>
-                {offerToken && (
-                  <TokenAmountPriceEstimation
-                    className={cl.priceEstimation}
-                    token={offerToken}
-                    tokenAmount={Number(saleData.endingPrice)}
-                  />
-                )}
-              </>
-            </TableCell>
+            )}
             <TableCell className={cl.tableCell}>
               <Typography className={cl.bodyRowText}>
                 {saleData.offeringPeriod} {saleData.offeringPeriodUnit}

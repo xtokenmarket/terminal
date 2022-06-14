@@ -65,11 +65,6 @@ export const TableHeader = (props: IProps) => {
         <Td type={OfferingOverview.SalesEnd} label={props.label}>
           <div className={classes.item}>Sales End</div>
         </Td>
-        <Td type={OfferingOverview.SalesPeriod} label={props.label}>
-          <div className={clsx(classes.item, classes.itemAlignCenter)}>
-            Sales Period
-          </div>
-        </Td>
       </div>
     )
   }
@@ -80,8 +75,8 @@ export const TableHeader = (props: IProps) => {
         <Td type={WhitelistSale.CurrentPrice} label={props.label}>
           <div className={classes.item}>Current Price</div>
         </Td>
-        <Td type={WhitelistSale.PricingFormular} label={props.label}>
-          <div className={classes.item}>Pricing Formular</div>
+        <Td type={WhitelistSale.PricingFormula} label={props.label}>
+          <div className={classes.item}>Pricing Formula</div>
         </Td>
         <Td type={WhitelistSale.StartingEndingPrice} label={props.label}>
           <div className={classes.item}>Starting / Ending Price</div>
@@ -108,8 +103,8 @@ export const TableHeader = (props: IProps) => {
         <Td type={PublicSale.CurrentPrice} label={props.label}>
           <div className={classes.item}>Current Price</div>
         </Td>
-        <Td type={PublicSale.PricingFormular} label={props.label}>
-          <div className={classes.item}>Pricing Formular</div>
+        <Td type={PublicSale.PricingFormula} label={props.label}>
+          <div className={classes.item}>Pricing Formula</div>
         </Td>
         <Td type={PublicSale.StartingEndingPrice} label={props.label}>
           <div className={classes.item}>Starting / Ending Price</div>
