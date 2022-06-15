@@ -247,12 +247,14 @@ export const getDurationSec = (amount: number, unit: string) => {
 export const parseDurationSec = (amount: number) => {
   if (amount === 0) return '0 day'
 
-  const unitNames = ['Year', 'Month', 'Week', 'Day']
+  const unitNames = ['Year', 'Month', 'Week', 'Day', 'Hour', 'Minute']
   const amountByUnit = [
     amount / (secondsIn1Day * 7 * 4 * 365),
     amount / (secondsIn1Day * 7 * 4),
     amount / (secondsIn1Day * 7),
     amount / secondsIn1Day,
+    amount / (60 * 60),
+    amount / 60,
   ].map(Math.floor)
   const applicableUnitIndex = amountByUnit.findIndex((amount) => amount > 0)
   const getUnitEnding = (unitAmount: number) => (unitAmount > 1 ? 's' : '')
