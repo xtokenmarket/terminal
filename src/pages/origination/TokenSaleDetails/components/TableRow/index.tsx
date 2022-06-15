@@ -128,6 +128,7 @@ interface IProps {
   toggleModal?: () => void
   isVestedPropertiesShow?: boolean
   isOfferUnsuccessful?: boolean
+  isSaleInitiated?: boolean
 }
 
 export const TableRow = ({
@@ -135,6 +136,7 @@ export const TableRow = ({
   toggleModal,
   isVestedPropertiesShow,
   isOfferUnsuccessful,
+  isSaleInitiated,
 }: IProps) => {
   const cl = useStyles()
 
@@ -304,7 +306,7 @@ export const TableRow = ({
 
             <Td type={WhitelistSale.TimeRemaining} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {item.timeRemaining
+                {isSaleInitiated && item.timeRemaining
                   ? parseRemainingDurationSec(item.timeRemaining.toNumber())
                   : 'N/A'}
               </Typography>
@@ -357,7 +359,7 @@ export const TableRow = ({
           </Td>
           <Td type={PublicSale.TimeRemaining} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.timeRemaining
+              {isSaleInitiated && item.timeRemaining
                 ? `${parseRemainingDurationSec(item.timeRemaining.toNumber())}`
                 : 'N/A'}
             </Typography>
