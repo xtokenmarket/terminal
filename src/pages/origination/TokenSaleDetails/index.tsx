@@ -196,7 +196,7 @@ const TokenSaleDetails = () => {
   // TODO: user own at least 1 vesting entry nft
   const isVestButtonShow =
     tokenOffer &&
-    tokenOffer?.myPosition.amountvested.gt(0) &&
+    tokenOffer?.myPosition.amountAvailableToVest.gt(0) &&
     isCliffPeriodPassed()
 
   const isWhitelistSaleConfigured =

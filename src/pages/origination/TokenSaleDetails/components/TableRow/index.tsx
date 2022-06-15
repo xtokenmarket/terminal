@@ -480,12 +480,12 @@ export const TableRow = ({
                     {formatToShortNumber(
                       formatBigNumber(
                         item.amountsRaised,
-                        item.offerToken.decimals
+                        item.purchaseToken.decimals
                       )
                     )}
                   </Typography>
                   <Typography className={cl.symbol}>
-                    {item.offerToken.symbol}
+                    {item.purchaseToken.symbol}
                   </Typography>
                 </div>
               </Td>
