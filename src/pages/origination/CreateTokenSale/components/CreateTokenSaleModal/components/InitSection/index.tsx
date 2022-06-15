@@ -131,6 +131,14 @@ export const InitSection = (props: IProps) => {
         ),
       }
 
+      // ====test data====
+      // const testSaleParams = {
+      //   ...saleParams,
+      //   publicSaleDuration: BigNumber.from('120'),
+      //   vestingPeriod: BigNumber.from('3000'),
+      //   cliffPeriod: BigNumber.from('60'),
+      // }
+
       const txId = await originationService.createFungibleListing(saleParams)
       const finalTxId = await originationService.waitUntilCreateFungibleListing(
         account,
