@@ -237,6 +237,9 @@ export const getDurationSec = (amount: number, unit: string) => {
   if (unit === 'Minutes') {
     durationSec = amount * 60
   }
+  if (unit === 'Hours') {
+    durationSec = amount * 60 * 60
+  }
   if (unit === 'Days') {
     durationSec = amount * secondsIn1Day
   }
