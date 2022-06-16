@@ -5,7 +5,6 @@ import { BigNumber, constants, Contract, ethers } from 'ethers'
 import {
   knownTokens,
   getTokenFromAddress,
-  getContractAddress,
   getNetworkProvider,
 } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
@@ -65,25 +64,14 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         poolAddress
       )
 
-      const nonfungiblePositionManagerAddress = getContractAddress(
-        'vestingEntryNFT',
-        provider?.network.chainId
-      )
-
-      const vestingEntryNFTContract = new Contract(
-        nonfungiblePositionManagerAddress,
-        Abi.vestingEntryNFT,
-        provider
-      )
-
       const [
         token0,
         token1,
         offerTokenAmountPurchased,
         purchaseTokenContribution,
-        entryId,
-        isOwnerOrManager,
         userToVestingId, // TODO: need to be refactored later after graph is ready
+        isOwnerOrManager,
+        vestingEntryNFTAddress,
       ] = await Promise.all([
         getTokenDetails(_offerData?.offerToken as string),
         getTokenDetails(_offerData?.purchaseToken as string),
@@ -91,12 +79,21 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         fungiblePool.contract.purchaseTokenContribution(account),
         fungiblePool.contract.userToVestingId(account),
         fungiblePool.contract.isOwnerOrManager(account),
-        fungiblePool.contract.userToVestingId(account),
+        fungiblePool.contract.vestingEntryNFT(),
       ])
 
-      const nftInfo = await vestingEntryNFTContract.tokenIdVestingAmounts(
-        entryId
+      const vestingEntryNFTContract = new Contract(
+        vestingEntryNFTAddress,
+        Abi.vestingEntryNFT,
+        provider
       )
+
+      const nftInfo = await vestingEntryNFTContract.tokenIdVestingAmounts(
+        userToVestingId
+      )
+
+      const tokenIdVestingAmounts =
+        await vestingEntryNFTContract.tokenIdVestingAmounts(userToVestingId)
 
       const { tokenAmount, tokenAmountClaimed } = nftInfo
 
@@ -237,7 +234,8 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         offerToken: token0,
         purchaseToken: token1 || ETH,
         vestableTokenAmount,
-        userToVestingId: [userToVestingId],
+        userToVestingId: [userToVestingId.toNumber()],
+        tokenIdVestingAmounts,
       }
 
       const offeringSummary = {

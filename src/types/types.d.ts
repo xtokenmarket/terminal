@@ -276,6 +276,7 @@ export interface IMyPosition extends Label {
   purchaseToken: IToken
   vestableTokenAmount: BigNumber
   userToVestingId: string[]
+  tokenIdVestingAmounts: BigNumber
 }
 
 export interface IOfferingSummary extends Label {

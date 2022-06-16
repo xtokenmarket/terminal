@@ -124,6 +124,33 @@ class FungiblePoolService {
     })
   }
 
+  vest = async (userToVestingId: string[]): Promise<string> => {
+    const tx = await this.contract.claimVested(userToVestingId, {
+      gasLimit: 7000000,
+    })
+    console.log(`vest transaction hash: ${tx.hash}`)
+    return tx.hash
+  }
+
+  waitUntilVest = async (txId: string): Promise<string> => {
+    let resolved = false
+    return new Promise((resolve) => {
+      this.contract.on('ClaimVested', (...rest) => {
+        if (!resolved) {
+          resolved = true
+          resolve(rest[0].transactionHash)
+        }
+      })
+
+      this.contract.provider.waitForTransaction(txId).then(() => {
+        if (!resolved) {
+          resolved = true
+          resolve(txId)
+        }
+      })
+    })
+  }
+
   private generateMerkleProof = async (
     account: string,
     poolAddress: string
