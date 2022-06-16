@@ -367,8 +367,12 @@ const TokenSaleDetails = () => {
               isOpen={state.isClaimModalOpen}
               onClose={toggleClaimModal}
               data={{
-                token: tokenOffer.offeringOverview.offerToken,
-                amount: BigNumber.from(tokenOffer.myPosition.tokenPurchased),
+                token: isOwnerOrManager
+                  ? tokenOffer.offeringOverview.purchaseToken
+                  : tokenOffer.offeringOverview.offerToken,
+                amount: isOwnerOrManager
+                  ? tokenOffer.offeringSummary.amountsRaised
+                  : BigNumber.from(tokenOffer.myPosition.tokenPurchased),
               }}
               isOwnerOrManager={isOwnerOrManager}
             />
