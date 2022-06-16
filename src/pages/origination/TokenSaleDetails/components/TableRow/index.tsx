@@ -299,11 +299,16 @@ export const TableRow = ({
 
             <Td type={WhitelistSale.AddressCap} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {item.addressCap
-                  ? formatToShortNumber(
+                {!item.addressCap.isZero() ? (
+                  <>
+                    {formatToShortNumber(
                       formatBigNumber(item.addressCap, item.offerToken.decimals)
-                    )
-                  : 'N/A'}
+                    )}{' '}
+                    {item.offerToken.symbol}
+                  </>
+                ) : (
+                  'N/A'
+                )}
               </Typography>
             </Td>
 
