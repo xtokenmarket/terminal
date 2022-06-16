@@ -186,21 +186,6 @@ export const OutputEstimation = (props: IProps) => {
             <span>~ $ 309,73</span>
           </Typography>
         </div>
-        <Typography className={classes.label}>REMAINING PERIOD</Typography>
-        <div className={classes.infoRow}>
-          {durationRemaining.length === 0 ? (
-            <div className={classes.wrapper}>
-              <Typography className={classes.whiteText}>N/A</Typography>
-            </div>
-          ) : (
-            <div className={classes.wrapper}>
-              <Typography className={classes.whiteText}>{primary}</Typography>
-              <Typography className={classes.lightPurpletext}>
-                {rest}
-              </Typography>
-            </div>
-          )}
-        </div>
       </div>
     </div>
   )
