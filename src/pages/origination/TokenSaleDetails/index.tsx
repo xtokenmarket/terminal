@@ -212,7 +212,6 @@ const TokenSaleDetails = () => {
 
   const isSaleCompleted =
     tokenOffer &&
-    !tokenOffer.offeringOverview.salesBegin.isZero() &&
     getRemainingTimeSec(tokenOffer?.offeringOverview.salesEnd).isZero()
 
   const isOfferUnsuccessful =
@@ -250,6 +249,8 @@ const TokenSaleDetails = () => {
   const isVestedPropertiesShow =
     tokenOffer?.myPosition.amountAvailableToVest.gt(0) ||
     tokenOffer?.myPosition.amountvested.gt(0)
+
+  const isOwnerOrManager = tokenOffer?.offeringOverview.isOwnerOrManager
 
   return (
     <PageWrapper>
@@ -291,42 +292,44 @@ const TokenSaleDetails = () => {
                   item={tokenOffer.whitelist}
                   label={'Whitelist Sale'}
                   toggleModal={toggleSetWhitelistModal}
-                  isOwnerOrManager={
-                    tokenOffer.offeringOverview.isOwnerOrManager
-                  }
+                  isOwnerOrManager={isOwnerOrManager}
                   isWhitelistSet={tokenOffer.whitelist.whitelist}
                 />
-                <div className={cl.buttonWrapper}>
-                  <Button
-                    className={cl.button}
-                    onClick={toggleWhitelistInvestModal}
-                    disabled={iswhitelistSaleInvestDisabled}
-                  >
-                    <Typography className={cl.text}>INVEST</Typography>
-                  </Button>
-                  {!tokenOffer.whitelist.isAddressWhitelisted &&
-                    tokenOffer.whitelist.whitelist && (
-                      <div className={cl.errorMessageWrapper}>
-                        <img alt="info" src="/assets/icons/warning.svg" />
-                        &nbsp;&nbsp;
-                        <div>
-                          Unfortunately, your address was not whitelisted
+                {!isOwnerOrManager && (
+                  <div className={cl.buttonWrapper}>
+                    <Button
+                      className={cl.button}
+                      onClick={toggleWhitelistInvestModal}
+                      disabled={iswhitelistSaleInvestDisabled}
+                    >
+                      <Typography className={cl.text}>INVEST</Typography>
+                    </Button>
+                    {!tokenOffer.whitelist.isAddressWhitelisted &&
+                      tokenOffer.whitelist.whitelist && (
+                        <div className={cl.errorMessageWrapper}>
+                          <img alt="info" src="/assets/icons/warning.svg" />
+                          &nbsp;&nbsp;
+                          <div>
+                            Unfortunately, your address was not whitelisted
+                          </div>
                         </div>
-                      </div>
-                    )}
-                </div>
+                      )}
+                  </div>
+                )}
               </>
             )}
             {!isSaleCompleted && isPublicSaleConfigured && (
               <>
                 <Table item={tokenOffer.publicSale} label={'Public Sale'} />
-                <Button
-                  className={cl.button}
-                  onClick={toggleInvestModal}
-                  disabled={isPublicSaleInvestDisabled}
-                >
-                  <Typography className={cl.text}>INVEST</Typography>
-                </Button>
+                {!isOwnerOrManager && (
+                  <Button
+                    className={cl.button}
+                    onClick={toggleInvestModal}
+                    disabled={isPublicSaleInvestDisabled}
+                  >
+                    <Typography className={cl.text}>INVEST</Typography>
+                  </Button>
+                )}
               </>
             )}
             {isMyPositionShow && (
