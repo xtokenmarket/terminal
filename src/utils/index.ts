@@ -234,6 +234,9 @@ export const getMetamaskError = (error: any) => {
 export const getDurationSec = (amount: number, unit: string) => {
   let durationSec = 0
 
+  if (unit === 'Minutes') {
+    durationSec = amount * 60
+  }
   if (unit === 'Days') {
     durationSec = amount * secondsIn1Day
   }

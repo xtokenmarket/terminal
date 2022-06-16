@@ -193,6 +193,7 @@ export const SaleForm = ({
             </div>
 
             <Selector
+              saleDisplayName={saleDisplayName}
               onSelectorChange={(e) =>
                 updateSaleData({
                   offeringPeriodUnit: e.target.value as PeriodUnit,
