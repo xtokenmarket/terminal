@@ -208,6 +208,31 @@ class FungiblePoolService {
     new Promise((resolve) => {
       this.contract.provider.waitForTransaction(txId).then(() => resolve(txId))
     })
+
+  claimPurchaseToken = async (): Promise<string> => {
+    const transactionObject = await this.contract.claimPurchaseToken()
+
+    return transactionObject.hash
+  }
+
+  waitUntilClaimPurchaseToken = async (txId: string): Promise<string> => {
+    let resolved = false
+    return new Promise((resolve) => {
+      this.contract.on('ClaimPurchaseToken', (...rest) => {
+        if (!resolved) {
+          resolved = true
+          resolve(rest[0].transactionHash)
+        }
+      })
+
+      this.contract.provider.waitForTransaction(txId).then(() => {
+        if (!resolved) {
+          resolved = true
+          resolve(txId)
+        }
+      })
+    })
+  }
 }
 
 export { FungiblePoolService }

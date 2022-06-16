@@ -193,6 +193,8 @@ const TokenSaleDetails = () => {
     return now.gt(cliffPeriodEnd)
   }
 
+  const isOwnerOrManager = tokenOffer?.offeringOverview.isOwnerOrManager
+
   // TODO: user own at least 1 vesting entry nft
   const isVestButtonShow =
     tokenOffer &&
@@ -212,6 +214,7 @@ const TokenSaleDetails = () => {
 
   const isSaleCompleted =
     tokenOffer &&
+    !tokenOffer?.offeringOverview.salesBegin.isZero() &&
     getRemainingTimeSec(tokenOffer?.offeringOverview.salesEnd).isZero()
 
   const isOfferUnsuccessful =
@@ -223,9 +226,10 @@ const TokenSaleDetails = () => {
 
   const isClaimButtonShow =
     tokenOffer &&
-    tokenOffer.myPosition.amountInvested.gt(0) &&
-    isCliffPeriodPassed() &&
-    tokenOffer.offeringOverview.vestingPeriod.isZero()
+    ((isOwnerOrManager && isCliffPeriodPassed() && isSaleCompleted) ||
+      (tokenOffer.myPosition.tokenPurchased.gt(0) &&
+        isCliffPeriodPassed() &&
+        tokenOffer.offeringOverview.vestingPeriod.isZero()))
 
   const isMyPositionShow =
     tokenOffer &&
@@ -249,8 +253,6 @@ const TokenSaleDetails = () => {
   const isVestedPropertiesShow =
     tokenOffer?.myPosition.amountAvailableToVest.gt(0) ||
     tokenOffer?.myPosition.amountvested.gt(0)
-
-  const isOwnerOrManager = tokenOffer?.offeringOverview.isOwnerOrManager
 
   return (
     <PageWrapper>
@@ -361,9 +363,10 @@ const TokenSaleDetails = () => {
               isOpen={state.isClaimModalOpen}
               onClose={toggleClaimModal}
               data={{
-                token: tokenOffer.offeringOverview.purchaseToken,
-                amount: BigNumber.from(tokenOffer.myPosition.amountInvested),
+                token: tokenOffer.offeringOverview.offerToken,
+                amount: BigNumber.from(tokenOffer.myPosition.tokenPurchased),
               }}
+              isOwnerOrManager={isOwnerOrManager}
             />
             <InvestModal
               isWhitelist={state.isWhitelistInvestClicked}
