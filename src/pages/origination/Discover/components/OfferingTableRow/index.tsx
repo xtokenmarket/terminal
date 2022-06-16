@@ -28,8 +28,9 @@ const useStyles = makeStyles((theme) => ({
     padding: '20px 0',
   },
   content: {
+    border: `solid 1px ${theme.colors.primary200}`,
     cursor: 'pointer',
-    padding: 16,
+    padding: '16px 0',
     display: 'flex',
     alignItems: 'center',
     position: 'relative',
@@ -80,6 +81,9 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 800,
     marginLeft: theme.spacing(2),
   },
+  itemMarginLeft: {
+    marginLeft: 15,
+  },
 }))
 
 interface IProps {
@@ -122,7 +126,6 @@ export const OfferingTableRow = ({ offering }: IProps) => {
       )
     }
 
-
     const remainingOfferingAmount =
       totalOfferingAmount.sub(offerTokenAmountSold)
 
@@ -132,7 +135,7 @@ export const OfferingTableRow = ({ offering }: IProps) => {
         to={`/origination/token-offers/${tokenOffer.network}/${offering}`}
       >
         <OfferingTd type="offerToken">
-          <div className={cl.item}>
+          <div className={clsx(cl.item, cl.itemMarginLeft)}>
             <img
               alt="offerToken"
               className={cl.tokenIcon}
@@ -180,7 +183,7 @@ export const OfferingTableRow = ({ offering }: IProps) => {
           </Typography>
         </OfferingTd>
         <OfferingTd type="vestingCliff">
-          <Typography className={clsx(cl.item, cl.label, cl.itemAlignRight)}>
+          <Typography className={clsx(cl.item, cl.label)}>
             {cliffPeriod.isZero()
               ? 'None'
               : parseDurationSec(cliffPeriod.toNumber())}

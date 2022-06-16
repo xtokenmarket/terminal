@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme) => ({
   itemAlignRight: {
     justifyContent: 'flex-end',
   },
+  itemMarginLeft: {
+    paddingLeft: 17,
+  },
 }))
 
 export const OfferingTableHeader = () => {
@@ -42,9 +45,7 @@ export const OfferingTableHeader = () => {
         <div className={classes.item}>Vesting Period</div>
       </OfferingTd>
       <OfferingTd type="vestingCliff">
-        <div className={clsx(classes.item, classes.itemAlignRight)}>
-          Vesting Cliff
-        </div>
+        <div className={classes.item}>Vesting Cliff</div>
       </OfferingTd>
     </div>
   )
