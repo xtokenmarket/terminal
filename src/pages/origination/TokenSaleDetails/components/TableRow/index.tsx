@@ -2,6 +2,7 @@ import clsx from 'clsx'
 import { Button, makeStyles, Tooltip, Typography } from '@material-ui/core'
 import { Td } from '../Td'
 import {
+  EPricingFormula,
   MyPosition,
   OfferingOverview,
   OfferingSummary,
@@ -270,23 +271,25 @@ export const TableRow = ({
               </Typography>
             </Td>
 
-            <Td type={WhitelistSale.StartingEndingPrice} label={item.label}>
-              <Typography className={clsx(cl.item, cl.label)}>
-                {item.startingPrice && item.endingPrice
-                  ? `${formatToShortNumber(
-                      formatBigNumber(
-                        item.startingPrice,
-                        item.purchaseToken.decimals
-                      )
-                    )}/${formatToShortNumber(
-                      formatBigNumber(
-                        item.endingPrice,
-                        item.purchaseToken.decimals
-                      )
-                    )} ${item.purchaseToken.symbol}`
-                  : 'N/A'}
-              </Typography>
-            </Td>
+            {item.pricingFormula !== EPricingFormula.Standard && (
+              <Td type={WhitelistSale.StartingEndingPrice} label={item.label}>
+                <Typography className={clsx(cl.item, cl.label)}>
+                  {item.startingPrice && item.endingPrice
+                    ? `${formatToShortNumber(
+                        formatBigNumber(
+                          item.startingPrice,
+                          item.purchaseToken.decimals
+                        )
+                      )}/${formatToShortNumber(
+                        formatBigNumber(
+                          item.endingPrice,
+                          item.purchaseToken.decimals
+                        )
+                      )} ${item.purchaseToken.symbol}`
+                    : 'N/A'}
+                </Typography>
+              </Td>
+            )}
 
             <Td type={WhitelistSale.Whitelist} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
@@ -340,23 +343,25 @@ export const TableRow = ({
               {item.pricingFormula || 'N/A'}
             </Typography>
           </Td>
-          <Td type={PublicSale.StartingEndingPrice} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label)}>
-              {item.startingPrice && item.endingPrice
-                ? `${formatToShortNumber(
-                    formatBigNumber(
-                      item.startingPrice,
-                      item.purchaseToken.decimals
-                    )
-                  )}/${formatToShortNumber(
-                    formatBigNumber(
-                      item.endingPrice,
-                      item.purchaseToken.decimals
-                    )
-                  )} ${item.purchaseToken.symbol}`
-                : 'N/A'}
-            </Typography>
-          </Td>
+          {item.pricingFormula !== EPricingFormula.Standard && (
+            <Td type={PublicSale.StartingEndingPrice} label={item.label}>
+              <Typography className={clsx(cl.item, cl.label)}>
+                {item.startingPrice && item.endingPrice
+                  ? `${formatToShortNumber(
+                      formatBigNumber(
+                        item.startingPrice,
+                        item.purchaseToken.decimals
+                      )
+                    )}/${formatToShortNumber(
+                      formatBigNumber(
+                        item.endingPrice,
+                        item.purchaseToken.decimals
+                      )
+                    )} ${item.purchaseToken.symbol}`
+                  : 'N/A'}
+              </Typography>
+            </Td>
+          )}
           <Td type={PublicSale.TimeRemaining} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
               {isSaleInitiated && item.timeRemaining

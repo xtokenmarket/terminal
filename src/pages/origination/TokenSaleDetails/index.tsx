@@ -8,7 +8,7 @@ import { Button, makeStyles, Typography } from '@material-ui/core'
 import { PageWrapper, PageHeader, PageContent, SimpleLoader } from 'components'
 import { useOriginationPool } from 'helpers'
 import { getCurrentTimeStamp, getRemainingTimeSec } from 'utils'
-import { Network } from 'utils/enums'
+import { EPricingFormula, Network } from 'utils/enums'
 
 import { ClaimModal } from './components/ClaimModal'
 import { InitiateSaleModal } from './components/InitiateSaleModal'
@@ -300,6 +300,10 @@ const TokenSaleDetails = () => {
                   toggleModal={toggleSetWhitelistModal}
                   isOwnerOrManager={isOwnerOrManager}
                   isWhitelistSet={tokenOffer.whitelist.whitelist}
+                  isFormulaStandard={
+                    tokenOffer.whitelist.pricingFormula ===
+                    EPricingFormula.Standard
+                  }
                 />
                 {!isOwnerOrManager && (
                   <div className={cl.buttonWrapper}>
@@ -326,7 +330,14 @@ const TokenSaleDetails = () => {
             )}
             {!isSaleCompleted && isPublicSaleConfigured && (
               <>
-                <Table item={tokenOffer.publicSale} label={'Public Sale'} />
+                <Table
+                  item={tokenOffer.publicSale}
+                  label={'Public Sale'}
+                  isFormulaStandard={
+                    tokenOffer.publicSale.pricingFormula ===
+                    EPricingFormula.Standard
+                  }
+                />
                 {!isOwnerOrManager && (
                   <Button
                     className={cl.button}
