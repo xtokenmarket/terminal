@@ -77,7 +77,7 @@ export const getOffersDataMulticall = async (
       [getOfferTokenPrice],
       [vestableTokenAmount],
       [purchaseTokensAcquired],
-      sponsorTokensClaimed,
+      [sponsorTokensClaimed],
     ] = await multicall.multicallv2(Abi.OriginationPool, calls, {
       requireSuccess: false,
     })
