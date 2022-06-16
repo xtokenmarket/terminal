@@ -88,12 +88,16 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         provider
       )
 
-      const nftInfo = await vestingEntryNFTContract.tokenIdVestingAmounts(
-        userToVestingId
-      )
+      let nftInfo = {
+        tokenAmount: BigNumber.from(0),
+        tokenAmountClaimed: BigNumber.from(0),
+      }
 
-      const tokenIdVestingAmounts =
-        await vestingEntryNFTContract.tokenIdVestingAmounts(userToVestingId)
+      if (vestingEntryNFTAddress !== ethers.constants.AddressZero) {
+        nftInfo = await vestingEntryNFTContract.tokenIdVestingAmounts(
+          userToVestingId
+        )
+      }
 
       const { tokenAmount, tokenAmountClaimed } = nftInfo
 
@@ -235,7 +239,6 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         purchaseToken: token1 || ETH,
         vestableTokenAmount,
         userToVestingId: [userToVestingId.toNumber()],
-        tokenIdVestingAmounts,
       }
 
       const offeringSummary = {
