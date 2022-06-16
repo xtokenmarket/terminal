@@ -26,7 +26,9 @@ export const numberWithCommas = (
   if (!x) return '0'
   const n = Number(x)
   if (n < 1000) {
-    return Number.isInteger(n) && !forcePrecision ? x : n.toFixed(decimals)
+    // TODO: need to check the formatting consistency in mining app
+    // return Number.isInteger(n) && !forcePrecision ? x : n.toFixed(decimals)
+    return formatSmallNumber(x)
   }
   let formattedNumber = n.toFixed(decimals).replace(/\d(?=(\d{3})+\.)/g, '$&,')
   const splitArray = formattedNumber.split('.')
@@ -56,6 +58,10 @@ export const formatToShortNumber = (number: string, decimals = 2): string => {
     }`
   }
 
+  return formatSmallNumber(number)
+}
+
+const formatSmallNumber = (number: string) => {
   if (parseInt(number) >= 100) {
     return Number(number).toFixed(0)
   }
