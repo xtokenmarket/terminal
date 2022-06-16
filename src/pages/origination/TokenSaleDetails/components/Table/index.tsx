@@ -3,7 +3,7 @@ import { useConnectedWeb3Context } from 'contexts'
 import { transparentize } from 'polished'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { FungibleOriginationPoolService } from 'services/fungibleOriginationPool'
+import { FungiblePoolService } from 'services'
 import { OriginationDetailItem } from 'types'
 import { TableHeader } from '../TableHeader'
 import { TableRow } from '../TableRow'
@@ -85,7 +85,7 @@ export const Table = ({
   const { account, library: provider } = useConnectedWeb3Context()
   const { poolAddress } = useParams<{ poolAddress: string }>()
   useEffect(() => {
-    const fungibleOriginationPool = new FungibleOriginationPoolService(
+    const fungibleOriginationPool = new FungiblePoolService(
       provider,
       account,
       poolAddress

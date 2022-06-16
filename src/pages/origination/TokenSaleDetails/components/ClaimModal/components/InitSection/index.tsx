@@ -4,7 +4,7 @@ import { WarningInfo } from 'components/Common/WarningInfo'
 import { useConnectedWeb3Context } from 'contexts'
 import { IClaimData } from 'types'
 import { useSnackbar } from 'notistack'
-import { FungibleOriginationPoolService } from 'services/fungibleOriginationPool'
+import { FungiblePoolService } from 'services'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,7 +50,7 @@ export const InitSection = ({
     }
   )
 
-  const fungibleOriginationPool = new FungibleOriginationPoolService(
+  const fungibleOriginationPool = new FungiblePoolService(
     provider,
     account,
     poolAddress

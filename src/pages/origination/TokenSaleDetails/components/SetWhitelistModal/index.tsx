@@ -16,7 +16,7 @@ import { Input } from 'pages/origination/CreateTokenSale/components'
 import { ChainId, CHAIN_NAMES, ORIGINATION_API_URL } from 'config/constants'
 import { useSnackbar } from 'notistack'
 import axios from 'axios'
-import { FungibleOriginationPoolService } from 'services/fungibleOriginationPool'
+import { FungiblePoolService } from 'services'
 import { useOriginationPool } from 'helpers'
 import { getNetworkFromId } from 'utils/network'
 import { NetworkId } from 'types'
@@ -152,7 +152,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
     }
   )
 
-  const fungibleOriginationPool = new FungibleOriginationPoolService(
+  const fungibleOriginationPool = new FungiblePoolService(
     provider,
     account,
     poolAddress
