@@ -402,13 +402,20 @@ export const TableRow = ({
             <>
               <Td type={MyPosition.Amountvested} label={item.label}>
                 <Typography className={clsx(cl.item, cl.label)}>
-                  {numberWithCommas(item.amountvested.toString())}{' '}
+                  {formatToShortNumber(
+                    formatBigNumber(item.amountvested, item.offerToken.decimals)
+                  )}{' '}
                   {item.offerToken.symbol}
                 </Typography>
               </Td>
               <Td type={MyPosition.AmountAvailableToVest} label={item.label}>
                 <Typography className={clsx(cl.item, cl.label)}>
-                  {numberWithCommas(item.amountAvailableToVest.toString())}{' '}
+                  {formatToShortNumber(
+                    formatBigNumber(
+                      item.amountAvailableToVest,
+                      item.offerToken.decimals
+                    )
+                  )}{' '}
                   {item.offerToken.symbol}
                 </Typography>
               </Td>
