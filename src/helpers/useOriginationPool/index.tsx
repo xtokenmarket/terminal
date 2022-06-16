@@ -124,6 +124,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         whitelistMerkleRoot,
         whitelistSaleDuration,
         whitelistStartingPrice,
+        sponsorTokensClaimed,
       } = _offerData as ITokenOfferDetails
 
       const _publicSaleDuration = BigNumber.from(Number(publicSaleDuration))
@@ -268,6 +269,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         },
         // TODO: remove this hardcoded value
         network: Network.KOVAN,
+        sponsorTokensClaimed,
       }
     } catch (error) {
       console.log(error)

@@ -200,7 +200,8 @@ const TokenSaleDetails = () => {
     tokenOffer &&
     tokenOffer?.myPosition.amountAvailableToVest.gt(0) &&
     isCliffPeriodPassed() &&
-    tokenOffer.offeringOverview.vestingPeriod.gt(0)
+    tokenOffer.offeringOverview.vestingPeriod.gt(0) &&
+    !isOwnerOrManager
 
   const isWhitelistSaleConfigured =
     tokenOffer &&
@@ -226,7 +227,10 @@ const TokenSaleDetails = () => {
 
   const isClaimButtonShow =
     tokenOffer &&
-    ((isOwnerOrManager && isCliffPeriodPassed() && isSaleCompleted) ||
+    ((isOwnerOrManager &&
+      isCliffPeriodPassed() &&
+      isSaleCompleted &&
+      !tokenOffer.sponsorTokensClaimed) ||
       (tokenOffer.myPosition.tokenPurchased.gt(0) &&
         isCliffPeriodPassed() &&
         tokenOffer.offeringOverview.vestingPeriod.isZero()))
