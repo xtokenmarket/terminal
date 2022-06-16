@@ -199,8 +199,8 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
           whitelistEndingPrice?.toString()
             ? EPricingFormula.Standard
             : whitelistStartingPrice?.gt(whitelistEndingPrice as BigNumber)
-            ? EPricingFormula.Ascending
-            : EPricingFormula.Descending,
+            ? EPricingFormula.Descending
+            : EPricingFormula.Ascending,
         startingPrice: whitelistStartingPrice,
         endingPrice: whitelistEndingPrice,
         whitelist: isSetWhitelist(),
@@ -220,8 +220,8 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
           publicStartingPrice.toString() === publicEndingPrice.toString()
             ? EPricingFormula.Standard
             : publicStartingPrice?.gt(publicEndingPrice as BigNumber)
-            ? EPricingFormula.Ascending
-            : EPricingFormula.Descending,
+            ? EPricingFormula.Descending
+            : EPricingFormula.Ascending,
         salesPeriod: publicSaleDuration,
         timeRemaining,
         offerToken: token0,
