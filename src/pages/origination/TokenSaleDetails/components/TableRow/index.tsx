@@ -117,6 +117,9 @@ const useStyles = makeStyles((theme) => ({
   itemMarginLeft: {
     marginLeft: 17,
   },
+  marginBottom: {
+    marginBottom: 53,
+  },
 }))
 
 interface IProps {
@@ -130,6 +133,7 @@ interface IProps {
   isVestedPropertiesShow?: boolean
   isOfferUnsuccessful?: boolean
   isSaleInitiated?: boolean
+  isOwnerOrManager?: boolean
 }
 
 export const TableRow = ({
@@ -138,6 +142,7 @@ export const TableRow = ({
   isVestedPropertiesShow,
   isOfferUnsuccessful,
   isSaleInitiated,
+  isOwnerOrManager,
 }: IProps) => {
   const cl = useStyles()
 
@@ -254,7 +259,9 @@ export const TableRow = ({
 
       return (
         <>
-          <div className={cl.content}>
+          <div
+            className={clsx(cl.content, [isOwnerOrManager && cl.marginBottom])}
+          >
             <Td type={WhitelistSale.CurrentPrice} label={item.label}>
               <Typography
                 className={clsx(cl.item, cl.label, cl.itemMarginLeft)}

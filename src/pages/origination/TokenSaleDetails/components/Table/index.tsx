@@ -159,6 +159,7 @@ export const Table = ({
             isVestedPropertiesShow={isVestedPropertiesShow}
             isOfferUnsuccessful={isOfferUnsuccessful}
             isSaleInitiated={isSaleInitiated}
+            isOwnerOrManager={isOwnerOrManager}
           />
         </div>
       </div>

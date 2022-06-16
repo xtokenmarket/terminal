@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '20px 0',
   },
   content: {
+    marginBottom: 13,
     border: `solid 1px ${theme.colors.primary200}`,
     cursor: 'pointer',
     padding: '16px 0',
