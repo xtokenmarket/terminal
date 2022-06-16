@@ -196,7 +196,7 @@ const TokenSaleDetails = () => {
   // TODO: user own at least 1 vesting entry nft
   const isVestButtonShow =
     tokenOffer &&
-    tokenOffer?.myPosition.amountvested.gt(0) &&
+    tokenOffer?.myPosition.amountAvailableToVest.gt(0) &&
     isCliffPeriodPassed() &&
     tokenOffer.offeringOverview.vestingPeriod.gt(0)
 
@@ -246,6 +246,10 @@ const TokenSaleDetails = () => {
       tokenOffer.whitelist.salesPeriod?.gt(0) &&
       !tokenOffer.whitelist.whitelist) ||
     tokenOffer?.offeringOverview.salesBegin.gt(0)
+
+  const isVestedPropertiesShow =
+    tokenOffer?.myPosition.amountAvailableToVest.gt(0) ||
+    tokenOffer?.myPosition.amountvested.gt(0)
 
   return (
     <PageWrapper>
@@ -330,7 +334,7 @@ const TokenSaleDetails = () => {
                 item={tokenOffer.myPosition}
                 label={'My Position'}
                 toggleModal={toggleClaimModal}
-                isVestedPropertiesShow={isVestButtonShow}
+                isVestedPropertiesShow={isVestedPropertiesShow}
               />
             )}
             {isVestButtonShow && (
