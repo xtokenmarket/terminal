@@ -7,6 +7,7 @@ import {
   formatDurationUnits,
   getCurrentTimeStamp,
   getTimeRemainingUnits,
+  numberWithCommas,
   parseDurationSec,
 } from 'utils'
 import { VestStep } from 'utils/enums'
@@ -127,10 +128,11 @@ export const OutputEstimation = (props: IProps) => {
           />
           &nbsp;&nbsp;
           <Typography className={classes.amount}>
-            {formatBigNumber(
-              myPositionData.amountAvailableToVest,
-              offerData.offerToken.decimals,
-              4
+            {numberWithCommas(
+              formatBigNumber(
+                myPositionData.amountAvailableToVest,
+                offerData.offerToken.decimals
+              )
             )}
             &nbsp; <span>~ $ 309,73</span>
             {/*{offerData.offerToken.price && (
@@ -170,36 +172,23 @@ export const OutputEstimation = (props: IProps) => {
           &nbsp;&nbsp;
           <Typography className={classes.amountSmall}>
             {vestState.step === VestStep.Info
-              ? formatBigNumber(
-                  myPositionData.amountvested,
-                  offerData.offerToken.decimals,
-                  4
+              ? numberWithCommas(
+                  formatBigNumber(
+                    myPositionData.amountvested,
+                    offerData.offerToken.decimals
+                  )
                 )
-              : formatBigNumber(
-                  myPositionData.amountvested.add(
-                    myPositionData.amountAvailableToVest
-                  ),
-                  offerData.offerToken.decimals,
-                  4
+              : numberWithCommas(
+                  formatBigNumber(
+                    myPositionData.amountvested.add(
+                      myPositionData.amountAvailableToVest
+                    ),
+                    offerData.offerToken.decimals
+                  )
                 )}
             &nbsp;
             <span>~ $ 309,73</span>
           </Typography>
-        </div>
-        <Typography className={classes.label}>REMAINING PERIOD</Typography>
-        <div className={classes.infoRow}>
-          {durationRemaining.length === 0 ? (
-            <div className={classes.wrapper}>
-              <Typography className={classes.whiteText}>N/A</Typography>
-            </div>
-          ) : (
-            <div className={classes.wrapper}>
-              <Typography className={classes.whiteText}>{primary}</Typography>
-              <Typography className={classes.lightPurpletext}>
-                {rest}
-              </Typography>
-            </div>
-          )}
         </div>
       </div>
     </div>

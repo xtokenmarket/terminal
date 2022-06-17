@@ -32,6 +32,7 @@ interface IProps {
   isOpen: boolean
   onClose: () => void
   data: IClaimData
+  isOwnerOrManager?: boolean
 }
 
 export const ClaimModal = ({
@@ -40,6 +41,7 @@ export const ClaimModal = ({
   onClose,
   data,
   poolAddress,
+  isOwnerOrManager,
 }: IProps) => {
   const classes = useStyles()
   const commonClasses = useCommonStyles()
@@ -86,6 +88,7 @@ export const ClaimModal = ({
             onClose={onClose}
             data={data}
             setTxId={setTxId}
+            isOwnerOrManager={isOwnerOrManager}
           />
         ) : (
           <SuccessSection

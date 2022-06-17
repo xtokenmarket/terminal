@@ -6,7 +6,7 @@ import {
   Typography,
 } from '@material-ui/core'
 import clsx from 'clsx'
-import { EPeriods } from 'utils/enums'
+import { EOfferingPeriods, EPeriods } from 'utils/enums'
 import { Input } from '../Input'
 import { QuestionTooltip } from '../QuestionTooltip'
 
@@ -114,6 +114,7 @@ interface IProps {
   inputValue: string
   disabled?: boolean
   onChangeinput: (e: React.ChangeEvent<HTMLInputElement>) => void
+  saleDisplayName?: string
 }
 
 export const Selector: React.FC<IProps> = ({
@@ -124,8 +125,10 @@ export const Selector: React.FC<IProps> = ({
   inputValue,
   disabled,
   onChangeinput,
+  saleDisplayName,
 }) => {
   const classes = useStyles()
+  const Eoptions = saleDisplayName ? EOfferingPeriods : EPeriods
 
   return (
     <>
@@ -157,7 +160,7 @@ export const Selector: React.FC<IProps> = ({
           <Select
             fullWidth
             disableUnderline
-            placeholder={EPeriods.Weeks}
+            placeholder={Eoptions.Weeks}
             classes={{
               root: clsx(
                 classes.selectorInput,
@@ -180,7 +183,7 @@ export const Selector: React.FC<IProps> = ({
             onChange={onSelectorChange}
             disabled={disabled}
           >
-            {Object.values(EPeriods).map((unit) => {
+            {Object.values(Eoptions).map((unit) => {
               return (
                 <MenuItem className={classes.item} value={unit} key={unit}>
                   {unit}

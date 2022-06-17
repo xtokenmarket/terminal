@@ -5,6 +5,7 @@ import { IOfferingOverview } from 'types'
 import {
   formatBigNumber,
   formatDurationUnits,
+  formatToShortNumber,
   getCurrentTimeStamp,
   getTimeRemainingUnits,
   parseDurationSec,
@@ -104,10 +105,11 @@ export const OutputEstimation = (props: IProps) => {
           />
           &nbsp;&nbsp;
           <Typography className={classes.amount}>
-            {formatBigNumber(
-              offerData.totalOfferingAmount,
-              offerData.offerToken.decimals,
-              4
+            {formatToShortNumber(
+              formatBigNumber(
+                offerData.totalOfferingAmount,
+                offerData.offerToken.decimals
+              )
             )}
             &nbsp;
             {/*{offerData.offerToken.price && (

@@ -267,11 +267,6 @@ export const RewardVestSection: React.FC<IProps> = ({
                 <Typography className={cl.title}>TOTAL VESTING</Typography>
                 {renderVestingTokens()}
               </Grid>
-
-              <Grid item xs={12} md={6}>
-                <Typography className={cl.title}>REMAINING PERIOD</Typography>
-                {renderVestingPeriods()}
-              </Grid>
             </Grid>
           </div>
         </Grid>

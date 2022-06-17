@@ -3,7 +3,7 @@ import { useConnectedWeb3Context } from 'contexts'
 import { transparentize } from 'polished'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { FungibleOriginationPoolService } from 'services/fungibleOriginationPool'
+import { FungiblePoolService } from 'services'
 import { OriginationDetailItem } from 'types'
 import { TableHeader } from '../TableHeader'
 import { TableRow } from '../TableRow'
@@ -68,6 +68,7 @@ interface IProps {
   isInitiateSaleButtonDisabled?: boolean
   isWhitelistSet?: boolean
   isSaleInitiated?: boolean
+  isFormulaStandard?: boolean
 }
 
 export const Table = ({
@@ -80,12 +81,13 @@ export const Table = ({
   isInitiateSaleButtonDisabled,
   isWhitelistSet,
   isSaleInitiated,
+  isFormulaStandard,
 }: IProps) => {
   const [saleInitiated, setSaleInitiated] = useState(false)
   const { account, library: provider } = useConnectedWeb3Context()
   const { poolAddress } = useParams<{ poolAddress: string }>()
   useEffect(() => {
-    const fungibleOriginationPool = new FungibleOriginationPoolService(
+    const fungibleOriginationPool = new FungiblePoolService(
       provider,
       account,
       poolAddress
@@ -148,6 +150,7 @@ export const Table = ({
           label={item.label}
           isVestedPropertiesShow={isVestedPropertiesShow}
           isOfferUnsuccessful={isOfferUnsuccessful}
+          isFormulaStandard={isFormulaStandard}
         />
         <div>
           <TableRow
@@ -155,6 +158,8 @@ export const Table = ({
             toggleModal={toggleModal}
             isVestedPropertiesShow={isVestedPropertiesShow}
             isOfferUnsuccessful={isOfferUnsuccessful}
+            isSaleInitiated={isSaleInitiated}
+            isOwnerOrManager={isOwnerOrManager}
           />
         </div>
       </div>

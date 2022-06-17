@@ -2,6 +2,7 @@ import clsx from 'clsx'
 import { Button, makeStyles, Tooltip, Typography } from '@material-ui/core'
 import { Td } from '../Td'
 import {
+  EPricingFormula,
   MyPosition,
   OfferingOverview,
   OfferingSummary,
@@ -116,6 +117,9 @@ const useStyles = makeStyles((theme) => ({
   itemMarginLeft: {
     marginLeft: 17,
   },
+  marginBottom: {
+    marginBottom: 53,
+  },
 }))
 
 interface IProps {
@@ -128,6 +132,8 @@ interface IProps {
   toggleModal?: () => void
   isVestedPropertiesShow?: boolean
   isOfferUnsuccessful?: boolean
+  isSaleInitiated?: boolean
+  isOwnerOrManager?: boolean
 }
 
 export const TableRow = ({
@@ -135,6 +141,8 @@ export const TableRow = ({
   toggleModal,
   isVestedPropertiesShow,
   isOfferUnsuccessful,
+  isSaleInitiated,
+  isOwnerOrManager,
 }: IProps) => {
   const cl = useStyles()
 
@@ -251,7 +259,9 @@ export const TableRow = ({
 
       return (
         <>
-          <div className={cl.content}>
+          <div
+            className={clsx(cl.content, [isOwnerOrManager && cl.marginBottom])}
+          >
             <Td type={WhitelistSale.CurrentPrice} label={item.label}>
               <Typography
                 className={clsx(cl.item, cl.label, cl.itemMarginLeft)}
@@ -268,23 +278,25 @@ export const TableRow = ({
               </Typography>
             </Td>
 
-            <Td type={WhitelistSale.StartingEndingPrice} label={item.label}>
-              <Typography className={clsx(cl.item, cl.label)}>
-                {item.startingPrice && item.endingPrice
-                  ? `${formatToShortNumber(
-                      formatBigNumber(
-                        item.startingPrice,
-                        item.purchaseToken.decimals
-                      )
-                    )}/${formatToShortNumber(
-                      formatBigNumber(
-                        item.endingPrice,
-                        item.purchaseToken.decimals
-                      )
-                    )} ${item.purchaseToken.symbol}`
-                  : 'N/A'}
-              </Typography>
-            </Td>
+            {item.pricingFormula !== EPricingFormula.Standard && (
+              <Td type={WhitelistSale.StartingEndingPrice} label={item.label}>
+                <Typography className={clsx(cl.item, cl.label)}>
+                  {item.startingPrice && item.endingPrice
+                    ? `${formatToShortNumber(
+                        formatBigNumber(
+                          item.startingPrice,
+                          item.purchaseToken.decimals
+                        )
+                      )}/${formatToShortNumber(
+                        formatBigNumber(
+                          item.endingPrice,
+                          item.purchaseToken.decimals
+                        )
+                      )} ${item.purchaseToken.symbol}`
+                    : 'N/A'}
+                </Typography>
+              </Td>
+            )}
 
             <Td type={WhitelistSale.Whitelist} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
@@ -294,17 +306,22 @@ export const TableRow = ({
 
             <Td type={WhitelistSale.AddressCap} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {item.addressCap
-                  ? formatToShortNumber(
+                {!item.addressCap.isZero() ? (
+                  <>
+                    {formatToShortNumber(
                       formatBigNumber(item.addressCap, item.offerToken.decimals)
-                    )
-                  : 'N/A'}
+                    )}{' '}
+                    {item.offerToken.symbol}
+                  </>
+                ) : (
+                  'N/A'
+                )}
               </Typography>
             </Td>
 
             <Td type={WhitelistSale.TimeRemaining} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {item.timeRemaining
+                {isSaleInitiated && item.timeRemaining
                   ? parseRemainingDurationSec(item.timeRemaining.toNumber())
                   : 'N/A'}
               </Typography>
@@ -338,26 +355,28 @@ export const TableRow = ({
               {item.pricingFormula || 'N/A'}
             </Typography>
           </Td>
-          <Td type={PublicSale.StartingEndingPrice} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label)}>
-              {item.startingPrice && item.endingPrice
-                ? `${formatToShortNumber(
-                    formatBigNumber(
-                      item.startingPrice,
-                      item.purchaseToken.decimals
-                    )
-                  )}/${formatToShortNumber(
-                    formatBigNumber(
-                      item.endingPrice,
-                      item.purchaseToken.decimals
-                    )
-                  )} ${item.purchaseToken.symbol}`
-                : 'N/A'}
-            </Typography>
-          </Td>
+          {item.pricingFormula !== EPricingFormula.Standard && (
+            <Td type={PublicSale.StartingEndingPrice} label={item.label}>
+              <Typography className={clsx(cl.item, cl.label)}>
+                {item.startingPrice && item.endingPrice
+                  ? `${formatToShortNumber(
+                      formatBigNumber(
+                        item.startingPrice,
+                        item.purchaseToken.decimals
+                      )
+                    )}/${formatToShortNumber(
+                      formatBigNumber(
+                        item.endingPrice,
+                        item.purchaseToken.decimals
+                      )
+                    )} ${item.purchaseToken.symbol}`
+                  : 'N/A'}
+              </Typography>
+            </Td>
+          )}
           <Td type={PublicSale.TimeRemaining} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {item.timeRemaining
+              {isSaleInitiated && item.timeRemaining
                 ? `${parseRemainingDurationSec(item.timeRemaining.toNumber())}`
                 : 'N/A'}
             </Typography>
@@ -377,11 +396,7 @@ export const TableRow = ({
       item = myPosition
       return (
         <div className={cl.content}>
-          <Td
-            type={MyPosition.TokenPurchased}
-            label={item.label}
-            isVestedPropertiesShow={isVestedPropertiesShow}
-          >
+          <Td type={MyPosition.TokenPurchased} label={item.label}>
             <Typography className={clsx(cl.item, cl.label, cl.itemMarginLeft)}>
               {formatToShortNumber(
                 formatBigNumber(item.tokenPurchased, item.offerToken.decimals)
@@ -404,13 +419,20 @@ export const TableRow = ({
             <>
               <Td type={MyPosition.Amountvested} label={item.label}>
                 <Typography className={clsx(cl.item, cl.label)}>
-                  {numberWithCommas(item.amountvested.toString())}{' '}
+                  {formatToShortNumber(
+                    formatBigNumber(item.amountvested, item.offerToken.decimals)
+                  )}{' '}
                   {item.offerToken.symbol}
                 </Typography>
               </Td>
               <Td type={MyPosition.AmountAvailableToVest} label={item.label}>
                 <Typography className={clsx(cl.item, cl.label)}>
-                  {numberWithCommas(item.amountAvailableToVest.toString())}{' '}
+                  {formatToShortNumber(
+                    formatBigNumber(
+                      item.amountAvailableToVest,
+                      item.offerToken.decimals
+                    )
+                  )}{' '}
                   {item.offerToken.symbol}
                 </Typography>
               </Td>
@@ -482,12 +504,12 @@ export const TableRow = ({
                     {formatToShortNumber(
                       formatBigNumber(
                         item.amountsRaised,
-                        item.offerToken.decimals
+                        item.purchaseToken.decimals
                       )
                     )}
                   </Typography>
                   <Typography className={cl.symbol}>
-                    {item.offerToken.symbol}
+                    {item.purchaseToken.symbol}
                   </Typography>
                 </div>
               </Td>

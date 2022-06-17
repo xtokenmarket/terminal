@@ -8,7 +8,7 @@ import { Button, makeStyles, Typography } from '@material-ui/core'
 import { PageWrapper, PageHeader, PageContent, SimpleLoader } from 'components'
 import { useOriginationPool } from 'helpers'
 import { getCurrentTimeStamp, getRemainingTimeSec } from 'utils'
-import { Network } from 'utils/enums'
+import { EPricingFormula, Network } from 'utils/enums'
 
 import { ClaimModal } from './components/ClaimModal'
 import { InitiateSaleModal } from './components/InitiateSaleModal'
@@ -193,11 +193,15 @@ const TokenSaleDetails = () => {
     return now.gt(cliffPeriodEnd)
   }
 
+  const isOwnerOrManager = tokenOffer?.offeringOverview.isOwnerOrManager
+
   // TODO: user own at least 1 vesting entry nft
   const isVestButtonShow =
     tokenOffer &&
-    tokenOffer?.myPosition.amountvested.gt(0) &&
-    isCliffPeriodPassed()
+    tokenOffer?.myPosition.amountAvailableToVest.gt(0) &&
+    isCliffPeriodPassed() &&
+    tokenOffer.offeringOverview.vestingPeriod.gt(0) &&
+    !isOwnerOrManager
 
   const isWhitelistSaleConfigured =
     tokenOffer &&
@@ -211,7 +215,7 @@ const TokenSaleDetails = () => {
 
   const isSaleCompleted =
     tokenOffer &&
-    !tokenOffer.offeringOverview.salesBegin.isZero() &&
+    !tokenOffer?.offeringOverview.salesBegin.isZero() &&
     getRemainingTimeSec(tokenOffer?.offeringOverview.salesEnd).isZero()
 
   const isOfferUnsuccessful =
@@ -223,8 +227,13 @@ const TokenSaleDetails = () => {
 
   const isClaimButtonShow =
     tokenOffer &&
-    tokenOffer.myPosition.tokenPurchased.gt(0) &&
-    isCliffPeriodPassed()
+    ((isOwnerOrManager &&
+      isCliffPeriodPassed() &&
+      isSaleCompleted &&
+      !tokenOffer.sponsorTokensClaimed) ||
+      (tokenOffer.myPosition.tokenPurchased.gt(0) &&
+        isCliffPeriodPassed() &&
+        tokenOffer.offeringOverview.vestingPeriod.isZero()))
 
   const isMyPositionShow =
     tokenOffer &&
@@ -244,6 +253,10 @@ const TokenSaleDetails = () => {
       tokenOffer.whitelist.salesPeriod?.gt(0) &&
       !tokenOffer.whitelist.whitelist) ||
     tokenOffer?.offeringOverview.salesBegin.gt(0)
+
+  const isVestedPropertiesShow =
+    tokenOffer?.myPosition.amountAvailableToVest.gt(0) ||
+    tokenOffer?.myPosition.amountvested.gt(0)
 
   return (
     <PageWrapper>
@@ -285,42 +298,55 @@ const TokenSaleDetails = () => {
                   item={tokenOffer.whitelist}
                   label={'Whitelist Sale'}
                   toggleModal={toggleSetWhitelistModal}
-                  isOwnerOrManager={
-                    tokenOffer.offeringOverview.isOwnerOrManager
-                  }
+                  isOwnerOrManager={isOwnerOrManager}
                   isWhitelistSet={tokenOffer.whitelist.whitelist}
+                  isFormulaStandard={
+                    tokenOffer.whitelist.pricingFormula ===
+                    EPricingFormula.Standard
+                  }
                 />
-                <div className={cl.buttonWrapper}>
-                  <Button
-                    className={cl.button}
-                    onClick={toggleWhitelistInvestModal}
-                    disabled={iswhitelistSaleInvestDisabled}
-                  >
-                    <Typography className={cl.text}>INVEST</Typography>
-                  </Button>
-                  {!tokenOffer.whitelist.isAddressWhitelisted &&
-                    tokenOffer.whitelist.whitelist && (
-                      <div className={cl.errorMessageWrapper}>
-                        <img alt="info" src="/assets/icons/warning.svg" />
-                        &nbsp;&nbsp;
-                        <div>
-                          Unfortunately, your address was not whitelisted
+                {!isOwnerOrManager && (
+                  <div className={cl.buttonWrapper}>
+                    <Button
+                      className={cl.button}
+                      onClick={toggleWhitelistInvestModal}
+                      disabled={iswhitelistSaleInvestDisabled}
+                    >
+                      <Typography className={cl.text}>INVEST</Typography>
+                    </Button>
+                    {!tokenOffer.whitelist.isAddressWhitelisted &&
+                      tokenOffer.whitelist.whitelist && (
+                        <div className={cl.errorMessageWrapper}>
+                          <img alt="info" src="/assets/icons/warning.svg" />
+                          &nbsp;&nbsp;
+                          <div>
+                            Unfortunately, your address was not whitelisted
+                          </div>
                         </div>
-                      </div>
-                    )}
-                </div>
+                      )}
+                  </div>
+                )}
               </>
             )}
             {!isSaleCompleted && isPublicSaleConfigured && (
               <>
-                <Table item={tokenOffer.publicSale} label={'Public Sale'} />
-                <Button
-                  className={cl.button}
-                  onClick={toggleInvestModal}
-                  disabled={isPublicSaleInvestDisabled}
-                >
-                  <Typography className={cl.text}>INVEST</Typography>
-                </Button>
+                <Table
+                  item={tokenOffer.publicSale}
+                  label={'Public Sale'}
+                  isFormulaStandard={
+                    tokenOffer.publicSale.pricingFormula ===
+                    EPricingFormula.Standard
+                  }
+                />
+                {!isOwnerOrManager && (
+                  <Button
+                    className={cl.button}
+                    onClick={toggleInvestModal}
+                    disabled={isPublicSaleInvestDisabled}
+                  >
+                    <Typography className={cl.text}>INVEST</Typography>
+                  </Button>
+                )}
               </>
             )}
             {isMyPositionShow && (
@@ -328,14 +354,11 @@ const TokenSaleDetails = () => {
                 item={tokenOffer.myPosition}
                 label={'My Position'}
                 toggleModal={toggleClaimModal}
-                isVestedPropertiesShow={isVestButtonShow}
+                isVestedPropertiesShow={isVestedPropertiesShow}
               />
             )}
             {isVestButtonShow && (
-              <Button
-                className={clsx(cl.button, cl.marginLeft)}
-                onClick={toggleVestModal}
-              >
+              <Button className={cl.button} onClick={toggleVestModal}>
                 <Typography className={cl.text}>VEST</Typography>
               </Button>
             )}
@@ -355,9 +378,14 @@ const TokenSaleDetails = () => {
               isOpen={state.isClaimModalOpen}
               onClose={toggleClaimModal}
               data={{
-                token: tokenOffer.offeringOverview.offerToken,
-                amount: BigNumber.from(tokenOffer.myPosition.tokenPurchased),
+                token: isOwnerOrManager
+                  ? tokenOffer.offeringOverview.purchaseToken
+                  : tokenOffer.offeringOverview.offerToken,
+                amount: isOwnerOrManager
+                  ? tokenOffer.offeringSummary.amountsRaised
+                  : BigNumber.from(tokenOffer.myPosition.tokenPurchased),
               }}
+              isOwnerOrManager={isOwnerOrManager}
             />
             <InvestModal
               isWhitelist={state.isWhitelistInvestClicked}

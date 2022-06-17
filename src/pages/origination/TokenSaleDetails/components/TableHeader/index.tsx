@@ -33,6 +33,7 @@ interface IProps {
   label: string
   isVestedPropertiesShow?: boolean
   isOfferUnsuccessful?: boolean
+  isFormulaStandard?: boolean
 }
 
 export const TableHeader = (props: IProps) => {
@@ -78,9 +79,11 @@ export const TableHeader = (props: IProps) => {
         <Td type={WhitelistSale.PricingFormula} label={props.label}>
           <div className={classes.item}>Pricing Formula</div>
         </Td>
-        <Td type={WhitelistSale.StartingEndingPrice} label={props.label}>
-          <div className={classes.item}>Starting / Ending Price</div>
-        </Td>
+        {!props.isFormulaStandard && (
+          <Td type={WhitelistSale.StartingEndingPrice} label={props.label}>
+            <div className={classes.item}>Starting / Ending Price</div>
+          </Td>
+        )}
         <Td type={WhitelistSale.Whitelist} label={props.label}>
           <div className={classes.item}>Whitelist</div>
         </Td>
@@ -106,9 +109,11 @@ export const TableHeader = (props: IProps) => {
         <Td type={PublicSale.PricingFormula} label={props.label}>
           <div className={classes.item}>Pricing Formula</div>
         </Td>
-        <Td type={PublicSale.StartingEndingPrice} label={props.label}>
-          <div className={classes.item}>Starting / Ending Price</div>
-        </Td>
+        {!props.isFormulaStandard && (
+          <Td type={PublicSale.StartingEndingPrice} label={props.label}>
+            <div className={classes.item}>Starting / Ending Price</div>
+          </Td>
+        )}
         <Td type={PublicSale.TimeRemaining} label={props.label}>
           <div className={classes.item}>Time Remaining</div>
         </Td>

@@ -35,7 +35,10 @@ export const PublicSaleForm: React.FC<IProps> = ({
           pricingFormula,
           Number(startingPrice),
           Number(endingPrice)
-        )
+        ) &&
+        Number(startingPrice) > 0 &&
+        Number(endingPrice) > 0 &&
+        Number(offeringPeriod) > 0
       ))
 
   return (

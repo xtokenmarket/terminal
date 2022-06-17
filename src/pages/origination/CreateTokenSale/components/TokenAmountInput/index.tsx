@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import clsx from 'clsx'
 import { TokenIcon } from 'components'
 import { IToken } from 'types'
@@ -7,8 +7,9 @@ import { makeStyles, TextField, Typography } from '@material-ui/core'
 import useCommonStyles from 'style/common'
 import { QuestionTooltip } from '../QuestionTooltip'
 import { useTokenBalance } from 'helpers'
-import { formatBigNumber } from 'utils'
+import { formatBigNumber, numberWithCommas } from 'utils'
 import { TokenAmountPriceEstimation } from '../TokenAmountPriceEstimation'
+import { formatUnits } from 'ethers/lib/utils'
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -118,6 +119,17 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden',
     lineHeight: '28px',
   },
+  warning: {
+    color: theme.colors.warn,
+    marginTop: 10,
+    fontSize: 14,
+    marginLeft: 10,
+  },
+  textWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
 }))
 
 interface IProps {
@@ -129,6 +141,7 @@ interface IProps {
   tokenDetailsPlaceholder?: string
   disabled?: boolean
   infoText?: string
+  setIsInsufficientBalance?: (_: boolean) => void
 }
 
 export const TokenAmountInput: React.FC<IProps> = ({
@@ -140,6 +153,7 @@ export const TokenAmountInput: React.FC<IProps> = ({
   disabled,
   infoText,
   tokenDetailsPlaceholder,
+  setIsInsufficientBalance,
 }) => {
   const classes = useStyles()
   const commonClasses = useCommonStyles()
@@ -150,8 +164,19 @@ export const TokenAmountInput: React.FC<IProps> = ({
       return null
     }
 
-    return `${formatBigNumber(balance, token.decimals, 4)} ${token.symbol}`
+    return `${numberWithCommas(formatBigNumber(balance, token.decimals, 4))} ${
+      token.symbol
+    }`
   }
+
+  useEffect(() => {
+    if (label === 'Offer Token Amount') {
+      const isInsufficientBalance =
+        Number(value) > Number(formatUnits(balance, token?.decimals))
+      setIsInsufficientBalance &&
+        setIsInsufficientBalance(isInsufficientBalance)
+    }
+  }, [value, balance])
 
   return (
     <>
@@ -206,13 +231,20 @@ export const TokenAmountInput: React.FC<IProps> = ({
         )}
       </div>
 
-      <Typography className={classes.bottomDetails}>
-        {label === 'Reserve Purchase Token Raised'
-          ? tokenDetailsPlaceholder
-          : !token
-          ? tokenDetailsPlaceholder
-          : `Available - ${getFormattedTokenBalance()}`}
-      </Typography>
+      <div className={classes.textWrapper}>
+        <Typography className={classes.bottomDetails}>
+          {label === 'Reserve Purchase Token Raised'
+            ? tokenDetailsPlaceholder
+            : !token
+            ? tokenDetailsPlaceholder
+            : `Available - ${getFormattedTokenBalance()}`}
+        </Typography>
+        {label === 'Offer Token Amount' &&
+          value &&
+          Number(value) > Number(formatUnits(balance, token?.decimals)) && (
+            <div className={classes.warning}>Insufficient Balance</div>
+          )}
+      </div>
     </>
   )
 }

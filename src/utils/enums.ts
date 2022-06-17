@@ -112,6 +112,18 @@ export enum Network {
 }
 
 export enum EPeriods {
+  // TODO: remove on production
+  Minutes = 'Minutes',
+  Hours = 'Hours',
+  Days = 'Days',
+  Weeks = 'Weeks',
+  Month = 'Months',
+}
+
+export enum EOfferingPeriods {
+  // TODO: remove on production
+  Minutes = 'Minutes',
+  Hours = 'Hours',
   Days = 'Days',
   Weeks = 'Weeks',
 }
