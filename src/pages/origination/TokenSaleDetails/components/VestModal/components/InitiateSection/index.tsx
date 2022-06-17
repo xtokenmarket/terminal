@@ -172,9 +172,8 @@ export const InitiateSection = (props: IProps) => {
         account,
         offerData.poolAddress
       )
-      // const txId = await fungiblePool.initiateSale()
-      // const finalTxId = await fungiblePool.waitUntilInitiateSale(txId)
-      const finalTxId = ''
+      const txId = await fungiblePool.vest(myPositionData.userToVestingId)
+      const finalTxId = await fungiblePool.waitUntilVest(txId)
 
       setState((prev) => ({
         ...prev,

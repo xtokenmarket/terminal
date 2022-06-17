@@ -4,7 +4,7 @@ import { WarningInfo } from 'components/Common/WarningInfo'
 import { useConnectedWeb3Context } from 'contexts'
 import { IClaimData } from 'types'
 import { useSnackbar } from 'notistack'
-import { FungibleOriginationPoolService } from 'services/fungibleOriginationPool'
+import { FungiblePoolService } from 'services'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,6 +20,7 @@ interface IProps {
   onClose: () => void
   setTxId: (id: string) => void
   data: IClaimData
+  isOwnerOrManager?: boolean
 }
 
 interface IState {
@@ -33,6 +34,7 @@ export const InitSection = ({
   onNext,
   onClose,
   setTxId,
+  isOwnerOrManager,
 }: IProps) => {
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
@@ -50,7 +52,7 @@ export const InitSection = ({
     }
   )
 
-  const fungibleOriginationPool = new FungibleOriginationPoolService(
+  const fungibleOriginationPool = new FungiblePoolService(
     provider,
     account,
     poolAddress
@@ -66,7 +68,9 @@ export const InitSection = ({
     try {
       setState({ isClaiming: true })
 
-      const txId = await fungibleOriginationPool.claimTokens()
+      const txId = await fungibleOriginationPool[
+        isOwnerOrManager ? 'claimPurchaseToken' : 'claimTokens'
+      ]()
       setTxId(txId)
 
       setState({

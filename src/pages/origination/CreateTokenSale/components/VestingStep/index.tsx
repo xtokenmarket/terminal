@@ -109,7 +109,8 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
             infoText="Placeholder text"
             inputValue={`${data.vestingPeriod}`}
             onChangeinput={(e) => {
-              updateData({ vestingPeriod: e.target.value })
+              const newValue = parseInt(e.target.value)
+              updateData({ vestingPeriod: newValue.toString() })
             }}
             disabled={!vestingWanted}
           />
@@ -123,7 +124,8 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
             label="Cliff Period"
             inputValue={`${data.cliffPeriod}`}
             onChangeinput={(e) => {
-              updateData({ cliffPeriod: e.target.value })
+              const newValue = parseInt(e.target.value)
+              updateData({ cliffPeriod: newValue.toString() })
             }}
             disabled={!vestingWanted}
           />

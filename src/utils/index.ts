@@ -26,7 +26,9 @@ export const numberWithCommas = (
   if (!x) return '0'
   const n = Number(x)
   if (n < 1000) {
-    return Number.isInteger(n) && !forcePrecision ? x : n.toFixed(decimals)
+    // TODO: need to check the formatting consistency in mining app
+    // return Number.isInteger(n) && !forcePrecision ? x : n.toFixed(decimals)
+    return formatSmallNumber(x)
   }
   let formattedNumber = n.toFixed(decimals).replace(/\d(?=(\d{3})+\.)/g, '$&,')
   const splitArray = formattedNumber.split('.')
@@ -56,6 +58,10 @@ export const formatToShortNumber = (number: string, decimals = 2): string => {
     }`
   }
 
+  return formatSmallNumber(number)
+}
+
+const formatSmallNumber = (number: string) => {
   if (parseInt(number) >= 100) {
     return Number(number).toFixed(0)
   }
@@ -227,7 +233,16 @@ export const getMetamaskError = (error: any) => {
 
 export const getDurationSec = (amount: number, unit: string) => {
   let durationSec = 0
+  if (isNaN(amount)) {
+    amount = 0
+  }
 
+  if (unit === 'Minutes') {
+    durationSec = amount * 60
+  }
+  if (unit === 'Hours') {
+    durationSec = amount * 60 * 60
+  }
   if (unit === 'Days') {
     durationSec = amount * secondsIn1Day
   }
@@ -247,12 +262,15 @@ export const getDurationSec = (amount: number, unit: string) => {
 export const parseDurationSec = (amount: number) => {
   if (amount === 0) return '0 day'
 
-  const unitNames = ['Year', 'Month', 'Week', 'Day']
+  const unitNames = ['Year', 'Month', 'Week', 'Day', 'Hour', 'Minute', 'Second']
   const amountByUnit = [
     amount / (secondsIn1Day * 7 * 4 * 365),
     amount / (secondsIn1Day * 7 * 4),
     amount / (secondsIn1Day * 7),
     amount / secondsIn1Day,
+    amount / (60 * 60),
+    amount / 60,
+    amount,
   ].map(Math.floor)
   const applicableUnitIndex = amountByUnit.findIndex((amount) => amount > 0)
   const getUnitEnding = (unitAmount: number) => (unitAmount > 1 ? 's' : '')

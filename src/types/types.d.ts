@@ -215,6 +215,7 @@ export interface ITokenOffer {
   publicSale: IPublicSale
   myPosition: IMyPosition
   offeringSummary: IOfferingSummary
+  sponsorTokensClaimed: boolean
 }
 
 interface Label {
@@ -275,6 +276,7 @@ export interface IMyPosition extends Label {
   offerToken: IToken
   purchaseToken: IToken
   vestableTokenAmount: BigNumber
+  userToVestingId: string[]
 }
 
 export interface IOfferingSummary extends Label {

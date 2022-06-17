@@ -193,6 +193,7 @@ export const SaleForm = ({
             </div>
 
             <Selector
+              saleDisplayName={saleDisplayName}
               onSelectorChange={(e) =>
                 updateSaleData({
                   offeringPeriodUnit: e.target.value as PeriodUnit,
@@ -201,7 +202,8 @@ export const SaleForm = ({
               selectorValue={`${offeringPeriodUnit}`}
               inputValue={`${offeringPeriod}`}
               onChangeinput={(e) => {
-                updateSaleData({ offeringPeriod: e.target.value })
+                const newValue = parseInt(e.target.value)
+                updateSaleData({ offeringPeriod: newValue.toString() })
               }}
             />
             {isShowOfferingPeriodError && (

@@ -5,7 +5,6 @@ import { BigNumber, constants, Contract, ethers } from 'ethers'
 import {
   knownTokens,
   getTokenFromAddress,
-  getContractAddress,
   getNetworkProvider,
 } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
@@ -65,24 +64,14 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         poolAddress
       )
 
-      const nonfungiblePositionManagerAddress = getContractAddress(
-        'vestingEntryNFT',
-        provider?.network.chainId
-      )
-
-      const vestingEntryNFTContract = new Contract(
-        nonfungiblePositionManagerAddress,
-        Abi.vestingEntryNFT,
-        provider
-      )
-
       const [
         token0,
         token1,
         offerTokenAmountPurchased,
         purchaseTokenContribution,
-        entryId,
+        userToVestingId, // TODO: need to be refactored later after graph is ready
         isOwnerOrManager,
+        vestingEntryNFTAddress,
       ] = await Promise.all([
         getTokenDetails(_offerData?.offerToken as string),
         getTokenDetails(_offerData?.purchaseToken as string),
@@ -90,11 +79,25 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         fungiblePool.contract.purchaseTokenContribution(account),
         fungiblePool.contract.userToVestingId(account),
         fungiblePool.contract.isOwnerOrManager(account),
+        fungiblePool.contract.vestingEntryNFT(),
       ])
 
-      const nftInfo = await vestingEntryNFTContract.tokenIdVestingAmounts(
-        entryId
+      const vestingEntryNFTContract = new Contract(
+        vestingEntryNFTAddress,
+        Abi.vestingEntryNFT,
+        provider
       )
+
+      let nftInfo = {
+        tokenAmount: BigNumber.from(0),
+        tokenAmountClaimed: BigNumber.from(0),
+      }
+
+      if (vestingEntryNFTAddress !== ethers.constants.AddressZero) {
+        nftInfo = await vestingEntryNFTContract.tokenIdVestingAmounts(
+          userToVestingId
+        )
+      }
 
       const { tokenAmount, tokenAmountClaimed } = nftInfo
 
@@ -121,6 +124,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         whitelistMerkleRoot,
         whitelistSaleDuration,
         whitelistStartingPrice,
+        sponsorTokensClaimed,
       } = _offerData as ITokenOfferDetails
 
       const _publicSaleDuration = BigNumber.from(Number(publicSaleDuration))
@@ -195,8 +199,8 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
           whitelistEndingPrice?.toString()
             ? EPricingFormula.Standard
             : whitelistStartingPrice?.gt(whitelistEndingPrice as BigNumber)
-            ? EPricingFormula.Ascending
-            : EPricingFormula.Descending,
+            ? EPricingFormula.Descending
+            : EPricingFormula.Ascending,
         startingPrice: whitelistStartingPrice,
         endingPrice: whitelistEndingPrice,
         whitelist: isSetWhitelist(),
@@ -212,9 +216,12 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
       const publicSale = {
         label: OriginationLabels.PublicSale,
         currentPrice: getOfferTokenPrice,
-        pricingFormula: publicStartingPrice?.gt(publicEndingPrice as BigNumber)
-          ? 'Ascending'
-          : 'Descending',
+        pricingFormula:
+          publicStartingPrice.toString() === publicEndingPrice.toString()
+            ? EPricingFormula.Standard
+            : publicStartingPrice?.gt(publicEndingPrice as BigNumber)
+            ? EPricingFormula.Descending
+            : EPricingFormula.Ascending,
         salesPeriod: publicSaleDuration,
         timeRemaining,
         offerToken: token0,
@@ -232,6 +239,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         offerToken: token0,
         purchaseToken: token1 || ETH,
         vestableTokenAmount,
+        userToVestingId: [userToVestingId.toNumber()],
       }
 
       const offeringSummary = {
@@ -261,6 +269,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         },
         // TODO: remove this hardcoded value
         network: Network.KOVAN,
+        sponsorTokensClaimed,
       }
     } catch (error) {
       console.log(error)
