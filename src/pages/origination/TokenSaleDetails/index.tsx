@@ -331,6 +331,7 @@ const TokenSaleDetails = () => {
             {!isSaleCompleted && isPublicSaleConfigured && (
               <>
                 <Table
+                  isSaleInitiated={tokenOffer.offeringOverview.salesBegin.gt(0)}
                   item={tokenOffer.publicSale}
                   label={'Public Sale'}
                   isFormulaStandard={
