@@ -258,6 +258,10 @@ const TokenSaleDetails = () => {
     tokenOffer?.myPosition.amountAvailableToVest.gt(0) ||
     tokenOffer?.myPosition.amountvested.gt(0)
 
+  const isWhitelistSaleEnded = BigNumber.from(
+    Math.floor(Date.now() / 1000)
+  ).gte(tokenOffer?.whitelist.endOfWhitelistPeriod || 0)
+
   return (
     <PageWrapper>
       <PageHeader
@@ -315,7 +319,8 @@ const TokenSaleDetails = () => {
                       <Typography className={cl.text}>INVEST</Typography>
                     </Button>
                     {!tokenOffer.whitelist.isAddressWhitelisted &&
-                      tokenOffer.whitelist.whitelist && (
+                      tokenOffer.whitelist.whitelist &&
+                      !isWhitelistSaleEnded && (
                         <div className={cl.errorMessageWrapper}>
                           <img alt="info" src="/assets/icons/warning.svg" />
                           &nbsp;&nbsp;
@@ -331,9 +336,7 @@ const TokenSaleDetails = () => {
             {!isSaleCompleted && isPublicSaleConfigured && (
               <>
                 <Table
-                  isWhitelistSaleEnded={BigNumber.from(
-                    Math.floor(Date.now() / 1000)
-                  ).gte(tokenOffer.whitelist.endOfWhitelistPeriod || 0)}
+                  isWhitelistSaleEnded={isWhitelistSaleEnded}
                   isWhitelistSet={tokenOffer.whitelist.whitelist}
                   isSaleInitiated={tokenOffer.offeringOverview.salesBegin.gt(0)}
                   item={tokenOffer.publicSale}
