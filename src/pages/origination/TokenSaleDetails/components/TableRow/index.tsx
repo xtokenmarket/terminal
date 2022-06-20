@@ -337,7 +337,9 @@ export const TableRow = ({
 
             <Td type={WhitelistSale.TimeRemaining} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {isSaleInitiated && item.timeRemaining.toNumber() > 0
+                {isSaleInitiated &&
+                item.timeRemaining.toNumber() > 0 &&
+                days >= 0
                   ? `${days}D:${hours}H:${minutes}M:${seconds}S`
                   : isSaleInitiated && item.timeRemaining.toNumber() === 0
                   ? 'Ended'
@@ -396,7 +398,8 @@ export const TableRow = ({
             <Typography className={clsx(cl.item, cl.label)}>
               {isSaleInitiated &&
               item.timeRemaining.toNumber() > 0 &&
-              (!isWhitelistSet || isWhitelistSaleEnded)
+              (!isWhitelistSet || isWhitelistSaleEnded) &&
+              days >= 0
                 ? `${days}D:${hours}H:${minutes}M:${seconds}S`
                 : isSaleInitiated && item.timeRemaining.toNumber() === 0
                 ? 'Ended'
