@@ -282,9 +282,14 @@ export const TableRow = ({
               <Typography
                 className={clsx(cl.item, cl.label, cl.itemMarginLeft)}
               >
-                {`${formatToShortNumber(
-                  formatBigNumber(item.currentPrice, item.offerToken.decimals)
-                )} ${item.purchaseToken.symbol}` || 'N/A'}
+                {isSaleInitiated
+                  ? `${formatToShortNumber(
+                      formatBigNumber(
+                        item.currentPrice,
+                        item.offerToken.decimals
+                      )
+                    )} ${item.purchaseToken.symbol}`
+                  : 'N/A'}
               </Typography>
             </Td>
 
@@ -365,9 +370,14 @@ export const TableRow = ({
         <div className={cl.content}>
           <Td type={PublicSale.CurrentPrice} label={item.label}>
             <Typography className={clsx(cl.item, cl.label, cl.itemMarginLeft)}>
-              {`${formatToShortNumber(
-                formatBigNumber(item.currentPrice, item.purchaseToken.decimals)
-              )} ${item.purchaseToken.symbol}` || 'N/A'}
+              {isSaleInitiated
+                ? `${formatToShortNumber(
+                    formatBigNumber(
+                      item.currentPrice,
+                      item.purchaseToken.decimals
+                    )
+                  )} ${item.purchaseToken.symbol}`
+                : 'N/A'}
             </Typography>
           </Td>
           <Td type={PublicSale.PricingFormula} label={item.label}>
