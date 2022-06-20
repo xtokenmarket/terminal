@@ -19,7 +19,7 @@ interface IProps {
   onNext: () => void
   onClose: () => void
   setTxId: (id: string) => void
-  data: IClaimData
+  data?: IClaimData
   isOwnerOrManager?: boolean
 }
 

@@ -17,6 +17,9 @@ import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
 import { VestModal } from './components/VestModal'
 import axios from 'axios'
+import { IToken } from 'types'
+
+type ItokenAndAmount = { token: IToken; amount: BigNumber }
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -194,6 +197,34 @@ const TokenSaleDetails = () => {
   }
 
   const isOwnerOrManager = tokenOffer?.offeringOverview.isOwnerOrManager
+
+  const getTokenAndAmount = (
+    _isOwnerOrManage?: boolean,
+    _isOfferUnsuccessful?: boolean
+  ): ItokenAndAmount => {
+    if (!tokenOffer) return {} as ItokenAndAmount
+    if (isOwnerOrManager && isOfferUnsuccessful)
+      return {
+        token: tokenOffer.offeringOverview.offerToken,
+        amount: tokenOffer.offeringOverview.totalOfferingAmount,
+      }
+    if (isOwnerOrManager && !isOfferUnsuccessful)
+      return {
+        token: tokenOffer.offeringOverview.purchaseToken,
+        amount: tokenOffer.offeringSummary.amountsRaised,
+      }
+    if (!isOwnerOrManager && isOfferUnsuccessful)
+      return {
+        token: tokenOffer.offeringOverview.purchaseToken,
+        amount: BigNumber.from(tokenOffer.myPosition.amountInvested),
+      }
+    if (!isOwnerOrManager && !isOfferUnsuccessful)
+      return {
+        token: tokenOffer.offeringOverview.offerToken,
+        amount: BigNumber.from(tokenOffer.myPosition.tokenPurchased),
+      }
+    return {} as ItokenAndAmount
+  }
 
   // TODO: user own at least 1 vesting entry nft
   const isVestButtonShow =
@@ -386,12 +417,10 @@ const TokenSaleDetails = () => {
               isOpen={state.isClaimModalOpen}
               onClose={toggleClaimModal}
               data={{
-                token: isOwnerOrManager
-                  ? tokenOffer.offeringOverview.purchaseToken
-                  : tokenOffer.offeringOverview.offerToken,
-                amount: isOwnerOrManager
-                  ? tokenOffer.offeringSummary.amountsRaised
-                  : BigNumber.from(tokenOffer.myPosition.tokenPurchased),
+                token: getTokenAndAmount(isOwnerOrManager, isOfferUnsuccessful)
+                  .token,
+                amount: getTokenAndAmount(isOwnerOrManager, isOfferUnsuccessful)
+                  .amount,
               }}
               isOwnerOrManager={isOwnerOrManager}
             />
