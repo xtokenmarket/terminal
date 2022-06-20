@@ -211,6 +211,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         purchaseToken: token1 || ETH,
         whitelistMerkleRoot,
         isAddressWhitelisted,
+        endOfWhitelistPeriod,
       }
 
       const publicSale = {
@@ -228,6 +229,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         purchaseToken: token1 || ETH,
         startingPrice: publicStartingPrice,
         endingPrice: publicEndingPrice,
+        saleEndTimestamp,
       }
 
       const myPosition = {

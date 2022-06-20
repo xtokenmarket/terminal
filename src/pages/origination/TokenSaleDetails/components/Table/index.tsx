@@ -69,6 +69,7 @@ interface IProps {
   isWhitelistSet?: boolean
   isSaleInitiated?: boolean
   isFormulaStandard?: boolean
+  isWhitelistSaleEnded?: boolean
 }
 
 export const Table = ({
@@ -82,6 +83,7 @@ export const Table = ({
   isWhitelistSet,
   isSaleInitiated,
   isFormulaStandard,
+  isWhitelistSaleEnded,
 }: IProps) => {
   const [saleInitiated, setSaleInitiated] = useState(false)
   const { account, library: provider } = useConnectedWeb3Context()
@@ -160,6 +162,8 @@ export const Table = ({
             isOfferUnsuccessful={isOfferUnsuccessful}
             isSaleInitiated={isSaleInitiated}
             isOwnerOrManager={isOwnerOrManager}
+            isWhitelistSet={isWhitelistSet}
+            isWhitelistSaleEnded={isWhitelistSaleEnded}
           />
         </div>
       </div>

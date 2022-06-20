@@ -331,6 +331,10 @@ const TokenSaleDetails = () => {
             {!isSaleCompleted && isPublicSaleConfigured && (
               <>
                 <Table
+                  isWhitelistSaleEnded={BigNumber.from(
+                    Math.floor(Date.now() / 1000)
+                  ).gte(tokenOffer.whitelist.endOfWhitelistPeriod || 0)}
+                  isWhitelistSet={tokenOffer.whitelist.whitelist}
                   isSaleInitiated={tokenOffer.offeringOverview.salesBegin.gt(0)}
                   item={tokenOffer.publicSale}
                   label={'Public Sale'}
