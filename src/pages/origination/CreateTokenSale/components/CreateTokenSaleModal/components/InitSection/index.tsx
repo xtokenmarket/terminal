@@ -149,14 +149,12 @@ export const InitSection = (props: IProps) => {
       setPoolAddress(poolAddress)
       setTxId(finalTxId)
 
-      setTimeout(() => {
-        setState((prev) => ({
-          ...prev,
-          createTokenSaleTx: txId,
-          isCreatingTokenSale: false,
-          isCompleted: true,
-        }))
-      }, 3000)
+      setState((prev) => ({
+        ...prev,
+        createTokenSaleTx: txId,
+        isCreatingTokenSale: false,
+        isCompleted: true,
+      }))
     } catch (error) {
       console.error('Error when creating token sale', error)
       const metamaskError = getMetamaskError(error)
