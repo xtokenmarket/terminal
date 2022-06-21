@@ -394,6 +394,7 @@ const TokenSaleDetails = () => {
                 label={'My Position'}
                 toggleModal={toggleClaimModal}
                 isVestedPropertiesShow={isVestedPropertiesShow}
+                isOfferUnsuccessful={isOfferUnsuccessful}
               />
             )}
             {isVestButtonShow && (

@@ -127,9 +127,11 @@ export const TableHeader = (props: IProps) => {
   if (props.label === OriginationLabels.MyPosition) {
     return (
       <div className={classes.root}>
-        <Td type={MyPosition.TokenPurchased} label={props.label}>
-          <div className={classes.item}>Token Purchased</div>
-        </Td>
+        {!props.isOfferUnsuccessful && (
+          <Td type={MyPosition.TokenPurchased} label={props.label}>
+            <div className={classes.item}>Token Purchased</div>
+          </Td>
+        )}
         <Td type={MyPosition.AmountInvested} label={props.label}>
           <div className={classes.item}>Amount Invested</div>
         </Td>
