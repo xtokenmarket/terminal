@@ -21,6 +21,9 @@ import {
 } from 'utils'
 import { parseDuration, ZERO } from 'utils/number'
 import { RewardModal } from 'components'
+import { ETHER_DECIMAL } from 'config/constants'
+import { Network } from 'utils/enums'
+
 import {
   BalanceSection,
   DepositModal,
@@ -32,7 +35,6 @@ import {
 import { RewardVestSection } from '../RewardVestSection'
 import { VestAllModal } from '../VestAllModal'
 import { PoolShareSection } from '../PoolShareSection'
-import { ETHER_DECIMAL } from 'config/constants'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -246,8 +248,11 @@ export const Content = (props: IProps) => {
 
   // CitaDAO pool
   const isDepositDisabled =
-    poolData.address.toLowerCase() ===
-    '0x6148a1bd2be586e981115f9c0b16a09bbc271e2c'
+    poolData.network === Network.MAINNET &&
+    [
+      '0x6148a1bd2be586e981115f9c0b16a09bbc271e2c', // CitaDAO Mainnet pool
+      '0xc5f0237a2a2bb9dc60da73491ad39a1afc4c8b63', // frETH-WETH pool
+    ].includes(poolData.address.toLowerCase())
 
   useEffect(() => {
     const timer = (ms: number) => new Promise((res) => setTimeout(res, ms))
