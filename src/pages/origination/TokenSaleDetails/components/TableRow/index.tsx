@@ -77,9 +77,8 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
   },
   tokenIcon: {
-    width: 48,
-    height: 48,
-    border: `6px solid ${theme.colors.primary400}`,
+    width: 40,
+    height: 40,
     position: 'relative',
     borderRadius: '50%',
     '&+&': { left: -16 },
@@ -444,7 +443,11 @@ export const TableRow = ({
             </Td>
           )}
           <Td type={MyPosition.AmountInvested} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label)}>
+            <Typography
+              className={clsx(cl.item, cl.label, [
+                isOfferUnsuccessful && cl.itemMarginLeft,
+              ])}
+            >
               {formatToShortNumber(
                 formatBigNumber(
                   item.amountInvested,
