@@ -5,6 +5,14 @@ import { useConnectedWeb3Context } from 'contexts'
 import { IClaimData } from 'types'
 import { useSnackbar } from 'notistack'
 import { FungiblePoolService } from 'services'
+import { useOriginationPool } from 'helpers'
+import { useParams } from 'react-router-dom'
+import { Network } from 'utils/enums'
+
+type RouteParams = {
+  network: string
+  poolAddress: string
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,6 +47,8 @@ export const InitSection = ({
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
   const { account, library: provider } = useConnectedWeb3Context()
+  const { network } = useParams<RouteParams>()
+  const { loadInfo } = useOriginationPool(poolAddress, network as Network)
 
   const [state, setState] = useReducer(
     (prevState: IState, newState: Partial<IState>) => ({
@@ -71,12 +81,20 @@ export const InitSection = ({
       const txId = await fungibleOriginationPool[
         isOwnerOrManager ? 'claimPurchaseToken' : 'claimTokens'
       ]()
-      setTxId(txId)
+
+      const finalTxId = await fungibleOriginationPool.waitUntilClaim(
+        txId,
+        isOwnerOrManager
+      )
+
+      setTxId(finalTxId)
 
       setState({
         isClaiming: false,
         isCompleted: true,
       })
+
+      await loadInfo()
     } catch (error: any) {
       enqueueSnackbar(error.message || 'Transaction execution failed', {
         variant: 'error',

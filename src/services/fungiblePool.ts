@@ -215,15 +215,22 @@ class FungiblePoolService {
     return transactionObject.hash
   }
 
-  waitUntilClaimPurchaseToken = async (txId: string): Promise<string> => {
+  waitUntilClaim = async (
+    txId: string,
+    isOwnerOrManager?: boolean
+  ): Promise<string> => {
     let resolved = false
     return new Promise((resolve) => {
-      this.contract.on('ClaimPurchaseToken', (...rest) => {
-        if (!resolved) {
-          resolved = true
-          resolve(rest[0].transactionHash)
+      this.contract.on(
+        // TODO: No claimTokens event found
+        isOwnerOrManager ? 'ClaimPurchaseToken' : 'ClaimPurchaseToken',
+        (...rest) => {
+          if (!resolved) {
+            resolved = true
+            resolve(rest[0].transactionHash)
+          }
         }
-      })
+      )
 
       this.contract.provider.waitForTransaction(txId).then(() => {
         if (!resolved) {

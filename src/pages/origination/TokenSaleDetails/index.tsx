@@ -259,10 +259,9 @@ const TokenSaleDetails = () => {
   const isClaimButtonShow =
     tokenOffer &&
     ((isOwnerOrManager &&
-      isCliffPeriodPassed() &&
       isSaleCompleted &&
       !tokenOffer.sponsorTokensClaimed) ||
-      (tokenOffer.myPosition.tokenPurchased.gt(0) &&
+      (tokenOffer.myPosition.amountInvested.gt(0) &&
         isCliffPeriodPassed() &&
         tokenOffer.offeringOverview.vestingPeriod.isZero()))
 
