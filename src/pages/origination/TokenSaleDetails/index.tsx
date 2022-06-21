@@ -268,7 +268,8 @@ const TokenSaleDetails = () => {
   const isMyPositionShow =
     tokenOffer &&
     (tokenOffer.myPosition.tokenPurchased.gt(0) ||
-      tokenOffer.myPosition.amountInvested.gt(0))
+      tokenOffer.myPosition.amountInvested.gt(0) ||
+      tokenOffer?.myPosition.amountAvailableToVest.gt(0))
 
   const isPublicSaleInvestDisabled =
     !tokenOffer?.offeringOverview.salesBegin.gt(0) ||
