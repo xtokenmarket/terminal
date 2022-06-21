@@ -88,9 +88,11 @@ const getFilteredPools = (
       (pool) =>
         !(
           pool.network === Network.MAINNET &&
-          pool.address.toLowerCase() ===
-            '0x6148a1bd2be586e981115f9c0b16a09bbc271e2c'
-        ) // CitaDAO Mainnet pool
+          [
+            '0x6148a1bd2be586e981115f9c0b16a09bbc271e2c', // CitaDAO Mainnet pool
+            '0xc5f0237a2a2bb9dc60da73491ad39a1afc4c8b63', // frETH-WETH pool
+          ].includes(pool.address.toLowerCase())
+        )
     )
   }
   return filteredPools
