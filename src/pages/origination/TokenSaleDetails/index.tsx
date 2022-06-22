@@ -267,6 +267,7 @@ const TokenSaleDetails = () => {
         tokenOffer.offeringOverview.vestingPeriod.isZero()))
 
   const isMyPositionShow =
+    !isOwnerOrManager &&
     tokenOffer &&
     (tokenOffer.myPosition.tokenPurchased.gt(0) ||
       tokenOffer.myPosition.amountInvested.gt(0) ||
