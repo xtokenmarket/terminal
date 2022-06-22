@@ -62,7 +62,7 @@ export const useMyTokenOffers = () => {
 
   useEffect(() => {
     loadTokenOffers()
-  }, [chainId])
+  }, [chainId, account])
 
   return state
 }
