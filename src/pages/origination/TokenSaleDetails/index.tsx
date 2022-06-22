@@ -261,7 +261,8 @@ const TokenSaleDetails = () => {
     ((isOwnerOrManager &&
       isSaleCompleted &&
       !tokenOffer.sponsorTokensClaimed) ||
-      (tokenOffer.myPosition.amountInvested.gt(0) &&
+      (((isOfferUnsuccessful && tokenOffer.myPosition.amountInvested.gt(0)) ||
+        (!isOfferUnsuccessful && tokenOffer.myPosition.tokenPurchased.gt(0))) &&
         isCliffPeriodPassed() &&
         tokenOffer.offeringOverview.vestingPeriod.isZero()))
 
