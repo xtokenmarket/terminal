@@ -345,7 +345,7 @@ export const TableRow = ({
                 item.timeRemaining.toNumber() > 0 &&
                 days >= 0
                   ? `${days}D:${hours}H:${minutes}M:${seconds}S`
-                  : isSaleInitiated && item.timeRemaining.toNumber() === 0
+                  : isSaleInitiated && days + hours + minutes + seconds <= 0
                   ? 'Ended'
                   : 'Not Started'}
               </Typography>
@@ -410,7 +410,7 @@ export const TableRow = ({
               (!isWhitelistSet || isWhitelistSaleEnded) &&
               days >= 0
                 ? `${days}D:${hours}H:${minutes}M:${seconds}S`
-                : isSaleInitiated && item.timeRemaining.toNumber() === 0
+                : isSaleInitiated && days + hours + minutes + seconds <= 0
                 ? 'Ended'
                 : 'Not Started'}
             </Typography>
