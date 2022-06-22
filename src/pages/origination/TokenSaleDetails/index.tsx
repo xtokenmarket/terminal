@@ -315,6 +315,7 @@ const TokenSaleDetails = () => {
               open={state.open}
               onClose={onClose}
               onSuccess={onSuccess}
+              purchaseToken={tokenOffer.offeringOverview.purchaseToken}
             />
             {isSaleCompleted ? (
               <Table
