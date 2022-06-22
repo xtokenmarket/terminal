@@ -226,6 +226,10 @@ const TokenSaleDetails = () => {
     return {} as ItokenAndAmount
   }
 
+  const isSoldOut = tokenOffer?.offeringOverview.offerTokenAmountSold.eq(
+    tokenOffer?.offeringOverview.totalOfferingAmount
+  )
+
   // TODO: user own at least 1 vesting entry nft
   const isVestButtonShow =
     tokenOffer &&
@@ -276,13 +280,12 @@ const TokenSaleDetails = () => {
   const isPublicSaleInvestDisabled =
     !tokenOffer?.offeringOverview.salesBegin.gt(0) ||
     tokenOffer.whitelist.timeRemaining.gt(0) ||
-    tokenOffer?.offeringOverview.offerTokenAmountSold.eq(
-      tokenOffer?.offeringOverview.totalOfferingAmount
-    )
+    isSoldOut
 
   const iswhitelistSaleInvestDisabled =
     !tokenOffer?.offeringOverview.salesBegin.gt(0) ||
-    !tokenOffer.whitelist.isAddressWhitelisted
+    !tokenOffer.whitelist.isAddressWhitelisted ||
+    isSoldOut
 
   const isInitiateSaleButtonDisabled =
     (tokenOffer &&
@@ -438,6 +441,7 @@ const TokenSaleDetails = () => {
               onSuccess={onInvestSuccess}
               open={state.isInvestModalOpen}
               addressCap={tokenOffer.whitelist.addressCap}
+              isSaleCompleted={isSaleCompleted}
             />
             <VestModal
               offerData={tokenOffer.offeringOverview}
