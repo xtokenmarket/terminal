@@ -275,7 +275,10 @@ const TokenSaleDetails = () => {
 
   const isPublicSaleInvestDisabled =
     !tokenOffer?.offeringOverview.salesBegin.gt(0) ||
-    tokenOffer.whitelist.timeRemaining.gt(0)
+    tokenOffer.whitelist.timeRemaining.gt(0) ||
+    tokenOffer?.offeringOverview.offerTokenAmountSold.eq(
+      tokenOffer?.offeringOverview.totalOfferingAmount
+    )
 
   const iswhitelistSaleInvestDisabled =
     !tokenOffer?.offeringOverview.salesBegin.gt(0) ||
