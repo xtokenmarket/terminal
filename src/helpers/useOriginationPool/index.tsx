@@ -44,6 +44,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
     ...knownTokens.eth,
     address: constants.AddressZero,
   }
+  const defaultTokenLogo = '/assets/tokens/unknown.png'
 
   const getTokenDetails = async (address: string) => {
     try {
@@ -91,6 +92,13 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
       offerData.offerToken = token0
       offerData.purchaseToken = token1
     }
+
+    offerData.offerToken.image = offerData.offerToken.image
+      ? offerData.offerToken.image
+      : defaultTokenLogo
+    offerData.purchaseToken.image = offerData.purchaseToken.image
+      ? offerData.purchaseTokeen.image
+      : defaultTokenLogo
 
     try {
       const fungiblePool = new FungiblePoolService(
