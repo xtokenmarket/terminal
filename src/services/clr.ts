@@ -3,6 +3,8 @@ import { Maybe } from 'types'
 import Abi from 'abis'
 import { Interface } from '@ethersproject/abi'
 import { getContractAddress } from 'config/networks'
+import { hexlify } from 'ethers/lib/utils'
+import { ChainId } from 'config/constants'
 
 const xAssetCLRAbi = Abi.xAssetCLR
 
