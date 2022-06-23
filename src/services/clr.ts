@@ -47,7 +47,11 @@ class CLRService {
     networkId: number
   ) => {
     return this.contract.deposit(inputAsset, amount, {
-      gasLimit: hexlify(networkId === ChainId.Arbitrum ? 600000 : 100000),
+      gasLimit: hexlify(
+        networkId === ChainId.Arbitrum || networkId === ChainId.Mainnet
+          ? 600000
+          : 100000
+      ),
     })
   }
 

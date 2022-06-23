@@ -257,10 +257,8 @@ export const DepositSection = (props: IProps) => {
         depositing: true,
       }))
 
-      const inputAsset = depositState.amount0.isZero() ? 1 : 0
-      const inputAmount = depositState.amount0.isZero()
-        ? depositState.amount1
-        : depositState.amount0
+      const inputAsset = 1
+      const inputAmount = depositState.amount1
 
       const clr = new CLRService(provider, account, poolData.address)
 
