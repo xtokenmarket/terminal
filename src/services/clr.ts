@@ -4,6 +4,7 @@ import Abi from 'abis'
 import { Interface } from '@ethersproject/abi'
 import { getContractAddress } from 'config/networks'
 import { hexlify } from 'ethers/lib/utils'
+import { ChainId } from 'config/constants'
 
 const xAssetCLRAbi = Abi.xAssetCLR
 
@@ -40,9 +41,13 @@ class CLRService {
     return this.contract.getLiquidityForAmounts(amount0, amount1)
   }
 
-  deposit = async (inputAsset: number, amount: BigNumber) => {
+  deposit = async (
+    inputAsset: number,
+    amount: BigNumber,
+    networkId: number
+  ) => {
     return this.contract.deposit(inputAsset, amount, {
-      gasLimit: hexlify(600000),
+      gasLimit: hexlify(networkId === ChainId.Arbitrum ? 600000 : 100000),
     })
   }
 
