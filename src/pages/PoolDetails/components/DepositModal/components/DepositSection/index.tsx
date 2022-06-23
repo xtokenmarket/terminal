@@ -12,6 +12,7 @@ import ClockIcon from '@material-ui/icons/AccessTime'
 import { ActionStepRow, WarningInfo } from '..'
 import { useCountdown } from 'helpers/useCountdownClock'
 import { FIVE_MINUTES_IN_MS, LOCKED_STARTING_TIME } from 'config/constants'
+import { Network } from 'utils/enums'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -257,8 +258,11 @@ export const DepositSection = (props: IProps) => {
         depositing: true,
       }))
 
+      const PONY_LP_ADDRESS = '0x7fc70ABE76605d1Ef1f7A5DdC5E2ad35A43a6949'
       const isPonyLP =
-        poolData.address === '0x7fc70ABE76605d1Ef1f7A5DdC5E2ad35A43a6949'
+        poolData.network === Network.MAINNET &&
+        poolData.address.toLowerCase() === PONY_LP_ADDRESS.toLowerCase()
+
       const inputAsset = depositState.amount0.isZero() || isPonyLP ? 1 : 0
       const inputAmount =
         depositState.amount0.isZero() || isPonyLP
