@@ -1,10 +1,8 @@
 import axios from 'axios'
 import { ORIGINATION_API_URL } from 'config/constants'
-import { useConnectedWeb3Context } from 'contexts'
 import { useNetworkContext } from 'contexts/networkContext'
-import { useServices } from 'helpers'
 import { useEffect, useState } from 'react'
-import { IOriginationPool, ITokenOffer } from 'types'
+import { IOriginationPool } from 'types'
 import { isTestnet, isTestNetwork } from 'utils/network'
 
 interface IState {
@@ -19,11 +17,9 @@ export const useOriginationPools = () => {
   })
 
   const { chainId } = useNetworkContext()
-  const { account, library: provider } = useConnectedWeb3Context()
-  const { originationService } = useServices()
 
-  const getFilteredOffers = (offers: ITokenOffer[] = []) =>
-    offers.filter((offer: ITokenOffer) =>
+  const getFilteredOffers = (offers: IOriginationPool[] = []) =>
+    offers.filter((offer: IOriginationPool) =>
       isTestnet(chainId)
         ? isTestNetwork(offer.network)
         : !isTestNetwork(offer.network)
@@ -33,13 +29,11 @@ export const useOriginationPools = () => {
     setState((prev) => ({ ...prev, isLoading: true }))
 
     try {
-      // const { data: tokenOffers } = await getTokenOffers()
-
-      // TODO: offers data pull from the contract, can be deleted after api is ready
       const { data: pools } = await axios.get<any[]>(
         `${ORIGINATION_API_URL}/pools`
       )
-      console.log('pools', pools)
+
+      const filteredPools = getFilteredOffers(pools)
 
       setState((prev) => ({
         ...prev,
@@ -48,20 +42,6 @@ export const useOriginationPools = () => {
       }))
       setState((prev) => ({ ...prev, isLoading: false }))
     } catch (error) {
-      // const readonlyProvider = provider
-
-      // const createFungibleListingFilter =
-      //   originationService.contract.filters.CreateFungibleListing()
-      // const tokenOffers = await originationService.contract.queryFilter(
-      //   createFungibleListingFilter
-      // )
-      // const tokenOfferAddresses = tokenOffers.map((offer) => offer.args?.pool)
-      // setState((prev) => ({
-      //   ...prev,
-      //   tokenOffers: tokenOfferAddresses,
-      //   isLoading: false,
-      // }))
-
       setState((prev) => ({ ...prev, isLoading: false }))
     }
   }
