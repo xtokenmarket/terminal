@@ -303,3 +303,29 @@ export interface IClaimData {
   token: IToken
   amount: BigNumber
 }
+
+export interface IOriginationPool {
+  address: string
+  offerToken: IToken
+  purchaseToken: IToken
+  owner: string
+  manager: string
+  network: Network
+  reserveAmount: BigNumber
+  totalOfferingAmount: BigNumber
+  offerTokenAmountSold: BigNumber
+  publicStartingPrice: BigNumber
+  publicEndingPrice: BigNumber
+  publicSaleDuration: BigNumber
+  saleInitiatedTimestamp: BigNumber
+  saleEndTimestamp: BigNumber
+  vestingPeriod: BigNumber
+  cliffPeriod: BigNumber
+  whitelistStartingPrice: BigNumber
+  whitelistEndingPrice: BigNumber
+  whitelistSaleDuration: BigNumber
+  getOfferTokenPrice: BigNumber
+  vestableTokenAmount: BigNumber
+  purchaseTokensAcquired: BigNumber
+  sponsorTokensClaimed: boolean
+}

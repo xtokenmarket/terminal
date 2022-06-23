@@ -1,15 +1,15 @@
 import axios from 'axios'
+import { ORIGINATION_API_URL } from 'config/constants'
 import { useConnectedWeb3Context } from 'contexts'
 import { useNetworkContext } from 'contexts/networkContext'
 import { useServices } from 'helpers'
 import { useEffect, useState } from 'react'
-import { ITokenOffer } from 'types'
+import { IOriginationPool, ITokenOffer } from 'types'
 import { isTestnet, isTestNetwork } from 'utils/network'
 
 interface IState {
   isLoading: boolean
-  // tokenOffers: ITokenOffer[]
-  tokenOffers: string[]
+  tokenOffers: IOriginationPool[]
 }
 
 export const useOriginationPools = () => {
@@ -36,20 +36,32 @@ export const useOriginationPools = () => {
       // const { data: tokenOffers } = await getTokenOffers()
 
       // TODO: offers data pull from the contract, can be deleted after api is ready
-      const readonlyProvider = provider
-
-      const createFungibleListingFilter =
-        originationService.contract.filters.CreateFungibleListing()
-      const tokenOffers = await originationService.contract.queryFilter(
-        createFungibleListingFilter
+      const { data: pools } = await axios.get<any[]>(
+        `${ORIGINATION_API_URL}/pools`
       )
-      const tokenOfferAddresses = tokenOffers.map((offer) => offer.args?.pool)
+      console.log('pools', pools)
+
       setState((prev) => ({
         ...prev,
-        tokenOffers: tokenOfferAddresses,
+        tokenOffers: pools,
         isLoading: false,
       }))
+      setState((prev) => ({ ...prev, isLoading: false }))
     } catch (error) {
+      // const readonlyProvider = provider
+
+      // const createFungibleListingFilter =
+      //   originationService.contract.filters.CreateFungibleListing()
+      // const tokenOffers = await originationService.contract.queryFilter(
+      //   createFungibleListingFilter
+      // )
+      // const tokenOfferAddresses = tokenOffers.map((offer) => offer.args?.pool)
+      // setState((prev) => ({
+      //   ...prev,
+      //   tokenOffers: tokenOfferAddresses,
+      //   isLoading: false,
+      // }))
+
       setState((prev) => ({ ...prev, isLoading: false }))
     }
   }

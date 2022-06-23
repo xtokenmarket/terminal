@@ -3,13 +3,12 @@ import { useConnectedWeb3Context } from 'contexts'
 import { useNetworkContext } from 'contexts/networkContext'
 import { useServices } from 'helpers'
 import { useEffect, useState } from 'react'
-import { ITokenOffer } from 'types'
+import { IOriginationPool, ITokenOffer } from 'types'
 import { isTestnet, isTestNetwork } from 'utils/network'
 
 interface IState {
   isLoading: boolean
-  // tokenOffers: ITokenOffer[]
-  tokenOffers: string[]
+  tokenOffers: IOriginationPool[]
 }
 
 export const useMyTokenOffers = () => {
