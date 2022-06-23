@@ -3,6 +3,7 @@ import { Maybe } from 'types'
 import Abi from 'abis'
 import { Interface } from '@ethersproject/abi'
 import { getContractAddress } from 'config/networks'
+import { hexlify } from 'ethers/lib/utils'
 
 const xAssetCLRAbi = Abi.xAssetCLR
 
@@ -40,7 +41,9 @@ class CLRService {
   }
 
   deposit = async (inputAsset: number, amount: BigNumber) => {
-    return this.contract.deposit(inputAsset, amount)
+    return this.contract.deposit(inputAsset, amount, {
+      gasLimit: hexlify(600000),
+    })
   }
 
   waitUntilDeposit = async (
