@@ -17,6 +17,9 @@ import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
 import { VestModal } from './components/VestModal'
 import axios from 'axios'
+import { IToken } from 'types'
+
+type ItokenAndAmount = { token: IToken; amount: BigNumber }
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -195,6 +198,38 @@ const TokenSaleDetails = () => {
 
   const isOwnerOrManager = tokenOffer?.offeringOverview.isOwnerOrManager
 
+  const getTokenAndAmount = (
+    _isOwnerOrManage?: boolean,
+    _isOfferUnsuccessful?: boolean
+  ): ItokenAndAmount => {
+    if (!tokenOffer) return {} as ItokenAndAmount
+    if (isOwnerOrManager && isOfferUnsuccessful)
+      return {
+        token: tokenOffer.offeringOverview.offerToken,
+        amount: tokenOffer.offeringOverview.totalOfferingAmount,
+      }
+    if (isOwnerOrManager && !isOfferUnsuccessful)
+      return {
+        token: tokenOffer.offeringOverview.purchaseToken,
+        amount: tokenOffer.offeringSummary.amountsRaised,
+      }
+    if (!isOwnerOrManager && isOfferUnsuccessful)
+      return {
+        token: tokenOffer.offeringOverview.purchaseToken,
+        amount: BigNumber.from(tokenOffer.myPosition.amountInvested),
+      }
+    if (!isOwnerOrManager && !isOfferUnsuccessful)
+      return {
+        token: tokenOffer.offeringOverview.offerToken,
+        amount: BigNumber.from(tokenOffer.myPosition.tokenPurchased),
+      }
+    return {} as ItokenAndAmount
+  }
+
+  const isSoldOut = tokenOffer?.offeringOverview.offerTokenAmountSold.eq(
+    tokenOffer?.offeringOverview.totalOfferingAmount
+  )
+
   // TODO: user own at least 1 vesting entry nft
   const isVestButtonShow =
     tokenOffer &&
@@ -228,25 +263,29 @@ const TokenSaleDetails = () => {
   const isClaimButtonShow =
     tokenOffer &&
     ((isOwnerOrManager &&
-      isCliffPeriodPassed() &&
       isSaleCompleted &&
       !tokenOffer.sponsorTokensClaimed) ||
-      (tokenOffer.myPosition.tokenPurchased.gt(0) &&
+      (((isOfferUnsuccessful && tokenOffer.myPosition.amountInvested.gt(0)) ||
+        (!isOfferUnsuccessful && tokenOffer.myPosition.tokenPurchased.gt(0))) &&
         isCliffPeriodPassed() &&
         tokenOffer.offeringOverview.vestingPeriod.isZero()))
 
   const isMyPositionShow =
+    !isOwnerOrManager &&
     tokenOffer &&
     (tokenOffer.myPosition.tokenPurchased.gt(0) ||
-      tokenOffer.myPosition.amountInvested.gt(0))
+      tokenOffer.myPosition.amountInvested.gt(0) ||
+      tokenOffer?.myPosition.amountAvailableToVest.gt(0))
 
   const isPublicSaleInvestDisabled =
     !tokenOffer?.offeringOverview.salesBegin.gt(0) ||
-    tokenOffer.whitelist.timeRemaining.gt(0)
+    tokenOffer.whitelist.timeRemaining.gt(0) ||
+    isSoldOut
 
   const iswhitelistSaleInvestDisabled =
     !tokenOffer?.offeringOverview.salesBegin.gt(0) ||
-    !tokenOffer.whitelist.isAddressWhitelisted
+    !tokenOffer.whitelist.isAddressWhitelisted ||
+    isSoldOut
 
   const isInitiateSaleButtonDisabled =
     (tokenOffer &&
@@ -257,6 +296,10 @@ const TokenSaleDetails = () => {
   const isVestedPropertiesShow =
     tokenOffer?.myPosition.amountAvailableToVest.gt(0) ||
     tokenOffer?.myPosition.amountvested.gt(0)
+
+  const isWhitelistSaleEnded = BigNumber.from(
+    Math.floor(Date.now() / 1000)
+  ).gte(tokenOffer?.whitelist.endOfWhitelistPeriod || 0)
 
   return (
     <PageWrapper>
@@ -275,6 +318,7 @@ const TokenSaleDetails = () => {
               open={state.open}
               onClose={onClose}
               onSuccess={onSuccess}
+              purchaseToken={tokenOffer.offeringOverview.purchaseToken}
             />
             {isSaleCompleted ? (
               <Table
@@ -315,7 +359,8 @@ const TokenSaleDetails = () => {
                       <Typography className={cl.text}>INVEST</Typography>
                     </Button>
                     {!tokenOffer.whitelist.isAddressWhitelisted &&
-                      tokenOffer.whitelist.whitelist && (
+                      tokenOffer.whitelist.whitelist &&
+                      !isWhitelistSaleEnded && (
                         <div className={cl.errorMessageWrapper}>
                           <img alt="info" src="/assets/icons/warning.svg" />
                           &nbsp;&nbsp;
@@ -331,6 +376,9 @@ const TokenSaleDetails = () => {
             {!isSaleCompleted && isPublicSaleConfigured && (
               <>
                 <Table
+                  isWhitelistSaleEnded={isWhitelistSaleEnded}
+                  isWhitelistSet={tokenOffer.whitelist.whitelist}
+                  isSaleInitiated={tokenOffer.offeringOverview.salesBegin.gt(0)}
                   item={tokenOffer.publicSale}
                   label={'Public Sale'}
                   isFormulaStandard={
@@ -355,6 +403,7 @@ const TokenSaleDetails = () => {
                 label={'My Position'}
                 toggleModal={toggleClaimModal}
                 isVestedPropertiesShow={isVestedPropertiesShow}
+                isOfferUnsuccessful={isOfferUnsuccessful}
               />
             )}
             {isVestButtonShow && (
@@ -378,12 +427,10 @@ const TokenSaleDetails = () => {
               isOpen={state.isClaimModalOpen}
               onClose={toggleClaimModal}
               data={{
-                token: isOwnerOrManager
-                  ? tokenOffer.offeringOverview.purchaseToken
-                  : tokenOffer.offeringOverview.offerToken,
-                amount: isOwnerOrManager
-                  ? tokenOffer.offeringSummary.amountsRaised
-                  : BigNumber.from(tokenOffer.myPosition.tokenPurchased),
+                token: getTokenAndAmount(isOwnerOrManager, isOfferUnsuccessful)
+                  .token,
+                amount: getTokenAndAmount(isOwnerOrManager, isOfferUnsuccessful)
+                  .amount,
               }}
               isOwnerOrManager={isOwnerOrManager}
             />
@@ -394,6 +441,7 @@ const TokenSaleDetails = () => {
               onSuccess={onInvestSuccess}
               open={state.isInvestModalOpen}
               addressCap={tokenOffer.whitelist.addressCap}
+              isSaleCompleted={isSaleCompleted}
             />
             <VestModal
               offerData={tokenOffer.offeringOverview}

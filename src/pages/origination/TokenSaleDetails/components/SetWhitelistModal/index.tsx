@@ -19,7 +19,9 @@ import axios from 'axios'
 import { FungiblePoolService } from 'services'
 import { useOriginationPool } from 'helpers'
 import { getNetworkFromId } from 'utils/network'
-import { NetworkId } from 'types'
+import { IToken, NetworkId } from 'types'
+import { parseUnits } from 'ethers/lib/utils'
+import { BigNumber } from 'ethers'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -115,6 +117,7 @@ interface IProps {
   open: boolean
   onClose: () => void
   onSuccess: () => Promise<void>
+  purchaseToken: IToken
 }
 
 interface IState {
@@ -129,6 +132,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
   open,
   onClose,
   onSuccess,
+  purchaseToken,
 }) => {
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
@@ -166,7 +170,10 @@ export const SetWhitelistModal: React.FC<IProps> = ({
       'network',
       CHAIN_NAMES[networkId as ChainId]?.toLowerCase()
     )
-    requestData.append('maxAmountPerAddress', state.value)
+    requestData.append(
+      'maxAmountPerAddress',
+      parseUnits(state.value, purchaseToken.decimals).toString()
+    )
     requestData.append('signedPoolAddress', signedPoolAddress)
 
     const { merkleRoot } = await axios
