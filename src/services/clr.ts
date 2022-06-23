@@ -41,18 +41,8 @@ class CLRService {
     return this.contract.getLiquidityForAmounts(amount0, amount1)
   }
 
-  deposit = async (
-    inputAsset: number,
-    amount: BigNumber,
-    networkId: number
-  ) => {
-    return this.contract.deposit(inputAsset, amount, {
-      gasLimit: hexlify(
-        networkId === ChainId.Arbitrum || networkId === ChainId.Mainnet
-          ? 600000
-          : 100000
-      ),
-    })
+  deposit = async (inputAsset: number, amount: BigNumber) => {
+    return this.contract.deposit(inputAsset, amount)
   }
 
   waitUntilDeposit = async (

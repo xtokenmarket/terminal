@@ -249,7 +249,7 @@ export const DepositSection = (props: IProps) => {
     }
   }
   const onDeposit = async () => {
-    if (!account || !provider || !networkId) {
+    if (!account || !provider) {
       return
     }
     try {
@@ -271,7 +271,7 @@ export const DepositSection = (props: IProps) => {
 
       const clr = new CLRService(provider, account, poolData.address)
 
-      const txId = await clr.deposit(inputAsset, inputAmount, networkId)
+      const txId = await clr.deposit(inputAsset, inputAmount)
 
       const finalTxId = await clr.waitUntilDeposit(
         poolData.address,
