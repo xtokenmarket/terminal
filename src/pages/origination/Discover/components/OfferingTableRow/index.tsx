@@ -13,7 +13,7 @@ import { useOriginationPool } from 'helpers/useOriginationPool'
 import moment from 'moment'
 import { useConnectedWeb3Context } from 'contexts'
 import { getNetworkFromId } from 'utils/network'
-import { NetworkId } from 'types'
+import { IOriginationPool, NetworkId } from 'types'
 import { useCountdown } from 'helpers/useCountdownClock'
 
 const useStyles = makeStyles((theme) => ({
@@ -89,14 +89,14 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  offering: string
+  offering: IOriginationPool
 }
 
 export const OfferingTableRow = ({ offering }: IProps) => {
   const cl = useStyles()
   const { networkId } = useConnectedWeb3Context()
   const { tokenOffer } = useOriginationPool(
-    offering,
+    offering.address,
     getNetworkFromId(networkId as NetworkId)
   )
   const _originationRow = tokenOffer?.originationRow
@@ -136,7 +136,7 @@ export const OfferingTableRow = ({ offering }: IProps) => {
     return (
       <NavLink
         className={cl.content}
-        to={`/origination/token-offers/${tokenOffer.network}/${offering}`}
+        to={`/origination/token-offers/${tokenOffer.network}/${offering.address}`}
       >
         <OfferingTd type="offerToken">
           <div className={clsx(cl.item, cl.itemMarginLeft)}>
