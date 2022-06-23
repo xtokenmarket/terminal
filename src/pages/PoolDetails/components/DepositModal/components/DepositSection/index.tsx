@@ -257,8 +257,13 @@ export const DepositSection = (props: IProps) => {
         depositing: true,
       }))
 
-      const inputAsset = 1
-      const inputAmount = depositState.amount1
+      const isPonyLP =
+        poolData.address === '0x7fc70ABE76605d1Ef1f7A5DdC5E2ad35A43a6949'
+      const inputAsset = depositState.amount0.isZero() || isPonyLP ? 1 : 0
+      const inputAmount =
+        depositState.amount0.isZero() || isPonyLP
+          ? depositState.amount1
+          : depositState.amount0
 
       const clr = new CLRService(provider, account, poolData.address)
 
