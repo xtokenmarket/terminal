@@ -306,6 +306,7 @@ export interface IWhitelistSale extends Label {
   purchaseToken: IToken
   whitelistMerkleRoot?: string[]
   isAddressWhitelisted: boolean
+  endOfWhitelistPeriod: BigNumber
 }
 
 export interface IPublicSale extends Label {
@@ -317,6 +318,7 @@ export interface IPublicSale extends Label {
   purchaseToken: IToken
   startingPrice: BigNumber
   endingPrice: BigNumber
+  saleEndTimestamp: BigNumber
 }
 
 export interface IMyPosition extends Label {

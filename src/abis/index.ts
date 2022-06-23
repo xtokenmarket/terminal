@@ -13,7 +13,6 @@ import NonRewardPoolAbi from './NonRewardPool.json'
 // Origination
 import OriginationCoreAbi from './origination/OriginationCore.json'
 import OriginationPoolAbi from './origination/OriginationPool.json'
-import FungibleOriginationpoolAbi from './origination/FungibleOriginationPool.json'
 import vestingEntryNFTAbi from './origination/vestingEntryNFT.json'
 
 const Abi = {
@@ -32,7 +31,6 @@ const Abi = {
   // Origination
   OriginationCore: OriginationCoreAbi,
   OriginationPool: OriginationPoolAbi,
-  FungibleOriginationPool: FungibleOriginationpoolAbi,
   vestingEntryNFT: vestingEntryNFTAbi,
 }
 

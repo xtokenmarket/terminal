@@ -25,6 +25,7 @@ import {
   parseRemainingDurationSec,
 } from 'utils'
 import moment from 'moment'
+import { useCountdown } from 'helpers/useCountdownClock'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,9 +77,8 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
   },
   tokenIcon: {
-    width: 48,
-    height: 48,
-    border: `6px solid ${theme.colors.primary400}`,
+    width: 40,
+    height: 40,
     position: 'relative',
     borderRadius: '50%',
     '&+&': { left: -16 },
@@ -134,6 +134,8 @@ interface IProps {
   isOfferUnsuccessful?: boolean
   isSaleInitiated?: boolean
   isOwnerOrManager?: boolean
+  isWhitelistSet?: boolean
+  isWhitelistSaleEnded?: boolean
 }
 
 export const TableRow = ({
@@ -143,8 +145,21 @@ export const TableRow = ({
   isOfferUnsuccessful,
   isSaleInitiated,
   isOwnerOrManager,
+  isWhitelistSet,
+  isWhitelistSaleEnded,
 }: IProps) => {
   const cl = useStyles()
+  const { days, hours, minutes, seconds } = useCountdown(
+    item.label === OriginationLabels.WhitelistSale
+      ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        item.endOfWhitelistPeriod.toNumber() * 1000
+      : item.label === OriginationLabels.PublicSale
+      ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        item.saleEndTimestamp.toNumber() * 1000
+      : 0
+  )
 
   const renderContent = () => {
     const offeringOverview = item as IOfferingOverview
@@ -266,9 +281,14 @@ export const TableRow = ({
               <Typography
                 className={clsx(cl.item, cl.label, cl.itemMarginLeft)}
               >
-                {`${formatToShortNumber(
-                  formatBigNumber(item.currentPrice, item.offerToken.decimals)
-                )} ${item.purchaseToken.symbol}` || 'N/A'}
+                {isSaleInitiated
+                  ? `${formatToShortNumber(
+                      formatBigNumber(
+                        item.currentPrice,
+                        item.offerToken.decimals
+                      )
+                    )} ${item.purchaseToken.symbol}`
+                  : 'N/A'}
               </Typography>
             </Td>
 
@@ -321,9 +341,13 @@ export const TableRow = ({
 
             <Td type={WhitelistSale.TimeRemaining} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {isSaleInitiated && item.timeRemaining
-                  ? parseRemainingDurationSec(item.timeRemaining.toNumber())
-                  : 'N/A'}
+                {isSaleInitiated &&
+                item.timeRemaining.toNumber() > 0 &&
+                days >= 0
+                  ? `${days}D:${hours}H:${minutes}M:${seconds}S`
+                  : isSaleInitiated && days + hours + minutes + seconds <= 0
+                  ? 'Ended'
+                  : 'Not Started'}
               </Typography>
             </Td>
 
@@ -345,9 +369,14 @@ export const TableRow = ({
         <div className={cl.content}>
           <Td type={PublicSale.CurrentPrice} label={item.label}>
             <Typography className={clsx(cl.item, cl.label, cl.itemMarginLeft)}>
-              {`${formatToShortNumber(
-                formatBigNumber(item.currentPrice, item.purchaseToken.decimals)
-              )} ${item.purchaseToken.symbol}` || 'N/A'}
+              {isSaleInitiated
+                ? `${formatToShortNumber(
+                    formatBigNumber(
+                      item.currentPrice,
+                      item.purchaseToken.decimals
+                    )
+                  )} ${item.purchaseToken.symbol}`
+                : 'N/A'}
             </Typography>
           </Td>
           <Td type={PublicSale.PricingFormula} label={item.label}>
@@ -376,9 +405,14 @@ export const TableRow = ({
           )}
           <Td type={PublicSale.TimeRemaining} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {isSaleInitiated && item.timeRemaining
-                ? `${parseRemainingDurationSec(item.timeRemaining.toNumber())}`
-                : 'N/A'}
+              {isSaleInitiated &&
+              item.timeRemaining.toNumber() > 0 &&
+              (!isWhitelistSet || isWhitelistSaleEnded) &&
+              days >= 0
+                ? `${days}D:${hours}H:${minutes}M:${seconds}S`
+                : isSaleInitiated && days + hours + minutes + seconds <= 0
+                ? 'Ended'
+                : 'Not Started'}
             </Typography>
           </Td>
           <Td type={PublicSale.SalesPeriod} label={item.label}>
@@ -396,16 +430,24 @@ export const TableRow = ({
       item = myPosition
       return (
         <div className={cl.content}>
-          <Td type={MyPosition.TokenPurchased} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label, cl.itemMarginLeft)}>
-              {formatToShortNumber(
-                formatBigNumber(item.tokenPurchased, item.offerToken.decimals)
-              )}{' '}
-              {item.offerToken.symbol}
-            </Typography>
-          </Td>
+          {!isOfferUnsuccessful && (
+            <Td type={MyPosition.TokenPurchased} label={item.label}>
+              <Typography
+                className={clsx(cl.item, cl.label, cl.itemMarginLeft)}
+              >
+                {formatToShortNumber(
+                  formatBigNumber(item.tokenPurchased, item.offerToken.decimals)
+                )}{' '}
+                {item.offerToken.symbol}
+              </Typography>
+            </Td>
+          )}
           <Td type={MyPosition.AmountInvested} label={item.label}>
-            <Typography className={clsx(cl.item, cl.label)}>
+            <Typography
+              className={clsx(cl.item, cl.label, [
+                isOfferUnsuccessful && cl.itemMarginLeft,
+              ])}
+            >
               {formatToShortNumber(
                 formatBigNumber(
                   item.amountInvested,

@@ -14,6 +14,7 @@ import moment from 'moment'
 import { useConnectedWeb3Context } from 'contexts'
 import { getNetworkFromId } from 'utils/network'
 import { NetworkId } from 'types'
+import { useCountdown } from 'helpers/useCountdownClock'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -100,6 +101,10 @@ export const OfferingTableRow = ({ offering }: IProps) => {
   )
   const _originationRow = tokenOffer?.originationRow
 
+  const { days, hours, minutes, seconds } = useCountdown(
+    _originationRow?.salesEnd ? _originationRow?.salesEnd.toNumber() * 1000 : 0
+  )
+
   const renderContent = () => {
     if (!tokenOffer || !_originationRow) {
       return null
@@ -121,10 +126,8 @@ export const OfferingTableRow = ({ offering }: IProps) => {
       const isSaleInitiated = !salesBegin.isZero()
       if (!isSaleInitiated) return "Hasn't started"
       if (getRemainingTimeSec(salesEnd).isZero()) return 'Ended'
-
-      return parseRemainingDurationSec(
-        parseInt(getRemainingTimeSec(salesEnd).toString())
-      )
+      if (days < 0) return `0D:0H:0M:0S`
+      return `${days}D:${hours}H:${minutes}M:${seconds}S`
     }
 
     const remainingOfferingAmount =

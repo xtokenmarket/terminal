@@ -125,9 +125,7 @@ class FungiblePoolService {
   }
 
   vest = async (userToVestingId: string[]): Promise<string> => {
-    const tx = await this.contract.claimVested(userToVestingId, {
-      gasLimit: 7000000,
-    })
+    const tx = await this.contract.claimVested(userToVestingId)
     console.log(`vest transaction hash: ${tx.hash}`)
     return tx.hash
   }
@@ -215,15 +213,22 @@ class FungiblePoolService {
     return transactionObject.hash
   }
 
-  waitUntilClaimPurchaseToken = async (txId: string): Promise<string> => {
+  waitUntilClaim = async (
+    txId: string,
+    isOwnerOrManager?: boolean
+  ): Promise<string> => {
     let resolved = false
     return new Promise((resolve) => {
-      this.contract.on('ClaimPurchaseToken', (...rest) => {
-        if (!resolved) {
-          resolved = true
-          resolve(rest[0].transactionHash)
+      this.contract.on(
+        // TODO: No claimTokens event found
+        'PurchaseTokenClaim',
+        (...rest) => {
+          if (!resolved) {
+            resolved = true
+            resolve(rest[0].transactionHash)
+          }
         }
-      })
+      )
 
       this.contract.provider.waitForTransaction(txId).then(() => {
         if (!resolved) {

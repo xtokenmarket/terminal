@@ -183,7 +183,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
 
           isAddressWhitelisted = (
             await axios.get(
-              `http://originationstage.xtokenapi.link/api/whitelistedAcccountDetails/?accountAddress=${account}&poolAddress=${poolAddress}&network=kovan`
+              `${ORIGINATION_API_URL}/whitelistedAcccountDetails/?accountAddress=${account}&poolAddress=${poolAddress}&network=kovan`
             )
           ).data.isAddressWhitelisted
         } catch (e) {
@@ -211,6 +211,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         purchaseToken: token1 || ETH,
         whitelistMerkleRoot,
         isAddressWhitelisted,
+        endOfWhitelistPeriod,
       }
 
       const publicSale = {
@@ -228,6 +229,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         purchaseToken: token1 || ETH,
         startingPrice: publicStartingPrice,
         endingPrice: publicEndingPrice,
+        saleEndTimestamp,
       }
 
       const myPosition = {

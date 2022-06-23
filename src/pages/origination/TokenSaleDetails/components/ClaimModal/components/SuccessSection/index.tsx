@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   onClose?: () => void
-  data: IClaimData
+  data?: IClaimData
   txId: string
 }
 
@@ -71,12 +71,12 @@ export const SuccessSection = ({
           className={classes.img}
         />
         <Typography className={classes.title}>
-          {data.token.symbol} Token claimed!
+          {data?.token.symbol} Token claimed!
         </Typography>
         <Typography className={classes.description}>
           You have successfully claimed{' '}
-          {formatBigNumber(data.amount, data.token.decimals)}{' '}
-          {data.token.symbol}
+          {formatBigNumber(data?.amount || 0, data?.token.decimals || 0)}{' '}
+          {data?.token.symbol}
         </Typography>
       </div>
       <div className={classes.actions}>

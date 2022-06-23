@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core'
+import { IconButton, makeStyles, Typography } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import { Modal } from 'components'
 import { useConnectedWeb3Context } from 'contexts'
@@ -9,12 +9,53 @@ import { ZERO } from 'utils/number'
 
 import { InputSection, InvestSection, SuccessSection } from './components'
 import { ApproveSection } from './components/ApproveSection'
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  content: {
+    paddingTop: 2,
+    backgroundColor: theme.colors.primary400,
+    width: 600,
+    maxWidth: '90vw',
+    minHeight: '20vh',
+    maxHeight: '50vh',
+    textAlign: 'center',
+    fontSize: '23px',
+    fontWeight: 600,
+    marginTop: '20p',
+    color: theme.colors.white,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  header: {
+    padding: 32,
+    position: 'relative',
+    paddingBottom: 16,
+    display: 'flex',
+    backgroundColor: theme.colors.primary500,
+  },
+  title: {
+    color: theme.colors.white,
+    fontWeight: 600,
+    fontSize: 22,
+    marginBottom: 8,
+  },
+  closeButton: {
+    padding: 0,
+    color: theme.colors.white1,
+    position: 'absolute',
+    right: 24,
+    top: 36,
+    [theme.breakpoints.down('xs')]: {
+      top: 12,
+      right: 12,
+    },
   },
 }))
 
@@ -25,6 +66,7 @@ interface IProps {
   onSuccess: () => Promise<void>
   open: boolean
   addressCap: BigNumber
+  isSaleCompleted?: boolean
 }
 
 export interface IState {
@@ -52,6 +94,7 @@ export const InvestModal: React.FC<IProps> = ({
   onSuccess,
   open,
   addressCap,
+  isSaleCompleted,
 }) => {
   const classes = useStyles()
   const { account } = useConnectedWeb3Context()
@@ -105,6 +148,19 @@ export const InvestModal: React.FC<IProps> = ({
   }
 
   const renderContent = () => {
+    if (isSaleCompleted) {
+      return (
+        <div>
+          <div className={classes.header}>
+            <Typography className={classes.title}>Invest</Typography>
+            <IconButton className={classes.closeButton} onClick={onClose}>
+              <CloseOutlinedIcon />
+            </IconButton>
+          </div>
+          <div className={classes.content}>The sale has been ended. 😭</div>
+        </div>
+      )
+    }
     switch (state.step) {
       case EInvestModalStep.Input:
         return (

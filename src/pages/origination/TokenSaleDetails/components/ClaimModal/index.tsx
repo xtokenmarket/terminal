@@ -31,7 +31,7 @@ interface IProps {
   className?: string
   isOpen: boolean
   onClose: () => void
-  data: IClaimData
+  data?: IClaimData
   isOwnerOrManager?: boolean
 }
 
