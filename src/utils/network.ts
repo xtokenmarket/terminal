@@ -41,7 +41,7 @@ export const getIdFromNetwork = (network?: Network): ChainId => {
 }
 
 export const isTestNetwork = (network?: Network): boolean =>
-  !!network && [Network.KOVAN].includes(network)
+  !!network && [Network.KOVAN, ChainId.Goerli].includes(network)
 
 export const isTestnet = (chainId: ChainId): boolean => {
   return [ChainId.Kovan, ChainId.Goerli].includes(chainId)
