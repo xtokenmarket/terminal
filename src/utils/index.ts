@@ -15,7 +15,12 @@ export const formatBigNumber = (
   decimals: number,
   precision = 2
 ): string => {
-  return Number(formatUnits(value, decimals)).toFixed(precision)
+  const _value = Number(formatUnits(value, decimals))
+
+  if (_value < 1000) {
+    return formatSmallNumber(_value.toString())
+  }
+  return Number(_value).toFixed(precision)
 }
 
 export const numberWithCommas = (
