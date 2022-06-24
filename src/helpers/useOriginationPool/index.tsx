@@ -65,7 +65,6 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
     setState((prev) => ({ ...prev, loading: true }))
 
     let offerData
-    const whitelistMerkleRoot = [''] // TODO: add whitelistMerkleRoot later endpoint is ready
     try {
       offerData = (
         await axios.get(
@@ -83,7 +82,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
       offerData = await getOffersDataMulticall(poolAddress, multicall)
     }
 
-    if (!offerData.offerToken.address) {
+    if (!offerData?.offerToken.address) {
       const [token0, token1] = await Promise.all([
         getTokenDetails(offerData?.offerToken),
         getTokenDetails(offerData?.purchaseToken),
@@ -120,6 +119,12 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         fungiblePool.contract.isOwnerOrManager(account),
         fungiblePool.contract.vestingEntryNFT(),
       ])
+
+      const whitelistMerkleRoot = (
+        await axios.get(
+          `${ORIGINATION_API_URL}/pools/whitelistMerkleRoot?network=goerli&poolAddress=${poolAddress}`
+        )
+      ).data
 
       const vestingEntryNFTContract = new Contract(
         vestingEntryNFTAddress,
@@ -199,33 +204,23 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         ? getRemainingTimeSec(saleEndTimestamp)
         : BigNumber.from('0')
 
-      const isSetWhitelist = () =>
-        whitelistMerkleRoot &&
-        whitelistMerkleRoot.some(
-          (x) =>
-            x !== ethers.constants.AddressZero && x !== NULL_ADDRESS_WHITELIST
-        )
-
       let addressCap = ZERO
       let isAddressWhitelisted = false
 
-      if (isSetWhitelist()) {
+      if (whitelistMerkleRoot.hasSetWhitelistMerkleRoot) {
         try {
           // `maxContributionAmount` doesn't exist on contract level. Can only get from API.
           // TODO: network is hardcoded for now
-          addressCap = BigNumber.from(
-            (
-              await axios.get(
-                `${ORIGINATION_API_URL}/whitelistedAcccountDetails/?accountAddress=${account}&poolAddress=${poolAddress}&network=goerli`
-              )
-            ).data.maxContributionAmount
-          )
-
-          isAddressWhitelisted = (
+          const whitelistedAcccountDetails = (
             await axios.get(
               `${ORIGINATION_API_URL}/whitelistedAcccountDetails/?accountAddress=${account}&poolAddress=${poolAddress}&network=goerli`
             )
-          ).data.isAddressWhitelisted
+          ).data
+
+          addressCap = BigNumber.from(
+            whitelistedAcccountDetails.maxContributionAmount
+          )
+          isAddressWhitelisted = whitelistedAcccountDetails.isAddressWhitelisted
         } catch (e) {
           // Whitelist detail for pool is missing
         }
@@ -243,7 +238,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
             : EPricingFormula.Ascending,
         startingPrice: whitelistStartingPrice,
         endingPrice: whitelistEndingPrice,
-        whitelist: isSetWhitelist(),
+        whitelist: whitelistMerkleRoot.hasSetWhitelistMerkleRoot,
         addressCap,
         timeRemaining: whitelistTimeRemaining,
         salesPeriod: whitelistSaleDuration,
