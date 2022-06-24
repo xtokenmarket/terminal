@@ -112,19 +112,17 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         userToVestingId, // TODO: need to be refactored later after graph is ready
         isOwnerOrManager,
         vestingEntryNFTAddress,
+        whitelistMerkleRoot,
       ] = await Promise.all([
         fungiblePool.contract.offerTokenAmountPurchased(account),
         fungiblePool.contract.purchaseTokenContribution(account),
         fungiblePool.contract.userToVestingId(account),
         fungiblePool.contract.isOwnerOrManager(account),
         fungiblePool.contract.vestingEntryNFT(),
-      ])
-
-      const whitelistMerkleRoot = (
-        await axios.get(
+        axios.get(
           `${ORIGINATION_API_URL}/pools/whitelistMerkleRoot?network=goerli&poolAddress=${poolAddress}`
-        )
-      ).data
+        ),
+      ])
 
       const vestingEntryNFTContract = new Contract(
         vestingEntryNFTAddress,
@@ -207,7 +205,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
       let addressCap = ZERO
       let isAddressWhitelisted = false
 
-      if (whitelistMerkleRoot.hasSetWhitelistMerkleRoot) {
+      if (whitelistMerkleRoot.data.hasSetWhitelistMerkleRoot) {
         try {
           // `maxContributionAmount` doesn't exist on contract level. Can only get from API.
           // TODO: network is hardcoded for now
@@ -238,13 +236,13 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
             : EPricingFormula.Ascending,
         startingPrice: whitelistStartingPrice,
         endingPrice: whitelistEndingPrice,
-        whitelist: whitelistMerkleRoot.hasSetWhitelistMerkleRoot,
+        whitelist: whitelistMerkleRoot.data.hasSetWhitelistMerkleRoot,
         addressCap,
         timeRemaining: whitelistTimeRemaining,
         salesPeriod: whitelistSaleDuration,
         offerToken: offerToken,
         purchaseToken: purchaseToken || ETH,
-        whitelistMerkleRoot,
+        whitelistMerkleRoot: whitelistMerkleRoot.data.merkleRoot,
         isAddressWhitelisted,
         endOfWhitelistPeriod,
       }
