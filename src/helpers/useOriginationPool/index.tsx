@@ -12,12 +12,13 @@ import { useNetworkContext } from 'contexts/networkContext'
 import { useServices } from 'helpers'
 import { EPricingFormula, Network, OriginationLabels } from 'utils/enums'
 import { getOffersDataMulticall, ITokenOfferDetails } from './helper'
-import { IToken, ITokenOffer } from 'types'
+import { IOriginationPool, IToken, ITokenOffer } from 'types'
 import { ERC20Service, FungiblePoolService } from 'services'
 import { getCurrentTimeStamp, getRemainingTimeSec } from 'utils'
 import { NULL_ADDRESS_WHITELIST, ORIGINATION_API_URL } from 'config/constants'
 import { ZERO } from 'utils/number'
 import { getIdFromNetwork } from 'utils/network'
+import { getAddress } from 'ethers/lib/utils'
 
 interface IState {
   tokenOffer?: ITokenOffer
@@ -39,6 +40,12 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
     readonlyProvider = getNetworkProvider(network)
   }
 
+  const ETH: IToken = {
+    ...knownTokens.eth,
+    address: constants.AddressZero,
+  }
+  const defaultTokenLogo = '/assets/tokens/unknown.png'
+
   const getTokenDetails = async (address: string) => {
     try {
       return getTokenFromAddress(address, readonlyProvider?.network.chainId)
@@ -52,34 +59,94 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
     }
   }
 
-  const getContractTokenOfferData = async (
-    poolAddress: string
-  ): Promise<ITokenOffer | undefined> => {
+  const fungiblePool = new FungiblePoolService(provider, account, poolAddress)
+
+  const loadInfo = async () => {
+    if (!poolAddress) return
+
+    setState((prev) => ({ ...prev, loading: true }))
+
+    let offerData
+    let _sponsorTokensClaimed
     try {
-      const _offerData = await getOffersDataMulticall(poolAddress, multicall)
+      offerData = (
+        await axios.get(
+          `${ORIGINATION_API_URL}/pool/${getAddress(poolAddress)}`,
+          {
+            params: {
+              network,
+            },
+          }
+        )
+      ).data
 
-      const fungiblePool = new FungiblePoolService(
-        provider,
-        account,
-        poolAddress
-      )
-
+      // TODO: temporary workaround
       const [
-        token0,
-        token1,
+        whitelistStartingPrice,
+        whitelistEndingPrice,
+        publicStartingPrice,
+        publicEndingPrice,
+        saleInitiatedTimestamp,
+        saleEndTimestamp,
+        sponsorTokensClaimed,
+      ] = await Promise.all([
+        fungiblePool.contract.whitelistStartingPrice(),
+        fungiblePool.contract.whitelistEndingPrice(),
+        fungiblePool.contract.publicStartingPrice(),
+        fungiblePool.contract.publicEndingPrice(),
+        fungiblePool.contract.saleInitiatedTimestamp(),
+        fungiblePool.contract.saleEndTimestamp(),
+        fungiblePool.contract.sponsorTokensClaimed(),
+      ])
+
+      _sponsorTokensClaimed = sponsorTokensClaimed
+
+      offerData.whitelistStartingPrice = whitelistStartingPrice
+      offerData.whitelistEndingPrice = whitelistEndingPrice
+      offerData.publicStartingPrice = publicStartingPrice
+      offerData.publicEndingPrice = publicEndingPrice
+      offerData.saleInitiatedTimestamp = saleInitiatedTimestamp
+      offerData.saleEndTimestamp = saleEndTimestamp
+    } catch (e) {
+      console.error('Error fetching token offer details', e)
+      //Fallback in case API doesn't return token offer details
+      offerData = await getOffersDataMulticall(poolAddress, multicall)
+    }
+
+    if (!offerData?.offerToken.address) {
+      const [token0, token1] = await Promise.all([
+        getTokenDetails(offerData?.offerToken),
+        getTokenDetails(offerData?.purchaseToken),
+      ])
+
+      offerData.offerToken = token0
+      offerData.purchaseToken = token1
+    }
+
+    offerData.offerToken.image = offerData.offerToken?.image
+      ? offerData.offerToken?.image
+      : defaultTokenLogo
+    offerData.purchaseToken.image = offerData.purchaseToken?.image
+      ? offerData.purchaseTokeen?.image
+      : defaultTokenLogo
+
+    try {
+      const [
         offerTokenAmountPurchased,
         purchaseTokenContribution,
         userToVestingId, // TODO: need to be refactored later after graph is ready
         isOwnerOrManager,
         vestingEntryNFTAddress,
+        whitelistMerkleRoot,
       ] = await Promise.all([
-        getTokenDetails(_offerData?.offerToken as string),
-        getTokenDetails(_offerData?.purchaseToken as string),
         fungiblePool.contract.offerTokenAmountPurchased(account),
         fungiblePool.contract.purchaseTokenContribution(account),
         fungiblePool.contract.userToVestingId(account),
         fungiblePool.contract.isOwnerOrManager(account),
         fungiblePool.contract.vestingEntryNFT(),
+        axios.get(
+          `${ORIGINATION_API_URL}/whitelistMerkleRoot?network=goerli&poolAddress=${poolAddress}`
+        ),
       ])
 
       const vestingEntryNFTContract = new Contract(
@@ -101,9 +168,10 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
 
       const { tokenAmount, tokenAmountClaimed } = nftInfo
 
-      const ETH: IToken = {
-        ...knownTokens.eth,
-        address: constants.AddressZero,
+      for (const key in offerData) {
+        if (!isNaN(offerData[key])) {
+          offerData[key] = BigNumber.from(offerData[key])
+        }
       }
 
       const {
@@ -121,11 +189,11 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         vestableTokenAmount,
         vestingPeriod,
         whitelistEndingPrice,
-        whitelistMerkleRoot,
         whitelistSaleDuration,
         whitelistStartingPrice,
-        sponsorTokensClaimed,
-      } = _offerData as ITokenOfferDetails
+      } = offerData as IOriginationPool
+      const { sponsorTokensClaimed, offerToken, purchaseToken } =
+        offerData as IOriginationPool
 
       const _publicSaleDuration = BigNumber.from(Number(publicSaleDuration))
       const _whitelistSaleDuration = BigNumber.from(
@@ -134,8 +202,8 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
 
       const offeringOverview = {
         label: OriginationLabels.OfferingOverview,
-        offerToken: token0 || ETH,
-        purchaseToken: token1 || ETH,
+        offerToken: offerToken || ETH,
+        purchaseToken: purchaseToken || ETH,
         offeringReserve: reserveAmount,
         vestingPeriod,
         cliffPeriod,
@@ -159,33 +227,23 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         ? getRemainingTimeSec(saleEndTimestamp)
         : BigNumber.from('0')
 
-      const isSetWhitelist = () =>
-        whitelistMerkleRoot &&
-        whitelistMerkleRoot.some(
-          (x) =>
-            x !== ethers.constants.AddressZero && x !== NULL_ADDRESS_WHITELIST
-        )
-
       let addressCap = ZERO
       let isAddressWhitelisted = false
 
-      if (isSetWhitelist()) {
+      if (whitelistMerkleRoot.data.hasSetWhitelistMerkleRoot) {
         try {
           // `maxContributionAmount` doesn't exist on contract level. Can only get from API.
           // TODO: network is hardcoded for now
-          addressCap = BigNumber.from(
-            (
-              await axios.get(
-                `${ORIGINATION_API_URL}/whitelistedAcccountDetails/?accountAddress=${account}&poolAddress=${poolAddress}&network=kovan`
-              )
-            ).data.maxContributionAmount
-          )
-
-          isAddressWhitelisted = (
+          const whitelistedAcccountDetails = (
             await axios.get(
-              `${ORIGINATION_API_URL}/whitelistedAcccountDetails/?accountAddress=${account}&poolAddress=${poolAddress}&network=kovan`
+              `${ORIGINATION_API_URL}/whitelistedAcccountDetails/?accountAddress=${account}&poolAddress=${poolAddress}&network=goerli`
             )
-          ).data.isAddressWhitelisted
+          ).data
+
+          addressCap = BigNumber.from(
+            whitelistedAcccountDetails.maxContributionAmount
+          )
+          isAddressWhitelisted = whitelistedAcccountDetails.isAddressWhitelisted
         } catch (e) {
           // Whitelist detail for pool is missing
         }
@@ -198,18 +256,18 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
           whitelistStartingPrice?.toString() ===
           whitelistEndingPrice?.toString()
             ? EPricingFormula.Standard
-            : whitelistStartingPrice?.gt(whitelistEndingPrice as BigNumber)
+            : whitelistStartingPrice?.gt(whitelistEndingPrice)
             ? EPricingFormula.Descending
             : EPricingFormula.Ascending,
         startingPrice: whitelistStartingPrice,
         endingPrice: whitelistEndingPrice,
-        whitelist: isSetWhitelist(),
+        whitelist: whitelistMerkleRoot.data.hasSetWhitelistMerkleRoot,
         addressCap,
         timeRemaining: whitelistTimeRemaining,
         salesPeriod: whitelistSaleDuration,
-        offerToken: token0,
-        purchaseToken: token1 || ETH,
-        whitelistMerkleRoot,
+        offerToken: offerToken,
+        purchaseToken: purchaseToken || ETH,
+        whitelistMerkleRoot: whitelistMerkleRoot.data.merkleRoot,
         isAddressWhitelisted,
         endOfWhitelistPeriod,
       }
@@ -220,13 +278,13 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         pricingFormula:
           publicStartingPrice.toString() === publicEndingPrice.toString()
             ? EPricingFormula.Standard
-            : publicStartingPrice?.gt(publicEndingPrice as BigNumber)
+            : publicStartingPrice?.gt(publicEndingPrice)
             ? EPricingFormula.Descending
             : EPricingFormula.Ascending,
         salesPeriod: publicSaleDuration,
         timeRemaining,
-        offerToken: token0,
-        purchaseToken: token1 || ETH,
+        offerToken: offerToken,
+        purchaseToken: purchaseToken || ETH,
         startingPrice: publicStartingPrice,
         endingPrice: publicEndingPrice,
         saleEndTimestamp,
@@ -238,16 +296,16 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         amountInvested: purchaseTokenContribution,
         amountvested: tokenAmountClaimed,
         amountAvailableToVest: tokenAmount.sub(tokenAmountClaimed),
-        offerToken: token0,
-        purchaseToken: token1 || ETH,
+        offerToken: offerToken,
+        purchaseToken: purchaseToken || ETH,
         vestableTokenAmount,
         userToVestingId: [userToVestingId.toNumber()],
       }
 
       const offeringSummary = {
         label: OriginationLabels.OfferingSummary,
-        offerToken: token0,
-        purchaseToken: token1 || ETH,
+        offerToken: offerToken,
+        purchaseToken: purchaseToken || ETH,
         tokensSold: offerTokenAmountSold,
         amountsRaised: purchaseTokensAcquired,
         vestingPeriod,
@@ -258,7 +316,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         ),
       }
 
-      return {
+      const _offerData: ITokenOffer = {
         offeringSummary,
         myPosition,
         whitelist: _whitelist,
@@ -270,40 +328,20 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
           saleDuration: publicSaleDuration,
         },
         // TODO: remove this hardcoded value
-        network: Network.KOVAN,
-        sponsorTokensClaimed,
+        network: Network.GOERLI,
+        // TODO: temporary workaround
+        sponsorTokensClaimed: _sponsorTokensClaimed,
       }
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
-  const loadInfo = async () => {
-    if (!poolAddress) return
-
-    setState((prev) => ({ ...prev, loading: true }))
-    try {
-      // try {
-      // pool = (
-      //   await axios.get(
-      //     `${TERMINAL_API_URL}/pool/${getAddress(tokenOfferAddress as string)}`,
-      //     {
-      //       params: {
-      //         network,
-      //       },
-      //     }
-      //   )
-      // ).data
-      // } catch (e) {
-      // console.error('Error fetching token offer details', e)
-      // Fallback in case API doesn't return token offer details
-      const offerData = await getContractTokenOfferData(poolAddress)
       setState({
         loading: false,
-        tokenOffer: offerData,
+        tokenOffer: _offerData,
       })
-    } catch (e) {
-      setState((prev) => ({ ...prev, loading: false }))
+    } catch (error) {
+      console.log('handling offer data error', error)
+      setState({
+        loading: false,
+      })
     }
   }
 
