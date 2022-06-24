@@ -93,10 +93,10 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
     }
 
     offerData.offerToken.image = offerData.offerToken?.image
-      ? offerData.offerToken.image
+      ? offerData.offerToken?.image
       : defaultTokenLogo
     offerData.purchaseToken.image = offerData.purchaseToken?.image
-      ? offerData.purchaseTokeen.image
+      ? offerData.purchaseTokeen?.image
       : defaultTokenLogo
 
     try {
