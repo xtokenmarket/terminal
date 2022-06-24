@@ -120,7 +120,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         fungiblePool.contract.isOwnerOrManager(account),
         fungiblePool.contract.vestingEntryNFT(),
         axios.get(
-          `${ORIGINATION_API_URL}/pools/whitelistMerkleRoot?network=goerli&poolAddress=${poolAddress}`
+          `${ORIGINATION_API_URL}/whitelistMerkleRoot?network=goerli&poolAddress=${poolAddress}`
         ),
       ])
 
