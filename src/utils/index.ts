@@ -20,7 +20,7 @@ export const formatBigNumber = (
 
 export const numberWithCommas = (
   x: string,
-  decimals = 2,
+  decimals = 0,
   forcePrecision = false
 ) => {
   if (!x) return '0'
