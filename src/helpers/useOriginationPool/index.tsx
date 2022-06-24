@@ -59,12 +59,15 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
     }
   }
 
+  const fungiblePool = new FungiblePoolService(provider, account, poolAddress)
+
   const loadInfo = async () => {
     if (!poolAddress) return
 
     setState((prev) => ({ ...prev, loading: true }))
 
     let offerData
+    let _sponsorTokensClaimed
     try {
       offerData = (
         await axios.get(
@@ -76,6 +79,34 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
           }
         )
       ).data
+
+      // TODO: temporary workaround
+      const [
+        whitelistStartingPrice,
+        whitelistEndingPrice,
+        publicStartingPrice,
+        publicEndingPrice,
+        saleInitiatedTimestamp,
+        saleEndTimestamp,
+        sponsorTokensClaimed,
+      ] = await Promise.all([
+        fungiblePool.contract.whitelistStartingPrice(),
+        fungiblePool.contract.whitelistEndingPrice(),
+        fungiblePool.contract.publicStartingPrice(),
+        fungiblePool.contract.publicEndingPrice(),
+        fungiblePool.contract.saleInitiatedTimestamp(),
+        fungiblePool.contract.saleEndTimestamp(),
+        fungiblePool.contract.sponsorTokensClaimed(),
+      ])
+
+      _sponsorTokensClaimed = sponsorTokensClaimed
+
+      offerData.whitelistStartingPrice = whitelistStartingPrice
+      offerData.whitelistEndingPrice = whitelistEndingPrice
+      offerData.publicStartingPrice = publicStartingPrice
+      offerData.publicEndingPrice = publicEndingPrice
+      offerData.saleInitiatedTimestamp = saleInitiatedTimestamp
+      offerData.saleEndTimestamp = saleEndTimestamp
     } catch (e) {
       console.error('Error fetching token offer details', e)
       //Fallback in case API doesn't return token offer details
@@ -100,12 +131,6 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
       : defaultTokenLogo
 
     try {
-      const fungiblePool = new FungiblePoolService(
-        provider,
-        account,
-        poolAddress
-      )
-
       const [
         offerTokenAmountPurchased,
         purchaseTokenContribution,
@@ -304,7 +329,8 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         },
         // TODO: remove this hardcoded value
         network: Network.GOERLI,
-        sponsorTokensClaimed,
+        // TODO: temporary workaround
+        sponsorTokensClaimed: _sponsorTokensClaimed,
       }
 
       setState({
