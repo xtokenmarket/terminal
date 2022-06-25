@@ -97,7 +97,9 @@ export const OfferingTableRow = ({ offering }: IProps) => {
   const { networkId } = useConnectedWeb3Context()
   const { tokenOffer } = useOriginationPool(
     offering.address,
-    getNetworkFromId(networkId as NetworkId)
+    getNetworkFromId(networkId as NetworkId),
+    offering,
+    false
   )
   const _originationRow = tokenOffer?.originationRow
 
@@ -136,7 +138,7 @@ export const OfferingTableRow = ({ offering }: IProps) => {
     return (
       <NavLink
         className={cl.content}
-        to={`/origination/token-offers/${tokenOffer.network}/${offering.address}`}
+        to={`/origination/token-offers/${tokenOffer.network}/${tokenOffer.address}`}
       >
         <OfferingTd type="offerToken">
           <div className={clsx(cl.item, cl.itemMarginLeft)}>

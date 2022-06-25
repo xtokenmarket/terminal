@@ -76,6 +76,7 @@ export const COINGECKO_CHAIN_IDS: Record<ChainId, string> = {
 
 export const DEFAULT_NETWORK = Network.MAINNET
 export const DEFAULT_NETWORK_ID = ChainId.Mainnet
+export const TEST_NETWORKS = [Network.KOVAN, Network.GOERLI]
 
 export interface AddNetworkChainParameters {
   chainId: string // A 0x-prefixed hexadecimal string
