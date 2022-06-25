@@ -13,6 +13,7 @@ import { ZERO } from 'utils/number'
 import { OutputEstimation, OutputEstimationInfo } from '..'
 import { useEffect, useState } from 'react'
 import _ from 'lodash'
+import { Network } from 'utils/enums'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -166,6 +167,11 @@ export const InputSection = (props: IProps) => {
     }
   }, [balance0, balance1, depositState])
 
+  const PONY_LP_ADDRESS = '0x7fc70ABE76605d1Ef1f7A5DdC5E2ad35A43a6949'
+  const isPonyLP =
+    poolData.network === Network.MAINNET &&
+    poolData.address.toLowerCase() === PONY_LP_ADDRESS.toLowerCase()
+
   return (
     <div className={classes.root}>
       <div className={classes.header}>
@@ -175,6 +181,7 @@ export const InputSection = (props: IProps) => {
         </IconButton>
         <div>
           <TokenBalanceInput
+            isDisabled={isPonyLP}
             value={depositState.amount0}
             onChange={(amount0) => {
               handleAmountsChange(amount0, ZERO)
