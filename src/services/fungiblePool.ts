@@ -220,8 +220,7 @@ class FungiblePoolService {
     let resolved = false
     return new Promise((resolve) => {
       this.contract.on(
-        // TODO: No claimTokens event found
-        'PurchaseTokenClaim',
+        isOwnerOrManager ? 'PurchaseTokenClaim' : 'TokensClaimed',
         (...rest) => {
           if (!resolved) {
             resolved = true
