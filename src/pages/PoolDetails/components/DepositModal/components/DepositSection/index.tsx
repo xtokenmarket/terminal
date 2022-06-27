@@ -258,7 +258,7 @@ export const DepositSection = (props: IProps) => {
         depositing: true,
       }))
 
-      const PONY_LP_ADDRESS = '0x7fc70ABE76605d1Ef1f7A5DdC5E2ad35A43a6949'
+      const PONY_LP_ADDRESS = '0x11AE2b89175792F57D320a020eaEa879E837fe6c'
       const isPonyLP =
         poolData.network === Network.MAINNET &&
         poolData.address.toLowerCase() === PONY_LP_ADDRESS.toLowerCase()
