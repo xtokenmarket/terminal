@@ -28,7 +28,7 @@ export interface ITokenOfferDetails {
 export const getOffersDataMulticall = async (
   poolAddress: string,
   multicall: MulticallService
-): Promise<ITokenOfferDetails | undefined> => {
+) => {
   try {
     const calls = [
       'offerToken',

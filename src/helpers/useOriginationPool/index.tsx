@@ -113,12 +113,21 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
       offerData.saleEndTimestamp = saleEndTimestamp
       offerData.offerTokenAmountSold = offerTokenAmountSold
       offerData.purchaseTokensAcquired = purchaseTokensAcquired
+
+      for (const key in offerData) {
+        if (!isNaN(offerData[key]) && typeof offerData[key] !== 'object') {
+          offerData[key] = BigNumber.from(offerData[key])
+        }
+      }
     } catch (e) {
       console.error('Error fetching token offer details', e)
       //Fallback in case API doesn't return token offer details
       offerData = await getOffersDataMulticall(poolAddress, multicall)
+      // TODO: temporary workaround
+      _sponsorTokensClaimed = offerData?.sponsorTokensClaimed
     }
 
+    if (!offerData) return
     if (!offerData?.offerToken.address) {
       const [token0, token1] = await Promise.all([
         getTokenDetails(offerData?.offerToken),
@@ -133,7 +142,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
       ? offerData.offerToken?.image
       : defaultTokenLogo
     offerData.purchaseToken.image = offerData.purchaseToken?.image
-      ? offerData.purchaseTokeen?.image
+      ? offerData.purchaseToken?.image
       : defaultTokenLogo
 
     try {
@@ -174,12 +183,6 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
 
       const { tokenAmount, tokenAmountClaimed } = nftInfo
 
-      for (const key in offerData) {
-        if (!isNaN(offerData[key])) {
-          offerData[key] = BigNumber.from(offerData[key])
-        }
-      }
-
       const {
         cliffPeriod,
         getOfferTokenPrice,
@@ -197,9 +200,10 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         whitelistEndingPrice,
         whitelistSaleDuration,
         whitelistStartingPrice,
-      } = offerData as IOriginationPool
-      const { sponsorTokensClaimed, offerToken, purchaseToken } =
-        offerData as IOriginationPool
+        sponsorTokensClaimed,
+        offerToken,
+        purchaseToken,
+      } = offerData
 
       const _publicSaleDuration = BigNumber.from(Number(publicSaleDuration))
       const _whitelistSaleDuration = BigNumber.from(
