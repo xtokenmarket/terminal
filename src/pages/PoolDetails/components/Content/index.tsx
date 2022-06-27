@@ -341,17 +341,16 @@ export const Content = (props: IProps) => {
       return '0 to infinity'
     }
 
-    const ratio0 = Math.pow(1.0001, Number(tick0))
-    const ratio1 = Math.pow(1.0001, Number(tick1))
+    const price0 = Math.pow(1.0001, Number(tick0))
+    const price1 = Math.pow(1.0001, Number(tick1))
 
-    const price0 = 1 / ratio1
     const price0Int = parseInt(price0.toString())
 
     const toFixed = price0Int >= 100 ? 0 : price0Int >= 1 ? 2 : 4
 
     return `${price0.toFixed(toFixed)} ${token0.symbol} per ${
       token1.symbol
-    } to ${(1 / ratio0).toFixed(toFixed)} ${token0.symbol} per ${token1.symbol}`
+    } to ${price1.toFixed(toFixed)} ${token0.symbol} per ${token1.symbol}`
   }
 
   const triggerRipple = () => {
