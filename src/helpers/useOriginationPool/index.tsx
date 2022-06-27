@@ -89,6 +89,8 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         saleInitiatedTimestamp,
         saleEndTimestamp,
         sponsorTokensClaimed,
+        offerTokenAmountSold,
+        purchaseTokensAcquired,
       ] = await Promise.all([
         fungiblePool.contract.whitelistStartingPrice(),
         fungiblePool.contract.whitelistEndingPrice(),
@@ -97,6 +99,8 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
         fungiblePool.contract.saleInitiatedTimestamp(),
         fungiblePool.contract.saleEndTimestamp(),
         fungiblePool.contract.sponsorTokensClaimed(),
+        fungiblePool.contract.offerTokenAmountSold(),
+        fungiblePool.contract.purchaseTokensAcquired(),
       ])
 
       _sponsorTokensClaimed = sponsorTokensClaimed
@@ -107,6 +111,8 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
       offerData.publicEndingPrice = publicEndingPrice
       offerData.saleInitiatedTimestamp = saleInitiatedTimestamp
       offerData.saleEndTimestamp = saleEndTimestamp
+      offerData.offerTokenAmountSold = offerTokenAmountSold
+      offerData.purchaseTokensAcquired = purchaseTokensAcquired
     } catch (e) {
       console.error('Error fetching token offer details', e)
       //Fallback in case API doesn't return token offer details
