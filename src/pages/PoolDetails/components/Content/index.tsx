@@ -21,7 +21,7 @@ import {
 } from 'utils'
 import { parseDuration, ZERO } from 'utils/number'
 import { RewardModal } from 'components'
-import { ChainId, ETHER_DECIMAL } from 'config/constants'
+import { DEFAULT_NETWORK_ID, ETHER_DECIMAL } from 'config/constants'
 import { Network } from 'utils/enums'
 
 import {
@@ -231,7 +231,8 @@ const initialState: IState = {
 
 export const Content = (props: IProps) => {
   const classes = useStyles()
-  const { account, setWalletConnectModalOpened } = useConnectedWeb3Context()
+  const { account, setWalletConnectModalOpened, networkId } =
+    useConnectedWeb3Context()
   const [state, setState] = useState<IState>(initialState)
 
   const { poolData } = props
@@ -327,16 +328,15 @@ export const Content = (props: IProps) => {
     _token0: any,
     _token1: any
   ) => {
-    const chainId = ChainId.Mainnet
     const token0 = new Token(
-      chainId,
+      networkId || DEFAULT_NETWORK_ID,
       _token0.address,
       Number(_token0.decimals),
       _token0.symbol,
       _token0.name
     )
     const token1 = new Token(
-      chainId,
+      networkId || DEFAULT_NETWORK_ID,
       _token1.address,
       Number(_token1.decimals),
       _token1.symbol,
