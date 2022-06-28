@@ -21,7 +21,7 @@ import {
 } from 'utils'
 import { parseDuration, ZERO } from 'utils/number'
 import { RewardModal } from 'components'
-import { ETHER_DECIMAL } from 'config/constants'
+import { ChainId, ETHER_DECIMAL } from 'config/constants'
 import { Network } from 'utils/enums'
 
 import {
@@ -35,6 +35,8 @@ import {
 import { RewardVestSection } from '../RewardVestSection'
 import { VestAllModal } from '../VestAllModal'
 import { PoolShareSection } from '../PoolShareSection'
+import { tickToPrice } from '@uniswap/v3-sdk'
+import { Token } from '@uniswap/sdk-core'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -319,6 +321,37 @@ export const Content = (props: IProps) => {
     return rewards.join('')
   }
 
+  const getPriceFromTicks = (
+    tickLower: number,
+    tickUpper: number,
+    _token0: any,
+    _token1: any
+  ) => {
+    const chainId = ChainId.Mainnet
+    const token0 = new Token(
+      chainId,
+      _token0.address,
+      Number(_token0.decimals),
+      _token0.symbol,
+      _token0.name
+    )
+    const token1 = new Token(
+      chainId,
+      _token1.address,
+      Number(_token1.decimals),
+      _token1.symbol,
+      _token1.name
+    )
+
+    const priceLower = tickToPrice(token0, token1, tickLower)
+    const priceUpper = tickToPrice(token0, token1, tickUpper)
+
+    return {
+      priceLower: priceLower,
+      priceUpper: priceUpper,
+    }
+  }
+
   const getPriceRange = () => {
     const { token0, token1, ticks, poolFee } = poolData
     const { tick0, tick1 } = ticks
@@ -341,17 +374,22 @@ export const Content = (props: IProps) => {
       return '0 to infinity'
     }
 
-    const ratio0 = Math.pow(1.0001, Number(tick0))
-    const ratio1 = Math.pow(1.0001, Number(tick1))
+    const { priceLower, priceUpper } = getPriceFromTicks(
+      numberTick0,
+      numberTick1,
+      token0,
+      token1
+    )
 
-    const price0 = 1 / ratio1
-    const price0Int = parseInt(price0.toString())
+    const price0Int = parseInt(priceLower.toString())
+    const price1Int = parseInt(priceUpper.toString())
 
-    const toFixed = price0Int >= 100 ? 0 : price0Int >= 1 ? 2 : 4
+    const toFixed0 = price0Int >= 100 ? 0 : price0Int >= 1 ? 2 : 4
+    const toFixed1 = price1Int >= 100 ? 0 : price0Int >= 1 ? 2 : 4
 
-    return `${price0.toFixed(toFixed)} ${token0.symbol} per ${
+    return `${priceLower.toFixed(toFixed0)} ${token0.symbol} per ${
       token1.symbol
-    } to ${(1 / ratio0).toFixed(toFixed)} ${token0.symbol} per ${token1.symbol}`
+    } to ${priceUpper.toFixed(toFixed1)} ${token0.symbol} per ${token1.symbol}`
   }
 
   const triggerRipple = () => {
