@@ -181,7 +181,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
       try {
         whitelistMerkleRoot = (
           await axios.get(
-            `${ORIGINATION_API_URL}/whitelistMerkleRoot?network=goerli&poolAddress=${poolAddress}`
+            `${ORIGINATION_API_URL}/whitelistMerkleRoot?network=${network}&poolAddress=${poolAddress}`
           )
         ).data
       } catch (error) {
@@ -272,7 +272,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
           // TODO: network is hardcoded for now
           whitelistedAcccountDetails = (
             await axios.get(
-              `${ORIGINATION_API_URL}/whitelistedAcccountDetails/?accountAddress=${account}&poolAddress=${poolAddress}&network=goerli`
+              `${ORIGINATION_API_URL}/whitelistedAcccountDetails/?accountAddress=${account}&poolAddress=${poolAddress}&network=${network}`
             )
           ).data
 
@@ -366,7 +366,7 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
           saleDuration: publicSaleDuration,
         },
         // TODO: remove this hardcoded value
-        network: Network.GOERLI,
+        network,
         // TODO: temporary workaround
         sponsorTokensClaimed: _sponsorTokensClaimed,
       }
