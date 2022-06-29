@@ -15,10 +15,18 @@ import { getOffersDataMulticall, ITokenOfferDetails } from './helper'
 import { IOriginationPool, IToken, ITokenOffer } from 'types'
 import { ERC20Service, FungiblePoolService } from 'services'
 import { getCurrentTimeStamp, getRemainingTimeSec } from 'utils'
-import { NULL_ADDRESS_WHITELIST, ORIGINATION_API_URL } from 'config/constants'
+import {
+  ChainId,
+  NULL_ADDRESS_WHITELIST,
+  ORIGINATION_API_URL,
+} from 'config/constants'
 import { ZERO } from 'utils/number'
-import { getIdFromNetwork } from 'utils/network'
+import { getIdFromNetwork, isTestnet } from 'utils/network'
 import { getAddress } from 'ethers/lib/utils'
+import {
+  getCoinGeckoIDs,
+  getTokenExchangeRate,
+} from 'helpers/useTerminalPool/helper'
 
 interface IState {
   tokenOffer?: ITokenOffer
@@ -126,17 +134,25 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
       offerData = await getOffersDataMulticall(poolAddress, multicall)
       // TODO: temporary workaround
       _sponsorTokensClaimed = offerData?.sponsorTokensClaimed
-    }
 
-    if (!offerData) return
-    if (!offerData?.offerToken.address) {
       const [token0, token1] = await Promise.all([
         getTokenDetails(offerData?.offerToken),
         getTokenDetails(offerData?.purchaseToken),
       ])
 
+      if (!offerData) return
       offerData.offerToken = token0
       offerData.purchaseToken = token1
+
+      let rates = undefined
+      if (!isTestnet(readonlyProvider?.network.chainId as ChainId)) {
+        const ids = await getCoinGeckoIDs([token0.symbol, token1.symbol])
+        rates = await getTokenExchangeRate(ids)
+      }
+
+      offerData.offerToken.price = rates && rates[0] ? rates[0].toString() : '0'
+      offerData.purchaseToken.price =
+        rates && rates[1] ? rates[1].toString() : '0'
     }
 
     offerData.offerToken.image = offerData.offerToken?.image
