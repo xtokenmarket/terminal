@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { ORIGINATION_API_URL } from 'config/constants'
 import { useNetworkContext } from 'contexts/networkContext'
+import { useServices } from 'helpers/useServices'
 import { useEffect, useState } from 'react'
 import { IOriginationPool } from 'types'
 import { isTestnet, isTestNetwork } from 'utils/network'
@@ -17,6 +18,7 @@ export const useOriginationPools = () => {
   })
 
   const { chainId } = useNetworkContext()
+  const { originationService } = useServices()
 
   const getFilteredOffers = (offers: IOriginationPool[] = []) =>
     offers.filter((offer: IOriginationPool) =>
@@ -40,9 +42,21 @@ export const useOriginationPools = () => {
         tokenOffers: pools,
         isLoading: false,
       }))
-      setState((prev) => ({ ...prev, isLoading: false }))
     } catch (error) {
-      setState((prev) => ({ ...prev, isLoading: false }))
+      const createFungibleListingFilter =
+        originationService.contract.filters.CreateFungibleListing()
+      const tokenOffers = await originationService.contract.queryFilter(
+        createFungibleListingFilter
+      )
+      const tokenOfferAddresses = tokenOffers.map((offer) => offer.args?.pool)
+      const pools = tokenOffers.map((offer) => {
+        return { address: offer.args?.pool }
+      })
+      setState((prev) => ({
+        ...prev,
+        tokenOffers: pools as IOriginationPool[],
+        isLoading: false,
+      }))
     }
   }
 
