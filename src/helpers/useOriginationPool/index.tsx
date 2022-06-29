@@ -134,13 +134,14 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
       offerData = await getOffersDataMulticall(poolAddress, multicall)
       // TODO: temporary workaround
       _sponsorTokensClaimed = offerData?.sponsorTokensClaimed
+    }
 
+    if (!offerData) return
+    if (offerData && !offerData?.offerToken.address) {
       const [token0, token1] = await Promise.all([
         getTokenDetails(offerData?.offerToken),
         getTokenDetails(offerData?.purchaseToken),
       ])
-
-      if (!offerData) return
       offerData.offerToken = token0
       offerData.purchaseToken = token1
 
