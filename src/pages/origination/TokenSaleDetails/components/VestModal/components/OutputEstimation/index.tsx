@@ -1,6 +1,7 @@
 import { makeStyles, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import { TokenIcon } from 'components'
+import { BigNumber } from 'ethers'
 import { IMyPosition, IOfferingOverview } from 'types'
 import {
   formatBigNumber,
@@ -134,17 +135,19 @@ export const OutputEstimation = (props: IProps) => {
                 offerData.offerToken.decimals
               )
             )}
-            &nbsp; <span>~ $ 309,73</span>
-            {/*{offerData.offerToken.price && (
+            {offerData.offerToken.price && (
               <span>
                 ~ $
-                {getTotalTokenPrice(
-                  amount,
-                  offerData.offerToken.decimals,
-                  offerData.offerToken.price
+                {numberWithCommas(
+                  formatBigNumber(
+                    myPositionData.amountAvailableToVest.mul(
+                      BigNumber.from(offerData.offerToken.price)
+                    ),
+                    offerData.offerToken.decimals
+                  )
                 )}
               </span>
-            )}*/}
+            )}
           </Typography>
         </div>
         {vestState.step === VestStep.Info && (
@@ -187,7 +190,28 @@ export const OutputEstimation = (props: IProps) => {
                   )
                 )}
             &nbsp;
-            <span>~ $ 309,73</span>
+            <span>
+              ~ $
+              {vestState.step === VestStep.Info
+                ? numberWithCommas(
+                    formatBigNumber(
+                      myPositionData.amountvested.mul(
+                        BigNumber.from(offerData.offerToken.price)
+                      ),
+                      offerData.offerToken.decimals
+                    )
+                  )
+                : numberWithCommas(
+                    formatBigNumber(
+                      myPositionData.amountvested.add(
+                        myPositionData.amountAvailableToVest.mul(
+                          BigNumber.from(offerData.offerToken.price)
+                        )
+                      ),
+                      offerData.offerToken.decimals
+                    )
+                  )}
+            </span>
           </Typography>
         </div>
       </div>
