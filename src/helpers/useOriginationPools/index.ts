@@ -48,7 +48,6 @@ export const useOriginationPools = () => {
       const tokenOffers = await originationService.contract.queryFilter(
         createFungibleListingFilter
       )
-      const tokenOfferAddresses = tokenOffers.map((offer) => offer.args?.pool)
       const pools = tokenOffers.map((offer) => {
         return { address: offer.args?.pool }
       })
