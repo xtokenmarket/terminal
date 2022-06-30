@@ -21,7 +21,7 @@ import {
 } from 'utils'
 import { parseDuration, ZERO } from 'utils/number'
 import { RewardModal } from 'components'
-import { ETHER_DECIMAL } from 'config/constants'
+import { DEFAULT_NETWORK_ID, ETHER_DECIMAL } from 'config/constants'
 import { Network } from 'utils/enums'
 
 import {
@@ -35,6 +35,8 @@ import {
 import { RewardVestSection } from '../RewardVestSection'
 import { VestAllModal } from '../VestAllModal'
 import { PoolShareSection } from '../PoolShareSection'
+import { tickToPrice } from '@uniswap/v3-sdk'
+import { Token } from '@uniswap/sdk-core'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -229,7 +231,8 @@ const initialState: IState = {
 
 export const Content = (props: IProps) => {
   const classes = useStyles()
-  const { account, setWalletConnectModalOpened } = useConnectedWeb3Context()
+  const { account, setWalletConnectModalOpened, networkId } =
+    useConnectedWeb3Context()
   const [state, setState] = useState<IState>(initialState)
 
   const { poolData } = props
@@ -319,6 +322,36 @@ export const Content = (props: IProps) => {
     return rewards.join('')
   }
 
+  const getPriceFromTicks = (
+    tickLower: number,
+    tickUpper: number,
+    _token0: any,
+    _token1: any
+  ) => {
+    const token0 = new Token(
+      networkId || DEFAULT_NETWORK_ID,
+      _token0.address,
+      Number(_token0.decimals),
+      _token0.symbol,
+      _token0.name
+    )
+    const token1 = new Token(
+      networkId || DEFAULT_NETWORK_ID,
+      _token1.address,
+      Number(_token1.decimals),
+      _token1.symbol,
+      _token1.name
+    )
+
+    const priceLower = tickToPrice(token0, token1, tickLower)
+    const priceUpper = tickToPrice(token0, token1, tickUpper)
+
+    return {
+      priceLower,
+      priceUpper,
+    }
+  }
+
   const getPriceRange = () => {
     const { token0, token1, ticks, poolFee } = poolData
     const { tick0, tick1 } = ticks
@@ -326,6 +359,12 @@ export const Content = (props: IProps) => {
     const numberPoolFee = Number(poolFee)
     const numberTick0 = Number(tick0)
     const numberTick1 = Number(tick1)
+
+    const formatNumber = (price: string) => {
+      const priceInt = parseInt(price)
+      const toFixed = priceInt >= 100 ? 0 : priceInt >= 1 ? 2 : 4
+      return parseFloat(Number(price).toFixed(toFixed))
+    }
 
     if (
       (numberPoolFee === 500 &&
@@ -341,17 +380,18 @@ export const Content = (props: IProps) => {
       return '0 to infinity'
     }
 
-    const ratio0 = Math.pow(1.0001, Number(tick0))
-    const ratio1 = Math.pow(1.0001, Number(tick1))
+    const { priceLower, priceUpper } = getPriceFromTicks(
+      numberTick0,
+      numberTick1,
+      token0,
+      token1
+    )
 
-    const price0 = 1 / ratio1
-    const price0Int = parseInt(price0.toString())
-
-    const toFixed = price0Int >= 100 ? 0 : price0Int >= 1 ? 2 : 4
-
-    return `${price0.toFixed(toFixed)} ${token0.symbol} per ${
+    return `${formatNumber(priceLower.toSignificant(4))} ${token0.symbol} per ${
       token1.symbol
-    } to ${(1 / ratio0).toFixed(toFixed)} ${token0.symbol} per ${token1.symbol}`
+    } to ${formatNumber(priceUpper.toSignificant(4))} ${token0.symbol} per ${
+      token1.symbol
+    }`
   }
 
   const triggerRipple = () => {
