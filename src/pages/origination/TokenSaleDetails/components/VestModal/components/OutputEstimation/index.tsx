@@ -1,12 +1,14 @@
 import { makeStyles, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import { TokenIcon } from 'components'
+import { BigNumber } from 'ethers'
 import { IMyPosition, IOfferingOverview } from 'types'
 import {
   formatBigNumber,
   formatDurationUnits,
   getCurrentTimeStamp,
   getTimeRemainingUnits,
+  getTotalTokenPrice,
   numberWithCommas,
   parseDurationSec,
 } from 'utils'
@@ -134,17 +136,18 @@ export const OutputEstimation = (props: IProps) => {
                 offerData.offerToken.decimals
               )
             )}
-            &nbsp; <span>~ $ 309,73</span>
-            {/*{offerData.offerToken.price && (
+            {offerData.offerToken.price && (
               <span>
                 ~ $
-                {getTotalTokenPrice(
-                  amount,
-                  offerData.offerToken.decimals,
-                  offerData.offerToken.price
+                {numberWithCommas(
+                  getTotalTokenPrice(
+                    myPositionData.amountAvailableToVest,
+                    offerData.offerToken.decimals,
+                    offerData.offerToken.price
+                  )
                 )}
               </span>
-            )}*/}
+            )}
           </Typography>
         </div>
         {vestState.step === VestStep.Info && (
@@ -187,7 +190,26 @@ export const OutputEstimation = (props: IProps) => {
                   )
                 )}
             &nbsp;
-            <span>~ $ 309,73</span>
+            <span>
+              ~ $
+              {vestState.step === VestStep.Info
+                ? numberWithCommas(
+                    getTotalTokenPrice(
+                      myPositionData.amountvested,
+                      offerData.offerToken.decimals,
+                      offerData.offerToken.price
+                    )
+                  )
+                : numberWithCommas(
+                    getTotalTokenPrice(
+                      myPositionData.amountvested.add(
+                        myPositionData.amountAvailableToVest
+                      ),
+                      offerData.offerToken.decimals,
+                      offerData.offerToken.price
+                    )
+                  )}
+            </span>
           </Typography>
         </div>
       </div>

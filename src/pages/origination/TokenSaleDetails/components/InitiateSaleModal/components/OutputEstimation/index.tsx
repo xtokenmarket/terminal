@@ -1,6 +1,7 @@
 import { makeStyles, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import { TokenIcon } from 'components'
+import { BigNumber } from 'ethers'
 import { IOfferingOverview } from 'types'
 import {
   formatBigNumber,
@@ -8,6 +9,8 @@ import {
   formatToShortNumber,
   getCurrentTimeStamp,
   getTimeRemainingUnits,
+  getTotalTokenPrice,
+  numberWithCommas,
   parseDurationSec,
   // getTotalTokenPrice,
 } from 'utils'
@@ -112,16 +115,16 @@ export const OutputEstimation = (props: IProps) => {
               )
             )}
             &nbsp;
-            {/*{offerData.offerToken.price && (
-              <span>
-                ~ $
-                {getTotalTokenPrice(
-                  amount,
+            <span>
+              ~ $
+              {numberWithCommas(
+                getTotalTokenPrice(
+                  offerData.totalOfferingAmount,
                   offerData.offerToken.decimals,
                   offerData.offerToken.price
-                )}
-              </span>
-            )}*/}
+                )
+              )}
+            </span>
           </Typography>
         </div>
       </div>
