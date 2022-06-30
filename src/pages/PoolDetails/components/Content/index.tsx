@@ -361,7 +361,7 @@ export const Content = (props: IProps) => {
     const numberTick1 = Number(tick1)
 
     const formatNumber = (price: string) => {
-      const priceInt = parseInt(price.toString())
+      const priceInt = parseInt(price)
       const toFixed = priceInt >= 100 ? 0 : priceInt >= 1 ? 2 : 4
       return parseFloat(Number(price).toFixed(toFixed))
     }
