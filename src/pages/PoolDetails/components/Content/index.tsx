@@ -387,9 +387,9 @@ export const Content = (props: IProps) => {
       token1
     )
 
-    return `${formatNumber(priceLower.toSignificant())} ${token0.symbol} per ${
+    return `${formatNumber(priceLower.toSignificant(4))} ${token0.symbol} per ${
       token1.symbol
-    } to ${formatNumber(priceUpper.toSignificant())} ${token0.symbol} per ${
+    } to ${formatNumber(priceUpper.toSignificant(4))} ${token0.symbol} per ${
       token1.symbol
     }`
   }
