@@ -62,7 +62,8 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.colors.secondary,
     },
     '&.pending': {
-      color: theme.colors.primary700,
+      opacity: 0.3,
+      backgroundColor: theme.colors.secondary,
     },
     '&.disabled': {
       opacity: 0.3,
@@ -317,7 +318,9 @@ export const SetWhitelistModal: React.FC<IProps> = ({
 
           <div className={classes.buttonWrapper}>
             <Button
-              disabled={!state.whitelistFile}
+              disabled={
+                !state.whitelistFile || state.txState === TxState.InProgress
+              }
               color="primary"
               variant="contained"
               className={clsx(
