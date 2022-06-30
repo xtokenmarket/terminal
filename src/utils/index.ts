@@ -66,20 +66,14 @@ export const formatToShortNumber = (number: string, decimals = 2): string => {
   return formatSmallNumber(number)
 }
 
+const getToFixed = (value: string) => {
+  const priceInt = parseInt(value)
+  const toFixed = priceInt >= 100 ? 0 : priceInt >= 1 ? 2 : 4
+  return toFixed
+}
+
 const formatSmallNumber = (number: string) => {
-  if (parseInt(number) >= 100) {
-    return Number(number).toFixed(0)
-  }
-
-  if (parseInt(number) > 0) {
-    return Number(number).toFixed(2)
-  }
-
-  if (parseInt(number) === 0) {
-    return parseFloat(Number(number).toFixed(5)).toString()
-  }
-
-  return '0'
+  return parseFloat(Number(number).toFixed(getToFixed(number))).toString()
 }
 
 export const hideInsignificantZeros = (x: string) => {
@@ -204,7 +198,7 @@ export const getCurrentTimeStamp = () => Math.floor(Date.now() / 1000)
 export const getTotalTokenPrice = (
   amount: BigNumber,
   decimal: number,
-  price: string
+  price = '0'
 ) => {
   const totalPrice =
     Number(formatUnits(amount, decimal).toString()) * Number(price)

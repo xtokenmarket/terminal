@@ -7,7 +7,7 @@ import {
 import clsx from 'clsx'
 import { IToken } from 'types'
 import { TokenIcon } from 'components'
-import { formatBigNumber, numberWithCommas } from 'utils'
+import { formatBigNumber, getTotalTokenPrice, numberWithCommas } from 'utils'
 import { BigNumber } from 'ethers'
 
 const useStyles = makeStyles((theme) => ({
@@ -96,10 +96,7 @@ export const TokenInfo = (props: IProps) => {
             <span>
               ~ $
               {numberWithCommas(
-                formatBigNumber(
-                  amount.mul(BigNumber.from(token.price)),
-                  token.decimals
-                )
+                getTotalTokenPrice(amount, token.decimals, token.price)
               )}
             </span>
           </Typography>

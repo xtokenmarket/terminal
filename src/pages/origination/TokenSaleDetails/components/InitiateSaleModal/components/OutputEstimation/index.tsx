@@ -9,6 +9,7 @@ import {
   formatToShortNumber,
   getCurrentTimeStamp,
   getTimeRemainingUnits,
+  getTotalTokenPrice,
   numberWithCommas,
   parseDurationSec,
   // getTotalTokenPrice,
@@ -117,11 +118,10 @@ export const OutputEstimation = (props: IProps) => {
             <span>
               ~ $
               {numberWithCommas(
-                formatBigNumber(
-                  offerData.totalOfferingAmount.mul(
-                    BigNumber.from(offerData.offerToken.price)
-                  ),
-                  offerData.offerToken.decimals
+                getTotalTokenPrice(
+                  offerData.totalOfferingAmount,
+                  offerData.offerToken.decimals,
+                  offerData.offerToken.price
                 )
               )}
             </span>

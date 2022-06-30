@@ -8,6 +8,7 @@ import {
   formatDurationUnits,
   getCurrentTimeStamp,
   getTimeRemainingUnits,
+  getTotalTokenPrice,
   numberWithCommas,
   parseDurationSec,
 } from 'utils'
@@ -139,11 +140,10 @@ export const OutputEstimation = (props: IProps) => {
               <span>
                 ~ $
                 {numberWithCommas(
-                  formatBigNumber(
-                    myPositionData.amountAvailableToVest.mul(
-                      BigNumber.from(offerData.offerToken.price)
-                    ),
-                    offerData.offerToken.decimals
+                  getTotalTokenPrice(
+                    myPositionData.amountAvailableToVest,
+                    offerData.offerToken.decimals,
+                    offerData.offerToken.price
                   )
                 )}
               </span>
@@ -194,21 +194,19 @@ export const OutputEstimation = (props: IProps) => {
               ~ $
               {vestState.step === VestStep.Info
                 ? numberWithCommas(
-                    formatBigNumber(
-                      myPositionData.amountvested.mul(
-                        BigNumber.from(offerData.offerToken.price)
-                      ),
-                      offerData.offerToken.decimals
+                    getTotalTokenPrice(
+                      myPositionData.amountvested,
+                      offerData.offerToken.decimals,
+                      offerData.offerToken.price
                     )
                   )
                 : numberWithCommas(
-                    formatBigNumber(
+                    getTotalTokenPrice(
                       myPositionData.amountvested.add(
-                        myPositionData.amountAvailableToVest.mul(
-                          BigNumber.from(offerData.offerToken.price)
-                        )
+                        myPositionData.amountAvailableToVest
                       ),
-                      offerData.offerToken.decimals
+                      offerData.offerToken.decimals,
+                      offerData.offerToken.price
                     )
                   )}
             </span>
