@@ -43,17 +43,23 @@ export const useOriginationPools = () => {
         isLoading: false,
       }))
     } catch (error) {
-      const createFungibleListingFilter =
-        originationService.contract.filters.CreateFungibleListing()
-      const tokenOffers = await originationService.contract.queryFilter(
-        createFungibleListingFilter
-      )
-      const pools = tokenOffers.map((offer) => {
-        return { address: offer.args?.pool }
-      })
+      // TODO: for testing only. Can be remove later
+      // const createFungibleListingFilter =
+      //   originationService.contract.filters.CreateFungibleListing()
+      // const tokenOffers = await originationService.contract.queryFilter(
+      //   createFungibleListingFilter
+      // )
+      // const pools = tokenOffers.map((offer) => {
+      //   return { address: offer.args?.pool }
+      // })
+      // setState((prev) => ({
+      //   ...prev,
+      //   tokenOffers: pools as IOriginationPool[],
+      //   isLoading: false,
+      // }))
+
       setState((prev) => ({
         ...prev,
-        tokenOffers: pools as IOriginationPool[],
         isLoading: false,
       }))
     }
