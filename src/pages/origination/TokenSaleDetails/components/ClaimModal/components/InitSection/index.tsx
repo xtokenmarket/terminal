@@ -82,22 +82,17 @@ export const InitSection = ({
         isOwnerOrManager ? 'claimPurchaseToken' : 'claimTokens'
       ]()
 
-      let finalTxId = ''
-      if (isOwnerOrManager) {
-        finalTxId = await fungibleOriginationPool.waitUntilClaim(
-          txId,
-          isOwnerOrManager
-        )
-      }
+      const finalTxId = await fungibleOriginationPool.waitUntilClaim(
+        txId,
+        isOwnerOrManager
+      )
 
-      setTxId(isOwnerOrManager ? finalTxId : txId)
+      setTxId(finalTxId)
 
       setState({
         isClaiming: false,
         isCompleted: true,
       })
-
-      await loadInfo()
     } catch (error: any) {
       enqueueSnackbar(error.message || 'Transaction execution failed', {
         variant: 'error',

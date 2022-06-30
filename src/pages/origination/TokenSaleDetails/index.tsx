@@ -187,6 +187,14 @@ const TokenSaleDetails = () => {
     await loadInfo()
   }
 
+  const onClaimSuccess = async () => {
+    setState((prev) => ({
+      ...prev,
+      isClaimModalOpen: false,
+    }))
+    await loadInfo()
+  }
+
   const isCliffPeriodPassed = () => {
     if (!tokenOffer) return false
     const now = BigNumber.from(getCurrentTimeStamp())
@@ -433,6 +441,7 @@ const TokenSaleDetails = () => {
                   .amount,
               }}
               isOwnerOrManager={isOwnerOrManager}
+              onClaimSuccess={onClaimSuccess}
             />
             <InvestModal
               isWhitelist={state.isWhitelistInvestClicked}
