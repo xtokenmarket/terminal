@@ -347,8 +347,8 @@ export const Content = (props: IProps) => {
     const priceUpper = tickToPrice(token0, token1, tickUpper)
 
     return {
-      priceLower: priceLower,
-      priceUpper: priceUpper,
+      priceLower,
+      priceUpper,
     }
   }
 
@@ -359,6 +359,12 @@ export const Content = (props: IProps) => {
     const numberPoolFee = Number(poolFee)
     const numberTick0 = Number(tick0)
     const numberTick1 = Number(tick1)
+
+    const formatNumber = (price: string) => {
+      const priceInt = parseInt(price.toString())
+      const toFixed = priceInt >= 100 ? 0 : priceInt >= 1 ? 2 : 4
+      return parseFloat(Number(price).toFixed(toFixed))
+    }
 
     if (
       (numberPoolFee === 500 &&
@@ -381,15 +387,11 @@ export const Content = (props: IProps) => {
       token1
     )
 
-    const price0Int = parseInt(priceLower.toString())
-    const price1Int = parseInt(priceUpper.toString())
-
-    const toFixed0 = price0Int >= 100 ? 0 : price0Int >= 1 ? 2 : 4
-    const toFixed1 = price1Int >= 100 ? 0 : price0Int >= 1 ? 2 : 4
-
-    return `${priceLower.toFixed(toFixed0)} ${token0.symbol} per ${
+    return `${formatNumber(priceLower.toFixed(4))} ${token0.symbol} per ${
       token1.symbol
-    } to ${priceUpper.toFixed(toFixed1)} ${token0.symbol} per ${token1.symbol}`
+    } to ${formatNumber(priceUpper.toFixed(4))} ${token0.symbol} per ${
+      token1.symbol
+    }`
   }
 
   const triggerRipple = () => {
