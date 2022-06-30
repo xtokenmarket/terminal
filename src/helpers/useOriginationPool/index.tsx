@@ -136,7 +136,6 @@ export const useOriginationPool = (poolAddress: string, network: Network) => {
       _sponsorTokensClaimed = offerData?.sponsorTokensClaimed
     }
 
-    if (!offerData) return
     if (offerData && !offerData?.offerToken.address) {
       const [token0, token1] = await Promise.all([
         getTokenDetails(offerData?.offerToken),
