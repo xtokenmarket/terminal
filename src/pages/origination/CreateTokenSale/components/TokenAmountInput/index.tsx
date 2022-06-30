@@ -240,6 +240,7 @@ export const TokenAmountInput: React.FC<IProps> = ({
             : `Available - ${getFormattedTokenBalance()}`}
         </Typography>
         {label === 'Offer Token Amount' &&
+          token &&
           value &&
           Number(value) > Number(formatUnits(balance, token?.decimals)) && (
             <div className={classes.warning}>Insufficient Balance</div>
