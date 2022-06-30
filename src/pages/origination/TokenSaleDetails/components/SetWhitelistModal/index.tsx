@@ -206,14 +206,14 @@ export const SetWhitelistModal: React.FC<IProps> = ({
       return
     }
 
-    setState({ txState: TxState.InProgress })
-
-    const signedPoolAddress = await provider
-      .getSigner()
-      .signMessage(poolAddress)
-
     let merkleTreeRoot
     try {
+      setState({ txState: TxState.InProgress })
+
+      const signedPoolAddress = await provider
+        .getSigner()
+        .signMessage(poolAddress)
+
       merkleTreeRoot = await generateMerkleTreeRoot(signedPoolAddress)
     } catch (error: any) {
       enqueueSnackbar(error.message, { variant: 'error' })
