@@ -285,7 +285,7 @@ export const TableRow = ({
                   ? `${formatToShortNumber(
                       formatBigNumber(
                         item.currentPrice,
-                        item.offerToken.decimals
+                        item.purchaseToken.decimals
                       )
                     )} ${item.purchaseToken.symbol}`
                   : 'N/A'}
