@@ -46,7 +46,7 @@ export const OutputEstimationInfo = (props: IProps) => {
       <div>
         <Typography className={classes.title}>Output is estimated</Typography>
         <Typography className={classes.description}>
-          If the price changes by more than 0.5% your transaction will be
+          If the price changes by more than 1% your transaction will be
           reverted.
         </Typography>
       </div>
