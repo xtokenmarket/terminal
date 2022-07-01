@@ -85,7 +85,9 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   className?: string
   value: string
-  onChange: (e: any) => void
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void
   label?: string
   disabled?: boolean
   infoText?: string

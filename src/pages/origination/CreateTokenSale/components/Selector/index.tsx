@@ -113,7 +113,9 @@ interface IProps {
   infoText?: string
   inputValue: string
   disabled?: boolean
-  onChangeinput: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onChangeinput: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void
   saleDisplayName?: string
 }
 

@@ -234,8 +234,9 @@ export const SetWhitelistModal: React.FC<IProps> = ({
 
   const resetTxState = () => setState({ txState: TxState.None })
 
-  const onInputChange = (event: ChangeEvent<HTMLInputElement>) =>
-    setState({ value: event.target.value })
+  const onInputChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => setState({ value: event.target.value })
 
   const onFileInputClick = () => {
     if (!hiddenFileInput.current) return
