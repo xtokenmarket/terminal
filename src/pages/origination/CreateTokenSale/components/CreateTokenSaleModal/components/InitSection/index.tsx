@@ -119,7 +119,7 @@ export const InitSection = (props: IProps) => {
         ),
         reserveAmount: parseUnits(
           data.reserveOfferTokenAmount,
-          offerToken.decimals
+          purchaseToken.decimals
         ),
         vestingPeriod: getDurationSec(
           Number(data.vestingPeriod),
