@@ -203,11 +203,12 @@ export const TokenAmountInput: React.FC<IProps> = ({
           placeholder={token ? 'Input amount' : 'Amount'}
           onChange={(event) => {
             const newValue = event.target.value
-            if (!isNaN(Number(newValue))) {
+            if (!isNaN(Number(newValue)) && Number(newValue) >= 0) {
               onChange(newValue)
             }
           }}
           InputProps={{
+            inputProps: { min: 0 },
             classes: {
               notchedOutline: classes.notchedOutline,
               input: clsx(
