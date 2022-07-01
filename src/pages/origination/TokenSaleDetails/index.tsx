@@ -1,14 +1,13 @@
-import clsx from 'clsx'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { BigNumber } from 'ethers'
 import { transparentize } from 'polished'
 import { useHistory, useParams } from 'react-router'
-import { useConnectedWeb3Context } from 'contexts'
 import { Button, makeStyles, Typography } from '@material-ui/core'
 import { PageWrapper, PageHeader, PageContent, SimpleLoader } from 'components'
 import { useOriginationPool } from 'helpers'
 import { getCurrentTimeStamp, getRemainingTimeSec } from 'utils'
 import { EPricingFormula, Network } from 'utils/enums'
+import { IToken } from 'types'
 
 import { ClaimModal } from './components/ClaimModal'
 import { InitiateSaleModal } from './components/InitiateSaleModal'
@@ -16,8 +15,6 @@ import { InvestModal } from './components/InvestModal'
 import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
 import { VestModal } from './components/VestModal'
-import axios from 'axios'
-import { IToken } from 'types'
 
 type ItokenAndAmount = { token: IToken; amount: BigNumber }
 
@@ -89,10 +86,10 @@ const TokenSaleDetails = () => {
   const { network, poolAddress } = useParams<RouteParams>()
   const { tokenOffer, loadInfo } = useOriginationPool(
     poolAddress,
-    network as Network
+    network as Network,
+    undefined,
+    true
   )
-  const { account, networkId, library: provider } = useConnectedWeb3Context()
-  const whitelistMerkleRoot = tokenOffer?.whitelist.whitelistMerkleRoot
 
   const [state, setState] = useState<IState>({
     isClaimModalOpen: false,

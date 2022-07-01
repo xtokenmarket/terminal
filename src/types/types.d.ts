@@ -207,8 +207,8 @@ export interface ISaleParams {
 }
 
 export interface ITokenOffer {
-  network?: Network
-  poolAddress?: string
+  address: string
+  network: Network
   offeringOverview: IOfferingOverview
   originationRow: IOriginationRow
   whitelist: IWhitelistSale

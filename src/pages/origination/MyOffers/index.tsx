@@ -41,10 +41,11 @@ const MyOffers = () => {
   const { tokenOffers, isLoading } = useMyTokenOffers()
   const { account, setWalletConnectModalOpened } = useConnectedWeb3Context()
   const { chainId } = useNetworkContext()
-  const loading = isLoading && tokenOffers.length === 0
-  const isProdTestNet = IS_PROD && isTestnet(chainId)
   const classes = useStyles()
   const history = useHistory()
+
+  const loading = isLoading && tokenOffers.length === 0
+  const isProdTestNet = IS_PROD && isTestnet(chainId)
   const isConnected = !!account
 
   const onCreateTokenSale = () => {
