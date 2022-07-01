@@ -42,12 +42,12 @@ export const SortButton = (props: IProps) => {
         }
       }}
     >
-      {type !== ESort.DESC && (
+      {/* {type !== ESort.DESC && (
         <img alt="up" className={classes.icon} src="/assets/icons/up.svg" />
       )}
       {type !== ESort.ASC && (
         <img alt="down" className={classes.icon} src="/assets/icons/down.svg" />
-      )}
+      )} */}
     </button>
   )
 }
