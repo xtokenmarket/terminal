@@ -137,7 +137,14 @@ export const useOriginationPool = (
       if (
         !isNaN(offerData[key]) &&
         typeof offerData[key] !== 'object' &&
-        !['address', 'manager', 'owner'].includes(key)
+        ![
+          'address',
+          'manager',
+          'owner',
+          'offerToken',
+          'purchaseToken',
+        ].includes(key) &&
+        offerData[key]
       ) {
         offerData[key] = BigNumber.from(offerData[key])
       }
