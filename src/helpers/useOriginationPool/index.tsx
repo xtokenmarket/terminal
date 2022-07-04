@@ -319,9 +319,9 @@ export const useOriginationPool = (
             whitelistedAccountDetails.isAddressWhitelisted
 
           _whitelist.whitelist =
-            whitelistMerkleRoot.data?.hasSetWhitelistMerkleRoot
+            whitelistedAccountDetails.hasSetWhitelistMerkleRoot
 
-          _whitelist.whitelist = whitelistMerkleRoot.data?.merkleRoot
+          _whitelist.whitelistMerkleRoot = whitelistedAccountDetails.merkleRoot
         } catch (e) {
           // Whitelist detail for pool is missing
         }
