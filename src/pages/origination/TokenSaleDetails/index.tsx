@@ -241,7 +241,10 @@ const TokenSaleDetails = () => {
     tokenOffer?.myPosition.amountAvailableToVest.gt(0) &&
     isCliffPeriodPassed() &&
     tokenOffer.offeringOverview.vestingPeriod.gt(0) &&
-    !isOwnerOrManager
+    !isOwnerOrManager &&
+    // eslint-disable-next-line
+    // @ts-ignore
+    !isOfferUnsuccessful
 
   const isWhitelistSaleConfigured =
     tokenOffer &&
