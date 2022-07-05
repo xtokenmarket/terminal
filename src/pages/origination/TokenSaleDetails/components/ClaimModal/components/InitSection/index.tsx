@@ -2,17 +2,8 @@ import { useEffect, useReducer } from 'react'
 import { Button, CircularProgress, makeStyles } from '@material-ui/core'
 import { WarningInfo } from 'components/Common/WarningInfo'
 import { useConnectedWeb3Context } from 'contexts'
-import { IClaimData } from 'types'
 import { useSnackbar } from 'notistack'
 import { FungiblePoolService } from 'services'
-import { useOriginationPool } from 'helpers'
-import { useParams } from 'react-router-dom'
-import { Network } from 'utils/enums'
-
-type RouteParams = {
-  network: string
-  poolAddress: string
-}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,7 +18,6 @@ interface IProps {
   onNext: () => void
   onClose: () => void
   setTxId: (id: string) => void
-  data?: IClaimData
   isOwnerOrManager?: boolean
 }
 
@@ -47,8 +37,6 @@ export const InitSection = ({
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
   const { account, library: provider } = useConnectedWeb3Context()
-  const { network } = useParams<RouteParams>()
-  const { loadInfo } = useOriginationPool(poolAddress, network as Network)
 
   const [state, setState] = useReducer(
     (prevState: IState, newState: Partial<IState>) => ({

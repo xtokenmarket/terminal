@@ -140,7 +140,7 @@ const networks: { [K in ChainId]: INetwork } = {
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
-      vestingEntryNFT: '0x7F17cD4A78FB24dD236f165E70aB60b7f2Ce8764',
+      vestingEntryNFT: '0x0f4659aEF88CFE75897Fd5A494ff01FE8048B436',
     },
     terminal: {
       tradeFee: BigNumber.from(1000),

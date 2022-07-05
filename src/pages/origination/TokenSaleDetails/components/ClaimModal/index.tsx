@@ -93,7 +93,6 @@ export const ClaimModal = ({
             poolAddress={poolAddress}
             onNext={onNextStep}
             onClose={onClose}
-            data={data}
             setTxId={setTxId}
             isOwnerOrManager={isOwnerOrManager}
           />
