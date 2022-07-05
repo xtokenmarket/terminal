@@ -3,13 +3,18 @@ import Abi from 'abis'
 import axios from 'axios'
 import { BigNumber, constants, Contract, ethers } from 'ethers'
 import {
-  knownTokens,
-  getTokenFromAddress,
   getNetworkProvider,
+  getTokenFromAddress,
+  knownTokens,
 } from 'config/networks'
 import { useConnectedWeb3Context } from 'contexts'
 import { useServices } from 'helpers'
-import { EPricingFormula, Network, OriginationLabels } from 'utils/enums'
+import {
+  EOriginationEvent,
+  EPricingFormula,
+  Network,
+  OriginationLabels,
+} from 'utils/enums'
 import { getOffersDataMulticall } from './helper'
 import { IToken, ITokenOffer, IWhitelistSale } from 'types'
 import { ERC20Service, FungiblePoolService } from 'services'
@@ -17,6 +22,7 @@ import { getCurrentTimeStamp, getRemainingTimeSec } from 'utils'
 import { ChainId, ORIGINATION_API_URL } from 'config/constants'
 import { ZERO } from 'utils/number'
 import { getIdFromNetwork, isTestnet } from 'utils/network'
+import { isAddress } from 'utils/tools'
 import { getAddress } from 'ethers/lib/utils'
 import {
   getCoinGeckoIDs,
@@ -69,12 +75,10 @@ export const useOriginationPool = (
 
   const fungiblePool = new FungiblePoolService(provider, account, poolAddress)
 
-  const loadInfo = async (isReloadPool = false) => {
+  const loadInfo = async (isReloadPool = false, event?: EOriginationEvent) => {
     if (!offerData && !poolAddress) return
 
     setState((prev) => ({ ...prev, loading: true }))
-
-    let _sponsorTokensClaimed
 
     if ((!offerData && poolAddress) || isReloadPool) {
       try {
@@ -89,67 +93,75 @@ export const useOriginationPool = (
           )
         ).data
 
-        // TODO: temporary workaround
-        const [
-          whitelistStartingPrice,
-          whitelistEndingPrice,
-          publicStartingPrice,
-          publicEndingPrice,
-          saleInitiatedTimestamp,
-          saleEndTimestamp,
-          sponsorTokensClaimed,
-          offerTokenAmountSold,
-          purchaseTokensAcquired,
-        ] = await Promise.all([
-          fungiblePool.contract.whitelistStartingPrice(),
-          fungiblePool.contract.whitelistEndingPrice(),
-          fungiblePool.contract.publicStartingPrice(),
-          fungiblePool.contract.publicEndingPrice(),
-          fungiblePool.contract.saleInitiatedTimestamp(),
-          fungiblePool.contract.saleEndTimestamp(),
-          fungiblePool.contract.sponsorTokensClaimed(),
-          fungiblePool.contract.offerTokenAmountSold(),
-          fungiblePool.contract.purchaseTokensAcquired(),
-        ])
+        // TODO: Workaround for delay in updating API data from subgraph
+        if (isReloadPool && event) {
+          switch (event) {
+            case EOriginationEvent.Claim: {
+              offerData.sponsorTokensClaimed =
+                await fungiblePool.contract.sponsorTokensClaimed()
+              break
+            }
+            case EOriginationEvent.InitiateSale: {
+              const [
+                getOfferTokenPrice,
+                publicEndingPrice,
+                publicStartingPrice,
+                purchaseTokensAcquired,
+                saleEndTimestamp,
+                saleInitiatedTimestamp,
+                whitelistEndingPrice,
+                whitelistSaleDuration,
+                whitelistStartingPrice,
+              ] = await Promise.all([
+                fungiblePool.contract.getOfferTokenPrice(),
+                fungiblePool.contract.publicEndingPrice(),
+                fungiblePool.contract.publicStartingPrice(),
+                fungiblePool.contract.purchaseTokensAcquired(),
+                fungiblePool.contract.saleEndTimestamp(),
+                fungiblePool.contract.saleInitiatedTimestamp(),
+                fungiblePool.contract.whitelistEndingPrice(),
+                fungiblePool.contract.whitelistSaleDuration(),
+                fungiblePool.contract.whitelistStartingPrice(),
+              ])
 
-        _sponsorTokensClaimed = sponsorTokensClaimed
-
-        offerData.whitelistStartingPrice = whitelistStartingPrice
-        offerData.whitelistEndingPrice = whitelistEndingPrice
-        offerData.publicStartingPrice = publicStartingPrice
-        offerData.publicEndingPrice = publicEndingPrice
-        offerData.saleInitiatedTimestamp = saleInitiatedTimestamp
-        offerData.saleEndTimestamp = saleEndTimestamp
-        offerData.offerTokenAmountSold = offerTokenAmountSold
-        offerData.purchaseTokensAcquired = purchaseTokensAcquired
+              offerData.getOfferTokenPrice = getOfferTokenPrice
+              offerData.publicEndingPrice = publicEndingPrice
+              offerData.publicStartingPrice = publicStartingPrice
+              offerData.purchaseTokensAcquired = purchaseTokensAcquired
+              offerData.saleEndTimestamp = saleEndTimestamp
+              offerData.saleInitiatedTimestamp = saleInitiatedTimestamp
+              offerData.whitelistEndingPrice = whitelistEndingPrice
+              offerData.whitelistSaleDuration = whitelistSaleDuration
+              offerData.whitelistStartingPrice = whitelistStartingPrice
+              break
+            }
+            case EOriginationEvent.Invest: {
+              offerData.offerTokenAmountSold =
+                await fungiblePool.contract.offerTokenAmountSold()
+              break
+            }
+          }
+        }
       } catch (e) {
         console.error('Error fetching token offer details', e)
 
         // Fallback in case API doesn't return token offer details
         offerData = await getOffersDataMulticall(poolAddress, multicall)
-
-        // TODO: temporary workaround
-        _sponsorTokensClaimed = offerData?.sponsorTokensClaimed
+        offerData.network = network
       }
     }
 
     for (const key in offerData) {
       if (
+        typeof offerData[key] === 'string' &&
         !isNaN(offerData[key]) &&
-        typeof offerData[key] !== 'object' &&
-        ![
-          'address',
-          'manager',
-          'owner',
-          'offerToken',
-          'purchaseToken',
-        ].includes(key) &&
-        offerData[key]
+        !isAddress(offerData[key])
       ) {
         offerData[key] = BigNumber.from(offerData[key])
       }
     }
 
+    // Fetch token details and price, in fallback behaviour
     if (!offerData?.offerToken.address) {
       const [offerToken, purchaseToken] = await Promise.all([
         getTokenDetails(offerData?.offerToken),
@@ -297,11 +309,15 @@ export const useOriginationPool = (
 
     // Fetch whitelist merkle root, only on Token Offer page
     if (isPoolDetails) {
+      // TODO: Fetch Whitelist sale details, only if `whitelistSaleDuration` is set
       const whitelistMerkleRoot = (
         await axios.get(
           `${ORIGINATION_API_URL}/whitelistMerkleRoot?network=${offerData.network}&poolAddress=${poolAddress}`
         )
       ).data
+
+      _whitelist.whitelist = whitelistMerkleRoot.hasSetWhitelistMerkleRoot
+      _whitelist.whitelistMerkleRoot = whitelistMerkleRoot.merkleRoot
 
       if (whitelistMerkleRoot.hasSetWhitelistMerkleRoot) {
         try {
@@ -317,10 +333,6 @@ export const useOriginationPool = (
           )
           _whitelist.isAddressWhitelisted =
             whitelistedAccountDetails.isAddressWhitelisted
-
-          _whitelist.whitelist = whitelistMerkleRoot.hasSetWhitelistMerkleRoot
-
-          _whitelist.whitelistMerkleRoot = whitelistMerkleRoot.merkleRoot
         } catch (e) {
           // Whitelist detail for pool is missing
         }
@@ -388,8 +400,7 @@ export const useOriginationPool = (
         startingPrice: publicStartingPrice,
         saleDuration: publicSaleDuration,
       },
-      // TODO: temporary workaround
-      sponsorTokensClaimed: _sponsorTokensClaimed,
+      sponsorTokensClaimed: offerData.sponsorTokensClaimed,
     }
 
     setState({

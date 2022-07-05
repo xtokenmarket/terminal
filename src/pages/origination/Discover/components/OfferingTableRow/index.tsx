@@ -124,6 +124,7 @@ export const OfferingTableRow = ({ offering }: IProps) => {
       salesEnd,
     } = _originationRow
 
+    // TODO: Better way to parse time remaining info
     const getTimeRemaining = () => {
       const isSaleInitiated = !salesBegin.isZero()
       if (!isSaleInitiated) return "Hasn't started"
