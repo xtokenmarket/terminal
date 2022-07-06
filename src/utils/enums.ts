@@ -278,3 +278,9 @@ export enum EInvestModalStep {
   Success = 'Success',
   Approve = 'Approve',
 }
+
+export enum EOriginationEvent {
+  Claim = 'Claim',
+  InitiateSale = 'InitiateSale',
+  Invest = 'Invest',
+}

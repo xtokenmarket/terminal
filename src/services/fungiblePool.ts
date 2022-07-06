@@ -4,6 +4,7 @@ import { Maybe } from 'types'
 import Abi from 'abis'
 import { CHAIN_NAMES, ChainId, ORIGINATION_API_URL } from 'config/constants'
 import { hexlify } from 'ethers/lib/utils'
+
 class FungiblePoolService {
   provider: any
   contract: Contract

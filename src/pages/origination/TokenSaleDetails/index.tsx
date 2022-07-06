@@ -3,11 +3,11 @@ import { BigNumber } from 'ethers'
 import { transparentize } from 'polished'
 import { useHistory, useParams } from 'react-router'
 import { Button, makeStyles, Typography } from '@material-ui/core'
-import { PageWrapper, PageHeader, PageContent, SimpleLoader } from 'components'
+import { PageContent, PageHeader, PageWrapper, SimpleLoader } from 'components'
 import { useOriginationPool } from 'helpers'
 import { getCurrentTimeStamp, getRemainingTimeSec } from 'utils'
-import { EPricingFormula, Network } from 'utils/enums'
-import { IToken } from 'types'
+import { EOriginationEvent, EPricingFormula, Network } from 'utils/enums'
+import { IClaimData } from 'types'
 
 import { ClaimModal } from './components/ClaimModal'
 import { InitiateSaleModal } from './components/InitiateSaleModal'
@@ -15,8 +15,6 @@ import { InvestModal } from './components/InvestModal'
 import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
 import { VestModal } from './components/VestModal'
-
-type ItokenAndAmount = { token: IToken; amount: BigNumber }
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -105,7 +103,7 @@ const TokenSaleDetails = () => {
       ...prev,
       isInitiateSaleModalOpen: false,
     }))
-    await loadInfo()
+    await loadInfo(true, EOriginationEvent.InitiateSale)
   }
 
   const onVestSuccess = async () => {
@@ -132,7 +130,7 @@ const TokenSaleDetails = () => {
   }
 
   const onSaleEnd = async () => {
-    await loadInfo()
+    await loadInfo(true)
   }
 
   const toggleSetWhitelistModal = () => {
@@ -150,7 +148,6 @@ const TokenSaleDetails = () => {
   }
 
   const toggleClaimModal = () => {
-    console.log('Toggle open:', !state.isClaimModalOpen)
     setState((prev) => ({
       ...prev,
       isClaimModalOpen: !state.isClaimModalOpen,
@@ -185,7 +182,7 @@ const TokenSaleDetails = () => {
       ...prev,
       isInvestModalOpen: false,
     }))
-    await loadInfo()
+    await loadInfo(true, EOriginationEvent.Invest)
   }
 
   const onClaimSuccess = async () => {
@@ -193,11 +190,12 @@ const TokenSaleDetails = () => {
       ...prev,
       isClaimModalOpen: false,
     }))
-    await loadInfo()
+    await loadInfo(true, EOriginationEvent.Claim)
   }
 
   const isCliffPeriodPassed = () => {
     if (!tokenOffer) return false
+
     const now = BigNumber.from(getCurrentTimeStamp())
     const cliffPeriodEnd = tokenOffer?.offeringOverview.salesEnd.add(
       tokenOffer.offeringOverview.cliffPeriod
@@ -207,32 +205,33 @@ const TokenSaleDetails = () => {
 
   const isOwnerOrManager = tokenOffer?.offeringOverview.isOwnerOrManager
 
-  const getTokenAndAmount = (
-    _isOwnerOrManage?: boolean,
-    _isOfferUnsuccessful?: boolean
-  ): ItokenAndAmount => {
-    if (!tokenOffer) return {} as ItokenAndAmount
-    if (isOwnerOrManager && isOfferUnsuccessful)
+  const getClaimData = (): IClaimData | undefined => {
+    if (!tokenOffer) return undefined
+
+    if (isOwnerOrManager && isOfferUnsuccessful) {
       return {
         token: tokenOffer.offeringOverview.offerToken,
         amount: tokenOffer.offeringOverview.totalOfferingAmount,
       }
-    if (isOwnerOrManager && !isOfferUnsuccessful)
+    }
+    if (isOwnerOrManager && !isOfferUnsuccessful) {
       return {
         token: tokenOffer.offeringOverview.purchaseToken,
         amount: tokenOffer.offeringSummary.amountsRaised,
       }
-    if (!isOwnerOrManager && isOfferUnsuccessful)
+    }
+    if (!isOwnerOrManager && isOfferUnsuccessful) {
       return {
         token: tokenOffer.offeringOverview.purchaseToken,
         amount: BigNumber.from(tokenOffer.myPosition.amountInvested),
       }
-    if (!isOwnerOrManager && !isOfferUnsuccessful)
+    }
+    if (!isOwnerOrManager && !isOfferUnsuccessful) {
       return {
         token: tokenOffer.offeringOverview.offerToken,
         amount: BigNumber.from(tokenOffer.myPosition.tokenPurchased),
       }
-    return {} as ItokenAndAmount
+    }
   }
 
   const isSoldOut = tokenOffer?.offeringOverview.offerTokenAmountSold.eq(
@@ -440,12 +439,7 @@ const TokenSaleDetails = () => {
               poolAddress={poolAddress}
               isOpen={state.isClaimModalOpen}
               onClose={toggleClaimModal}
-              data={{
-                token: getTokenAndAmount(isOwnerOrManager, isOfferUnsuccessful)
-                  .token,
-                amount: getTokenAndAmount(isOwnerOrManager, isOfferUnsuccessful)
-                  .amount,
-              }}
+              data={getClaimData()}
               isOwnerOrManager={isOwnerOrManager}
               onClaimSuccess={onClaimSuccess}
             />
