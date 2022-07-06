@@ -94,7 +94,7 @@ export const TableHeader = (props: IProps) => {
           <div className={classes.item}>Time Remaining</div>
         </Td>
         <Td type={WhitelistSale.SalesPeriod} label={props.label}>
-          <div className={classes.item}>Sales Period</div>
+          <div className={classes.item}>Sale Period</div>
         </Td>
       </div>
     )
@@ -118,7 +118,7 @@ export const TableHeader = (props: IProps) => {
           <div className={classes.item}>Time Remaining</div>
         </Td>
         <Td type={PublicSale.SalesPeriod} label={props.label}>
-          <div className={classes.item}>Sales Period</div>
+          <div className={classes.item}>Sale Period</div>
         </Td>
       </div>
     )

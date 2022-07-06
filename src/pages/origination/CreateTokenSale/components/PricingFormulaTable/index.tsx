@@ -97,7 +97,7 @@ export const PricingFormulaTable: React.FC<IProps> = ({
             )}
             <TableCell>
               <Typography variant="h6" className={cl.rowHeader}>
-                Sales Period
+                Sale Period
               </Typography>
             </TableCell>
           </TableRow>
