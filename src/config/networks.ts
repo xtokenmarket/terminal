@@ -226,7 +226,7 @@ export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
 }
 
 export const tokenSymbols = Object.keys(knownTokens)
-export const commonBaseTokenSymbols = ['usdt', 'weth', 'dai', 'weth', 'usdc']
+export const commonBaseTokenSymbols = ['eth', 'usdt', 'weth', 'dai', 'usdc']
 
 export const supportedNetworkIds = [
   ChainId.Mainnet,
