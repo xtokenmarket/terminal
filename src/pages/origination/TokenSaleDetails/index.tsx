@@ -131,6 +131,10 @@ const TokenSaleDetails = () => {
     await loadInfo()
   }
 
+  const onSaleEnd = async () => {
+    await loadInfo()
+  }
+
   const toggleSetWhitelistModal = () => {
     setState((prev) => ({
       ...prev,
@@ -346,6 +350,7 @@ const TokenSaleDetails = () => {
             {!isSaleCompleted && isWhitelistSaleConfigured && (
               <>
                 <Table
+                  onSaleEnd={onSaleEnd}
                   isSaleInitiated={tokenOffer.offeringOverview.salesBegin.gt(0)}
                   item={tokenOffer.whitelist}
                   label={'Whitelist Sale'}
@@ -384,6 +389,7 @@ const TokenSaleDetails = () => {
             {!isSaleCompleted && isPublicSaleConfigured && (
               <>
                 <Table
+                  onSaleEnd={onSaleEnd}
                   isWhitelistSaleEnded={isWhitelistSaleEnded}
                   isWhitelistSet={tokenOffer.whitelist.whitelist}
                   isSaleInitiated={tokenOffer.offeringOverview.salesBegin.gt(0)}

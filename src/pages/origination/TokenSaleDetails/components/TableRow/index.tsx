@@ -137,6 +137,7 @@ interface IProps {
   isOwnerOrManager?: boolean
   isWhitelistSet?: boolean
   isWhitelistSaleEnded?: boolean
+  onSaleEnd?: () => void
 }
 
 export const TableRow = ({
@@ -148,6 +149,7 @@ export const TableRow = ({
   isOwnerOrManager,
   isWhitelistSet,
   isWhitelistSaleEnded,
+  onSaleEnd,
 }: IProps) => {
   const cl = useStyles()
   const { days, hours, minutes, seconds } = useCountdown(
@@ -165,7 +167,7 @@ export const TableRow = ({
   useEffect(() => {
     const reload = async () => {
       if (isSaleInitiated && days + hours + minutes + seconds === 0) {
-        location.reload()
+        onSaleEnd && onSaleEnd()
       }
     }
 
