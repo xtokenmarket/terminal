@@ -23,6 +23,7 @@ import { QuestionTooltip } from '../QuestionTooltip'
 import { Selector } from '../Selector'
 import clsx from 'clsx'
 import { IToken, PeriodUnit, SaleData } from 'types'
+import { HOURS_IN_4_WEEKS } from 'config/constants'
 
 const useStyles = makeStyles((theme) => ({
   label: {
@@ -140,7 +141,11 @@ export const SaleForm = ({
 
   const isShowOfferingPeriodError =
     (Number(offeringPeriod) > 4 && offeringPeriodUnit === EPeriods.Weeks) ||
-    (Number(offeringPeriod) > 28 && offeringPeriodUnit === EPeriods.Days)
+    (Number(offeringPeriod) > 28 && offeringPeriodUnit === EPeriods.Days) ||
+    (Number(offeringPeriod) > HOURS_IN_4_WEEKS &&
+      offeringPeriodUnit === EPeriods.Hours) ||
+    (Number(offeringPeriod) > HOURS_IN_4_WEEKS * 60 &&
+      offeringPeriodUnit === EPeriods.Minutes)
 
   return (
     <>

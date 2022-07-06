@@ -85,7 +85,9 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   className?: string
   value: string
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void
   label?: string
   disabled?: boolean
   infoText?: string
@@ -128,12 +130,18 @@ export const Input: React.FC<IProps> = ({
         variant="outlined"
         value={value}
         placeholder="Amount"
-        onChange={onChange}
+        onChange={(event) => {
+          const newValue = event.target.value
+          if (!isNaN(Number(newValue)) && Number(newValue) >= 0) {
+            onChange(event)
+          }
+        }}
         InputLabelProps={{
           className: classes.inputLabel,
           shrink: true,
         }}
         InputProps={{
+          inputProps: { min: 0 },
           classes: {
             notchedOutline: classes.notchedOutline,
             input: clsx(

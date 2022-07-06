@@ -62,7 +62,8 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.colors.secondary,
     },
     '&.pending': {
-      color: theme.colors.primary700,
+      opacity: 0.3,
+      backgroundColor: theme.colors.secondary,
     },
     '&.disabled': {
       opacity: 0.3,
@@ -205,14 +206,14 @@ export const SetWhitelistModal: React.FC<IProps> = ({
       return
     }
 
-    setState({ txState: TxState.InProgress })
-
-    const signedPoolAddress = await provider
-      .getSigner()
-      .signMessage(poolAddress)
-
     let merkleTreeRoot
     try {
+      setState({ txState: TxState.InProgress })
+
+      const signedPoolAddress = await provider
+        .getSigner()
+        .signMessage(poolAddress)
+
       merkleTreeRoot = await generateMerkleTreeRoot(signedPoolAddress)
     } catch (error: any) {
       enqueueSnackbar(error.message, { variant: 'error' })
@@ -233,8 +234,9 @@ export const SetWhitelistModal: React.FC<IProps> = ({
 
   const resetTxState = () => setState({ txState: TxState.None })
 
-  const onInputChange = (event: ChangeEvent<HTMLInputElement>) =>
-    setState({ value: event.target.value })
+  const onInputChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => setState({ value: event.target.value })
 
   const onFileInputClick = () => {
     if (!hiddenFileInput.current) return
@@ -317,7 +319,9 @@ export const SetWhitelistModal: React.FC<IProps> = ({
 
           <div className={classes.buttonWrapper}>
             <Button
-              disabled={!state.whitelistFile}
+              disabled={
+                !state.whitelistFile || state.txState === TxState.InProgress
+              }
               color="primary"
               variant="contained"
               className={clsx(
