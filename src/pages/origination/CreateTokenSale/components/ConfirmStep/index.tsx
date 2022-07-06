@@ -162,7 +162,7 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit }) => {
                 <span className="separator" />
                 <Grid item xs={12} sm={3} className={classes.section}>
                   <div className="content">
-                    <p className="title">Offering Period</p>
+                    <p className="title">Offering period</p>
                     <p className="data">{getOfferingPeriod()}</p>
                   </div>
                 </Grid>
