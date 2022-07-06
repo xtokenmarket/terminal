@@ -131,6 +131,10 @@ const TokenSaleDetails = () => {
     await loadInfo()
   }
 
+  const onSaleEnd = async () => {
+    await loadInfo()
+  }
+
   const toggleSetWhitelistModal = () => {
     setState((prev) => ({
       ...prev,
@@ -241,7 +245,10 @@ const TokenSaleDetails = () => {
     tokenOffer?.myPosition.amountAvailableToVest.gt(0) &&
     isCliffPeriodPassed() &&
     tokenOffer.offeringOverview.vestingPeriod.gt(0) &&
-    !isOwnerOrManager
+    !isOwnerOrManager &&
+    // eslint-disable-next-line
+    // @ts-ignore
+    !isOfferUnsuccessful
 
   const isWhitelistSaleConfigured =
     tokenOffer &&
@@ -343,6 +350,7 @@ const TokenSaleDetails = () => {
             {!isSaleCompleted && isWhitelistSaleConfigured && (
               <>
                 <Table
+                  onSaleEnd={onSaleEnd}
                   isSaleInitiated={tokenOffer.offeringOverview.salesBegin.gt(0)}
                   item={tokenOffer.whitelist}
                   label={'Whitelist Sale'}
@@ -381,6 +389,7 @@ const TokenSaleDetails = () => {
             {!isSaleCompleted && isPublicSaleConfigured && (
               <>
                 <Table
+                  onSaleEnd={onSaleEnd}
                   isWhitelistSaleEnded={isWhitelistSaleEnded}
                   isWhitelistSet={tokenOffer.whitelist.whitelist}
                   isSaleInitiated={tokenOffer.offeringOverview.salesBegin.gt(0)}

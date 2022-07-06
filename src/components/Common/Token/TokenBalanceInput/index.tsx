@@ -197,7 +197,12 @@ export const TokenBalanceInput: React.FC<IProps> = ({
       ? e.target.value.split('.')[1]
       : ''
 
-    if (loading || decimals.length > token.decimals) return
+    if (
+      loading ||
+      decimals.length > token.decimals ||
+      Number(e.target.value) < 0
+    )
+      return
     setLoadingStart && setLoadingStart()
     setAmount(e.target.value)
     onChangeDebounced(e.target.value, balance)

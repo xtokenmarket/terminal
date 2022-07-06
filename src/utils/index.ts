@@ -25,7 +25,7 @@ export const formatBigNumber = (
 
 export const numberWithCommas = (
   x: string,
-  decimals = 0,
+  decimals = 2,
   forcePrecision = false
 ) => {
   if (!x) return '0'

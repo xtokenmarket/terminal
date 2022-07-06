@@ -137,7 +137,14 @@ export const useOriginationPool = (
       if (
         !isNaN(offerData[key]) &&
         typeof offerData[key] !== 'object' &&
-        !['address', 'manager', 'owner'].includes(key)
+        ![
+          'address',
+          'manager',
+          'owner',
+          'offerToken',
+          'purchaseToken',
+        ].includes(key) &&
+        offerData[key]
       ) {
         offerData[key] = BigNumber.from(offerData[key])
       }
@@ -310,6 +317,10 @@ export const useOriginationPool = (
           )
           _whitelist.isAddressWhitelisted =
             whitelistedAccountDetails.isAddressWhitelisted
+
+          _whitelist.whitelist = whitelistMerkleRoot.hasSetWhitelistMerkleRoot
+
+          _whitelist.whitelistMerkleRoot = whitelistMerkleRoot.merkleRoot
         } catch (e) {
           // Whitelist detail for pool is missing
         }

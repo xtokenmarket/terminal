@@ -26,6 +26,7 @@ import {
 } from 'utils'
 import moment from 'moment'
 import { useCountdown } from 'helpers/useCountdownClock'
+import { useEffect } from 'react'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -136,6 +137,7 @@ interface IProps {
   isOwnerOrManager?: boolean
   isWhitelistSet?: boolean
   isWhitelistSaleEnded?: boolean
+  onSaleEnd?: () => void
 }
 
 export const TableRow = ({
@@ -147,6 +149,7 @@ export const TableRow = ({
   isOwnerOrManager,
   isWhitelistSet,
   isWhitelistSaleEnded,
+  onSaleEnd,
 }: IProps) => {
   const cl = useStyles()
   const { days, hours, minutes, seconds } = useCountdown(
@@ -160,6 +163,23 @@ export const TableRow = ({
         item.saleEndTimestamp.toNumber() * 1000
       : 0
   )
+
+  useEffect(() => {
+    const reload = async () => {
+      if (isSaleInitiated && days + hours + minutes + seconds === 0) {
+        onSaleEnd && onSaleEnd()
+      }
+    }
+
+    reload()
+  }, [seconds])
+
+  const getTimeRemaining = (timeRemaining: any) => {
+    if (isSaleInitiated && timeRemaining.toNumber() > 0 && days >= 0)
+      return `${days}D:${hours}H:${minutes}M:${seconds}S`
+    if (isSaleInitiated && days + hours + minutes + seconds <= 0) return 'Ended'
+    return 'Not Started'
+  }
 
   const renderContent = () => {
     const offeringOverview = item as IOfferingOverview
@@ -285,7 +305,7 @@ export const TableRow = ({
                   ? `${formatToShortNumber(
                       formatBigNumber(
                         item.currentPrice,
-                        item.offerToken.decimals
+                        item.purchaseToken.decimals
                       )
                     )} ${item.purchaseToken.symbol}`
                   : 'N/A'}
@@ -341,13 +361,7 @@ export const TableRow = ({
 
             <Td type={WhitelistSale.TimeRemaining} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {isSaleInitiated &&
-                item.timeRemaining.toNumber() > 0 &&
-                days >= 0
-                  ? `${days}D:${hours}H:${minutes}M:${seconds}S`
-                  : isSaleInitiated && days + hours + minutes + seconds <= 0
-                  ? 'Ended'
-                  : 'Not Started'}
+                {getTimeRemaining(item.timeRemaining)}
               </Typography>
             </Td>
 
@@ -405,14 +419,7 @@ export const TableRow = ({
           )}
           <Td type={PublicSale.TimeRemaining} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {isSaleInitiated &&
-              item.timeRemaining.toNumber() > 0 &&
-              (!isWhitelistSet || isWhitelistSaleEnded) &&
-              days >= 0
-                ? `${days}D:${hours}H:${minutes}M:${seconds}S`
-                : isSaleInitiated && days + hours + minutes + seconds <= 0
-                ? 'Ended'
-                : 'Not Started'}
+              {getTimeRemaining(item.timeRemaining)}
             </Typography>
           </Td>
           <Td type={PublicSale.SalesPeriod} label={item.label}>
