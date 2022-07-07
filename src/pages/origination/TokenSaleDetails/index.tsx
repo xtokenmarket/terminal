@@ -293,10 +293,15 @@ const TokenSaleDetails = () => {
     tokenOffer.whitelist.timeRemaining.gt(0) ||
     isSoldOut
 
+  const isWhitelistSaleEnded = BigNumber.from(
+    Math.floor(Date.now() / 1000)
+  ).gte(tokenOffer?.whitelist.endOfWhitelistPeriod || 0)
+
   const iswhitelistSaleInvestDisabled =
     !tokenOffer?.offeringOverview.salesBegin.gt(0) ||
     !tokenOffer.whitelist.isAddressWhitelisted ||
-    isSoldOut
+    isSoldOut ||
+    isWhitelistSaleEnded
 
   const isInitiateSaleButtonDisabled =
     (tokenOffer &&
@@ -307,10 +312,6 @@ const TokenSaleDetails = () => {
   const isVestedPropertiesShow =
     tokenOffer?.myPosition.amountAvailableToVest.gt(0) ||
     tokenOffer?.myPosition.amountvested.gt(0)
-
-  const isWhitelistSaleEnded = BigNumber.from(
-    Math.floor(Date.now() / 1000)
-  ).gte(tokenOffer?.whitelist.endOfWhitelistPeriod || 0)
 
   return (
     <PageWrapper>
