@@ -354,9 +354,12 @@ export const TableRow = ({
                 {!item.addressCap.isZero() ? (
                   <>
                     {formatToShortNumber(
-                      formatBigNumber(item.addressCap, item.offerToken.decimals)
+                      formatBigNumber(
+                        item.addressCap,
+                        item.purchaseToken.decimals
+                      )
                     )}{' '}
-                    {item.offerToken.symbol}
+                    {item.purchaseToken.symbol}
                   </>
                 ) : (
                   'N/A'
