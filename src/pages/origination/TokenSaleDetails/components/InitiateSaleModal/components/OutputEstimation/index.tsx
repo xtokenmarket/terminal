@@ -12,6 +12,7 @@ import {
   getTotalTokenPrice,
   numberWithCommas,
   parseDurationSec,
+  parseRemainingDurationSec,
   // getTotalTokenPrice,
 } from 'utils'
 import { ONE_ETHER } from 'utils/number'
@@ -131,7 +132,7 @@ export const OutputEstimation = (props: IProps) => {
       <div className={classes.period}>
         <Typography className={classes.label}>SALE PERIOD</Typography>
         <Typography className={classes.whiteText}>
-          {parseDurationSec(Number(offerData.salesPeriod?.toString()))}
+          {parseRemainingDurationSec(Number(offerData.salesPeriod?.toString()))}
         </Typography>
       </div>
     </div>

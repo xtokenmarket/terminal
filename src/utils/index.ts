@@ -285,23 +285,25 @@ export const parseRemainingDurationSec = (
   amount: number,
   unitPrecision = 3
 ) => {
-  if (amount === 0) return '0D:00H:00M'
+  if (amount === 0) return '0 Seconds'
 
   const duration = moment.duration(amount * 1000)
 
   return [
-    { Y: duration.years() },
-    { M: duration.months() },
-    { W: duration.weeks() },
+    { Year: duration.years() },
+    { Minutes: duration.months() },
+    { Week: duration.weeks() },
     // for some reason, moment keeps days and weeks irrespective of each other
-    { D: Math.max(duration.days() - duration.weeks() * 7, 0) },
-    { H: duration.hours() },
-    { M: duration.minutes() },
+    { Day: Math.max(duration.days() - duration.weeks() * 7, 0) },
+    { Hour: duration.hours() },
+    { Minute: duration.minutes() },
   ]
     .filter((unit) => Object.values(unit)[0] > 0)
     .map((unit) => {
       const [key, value] = Object.entries(unit)[0]
-      return `${value.toString()}${key}`
+      return `${value.toString()} ${key}${
+        Number(value.toString()) > 1 ? 's' : ''
+      }`
     })
     .filter((_, i) => i < unitPrecision)
     .join(' ')

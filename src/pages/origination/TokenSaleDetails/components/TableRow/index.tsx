@@ -22,7 +22,6 @@ import {
   formatToShortNumber,
   numberWithCommas,
   parseDurationSec,
-  parseRemainingDurationSec,
 } from 'utils'
 import moment from 'moment'
 import { useCountdown } from 'helpers/useCountdownClock'
