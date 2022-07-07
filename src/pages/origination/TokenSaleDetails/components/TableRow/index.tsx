@@ -248,7 +248,7 @@ export const TableRow = ({
                   formatToShortNumber(
                     formatBigNumber(
                       item.offeringReserve,
-                      item.offerToken.decimals
+                      item.purchaseToken.decimals
                     )
                   )}
               </Typography>
