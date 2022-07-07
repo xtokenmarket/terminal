@@ -1,7 +1,6 @@
 import { makeStyles, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import { TokenIcon } from 'components'
-import { BigNumber } from 'ethers'
 import { IOfferingOverview } from 'types'
 import {
   formatBigNumber,
@@ -11,11 +10,9 @@ import {
   getTimeRemainingUnits,
   getTotalTokenPrice,
   numberWithCommas,
-  parseDurationSec,
   parseRemainingDurationSec,
   // getTotalTokenPrice,
 } from 'utils'
-import { ONE_ETHER } from 'utils/number'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
