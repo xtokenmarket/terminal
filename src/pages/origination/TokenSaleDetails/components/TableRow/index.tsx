@@ -26,6 +26,7 @@ import {
 import moment from 'moment'
 import { useCountdown } from 'helpers/useCountdownClock'
 import { useEffect } from 'react'
+import { BigNumber } from 'ethers'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -173,7 +174,12 @@ export const TableRow = ({
     reload()
   }, [seconds])
 
-  const getTimeRemaining = (timeRemaining: any) => {
+  const getTimeRemaining = (
+    timeRemaining: BigNumber,
+    isPublicSale?: boolean
+  ) => {
+    if (isWhitelistSet && !isWhitelistSaleEnded && isPublicSale)
+      return 'Not Started'
     if (isSaleInitiated && timeRemaining.toNumber() > 0 && days >= 0)
       return `${days}D:${hours}H:${minutes}M:${seconds}S`
     if (isSaleInitiated && days + hours + minutes + seconds <= 0) return 'Ended'
@@ -418,7 +424,7 @@ export const TableRow = ({
           )}
           <Td type={PublicSale.TimeRemaining} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {getTimeRemaining(item.timeRemaining)}
+              {getTimeRemaining(item.timeRemaining, true)}
             </Typography>
           </Td>
           <Td type={PublicSale.SalesPeriod} label={item.label}>
