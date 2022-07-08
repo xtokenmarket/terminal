@@ -115,6 +115,8 @@ export const InputSection = (props: IProps) => {
       props.isWhitelist
     )
       setState({ errorMessage: 'Amount exceeds address cap.' })
+    else if (state.offerAmount.gt(props.offerData.totalOfferingAmount))
+      setState({ errorMessage: 'Amount exceeds total offering Amount' })
     else setState({ errorMessage: '' })
   }, [state.purchaseAmount, account])
 
