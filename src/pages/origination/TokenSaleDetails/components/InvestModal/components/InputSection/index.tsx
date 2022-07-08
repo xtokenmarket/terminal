@@ -1,12 +1,13 @@
 import { makeStyles, Typography, IconButton, Button } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
-import { useReducer } from 'react'
+import { useEffect, useReducer } from 'react'
 import { FungiblePoolService } from 'services'
-import { IOfferingOverview } from 'types'
+import { IMyPosition, IOfferingOverview, IWhitelistSale } from 'types'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { TokenBalanceInput } from 'components'
 import { ZERO } from 'utils/number'
 import { BigNumber } from 'ethers'
+import { useTokenBalance } from 'helpers'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -32,20 +33,6 @@ const useStyles = makeStyles((theme) => ({
     minHeight: '20vh',
     maxHeight: '50vh',
   },
-  warning: {
-    padding: '16px !important',
-    '& div': {
-      '&:first-child': {
-        marginTop: 0,
-        marginRight: 16,
-      },
-      '& p': {
-        fontSize: 14,
-        marginTop: 3,
-        '&:first-child': { fontSize: 16, marginTop: 0 },
-      },
-    },
-  },
   actions: {
     marginTop: 32,
   },
@@ -69,6 +56,12 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 32,
   },
   progress: { color: theme.colors.white },
+  warning: {
+    width: '100%',
+    color: theme.colors.warn,
+    fontSize: '14px',
+    marginTop: '10px',
+  },
 }))
 
 interface IProps {
@@ -76,18 +69,25 @@ interface IProps {
   onNext: () => void
   offerData: IOfferingOverview
   updateState: (e: any) => void
+  whitelistData: IWhitelistSale
+  myPositionData: IMyPosition
+  isWhitelist: boolean
 }
 
 interface IState {
   isEstimating: boolean
   offerAmount: BigNumber
   purchaseAmount: BigNumber
+  errorMessage: string
 }
 
 export const InputSection = (props: IProps) => {
   const classes = useStyles()
   const { account, library: provider } = useConnectedWeb3Context()
   const { offerData, onClose, onNext, updateState } = props
+  const { balance, isLoading } = useTokenBalance(
+    offerData.purchaseToken.address || ''
+  )
 
   const [state, setState] = useReducer(
     (prevState: IState, newState: Partial<IState>) => ({
@@ -98,8 +98,25 @@ export const InputSection = (props: IProps) => {
       isEstimating: false,
       offerAmount: ZERO,
       purchaseAmount: ZERO,
+      errorMessage: '',
     }
   )
+
+  useEffect(() => {
+    if (
+      props.myPositionData.amountInvested.gte(props.whitelistData.addressCap) &&
+      props.isWhitelist
+    )
+      setState({ errorMessage: 'Invested amount has reached the address cap.' })
+    else if (state.purchaseAmount.gt(balance) && !isLoading)
+      setState({ errorMessage: 'Amount exceeds balance.' })
+    else if (
+      state.purchaseAmount.gt(props.whitelistData.addressCap) &&
+      props.isWhitelist
+    )
+      setState({ errorMessage: 'Amount exceeds address cap.' })
+    else setState({ errorMessage: '' })
+  }, [state.purchaseAmount, account])
 
   const estimateOfferAmount = async (purchaseAmount: BigNumber) => {
     if (!account || !provider) {
@@ -165,11 +182,16 @@ export const InputSection = (props: IProps) => {
             className={classes.initiateBtn}
             onClick={_onInvest}
             disabled={
-              state.offerAmount.isZero() || state.purchaseAmount.isZero()
+              state.offerAmount.isZero() ||
+              state.purchaseAmount.isZero() ||
+              !!state.errorMessage
             }
           >
             INVEST
           </Button>
+          {state.errorMessage && (
+            <div className={classes.warning}>{state.errorMessage}</div>
+          )}
         </div>
       </div>
     </div>
