@@ -41,35 +41,23 @@ export const PoolTableHeader = () => {
       <PoolTd type="tvl">
         <div className={classes.itemAlignRight}>
           TVL
-          <SortButton />
+          {/* <SortButton /> */}
         </div>
       </PoolTd>
       <PoolTd type="vesting">
-        <div className={classes.itemAlignRight}>
-          VESTING
-          <SortButton />
-        </div>
+        <div className={classes.itemAlignRight}>VESTING</div>
       </PoolTd>
       <PoolTd type="program">
         <div className={classes.itemAlignRight}>PROGRAM</div>
       </PoolTd>
       <PoolTd type="ending">
-        <div className={classes.itemAlignRight}>
-          ENDING
-          <SortButton />
-        </div>
+        <div className={classes.itemAlignRight}>ENDING</div>
       </PoolTd>
       <PoolTd type="apr">
-        <div className={classes.itemAlignRight}>
-          APR
-          <SortButton />
-        </div>
+        <div className={classes.itemAlignRight}>APR</div>
       </PoolTd>
       <PoolTd type="network">
-        <div className={classes.itemAlignRight}>
-          NETWORK
-          <SortButton />
-        </div>
+        <div className={classes.itemAlignRight}>NETWORK</div>
       </PoolTd>
     </div>
   )
