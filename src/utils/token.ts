@@ -6,6 +6,7 @@ import { IToken } from 'types'
 import { getTokenLogo } from './coingecko'
 import { isContract } from './tools'
 import { Web3Provider } from '@ethersproject/providers'
+import { BigNumber } from 'ethers'
 
 export const getSortedToken = (tokenA: string, tokenB: string) => {
   const tA = tokenA.toLowerCase()
@@ -38,15 +39,25 @@ export async function fetchUnknownToken(
       getTokenLogo(address, COINGECKO_CHAIN_IDS[chainId]),
     ])
     const image = logo ?? '/assets/tokens/unknown.png'
-    const unknownToken: IToken = {
+
+    return {
       name,
       symbol,
       address,
       decimals,
       image,
-    }
-    return unknownToken
+    } as IToken
   } catch {
     return false
+  }
+}
+
+export const parseTokenDetails = (token: any, balance?: string) => {
+  return {
+    address: token.id,
+    decimals: token.decimals,
+    name: token.name,
+    symbol: token.symbol,
+    balance: balance ? BigNumber.from(balance) : undefined,
   }
 }
