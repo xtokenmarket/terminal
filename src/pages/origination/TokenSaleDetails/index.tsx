@@ -248,27 +248,6 @@ const TokenSaleDetails = () => {
     tokenOffer?.offeringOverview.totalOfferingAmount
   )
 
-  // TODO: user own at least 1 vesting entry nft
-  const isVestButtonShow =
-    tokenOffer &&
-    tokenOffer?.myPosition.amountAvailableToVest.gt(0) &&
-    isCliffPeriodPassed() &&
-    tokenOffer.offeringOverview.vestingPeriod.gt(0) &&
-    !isOwnerOrManager &&
-    // eslint-disable-next-line
-    // @ts-ignore
-    !isOfferUnsuccessful
-
-  const isWhitelistSaleConfigured =
-    tokenOffer &&
-    tokenOffer.whitelist.startingPrice &&
-    tokenOffer.whitelist.startingPrice.gt(0)
-
-  const isPublicSaleConfigured =
-    tokenOffer &&
-    tokenOffer.publicSale.startingPrice &&
-    tokenOffer.publicSale.startingPrice.gt(0)
-
   const isSaleCompleted =
     tokenOffer &&
     !tokenOffer?.offeringOverview.salesBegin.isZero() &&
@@ -281,15 +260,48 @@ const TokenSaleDetails = () => {
       tokenOffer.offeringSummary.amountsRaised
     )
 
+  // TODO: user own at least 1 vesting entry nft
+  const isVestButtonShow =
+    tokenOffer &&
+    tokenOffer?.myPosition.amountAvailableToVest.gt(0) &&
+    isCliffPeriodPassed() &&
+    tokenOffer.offeringOverview.vestingPeriod.gt(0) &&
+    !isOwnerOrManager &&
+    !isOfferUnsuccessful
+
+  const isWhitelistSaleConfigured =
+    tokenOffer &&
+    tokenOffer.whitelist.startingPrice &&
+    tokenOffer.whitelist.startingPrice.gt(0)
+
+  const isPublicSaleConfigured =
+    tokenOffer &&
+    tokenOffer.publicSale.startingPrice &&
+    tokenOffer.publicSale.startingPrice.gt(0)
+
+  const managerClaim =
+    isOwnerOrManager && isSaleCompleted && !tokenOffer.sponsorTokensClaimed
+
+  const userUnsuccessfulVestingClaim =
+    isOfferUnsuccessful &&
+    tokenOffer.myPosition.amountInvested.gt(0) &&
+    tokenOffer.offeringOverview.vestingPeriod.gt(0)
+
+  const userClaim =
+    !isOfferUnsuccessful &&
+    tokenOffer?.myPosition.tokenPurchased.gt(0) &&
+    tokenOffer?.offeringOverview.vestingPeriod.isZero()
+
+  const userUnsuccessfulClaim =
+    isOfferUnsuccessful && tokenOffer.myPosition.amountInvested.gt(0)
+
   const isClaimButtonShow =
     tokenOffer &&
-    ((isOwnerOrManager &&
-      isSaleCompleted &&
-      !tokenOffer.sponsorTokensClaimed) ||
-      (((isOfferUnsuccessful && tokenOffer.myPosition.amountInvested.gt(0)) ||
-        (!isOfferUnsuccessful && tokenOffer.myPosition.tokenPurchased.gt(0))) &&
-        isCliffPeriodPassed() &&
-        tokenOffer.offeringOverview.vestingPeriod.isZero()))
+    isCliffPeriodPassed() &&
+    (managerClaim ||
+      userUnsuccessfulVestingClaim ||
+      userClaim ||
+      userUnsuccessfulClaim)
 
   const isMyPositionShow =
     !isOwnerOrManager &&
@@ -325,8 +337,9 @@ const TokenSaleDetails = () => {
     tokenOffer?.offeringOverview.salesBegin.gt(0)
 
   const isVestedPropertiesShow =
-    tokenOffer?.myPosition.amountAvailableToVest.gt(0) ||
-    tokenOffer?.myPosition.amountvested.gt(0)
+    (tokenOffer?.myPosition.amountAvailableToVest.gt(0) ||
+      tokenOffer?.myPosition.amountvested.gt(0)) &&
+    !isOfferUnsuccessful
 
   return (
     <PageWrapper>
