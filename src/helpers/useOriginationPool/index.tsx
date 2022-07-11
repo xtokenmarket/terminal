@@ -155,17 +155,20 @@ export const useOriginationPool = (
       if (
         typeof offerData[key] === 'string' &&
         !isNaN(offerData[key]) &&
-        !isAddress(offerData[key])
+        !isAddress(offerData[key]) &&
+        !['network'].includes(key)
       ) {
         offerData[key] = BigNumber.from(offerData[key])
       }
     }
 
     // Fetch token details and price, in fallback behaviour
-    if (!offerData?.offerToken.address) {
+    if (!offerData?.offerToken.price || !offerData?.purchaseToken.price) {
       const [offerToken, purchaseToken] = await Promise.all([
-        getTokenDetails(offerData?.offerToken),
-        getTokenDetails(offerData?.purchaseToken),
+        getTokenDetails(offerData?.offerToken.address || offerData?.offerToken),
+        getTokenDetails(
+          offerData?.purchaseToken.address || offerData?.purchaseToken
+        ),
       ])
 
       offerData.offerToken = offerToken
@@ -309,18 +312,18 @@ export const useOriginationPool = (
 
     // Fetch whitelist merkle root, only on Token Offer page
     if (isPoolDetails) {
-      // TODO: Fetch Whitelist sale details, only if `whitelistSaleDuration` is set
-      const whitelistMerkleRoot = (
-        await axios.get(
-          `${ORIGINATION_API_URL}/whitelistMerkleRoot?network=${offerData.network}&poolAddress=${poolAddress}`
-        )
-      ).data
+      try {
+        // TODO: Fetch Whitelist sale details, only if `whitelistSaleDuration` is set
+        const whitelistMerkleRoot = (
+          await axios.get(
+            `${ORIGINATION_API_URL}/whitelistMerkleRoot?network=${offerData.network}&poolAddress=${poolAddress}`
+          )
+        ).data
 
-      _whitelist.whitelist = whitelistMerkleRoot.hasSetWhitelistMerkleRoot
-      _whitelist.whitelistMerkleRoot = whitelistMerkleRoot.merkleRoot
+        _whitelist.whitelist = whitelistMerkleRoot.hasSetWhitelistMerkleRoot
+        _whitelist.whitelistMerkleRoot = whitelistMerkleRoot.merkleRoot
 
-      if (whitelistMerkleRoot.hasSetWhitelistMerkleRoot) {
-        try {
+        if (whitelistMerkleRoot.hasSetWhitelistMerkleRoot) {
           // `maxContributionAmount` doesn't exist on contract level. Can only get from API.
           const whitelistedAccountDetails = (
             await axios.get(
@@ -333,9 +336,9 @@ export const useOriginationPool = (
           )
           _whitelist.isAddressWhitelisted =
             whitelistedAccountDetails.isAddressWhitelisted
-        } catch (e) {
-          // Whitelist detail for pool is missing
         }
+      } catch (e) {
+        // Whitelist detail for pool is missing
       }
 
       // Fetch `account` related data
@@ -357,7 +360,7 @@ export const useOriginationPool = (
 
           const vestingEntryNFTContract = new Contract(
             vestingEntryNFTAddress,
-            Abi.vestingEntryNFT,
+            Abi.VestingEntryNFT,
             provider
           )
 
