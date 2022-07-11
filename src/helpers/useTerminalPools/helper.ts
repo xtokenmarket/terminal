@@ -1,7 +1,7 @@
 import { Network } from 'utils/enums'
 import { AddressZero } from '@ethersproject/constants'
 import { getAddress } from 'ethers/lib/utils'
-import { BigNumber } from 'ethers'
+import { parseTokenDetails } from 'utils/token'
 
 export const POOLS_QUERY = `
 query {
@@ -68,15 +68,15 @@ export const parsePools = (data: any, network: Network) => {
         poolFee: pool.poolFee.toString(),
         rewardProgramDuration: pool.rewardDuration,
         rewardTokens: pool.rewards.map(({ token }: any) =>
-          _parseTokenDetails(token)
+          parseTokenDetails(token)
         ),
         rewardsAreEscrowed: pool.rewardsAreEscrowed,
-        stakedToken: _parseTokenDetails(pool.stakedToken),
-        token0: _parseTokenDetails(
+        stakedToken: parseTokenDetails(pool.stakedToken),
+        token0: parseTokenDetails(
           pool.token0,
           pool.stakedTokenBalance ? pool.stakedTokenBalance[0] : undefined
         ),
-        token1: _parseTokenDetails(
+        token1: parseTokenDetails(
           pool.token1,
           pool.stakedTokenBalance ? pool.stakedTokenBalance[1] : undefined
         ),
@@ -94,14 +94,4 @@ export const parsePools = (data: any, network: Network) => {
           : AddressZero,
         vestingPeriod: pool.vestingPeriod || '0',
       }))
-}
-
-const _parseTokenDetails = (token: any, balance?: string) => {
-  return {
-    address: token.id,
-    decimals: token.decimals,
-    name: token.name,
-    symbol: token.symbol,
-    balance: balance ? BigNumber.from(balance) : undefined,
-  }
 }

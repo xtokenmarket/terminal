@@ -1,31 +1,33 @@
 import axios from 'axios'
-import { ORIGINATION_API_URL } from 'config/constants'
+import { ChainId, ORIGINATION_API_URL } from 'config/constants'
 import { useNetworkContext } from 'contexts/networkContext'
-import { useServices } from 'helpers/useServices'
 import { useEffect, useState } from 'react'
 import { IOriginationPool } from 'types'
 import { isTestnet, isTestNetwork } from 'utils/network'
+import { fetchQuery } from 'utils/thegraph'
+import { Network } from 'utils/enums'
+
+import { parseTokenOffers, TOKEN_OFFERS_QUERY } from './helper'
 
 interface IState {
   isLoading: boolean
   tokenOffers: IOriginationPool[]
 }
 
+const ORIGINATION_NETWORKS = [
+  // Network.MAINNET,
+  // Network.ARBITRUM,
+  // Network.OPTIMISM,
+  // Network.POLYGON,
+  Network.GOERLI,
+]
+
 export const useOriginationPools = () => {
   const [state, setState] = useState<IState>({
     tokenOffers: [],
     isLoading: true,
   })
-
   const { chainId } = useNetworkContext()
-  const { originationService } = useServices()
-
-  const getFilteredOffers = (offers: IOriginationPool[] = []) =>
-    offers.filter((offer: IOriginationPool) =>
-      isTestnet(chainId)
-        ? isTestNetwork(offer.network)
-        : !isTestNetwork(offer.network)
-    )
 
   const loadTokenOffers = async () => {
     setState((prev) => ({ ...prev, isLoading: true }))
@@ -35,33 +37,45 @@ export const useOriginationPools = () => {
         `${ORIGINATION_API_URL}/pools`
       )
 
-      const filteredPools = getFilteredOffers(pools)
+      const tokenOffers = getFilteredOffers(pools, chainId)
 
       setState((prev) => ({
         ...prev,
-        tokenOffers: pools,
+        tokenOffers,
         isLoading: false,
       }))
     } catch (error) {
-      // TODO: for testing only. Can be remove later
-      // const createFungibleListingFilter =
-      //   originationService.contract.filters.CreateFungibleListing()
-      // const tokenOffers = await originationService.contract.queryFilter(
-      //   createFungibleListingFilter
-      // )
-      // const pools = tokenOffers.map((offer) => {
-      //   return { address: offer.args?.pool }
-      // })
-      // setState((prev) => ({
-      //   ...prev,
-      //   tokenOffers: pools as IOriginationPool[],
-      //   isLoading: false,
-      // }))
+      try {
+        const graphqlUrls = ORIGINATION_NETWORKS.map(
+          (network: string) =>
+            // TODO: Update subgraph
+            'https://api.thegraph.com/subgraphs/name/cryptopixelfrog/subgraph-study'
+          // `https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-${network}`
+        )
+        let pools = await Promise.all(
+          graphqlUrls.map((url: string) =>
+            fetchQuery(TOKEN_OFFERS_QUERY, {}, url)
+          )
+        )
+        pools = pools
+          .map((p: any, index: number) => {
+            // TODO: Update `network`
+            // const _network = graphqlUrls[index].split('terminal-')[1]
+            // return parsePools(p, _network as Network)
+            return parseTokenOffers(p, Network.GOERLI)
+          })
+          .flat()
 
-      setState((prev) => ({
-        ...prev,
-        isLoading: false,
-      }))
+        const tokenOffers = getFilteredOffers(pools, chainId)
+
+        setState((prev) => ({
+          ...prev,
+          tokenOffers,
+          isLoading: false,
+        }))
+      } catch (e) {
+        setState((prev) => ({ ...prev, isLoading: false }))
+      }
     }
   }
 
@@ -71,3 +85,10 @@ export const useOriginationPools = () => {
 
   return state
 }
+
+const getFilteredOffers = (offers: IOriginationPool[], chainId: ChainId) =>
+  offers.filter((offer: IOriginationPool) =>
+    isTestnet(chainId)
+      ? isTestNetwork(offer.network)
+      : !isTestNetwork(offer.network)
+  )

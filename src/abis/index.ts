@@ -13,7 +13,7 @@ import NonRewardPoolAbi from './NonRewardPool.json'
 // Origination
 import OriginationCoreAbi from './origination/OriginationCore.json'
 import OriginationPoolAbi from './origination/OriginationPool.json'
-import vestingEntryNFTAbi from './origination/vestingEntryNFT.json'
+import VestingEntryNFTAbi from './origination/VestingEntryNFT.json'
 
 const Abi = {
   CLRV0: CLRV0Abi,
@@ -31,7 +31,7 @@ const Abi = {
   // Origination
   OriginationCore: OriginationCoreAbi,
   OriginationPool: OriginationPoolAbi,
-  vestingEntryNFT: vestingEntryNFTAbi,
+  VestingEntryNFT: VestingEntryNFTAbi,
 }
 
 export default Abi

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ChainId, GRAPHQL_URLS, TERMINAL_API_URL } from 'config/constants'
+import { ChainId, TERMINAL_API_URL } from 'config/constants'
 import { useNetworkContext } from 'contexts/networkContext'
 import { useEffect, useState } from 'react'
 import { useSnackbar } from 'notistack'
@@ -16,6 +16,14 @@ interface IState {
 }
 
 const testNetworks = [Network.KOVAN, Network.GOERLI]
+const MINING_NETWORKS = [
+  Network.MAINNET,
+  Network.ARBITRUM,
+  Network.OPTIMISM,
+  Network.POLYGON,
+  Network.KOVAN,
+  Network.GOERLI,
+]
 
 export const useTerminalPools = () => {
   const [state, setState] = useState<IState>({ pools: [], isLoading: true })
@@ -38,8 +46,9 @@ export const useTerminalPools = () => {
       })
     } catch (error) {
       try {
-        const graphqlUrls = Object.values(GRAPHQL_URLS).filter(
-          (url: string) => !!url
+        const graphqlUrls = MINING_NETWORKS.map(
+          (network: string) =>
+            `https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-${network}`
         )
         let pools = await Promise.all(
           graphqlUrls.map((url: string) => fetchQuery(POOLS_QUERY, {}, url))

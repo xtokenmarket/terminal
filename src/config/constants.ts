@@ -228,21 +228,6 @@ export const PROD_TESTNET_DISCOVER_PAGE_SIZE = 5
 export const INSUFFICIENT_FUNDS_ERROR =
   'Insufficient funds to process the transaction'
 
-export const GRAPHQL_URLS: Record<Network, string> = {
-  [Network.MAINNET]:
-    'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-mainnet',
-  [Network.ARBITRUM]:
-    'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-arbitrum',
-  [Network.OPTIMISM]:
-    'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-optimism',
-  [Network.POLYGON]:
-    'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-polygon',
-  [Network.KOVAN]:
-    'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-kovan',
-  [Network.GOERLI]:
-    'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-goerli',
-}
-
 export const MINING_EVENTS = {
   Collect: 'Reinvest',
   Deposit: 'Deposit',
