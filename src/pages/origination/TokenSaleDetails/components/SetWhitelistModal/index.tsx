@@ -346,7 +346,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
               {state.txState === TxState.InProgress && (
                 <>
                   &nbsp;
-                  <CircularProgress className={classes.progress} size={15} />
+                  <CircularProgress className={classes.progress} size={10} />
                 </>
               )}
             </Button>
