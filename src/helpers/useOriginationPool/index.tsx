@@ -221,7 +221,7 @@ export const useOriginationPool = (
       label: OriginationLabels.OfferingOverview,
       offerToken: offerToken || ETH,
       purchaseToken: purchaseToken || ETH,
-      offeringReserve: reserveAmount,
+      reserveAmount,
       vestingPeriod,
       cliffPeriod,
       salesBegin: saleInitiatedTimestamp,

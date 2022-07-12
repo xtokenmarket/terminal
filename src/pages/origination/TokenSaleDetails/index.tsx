@@ -246,7 +246,7 @@ const TokenSaleDetails = () => {
   const isOfferUnsuccessful =
     tokenOffer &&
     isSaleCompleted &&
-    tokenOffer.offeringOverview.offeringReserve.gt(
+    tokenOffer.offeringOverview.reserveAmount.gt(
       tokenOffer.offeringSummary.amountsRaised
     )
 
