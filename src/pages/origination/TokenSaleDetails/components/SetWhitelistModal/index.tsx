@@ -112,7 +112,8 @@ const useStyles = makeStyles((theme) => ({
     display: 'none',
   },
   buttonTextPending: {
-    color: theme.colors.primary200,
+    color: theme.colors.white,
+    fontWeight: 'normal',
   },
 }))
 
