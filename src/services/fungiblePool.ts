@@ -43,7 +43,7 @@ class FungiblePoolService {
       this.contract.on('InitiateSale', (...rest) => {
         if (!resolved) {
           resolved = true
-          resolve(rest[0].transactionHash)
+          resolve(rest[1].transactionHash)
         }
       })
 
