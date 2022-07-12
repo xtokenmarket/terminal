@@ -210,7 +210,7 @@ export enum OfferingOverview {
   OfferToken = 'offerToken',
   PurchaseToken = 'purchaseToken',
   OfferingStatus = 'offeringStatus',
-  OfferingReserve = 'offeringReserve',
+  ReserveAmount = 'reserveAmount',
   VestingPeriod = 'vestingPeriod',
   CliffPeriod = 'cliffPeriod',
   SalesBegin = 'salesBegin',
