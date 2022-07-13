@@ -29,6 +29,8 @@ import {
   getTokenExchangeRate,
 } from 'helpers/useTerminalPool/helper'
 
+import { fetchQuery } from 'utils/thegraph'
+import { ENTRY_IDS_QUERY } from 'helpers/useOriginationPools/helper'
 interface IState {
   tokenOffer?: ITokenOffer
   loading: boolean
@@ -357,6 +359,19 @@ export const useOriginationPool = (
             fungiblePool.contract.isOwnerOrManager(account),
             fungiblePool.contract.vestingEntryNFT(),
           ])
+
+          const graphqlUrl =
+            'https://api.thegraph.com/subgraphs/name/cryptopixelfrog/subgraph-study'
+          const eventVariables = {
+            poolAddress: poolAddress.toLowerCase(),
+            account: account.toLowerCase(),
+          }
+
+          const userToVestingEntryIds = await fetchQuery(
+            ENTRY_IDS_QUERY,
+            eventVariables,
+            graphqlUrl
+          )
 
           const vestingEntryNFTContract = new Contract(
             vestingEntryNFTAddress,
