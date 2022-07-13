@@ -156,14 +156,16 @@ export const OfferingTableRow = ({ offering }: IProps) => {
           <Typography className={cl.item}>
             {numberWithCommas(
               formatBigNumber(totalOfferingAmount, offerToken.decimals)
-            )}
+            )}{' '}
+            {offerToken.symbol}
           </Typography>
         </OfferingTd>
         <OfferingTd type="remainingOffering">
           <Typography className={cl.item}>
             {numberWithCommas(
               formatBigNumber(remainingOfferingAmount, offerToken.decimals)
-            )}
+            )}{' '}
+            {offerToken.symbol}
           </Typography>
         </OfferingTd>
         {/* TODO: replace this with true pricePerToken */}
