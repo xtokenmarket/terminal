@@ -53,6 +53,7 @@ export const InputSection = (props: IProps) => {
 
   const loadEstimations = async (amount: BigNumber) => {
     try {
+      // TODO: Replace with `calculateWithdrawAmounts()` contract call
       const token0Deposit = amount
         .mul(poolData.token0.balance as BigNumber)
         .div(poolData.totalSupply)
@@ -60,9 +61,10 @@ export const InputSection = (props: IProps) => {
         .mul(poolData.token1.balance as BigNumber)
         .div(poolData.totalSupply)
 
+      // 1% slippage
       updateState({
-        amount0Estimation: token0Deposit,
-        amount1Estimation: token1Deposit,
+        amount0Estimation: token0Deposit.mul(99).div(100),
+        amount1Estimation: token1Deposit.mul(99).div(100),
       })
     } catch (error) {
       console.error(error)
@@ -72,6 +74,7 @@ export const InputSection = (props: IProps) => {
   const handleInputChange = (newLPValue: BigNumber) => {
     updateState({ lpInput: newLPValue })
 
+    // TODO: Replace with `useDebounce` hook
     if (timerId) {
       clearTimeout(timerId)
     }

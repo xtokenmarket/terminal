@@ -4,12 +4,12 @@ import { useConnectedWeb3Context } from 'contexts'
 import { useTerminalPool } from 'helpers'
 import { useCallback, useEffect } from 'react'
 import { useHistory, useParams } from 'react-router'
+import { useNetworkContext } from 'contexts'
 import { isAddress } from 'utils/tools'
 import { getIdFromNetwork, getNetworkFromId } from 'utils/network'
 import { NetworkId } from 'types'
 
 import { Content } from './components'
-import { useNetworkContext } from '../../contexts/networkContext'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,6 +29,7 @@ const PoolDetails = () => {
   const { id: poolAddress, network } = params as any
 
   const {
+    clrService,
     loadInfo,
     loading,
     pool: poolData,
@@ -73,10 +74,14 @@ const PoolDetails = () => {
       <PageHeader headerTitle=" " backVisible onBack={onBack} />
       <PageContent>
         {isAddress(poolAddress) &&
-          (!poolData ? (
+          (!poolData || !clrService ? (
             <SimpleLoader />
           ) : (
-            <Content poolData={poolData} reloadTerminalPool={loadInfo} />
+            <Content
+              poolData={poolData}
+              reloadTerminalPool={loadInfo}
+              clrService={clrService}
+            />
           ))}
       </PageContent>
     </PageWrapper>

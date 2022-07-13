@@ -3,27 +3,36 @@ import { Maybe } from 'types'
 import Abi from 'abis'
 import { Interface } from '@ethersproject/abi'
 import { getContractAddress } from 'config/networks'
-import { hexlify } from 'ethers/lib/utils'
-import { ChainId } from 'config/constants'
-
-const xAssetCLRAbi = Abi.xAssetCLR
 
 class CLRService {
-  provider: any
+  abi: any
   contract: Contract
+  provider: any
+  version: string
 
   constructor(provider: any, signerAddress: Maybe<string>, address: string) {
+    this.abi = Abi.CLRV0
     this.provider = provider
-    if (signerAddress) {
-      const signer: Wallet = provider.getSigner()
-      this.contract = new ethers.Contract(
-        address,
-        xAssetCLRAbi,
-        provider
-      ).connect(signer)
-    } else {
-      this.contract = new ethers.Contract(address, xAssetCLRAbi, provider)
-    }
+    this.version = 'v1.0.0'
+    this.contract = new ethers.Contract(address, Abi.CLRV1, provider)
+
+    this.contract
+      .getVersion()
+      .then((version: string) => {
+        this.abi = Abi.CLRV1
+        this.version = version
+        if (signerAddress) {
+          const signer: Wallet = provider.getSigner()
+          this.contract = this.contract.connect(signer)
+        }
+      })
+      .catch(() => {
+        this.contract = new ethers.Contract(address, Abi.CLRV0, provider)
+        if (signerAddress) {
+          const signer: Wallet = provider.getSigner()
+          this.contract = this.contract.connect(signer)
+        }
+      })
   }
 
   get address(): string {
@@ -41,14 +50,25 @@ class CLRService {
     return this.contract.getLiquidityForAmounts(amount0, amount1)
   }
 
-  deposit = async (inputAsset: number, amount: BigNumber) => {
-    return this.contract.deposit(inputAsset, amount)
+  // TODO: Remove `isToken1Deposit` arg
+  deposit = async (
+    amount0: BigNumber,
+    amount1: BigNumber,
+    isToken1Deposit = false
+  ) => {
+    if (this.version === 'v1.0.0') {
+      return this.contract.deposit(
+        isToken1Deposit ? 1 : 0,
+        isToken1Deposit ? amount1 : amount0
+      )
+    } else {
+      return this.contract.deposit(amount0, amount1)
+    }
   }
 
   waitUntilDeposit = async (
-    clrPool: string,
-    inputAsset: number,
-    amount: BigNumber,
+    amount0: BigNumber,
+    amount1: BigNumber,
     account: string,
     txId: string
   ): Promise<string> => {
@@ -57,17 +77,15 @@ class CLRService {
       this.contract.on(
         'Deposit',
         (
-          clrPoolAddress: string,
-          sender: string,
-          inputAssetType: any,
-          amountStr: any,
+          _sender: string,
+          _amount0: BigNumber,
+          _amount1: BigNumber,
           ...rest
         ) => {
           if (
-            clrPool.toLowerCase() === clrPoolAddress.toLowerCase() &&
-            inputAsset === BigNumber.from(inputAssetType).toNumber() &&
-            account.toLowerCase() === sender.toLowerCase() &&
-            amount.eq(BigNumber.from(amountStr))
+            account.toLowerCase() === _sender.toLowerCase() &&
+            amount0.eq(_amount0) &&
+            amount1.eq(_amount1)
           ) {
             if (!resolved) {
               resolved = true
@@ -123,20 +141,36 @@ class CLRService {
     return null
   }
 
-  withdrawAndClaimReward = async (amount: BigNumber): Promise<string> => {
-    const transactionObject = await this.contract.withdrawAndClaimReward(amount)
-    console.log(
-      `withdrawAndClaimReward transaction hash: ${transactionObject.hash}`
-    )
-
-    return transactionObject.hash
+  withdrawAndClaimReward = async (
+    amount: BigNumber,
+    amount0Estimation: BigNumber,
+    amount1Estimation: BigNumber
+  ) => {
+    if (this.version === 'v1.0.0') {
+      return this.contract.withdrawAndClaimReward(amount)
+    } else {
+      return this.contract.withdrawAndClaimReward(
+        amount,
+        amount0Estimation,
+        amount1Estimation
+      )
+    }
   }
 
-  withdraw = async (amount: BigNumber): Promise<string> => {
-    const transactionObject = await this.contract.withdraw(amount)
-    console.log(`withdraw transaction hash: ${transactionObject.hash}`)
-
-    return transactionObject.hash
+  withdraw = async (
+    amount: BigNumber,
+    amount0Estimation: BigNumber,
+    amount1Estimation: BigNumber
+  ) => {
+    if (this.version === 'v1.0.0') {
+      return this.contract.withdraw(amount)
+    } else {
+      return this.contract.withdraw(
+        amount,
+        amount0Estimation,
+        amount1Estimation
+      )
+    }
   }
 
   parseWithdrawTx = async (
@@ -190,7 +224,7 @@ class CLRService {
       (log) => log.address.toLowerCase() === this.contract.address.toLowerCase()
     )
 
-    const uniPositionInterface = new Interface(Abi.xAssetCLR)
+    const uniPositionInterface = new Interface(Abi.CLRV0)
     for (let index = 0; index < filteredLogs.length; index++) {
       const log = filteredLogs[index]
       try {
@@ -206,8 +240,6 @@ class CLRService {
   }
 
   waitUntilWithdraw = async (
-    clrPool: string,
-    amount: BigNumber,
     account: string,
     txId: string
   ): Promise<string> => {
@@ -215,12 +247,8 @@ class CLRService {
     return new Promise((resolve) => {
       this.contract.on(
         'Withdraw',
-        (clrPoolAddress: string, sender: string, amountStr: any, ...rest) => {
-          if (
-            clrPool.toLowerCase() === clrPoolAddress.toLowerCase() &&
-            account.toLowerCase() === sender.toLowerCase() &&
-            amount.eq(BigNumber.from(amountStr))
-          ) {
+        (sender: string, amount0: BigNumber, amount1: BigNumber, ...rest) => {
+          if (account.toLowerCase() === sender.toLowerCase()) {
             if (!resolved) {
               resolved = true
               resolve(rest[0].transactionHash)

@@ -67,6 +67,7 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   open: boolean
   onClose: () => void
+  clrService: CLRService
   poolData: ITerminalPool
   onSuccess: () => Promise<void>
 }
@@ -80,11 +81,13 @@ interface IState {
 export const ReinvestModal: React.FC<IProps> = ({
   open,
   onClose,
+  clrService,
   poolData,
   onSuccess,
 }) => {
   const classes = useStyles()
   const { account, library: provider } = useConnectedWeb3Context()
+
   const [state, setState] = useState<IState>({
     reinvestTx: '',
     txState: TxState.None,
@@ -123,11 +126,8 @@ export const ReinvestModal: React.FC<IProps> = ({
         },
       }))
 
-      const clr = new CLRService(provider, account, poolData.address)
-
-      const txId = await clr.reinvest()
-
-      const finalTxId = await clr.waitUntilReinvest(txId)
+      const txId = await clrService.reinvest()
+      const finalTxId = await clrService.waitUntilReinvest(txId)
 
       setState((prev) => ({
         ...prev,

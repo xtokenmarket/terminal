@@ -13,6 +13,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { ZERO } from 'utils/number'
 import useCommonStyles from 'style/common'
 import { useConnectedWeb3Context } from 'contexts'
+import { CLRService } from 'services'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   className?: string
   onClose: () => void
+  clrService: CLRService
   poolData: ITerminalPool
   onSuccess: () => Promise<void>
 }
@@ -59,7 +61,7 @@ export const DepositModal = (props: IProps) => {
   const commonClasses = useCommonStyles()
   const { account } = useConnectedWeb3Context()
 
-  const { onClose } = props
+  const { clrService, onClose, onSuccess, poolData } = props
   const [state, setState] = useState<IDepositState>({
     step: EDepositStep.Init,
     amount0: ZERO,
@@ -112,8 +114,9 @@ export const DepositModal = (props: IProps) => {
             onNext={onNextStep}
             updateState={updateState}
             depositState={state}
-            onClose={props.onClose}
-            poolData={props.poolData}
+            onClose={onClose}
+            clrService={clrService}
+            poolData={poolData}
           />
         )
       case EDepositStep.Deposit:
@@ -121,18 +124,19 @@ export const DepositModal = (props: IProps) => {
           <DepositSection
             onNext={onNextStep}
             depositState={state}
-            poolData={props.poolData}
+            clrService={clrService}
+            poolData={poolData}
             updateState={updateState}
-            onClose={props.onClose}
+            onClose={onClose}
             goBack={goBack}
           />
         )
       default:
         return (
           <SuccessSection
-            onClose={props.onSuccess}
+            onClose={onSuccess}
             depositState={state}
-            poolData={props.poolData}
+            poolData={poolData}
           />
         )
     }

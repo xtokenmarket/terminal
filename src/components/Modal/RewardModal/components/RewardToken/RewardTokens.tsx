@@ -3,11 +3,12 @@ import { Button, makeStyles } from '@material-ui/core'
 import { IToken } from 'types'
 import { BigNumber } from 'ethers'
 import { ZERO } from 'utils/number'
-import { RewardToken } from '.'
-import { IRewardState } from '../..'
 import { useServices } from 'helpers'
 import { formatEther, formatUnits } from 'ethers/lib/utils'
 import { parseFee } from 'utils'
+
+import { RewardToken } from '.'
+import { IRewardState } from '../..'
 
 const useStyles = makeStyles((theme) => ({
   rewardTokens: {},
