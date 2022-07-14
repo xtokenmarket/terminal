@@ -260,11 +260,9 @@ const TokenSaleDetails = () => {
       tokenOffer.offeringSummary.amountsRaised
     )
 
-  // TODO: user own at least 1 vesting entry nft
   const isVestButtonShow =
     tokenOffer &&
     tokenOffer?.myPosition.amountAvailableToVest.gt(0) &&
-    isCliffPeriodPassed() &&
     tokenOffer.offeringOverview.vestingPeriod.gt(0) &&
     !isOwnerOrManager &&
     !isOfferUnsuccessful
@@ -465,7 +463,11 @@ const TokenSaleDetails = () => {
               />
             )}
             {isVestButtonShow && (
-              <Button className={cl.button} onClick={toggleVestModal}>
+              <Button
+                className={cl.button}
+                onClick={toggleVestModal}
+                disabled={!isCliffPeriodPassed()}
+              >
                 <Typography className={cl.text}>VEST</Typography>
               </Button>
             )}
