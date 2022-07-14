@@ -367,11 +367,10 @@ export const useOriginationPool = (
             account: account.toLowerCase(),
           }
 
-          const userToVestingEntryIds = await fetchQuery(
-            ENTRY_IDS_QUERY,
-            eventVariables,
-            graphqlUrl
-          )
+          const userToVestingEntryIds = (
+            await fetchQuery(ENTRY_IDS_QUERY, eventVariables, graphqlUrl)
+          ).userToVestingEntryIds
+
 
           const vestingEntryNFTContract = new Contract(
             vestingEntryNFTAddress,
@@ -379,26 +378,34 @@ export const useOriginationPool = (
             provider
           )
 
-          let nftInfo = {
-            tokenAmount: ZERO,
-            tokenAmountClaimed: ZERO,
-          }
+          let nftInfos = []
 
           if (vestingEntryNFTAddress !== ethers.constants.AddressZero) {
-            nftInfo = await vestingEntryNFTContract.tokenIdVestingAmounts(
-              userToVestingId
+            nftInfos = await Promise.all(
+              userToVestingEntryIds.map((x: any) =>
+                vestingEntryNFTContract.tokenIdVestingAmounts(x.userToVestingId)
+              )
             )
           }
 
+          const totalTokenAmount = nftInfos.reduce((a, b) => {
+            return a.add(b.tokenAmount)
+          }, BigNumber.from(0))
+          const totalTokenAmountClaimed = nftInfos.reduce((a, b) => {
+            return a.add(b.tokenAmountClaimed)
+          }, BigNumber.from(0))
+
           offeringOverview.isOwnerOrManager = isOwnerOrManager
 
-          myPosition.amountAvailableToVest = nftInfo.tokenAmount.sub(
-            nftInfo.tokenAmountClaimed
+          myPosition.amountAvailableToVest = totalTokenAmount.sub(
+            totalTokenAmountClaimed
           )
           myPosition.amountInvested = purchaseTokenContribution
-          myPosition.amountvested = nftInfo.tokenAmountClaimed
+          myPosition.amountvested = totalTokenAmountClaimed
           myPosition.tokenPurchased = offerTokenAmountPurchased
-          myPosition.userToVestingId = [userToVestingId.toNumber()] as never
+          myPosition.userToVestingId = userToVestingEntryIds.map(
+            (x: any) => x.userToVestingId
+          )
         } catch (e) {
           console.error('Error while fetching account related data', e)
         }
