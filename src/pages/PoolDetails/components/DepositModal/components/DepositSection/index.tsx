@@ -11,7 +11,7 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 import ClockIcon from '@material-ui/icons/AccessTime'
 import { ActionStepRow, WarningInfo } from '..'
 import { useCountdown } from 'helpers/useCountdownClock'
-import { FIVE_MINUTES_IN_MS, LOCKED_STARTING_TIME } from 'config/constants'
+import { FIVE_MINUTES_IN_MS } from 'config/constants'
 import { Network } from 'utils/enums'
 
 const useStyles = makeStyles((theme) => ({

@@ -9,7 +9,6 @@ import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { getContractAddress } from 'config/networks'
 import { ERC20Service } from 'services'
 import { getMetamaskError } from 'utils'
-import { LOCKED_STARTING_TIME } from 'config/constants'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
