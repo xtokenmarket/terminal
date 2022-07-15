@@ -40,6 +40,7 @@ import { ethers, Contract } from 'ethers'
 import { fetchQuery } from 'utils/thegraph'
 
 interface IState {
+  clrService?: CLRService
   pool?: ITerminalPool
   loading: boolean
 }
@@ -50,7 +51,11 @@ export const useTerminalPool = (
   network?: Network,
   isPoolDetails = false
 ) => {
-  const [state, setState] = useState<IState>({ loading: true, pool: undefined })
+  const [state, setState] = useState<IState>({
+    clrService: undefined,
+    loading: true,
+    pool: undefined,
+  })
   const { account, library: provider, networkId } = useConnectedWeb3Context()
   const { multicall, rewardEscrow } = useServices(network)
 
@@ -62,12 +67,6 @@ export const useTerminalPool = (
     // @ts-ignore
     readonlyProvider = getNetworkProvider(network)
   }
-
-  const clr = new CLRService(
-    readonlyProvider,
-    isWrongNetwork ? null : account,
-    poolAddress as string
-  )
 
   const getTokenDetails = async (addr: string) => {
     try {
@@ -103,8 +102,8 @@ export const useTerminalPool = (
 
         // Get `owner` and `manager` address off of contract
         /*const [owner, manager] = await Promise.all([
-          clr.contract.owner(),
-          clr.contract.manager(),
+          clrService.contract.owner(),
+          clrService.contract.manager(),
         ])
         pool.owner = owner
         pool.manager = manager*/
@@ -114,6 +113,12 @@ export const useTerminalPool = (
         pool = await getPoolDataMulticall(poolAddress as string, multicall)
       }
     }
+
+    const clrService = new CLRService(
+      readonlyProvider,
+      isWrongNetwork ? null : account,
+      poolAddress as string
+    )
 
     try {
       let { token0, token1, stakedToken } = pool
@@ -136,7 +141,8 @@ export const useTerminalPool = (
         pool.token0.price = rates && rates[0] ? rates[0].toString() : '0'
         pool.token1.price = rates && rates[1] ? rates[1].toString() : '0'
 
-        const { amount0, amount1 } = await clr.contract.getStakedTokenBalance()
+        const { amount0, amount1 } =
+          await clrService.contract.getStakedTokenBalance()
         const token0Balance =
           token0.decimals === 18
             ? amount0
@@ -223,7 +229,7 @@ export const useTerminalPool = (
           params: [token.address],
         }))
         const rewardsResponse = await multicall.multicallv2(
-          Abi.xAssetCLR,
+          clrService.abi,
           rewardCalls,
           { requireSuccess: false }
         )
@@ -284,7 +290,7 @@ export const useTerminalPool = (
 
         earnedTokens = await Promise.all(
           pool.rewardTokens.map(async (token: IToken) => {
-            const amount = await clr.earned(account, token.address)
+            const amount = await clrService.earned(account, token.address)
             return {
               ...token,
               amount,
@@ -330,7 +336,7 @@ export const useTerminalPool = (
 
         const [stakedTokenBalance, totalSupply] = await Promise.all([
           stakedCLRToken.balanceOf(account),
-          clr.contract.totalSupply(),
+          clrService.contract.totalSupply(),
         ])
 
         _totalSupply = totalSupply
@@ -398,6 +404,7 @@ export const useTerminalPool = (
 
       setState({
         loading: false,
+        clrService,
         pool: {
           address: poolAddress as string,
           apr: apr.toString(),

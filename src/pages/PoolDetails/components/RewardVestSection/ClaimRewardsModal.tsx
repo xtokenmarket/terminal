@@ -128,7 +128,7 @@ interface IProps {
   open: boolean
   onClose: () => void
   earnedTokens: EarnedToken[]
-  poolAddress: string
+  clrService: CLRService
   reloadTerminalPool: (isReloadPool: boolean) => Promise<void>
 }
 
@@ -136,7 +136,7 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
   open,
   onClose,
   earnedTokens,
-  poolAddress,
+  clrService,
   reloadTerminalPool,
 }) => {
   const cl = useStyles()
@@ -171,12 +171,12 @@ export const ClaimRewardsModal: React.FC<IProps> = ({
     setTxState(TxState.Confirming)
 
     try {
-      const clr = new CLRService(provider, account, poolAddress)
-      const txId = await clr.claimReward()
+      const txId = await clrService.claimReward()
       setTxState(TxState.InProgress)
 
-      const finalTxId = await clr.waitUntilClaimReward(account, txId)
-      const claimInfo = await clr.parseClaimTx(finalTxId)
+      const finalTxId = await clrService.waitUntilClaimReward(account, txId)
+      const claimInfo = await clrService.parseClaimTx(finalTxId)
+
       const claimedTokens = earnedTokens.map((token) => ({
         ...token,
         amount: claimInfo[token.address.toLowerCase()] || ZERO,

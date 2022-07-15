@@ -37,6 +37,7 @@ import { VestAllModal } from '../VestAllModal'
 import { PoolShareSection } from '../PoolShareSection'
 import { tickToPrice } from '@uniswap/v3-sdk'
 import { Token } from '@uniswap/sdk-core'
+import { CLRService } from 'services'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -209,6 +210,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
+  clrService: CLRService
   poolData: ITerminalPool
   reloadTerminalPool: (isReloadPool: boolean) => Promise<void>
 }
@@ -235,7 +237,7 @@ export const Content = (props: IProps) => {
     useConnectedWeb3Context()
   const [state, setState] = useState<IState>(initialState)
 
-  const { poolData } = props
+  const { clrService, poolData, reloadTerminalPool } = props
   const { token0, token1 } = poolData
 
   const timestamp = getCurrentTimeStamp()
@@ -423,8 +425,9 @@ export const Content = (props: IProps) => {
           onClose={() => setDepositModalVisible(false)}
           onSuccess={async () => {
             setDepositModalVisible(false)
-            await props.reloadTerminalPool(true)
+            await reloadTerminalPool(true)
           }}
+          clrService={clrService}
           poolData={poolData}
         />
       )}
@@ -435,7 +438,7 @@ export const Content = (props: IProps) => {
         onClose={() => setRewardModalVisible(false)}
         onSuccess={async () => {
           setRewardModalVisible(false)
-          await props.reloadTerminalPool(true)
+          await reloadTerminalPool(true)
         }}
         poolData={poolData}
       />
@@ -445,8 +448,9 @@ export const Content = (props: IProps) => {
           onClose={() => setWithdrawModalVisible(false)}
           onSuccess={async () => {
             setWithdrawModalVisible(false)
-            await props.reloadTerminalPool(true)
+            await reloadTerminalPool(true)
           }}
+          clrService={clrService}
           poolData={poolData}
         />
       )}
@@ -457,17 +461,18 @@ export const Content = (props: IProps) => {
           onClose={() => setVestModalVisible(false)}
           vestingTokens={readyToVest}
           poolAddress={poolData.address}
-          reloadTerminalPool={props.reloadTerminalPool}
+          reloadTerminalPool={reloadTerminalPool}
         />
       )}
 
       <ReinvestModal
         open={state.reinvestVisible}
         onClose={() => setReinvestModalVisible(false)}
+        clrService={clrService}
         poolData={poolData}
         onSuccess={async () => {
           setReinvestModalVisible(false)
-          await props.reloadTerminalPool(true)
+          await reloadTerminalPool(true)
         }}
       />
 
@@ -668,8 +673,9 @@ export const Content = (props: IProps) => {
         </div>
 
         <RewardVestSection
+          clrService={clrService}
           pool={poolData}
-          reloadTerminalPool={props.reloadTerminalPool}
+          reloadTerminalPool={reloadTerminalPool}
         />
 
         <HistorySection pool={poolData} />

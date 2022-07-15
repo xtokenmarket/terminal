@@ -10,9 +10,10 @@ import { ZERO } from 'utils/number'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import ClockIcon from '@material-ui/icons/AccessTime'
-import { ActionStepRow, WarningInfo } from '..'
+import { ActionStepRow } from '..'
 import { FIVE_MINUTES_IN_MS, LOCKED_STARTING_TIME } from 'config/constants'
 import { useCountdown } from 'helpers/useCountdownClock'
+import { WarningInfo } from 'components/Common/WarningInfo'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -94,6 +95,7 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   onNext: () => void
   withdrawState: IWithdrawState
+  clrService: CLRService
   poolData: ITerminalPool
   updateState: (e: any) => void
   goBack: () => void
@@ -109,15 +111,23 @@ interface IState {
 
 export const WithdrawSection = (props: IProps) => {
   const classes = useStyles()
+  const { account, library: provider } = useConnectedWeb3Context()
+
+  const {
+    onNext,
+    withdrawState,
+    clrService,
+    poolData,
+    updateState,
+    goBack,
+    onClose,
+  } = props
   const [state, setState] = useState<IState>({
     withdrawDone: false,
     withdrawing: false,
     withdrawTx: '',
     step: 1,
   })
-  const { onNext, withdrawState, poolData, updateState, goBack, onClose } =
-    props
-  const { account, library: provider } = useConnectedWeb3Context()
 
   const lockStartingTime = localStorage.getItem(LOCKED_STARTING_TIME) || 0
   const { minutes, seconds } = useCountdown(
@@ -137,31 +147,27 @@ export const WithdrawSection = (props: IProps) => {
     if (!account || !provider) {
       return
     }
+
     try {
       setState((prev) => ({
         ...prev,
         withdrawing: true,
       }))
 
-      const clr = new CLRService(provider, account, poolData.address)
+      const { amount0Estimation, amount1Estimation, lpInput, withdrawOnly } =
+        withdrawState
 
-      const txId = await clr[
-        withdrawState.withdrawOnly ? 'withdraw' : 'withdrawAndClaimReward'
-      ](withdrawState.lpInput)
+      const txId = await clrService[
+        withdrawOnly ? 'withdraw' : 'withdrawAndClaimReward'
+      ](lpInput, amount0Estimation, amount1Estimation)
 
-      const finalTxId = await clr.waitUntilWithdraw(
-        poolData.address,
-        withdrawState.lpInput,
-        account,
-        txId
-      )
-
-      const data = await clr.parseWithdrawTx(finalTxId)
+      const finalTxId = await clrService.waitUntilWithdraw(account, txId.hash)
+      const data = await clrService.parseWithdrawTx(finalTxId)
 
       const claimedEarn: BigNumber[] = []
 
-      if (!withdrawState.withdrawOnly) {
-        const claimInfo = await clr.parseClaimTx(finalTxId)
+      if (!withdrawOnly) {
+        const claimInfo = await clrService.parseClaimTx(finalTxId)
         poolData.rewardState.tokens.forEach((rewardToken) => {
           const rewardAmount =
             claimInfo[rewardToken.address.toLowerCase()] || ZERO
@@ -211,9 +217,6 @@ export const WithdrawSection = (props: IProps) => {
         )}
         <div>
           <Typography className={classes.title}>Withdraw Liquidity</Typography>
-          <Typography className={classes.description}>
-            Please complete all transactions to complete the withdraw.
-          </Typography>
         </div>
         {!state.withdrawing && (
           <IconButton className={classes.closeButton} onClick={onClose}>

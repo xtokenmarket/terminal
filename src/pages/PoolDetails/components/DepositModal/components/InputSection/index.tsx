@@ -2,18 +2,17 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Button, IconButton, makeStyles, Typography } from '@material-ui/core'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { TokenBalanceInput } from 'components'
-import { DefaultReadonlyProvider } from 'config/networks'
 import { WarningInfo } from 'components/Common/WarningInfo'
-import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef, useTokenBalance } from 'helpers'
 import { IDepositState } from 'pages/PoolDetails/components'
 import { CLRService } from 'services'
 import { ITerminalPool } from 'types'
 import { ZERO } from 'utils/number'
-import { OutputEstimation, OutputEstimationInfo } from '..'
 import { useEffect, useState } from 'react'
 import _ from 'lodash'
 import { Network } from 'utils/enums'
+
+import { OutputEstimation, OutputEstimationInfo } from '..'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -64,13 +63,14 @@ interface IProps {
   onClose: () => void
   depositState: IDepositState
   updateState: (e: any) => void
+  clrService: CLRService
   poolData: ITerminalPool
 }
 
 export const InputSection = (props: IProps) => {
   const classes = useStyles()
-  const { onNext, onClose, depositState, updateState, poolData } = props
-  const { account, library: provider } = useConnectedWeb3Context()
+  const { onNext, onClose, depositState, updateState, clrService, poolData } =
+    props
   const isMountedRef = useIsMountedRef()
 
   const { balance: balance0 } = useTokenBalance(poolData.token0.address)
@@ -99,13 +99,9 @@ export const InputSection = (props: IProps) => {
         })
         return
       }
-      const clr = new CLRService(
-        provider || DefaultReadonlyProvider,
-        account,
-        poolData.address
-      )
+
       const [amount0Estimation, amount1Estimation] =
-        await clr.calculateAmountsMintedSingleToken(
+        await clrService.calculateAmountsMintedSingleToken(
           amount0.isZero() ? 1 : 0,
           amount0.isZero() ? amount1 : amount0
         )
@@ -167,6 +163,7 @@ export const InputSection = (props: IProps) => {
     }
   }, [balance0, balance1, depositState])
 
+  // TODO: Remove the disable check after PONY pool upgrade
   const PONY_LP_ADDRESS = '0x11AE2b89175792F57D320a020eaEa879E837fe6c'
   const isPonyLP =
     poolData.network === Network.MAINNET &&

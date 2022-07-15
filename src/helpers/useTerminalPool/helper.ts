@@ -79,7 +79,7 @@ export const getPoolDataMulticall = async (
       [periodFinish],
       ticks,
       [manager],
-    ] = await multicall.multicallv2(Abi.xAssetCLR, calls, {
+    ] = await multicall.multicallv2(Abi.CLRV0, calls, {
       requireSuccess: false,
     })
     return {

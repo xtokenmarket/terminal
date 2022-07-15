@@ -94,6 +94,7 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   onNext: () => void
   depositState: IDepositState
+  clrService: CLRService
   poolData: ITerminalPool
   updateState: (e: any) => void
   onClose: () => void
@@ -127,7 +128,15 @@ export const DepositSection = (props: IProps) => {
     depositTx: '',
     step: 1,
   })
-  const { onNext, depositState, poolData, updateState, onClose, goBack } = props
+  const {
+    onNext,
+    depositState,
+    clrService,
+    poolData,
+    updateState,
+    onClose,
+    goBack,
+  } = props
   const { account, library: provider, networkId } = useConnectedWeb3Context()
 
   const isMountedRef = useIsMountedRef()
@@ -258,30 +267,23 @@ export const DepositSection = (props: IProps) => {
         depositing: true,
       }))
 
+      const { amount0, amount1 } = depositState
+
       const PONY_LP_ADDRESS = '0x11AE2b89175792F57D320a020eaEa879E837fe6c'
       const isPonyLP =
         poolData.network === Network.MAINNET &&
         poolData.address.toLowerCase() === PONY_LP_ADDRESS.toLowerCase()
 
-      const inputAsset = depositState.amount0.isZero() || isPonyLP ? 1 : 0
-      const inputAmount =
-        depositState.amount0.isZero() || isPonyLP
-          ? depositState.amount1
-          : depositState.amount0
+      const txId = await clrService.deposit(amount0, amount1, isPonyLP)
 
-      const clr = new CLRService(provider, account, poolData.address)
-
-      const txId = await clr.deposit(inputAsset, inputAmount)
-
-      const finalTxId = await clr.waitUntilDeposit(
-        poolData.address,
-        inputAsset,
-        inputAmount,
+      const finalTxId = await clrService.waitUntilDeposit(
+        amount0,
+        amount1,
         account,
         txId.hash
       )
 
-      const data = await clr.parseProvideLiquidityTx(finalTxId)
+      const data = await clrService.parseProvideLiquidityTx(finalTxId)
 
       if (data) {
         updateState({

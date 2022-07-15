@@ -210,7 +210,7 @@ class LMService {
       [key: string]: BigNumber
     } = {}
     const { logs } = await this.contract.provider.getTransactionReceipt(txId)
-    const uniPositionInterface = new Interface(Abi.xAssetCLR)
+    const uniPositionInterface = new Interface(Abi.CLRV0)
     for (let index = 0; index < logs.length; index++) {
       const log = logs[index]
       try {

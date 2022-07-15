@@ -3,6 +3,7 @@ import { useConnectedWeb3Context } from 'contexts'
 import { getEtherscanUri } from 'config/networks'
 import { formatUnits } from 'ethers/lib/utils'
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
+import { CLRService } from 'services'
 import { toUsd } from 'utils/number'
 import { ITerminalPool } from 'types'
 
@@ -99,11 +100,13 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
+  clrService: CLRService
   pool: ITerminalPool
   reloadTerminalPool: (isReloadPool: boolean) => Promise<void>
 }
 
 export const RewardVestSection: React.FC<IProps> = ({
+  clrService,
   pool,
   reloadTerminalPool,
 }) => {
@@ -259,7 +262,7 @@ export const RewardVestSection: React.FC<IProps> = ({
       <ClaimRewardsModal
         open={isModalOpen}
         onClose={toggleModal}
-        poolAddress={pool.address}
+        clrService={clrService}
         earnedTokens={pool.earnedTokens}
         reloadTerminalPool={reloadTerminalPool}
       />

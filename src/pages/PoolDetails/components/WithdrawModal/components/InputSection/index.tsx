@@ -2,9 +2,12 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Button, IconButton, makeStyles, Typography } from '@material-ui/core'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { LPTokenAmountInput } from 'components'
-import { LP_TOKEN_BASIC } from 'config/constants'
+import { ETHER_DECIMAL, LP_TOKEN_BASIC } from 'config/constants'
 import { IWithdrawState } from 'pages/PoolDetails/components'
 import { ITerminalPool } from 'types'
+import { parseUnits } from 'ethers/lib/utils'
+import { formatBigNumber } from 'utils'
+
 import { OutputEstimation } from '..'
 
 const useStyles = makeStyles((theme) => ({
@@ -53,16 +56,40 @@ export const InputSection = (props: IProps) => {
 
   const loadEstimations = async (amount: BigNumber) => {
     try {
-      const token0Deposit = amount
-        .mul(poolData.token0.balance as BigNumber)
-        .div(poolData.totalSupply)
-      const token1Deposit = amount
-        .mul(poolData.token1.balance as BigNumber)
-        .div(poolData.totalSupply)
+      let amount0Estimation
+      let amount1Estimation
+
+      const { token0, token1, totalSupply } = poolData
+
+      // TODO: Replace with `calculateWithdrawAmounts()` contract call
+      amount0Estimation = amount
+        .mul(token0.balance as BigNumber)
+        .div(totalSupply)
+        .mul(99)
+        .div(100)
+      amount1Estimation = amount
+        .mul(token1.balance as BigNumber)
+        .div(totalSupply)
+        .mul(99)
+        .div(100)
+
+      if (token0.decimals !== ETHER_DECIMAL) {
+        amount0Estimation = parseUnits(
+          formatBigNumber(amount0Estimation, ETHER_DECIMAL, 4),
+          token0.decimals
+        )
+      }
+
+      if (token1.decimals !== ETHER_DECIMAL) {
+        amount1Estimation = parseUnits(
+          formatBigNumber(amount1Estimation, ETHER_DECIMAL, 4),
+          token1.decimals
+        )
+      }
 
       updateState({
-        amount0Estimation: token0Deposit,
-        amount1Estimation: token1Deposit,
+        amount0Estimation,
+        amount1Estimation,
       })
     } catch (error) {
       console.error(error)
@@ -72,6 +99,7 @@ export const InputSection = (props: IProps) => {
   const handleInputChange = (newLPValue: BigNumber) => {
     updateState({ lpInput: newLPValue })
 
+    // TODO: Replace with `useDebounce` hook
     if (timerId) {
       clearTimeout(timerId)
     }

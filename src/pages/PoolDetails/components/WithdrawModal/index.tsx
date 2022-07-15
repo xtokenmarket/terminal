@@ -8,6 +8,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { ZERO } from 'utils/number'
 import useCommonStyles from 'style/common'
 import { useConnectedWeb3Context } from 'contexts'
+import { CLRService } from 'services'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   className?: string
   onClose: () => void
+  clrService: CLRService
   poolData: ITerminalPool
   onSuccess: () => Promise<void>
 }
@@ -40,12 +42,10 @@ export interface IWithdrawState {
   lpInput: BigNumber
   amount0Estimation: BigNumber
   amount1Estimation: BigNumber
-  // used
   amount0Withdrawn: BigNumber
   amount1Withdrawn: BigNumber
   liquidityWithdrawn: BigNumber
   claimedEarn: BigNumber[]
-  //
   withdrawOnly: boolean
 }
 
@@ -54,7 +54,7 @@ export const WithdrawModal = (props: IProps) => {
   const commonClasses = useCommonStyles()
   const { account } = useConnectedWeb3Context()
 
-  const { onClose } = props
+  const { className, clrService, poolData, onClose, onSuccess } = props
   const [state, setState] = useState<IWithdrawState>({
     step: EWithdrawStep.Input,
     lpInput: ZERO,
@@ -101,8 +101,8 @@ export const WithdrawModal = (props: IProps) => {
             onNext={onNextStep}
             updateState={updateState}
             withdrawState={state}
-            onClose={props.onClose}
-            poolData={props.poolData}
+            onClose={onClose}
+            poolData={poolData}
           />
         )
       case EWithdrawStep.Withdraw:
@@ -110,18 +110,19 @@ export const WithdrawModal = (props: IProps) => {
           <WithdrawSection
             onNext={onNextStep}
             withdrawState={state}
-            poolData={props.poolData}
+            clrService={clrService}
+            poolData={poolData}
             updateState={updateState}
             goBack={goBack}
-            onClose={props.onClose}
+            onClose={onClose}
           />
         )
       default:
         return (
           <SuccessSection
-            onClose={props.onSuccess}
+            onClose={onSuccess}
             withdrawState={state}
-            poolData={props.poolData}
+            poolData={poolData}
           />
         )
     }
@@ -133,7 +134,7 @@ export const WithdrawModal = (props: IProps) => {
         className={clsx(
           classes.root,
           commonClasses.scroll,
-          props.className,
+          className,
           state.step === EWithdrawStep.Success ? 'transparent' : ''
         )}
       >

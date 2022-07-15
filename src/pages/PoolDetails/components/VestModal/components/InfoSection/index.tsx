@@ -81,7 +81,7 @@ export const InfoSection: React.FC<IProps> = ({
         params: [account, rewardToken.address],
       }))
 
-      const earned = await multicall.multicallv2(Abi.xAssetCLR, earnedCall, {
+      const earned = await multicall.multicallv2(Abi.CLRV0, earnedCall, {
         requireSuccess: false,
       })
 
