@@ -267,7 +267,10 @@ export const CreatePoolSection = (props: IProps) => {
       setPoolAddress(poolAddress)
       setTxId(finalTxId)
 
-      localStorage.setItem(poolAddress, new Date().getTime().toString())
+      localStorage.setItem(
+        poolAddress.toLowerCase(),
+        new Date().getTime().toString()
+      )
 
       setState((prev) => ({
         ...prev,

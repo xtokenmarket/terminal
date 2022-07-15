@@ -129,7 +129,8 @@ export const WithdrawSection = (props: IProps) => {
     step: 1,
   })
 
-  const lockStartingTime = localStorage.getItem(poolData.address) || 0
+  const lockStartingTime =
+    localStorage.getItem(poolData.address.toLowerCase()) || 0
   const { minutes, seconds } = useCountdown(
     Number(lockStartingTime) + FIVE_MINUTES_IN_MS
   )
@@ -191,7 +192,10 @@ export const WithdrawSection = (props: IProps) => {
         withdrawDone: true,
       }))
 
-      localStorage.setItem(poolData.address, new Date().getTime().toString())
+      localStorage.setItem(
+        poolData.address.toLowerCase(),
+        new Date().getTime().toString()
+      )
     } catch (error) {
       console.error(error)
       setState((prev) => ({
