@@ -11,7 +11,7 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import ClockIcon from '@material-ui/icons/AccessTime'
 import { ActionStepRow } from '..'
-import { FIVE_MINUTES_IN_MS, LOCKED_STARTING_TIME } from 'config/constants'
+import { FIVE_MINUTES_IN_MS } from 'config/constants'
 import { useCountdown } from 'helpers/useCountdownClock'
 import { WarningInfo } from 'components/Common/WarningInfo'
 
@@ -129,7 +129,8 @@ export const WithdrawSection = (props: IProps) => {
     step: 1,
   })
 
-  const lockStartingTime = localStorage.getItem(LOCKED_STARTING_TIME) || 0
+  const lockStartingTime =
+    localStorage.getItem(poolData.address.toLowerCase()) || 0
   const { minutes, seconds } = useCountdown(
     Number(lockStartingTime) + FIVE_MINUTES_IN_MS
   )
@@ -192,7 +193,7 @@ export const WithdrawSection = (props: IProps) => {
       }))
 
       localStorage.setItem(
-        LOCKED_STARTING_TIME,
+        poolData.address.toLowerCase(),
         new Date().getTime().toString()
       )
     } catch (error) {

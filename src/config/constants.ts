@@ -26,8 +26,6 @@ export const ETHER_DECIMAL = 18
 export const MINT_BURN_SLIPPAGE = BigNumber.from(100)
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000'
 
-export const LOCKED_STARTING_TIME = 'LOCKED_STARTING_TIME'
-
 export const FIVE_MINUTES_IN_MS = 5 * 60 * 1000
 
 export const ONE_HOUR_IN_MS = 1000 * 60 * 60
