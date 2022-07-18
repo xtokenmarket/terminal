@@ -163,6 +163,7 @@ export const Header = () => {
           />
         )}
         <Button
+          id="connectWallet"
           className={classes.connect}
           color="primary"
           variant="contained"
