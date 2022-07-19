@@ -117,6 +117,7 @@ interface IProps {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void
   saleDisplayName?: string
+  id?: string
 }
 
 export const Selector: React.FC<IProps> = ({
@@ -128,6 +129,7 @@ export const Selector: React.FC<IProps> = ({
   disabled,
   onChangeinput,
   saleDisplayName,
+  id,
 }) => {
   const classes = useStyles()
   const Eoptions = saleDisplayName ? EOfferingPeriods : EPeriods
@@ -152,6 +154,7 @@ export const Selector: React.FC<IProps> = ({
       <Grid container justifyContent="space-between" spacing={3}>
         <Grid item xs={12} md={7}>
           <Input
+            id={`${id}Input`}
             className={classes.inputField}
             value={inputValue}
             onChange={onChangeinput}
@@ -160,6 +163,7 @@ export const Selector: React.FC<IProps> = ({
         </Grid>
         <Grid item xs={12} md={5}>
           <Select
+            id={`${id}Dropdown`}
             fullWidth
             disableUnderline
             placeholder={Eoptions.Weeks}
@@ -185,9 +189,14 @@ export const Selector: React.FC<IProps> = ({
             onChange={onSelectorChange}
             disabled={disabled}
           >
-            {Object.values(Eoptions).map((unit) => {
+            {Object.values(Eoptions).map((unit, index) => {
               return (
-                <MenuItem className={classes.item} value={unit} key={unit}>
+                <MenuItem
+                  className={classes.item}
+                  value={unit}
+                  key={unit}
+                  id={`${id}Dropdown-${index}`}
+                >
                   {unit}
                 </MenuItem>
               )
