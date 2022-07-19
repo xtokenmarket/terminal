@@ -169,6 +169,7 @@ export const TokenSelectModal: React.FC<IProps> = ({
               placeholder="Search by token name or paste address"
               value={searchQuery}
               onChange={onSearchQueryChange}
+              id="tokenAddress"
             />
             <Typography className={cl.commonLabel}>COMMON BASES</Typography>
             <CommonTokens onSelectToken={onSelect} includeETH={includeETH} />

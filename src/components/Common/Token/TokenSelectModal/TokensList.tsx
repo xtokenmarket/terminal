@@ -72,7 +72,9 @@ export const TokensList: React.FC<IProps> = ({
   isLoading,
 }) => {
   const cl = useStyles()
-  const [displayState, setDisplayState] = useState(ETokensListDisplayState.FoundResults)
+  const [displayState, setDisplayState] = useState(
+    ETokensListDisplayState.FoundResults
+  )
   useEffect(() => {
     if (isLoading) {
       setDisplayState(ETokensListDisplayState.Loading)
@@ -113,5 +115,9 @@ export const TokensList: React.FC<IProps> = ({
     ),
   }[displayState]
 
-  return <div className={cl.tokensList}>{content}</div>
+  return (
+    <div className={cl.tokensList} id="tokenList">
+      {content}
+    </div>
+  )
 }

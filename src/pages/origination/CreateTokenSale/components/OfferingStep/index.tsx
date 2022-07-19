@@ -140,6 +140,7 @@ export const OfferingStep: React.FC<IProps> = ({
       </Grid>
 
       <Button
+        id="next"
         className={classes.nextButton}
         color="primary"
         fullWidth

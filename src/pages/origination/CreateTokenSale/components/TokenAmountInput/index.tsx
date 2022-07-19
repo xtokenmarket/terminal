@@ -179,6 +179,7 @@ export const TokenAmountInput: React.FC<IProps> = ({
       )}
       <div className={classes.inputContainer}>
         <TextField
+          id={label?.replace(/ /g, '')}
           fullWidth
           className={classes.input}
           type="number"

@@ -20,6 +20,7 @@ async function main() {
       // eslint-disable-next-line no-undef
       seed: process.env.SEED,
     })
+    await sleep(2000)
     await metamask.switchNetwork('goerli')
 
     const page = await browser.newPage()
@@ -44,9 +45,32 @@ async function main() {
 
     page.bringToFront()
 
+    //create token sale
     await page.goto('http://localhost:3000/origination/new-token-sale', {
       waituntil: 'load',
     })
+    var selectToken0 = await page.waitForSelector('div#selectToken0')
+    await selectToken0.click()
+    var input = await page.waitForSelector('input#tokenAddress')
+    await input.type('0x36FC806bb8FE99d00439E9867314A5E082184257')
+    await sleep(2000)
+    var token = await page.waitForSelector('div#tokenList > div')
+    await token.click()
+
+    var selectToken1 = await page.waitForSelector('div#selectToken1')
+    await selectToken1.click()
+    await input.type('0x67F0ecD58a6287d5ec8CA92b6Fda836EDa9aE41F')
+    await sleep(2000)
+    token = await page.waitForSelector('div#tokenList > div')
+    await token.click()
+
+    var input0 = await page.waitForSelector('input#OfferTokenAmount')
+    await input0.type('3')
+    var input1 = await page.waitForSelector('input#ReservePurchaseTokenRaised')
+    await input1.type('2')
+
+    var next = await page.waitForSelector('button#next')
+    await next.click()
   } catch (error) {
     console.log('error>>', error)
   }

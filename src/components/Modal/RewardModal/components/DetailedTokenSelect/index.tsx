@@ -79,6 +79,7 @@ export const DetailedTokenSelect = ({
       <div
         className={clsx(classes.root, className)}
         onClick={() => (!isDisabled ? setModalVisible(true) : undefined)}
+        id={includeETH ? 'selectToken1' : 'selectToken0'}
       >
         {token ? (
           <TokenIcon token={token} className={classes.tokenIcon} />
