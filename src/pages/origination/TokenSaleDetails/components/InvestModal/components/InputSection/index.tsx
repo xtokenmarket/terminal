@@ -8,7 +8,6 @@ import { TokenBalanceInput } from 'components'
 import { ZERO } from 'utils/number'
 import { BigNumber } from 'ethers'
 import { useTokenBalance } from 'helpers'
-import { formatUnits } from 'ethers/lib/utils'
 import { formatBigNumber, numberWithCommas } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
@@ -104,23 +103,11 @@ export const InputSection = (props: IProps) => {
     }
   )
 
-  const isAddressCapExceeded =
-    props.myPositionData.amountInvested.gte(props.whitelistData.addressCap) &&
-    props.isWhitelist
-
-  const availableAmount = props.offerData.totalOfferingAmount.sub(
-    props.offerData.offerTokenAmountSold
-  )
-
-  const maxLimit = props.isWhitelist
-    ? props.whitelistData.addressCap.gt(availableAmount)
-      ? availableAmount
-      : props.whitelistData.addressCap
-    : availableAmount
-
   useEffect(() => {
     const isInsufficientBalance = state.purchaseAmount.gt(balance) && !isLoading
-    const isInvalidAmount = state.purchaseAmount.gt(maxLimit)
+    const isInvalidAmount =
+      state.purchaseAmount.gt(props.whitelistData.addressCap) &&
+      props.isWhitelist
 
     if (isInsufficientBalance) {
       setState({ errorMessage: 'Insufficient balance.' })
@@ -130,7 +117,10 @@ export const InputSection = (props: IProps) => {
     if (isInvalidAmount) {
       setState({
         errorMessage: `Invalid amount. Maximum limit is ${numberWithCommas(
-          formatBigNumber(maxLimit, props.offerData.offerToken.decimals)
+          formatBigNumber(
+            props.whitelistData.addressCap,
+            props.offerData.purchaseToken.decimals
+          )
         )}`,
       })
       return
@@ -210,12 +200,8 @@ export const InputSection = (props: IProps) => {
           >
             INVEST
           </Button>
-          {(state.errorMessage || isAddressCapExceeded) && (
-            <div className={classes.warning}>
-              {isAddressCapExceeded
-                ? 'Invested amount has reached the address cap.'
-                : state.errorMessage}
-            </div>
+          {state.errorMessage && (
+            <div className={classes.warning}>{state.errorMessage}</div>
           )}
         </div>
       </div>
