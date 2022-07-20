@@ -367,10 +367,14 @@ export const useOriginationPool = (
             account: account.toLowerCase(),
           }
 
-          const userToVestingEntryIds = (
-            await fetchQuery(ENTRY_IDS_QUERY, eventVariables, graphqlUrl)
-          ).userToVestingEntryIds
-
+          let userToVestingEntryIds
+          try {
+            userToVestingEntryIds = (
+              await fetchQuery(ENTRY_IDS_QUERY, eventVariables, graphqlUrl)
+            ).userToVestingEntryIds
+          } catch (error) {
+            console.error('Error while fetching userToVestingEntryIds')
+          }
 
           const vestingEntryNFTContract = new Contract(
             vestingEntryNFTAddress,
