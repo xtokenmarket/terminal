@@ -77,10 +77,11 @@ async function main() {
     await next.click()
     var yes = await page.waitForSelector('#isSetPublic > label:nth-child(1)')
     await yes.click()
-    var formula = await page.waitForSelector(
+    await sleep(1000)
+    var formulaStandard = await page.waitForSelector(
       '#formula > div:nth-child(2) > span'
     )
-    await formula.click()
+    await formulaStandard.click()
     var price = await page.waitForSelector('input#standardPrice')
     await price.type('1')
     var offeringPeriodDropdown = await page.waitForSelector(
@@ -90,11 +91,21 @@ async function main() {
     var offeringPeriodDropdownItem = await page.waitForSelector(
       '#offeringPeriodDropdown-0'
     )
+    await sleep(500)
     await offeringPeriodDropdownItem.click()
     var offeringPeriodInput = await page.waitForSelector('#offeringPeriodInput')
     await offeringPeriodInput.type('5')
     await sleep(1000)
     next = await page.waitForSelector('#next')
+    await next.click()
+
+    // Vesting step
+    var noVesting = await page.waitForSelector(
+      '#isSetVesting > div:nth-child(2) > span'
+    )
+    await noVesting.click()
+    await sleep(1000)
+    next = await page.waitForSelector('button#next')
     await next.click()
   } catch (error) {
     console.log('error>>', error)
