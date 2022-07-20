@@ -102,20 +102,25 @@ export const InputSection = (props: IProps) => {
     }
   )
 
+  const isInvestedAmountReachedAddressCap =
+    props.myPositionData.amountInvested.gte(props.whitelistData.addressCap) &&
+    props.isWhitelist
+
   useEffect(() => {
-    if (
-      props.myPositionData.amountInvested.gte(props.whitelistData.addressCap) &&
-      props.isWhitelist
-    )
-      setState({ errorMessage: 'Invested amount has reached the address cap.' })
-    else if (state.purchaseAmount.gt(balance) && !isLoading)
-      setState({ errorMessage: 'Amount exceeds balance.' })
-    else if (
+    const isAmountExceedsBalance =
+      state.purchaseAmount.gt(balance) && !isLoading
+    const isAmountExceedsAddressCap =
       state.purchaseAmount.gt(props.whitelistData.addressCap) &&
       props.isWhitelist
+    const isAmountExceedsTotalOffering = state.offerAmount.gt(
+      props.offerData.totalOfferingAmount
     )
+
+    if (isAmountExceedsBalance)
+      setState({ errorMessage: 'Amount exceeds balance.' })
+    else if (isAmountExceedsAddressCap)
       setState({ errorMessage: 'Amount exceeds address cap.' })
-    else if (state.offerAmount.gt(props.offerData.totalOfferingAmount))
+    else if (isAmountExceedsTotalOffering)
       setState({ errorMessage: 'Amount exceeds total offering Amount' })
     else setState({ errorMessage: '' })
   }, [state.purchaseAmount, account])
@@ -191,8 +196,12 @@ export const InputSection = (props: IProps) => {
           >
             INVEST
           </Button>
-          {state.errorMessage && (
-            <div className={classes.warning}>{state.errorMessage}</div>
+          {(state.errorMessage || isInvestedAmountReachedAddressCap) && (
+            <div className={classes.warning}>
+              {isInvestedAmountReachedAddressCap
+                ? 'Invested amount has reached the address cap.'
+                : state.errorMessage}
+            </div>
           )}
         </div>
       </div>
