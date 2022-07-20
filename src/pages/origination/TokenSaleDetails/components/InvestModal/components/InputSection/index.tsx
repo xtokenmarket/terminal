@@ -102,28 +102,36 @@ export const InputSection = (props: IProps) => {
     }
   )
 
-  const isInvestedAmountReachedAddressCap =
+  const isAddressCapExceeded =
     props.myPositionData.amountInvested.gte(props.whitelistData.addressCap) &&
     props.isWhitelist
 
-  useEffect(() => {
-    const isAmountExceedsBalance =
-      state.purchaseAmount.gt(balance) && !isLoading
-    const isAmountExceedsAddressCap =
-      state.purchaseAmount.gt(props.whitelistData.addressCap) &&
-      props.isWhitelist
-    const isAmountExceedsTotalOffering = state.offerAmount.gt(
-      props.offerData.totalOfferingAmount
-    )
+  const availableAmount = props.offerData.totalOfferingAmount.sub(
+    props.offerData.offerTokenAmountSold
+  )
 
-    if (isAmountExceedsBalance)
-      setState({ errorMessage: 'Amount exceeds balance.' })
-    else if (isAmountExceedsAddressCap)
-      setState({ errorMessage: 'Amount exceeds address cap.' })
-    else if (isAmountExceedsTotalOffering)
-      setState({ errorMessage: 'Amount exceeds total offering Amount' })
-    else setState({ errorMessage: '' })
-  }, [state.purchaseAmount, account])
+  const maxLimit = props.isWhitelist
+    ? props.whitelistData.addressCap.gt(availableAmount)
+      ? availableAmount
+      : props.whitelistData.addressCap
+    : availableAmount
+
+  useEffect(() => {
+    const isInsufficientBalance = state.purchaseAmount.gt(balance) && !isLoading
+    const isInvalidAmount = state.purchaseAmount.gt(maxLimit)
+
+    if (isInsufficientBalance) {
+      setState({ errorMessage: 'Insufficient balance.' })
+      return
+    }
+
+    if (isInvalidAmount) {
+      setState({ errorMessage: `Invalid amount. Maximum limit is ${maxLimit}` })
+      return
+    }
+
+    setState({ errorMessage: '' })
+  }, [balance, state.offerAmount, state.purchaseAmount])
 
   const estimateOfferAmount = async (purchaseAmount: BigNumber) => {
     if (!account || !provider) {
@@ -196,9 +204,9 @@ export const InputSection = (props: IProps) => {
           >
             INVEST
           </Button>
-          {(state.errorMessage || isInvestedAmountReachedAddressCap) && (
+          {(state.errorMessage || isAddressCapExceeded) && (
             <div className={classes.warning}>
-              {isInvestedAmountReachedAddressCap
+              {isAddressCapExceeded
                 ? 'Invested amount has reached the address cap.'
                 : state.errorMessage}
             </div>
