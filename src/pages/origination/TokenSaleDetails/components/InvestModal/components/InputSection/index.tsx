@@ -8,6 +8,8 @@ import { TokenBalanceInput } from 'components'
 import { ZERO } from 'utils/number'
 import { BigNumber } from 'ethers'
 import { useTokenBalance } from 'helpers'
+import { formatUnits } from 'ethers/lib/utils'
+import { formatBigNumber, numberWithCommas } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -126,7 +128,11 @@ export const InputSection = (props: IProps) => {
     }
 
     if (isInvalidAmount) {
-      setState({ errorMessage: `Invalid amount. Maximum limit is ${maxLimit}` })
+      setState({
+        errorMessage: `Invalid amount. Maximum limit is ${numberWithCommas(
+          formatBigNumber(maxLimit, props.offerData.offerToken.decimals)
+        )}`,
+      })
       return
     }
 
