@@ -64,31 +64,50 @@ async function offeringStep(page) {
   await next.click()
 }
 
-async function auctionStep(page) {
-  var no = await page.waitForSelector('#isSetWhitelist > label:nth-child(2)')
-  await no.click()
+async function auctionStep(page, isCreateWhitelist, isCreatePublic = true) {
+  async function fillForm() {
+    await sleep(1000)
+    var formulaStandard = await page.waitForSelector(
+      '#formula > div:nth-child(2) > span'
+    )
+    await formulaStandard.click()
+    var price = await page.waitForSelector('input#standardPrice')
+    await price.type('1')
+    var offeringPeriodDropdown = await page.waitForSelector(
+      '#offeringPeriodDropdown'
+    )
+    await offeringPeriodDropdown.click()
+    var offeringPeriodDropdownItem = await page.waitForSelector(
+      '#offeringPeriodDropdown-0'
+    )
+    await sleep(500)
+    await offeringPeriodDropdownItem.click()
+    var offeringPeriodInput = await page.waitForSelector('#offeringPeriodInput')
+    await offeringPeriodInput.type('5')
+  }
+
+  if (isCreateWhitelist) {
+    var yes = await page.waitForSelector('#isSetWhitelist > label:nth-child(1)')
+    await yes.click()
+    await fillForm()
+  } else {
+    var no = await page.waitForSelector('#isSetWhitelist > label:nth-child(2)')
+    await no.click()
+  }
+
+  await sleep(1000)
   var next = await page.waitForSelector('#next')
   await next.click()
-  var yes = await page.waitForSelector('#isSetPublic > label:nth-child(1)')
-  await yes.click()
-  await sleep(1000)
-  var formulaStandard = await page.waitForSelector(
-    '#formula > div:nth-child(2) > span'
-  )
-  await formulaStandard.click()
-  var price = await page.waitForSelector('input#standardPrice')
-  await price.type('1')
-  var offeringPeriodDropdown = await page.waitForSelector(
-    '#offeringPeriodDropdown'
-  )
-  await offeringPeriodDropdown.click()
-  var offeringPeriodDropdownItem = await page.waitForSelector(
-    '#offeringPeriodDropdown-0'
-  )
-  await sleep(500)
-  await offeringPeriodDropdownItem.click()
-  var offeringPeriodInput = await page.waitForSelector('#offeringPeriodInput')
-  await offeringPeriodInput.type('5')
+
+  if (isCreatePublic) {
+    yes = await page.waitForSelector('#isSetPublic > label:nth-child(1)')
+    await yes.click()
+    await fillForm()
+  } else {
+    no = await page.waitForSelector('#isSetPublic > label:nth-child(2)')
+    await no.click()
+  }
+
   await sleep(1000)
   next = await page.waitForSelector('#next')
   await next.click()
@@ -115,11 +134,11 @@ async function submitAndCreateSale(page, metamask) {
   await metamask.confirmTransaction()
   await sleep(2000)
   page.bringToFront()
-  const done = await page.waitForSelector('button#done')
+  const done = await page.waitForSelector('button#done', { timeout: 60000 })
   await done.click()
 }
 
-async function main() {
+async function createPublicSale() {
   try {
     const [page, metamask] = await launchAndConnect()
     await offeringStep(page)
@@ -131,4 +150,20 @@ async function main() {
   }
 }
 
-main()
+async function createWhitelistSale() {
+  try {
+    const isCreateWhitelist = true
+    const isCreatePublic = false
+
+    const [page, metamask] = await launchAndConnect()
+    await offeringStep(page)
+    await auctionStep(page, isCreateWhitelist, isCreatePublic)
+    await vestingStep(page)
+    await submitAndCreateSale(page, metamask)
+  } catch (error) {
+    console.log('error>>', error)
+  }
+}
+
+// createPublicSale()
+createWhitelistSale()
