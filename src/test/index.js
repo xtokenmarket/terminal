@@ -165,5 +165,21 @@ async function createWhitelistSale() {
   }
 }
 
+async function createWhitelistPublicSale() {
+  try {
+    const isCreateWhitelist = true
+    const isCreatePublic = true
+
+    const [page, metamask] = await launchAndConnect()
+    await offeringStep(page)
+    await auctionStep(page, isCreateWhitelist, isCreatePublic)
+    await vestingStep(page)
+    await submitAndCreateSale(page, metamask)
+  } catch (error) {
+    console.log('error>>', error)
+  }
+}
+
 // createPublicSale()
-createWhitelistSale()
+// createWhitelistSale()
+createWhitelistPublicSale()
