@@ -80,6 +80,7 @@ interface IState {
   offerAmount: BigNumber
   purchaseAmount: BigNumber
   errorMessage: string
+  maxLimit: BigNumber
 }
 
 export const InputSection = (props: IProps) => {
@@ -100,14 +101,45 @@ export const InputSection = (props: IProps) => {
       offerAmount: ZERO,
       purchaseAmount: ZERO,
       errorMessage: '',
+      maxLimit: ZERO,
     }
   )
 
   useEffect(() => {
+    const getMaxLimit = async () => {
+      const availableAmount = props.offerData.totalOfferingAmount.sub(
+        props.offerData.offerTokenAmountSold
+      )
+
+      const fungiblePool = new FungiblePoolService(
+        provider,
+        account,
+        offerData.poolAddress
+      )
+
+      let maxLimit
+      try {
+        maxLimit = await fungiblePool.getPurchaseAmountFromOfferAmount(
+          availableAmount
+        )
+      } catch (error) {
+        console.error('getPurchaseAmountFromOfferAmount error', error)
+      }
+      setState({ maxLimit })
+    }
+
+    getMaxLimit()
+  }, [])
+
+  useEffect(() => {
     const isInsufficientBalance = state.purchaseAmount.gt(balance) && !isLoading
-    const isInvalidAmount =
-      state.purchaseAmount.gt(props.whitelistData.addressCap) &&
-      props.isWhitelist
+
+    const maxLimit = props.isWhitelist
+      ? props.whitelistData.addressCap.gt(state.maxLimit)
+        ? state.maxLimit
+        : props.whitelistData.addressCap
+      : state.maxLimit
+    const isInvalidAmount = state.purchaseAmount.gt(maxLimit)
 
     if (isInsufficientBalance) {
       setState({ errorMessage: 'Insufficient balance.' })
@@ -117,10 +149,7 @@ export const InputSection = (props: IProps) => {
     if (isInvalidAmount) {
       setState({
         errorMessage: `Invalid amount. Maximum limit is ${numberWithCommas(
-          formatBigNumber(
-            props.whitelistData.addressCap,
-            props.offerData.purchaseToken.decimals
-          )
+          formatBigNumber(maxLimit, props.offerData.purchaseToken.decimals)
         )}`,
       })
       return
