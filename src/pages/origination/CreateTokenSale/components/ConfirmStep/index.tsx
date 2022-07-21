@@ -234,6 +234,7 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit }) => {
       </Grid>
 
       <Button
+        id="submit"
         className={classes.nextButton}
         color="primary"
         fullWidth

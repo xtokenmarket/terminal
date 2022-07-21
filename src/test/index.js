@@ -53,14 +53,14 @@ async function main() {
     await selectToken0.click()
     var input = await page.waitForSelector('input#tokenAddress')
     await input.type('0x36FC806bb8FE99d00439E9867314A5E082184257')
-    await sleep(2500)
+    await sleep(3000)
     var token = await page.waitForSelector('div#tokenList > div')
     await token.click()
 
     var selectToken1 = await page.waitForSelector('div#selectToken1')
     await selectToken1.click()
     await input.type('0x67F0ecD58a6287d5ec8CA92b6Fda836EDa9aE41F')
-    await sleep(2500)
+    await sleep(3000)
     token = await page.waitForSelector('div#tokenList > div')
     await token.click()
     var input0 = await page.waitForSelector('input#OfferTokenAmount')
@@ -107,6 +107,20 @@ async function main() {
     await sleep(1000)
     next = await page.waitForSelector('button#next')
     await next.click()
+    await page.screenshot({ path: 'create-token-sale.png' })
+
+    const submit = await page.waitForSelector('button#submit')
+    await submit.click()
+
+    // create token sale
+    const createTokenSale = await page.waitForSelector('button#createTokenSale')
+    await createTokenSale.click()
+    await sleep(3000)
+    await metamask.confirmTransaction()
+    await sleep(2000)
+    page.bringToFront()
+    const done = await page.waitForSelector('button#done')
+    await done.click()
   } catch (error) {
     console.log('error>>', error)
   }
