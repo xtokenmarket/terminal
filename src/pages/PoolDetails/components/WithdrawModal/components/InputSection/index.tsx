@@ -65,13 +65,9 @@ export const InputSection = (props: IProps) => {
       amount0Estimation = amount
         .mul(token0.balance as BigNumber)
         .div(totalSupply)
-        .mul(99)
-        .div(100)
       amount1Estimation = amount
         .mul(token1.balance as BigNumber)
         .div(totalSupply)
-        .mul(99)
-        .div(100)
 
       if (token0.decimals !== ETHER_DECIMAL) {
         amount0Estimation = parseUnits(
