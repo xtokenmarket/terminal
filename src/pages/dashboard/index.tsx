@@ -117,7 +117,9 @@ const Dashboard = () => {
                       <div className={classes.icon}>
                         <Icon fill={colors[0].colors.white} />
                       </div>
-                      <Typography className={classes.title}>{label}</Typography>
+                      <Typography className={classes.title}>{`${label
+                        .charAt(0)
+                        .toUpperCase()}${label.slice(1)}`}</Typography>
                     </div>
                     <Typography className={classes.description}>
                       {description}
