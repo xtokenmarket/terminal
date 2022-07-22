@@ -2,6 +2,7 @@ import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { MENU_ITEMS } from 'config/layout'
 import { FunctionComponent, SVGProps } from 'react'
 import { matchPath, NavLink, useHistory } from 'react-router-dom'
+import colors from 'theme/colors'
 
 type Items = {
   id: string
@@ -120,7 +121,7 @@ const Dashboard = () => {
                   <div className={classes.card}>
                     <div className={classes.titleWrapper}>
                       <div className={classes.icon}>
-                        <Icon />
+                        <Icon fill={colors[0].colors.white} />
                       </div>
                       <Typography className={classes.title}>{label}</Typography>
                     </div>
@@ -141,7 +142,6 @@ const Dashboard = () => {
                             disabled={!enabled}
                             variant="contained"
                             className={classes.button}
-                            //   onClick={onConfirm}
                           >
                             ENTER
                           </Button>
