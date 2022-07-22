@@ -85,10 +85,10 @@ const useStyles = makeStyles((theme) => ({
 
 const getItem = () => {
   const descriptions = [
-    'Origination Launch a token offering with dynamic pricing, custom duration and vesting parameters and reserve conditions.',
-    'Origination Launch a token offering with dynamic pricing, custom duration and vesting parameters and reserve conditions.',
-    'Origination Launch a token offering with dynamic pricing, custom duration and vesting parameters and reserve conditions.',
-    'Origination Launch a token offering with dynamic pricing, custom duration and vesting parameters and reserve conditions.',
+    'Configure and deploy an incentivized liquidity program with a concentrated price range and other custom parameters for any taken pair.',
+    'Launch a token offering with dynamic pricing, custom duration and vesting parameters and reserve conditions.',
+    'Attract long term, efficient liquidity in our novel hybrid of liquidity mining and bonding. ',
+    'Borrow any asset against your native token, with no need for price oracles of any kind.',
   ]
   let dashboardItems = MENU_ITEMS.filter((_, index) => index !== 0)
   dashboardItems = dashboardItems.map((x, index) => {
