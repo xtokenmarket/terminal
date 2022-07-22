@@ -22,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('md')]: {
       width: '100%',
     },
+    [theme.breakpoints.down('xs')]: {
+      width: '90%',
+    },
   },
   link: {
     textDecoration: 'none',
@@ -36,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
     fontSize: 14,
     lineHeight: '23px',
+    whiteSpace: 'pre-wrap',
   },
   card: {
     background: '#2e1e6d',
@@ -43,6 +47,9 @@ const useStyles = makeStyles((theme) => ({
     padding: '30px 45px',
     color: theme.colors.white,
     border: '1px solid #5f6395',
+    [theme.breakpoints.down('xs')]: {
+      padding: '20px 20px',
+    },
   },
   titleWrapper: {
     display: 'flex',
@@ -80,13 +87,18 @@ const useStyles = makeStyles((theme) => ({
     margin: '0 0 25px 0',
     width: '70%',
     lineHeight: 2,
+    [theme.breakpoints.down('xs')]: {
+      width: '90%',
+      marginTop: 20,
+      lineHeight: 1.5,
+    },
   },
 }))
 
 const getItem = () => {
   const descriptions = [
     'Configure and deploy an incentivized liquidity program with a concentrated price range and other custom parameters for any taken pair.',
-    'Launch a token offering with dynamic pricing, custom duration and vesting parameters and reserve conditions.',
+    `Launch a token offering with dynamic pricing,\n custom duration and vesting parameters and reserve conditions.`,
     'Attract long term, efficient liquidity in our novel hybrid of liquidity mining and bonding. ',
     'Borrow any asset against your native token, with no need for price oracles of any kind.',
   ]
