@@ -8,11 +8,11 @@ const routes = [
     path: '/',
     layout: MainLayout,
     routes: [
-      // {
-      //   exact: true,
-      //   path: "/home",
-      //   component: lazy(() => import("pages/ComingSoon")),
-      // },
+      {
+        exact: true,
+        path: '/home',
+        component: lazy(() => import('pages/dashboard')),
+      },
       {
         exact: true,
         path: '/native',
