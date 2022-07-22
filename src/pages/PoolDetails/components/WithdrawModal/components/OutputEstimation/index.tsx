@@ -118,6 +118,7 @@ export const OutputEstimation = (props: IProps) => {
                   4
                 )}
                 &nbsp;
+                {rewardToken.symbol}
                 {rewardToken.price && earned.length > 0 && (
                   <span>
                     ~ $
