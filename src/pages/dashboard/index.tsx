@@ -1,7 +1,7 @@
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { MENU_ITEMS } from 'config/layout'
 import { FunctionComponent, SVGProps } from 'react'
-import { matchPath, NavLink, useHistory } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import colors from 'theme/colors'
 
 type Items = {
@@ -99,7 +99,6 @@ const getItem = () => {
 
 const Dashboard = () => {
   const classes = useStyles()
-  const history = useHistory()
 
   return (
     <div className={classes.root}>
@@ -111,11 +110,6 @@ const Dashboard = () => {
         <Grid container spacing={5}>
           {getItem().map(
             ({ icon: Icon, href, enabled, label, description }) => {
-              const getIsActive = () =>
-                !!matchPath(history.location.pathname, {
-                  path: href,
-                  exact: false,
-                })
               return (
                 <Grid item xs={12} md={6}>
                   <div className={classes.card}>
@@ -131,12 +125,7 @@ const Dashboard = () => {
 
                     <div className={classes.bottomWrapper}>
                       {enabled ? (
-                        <NavLink
-                          isActive={getIsActive}
-                          to={href}
-                          key={href}
-                          className={classes.link}
-                        >
+                        <NavLink to={href} key={href} className={classes.link}>
                           <Button
                             color="primary"
                             disabled={!enabled}
