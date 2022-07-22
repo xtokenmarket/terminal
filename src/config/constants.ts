@@ -8,6 +8,7 @@ import { ReactComponent as MiningIcon } from 'assets/svgs/mining.svg'
 import { ReactComponent as NativeIcon } from 'assets/svgs/native.svg'
 import { ReactComponent as OriginationIcon } from 'assets/svgs/origination.svg'
 import { ReactComponent as TwitterIcon } from 'assets/svgs/twitter.svg'
+import { ReactComponent as DashboardIcon } from 'assets/svgs/dashboard.svg'
 import { IToken } from 'types'
 import { ethers } from 'ethers'
 
@@ -179,6 +180,7 @@ export const SvgIcons = {
   native: NativeIcon,
   origination: OriginationIcon,
   twitter: TwitterIcon,
+  dashboard: DashboardIcon,
 }
 
 export const LP_TOKEN_BASIC: IToken = {
