@@ -101,6 +101,7 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
         </Grid>
         <Grid item xs={12}>
           <Selector
+            id="vestingPeriod"
             onSelectorChange={(e) =>
               updateData({ vestingPeriodUnit: e.target.value })
             }
@@ -118,6 +119,7 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
         </Grid>
         <Grid item xs={12}>
           <Selector
+            id="cliffPeriod"
             onSelectorChange={(e) =>
               updateData({ cliffPeriodUnit: e.target.value })
             }
