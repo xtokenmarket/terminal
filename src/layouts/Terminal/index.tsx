@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 24,
     [theme.breakpoints.down('xs')]: {
       backgroundColor: theme.colors.primary700,
+      marginBottom: 56,
     },
   },
 }))
