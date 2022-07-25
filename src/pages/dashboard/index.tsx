@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     margin: 'auto',
     width: '80%',
+    maxWidth: 1000,
     [theme.breakpoints.down('md')]: {
       width: '100%',
     },
@@ -97,8 +98,8 @@ const useStyles = makeStyles((theme) => ({
 
 const getItem = () => {
   const descriptions = [
-    'Configure and deploy an incentivized liquidity program with a concentrated price range and other custom parameters for any taken pair.',
-    `Launch a token offering with dynamic pricing,\n custom duration and vesting parameters and reserve conditions.`,
+    'Configure and deploy an incentivized liquidity program with a concentrated price range and other custom parameters for any token pair.',
+    `Launch a token offering with dynamic pricing, custom duration, vesting parameters and reserve conditions.\n   `,
     'Attract long term, efficient liquidity in our novel hybrid of liquidity mining and bonding. ',
     'Borrow any asset against your native token, with no need for price oracles of any kind.',
   ]
@@ -112,11 +113,15 @@ const getItem = () => {
 const Dashboard = () => {
   const classes = useStyles()
 
+  const formatLabel = (label: string) => {
+    return `${label.charAt(0).toUpperCase()}${label.slice(1)}`
+  }
+
   return (
     <div className={classes.root}>
       <Typography className={classes.topDescription}>
-        The Xtoken terminal helps you gain access to our platform's apps for
-        building capital markets and liquidity managements.
+        xToken Terminal is a permissionless investment bank, providing projects
+        and individuals seamless access to fundamental on-chain primitives.
       </Typography>
       <div>
         <Grid container spacing={5}>
@@ -129,9 +134,14 @@ const Dashboard = () => {
                       <div className={classes.icon}>
                         <Icon fill={colors[0].colors.white} />
                       </div>
-                      <Typography className={classes.title}>{`${label
-                        .charAt(0)
-                        .toUpperCase()}${label.slice(1)}`}</Typography>
+                      <Typography className={classes.title}>
+                        {label.split(' ').length > 1
+                          ? `${label
+                              .split(' ')
+                              .map((x) => formatLabel(x))
+                              .join(' ')}`
+                          : formatLabel(label)}
+                      </Typography>
                     </div>
                     <Typography className={classes.description}>
                       {description}
