@@ -1,7 +1,6 @@
 import { makeStyles, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import { TokenIcon } from 'components'
-import { BigNumber } from 'ethers'
 import { IOfferingOverview } from 'types'
 import {
   formatBigNumber,
@@ -11,10 +10,9 @@ import {
   getTimeRemainingUnits,
   getTotalTokenPrice,
   numberWithCommas,
-  parseDurationSec,
+  parseRemainingDurationSec,
   // getTotalTokenPrice,
 } from 'utils'
-import { ONE_ETHER } from 'utils/number'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -129,9 +127,9 @@ export const OutputEstimation = (props: IProps) => {
         </div>
       </div>
       <div className={classes.period}>
-        <Typography className={classes.label}>SALES PERIOD</Typography>
+        <Typography className={classes.label}>SALE PERIOD</Typography>
         <Typography className={classes.whiteText}>
-          {parseDurationSec(Number(offerData.salesPeriod?.toString()))}
+          {parseRemainingDurationSec(Number(offerData.salesPeriod?.toString()))}
         </Typography>
       </div>
     </div>

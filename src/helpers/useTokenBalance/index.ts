@@ -13,15 +13,19 @@ export const useTokenBalance = (
 ): {
   balance: BigNumber
   loadBalance: () => Promise<void>
+  isLoading: boolean
 } => {
   const [balance, setBalance] = useState(ZERO)
+  const [isLoading, setIsLoading] = useState(false)
   const { account, library: provider, networkId } = useConnectedWeb3Context()
   const isMountedRef = useIsMountedRef()
 
   const loadBalance = async () => {
+    setIsLoading(true)
     const fProvider = provider || DefaultReadonlyProvider
     if (!user && !account) {
       setBalance(ZERO)
+      setIsLoading(false)
       return
     }
 
@@ -43,6 +47,8 @@ export const useTokenBalance = (
       if (isMountedRef.current) {
         setBalance(() => ZERO)
       }
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -50,5 +56,5 @@ export const useTokenBalance = (
     loadBalance()
   }, [tokenAddress, account, networkId, provider])
 
-  return { balance, loadBalance }
+  return { balance, loadBalance, isLoading }
 }

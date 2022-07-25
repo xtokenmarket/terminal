@@ -2,7 +2,7 @@ import { IconButton, makeStyles, Typography } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import { Modal } from 'components'
 import { useConnectedWeb3Context } from 'contexts'
-import { IOfferingOverview } from 'types'
+import { IMyPosition, IOfferingOverview, IWhitelistSale } from 'types'
 import { EInvestModalStep } from 'utils/enums'
 import { BigNumber } from 'ethers'
 import { ZERO } from 'utils/number'
@@ -67,6 +67,8 @@ interface IProps {
   open: boolean
   addressCap: BigNumber
   isSaleCompleted?: boolean
+  whitelistData: IWhitelistSale
+  myPositionData: IMyPosition
 }
 
 export interface IState {
@@ -95,6 +97,8 @@ export const InvestModal: React.FC<IProps> = ({
   open,
   addressCap,
   isSaleCompleted,
+  whitelistData,
+  myPositionData,
 }) => {
   const classes = useStyles()
   const { account } = useConnectedWeb3Context()
@@ -169,6 +173,9 @@ export const InvestModal: React.FC<IProps> = ({
             onNext={onNextStep}
             offerData={offerData}
             updateState={updateState}
+            whitelistData={whitelistData}
+            myPositionData={myPositionData}
+            isWhitelist={isWhitelist}
           />
         )
       case EInvestModalStep.Approve:

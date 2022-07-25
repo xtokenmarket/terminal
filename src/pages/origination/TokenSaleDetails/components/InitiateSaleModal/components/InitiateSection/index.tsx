@@ -6,13 +6,15 @@ import {
   CircularProgress,
 } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
-import { useIsMountedRef } from 'helpers'
+import { useIsMountedRef, useTokenBalance } from 'helpers'
 import { useEffect, useState } from 'react'
 import { ERC20Service, FungiblePoolService } from 'services'
 import { IOfferingOverview } from 'types'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 
 import { TokenInfo } from '../index'
+import { formatUnits } from 'ethers/lib/utils'
+import { BigNumber } from 'ethers'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -75,6 +77,12 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 32,
   },
   progress: { color: theme.colors.white },
+  error: {
+    color: theme.colors.warn,
+    marginTop: 10,
+    fontSize: 14,
+    marginLeft: 10,
+  },
 }))
 
 interface IProps {
@@ -96,6 +104,9 @@ export const InitiateSection = (props: IProps) => {
   const { account, library: provider, networkId } = useConnectedWeb3Context()
   const isMountedRef = useIsMountedRef()
   const { offerData, onClose, updateState } = props
+  const { balance, isLoading } = useTokenBalance(
+    offerData.offerToken.address || ''
+  )
 
   const [state, setState] = useState<IState>({
     isApproved: false,
@@ -205,6 +216,10 @@ export const InitiateSection = (props: IProps) => {
     }
   }
 
+  const isInsufficientBalance = BigNumber.from(
+    offerData.totalOfferingAmount
+  ).gt(balance)
+
   return (
     <div className={classes.root}>
       <div className={classes.header}>
@@ -233,7 +248,10 @@ export const InitiateSection = (props: IProps) => {
             className={classes.initiateBtn}
             onClick={onInitiate}
             disabled={
-              !state.isApproved || state.isInitiating || state.isInitiated
+              !state.isApproved ||
+              state.isInitiating ||
+              state.isInitiated ||
+              isInsufficientBalance
             }
           >
             {state.isInitiating ? (
@@ -245,6 +263,9 @@ export const InitiateSection = (props: IProps) => {
               'INITIATE'
             )}
           </Button>
+          {isInsufficientBalance && !isLoading && (
+            <div className={classes.error}>Insufficient Balance</div>
+          )}
         </div>
       </div>
     </div>

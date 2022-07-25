@@ -119,12 +119,6 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden',
     lineHeight: '28px',
   },
-  warning: {
-    color: theme.colors.warn,
-    marginTop: 10,
-    fontSize: 14,
-    marginLeft: 10,
-  },
   textWrapper: {
     display: 'flex',
     alignItems: 'center',
@@ -153,7 +147,6 @@ export const TokenAmountInput: React.FC<IProps> = ({
   disabled,
   infoText,
   tokenDetailsPlaceholder,
-  setIsInsufficientBalance,
 }) => {
   const classes = useStyles()
   const commonClasses = useCommonStyles()
@@ -168,15 +161,6 @@ export const TokenAmountInput: React.FC<IProps> = ({
       token.symbol
     }`
   }
-
-  useEffect(() => {
-    if (label === 'Offer Token Amount') {
-      const isInsufficientBalance =
-        Number(value) > Number(formatUnits(balance, token?.decimals))
-      setIsInsufficientBalance &&
-        setIsInsufficientBalance(isInsufficientBalance)
-    }
-  }, [value, balance])
 
   return (
     <>
@@ -240,12 +224,6 @@ export const TokenAmountInput: React.FC<IProps> = ({
             ? tokenDetailsPlaceholder
             : `Available - ${getFormattedTokenBalance()}`}
         </Typography>
-        {label === 'Offer Token Amount' &&
-          token &&
-          value &&
-          Number(value) > Number(formatUnits(balance, token?.decimals)) && (
-            <div className={classes.warning}>Insufficient Balance</div>
-          )}
       </div>
     </>
   )

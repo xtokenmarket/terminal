@@ -13,6 +13,7 @@ import { IToken, SaleData } from 'types'
 import { TokenAmountPriceEstimation } from '../TokenAmountPriceEstimation'
 import { EPricingFormula } from 'utils/enums'
 import clsx from 'clsx'
+import { getDurationSec, parseDurationSec } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   tableContainer: {},
@@ -97,7 +98,7 @@ export const PricingFormulaTable: React.FC<IProps> = ({
             )}
             <TableCell>
               <Typography variant="h6" className={cl.rowHeader}>
-                Sales Period
+                Sale Period
               </Typography>
             </TableCell>
           </TableRow>
@@ -158,7 +159,12 @@ export const PricingFormulaTable: React.FC<IProps> = ({
             )}
             <TableCell className={cl.tableCell}>
               <Typography className={cl.bodyRowText}>
-                {saleData.offeringPeriod} {saleData.offeringPeriodUnit}
+                {parseDurationSec(
+                  getDurationSec(
+                    Number(saleData.offeringPeriod),
+                    saleData.offeringPeriodUnit.toString()
+                  ).toNumber()
+                )}
               </Typography>
             </TableCell>
           </TableRow>

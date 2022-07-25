@@ -7,10 +7,8 @@ import {
   getRemainingTimeSec,
   numberWithCommas,
   parseDurationSec,
-  parseRemainingDurationSec,
 } from 'utils'
 import { useOriginationPool } from 'helpers/useOriginationPool'
-import moment from 'moment'
 import { useConnectedWeb3Context } from 'contexts'
 import { getNetworkFromId } from 'utils/network'
 import { IOriginationPool, NetworkId } from 'types'

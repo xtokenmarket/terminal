@@ -149,7 +149,7 @@ export const Sidebar = () => {
             </div>
           </div>
           <div className={classes.body}>
-            {MENU_ITEMS.map(({ icon: Icon, href, enabled }) => {
+            {MENU_ITEMS.map(({ icon: Icon, href, enabled, label }) => {
               const getIsActive = () =>
                 !!matchPath(history.location.pathname, {
                   path: href,
@@ -186,14 +186,25 @@ export const Sidebar = () => {
               }
 
               return (
-                <NavLink
-                  isActive={getIsActive}
-                  to={href}
+                <Tooltip
+                  title={label}
+                  arrow
+                  placement="top"
+                  classes={{
+                    arrow: classes.tooltipArrow,
+                    tooltip: classes.tooltip,
+                  }}
                   key={href}
-                  className={classes.item}
                 >
-                  {content}
-                </NavLink>
+                  <NavLink
+                    isActive={getIsActive}
+                    to={href}
+                    key={href}
+                    className={classes.item}
+                  >
+                    {content}
+                  </NavLink>
+                </Tooltip>
               )
             })}
           </div>

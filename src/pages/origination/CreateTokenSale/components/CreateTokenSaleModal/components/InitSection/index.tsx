@@ -14,6 +14,11 @@ const useStyles = makeStyles((theme) => ({
   },
   button: { height: 48, marginTop: 24 },
   progress: { color: theme.colors.white },
+  warning: {
+    color: theme.colors.warn,
+    marginTop: 10,
+    fontSize: 14,
+  },
 }))
 
 interface IProps {
@@ -161,7 +166,7 @@ export const InitSection = (props: IProps) => {
       setState((prev) => ({
         ...prev,
         error: metamaskError || '',
-        isCreatingPool: false,
+        isCreatingTokenSale: false,
       }))
       if (metamaskError) {
         setTimeout(() => {
@@ -209,6 +214,7 @@ export const InitSection = (props: IProps) => {
       >
         CANCEL
       </Button>
+      {state.error && <div className={classes.warning}>{state.error}</div>}
     </div>
   )
 }
