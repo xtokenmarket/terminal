@@ -40,12 +40,15 @@ class FungiblePoolService {
   waitUntilInitiateSale = async (txId: string): Promise<string> => {
     let resolved = false
     return new Promise((resolve) => {
-      this.contract.on('InitiateSale', (...rest) => {
-        if (!resolved) {
-          resolved = true
-          resolve(rest[1].transactionHash)
+      this.contract.on(
+        'InitiateSale',
+        (_offeringAmount: BigNumber, ...rest) => {
+          if (!resolved) {
+            resolved = true
+            resolve(rest[0].transactionHash)
+          }
         }
-      })
+      )
 
       this.contract.provider.waitForTransaction(txId).then(() => {
         if (!resolved) {

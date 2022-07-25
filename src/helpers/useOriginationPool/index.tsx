@@ -367,7 +367,7 @@ export const useOriginationPool = (
             account: account.toLowerCase(),
           }
 
-          let userToVestingEntryIds
+          let userToVestingEntryIds = []
           try {
             userToVestingEntryIds = (
               await fetchQuery(ENTRY_IDS_QUERY, eventVariables, graphqlUrl)
@@ -384,7 +384,10 @@ export const useOriginationPool = (
 
           let nftInfos = []
 
-          if (vestingEntryNFTAddress !== ethers.constants.AddressZero) {
+          if (
+            vestingEntryNFTAddress !== ethers.constants.AddressZero &&
+            userToVestingEntryIds.length !== 0
+          ) {
             nftInfos = await Promise.all(
               userToVestingEntryIds.map((x: any) =>
                 vestingEntryNFTContract.tokenIdVestingAmounts(x.userToVestingId)
@@ -394,10 +397,10 @@ export const useOriginationPool = (
 
           const totalTokenAmount = nftInfos.reduce((a, b) => {
             return a.add(b.tokenAmount)
-          }, BigNumber.from(0))
+          }, ZERO)
           const totalTokenAmountClaimed = nftInfos.reduce((a, b) => {
             return a.add(b.tokenAmountClaimed)
-          }, BigNumber.from(0))
+          }, ZERO)
 
           offeringOverview.isOwnerOrManager = isOwnerOrManager
 
