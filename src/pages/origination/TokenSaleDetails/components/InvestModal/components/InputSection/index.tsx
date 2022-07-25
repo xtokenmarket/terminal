@@ -1,12 +1,14 @@
 import { makeStyles, Typography, IconButton, Button } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
-import { useReducer } from 'react'
+import { useEffect, useReducer } from 'react'
 import { FungiblePoolService } from 'services'
-import { IOfferingOverview } from 'types'
+import { IMyPosition, IOfferingOverview, IWhitelistSale } from 'types'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { TokenBalanceInput } from 'components'
 import { ZERO } from 'utils/number'
 import { BigNumber } from 'ethers'
+import { useTokenBalance } from 'helpers'
+import { formatBigNumber, numberWithCommas } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -32,20 +34,6 @@ const useStyles = makeStyles((theme) => ({
     minHeight: '20vh',
     maxHeight: '50vh',
   },
-  warning: {
-    padding: '16px !important',
-    '& div': {
-      '&:first-child': {
-        marginTop: 0,
-        marginRight: 16,
-      },
-      '& p': {
-        fontSize: 14,
-        marginTop: 3,
-        '&:first-child': { fontSize: 16, marginTop: 0 },
-      },
-    },
-  },
   actions: {
     marginTop: 32,
   },
@@ -69,6 +57,12 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 32,
   },
   progress: { color: theme.colors.white },
+  warning: {
+    width: '100%',
+    color: theme.colors.warn,
+    fontSize: '14px',
+    marginTop: '10px',
+  },
 }))
 
 interface IProps {
@@ -76,18 +70,26 @@ interface IProps {
   onNext: () => void
   offerData: IOfferingOverview
   updateState: (e: any) => void
+  whitelistData: IWhitelistSale
+  myPositionData: IMyPosition
+  isWhitelist: boolean
 }
 
 interface IState {
   isEstimating: boolean
   offerAmount: BigNumber
   purchaseAmount: BigNumber
+  errorMessage: string
+  maxLimit: BigNumber
 }
 
 export const InputSection = (props: IProps) => {
   const classes = useStyles()
   const { account, library: provider } = useConnectedWeb3Context()
   const { offerData, onClose, onNext, updateState } = props
+  const { balance, isLoading } = useTokenBalance(
+    offerData.purchaseToken.address || ''
+  )
 
   const [state, setState] = useReducer(
     (prevState: IState, newState: Partial<IState>) => ({
@@ -98,8 +100,63 @@ export const InputSection = (props: IProps) => {
       isEstimating: false,
       offerAmount: ZERO,
       purchaseAmount: ZERO,
+      errorMessage: '',
+      maxLimit: ZERO,
     }
   )
+
+  useEffect(() => {
+    const getMaxLimit = async () => {
+      const availableAmount = props.offerData.totalOfferingAmount.sub(
+        props.offerData.offerTokenAmountSold
+      )
+
+      const fungiblePool = new FungiblePoolService(
+        provider,
+        account,
+        offerData.poolAddress
+      )
+
+      let maxLimit
+      try {
+        maxLimit = await fungiblePool.getPurchaseAmountFromOfferAmount(
+          availableAmount
+        )
+      } catch (error) {
+        console.error('getPurchaseAmountFromOfferAmount error', error)
+      }
+      setState({ maxLimit })
+    }
+
+    getMaxLimit()
+  }, [])
+
+  useEffect(() => {
+    const isInsufficientBalance = state.purchaseAmount.gt(balance) && !isLoading
+
+    const maxLimit = props.isWhitelist
+      ? props.whitelistData.addressCap.gt(state.maxLimit)
+        ? state.maxLimit
+        : props.whitelistData.addressCap
+      : state.maxLimit
+    const isInvalidAmount = state.purchaseAmount.gt(maxLimit)
+
+    if (isInsufficientBalance) {
+      setState({ errorMessage: 'Insufficient balance.' })
+      return
+    }
+
+    if (isInvalidAmount) {
+      setState({
+        errorMessage: `Invalid amount. Maximum limit is ${numberWithCommas(
+          formatBigNumber(maxLimit, props.offerData.purchaseToken.decimals)
+        )}`,
+      })
+      return
+    }
+
+    setState({ errorMessage: '' })
+  }, [balance, state.offerAmount, state.purchaseAmount])
 
   const estimateOfferAmount = async (purchaseAmount: BigNumber) => {
     if (!account || !provider) {
@@ -165,11 +222,16 @@ export const InputSection = (props: IProps) => {
             className={classes.initiateBtn}
             onClick={_onInvest}
             disabled={
-              state.offerAmount.isZero() || state.purchaseAmount.isZero()
+              state.offerAmount.isZero() ||
+              state.purchaseAmount.isZero() ||
+              !!state.errorMessage
             }
           >
             INVEST
           </Button>
+          {state.errorMessage && (
+            <div className={classes.warning}>{state.errorMessage}</div>
+          )}
         </div>
       </div>
     </div>

@@ -171,7 +171,7 @@ export const TokenSelectModal: React.FC<IProps> = ({
               onChange={onSearchQueryChange}
             />
             <Typography className={cl.commonLabel}>COMMON BASES</Typography>
-            <CommonTokens onSelectToken={onSelect} />
+            <CommonTokens onSelectToken={onSelect} includeETH={includeETH} />
           </div>
         </div>
         <TokensList

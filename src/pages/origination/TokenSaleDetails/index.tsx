@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { BigNumber } from 'ethers'
 import { transparentize } from 'polished'
 import { useHistory, useParams } from 'react-router'
-import { Button, makeStyles, Typography } from '@material-ui/core'
+import { Button, makeStyles, Tooltip, Typography } from '@material-ui/core'
 import { PageContent, PageHeader, PageWrapper, SimpleLoader } from 'components'
 import { useOriginationPool } from 'helpers'
 import { getCurrentTimeStamp, getRemainingTimeSec } from 'utils'
@@ -61,6 +61,16 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.warn3,
     marginLeft: 10,
     fontSize: 14,
+  },
+  tooltip: {
+    backgroundColor: theme.colors.primary300,
+    fontFamily: 'Gilmer',
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
+    fontSize: 8,
+  },
+  tooltipArrow: {
+    color: theme.colors.primary300,
   },
 }))
 
@@ -293,10 +303,20 @@ const TokenSaleDetails = () => {
     tokenOffer.whitelist.timeRemaining.gt(0) ||
     isSoldOut
 
+  const isWhitelistSaleEnded = BigNumber.from(
+    Math.floor(Date.now() / 1000)
+  ).gte(tokenOffer?.whitelist.endOfWhitelistPeriod || 0)
+
+  const isAddressCapExceeded = tokenOffer?.myPosition.amountInvested.gte(
+    tokenOffer?.whitelist.addressCap
+  )
+
   const iswhitelistSaleInvestDisabled =
     !tokenOffer?.offeringOverview.salesBegin.gt(0) ||
     !tokenOffer.whitelist.isAddressWhitelisted ||
-    isSoldOut
+    isSoldOut ||
+    isWhitelistSaleEnded ||
+    isAddressCapExceeded
 
   const isInitiateSaleButtonDisabled =
     (tokenOffer &&
@@ -307,10 +327,6 @@ const TokenSaleDetails = () => {
   const isVestedPropertiesShow =
     tokenOffer?.myPosition.amountAvailableToVest.gt(0) ||
     tokenOffer?.myPosition.amountvested.gt(0)
-
-  const isWhitelistSaleEnded = BigNumber.from(
-    Math.floor(Date.now() / 1000)
-  ).gte(tokenOffer?.whitelist.endOfWhitelistPeriod || 0)
 
   return (
     <PageWrapper>
@@ -363,13 +379,29 @@ const TokenSaleDetails = () => {
                 />
                 {!isOwnerOrManager && (
                   <div className={cl.buttonWrapper}>
-                    <Button
-                      className={cl.button}
-                      onClick={toggleWhitelistInvestModal}
-                      disabled={iswhitelistSaleInvestDisabled}
+                    <Tooltip
+                      title={
+                        isAddressCapExceeded && !isWhitelistSaleEnded
+                          ? 'Invested amount has reached the address cap.'
+                          : ''
+                      }
+                      arrow
+                      placement="right"
+                      classes={{
+                        arrow: cl.tooltipArrow,
+                        tooltip: cl.tooltip,
+                      }}
                     >
-                      <Typography className={cl.text}>INVEST</Typography>
-                    </Button>
+                      <div>
+                        <Button
+                          className={cl.button}
+                          onClick={toggleWhitelistInvestModal}
+                          disabled={iswhitelistSaleInvestDisabled}
+                        >
+                          <Typography className={cl.text}>INVEST</Typography>
+                        </Button>
+                      </div>
+                    </Tooltip>
                     {!tokenOffer.whitelist.isAddressWhitelisted &&
                       tokenOffer.whitelist.whitelist &&
                       !isWhitelistSaleEnded && (
@@ -451,6 +483,8 @@ const TokenSaleDetails = () => {
               open={state.isInvestModalOpen}
               addressCap={tokenOffer.whitelist.addressCap}
               isSaleCompleted={isSaleCompleted}
+              whitelistData={tokenOffer.whitelist}
+              myPositionData={tokenOffer.myPosition}
             />
             <VestModal
               offerData={tokenOffer.offeringOverview}

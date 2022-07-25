@@ -153,7 +153,7 @@ export const SaleForm = ({
         <Grid item xs={12} md={6}>
           <FormControl component="fieldset">
             <div className={clsx(classes.label, classes.labelWarpper)}>
-              {`Will your Offering have a ${saleDisplayName} period?`}
+              {`Will your offering have a ${saleDisplayName} period?`}
             </div>
             <RadioGroup
               name="sale-period"
@@ -225,7 +225,7 @@ export const SaleForm = ({
           className={clsx(!enabled && classes.sectionDisabled)}
         >
           <Radio
-            label="Choose the Pricing formula for this offering"
+            label="Choose the pricing formula for this offering"
             infoText={Object.values([
               InfoText.Standard,
               InfoText.Ascending,
