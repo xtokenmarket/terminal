@@ -51,8 +51,8 @@ export const TableHeader = (props: IProps) => {
         <Td type={OfferingOverview.OfferingStatus} label={props.label}>
           <div className={classes.item}>Offering Status</div>
         </Td>
-        <Td type={OfferingOverview.OfferingReserve} label={props.label}>
-          <div className={classes.item}>Offering Reserve</div>
+        <Td type={OfferingOverview.ReserveAmount} label={props.label}>
+          <div className={classes.item}>Reserve Amount</div>
         </Td>
         <Td type={OfferingOverview.VestingPeriod} label={props.label}>
           <div className={classes.item}>Vesting Period</div>

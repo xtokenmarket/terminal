@@ -189,8 +189,8 @@ export enum Description {
   PurchaseToken = 'choose what to sell your offer token for',
   OfferTokenAmount = 'Determine the amount of token you want to sell',
   ReserveOfferTokenAmount = 'Minimum amount of purchase token raised for successful sale',
-  StartingPrice = 'Determine the price of the token',
-  EndingPrice = 'Maximum amount of tokens you want to offer',
+  StartingPrice = 'Price at the beginning of the period',
+  EndingPrice = 'Price at the end of the period',
 }
 
 export enum EVestingOption {
@@ -210,7 +210,7 @@ export enum OfferingOverview {
   OfferToken = 'offerToken',
   PurchaseToken = 'purchaseToken',
   OfferingStatus = 'offeringStatus',
-  OfferingReserve = 'offeringReserve',
+  ReserveAmount = 'reserveAmount',
   VestingPeriod = 'vestingPeriod',
   CliffPeriod = 'cliffPeriod',
   SalesBegin = 'salesBegin',

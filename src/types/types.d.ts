@@ -275,7 +275,7 @@ interface Label {
 
 export interface IOfferingOverview extends Label {
   cliffPeriod: BigNumber
-  offeringReserve: BigNumber
+  reserveAmount: BigNumber
   offerToken: IToken
   offerTokenAmountSold: BigNumber
   poolAddress: string

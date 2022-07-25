@@ -62,8 +62,8 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.colors.secondary,
     },
     '&.pending': {
-      opacity: 0.3,
-      backgroundColor: theme.colors.secondary,
+      opacity: 1,
+      backgroundColor: 'none',
     },
     '&.disabled': {
       opacity: 0.3,
@@ -110,6 +110,10 @@ const useStyles = makeStyles((theme) => ({
   },
   file: {
     display: 'none',
+  },
+  buttonTextPending: {
+    color: theme.colors.white,
+    fontWeight: 'normal',
   },
 }))
 
@@ -326,7 +330,13 @@ export const SetWhitelistModal: React.FC<IProps> = ({
               )}
               onClick={handleSetWhitelistClick}
             >
-              <Typography className={classes.buttonText}>
+              <Typography
+                className={clsx([
+                  classes.buttonText,
+                  state.txState === TxState.InProgress &&
+                    classes.buttonTextPending,
+                ])}
+              >
                 {state.txState === TxState.InProgress
                   ? 'Pending'
                   : state.whitelistFile
