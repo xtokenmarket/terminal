@@ -29,6 +29,8 @@ import {
   getTokenExchangeRate,
 } from 'helpers/useTerminalPool/helper'
 
+import { fetchQuery } from 'utils/thegraph'
+import { ENTRY_IDS_QUERY } from 'helpers/useOriginationPools/helper'
 interface IState {
   tokenOffer?: ITokenOffer
   loading: boolean
@@ -221,7 +223,7 @@ export const useOriginationPool = (
       label: OriginationLabels.OfferingOverview,
       offerToken: offerToken || ETH,
       purchaseToken: purchaseToken || ETH,
-      offeringReserve: reserveAmount,
+      reserveAmount,
       vestingPeriod,
       cliffPeriod,
       salesBegin: saleInitiatedTimestamp,
@@ -358,32 +360,59 @@ export const useOriginationPool = (
             fungiblePool.contract.vestingEntryNFT(),
           ])
 
+          const graphqlUrl =
+            'https://api.thegraph.com/subgraphs/name/cryptopixelfrog/subgraph-study'
+          const eventVariables = {
+            poolAddress: poolAddress.toLowerCase(),
+            account: account.toLowerCase(),
+          }
+
+          let userToVestingEntryIds = []
+          try {
+            userToVestingEntryIds = (
+              await fetchQuery(ENTRY_IDS_QUERY, eventVariables, graphqlUrl)
+            ).userToVestingEntryIds
+          } catch (error) {
+            console.error('Error while fetching userToVestingEntryIds')
+          }
+
           const vestingEntryNFTContract = new Contract(
             vestingEntryNFTAddress,
             Abi.VestingEntryNFT,
             provider
           )
 
-          let nftInfo = {
-            tokenAmount: ZERO,
-            tokenAmountClaimed: ZERO,
-          }
+          let nftInfos = []
 
-          if (vestingEntryNFTAddress !== ethers.constants.AddressZero) {
-            nftInfo = await vestingEntryNFTContract.tokenIdVestingAmounts(
-              userToVestingId
+          if (
+            vestingEntryNFTAddress !== ethers.constants.AddressZero &&
+            userToVestingEntryIds.length !== 0
+          ) {
+            nftInfos = await Promise.all(
+              userToVestingEntryIds.map((x: any) =>
+                vestingEntryNFTContract.tokenIdVestingAmounts(x.userToVestingId)
+              )
             )
           }
 
+          const totalTokenAmount = nftInfos.reduce((a, b) => {
+            return a.add(b.tokenAmount)
+          }, ZERO)
+          const totalTokenAmountClaimed = nftInfos.reduce((a, b) => {
+            return a.add(b.tokenAmountClaimed)
+          }, ZERO)
+
           offeringOverview.isOwnerOrManager = isOwnerOrManager
 
-          myPosition.amountAvailableToVest = nftInfo.tokenAmount.sub(
-            nftInfo.tokenAmountClaimed
+          myPosition.amountAvailableToVest = totalTokenAmount.sub(
+            totalTokenAmountClaimed
           )
           myPosition.amountInvested = purchaseTokenContribution
-          myPosition.amountvested = nftInfo.tokenAmountClaimed
+          myPosition.amountvested = totalTokenAmountClaimed
           myPosition.tokenPurchased = offerTokenAmountPurchased
-          myPosition.userToVestingId = [userToVestingId.toNumber()] as never
+          myPosition.userToVestingId = userToVestingEntryIds.map(
+            (x: any) => x.userToVestingId
+          )
         } catch (e) {
           console.error('Error while fetching account related data', e)
         }

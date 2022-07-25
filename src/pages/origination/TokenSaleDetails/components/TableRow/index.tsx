@@ -241,13 +241,13 @@ export const TableRow = ({
               </Typography>
             </div>
           </Td>
-          <Td type={OfferingOverview.OfferingReserve} label={item.label}>
+          <Td type={OfferingOverview.ReserveAmount} label={item.label}>
             <div className={cl.item}>
               <Typography>
-                {item.offeringReserve &&
+                {item.reserveAmount &&
                   formatToShortNumber(
                     formatBigNumber(
-                      item.offeringReserve,
+                      item.reserveAmount,
                       item.purchaseToken.decimals
                     )
                   )}

@@ -264,7 +264,9 @@ export const InitiateSection = (props: IProps) => {
             )}
           </Button>
           {isInsufficientBalance && !isLoading && (
-            <div className={classes.error}>Insufficient Balance</div>
+            <div className={classes.error}>
+              Insufficient ${offerData.offerToken.symbol} Balance
+            </div>
           )}
         </div>
       </div>

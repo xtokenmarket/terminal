@@ -45,6 +45,17 @@ query {
 }
 `
 
+export const ENTRY_IDS_QUERY = `
+query ($poolAddress: String!, $account: String!) {
+  userToVestingEntryIds(where: { pool: $poolAddress, user: $account }) {
+    id
+    userToVestingId
+    txHash
+    timestamp
+  }
+}
+`
+
 export const parseTokenOffers = (data: any, network: Network) => {
   return data.errors
     ? []

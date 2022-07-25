@@ -14,7 +14,7 @@ const useStyles = makeStyles(() => ({
     '&.offerToken': { width: '12%' },
     '&.purchaseToken': { width: '12%' },
     '&.offeringStatus': { width: '12%' },
-    '&.offeringReserve': { width: '12%' },
+    '&.reserveAmount': { width: '12%' },
     '&.vestingPeriod': { width: '12%' },
     '&.cliffPeriod': { width: '12%' },
     '&.salesBegin': { width: '12%' },
