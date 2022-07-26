@@ -133,6 +133,7 @@ export const Table = ({
             <Typography className={cl.label}>{label}</Typography>
             {isOwnerOrManager && (
               <Button
+                id={isInitiateSaleButtonDisabled ? '' : 'initiateSale'}
                 className={cl.button}
                 onClick={toggleModal}
                 disabled={isInitiateSaleButtonDisabled}

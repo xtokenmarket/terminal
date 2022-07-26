@@ -220,6 +220,12 @@ export const InitiateSection = (props: IProps) => {
     offerData.totalOfferingAmount
   ).gt(balance)
 
+  const isDisabled =
+    !state.isApproved ||
+    state.isInitiating ||
+    state.isInitiated ||
+    isInsufficientBalance
+
   return (
     <div className={classes.root}>
       <div className={classes.header}>
@@ -242,17 +248,13 @@ export const InitiateSection = (props: IProps) => {
             amount={offerData.totalOfferingAmount}
           />
           <Button
+            id={isDisabled ? '' : 'initiate'}
             color="primary"
             variant="contained"
             fullWidth
             className={classes.initiateBtn}
             onClick={onInitiate}
-            disabled={
-              !state.isApproved ||
-              state.isInitiating ||
-              state.isInitiated ||
-              isInsufficientBalance
-            }
+            disabled={isDisabled}
           >
             {state.isInitiating ? (
               <>
