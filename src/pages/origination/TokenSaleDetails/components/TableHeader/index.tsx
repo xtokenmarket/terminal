@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core'
 import { Td } from '../Td'
 import {
-  MyPosition,
+  UserPosition,
   OfferingOverview,
   OfferingSummary,
   OriginationLabels,
@@ -128,19 +128,19 @@ export const TableHeader = (props: IProps) => {
     return (
       <div className={classes.root}>
         {!props.isOfferUnsuccessful && (
-          <Td type={MyPosition.TokenPurchased} label={props.label}>
+          <Td type={UserPosition.TokenPurchased} label={props.label}>
             <div className={classes.item}>Token Purchased</div>
           </Td>
         )}
-        <Td type={MyPosition.AmountInvested} label={props.label}>
+        <Td type={UserPosition.AmountInvested} label={props.label}>
           <div className={classes.item}>Amount Invested</div>
         </Td>
         {props.isVestedPropertiesShow && (
           <>
-            <Td type={MyPosition.Amountvested} label={props.label}>
+            <Td type={UserPosition.Amountvested} label={props.label}>
               <div className={classes.item}>Amount Vested</div>
             </Td>
-            <Td type={MyPosition.AmountAvailableToVest} label={props.label}>
+            <Td type={UserPosition.AmountAvailableToVest} label={props.label}>
               <div className={classes.item}>Amount Available To Vest</div>
             </Td>
           </>

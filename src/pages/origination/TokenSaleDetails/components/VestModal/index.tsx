@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Modal } from 'components'
 import { InitiateSection, SuccessSection } from './components'
 import { useConnectedWeb3Context } from 'contexts'
-import { IMyPosition, IOfferingOverview } from 'types'
+import { IUserPosition, IOfferingOverview } from 'types'
 import { VestStep } from 'utils/enums'
 import { InfoSection } from './components/InfoSection'
 
@@ -20,7 +20,7 @@ interface IProps {
   onClose: () => void
   onSuccess: () => Promise<void>
   open: boolean
-  myPositionData: IMyPosition
+  userPositionData: IUserPosition
 }
 
 export interface VestState {
@@ -42,7 +42,7 @@ export const VestModal: React.FC<IProps> = ({
   onClose,
   onSuccess,
   open,
-  myPositionData,
+  userPositionData,
 }) => {
   const classes = useStyles()
   const { account } = useConnectedWeb3Context()
@@ -95,7 +95,7 @@ export const VestModal: React.FC<IProps> = ({
             offerData={offerData}
             onNext={onNextStep}
             vestState={state}
-            myPositionData={myPositionData}
+            userPositionData={userPositionData}
           />
         )
       case VestStep.Vest:
@@ -105,7 +105,7 @@ export const VestModal: React.FC<IProps> = ({
             offerData={offerData}
             updateState={updateState}
             onNext={onNextStep}
-            myPositionData={myPositionData}
+            userPositionData={userPositionData}
           />
         )
       default:
@@ -115,7 +115,7 @@ export const VestModal: React.FC<IProps> = ({
             onClose={_onSuccess}
             txHash={state.txHash}
             vestState={state}
-            myPositionData={myPositionData}
+            userPositionData={userPositionData}
           />
         )
     }

@@ -3,7 +3,7 @@ import { Button, makeStyles, Tooltip, Typography } from '@material-ui/core'
 import { Td } from '../Td'
 import {
   EPricingFormula,
-  MyPosition,
+  UserPosition,
   OfferingOverview,
   OfferingSummary,
   OriginationLabels,
@@ -11,7 +11,7 @@ import {
   WhitelistSale,
 } from 'utils/enums'
 import {
-  IMyPosition,
+  IUserPosition,
   IOfferingOverview,
   IOfferingSummary,
   IPublicSale,
@@ -128,7 +128,7 @@ interface IProps {
     | IOfferingOverview
     | IWhitelistSale
     | IPublicSale
-    | IMyPosition
+    | IUserPosition
     | IOfferingSummary
   toggleModal?: () => void
   isVestedPropertiesShow?: boolean
@@ -190,7 +190,7 @@ export const TableRow = ({
     const offeringOverview = item as IOfferingOverview
     const whitelistSale = item as IWhitelistSale
     const publicSale = item as IPublicSale
-    const myPosition = item as IMyPosition
+    const userPosition = item as IUserPosition
     const offeringSummary = item as IOfferingSummary
 
     if (item.label === OriginationLabels.OfferingOverview) {
@@ -441,12 +441,12 @@ export const TableRow = ({
       )
     }
 
-    if (item.label === OriginationLabels.MyPosition) {
-      item = myPosition
+    if (item.label === OriginationLabels.UserPosition) {
+      item = userPosition
       return (
         <div className={cl.content}>
           {!isOfferUnsuccessful && (
-            <Td type={MyPosition.TokenPurchased} label={item.label}>
+            <Td type={UserPosition.TokenPurchased} label={item.label}>
               <Typography
                 className={clsx(cl.item, cl.label, cl.itemMarginLeft)}
               >
@@ -457,7 +457,7 @@ export const TableRow = ({
               </Typography>
             </Td>
           )}
-          <Td type={MyPosition.AmountInvested} label={item.label}>
+          <Td type={UserPosition.AmountInvested} label={item.label}>
             <Typography
               className={clsx(cl.item, cl.label, [
                 isOfferUnsuccessful && cl.itemMarginLeft,
@@ -474,7 +474,7 @@ export const TableRow = ({
           </Td>
           {isVestedPropertiesShow && (
             <>
-              <Td type={MyPosition.Amountvested} label={item.label}>
+              <Td type={UserPosition.Amountvested} label={item.label}>
                 <Typography className={clsx(cl.item, cl.label)}>
                   {formatToShortNumber(
                     formatBigNumber(item.amountvested, item.offerToken.decimals)
@@ -482,7 +482,7 @@ export const TableRow = ({
                   {item.offerToken.symbol}
                 </Typography>
               </Td>
-              <Td type={MyPosition.AmountAvailableToVest} label={item.label}>
+              <Td type={UserPosition.AmountAvailableToVest} label={item.label}>
                 <Typography className={clsx(cl.item, cl.label)}>
                   {formatToShortNumber(
                     formatBigNumber(

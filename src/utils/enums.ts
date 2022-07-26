@@ -236,7 +236,7 @@ export enum PublicSale {
   StartingEndingPrice = 'startingEndingPrice',
 }
 
-export enum MyPosition {
+export enum UserPosition {
   TokenPurchased = 'tokenPurchased',
   AmountInvested = 'amountInvested',
   Amountvested = 'amountvested',

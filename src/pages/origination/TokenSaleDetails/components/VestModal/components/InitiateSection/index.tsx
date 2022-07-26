@@ -9,7 +9,7 @@ import { useConnectedWeb3Context } from 'contexts'
 import { useIsMountedRef } from 'helpers'
 import { useEffect, useState } from 'react'
 import { ERC20Service, FungiblePoolService } from 'services'
-import { IMyPosition, IOfferingOverview } from 'types'
+import { IUserPosition, IOfferingOverview } from 'types'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 
 import { TokenInfo } from '../index'
@@ -65,7 +65,7 @@ interface IProps {
   offerData: IOfferingOverview
   updateState: (e: any) => void
   onNext: () => void
-  myPositionData: IMyPosition
+  userPositionData: IUserPosition
 }
 
 interface IState {
@@ -80,7 +80,7 @@ export const InitiateSection = (props: IProps) => {
   const classes = useStyles()
   const { account, library: provider, networkId } = useConnectedWeb3Context()
   const isMountedRef = useIsMountedRef()
-  const { offerData, onClose, updateState, onNext, myPositionData } = props
+  const { offerData, onClose, updateState, onNext, userPositionData } = props
 
   const [state, setState] = useState<IState>({
     isApproved: false,
@@ -172,7 +172,7 @@ export const InitiateSection = (props: IProps) => {
         account,
         offerData.poolAddress
       )
-      const txId = await fungiblePool.vest(myPositionData.userToVestingId)
+      const txId = await fungiblePool.vest(userPositionData.userToVestingId)
       const finalTxId = await fungiblePool.waitUntilVest(txId)
 
       setState((prev) => ({
@@ -215,7 +215,7 @@ export const InitiateSection = (props: IProps) => {
             actionPending={state.isApproving}
             actionDone={state.isApproved}
             token={offerData.offerToken}
-            amount={myPositionData.amountAvailableToVest}
+            amount={userPositionData.amountAvailableToVest}
           />
           <Button
             color="primary"

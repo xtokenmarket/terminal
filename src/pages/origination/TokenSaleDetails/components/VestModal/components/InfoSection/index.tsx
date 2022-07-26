@@ -1,5 +1,5 @@
 import { Button, IconButton, makeStyles, Typography } from '@material-ui/core'
-import { IMyPosition, IOfferingOverview } from 'types'
+import { IUserPosition, IOfferingOverview } from 'types'
 import { OutputEstimation } from '../index'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { VestState } from '../..'
@@ -48,12 +48,12 @@ interface IProps {
   onNext: () => void
   onClose: () => void
   vestState: VestState
-  myPositionData: IMyPosition
+  userPositionData: IUserPosition
 }
 
 export const InfoSection = (props: IProps) => {
   const classes = useStyles()
-  const { offerData, onNext, onClose, vestState, myPositionData } = props
+  const { offerData, onNext, onClose, vestState, userPositionData } = props
 
   return (
     <div className={classes.root}>
@@ -68,7 +68,7 @@ export const InfoSection = (props: IProps) => {
       <OutputEstimation
         offerData={offerData}
         vestState={vestState}
-        myPositionData={myPositionData}
+        userPositionData={userPositionData}
       />
       <div className={classes.actions}>
         <Button color="primary" variant="contained" fullWidth onClick={onNext}>

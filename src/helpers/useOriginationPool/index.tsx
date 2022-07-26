@@ -286,7 +286,7 @@ export const useOriginationPool = (
       saleEndTimestamp,
     }
 
-    const myPosition = {
+    const userPosition = {
       label: OriginationLabels.MyPosition,
       tokenPurchased: ZERO,
       amountInvested: ZERO,
@@ -404,13 +404,13 @@ export const useOriginationPool = (
 
           offeringOverview.isOwnerOrManager = isOwnerOrManager
 
-          myPosition.amountAvailableToVest = totalTokenAmount.sub(
+          userPosition.amountAvailableToVest = totalTokenAmount.sub(
             totalTokenAmountClaimed
           )
-          myPosition.amountInvested = purchaseTokenContribution
-          myPosition.amountvested = totalTokenAmountClaimed
-          myPosition.tokenPurchased = offerTokenAmountPurchased
-          myPosition.userToVestingId = userToVestingEntryIds.map(
+          userPosition.amountInvested = purchaseTokenContribution
+          userPosition.amountvested = totalTokenAmountClaimed
+          userPosition.tokenPurchased = offerTokenAmountPurchased
+          userPosition.userToVestingId = userToVestingEntryIds.map(
             (x: any) => x.userToVestingId
           )
         } catch (e) {
@@ -423,7 +423,7 @@ export const useOriginationPool = (
       address: poolAddress,
       network,
       offeringSummary,
-      myPosition,
+      userPosition,
       whitelist: _whitelist,
       offeringOverview,
       publicSale,
