@@ -112,6 +112,7 @@ export const Table = ({
             {isOwnerOrManager && (
               <span>
                 <Button
+                  id="setWhitelist"
                   className={cl.button}
                   onClick={() => {
                     toggleModal && toggleModal()
