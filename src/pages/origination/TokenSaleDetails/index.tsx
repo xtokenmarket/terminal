@@ -277,29 +277,29 @@ const TokenSaleDetails = () => {
     tokenOffer.publicSale.startingPrice &&
     tokenOffer.publicSale.startingPrice.gt(0)
 
-  const managerClaim =
+  const isClaimManager =
     isOwnerOrManager && isSaleCompleted && !tokenOffer.sponsorTokensClaimed
 
-  const userUnsuccessfulVestingClaim =
+  const isUnsuccessfulVestingSaleClaimUser =
     isOfferUnsuccessful &&
     tokenOffer.myPosition.amountInvested.gt(0) &&
     tokenOffer.offeringOverview.vestingPeriod.gt(0)
 
-  const userClaim =
+  const isSuccessfulSaleClaimUser =
     !isOfferUnsuccessful &&
     tokenOffer?.myPosition.tokenPurchased.gt(0) &&
     tokenOffer?.offeringOverview.vestingPeriod.isZero()
 
-  const userUnsuccessfulClaim =
+  const isUnsuccessfulSaleClaimUser =
     isOfferUnsuccessful && tokenOffer.myPosition.amountInvested.gt(0)
 
   const isClaimButtonShow =
     tokenOffer &&
     isCliffPeriodPassed() &&
-    (managerClaim ||
-      userUnsuccessfulVestingClaim ||
-      userClaim ||
-      userUnsuccessfulClaim)
+    (isClaimManager ||
+      isUnsuccessfulVestingSaleClaimUser ||
+      isSuccessfulSaleClaimUser ||
+      isUnsuccessfulSaleClaimUser)
 
   const isMyPositionShow =
     !isOwnerOrManager &&
