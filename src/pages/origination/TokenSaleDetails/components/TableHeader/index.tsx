@@ -124,7 +124,7 @@ export const TableHeader = (props: IProps) => {
     )
   }
 
-  if (props.label === OriginationLabels.MyPosition) {
+  if (props.label === OriginationLabels.UserPosition) {
     return (
       <div className={classes.root}>
         {!props.isOfferUnsuccessful && (

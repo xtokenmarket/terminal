@@ -301,7 +301,7 @@ const TokenSaleDetails = () => {
       isSuccessfulSaleClaimUser ||
       isUnsuccessfulSaleClaimUser)
 
-  const isMyPositionShow =
+  const isUserPositionShow =
     !isOwnerOrManager &&
     tokenOffer &&
     (tokenOffer.userPosition.tokenPurchased.gt(0) ||
@@ -453,7 +453,7 @@ const TokenSaleDetails = () => {
                 )}
               </>
             )}
-            {isMyPositionShow && (
+            {isUserPositionShow && (
               <Table
                 item={tokenOffer.userPosition}
                 label={'My Position'}

@@ -287,7 +287,7 @@ export const useOriginationPool = (
     }
 
     const userPosition = {
-      label: OriginationLabels.MyPosition,
+      label: OriginationLabels.UserPosition,
       tokenPurchased: ZERO,
       amountInvested: ZERO,
       amountvested: ZERO,

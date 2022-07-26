@@ -202,7 +202,7 @@ export enum OriginationLabels {
   OfferingOverview = 'offeringOverview',
   WhitelistSale = 'whitelistSale',
   PublicSale = 'publicSale',
-  MyPosition = 'myPosition',
+  UserPosition = 'userPosition',
   OfferingSummary = 'offeringSummary',
 }
 
