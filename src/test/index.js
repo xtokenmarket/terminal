@@ -9,6 +9,13 @@ require('dotenv').config()
 const ABC_ADDRESS = '0x36FC806bb8FE99d00439E9867314A5E082184257'
 const XYZ_ADDRESS = '0x67F0ecD58a6287d5ec8CA92b6Fda836EDa9aE41F'
 
+/*  
+TODO: should add jest after all the sale funcitions are added. 
+ref: https://github.com/ChainSafe/dappeteer/blob/master/docs/JEST.md
+run E2E testing: `node src/test/index.js`
+Need to manually maximize the Chromium view size to prevent the case some html elements not found while running the test 
+*/
+
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
