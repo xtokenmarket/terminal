@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/core'
 import { MENU_ITEMS } from 'config/layout'
 import { NavLink, useHistory, matchPath } from 'react-router-dom'
+import colors from 'theme/colors'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -86,20 +87,26 @@ export const BottomBar = () => {
         <div className={classes.content}>
           {MENU_ITEMS.map((item) => {
             const Icon = item.icon
+            const getIsActive = () =>
+              !!matchPath(history.location.pathname, {
+                path: item.href,
+                exact: false,
+              })
 
             return (
               <NavLink
-                isActive={() =>
-                  !!matchPath(history.location.pathname, {
-                    path: item.href,
-                    exact: false,
-                  })
-                }
+                isActive={() => getIsActive()}
                 to={item.href}
                 key={item.href}
                 className={classes.item}
               >
-                <Icon />
+                <Icon
+                  fill={
+                    getIsActive()
+                      ? colors[0].colors.white
+                      : colors[0].colors.primary100
+                  }
+                />
                 <span>{item.label}</span>
               </NavLink>
             )
