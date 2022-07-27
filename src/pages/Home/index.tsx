@@ -103,14 +103,14 @@ const getItem = () => {
     'Attract long term, efficient liquidity in our novel hybrid of liquidity mining and bonding. ',
     'Borrow any asset against your native token, with no need for price oracles of any kind.',
   ]
-  let dashboardItems = MENU_ITEMS.filter((_, index) => index !== 0)
-  dashboardItems = dashboardItems.map((x, index) => {
+  let homeItems = MENU_ITEMS.filter((_, index) => index !== 0)
+  homeItems = homeItems.map((x, index) => {
     return { ...x, description: descriptions[index] }
   })
-  return dashboardItems as Items[]
+  return homeItems as Items[]
 }
 
-const Dashboard = () => {
+const Home = () => {
   const classes = useStyles()
 
   const formatLabel = (label: string) => {
@@ -181,4 +181,4 @@ const Dashboard = () => {
   )
 }
 
-export default Dashboard
+export default Home

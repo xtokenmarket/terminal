@@ -4,8 +4,8 @@ export const MENU_ITEMS = [
   {
     id: 'terminal',
     label: 'terminal',
-    icon: SvgIcons.dashboard,
-    href: '/dashboard',
+    icon: SvgIcons.home,
+    href: '/',
     enabled: true,
   },
   {

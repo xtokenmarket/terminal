@@ -11,7 +11,7 @@ const routes = [
       {
         exact: true,
         path: '/',
-        component: lazy(() => import('pages/dashboard')),
+        component: lazy(() => import('pages/Home')),
       },
       {
         exact: true,
