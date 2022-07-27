@@ -121,7 +121,7 @@ const Dashboard = () => {
     <div className={classes.root}>
       <Typography className={classes.topDescription}>
         xToken Terminal is a permissionless investment bank, providing projects
-        and individuals seamless access to fundamental on-chain primitives.
+        and individuals with seamless access to fundamental on-chain primitives.
       </Typography>
       <div>
         <Grid container spacing={5}>
