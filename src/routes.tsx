@@ -99,7 +99,7 @@ const routes = [
       {
         path: '*',
         // eslint-disable-next-line
-        component: () => <Redirect to="/mining" />,
+        component: () => <Redirect to="/" />,
       },
     ],
   },
