@@ -153,7 +153,7 @@ export const Sidebar = () => {
               const getIsActive = () =>
                 !!matchPath(history.location.pathname, {
                   path: href,
-                  exact: false,
+                  exact: !!(href === '/'),
                 })
 
               const content = (
