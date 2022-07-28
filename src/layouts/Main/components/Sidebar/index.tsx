@@ -56,10 +56,6 @@ const useStyles = makeStyles((theme) => ({
     height: 36,
     marginRight: 24,
   },
-  logoLabel: {
-    color: theme.colors.white,
-    fontWeight: 600,
-  },
   body: { flex: 1, paddingTop: 32 },
   footer: {},
   item: {
@@ -144,8 +140,13 @@ export const Sidebar = () => {
         <div onClick={(e) => e.stopPropagation()} className={classes.content}>
           <div className={classes.header}>
             <div className={classes.logoWrapper}>
-              <img alt="logo" src="/assets/logo.png" className={classes.logo} />
-              <Typography className={classes.logoLabel}>XTOKEN</Typography>
+              <NavLink to={'/'}>
+                <img
+                  alt="logo"
+                  src="/assets/logo.png"
+                  className={classes.logo}
+                />
+              </NavLink>
             </div>
           </div>
           <div className={classes.body}>
