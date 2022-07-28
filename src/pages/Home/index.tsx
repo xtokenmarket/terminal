@@ -156,7 +156,7 @@ const Home = () => {
                             variant="contained"
                             className={classes.button}
                           >
-                            ENTER
+                            EXPLORE
                           </Button>
                         </NavLink>
                       ) : (
@@ -166,7 +166,7 @@ const Home = () => {
                           variant="contained"
                           className={classes.button}
                         >
-                          ENTER
+                          EXPLORE
                         </Button>
                       )}
                     </div>
