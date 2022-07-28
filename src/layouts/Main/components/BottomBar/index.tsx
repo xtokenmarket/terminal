@@ -86,6 +86,7 @@ export const BottomBar = () => {
       <div className={classes.root}>
         <div className={classes.content}>
           {MENU_ITEMS.map((item) => {
+            if (item.href === '/') return
             const Icon = item.icon
             const getIsActive = () =>
               !!matchPath(history.location.pathname, {

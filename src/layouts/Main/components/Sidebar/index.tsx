@@ -140,13 +140,7 @@ export const Sidebar = () => {
         <div onClick={(e) => e.stopPropagation()} className={classes.content}>
           <div className={classes.header}>
             <div className={classes.logoWrapper}>
-              <NavLink to={'/'}>
-                <img
-                  alt="logo"
-                  src="/assets/logo.png"
-                  className={classes.logo}
-                />
-              </NavLink>
+              <img alt="logo" src="/assets/logo.png" className={classes.logo} />
             </div>
           </div>
           <div className={classes.body}>
