@@ -147,11 +147,9 @@ export const Header = () => {
 
   return (
     <div className={clsx(classes.root, yPosition >= 30 && 'blur-header')}>
-      <NavLink to={'/'}>
-        <div className={classes.logo}>
-          <img alt="logo" src="/assets/logo.png" />
-        </div>
-      </NavLink>
+      <div className={classes.logo}>
+        <img alt="logo" src="/assets/logo.png" />
+      </div>
       <div className={classes.title}>
         {Icon && <Icon fill={colors[0].colors.white} />}
         <span>
