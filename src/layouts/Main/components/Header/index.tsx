@@ -111,7 +111,7 @@ export const Header = () => {
       (item) =>
         !!matchPath(history.location.pathname, {
           path: item.href,
-          exact: false,
+          exact: !!(item.href === '/'),
         })
     )
     return item
