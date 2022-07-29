@@ -138,8 +138,14 @@ export const useOriginationPool = (
               break
             }
             case EOriginationEvent.Invest: {
-              offerData.offerTokenAmountSold =
-                await fungiblePool.contract.offerTokenAmountSold()
+              const [offerTokenAmountSold, saleEndTimestamp] =
+                await Promise.all([
+                  fungiblePool.contract.offerTokenAmountSold(),
+                  fungiblePool.contract.saleEndTimestamp(),
+                ])
+
+              offerData.offerTokenAmountSold = offerTokenAmountSold
+              offerData.saleEndTimestamp = saleEndTimestamp
               break
             }
           }
