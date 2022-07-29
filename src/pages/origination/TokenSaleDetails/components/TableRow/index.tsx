@@ -157,8 +157,6 @@ export const TableRow = ({
 }: IProps) => {
   const cl = useStyles()
   const remainingTime = () => {
-    console.log('item.label', item.label)
-
     if (
       item.label === OriginationLabels.UserPosition &&
       isVestedPropertiesShow &&
