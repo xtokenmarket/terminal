@@ -138,6 +138,8 @@ interface IProps {
   isWhitelistSet?: boolean
   isWhitelistSaleEnded?: boolean
   onSaleEnd?: () => void
+  onCliffTimeEnd?: () => void
+  isSaleCompleted?: boolean
 }
 
 export const TableRow = ({
@@ -150,24 +152,43 @@ export const TableRow = ({
   isWhitelistSet,
   isWhitelistSaleEnded,
   onSaleEnd,
+  onCliffTimeEnd,
+  isSaleCompleted,
 }: IProps) => {
   const cl = useStyles()
-  const { days, hours, minutes, seconds } = useCountdown(
-    item.label === OriginationLabels.WhitelistSale
-      ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        item.endOfWhitelistPeriod.toNumber() * 1000
-      : item.label === OriginationLabels.PublicSale
-      ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        item.saleEndTimestamp.toNumber() * 1000
-      : 0
-  )
+  const remainingTime = () => {
+    console.log('item.label', item.label)
+
+    if (
+      item.label === OriginationLabels.UserPosition &&
+      isVestedPropertiesShow &&
+      !isOfferUnsuccessful &&
+      isSaleCompleted
+    ) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      return item.timeToCliff.toNumber() * 1000
+    }
+    if (item.label === OriginationLabels.WhitelistSale) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      return item.endOfWhitelistPeriod.toNumber() * 1000
+    }
+    if (item.label === OriginationLabels.PublicSale) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      return item.saleEndTimestamp.toNumber() * 1000
+    }
+
+    return 0
+  }
+  const { days, hours, minutes, seconds } = useCountdown(remainingTime())
 
   useEffect(() => {
     const reload = async () => {
       if (isSaleInitiated && days + hours + minutes + seconds === 0) {
         onSaleEnd && onSaleEnd()
+        onCliffTimeEnd && onCliffTimeEnd()
       }
     }
 
@@ -178,12 +199,19 @@ export const TableRow = ({
     timeRemaining: BigNumber,
     isPublicSale?: boolean
   ) => {
+    if (item.label === OriginationLabels.UserPosition) return
     if (isWhitelistSet && !isWhitelistSaleEnded && isPublicSale)
       return 'Not Started'
     if (isSaleInitiated && timeRemaining.toNumber() > 0 && days >= 0)
       return `${days}D:${hours}H:${minutes}M:${seconds}S`
     if (isSaleInitiated && days + hours + minutes + seconds <= 0) return 'Ended'
     return 'Not Started'
+  }
+
+  const getCliffTimeRemaining = () => {
+    if (days + hours + minutes + seconds > 0)
+      return `${days}D:${hours}H:${minutes}M:${seconds}S`
+    return 'Started'
   }
 
   const renderContent = () => {
@@ -493,6 +521,13 @@ export const TableRow = ({
                   {item.offerToken.symbol}
                 </Typography>
               </Td>
+              {isSaleCompleted && (
+                <Td type={UserPosition.TimeToCliff} label={item.label}>
+                  <Typography className={clsx(cl.item, cl.label)}>
+                    {getCliffTimeRemaining()}
+                  </Typography>
+                </Td>
+              )}
             </>
           )}
         </div>

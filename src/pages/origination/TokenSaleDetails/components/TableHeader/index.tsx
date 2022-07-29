@@ -34,6 +34,7 @@ interface IProps {
   isVestedPropertiesShow?: boolean
   isOfferUnsuccessful?: boolean
   isFormulaStandard?: boolean
+  isSaleCompleted?: boolean
 }
 
 export const TableHeader = (props: IProps) => {
@@ -143,6 +144,11 @@ export const TableHeader = (props: IProps) => {
             <Td type={UserPosition.AmountAvailableToVest} label={props.label}>
               <div className={classes.item}>Amount Available To Vest</div>
             </Td>
+            {props.isSaleCompleted && (
+              <Td type={UserPosition.AmountAvailableToVest} label={props.label}>
+                <div className={classes.item}>Cliff Time Remaining</div>
+              </Td>
+            )}
           </>
         )}
       </div>

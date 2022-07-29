@@ -241,6 +241,7 @@ export enum UserPosition {
   AmountInvested = 'amountInvested',
   Amountvested = 'amountvested',
   AmountAvailableToVest = 'amountAvailableToVest',
+  TimeToCliff = 'timeToCliff',
 }
 
 export enum OfferingSummary {

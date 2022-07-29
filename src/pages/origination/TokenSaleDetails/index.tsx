@@ -113,7 +113,9 @@ const TokenSaleDetails = () => {
       ...prev,
       isInitiateSaleModalOpen: false,
     }))
-    await loadInfo(true, EOriginationEvent.InitiateSale)
+    setTimeout(async () => {
+      await loadInfo(true, EOriginationEvent.InitiateSale)
+    }, 1000)
   }
 
   const onVestSuccess = async () => {
@@ -141,6 +143,10 @@ const TokenSaleDetails = () => {
 
   const onSaleEnd = async () => {
     await loadInfo(true)
+  }
+
+  const onCliffTimeEnd = async () => {
+    await loadInfo()
   }
 
   const toggleSetWhitelistModal = () => {
@@ -265,7 +271,8 @@ const TokenSaleDetails = () => {
     tokenOffer?.userPosition.amountAvailableToVest.gt(0) &&
     tokenOffer.offeringOverview.vestingPeriod.gt(0) &&
     !isOwnerOrManager &&
-    !isOfferUnsuccessful
+    !isOfferUnsuccessful &&
+    isSaleCompleted
 
   const isWhitelistSaleConfigured =
     tokenOffer &&
@@ -455,6 +462,8 @@ const TokenSaleDetails = () => {
             )}
             {isUserPositionShow && (
               <Table
+                isSaleCompleted={isSaleCompleted}
+                onCliffTimeEnd={onCliffTimeEnd}
                 item={tokenOffer.userPosition}
                 label={'My Position'}
                 toggleModal={toggleClaimModal}
