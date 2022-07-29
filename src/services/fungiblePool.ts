@@ -112,7 +112,7 @@ class FungiblePoolService {
   waitUntilPurchase = async (txId: string): Promise<string> => {
     let resolved = false
     return new Promise((resolve) => {
-      this.contract.on('Purchase', (...rest) => {
+      this.contract.on('Purchase', (sender, amount0, amount1, ...rest) => {
         if (!resolved) {
           resolved = true
           resolve(rest[0].transactionHash)
@@ -137,7 +137,7 @@ class FungiblePoolService {
   waitUntilVest = async (txId: string): Promise<string> => {
     let resolved = false
     return new Promise((resolve) => {
-      this.contract.on('ClaimVested', (...rest) => {
+      this.contract.on('ClaimVested', (sender, amount0, amount1, ...rest) => {
         if (!resolved) {
           resolved = true
           resolve(rest[0].transactionHash)
