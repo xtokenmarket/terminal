@@ -142,11 +142,11 @@ const TokenSaleDetails = () => {
   }
 
   const onSaleEnd = async () => {
-    await loadInfo(true)
+    await loadInfo(true, EOriginationEvent.SaleEnd)
   }
 
   const onCliffTimeEnd = async () => {
-    await loadInfo()
+    await loadInfo(true, EOriginationEvent.CliffTimeEnd)
   }
 
   const toggleSetWhitelistModal = () => {
