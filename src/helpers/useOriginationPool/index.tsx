@@ -356,13 +356,11 @@ export const useOriginationPool = (
           const [
             offerTokenAmountPurchased,
             purchaseTokenContribution,
-            userToVestingId, // TODO: need to be refactored later after graph is ready
             isOwnerOrManager,
             vestingEntryNFTAddress,
           ] = await Promise.all([
             fungiblePool.contract.offerTokenAmountPurchased(account),
             fungiblePool.contract.purchaseTokenContribution(account),
-            fungiblePool.contract.userToVestingId(account),
             fungiblePool.contract.isOwnerOrManager(account),
             fungiblePool.contract.vestingEntryNFT(),
           ])
