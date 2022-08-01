@@ -40,14 +40,13 @@ const useStyles = makeStyles((theme) => ({
       color: theme.colors.primary100,
       width: 16,
       height: 16,
-      '& g': { opacity: 0.6 },
     },
 
     '& span': {
       textTransform: 'uppercase',
       color: theme.colors.primary100,
       transition: 'all 0.4s',
-      fontSize: 12,
+      fontSize: 10,
     },
 
     '&:hover': {

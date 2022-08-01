@@ -82,7 +82,6 @@ const useStyles = makeStyles((theme) => ({
       '& svg': {
         width: 20,
         height: 20,
-        '& g': { opacity: 0.6 },
       },
     },
 
