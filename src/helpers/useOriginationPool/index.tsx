@@ -308,7 +308,7 @@ export const useOriginationPool = (
       purchaseToken: purchaseToken || ETH,
       vestableTokenAmount,
       userToVestingId: [],
-      timeToCliff: saleEndTimestamp.add(cliffPeriod),
+      vestableAt: saleEndTimestamp.add(cliffPeriod),
     }
 
     const offeringSummary = {

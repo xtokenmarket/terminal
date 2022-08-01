@@ -165,7 +165,7 @@ export const TableRow = ({
     ) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      return item.timeToCliff.toNumber() * 1000
+      return item.vestableAt.toNumber() * 1000
     }
     if (item.label === OriginationLabels.WhitelistSale) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -523,7 +523,7 @@ export const TableRow = ({
                 </Typography>
               </Td>
               {isSaleCompleted && (
-                <Td type={UserPosition.TimeToCliff} label={item.label}>
+                <Td type={UserPosition.VestableAt} label={item.label}>
                   <Typography className={clsx(cl.item, cl.label)}>
                     {getCliffTimeRemainingText()}
                   </Typography>

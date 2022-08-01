@@ -279,7 +279,7 @@ export interface IUserPosition extends Label {
   purchaseToken: IToken
   vestableTokenAmount: BigNumber
   userToVestingId: string[]
-  timeToCliff: BigNumber
+  vestableAt: BigNumber
 }
 
 export interface IOfferingSummary extends Label {
