@@ -110,6 +110,7 @@ const getItem = () => {
     `Launch a token offering with dynamic pricing, custom duration, vesting parameters and reserve conditions.`,
     'Attract long term, efficient liquidity in our novel hybrid of liquidity mining and bonding. ',
     'Borrow any asset against your native token, with no need for price oracles of any kind.',
+    'Abstract the financial and minting logic of your NFT launch, offloading auction mechanics, whitelist logic and much more to our infrastructure. ',
   ]
   let homeItems = MENU_ITEMS.filter((_, index) => index !== 0)
   homeItems = homeItems.map((x, index) => {

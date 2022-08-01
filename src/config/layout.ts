@@ -36,6 +36,13 @@ export const MENU_ITEMS = [
     href: '/native',
     enabled: false,
   },
+  {
+    id: 'minter',
+    label: 'Minter',
+    icon: SvgIcons.minter,
+    href: '/minter',
+    enabled: false,
+  },
 ]
 
 export const SOCIAL_ITEMS = [
