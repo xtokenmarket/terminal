@@ -184,9 +184,12 @@ export const TableRow = ({
 
   useEffect(() => {
     const reload = async () => {
-      if (isSaleInitiated && days + hours + minutes + seconds === 0) {
-        onSaleEnd && onSaleEnd()
-        onCliffTimeEnd && onCliffTimeEnd()
+      if (days + hours + minutes + seconds === 0) {
+        if (isSaleInitiated && onSaleEnd) {
+          onSaleEnd()
+        } else if (onCliffTimeEnd) {
+          onCliffTimeEnd()
+        }
       }
     }
 
