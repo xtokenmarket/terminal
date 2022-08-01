@@ -148,11 +148,7 @@ export const useOriginationPool = (
               offerData.saleEndTimestamp = saleEndTimestamp
               break
             }
-            case EOriginationEvent.SaleEnd: {
-              offerData.saleEndTimestamp =
-                await fungiblePool.contract.saleEndTimestamp()
-              break
-            }
+            case EOriginationEvent.SaleEnd:
             case EOriginationEvent.CliffTimeEnd: {
               offerData.saleEndTimestamp =
                 await fungiblePool.contract.saleEndTimestamp()
