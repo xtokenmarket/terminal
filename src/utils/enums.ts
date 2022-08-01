@@ -284,6 +284,6 @@ export enum EOriginationEvent {
   Claim = 'Claim',
   InitiateSale = 'InitiateSale',
   Invest = 'Invest',
-  SaleEnd = 'SaleEnd',
-  CliffTimeEnd = 'CliffTimeEnd',
+  SaleEnded = 'SaleEnded',
+  Vestable = 'Vestable',
 }
