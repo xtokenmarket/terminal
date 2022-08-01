@@ -193,7 +193,7 @@ export const TableRow = ({
     reload()
   }, [seconds])
 
-  const getTimeRemaining = (
+  const getTimeRemainingText = (
     timeRemaining: BigNumber,
     isPublicSale?: boolean
   ) => {
@@ -206,7 +206,7 @@ export const TableRow = ({
     return 'Not Started'
   }
 
-  const getCliffTimeRemaining = () => {
+  const getCliffTimeRemainingText = () => {
     if (days + hours + minutes + seconds > 0)
       return `${days}D:${hours}H:${minutes}M:${seconds}S`
     return 'Started'
@@ -395,7 +395,7 @@ export const TableRow = ({
 
             <Td type={WhitelistSale.TimeRemaining} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {getTimeRemaining(item.timeRemaining)}
+                {getTimeRemainingText(item.timeRemaining)}
               </Typography>
             </Td>
 
@@ -453,7 +453,7 @@ export const TableRow = ({
           )}
           <Td type={PublicSale.TimeRemaining} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {getTimeRemaining(item.timeRemaining, true)}
+              {getTimeRemainingText(item.timeRemaining, true)}
             </Typography>
           </Td>
           <Td type={PublicSale.SalesPeriod} label={item.label}>
@@ -522,7 +522,7 @@ export const TableRow = ({
               {isSaleCompleted && (
                 <Td type={UserPosition.TimeToCliff} label={item.label}>
                   <Typography className={clsx(cl.item, cl.label)}>
-                    {getCliffTimeRemaining()}
+                    {getCliffTimeRemainingText()}
                   </Typography>
                 </Td>
               )}

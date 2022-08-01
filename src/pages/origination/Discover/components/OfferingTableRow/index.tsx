@@ -123,7 +123,7 @@ export const OfferingTableRow = ({ offering }: IProps) => {
     } = _originationRow
 
     // TODO: Better way to parse time remaining info
-    const getTimeRemaining = () => {
+    const getTimeRemainingText = () => {
       const isSaleInitiated = !salesBegin.isZero()
       if (!isSaleInitiated) return "Hasn't started"
       if (getRemainingTimeSec(salesEnd).isZero()) return 'Ended'
@@ -181,7 +181,7 @@ export const OfferingTableRow = ({ offering }: IProps) => {
         </OfferingTd>
         <OfferingTd type="timeRemaining">
           <Typography className={clsx(cl.item, cl.label)}>
-            {getTimeRemaining()}
+            {getTimeRemainingText()}
           </Typography>
         </OfferingTd>
         <OfferingTd type="vestingPeriod">
