@@ -142,7 +142,7 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
       </Grid>
 
       <Button
-        id="next"
+        id="vestingStepBtn"
         className={classes.nextButton}
         color="primary"
         fullWidth
