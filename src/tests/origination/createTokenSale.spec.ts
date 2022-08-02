@@ -72,9 +72,7 @@ describe('create token sale', () => {
       'input#ReservePurchaseTokenRaised'
     )
     await input1?.type('2')
-    const next = await page.waitForSelector('button#next')
-    expect(next).toBeTruthy()
-    await next?.click()
+    await clickElement(page, 'button#offeringStepBtn')
   })
 
   it('should fill in auctionStep inputs', async () => {
@@ -102,7 +100,7 @@ describe('create token sale', () => {
       await clickElement(page, '#isSetWhitelist > label:nth-child(2)')
     }
     await sleep(1000)
-    await clickElement(page, '#next')
+    await clickElement(page, '#whitelistSaleBtn')
 
     if (isCreatePublic) {
       await clickElement(page, '#isSetPublic > label:nth-child(1)')
@@ -111,7 +109,7 @@ describe('create token sale', () => {
       await clickElement(page, '#isSetPublic > label:nth-child(2)')
     }
     await sleep(1000)
-    await clickElement(page, '#next')
+    await clickElement(page, '#publicSaleBtn')
   })
 
   it('should fill in vestingStep inputs', async () => {
@@ -142,7 +140,7 @@ describe('create token sale', () => {
       await clickElement(page, '#isSetVesting > div:nth-child(2) > span')
     }
     await sleep(1000)
-    await clickElement(page, 'button#next')
+    await clickElement(page, 'button#vestingStepBtn')
   })
 
   it('should submit and create token sale', async () => {
@@ -153,6 +151,6 @@ describe('create token sale', () => {
     await metamask.confirmTransaction()
     await sleep(2000)
     page.bringToFront()
-    await clickElement(page, 'button#done')
+    await clickElement(page, 'button#createTokenSaleSuccessSectionBtn')
   })
 })

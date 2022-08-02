@@ -294,7 +294,11 @@ export const SaleForm = ({
       </Grid>
 
       <Button
-        id="next"
+        id={
+          tokenSalePhase == ETokenSalePhase.Whitelist
+            ? 'whitelistSaleBtn'
+            : 'publicSaleBtn'
+        }
         className={classes.nextButton}
         color="primary"
         fullWidth
