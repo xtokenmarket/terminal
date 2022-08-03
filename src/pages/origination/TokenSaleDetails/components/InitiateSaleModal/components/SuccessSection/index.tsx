@@ -87,6 +87,7 @@ export const SuccessSection = (props: IProps) => {
           <ViewTransaction txId={txHash} />
         </div>
         <Button
+          id="initiateDone"
           color="primary"
           variant="contained"
           fullWidth
