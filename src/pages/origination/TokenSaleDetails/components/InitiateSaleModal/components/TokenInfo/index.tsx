@@ -103,6 +103,7 @@ export const TokenInfo = (props: IProps) => {
         </div>
       </div>
       <Button
+        id={actionPending || actionDone ? '' : 'initiateSaleApprove'}
         color="primary"
         disabled={actionPending || actionDone}
         variant="contained"
