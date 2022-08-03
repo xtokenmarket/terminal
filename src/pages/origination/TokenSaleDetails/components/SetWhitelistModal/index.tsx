@@ -277,7 +277,11 @@ export const SetWhitelistModal: React.FC<IProps> = ({
             </IconButton>
           )}
           <div className={classes.plusWrapper}>
-            <Button onClick={onFileInputClick} disableRipple>
+            <Button
+              id="uploadWhitelist"
+              onClick={onFileInputClick}
+              disableRipple
+            >
               <img
                 alt="plus"
                 className={classes.plus}
@@ -310,6 +314,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
 
           <div className={classes.inputWrapper}>
             <Input
+              id="addressCapInput"
               inputLabel="Max Sale Per whitelist address"
               value={state.value}
               onChange={onInputChange}
@@ -318,6 +323,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
 
           <div className={classes.buttonWrapper}>
             <Button
+              id="submitWhitelist"
               disabled={
                 !state.whitelistFile || state.txState === TxState.InProgress
               }

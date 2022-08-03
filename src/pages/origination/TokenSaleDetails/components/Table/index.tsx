@@ -116,6 +116,7 @@ export const Table = ({
             {isOwnerOrManager && (
               <span>
                 <Button
+                  id="setWhitelist"
                   className={cl.button}
                   onClick={() => {
                     toggleModal && toggleModal()
@@ -136,6 +137,7 @@ export const Table = ({
             <Typography className={cl.label}>{label}</Typography>
             {isOwnerOrManager && (
               <Button
+                id="initiateSale"
                 className={cl.button}
                 onClick={toggleModal}
                 disabled={isInitiateSaleButtonDisabled}
