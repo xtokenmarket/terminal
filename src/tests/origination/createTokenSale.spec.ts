@@ -42,16 +42,16 @@ export async function launchAndConnect() {
   await sleep(2000)
   await metamask.switchNetwork(NETWORK)
   page = await browser.newPage()
-  page.bringToFront()
+  await page.bringToFront()
   await page.goto('http://localhost:3000/mining/discover', {
     waitUntil: 'load',
   })
   await clickElement(page, '#connectWallet')
   await clickElement(page, '#wallets > button:nth-child(1)')
   await sleep(2000)
-  page.bringToFront()
+  await page.bringToFront()
   await metamask.approve()
-  page.bringToFront()
+  await page.bringToFront()
 }
 
 describe('create token sale', () => {
@@ -157,7 +157,7 @@ describe('create token sale', () => {
     await sleep(3000)
     await metamask.confirmTransaction()
     await sleep(2000)
-    page.bringToFront()
+    await page.bringToFront()
     await clickElement(page, 'button#createTokenSaleSuccessSectionBtn', 60000)
   })
 })

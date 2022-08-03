@@ -43,7 +43,7 @@ describe('set whitelist', () => {
     await metamask.confirmTransaction()
     await sleep(8000)
 
-    page.bringToFront()
+    await page.bringToFront()
     await clickElement(page, 'button#setWhitelistDone')
   })
 })
