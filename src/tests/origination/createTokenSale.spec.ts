@@ -19,9 +19,13 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-async function clickElement(page: Page, selector: any): Promise<void> {
+async function clickElement(
+  page: Page,
+  selector: any,
+  timeout?: number
+): Promise<void> {
   await page.bringToFront()
-  await page.waitForSelector(selector)
+  await page.waitForSelector(selector, { timeout })
   const element = await page.$(selector)
   await element?.click()
 }
@@ -151,6 +155,6 @@ describe('create token sale', () => {
     await metamask.confirmTransaction()
     await sleep(2000)
     page.bringToFront()
-    await clickElement(page, 'button#createTokenSaleSuccessSectionBtn')
+    await clickElement(page, 'button#createTokenSaleSuccessSectionBtn', 60000)
   })
 })
