@@ -140,7 +140,11 @@ const TokenSaleDetails = () => {
   }
 
   const onSaleEnd = async () => {
-    await loadInfo(true)
+    await loadInfo(true, EOriginationEvent.SaleEnded)
+  }
+
+  const onCliffTimeEnd = async () => {
+    await loadInfo(true, EOriginationEvent.Vestable)
   }
 
   const toggleSetWhitelistModal = () => {
@@ -233,13 +237,13 @@ const TokenSaleDetails = () => {
     if (!isOwnerOrManager && isOfferUnsuccessful) {
       return {
         token: tokenOffer.offeringOverview.purchaseToken,
-        amount: BigNumber.from(tokenOffer.myPosition.amountInvested),
+        amount: BigNumber.from(tokenOffer.userPosition.amountInvested),
       }
     }
     if (!isOwnerOrManager && !isOfferUnsuccessful) {
       return {
         token: tokenOffer.offeringOverview.offerToken,
-        amount: BigNumber.from(tokenOffer.myPosition.tokenPurchased),
+        amount: BigNumber.from(tokenOffer.userPosition.tokenPurchased),
       }
     }
   }
@@ -262,10 +266,11 @@ const TokenSaleDetails = () => {
 
   const isVestButtonShow =
     tokenOffer &&
-    tokenOffer?.myPosition.amountAvailableToVest.gt(0) &&
+    tokenOffer?.userPosition.amountAvailableToVest.gt(0) &&
     tokenOffer.offeringOverview.vestingPeriod.gt(0) &&
     !isOwnerOrManager &&
-    !isOfferUnsuccessful
+    !isOfferUnsuccessful &&
+    isSaleCompleted
 
   const isWhitelistSaleConfigured =
     tokenOffer &&
@@ -277,36 +282,36 @@ const TokenSaleDetails = () => {
     tokenOffer.publicSale.startingPrice &&
     tokenOffer.publicSale.startingPrice.gt(0)
 
-  const managerClaim =
+  const isClaimManager =
     isOwnerOrManager && isSaleCompleted && !tokenOffer.sponsorTokensClaimed
 
-  const userUnsuccessfulVestingClaim =
+  const isUnsuccessfulVestingSaleClaimUser =
     isOfferUnsuccessful &&
-    tokenOffer.myPosition.amountInvested.gt(0) &&
+    tokenOffer.userPosition.amountInvested.gt(0) &&
     tokenOffer.offeringOverview.vestingPeriod.gt(0)
 
-  const userClaim =
+  const isSuccessfulSaleClaimUser =
     !isOfferUnsuccessful &&
-    tokenOffer?.myPosition.tokenPurchased.gt(0) &&
+    tokenOffer?.userPosition.tokenPurchased.gt(0) &&
     tokenOffer?.offeringOverview.vestingPeriod.isZero()
 
-  const userUnsuccessfulClaim =
-    isOfferUnsuccessful && tokenOffer.myPosition.amountInvested.gt(0)
+  const isUnsuccessfulSaleClaimUser =
+    isOfferUnsuccessful && tokenOffer.userPosition.amountInvested.gt(0)
 
   const isClaimButtonShow =
     tokenOffer &&
     isCliffPeriodPassed() &&
-    (managerClaim ||
-      userUnsuccessfulVestingClaim ||
-      userClaim ||
-      userUnsuccessfulClaim)
+    (isClaimManager ||
+      isUnsuccessfulVestingSaleClaimUser ||
+      isSuccessfulSaleClaimUser ||
+      isUnsuccessfulSaleClaimUser)
 
-  const isMyPositionShow =
+  const isUserPositionShow =
     !isOwnerOrManager &&
     tokenOffer &&
-    (tokenOffer.myPosition.tokenPurchased.gt(0) ||
-      tokenOffer.myPosition.amountInvested.gt(0) ||
-      tokenOffer?.myPosition.amountAvailableToVest.gt(0))
+    (tokenOffer.userPosition.tokenPurchased.gt(0) ||
+      tokenOffer.userPosition.amountInvested.gt(0) ||
+      tokenOffer?.userPosition.amountAvailableToVest.gt(0))
 
   const isPublicSaleInvestDisabled =
     !tokenOffer?.offeringOverview.salesBegin.gt(0) ||
@@ -317,7 +322,7 @@ const TokenSaleDetails = () => {
     Math.floor(Date.now() / 1000)
   ).gte(tokenOffer?.whitelist.endOfWhitelistPeriod || 0)
 
-  const isAddressCapExceeded = tokenOffer?.myPosition.amountInvested.gte(
+  const isAddressCapExceeded = tokenOffer?.userPosition.amountInvested.gte(
     tokenOffer?.whitelist.addressCap
   )
 
@@ -335,8 +340,8 @@ const TokenSaleDetails = () => {
     tokenOffer?.offeringOverview.salesBegin.gt(0)
 
   const isVestedPropertiesShow =
-    (tokenOffer?.myPosition.amountAvailableToVest.gt(0) ||
-      tokenOffer?.myPosition.amountvested.gt(0)) &&
+    (tokenOffer?.userPosition.amountAvailableToVest.gt(0) ||
+      tokenOffer?.userPosition.amountvested.gt(0)) &&
     !isOfferUnsuccessful
 
   return (
@@ -453,9 +458,11 @@ const TokenSaleDetails = () => {
                 )}
               </>
             )}
-            {isMyPositionShow && (
+            {isUserPositionShow && (
               <Table
-                item={tokenOffer.myPosition}
+                isSaleCompleted={isSaleCompleted}
+                onCliffTimeEnd={onCliffTimeEnd}
+                item={tokenOffer.userPosition}
                 label={'My Position'}
                 toggleModal={toggleClaimModal}
                 isVestedPropertiesShow={isVestedPropertiesShow}
@@ -499,14 +506,14 @@ const TokenSaleDetails = () => {
               addressCap={tokenOffer.whitelist.addressCap}
               isSaleCompleted={isSaleCompleted}
               whitelistData={tokenOffer.whitelist}
-              myPositionData={tokenOffer.myPosition}
+              userPositionData={tokenOffer.userPosition}
             />
             <VestModal
               offerData={tokenOffer.offeringOverview}
               onClose={toggleVestModal}
               onSuccess={onVestSuccess}
               open={state.isVestModalOpen}
-              myPositionData={tokenOffer.myPosition}
+              userPositionData={tokenOffer.userPosition}
             />
           </div>
         )}

@@ -109,15 +109,35 @@ class FungiblePoolService {
     return tx.hash
   }
 
-  waitUntilPurchase = async (txId: string): Promise<string> => {
+  waitUntilPurchase = async (
+    contributionAmount: BigNumber,
+    offerAmount: BigNumber,
+    account: string,
+    txId: string
+  ): Promise<string> => {
     let resolved = false
     return new Promise((resolve) => {
-      this.contract.on('Purchase', (...rest) => {
-        if (!resolved) {
-          resolved = true
-          resolve(rest[0].transactionHash)
+      this.contract.on(
+        'Purchase',
+        (
+          _purchaser,
+          _contributionAmount,
+          _offerAmount,
+          _purchaseFee,
+          ...rest
+        ) => {
+          if (
+            account.toLowerCase() === _purchaser.toLowerCase() &&
+            contributionAmount.eq(_contributionAmount) &&
+            offerAmount.eq(_offerAmount)
+          ) {
+            if (!resolved) {
+              resolved = true
+              resolve(rest[0].transactionHash)
+            }
+          }
         }
-      })
+      )
 
       this.contract.provider.waitForTransaction(txId).then(() => {
         if (!resolved) {
@@ -137,12 +157,15 @@ class FungiblePoolService {
   waitUntilVest = async (txId: string): Promise<string> => {
     let resolved = false
     return new Promise((resolve) => {
-      this.contract.on('ClaimVested', (...rest) => {
-        if (!resolved) {
-          resolved = true
-          resolve(rest[0].transactionHash)
+      this.contract.on(
+        'ClaimVested',
+        (purchaser, tokenAmountClaimed, tokenAmountRemaining, ...rest) => {
+          if (!resolved) {
+            resolved = true
+            resolve(rest[0].transactionHash)
+          }
         }
-      })
+      )
 
       this.contract.provider.waitForTransaction(txId).then(() => {
         if (!resolved) {

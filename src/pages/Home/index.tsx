@@ -40,7 +40,6 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
     fontSize: 14,
     lineHeight: '23px',
-    whiteSpace: 'pre-wrap',
   },
   card: {
     background: '#2e1e6d',
@@ -51,6 +50,8 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down('xs')]: {
       padding: '20px 20px',
     },
+    minHeight: 251.5,
+    position: 'relative',
   },
   titleWrapper: {
     display: 'flex',
@@ -76,6 +77,13 @@ const useStyles = makeStyles((theme) => ({
   button: {
     minWidth: 100,
     marginTop: 15,
+    bottom: 30,
+    right: 45,
+    position: 'absolute',
+    [theme.breakpoints.down('xs')]: {
+      bottom: 20,
+      right: 20,
+    },
   },
   bottomWrapper: {
     width: '100%',
@@ -99,9 +107,10 @@ const useStyles = makeStyles((theme) => ({
 const getItem = () => {
   const descriptions = [
     'Configure and deploy an incentivized liquidity program with a concentrated price range and other custom parameters for any token pair.',
-    `Launch a token offering with dynamic pricing, custom duration, vesting parameters and reserve conditions.\n   `,
+    `Launch a token offering with dynamic pricing, custom duration, vesting parameters and reserve conditions.`,
     'Attract long term, efficient liquidity in our novel hybrid of liquidity mining and bonding. ',
     'Borrow any asset against your native token, with no need for price oracles of any kind.',
+    'Abstract the financial and minting logic of your NFT launch, offloading auction mechanics, whitelist logic and much more to our infrastructure. ',
   ]
   let homeItems = MENU_ITEMS.filter((_, index) => index !== 0)
   homeItems = homeItems.map((x, index) => {
@@ -156,7 +165,7 @@ const Home = () => {
                             variant="contained"
                             className={classes.button}
                           >
-                            ENTER
+                            EXPLORE
                           </Button>
                         </NavLink>
                       ) : (
@@ -166,7 +175,7 @@ const Home = () => {
                           variant="contained"
                           className={classes.button}
                         >
-                          ENTER
+                          EXPLORE
                         </Button>
                       )}
                     </div>

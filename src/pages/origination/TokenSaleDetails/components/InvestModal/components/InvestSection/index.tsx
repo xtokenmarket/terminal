@@ -96,7 +96,12 @@ export const InvestSection = (props: IProps) => {
         txId = await fungiblePool.purchase(purchaseAmount, isPurchaseTokenETH)
       }
 
-      const finalTxId = await fungiblePool.waitUntilPurchase(txId)
+      const finalTxId = await fungiblePool.waitUntilPurchase(
+        purchaseAmount,
+        offerAmount,
+        account,
+        txId
+      )
 
       setState({
         isPurchasing: false,

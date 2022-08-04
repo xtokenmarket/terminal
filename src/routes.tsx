@@ -44,6 +44,11 @@ const routes = [
         component: lazy(() => import('pages/origination/TokenSaleDetails')),
       },
       {
+        exact: true,
+        path: '/minter',
+        component: lazy(() => import('pages/ComingSoon')),
+      },
+      {
         path: '/mining',
         layout: TerminalLayout,
         routes: [

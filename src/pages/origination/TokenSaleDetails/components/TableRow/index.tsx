@@ -3,7 +3,7 @@ import { Button, makeStyles, Tooltip, Typography } from '@material-ui/core'
 import { Td } from '../Td'
 import {
   EPricingFormula,
-  MyPosition,
+  UserPosition,
   OfferingOverview,
   OfferingSummary,
   OriginationLabels,
@@ -11,7 +11,7 @@ import {
   WhitelistSale,
 } from 'utils/enums'
 import {
-  IMyPosition,
+  IUserPosition,
   IOfferingOverview,
   IOfferingSummary,
   IPublicSale,
@@ -128,7 +128,7 @@ interface IProps {
     | IOfferingOverview
     | IWhitelistSale
     | IPublicSale
-    | IMyPosition
+    | IUserPosition
     | IOfferingSummary
   toggleModal?: () => void
   isVestedPropertiesShow?: boolean
@@ -138,6 +138,8 @@ interface IProps {
   isWhitelistSet?: boolean
   isWhitelistSaleEnded?: boolean
   onSaleEnd?: () => void
+  onCliffTimeEnd?: () => void
+  isSaleCompleted?: boolean
 }
 
 export const TableRow = ({
@@ -150,34 +152,55 @@ export const TableRow = ({
   isWhitelistSet,
   isWhitelistSaleEnded,
   onSaleEnd,
+  onCliffTimeEnd,
+  isSaleCompleted,
 }: IProps) => {
   const cl = useStyles()
-  const { days, hours, minutes, seconds } = useCountdown(
-    item.label === OriginationLabels.WhitelistSale
-      ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        item.endOfWhitelistPeriod.toNumber() * 1000
-      : item.label === OriginationLabels.PublicSale
-      ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        item.saleEndTimestamp.toNumber() * 1000
-      : 0
-  )
+  const remainingTime = () => {
+    if (
+      item.label === OriginationLabels.UserPosition &&
+      isVestedPropertiesShow &&
+      !isOfferUnsuccessful &&
+      isSaleCompleted
+    ) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      return item.vestableAt.toNumber() * 1000
+    }
+    if (item.label === OriginationLabels.WhitelistSale) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      return item.endOfWhitelistPeriod.toNumber() * 1000
+    }
+    if (item.label === OriginationLabels.PublicSale) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      return item.saleEndTimestamp.toNumber() * 1000
+    }
+
+    return 0
+  }
+  const { days, hours, minutes, seconds } = useCountdown(remainingTime())
 
   useEffect(() => {
     const reload = async () => {
-      if (isSaleInitiated && days + hours + minutes + seconds === 0) {
-        onSaleEnd && onSaleEnd()
+      if (days + hours + minutes + seconds === 0) {
+        if (isSaleInitiated && onSaleEnd) {
+          onSaleEnd()
+        } else if (onCliffTimeEnd) {
+          onCliffTimeEnd()
+        }
       }
     }
 
     reload()
   }, [seconds])
 
-  const getTimeRemaining = (
+  const getTimeRemainingText = (
     timeRemaining: BigNumber,
     isPublicSale?: boolean
   ) => {
+    if (item.label === OriginationLabels.UserPosition) return
     if (isWhitelistSet && !isWhitelistSaleEnded && isPublicSale)
       return 'Not Started'
     if (isSaleInitiated && timeRemaining.toNumber() > 0 && days >= 0)
@@ -186,11 +209,17 @@ export const TableRow = ({
     return 'Not Started'
   }
 
+  const getCliffTimeRemainingText = () => {
+    if (days + hours + minutes + seconds > 0)
+      return `${days}D:${hours}H:${minutes}M:${seconds}S`
+    return 'Started'
+  }
+
   const renderContent = () => {
     const offeringOverview = item as IOfferingOverview
     const whitelistSale = item as IWhitelistSale
     const publicSale = item as IPublicSale
-    const myPosition = item as IMyPosition
+    const userPosition = item as IUserPosition
     const offeringSummary = item as IOfferingSummary
 
     if (item.label === OriginationLabels.OfferingOverview) {
@@ -369,7 +398,7 @@ export const TableRow = ({
 
             <Td type={WhitelistSale.TimeRemaining} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
-                {getTimeRemaining(item.timeRemaining)}
+                {getTimeRemainingText(item.timeRemaining)}
               </Typography>
             </Td>
 
@@ -427,7 +456,7 @@ export const TableRow = ({
           )}
           <Td type={PublicSale.TimeRemaining} label={item.label}>
             <Typography className={clsx(cl.item, cl.label)}>
-              {getTimeRemaining(item.timeRemaining, true)}
+              {getTimeRemainingText(item.timeRemaining, true)}
             </Typography>
           </Td>
           <Td type={PublicSale.SalesPeriod} label={item.label}>
@@ -441,12 +470,12 @@ export const TableRow = ({
       )
     }
 
-    if (item.label === OriginationLabels.MyPosition) {
-      item = myPosition
+    if (item.label === OriginationLabels.UserPosition) {
+      item = userPosition
       return (
         <div className={cl.content}>
           {!isOfferUnsuccessful && (
-            <Td type={MyPosition.TokenPurchased} label={item.label}>
+            <Td type={UserPosition.TokenPurchased} label={item.label}>
               <Typography
                 className={clsx(cl.item, cl.label, cl.itemMarginLeft)}
               >
@@ -457,7 +486,7 @@ export const TableRow = ({
               </Typography>
             </Td>
           )}
-          <Td type={MyPosition.AmountInvested} label={item.label}>
+          <Td type={UserPosition.AmountInvested} label={item.label}>
             <Typography
               className={clsx(cl.item, cl.label, [
                 isOfferUnsuccessful && cl.itemMarginLeft,
@@ -474,7 +503,7 @@ export const TableRow = ({
           </Td>
           {isVestedPropertiesShow && (
             <>
-              <Td type={MyPosition.Amountvested} label={item.label}>
+              <Td type={UserPosition.Amountvested} label={item.label}>
                 <Typography className={clsx(cl.item, cl.label)}>
                   {formatToShortNumber(
                     formatBigNumber(item.amountvested, item.offerToken.decimals)
@@ -482,7 +511,7 @@ export const TableRow = ({
                   {item.offerToken.symbol}
                 </Typography>
               </Td>
-              <Td type={MyPosition.AmountAvailableToVest} label={item.label}>
+              <Td type={UserPosition.AmountAvailableToVest} label={item.label}>
                 <Typography className={clsx(cl.item, cl.label)}>
                   {formatToShortNumber(
                     formatBigNumber(
@@ -493,6 +522,13 @@ export const TableRow = ({
                   {item.offerToken.symbol}
                 </Typography>
               </Td>
+              {isSaleCompleted && (
+                <Td type={UserPosition.VestableAt} label={item.label}>
+                  <Typography className={clsx(cl.item, cl.label)}>
+                    {getCliffTimeRemainingText()}
+                  </Typography>
+                </Td>
+              )}
             </>
           )}
         </div>
