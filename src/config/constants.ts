@@ -7,6 +7,7 @@ import { ReactComponent as HomeIcon } from 'assets/svgs/home.svg'
 import { ReactComponent as MiningIcon } from 'assets/svgs/mining.svg'
 import { ReactComponent as NativeIcon } from 'assets/svgs/native.svg'
 import { ReactComponent as OriginationIcon } from 'assets/svgs/origination.svg'
+import { ReactComponent as MinterIcon } from 'assets/svgs/minter.svg'
 import { ReactComponent as TwitterIcon } from 'assets/svgs/twitter.svg'
 import { IToken } from 'types'
 import { ethers } from 'ethers'
@@ -178,6 +179,7 @@ export const SvgIcons = {
   mining: MiningIcon,
   native: NativeIcon,
   origination: OriginationIcon,
+  minter: MinterIcon,
   twitter: TwitterIcon,
 }
 

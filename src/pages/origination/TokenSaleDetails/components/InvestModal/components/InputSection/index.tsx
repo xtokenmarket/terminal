@@ -2,7 +2,7 @@ import { makeStyles, Typography, IconButton, Button } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
 import { useEffect, useReducer } from 'react'
 import { FungiblePoolService } from 'services'
-import { IMyPosition, IOfferingOverview, IWhitelistSale } from 'types'
+import { IUserPosition, IOfferingOverview, IWhitelistSale } from 'types'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { TokenBalanceInput } from 'components'
 import { ZERO } from 'utils/number'
@@ -71,7 +71,7 @@ interface IProps {
   offerData: IOfferingOverview
   updateState: (e: any) => void
   whitelistData: IWhitelistSale
-  myPositionData: IMyPosition
+  userPositionData: IUserPosition
   isWhitelist: boolean
 }
 

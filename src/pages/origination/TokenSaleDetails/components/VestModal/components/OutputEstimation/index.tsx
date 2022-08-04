@@ -2,7 +2,7 @@ import { makeStyles, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import { TokenIcon } from 'components'
 import { BigNumber } from 'ethers'
-import { IMyPosition, IOfferingOverview } from 'types'
+import { IUserPosition, IOfferingOverview } from 'types'
 import {
   formatBigNumber,
   formatDurationUnits,
@@ -94,12 +94,12 @@ interface IProps {
   className?: string
   offerData: IOfferingOverview
   vestState: VestState
-  myPositionData: IMyPosition
+  userPositionData: IUserPosition
 }
 
 export const OutputEstimation = (props: IProps) => {
   const classes = useStyles()
-  const { offerData, vestState, myPositionData } = props
+  const { offerData, vestState, userPositionData } = props
 
   const now = getCurrentTimeStamp()
 
@@ -132,7 +132,7 @@ export const OutputEstimation = (props: IProps) => {
           <Typography className={classes.amount}>
             {numberWithCommas(
               formatBigNumber(
-                myPositionData.amountAvailableToVest,
+                userPositionData.amountAvailableToVest,
                 offerData.offerToken.decimals
               )
             )}
@@ -141,7 +141,7 @@ export const OutputEstimation = (props: IProps) => {
                 ~ $
                 {numberWithCommas(
                   getTotalTokenPrice(
-                    myPositionData.amountAvailableToVest,
+                    userPositionData.amountAvailableToVest,
                     offerData.offerToken.decimals,
                     offerData.offerToken.price
                   )
@@ -177,14 +177,14 @@ export const OutputEstimation = (props: IProps) => {
             {vestState.step === VestStep.Info
               ? numberWithCommas(
                   formatBigNumber(
-                    myPositionData.amountvested,
+                    userPositionData.amountvested,
                     offerData.offerToken.decimals
                   )
                 )
               : numberWithCommas(
                   formatBigNumber(
-                    myPositionData.amountvested.add(
-                      myPositionData.amountAvailableToVest
+                    userPositionData.amountvested.add(
+                      userPositionData.amountAvailableToVest
                     ),
                     offerData.offerToken.decimals
                   )
@@ -195,15 +195,15 @@ export const OutputEstimation = (props: IProps) => {
               {vestState.step === VestStep.Info
                 ? numberWithCommas(
                     getTotalTokenPrice(
-                      myPositionData.amountvested,
+                      userPositionData.amountvested,
                       offerData.offerToken.decimals,
                       offerData.offerToken.price
                     )
                   )
                 : numberWithCommas(
                     getTotalTokenPrice(
-                      myPositionData.amountvested.add(
-                        myPositionData.amountAvailableToVest
+                      userPositionData.amountvested.add(
+                        userPositionData.amountAvailableToVest
                       ),
                       offerData.offerToken.decimals,
                       offerData.offerToken.price

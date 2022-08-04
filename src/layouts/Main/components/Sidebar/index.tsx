@@ -56,10 +56,6 @@ const useStyles = makeStyles((theme) => ({
     height: 36,
     marginRight: 24,
   },
-  logoLabel: {
-    color: theme.colors.white,
-    fontWeight: 600,
-  },
   body: { flex: 1, paddingTop: 32 },
   footer: {},
   item: {
@@ -86,7 +82,6 @@ const useStyles = makeStyles((theme) => ({
       '& svg': {
         width: 20,
         height: 20,
-        '& g': { opacity: 0.6 },
       },
     },
 
@@ -145,7 +140,6 @@ export const Sidebar = () => {
           <div className={classes.header}>
             <div className={classes.logoWrapper}>
               <img alt="logo" src="/assets/logo.png" className={classes.logo} />
-              <Typography className={classes.logoLabel}>XTOKEN</Typography>
             </div>
           </div>
           <div className={classes.body}>

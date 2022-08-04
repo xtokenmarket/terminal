@@ -202,7 +202,7 @@ export enum OriginationLabels {
   OfferingOverview = 'offeringOverview',
   WhitelistSale = 'whitelistSale',
   PublicSale = 'publicSale',
-  MyPosition = 'myPosition',
+  UserPosition = 'userPosition',
   OfferingSummary = 'offeringSummary',
 }
 
@@ -236,11 +236,12 @@ export enum PublicSale {
   StartingEndingPrice = 'startingEndingPrice',
 }
 
-export enum MyPosition {
+export enum UserPosition {
   TokenPurchased = 'tokenPurchased',
   AmountInvested = 'amountInvested',
   Amountvested = 'amountvested',
   AmountAvailableToVest = 'amountAvailableToVest',
+  VestableAt = 'vestableAt',
 }
 
 export enum OfferingSummary {
@@ -283,4 +284,6 @@ export enum EOriginationEvent {
   Claim = 'Claim',
   InitiateSale = 'InitiateSale',
   Invest = 'Invest',
+  SaleEnded = 'SaleEnded',
+  Vestable = 'Vestable',
 }

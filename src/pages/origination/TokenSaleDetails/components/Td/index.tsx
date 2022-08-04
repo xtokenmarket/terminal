@@ -1,7 +1,7 @@
 import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core'
 import {
-  MyPosition,
+  UserPosition,
   OfferingOverview,
   OfferingSummary,
   OriginationLabels,
@@ -49,7 +49,7 @@ const useStyles = makeStyles(() => ({
       textAlign: 'right',
     },
   },
-  myPosition: {
+  userPosition: {
     '&.tokenPurchased': { width: '12%' },
     '&.amountInvested': { width: '12%' },
     '&.amountvested': { width: '12%' },
@@ -83,7 +83,7 @@ interface IProps {
     | OfferingOverview
     | WhitelistSale
     | PublicSale
-    | MyPosition
+    | UserPosition
     | OfferingSummary
   children: React.ReactNode | React.ReactNode[]
 }

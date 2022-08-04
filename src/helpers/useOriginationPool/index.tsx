@@ -138,8 +138,20 @@ export const useOriginationPool = (
               break
             }
             case EOriginationEvent.Invest: {
-              offerData.offerTokenAmountSold =
-                await fungiblePool.contract.offerTokenAmountSold()
+              const [offerTokenAmountSold, saleEndTimestamp] =
+                await Promise.all([
+                  fungiblePool.contract.offerTokenAmountSold(),
+                  fungiblePool.contract.saleEndTimestamp(),
+                ])
+
+              offerData.offerTokenAmountSold = offerTokenAmountSold
+              offerData.saleEndTimestamp = saleEndTimestamp
+              break
+            }
+            case EOriginationEvent.SaleEnded:
+            case EOriginationEvent.Vestable: {
+              offerData.saleEndTimestamp =
+                await fungiblePool.contract.saleEndTimestamp()
               break
             }
           }
@@ -286,8 +298,8 @@ export const useOriginationPool = (
       saleEndTimestamp,
     }
 
-    const myPosition = {
-      label: OriginationLabels.MyPosition,
+    const userPosition = {
+      label: OriginationLabels.UserPosition,
       tokenPurchased: ZERO,
       amountInvested: ZERO,
       amountvested: ZERO,
@@ -296,6 +308,7 @@ export const useOriginationPool = (
       purchaseToken: purchaseToken || ETH,
       vestableTokenAmount,
       userToVestingId: [],
+      vestableAt: saleEndTimestamp.add(cliffPeriod),
     }
 
     const offeringSummary = {
@@ -349,13 +362,11 @@ export const useOriginationPool = (
           const [
             offerTokenAmountPurchased,
             purchaseTokenContribution,
-            userToVestingId, // TODO: need to be refactored later after graph is ready
             isOwnerOrManager,
             vestingEntryNFTAddress,
           ] = await Promise.all([
             fungiblePool.contract.offerTokenAmountPurchased(account),
             fungiblePool.contract.purchaseTokenContribution(account),
-            fungiblePool.contract.userToVestingId(account),
             fungiblePool.contract.isOwnerOrManager(account),
             fungiblePool.contract.vestingEntryNFT(),
           ])
@@ -404,13 +415,13 @@ export const useOriginationPool = (
 
           offeringOverview.isOwnerOrManager = isOwnerOrManager
 
-          myPosition.amountAvailableToVest = totalTokenAmount.sub(
+          userPosition.amountAvailableToVest = totalTokenAmount.sub(
             totalTokenAmountClaimed
           )
-          myPosition.amountInvested = purchaseTokenContribution
-          myPosition.amountvested = totalTokenAmountClaimed
-          myPosition.tokenPurchased = offerTokenAmountPurchased
-          myPosition.userToVestingId = userToVestingEntryIds.map(
+          userPosition.amountInvested = purchaseTokenContribution
+          userPosition.amountvested = totalTokenAmountClaimed
+          userPosition.tokenPurchased = offerTokenAmountPurchased
+          userPosition.userToVestingId = userToVestingEntryIds.map(
             (x: any) => x.userToVestingId
           )
         } catch (e) {
@@ -423,7 +434,7 @@ export const useOriginationPool = (
       address: poolAddress,
       network,
       offeringSummary,
-      myPosition,
+      userPosition,
       whitelist: _whitelist,
       offeringOverview,
       publicSale,

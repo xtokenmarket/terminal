@@ -2,7 +2,7 @@ import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core'
 import { Td } from '../Td'
 import {
-  MyPosition,
+  UserPosition,
   OfferingOverview,
   OfferingSummary,
   OriginationLabels,
@@ -34,6 +34,7 @@ interface IProps {
   isVestedPropertiesShow?: boolean
   isOfferUnsuccessful?: boolean
   isFormulaStandard?: boolean
+  isSaleCompleted?: boolean
 }
 
 export const TableHeader = (props: IProps) => {
@@ -124,25 +125,30 @@ export const TableHeader = (props: IProps) => {
     )
   }
 
-  if (props.label === OriginationLabels.MyPosition) {
+  if (props.label === OriginationLabels.UserPosition) {
     return (
       <div className={classes.root}>
         {!props.isOfferUnsuccessful && (
-          <Td type={MyPosition.TokenPurchased} label={props.label}>
+          <Td type={UserPosition.TokenPurchased} label={props.label}>
             <div className={classes.item}>Token Purchased</div>
           </Td>
         )}
-        <Td type={MyPosition.AmountInvested} label={props.label}>
+        <Td type={UserPosition.AmountInvested} label={props.label}>
           <div className={classes.item}>Amount Invested</div>
         </Td>
         {props.isVestedPropertiesShow && (
           <>
-            <Td type={MyPosition.Amountvested} label={props.label}>
+            <Td type={UserPosition.Amountvested} label={props.label}>
               <div className={classes.item}>Amount Vested</div>
             </Td>
-            <Td type={MyPosition.AmountAvailableToVest} label={props.label}>
+            <Td type={UserPosition.AmountAvailableToVest} label={props.label}>
               <div className={classes.item}>Amount Available To Vest</div>
             </Td>
+            {props.isSaleCompleted && (
+              <Td type={UserPosition.AmountAvailableToVest} label={props.label}>
+                <div className={classes.item}>Cliff Time Remaining</div>
+              </Td>
+            )}
           </>
         )}
       </div>

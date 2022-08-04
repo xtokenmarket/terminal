@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme: any) => ({
     padding: '6px 0',
     [theme.breakpoints.down('xs')]: {
       padding: 0,
+      paddingBottom: 65,
     },
   },
 }))
