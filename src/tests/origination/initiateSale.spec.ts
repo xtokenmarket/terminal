@@ -22,11 +22,15 @@ describe('initiate sale', () => {
   it('should initiate sale', async () => {
     await clickElement(page, '#initiateSale')
     await sleep(3000)
-    await clickElement(page, '#initiateSaleApprove')
-    await sleep(3000)
-    await metamask.confirmTransaction()
-    await page.bringToFront()
-    await sleep(1000)
+
+    if ((await page.$('#initiateSaleApprove')) !== null) {
+      await clickElement(page, '#initiateSaleApprove')
+      await sleep(3000)
+      await metamask.confirmTransaction()
+      await page.bringToFront()
+      await sleep(1000)
+    }
+
     await clickElement(page, '#initiate', 60000)
     await sleep(3000)
     await metamask.confirmTransaction()
