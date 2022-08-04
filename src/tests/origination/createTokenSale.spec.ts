@@ -30,14 +30,14 @@ export async function clickElement(
   await element?.click()
 }
 
-export async function launchAndConnect() {
+export async function launchAndConnect(seed = process.env.SEED) {
   const launchOptions = {
     metamaskVersion: 'v10.15.0',
     defaultViewport: null,
   }
   const browser = await dappeteer.launch(puppeteer, launchOptions)
   metamask = await dappeteer.setupMetamask(browser, {
-    seed: process.env.SEED,
+    seed,
   })
   await sleep(2000)
   await metamask.switchNetwork(NETWORK)

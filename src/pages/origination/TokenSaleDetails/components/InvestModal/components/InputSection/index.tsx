@@ -185,6 +185,11 @@ export const InputSection = (props: IProps) => {
     onNext()
   }
 
+  const isDisabled =
+    state.offerAmount.isZero() ||
+    state.purchaseAmount.isZero() ||
+    !!state.errorMessage
+
   return (
     <div className={classes.root}>
       <div className={classes.header}>
@@ -216,16 +221,13 @@ export const InputSection = (props: IProps) => {
         </div>
         <div className={classes.actions}>
           <Button
+            id={isDisabled ? '' : 'invest'}
             color="primary"
             variant="contained"
             fullWidth
             className={classes.initiateBtn}
             onClick={_onInvest}
-            disabled={
-              state.offerAmount.isZero() ||
-              state.purchaseAmount.isZero() ||
-              !!state.errorMessage
-            }
+            disabled={isDisabled}
           >
             INVEST
           </Button>

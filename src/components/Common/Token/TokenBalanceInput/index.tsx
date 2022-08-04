@@ -216,6 +216,7 @@ export const TokenBalanceInput: React.FC<IProps> = ({
   return (
     <div className={clsx(classes.root, className)}>
       <TextField
+        id={isDisabled ? '' : 'investInput'}
         InputLabelProps={{
           className: isDisabled
             ? classes.inputLabelDisabled

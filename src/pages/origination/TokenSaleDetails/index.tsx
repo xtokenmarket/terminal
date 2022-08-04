@@ -410,6 +410,7 @@ const TokenSaleDetails = () => {
                     >
                       <div>
                         <Button
+                          id="whitelistInvest"
                           className={cl.button}
                           onClick={toggleWhitelistInvestModal}
                           disabled={iswhitelistSaleInvestDisabled}

@@ -174,6 +174,9 @@ export const ApproveSection = (props: IProps) => {
     }
   }
 
+  const isDisabled =
+    !state.isApproved || state.isInitiating || state.isInitiated
+
   return (
     <div className={classes.root}>
       <div className={classes.header}>
@@ -196,6 +199,7 @@ export const ApproveSection = (props: IProps) => {
             amount={purchaseAmount}
           />
           <Button
+            id={isDisabled ? '' : 'invest'}
             color="primary"
             variant="contained"
             fullWidth

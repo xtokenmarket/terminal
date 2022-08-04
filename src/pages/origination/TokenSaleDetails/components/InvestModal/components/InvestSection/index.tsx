@@ -122,6 +122,7 @@ export const InvestSection = (props: IProps) => {
       />
 
       <Button
+        id="investTokenBtn"
         className={classes.button}
         color="primary"
         fullWidth
