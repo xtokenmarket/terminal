@@ -113,9 +113,7 @@ const TokenSaleDetails = () => {
       ...prev,
       isInitiateSaleModalOpen: false,
     }))
-    setTimeout(async () => {
-      await loadInfo(true, EOriginationEvent.InitiateSale)
-    }, 1000)
+    await loadInfo(true, EOriginationEvent.InitiateSale)
   }
 
   const onVestSuccess = async () => {
