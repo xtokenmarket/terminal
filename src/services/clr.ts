@@ -151,8 +151,9 @@ class CLRService {
     } else {
       return this.contract.withdrawAndClaimReward(
         amount,
-        amount0Estimation,
-        amount1Estimation
+        // 1% slippage
+        amount0Estimation.mul(99).div(100),
+        amount1Estimation.mul(99).div(100)
       )
     }
   }
@@ -332,6 +333,10 @@ class CLRService {
         }
       })
     })
+  }
+
+  calculateWithdrawAmounts = async (amount: BigNumber) => {
+    return this.contract.calculateWithdrawAmounts(amount)
   }
 }
 
