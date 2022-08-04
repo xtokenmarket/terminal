@@ -102,6 +102,7 @@ export const WithdrawModal = (props: IProps) => {
             updateState={updateState}
             withdrawState={state}
             onClose={onClose}
+            clrService={clrService}
             poolData={poolData}
           />
         )

@@ -6,6 +6,7 @@ import { ETHER_DECIMAL, LP_TOKEN_BASIC } from 'config/constants'
 import { IWithdrawState } from 'pages/PoolDetails/components'
 import { ITerminalPool } from 'types'
 import { parseUnits } from 'ethers/lib/utils'
+import { CLRService } from 'services'
 import { formatBigNumber } from 'utils'
 
 import { OutputEstimation } from '..'
@@ -43,6 +44,7 @@ interface IProps {
   onClose: () => void
   withdrawState: IWithdrawState
   updateState: (e: any) => void
+  clrService: CLRService
   poolData: ITerminalPool
 }
 
@@ -50,7 +52,8 @@ let timerId: any
 
 export const InputSection = (props: IProps) => {
   const classes = useStyles()
-  const { onNext, onClose, withdrawState, updateState, poolData } = props
+  const { onNext, onClose, withdrawState, updateState, clrService, poolData } =
+    props
 
   const earned = poolData.earnedTokens.map((t) => t.amount)
 
@@ -59,28 +62,35 @@ export const InputSection = (props: IProps) => {
       let amount0Estimation
       let amount1Estimation
 
-      const { token0, token1, totalSupply } = poolData
+      if (clrService.version === 'v1.0.0') {
+        const { token0, token1, totalSupply } = poolData
 
-      // TODO: Replace with `calculateWithdrawAmounts()` contract call
-      amount0Estimation = amount
-        .mul(token0.balance as BigNumber)
-        .div(totalSupply)
-      amount1Estimation = amount
-        .mul(token1.balance as BigNumber)
-        .div(totalSupply)
+        amount0Estimation = amount
+          .mul(token0.balance as BigNumber)
+          .div(totalSupply)
+        amount1Estimation = amount
+          .mul(token1.balance as BigNumber)
+          .div(totalSupply)
 
-      if (token0.decimals !== ETHER_DECIMAL) {
-        amount0Estimation = parseUnits(
-          formatBigNumber(amount0Estimation, ETHER_DECIMAL, 4),
-          token0.decimals
+        if (token0.decimals !== ETHER_DECIMAL) {
+          amount0Estimation = parseUnits(
+            formatBigNumber(amount0Estimation, ETHER_DECIMAL, 4),
+            token0.decimals
+          )
+        }
+
+        if (token1.decimals !== ETHER_DECIMAL) {
+          amount1Estimation = parseUnits(
+            formatBigNumber(amount1Estimation, ETHER_DECIMAL, 4),
+            token1.decimals
+          )
+        }
+      } else {
+        const { amount0, amount1 } = await clrService.calculateWithdrawAmounts(
+          amount
         )
-      }
-
-      if (token1.decimals !== ETHER_DECIMAL) {
-        amount1Estimation = parseUnits(
-          formatBigNumber(amount1Estimation, ETHER_DECIMAL, 4),
-          token1.decimals
-        )
+        amount0Estimation = amount0
+        amount1Estimation = amount1
       }
 
       updateState({
