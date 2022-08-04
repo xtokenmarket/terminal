@@ -7,6 +7,7 @@ import { BigNumber } from 'ethers'
 import { IToken } from 'types'
 import { ETHER_DECIMAL } from 'config/constants'
 import { ZERO } from 'utils/number'
+import { parseUnits } from 'ethers/lib/utils'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -106,7 +107,10 @@ export const BalanceSection = (props: IProps) => {
             ~ $
             {numberWithCommas(
               isDeposit
-                ? tokenTvl || '0'
+                ? formatBigNumber(
+                    parseUnits(tokenTvl || '0', ETHER_DECIMAL),
+                    ETHER_DECIMAL
+                  )
                 : formatBigNumber(token.tvl as string, ETHER_DECIMAL)
             )}
           </Typography>
