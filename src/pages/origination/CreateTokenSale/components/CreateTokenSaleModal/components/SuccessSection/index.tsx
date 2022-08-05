@@ -77,6 +77,7 @@ export const SuccessSection = (props: IProps) => {
           <ViewTransaction txId={props.txId} />
         </div>
         <Button
+          id="createTokenSaleSuccessSectionBtn"
           color="primary"
           variant="contained"
           fullWidth

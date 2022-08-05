@@ -191,6 +191,7 @@ export const InitSection = (props: IProps) => {
       />
 
       <Button
+        id="createTokenSale"
         className={classes.button}
         color="primary"
         fullWidth

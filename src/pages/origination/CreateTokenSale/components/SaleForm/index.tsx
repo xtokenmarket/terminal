@@ -156,6 +156,7 @@ export const SaleForm = ({
               {`Will your offering have a ${saleDisplayName} period?`}
             </div>
             <RadioGroup
+              id={`isSet${tokenSalePhase}`}
               name="sale-period"
               value={enabled?.toString()}
               onChange={(event) =>
@@ -198,6 +199,7 @@ export const SaleForm = ({
             </div>
 
             <Selector
+              id="offeringPeriod"
               saleDisplayName={saleDisplayName}
               onSelectorChange={(e) =>
                 updateSaleData({
@@ -225,6 +227,7 @@ export const SaleForm = ({
           className={clsx(!enabled && classes.sectionDisabled)}
         >
           <Radio
+            id="formula"
             label="Choose the pricing formula for this offering"
             infoText={Object.values([
               InfoText.Standard,
@@ -241,6 +244,7 @@ export const SaleForm = ({
               {pricingFormula === EPricingFormula.Standard ? (
                 <div className={classes.inputContainer}>
                   <Input
+                    id="standardPrice"
                     label={`Price per token - ${purchaseToken?.symbol} per ${offerToken?.symbol}`}
                     value={startingPrice}
                     onChange={(event) => {
@@ -256,6 +260,7 @@ export const SaleForm = ({
                 <>
                   <div className={classes.inputContainer}>
                     <Input
+                      id="startingPrice"
                       label={`Starting Price - ${purchaseToken?.symbol} per ${offerToken?.symbol}`}
                       value={startingPrice}
                       onChange={(event) =>
@@ -270,6 +275,7 @@ export const SaleForm = ({
                   </div>
                   <div className={classes.inputContainer}>
                     <Input
+                      id="endingPrice"
                       label={`Ending Price - ${purchaseToken?.symbol} per ${offerToken?.symbol}`}
                       value={endingPrice}
                       onChange={(event) =>
@@ -288,6 +294,11 @@ export const SaleForm = ({
       </Grid>
 
       <Button
+        id={
+          tokenSalePhase == ETokenSalePhase.Whitelist
+            ? 'whitelistSaleBtn'
+            : 'publicSaleBtn'
+        }
         className={classes.nextButton}
         color="primary"
         fullWidth

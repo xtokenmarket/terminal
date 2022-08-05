@@ -42,6 +42,7 @@ interface IProps {
   onChange: (value: string, checked?: boolean) => void
   className?: string
   infoText?: string[]
+  id?: string
 }
 
 export const Radio: React.FC<IProps> = ({
@@ -51,6 +52,7 @@ export const Radio: React.FC<IProps> = ({
   onChange,
   className,
   infoText,
+  id,
 }) => {
   const [value, setValue] = useState(selectedItem)
   const classes = useStyles()
@@ -61,7 +63,7 @@ export const Radio: React.FC<IProps> = ({
   }
 
   return (
-    <div className={className}>
+    <div className={className} id={id}>
       {label && <Typography className={classes.label}>{label}</Typography>}
       {items.map((item: string, index) => (
         <div key={item} className={classes.item}>

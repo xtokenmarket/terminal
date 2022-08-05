@@ -92,6 +92,7 @@ interface IProps {
   disabled?: boolean
   infoText?: string
   inputLabel?: string
+  id?: string
 }
 
 export const Input: React.FC<IProps> = ({
@@ -102,6 +103,7 @@ export const Input: React.FC<IProps> = ({
   disabled,
   infoText,
   inputLabel,
+  id,
 }) => {
   const classes = useStyles()
   const commonClasses = useCommonStyles()
@@ -123,6 +125,7 @@ export const Input: React.FC<IProps> = ({
       )}
 
       <TextField
+        id={id}
         label={inputLabel}
         fullWidth
         className={classes.input}

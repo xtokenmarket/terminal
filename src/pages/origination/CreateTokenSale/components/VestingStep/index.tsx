@@ -89,6 +89,7 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
             Do you want to add a vesting period to your token sale?
           </Typography>
           <Radio
+            id={'isSetVesting'}
             items={Object.values(EVestingOption)}
             selectedItem={data.vestingEnabled ? `${data.vestingEnabled}` : ''}
             onChange={(value) =>
@@ -100,6 +101,7 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
         </Grid>
         <Grid item xs={12}>
           <Selector
+            id="vestingPeriod"
             onSelectorChange={(e) =>
               updateData({ vestingPeriodUnit: e.target.value })
             }
@@ -117,6 +119,7 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
         </Grid>
         <Grid item xs={12}>
           <Selector
+            id="cliffPeriod"
             onSelectorChange={(e) =>
               updateData({ cliffPeriodUnit: e.target.value })
             }
@@ -139,12 +142,15 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
       </Grid>
 
       <Button
+        id="vestingStepBtn"
         className={classes.nextButton}
         color="primary"
         fullWidth
         onClick={onNext}
         variant="contained"
-        disabled={vestingWanted ? !validVestingDataInserted : false}
+        disabled={
+          !data.vestingEnabled || (vestingWanted && !validVestingDataInserted)
+        }
       >
         Next
       </Button>
