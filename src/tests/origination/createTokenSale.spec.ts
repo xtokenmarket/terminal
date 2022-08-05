@@ -148,7 +148,6 @@ describe('create token sale', () => {
   })
 
   it('should submit and create token sale', async () => {
-    await page.screenshot({ path: 'create-token-sale.png' })
     await clickElement(page, 'button#submit')
     await clickElement(page, 'button#createTokenSale')
     await sleep(3000)
