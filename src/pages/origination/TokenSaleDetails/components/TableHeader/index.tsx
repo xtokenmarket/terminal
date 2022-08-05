@@ -86,7 +86,7 @@ export const TableHeader = (props: IProps) => {
           </Td>
         )}
         <Td type={WhitelistSale.Whitelist} label={props.label}>
-          <div className={classes.item}>Whitelist</div>
+          <div className={classes.item}>Allowlist</div>
         </Td>
         <Td type={WhitelistSale.AddressCap} label={props.label}>
           <div className={classes.item}>Address Cap</div>

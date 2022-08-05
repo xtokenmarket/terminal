@@ -119,7 +119,7 @@ export const SaleForm = ({
 
   const saleDisplayName =
     tokenSalePhase == ETokenSalePhase.Whitelist
-      ? 'Whitelist Sale'
+      ? 'Allowlist Sale'
       : 'Public Sale'
   const handlePricingFormulaChange = (
     newPricingFormula: EPricingFormula[keyof EPricingFormula]

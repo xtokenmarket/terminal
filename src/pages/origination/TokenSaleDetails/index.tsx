@@ -384,7 +384,7 @@ const TokenSaleDetails = () => {
                   onSaleEnd={onSaleEnd}
                   isSaleInitiated={tokenOffer.offeringOverview.salesBegin.gt(0)}
                   item={tokenOffer.whitelist}
-                  label={'Whitelist Sale'}
+                  label={'Allowlist Sale'}
                   toggleModal={toggleSetWhitelistModal}
                   isOwnerOrManager={isOwnerOrManager}
                   isWhitelistSet={tokenOffer.whitelist.whitelist}

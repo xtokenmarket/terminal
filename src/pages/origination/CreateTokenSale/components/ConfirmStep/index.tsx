@@ -208,7 +208,7 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit }) => {
           {data.whitelistSale.enabled && offerToken && (
             <div className={classes.whitelistSaleSummary}>
               <Typography className={classes.label}>
-                Whitelist Sale Summary
+                Allowlist Sale Summary
               </Typography>
               <PricingFormulaTable
                 saleData={data.whitelistSale}
