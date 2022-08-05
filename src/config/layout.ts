@@ -23,10 +23,10 @@ export const MENU_ITEMS = [
     enabled: true,
   },
   {
-    id: 'auction',
-    label: 'liquidity auction',
-    icon: SvgIcons.auction,
-    href: '/auction',
+    id: 'minter',
+    label: 'Minter',
+    icon: SvgIcons.minter,
+    href: '/minter',
     enabled: false,
   },
   {
@@ -37,10 +37,10 @@ export const MENU_ITEMS = [
     enabled: false,
   },
   {
-    id: 'minter',
-    label: 'Minter',
-    icon: SvgIcons.minter,
-    href: '/minter',
+    id: 'auction',
+    label: 'liquidity auction',
+    icon: SvgIcons.auction,
+    href: '/auction',
     enabled: false,
   },
 ]
