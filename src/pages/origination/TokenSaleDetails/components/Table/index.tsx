@@ -109,7 +109,7 @@ export const Table = ({
 
   const renderLabel = (label: string) => {
     switch (label) {
-      case 'Whitelist Sale':
+      case 'Allowlist Sale':
         return (
           <div className={cl.labelWrapper}>
             <Typography className={cl.label}>{label}</Typography>
@@ -123,7 +123,7 @@ export const Table = ({
                   disabled={isSaleInitiated}
                 >
                   <Typography className={cl.text}>
-                    {isWhitelistSet ? 'UPDATE WHITELIST' : 'SET WHITELIST'}
+                    {isWhitelistSet ? 'UPDATE ALLOWLIST' : 'SET ALLOWLIST'}
                   </Typography>
                 </Button>
               </span>

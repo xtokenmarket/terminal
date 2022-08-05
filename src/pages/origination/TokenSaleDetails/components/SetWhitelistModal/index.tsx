@@ -269,7 +269,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
         />
       ) : (
         <div className={classes.content}>
-          <Typography className={classes.title}>SET WHITELIST</Typography>
+          <Typography className={classes.title}>SET ALLOWLIST</Typography>
           <div className={classes.underline} />
           {!(state.txState === TxState.InProgress) && (
             <IconButton className={classes.closeButton} onClick={_onClose}>
@@ -302,7 +302,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
                 </>
               ) : (
                 <Typography className={classes.text}>
-                  Upload a CSV File with Whitelist addresses
+                  Upload a CSV File with allowlist addresses
                 </Typography>
               )}
             </Button>
@@ -310,7 +310,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
 
           <div className={classes.inputWrapper}>
             <Input
-              inputLabel="Max Sale Per whitelist address"
+              inputLabel="Max Sale Per Allowlist Address"
               value={state.value}
               onChange={onInputChange}
             />
@@ -340,8 +340,8 @@ export const SetWhitelistModal: React.FC<IProps> = ({
                 {state.txState === TxState.InProgress
                   ? 'Pending'
                   : state.whitelistFile
-                  ? 'SET WHITELIST'
-                  : 'Approve  WHITELIST'}
+                  ? 'SET ALLOWLIST'
+                  : 'Approve  Allowlist'}
               </Typography>
               {state.txState === TxState.InProgress && (
                 <>
