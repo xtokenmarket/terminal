@@ -62,10 +62,10 @@ export const TableHeader = (props: IProps) => {
           <div className={classes.item}>Cliff Period</div>
         </Td>
         <Td type={OfferingOverview.SalesBegin} label={props.label}>
-          <div className={classes.item}>Sales Begin</div>
+          <div className={classes.item}>Sale Begins</div>
         </Td>
         <Td type={OfferingOverview.SalesEnd} label={props.label}>
-          <div className={classes.item}>Sales End</div>
+          <div className={classes.item}>Sale Ends</div>
         </Td>
       </div>
     )
@@ -180,7 +180,7 @@ export const TableHeader = (props: IProps) => {
               <div className={classes.item}>Tokens Sold</div>
             </Td>
             <Td type={OfferingSummary.AmountsRaised} label={props.label}>
-              <div className={classes.item}>Amounts Raised</div>
+              <div className={classes.item}>Amount Raised</div>
             </Td>
             <Td type={OfferingSummary.VestingPeriod} label={props.label}>
               <div className={classes.item}>Vesting Period</div>

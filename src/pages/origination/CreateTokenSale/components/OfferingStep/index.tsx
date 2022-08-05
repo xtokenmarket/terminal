@@ -104,9 +104,6 @@ export const OfferingStep: React.FC<IProps> = ({
             hasPlaceholderTokenIcon={false}
             onChange={(purchaseToken) => updateData({ purchaseToken })}
           />
-          <InputDescription underlined={false}>
-            {Description.PurchaseToken}
-          </InputDescription>
         </Grid>
       </Grid>
       <Grid
