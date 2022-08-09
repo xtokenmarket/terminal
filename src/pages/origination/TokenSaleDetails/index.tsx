@@ -465,15 +465,13 @@ const TokenSaleDetails = () => {
                     EPricingFormula.Standard
                   }
                 />
-                {!isOwnerOrManager && (
-                  <Button
-                    className={cl.button}
-                    onClick={toggleInvestModal}
-                    disabled={isPublicSaleInvestDisabled}
-                  >
-                    <Typography className={cl.text}>INVEST</Typography>
-                  </Button>
-                )}
+                <Button
+                  className={cl.button}
+                  onClick={toggleInvestModal}
+                  disabled={isPublicSaleInvestDisabled}
+                >
+                  <Typography className={cl.text}>INVEST</Typography>
+                </Button>
               </>
             )}
             {isUserPositionShow && (
