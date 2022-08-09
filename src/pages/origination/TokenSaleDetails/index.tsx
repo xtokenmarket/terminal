@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 600,
   },
   root: {
-    paddingBottom: 10,
+    paddingBottom: 20,
     overflowX: 'auto',
     '&::-webkit-scrollbar': {
       backgroundColor: transparentize(0.6, theme.colors.primary),
