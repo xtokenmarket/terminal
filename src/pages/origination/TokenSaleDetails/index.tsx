@@ -327,7 +327,6 @@ const TokenSaleDetails = () => {
       (isVestingPeriodZero && isReserveAmountZero && isOwnerOrManager))
 
   const isUserPositionShow =
-    !isOwnerOrManager &&
     tokenOffer &&
     (tokenOffer.userPosition.tokenPurchased.gt(0) ||
       tokenOffer.userPosition.amountInvested.gt(0) ||
