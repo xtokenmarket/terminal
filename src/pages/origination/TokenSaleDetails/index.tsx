@@ -501,7 +501,7 @@ const TokenSaleDetails = () => {
               <Button
                 className={cl.button}
                 onClick={toggleClaimModal}
-                disabled={!isClaimableDuringSale}
+                disabled={!isClaimableDuringSale && !isSaleCompleted}
               >
                 <Typography className={cl.text}>CLAIM</Typography>
               </Button>
