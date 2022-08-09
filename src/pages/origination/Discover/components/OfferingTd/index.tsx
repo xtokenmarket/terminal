@@ -9,7 +9,7 @@ const useStyles = makeStyles(() => ({
     '&.pricePerToken': { width: '14%' },
     '&.timeRemaining': { width: '14%' },
     '&.vestingPeriod': { width: '14%' },
-    '&.vestingCliff': { width: '14%' },
+    '&.vestingCliff': { width: '11%' },
     '&+&': { paddingLeft: 16 },
     '&:last-child': {
       textAlign: 'right',
