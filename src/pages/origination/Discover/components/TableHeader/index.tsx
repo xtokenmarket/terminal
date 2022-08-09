@@ -27,7 +27,7 @@ export const OfferingTableHeader = () => {
   return (
     <div className={classes.root}>
       <OfferingTd type="offerToken">
-        <div className={classes.item}>Offer Token</div>
+        <div className={classes.item}>Offering Name</div>
       </OfferingTd>
       <OfferingTd type="maxOffering">
         <div className={classes.item}>Max Offering</div>

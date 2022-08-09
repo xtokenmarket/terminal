@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core'
 
 const useStyles = makeStyles(() => ({
   root: {
-    '&.offerToken': { width: '14%' },
+    '&.offerToken': { width: '25%' },
     '&.remainingOffering': { width: '14%' },
     '&.maxOffering': { width: '14%' },
     '&.pricePerToken': { width: '14%' },
