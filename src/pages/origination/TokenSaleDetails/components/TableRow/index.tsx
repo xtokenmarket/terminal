@@ -556,29 +556,43 @@ export const TableRow = ({
       return (
         <div className={cl.content}>
           <Td type={OfferingSummary.OfferToken} label={item.label}>
-            <div className={clsx(cl.item, cl.itemMarginLeft)}>
-              <img
-                alt="offerToken"
-                className={cl.tokenIcon}
-                src={item.offerToken.image}
-              />
-              <Typography className={cl.symbol}>
-                {item.offerToken.symbol}
-              </Typography>
-            </div>
+            <a
+              href={`${etherscanUri}token/${item.offerToken.address}`}
+              target="_blank"
+              rel="noreferrer"
+              className={cl.link}
+            >
+              <div className={clsx(cl.item, cl.itemMarginLeft)}>
+                <img
+                  alt="offerToken"
+                  className={cl.tokenIcon}
+                  src={item.offerToken.image}
+                />
+                <Typography className={cl.symbol}>
+                  {item.offerToken.symbol}
+                </Typography>
+              </div>
+            </a>
           </Td>
 
           <Td type={OfferingSummary.PurchaseToken} label={item.label}>
-            <div className={cl.item}>
-              <img
-                alt="purchaseToken"
-                className={cl.tokenIcon}
-                src={item.purchaseToken.image}
-              />
-              <Typography className={cl.symbol}>
-                {item.purchaseToken.symbol}
-              </Typography>
-            </div>
+            <a
+              href={`${etherscanUri}token/${item.purchaseToken.address}`}
+              target="_blank"
+              rel="noreferrer"
+              className={cl.link}
+            >
+              <div className={cl.item}>
+                <img
+                  alt="purchaseToken"
+                  className={cl.tokenIcon}
+                  src={item.purchaseToken.image}
+                />
+                <Typography className={cl.symbol}>
+                  {item.purchaseToken.symbol}
+                </Typography>
+              </div>
+            </a>
           </Td>
           {isOfferUnsuccessful && (
             <>
