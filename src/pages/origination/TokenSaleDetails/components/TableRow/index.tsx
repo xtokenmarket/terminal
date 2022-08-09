@@ -120,9 +120,6 @@ const useStyles = makeStyles((theme) => ({
   itemMarginLeft: {
     marginLeft: 17,
   },
-  marginBottom: {
-    marginBottom: 53,
-  },
   link: {
     textDecoration: 'none',
   },
@@ -349,9 +346,7 @@ export const TableRow = ({
 
       return (
         <>
-          <div
-            className={clsx(cl.content, [isOwnerOrManager && cl.marginBottom])}
-          >
+          <div className={cl.content}>
             <Td type={WhitelistSale.CurrentPrice} label={item.label}>
               <Typography
                 className={clsx(cl.item, cl.label, cl.itemMarginLeft)}

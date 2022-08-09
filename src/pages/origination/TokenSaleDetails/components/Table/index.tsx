@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     lineHeight: '19.2px',
     marginBottom: 3,
     color: theme.colors.white,
-    marginTop: 24,
+    marginTop: 40,
   },
   button: {
     marginTop: 24,
@@ -54,7 +54,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 16,
   },
 }))
 
@@ -113,14 +112,13 @@ export const Table = ({
         return (
           <div className={cl.labelWrapper}>
             <Typography className={cl.label}>{label}</Typography>
-            {isOwnerOrManager && (
+            {isOwnerOrManager && !isSaleInitiated && (
               <span>
                 <Button
                   className={cl.button}
                   onClick={() => {
                     toggleModal && toggleModal()
                   }}
-                  disabled={isSaleInitiated}
                 >
                   <Typography className={cl.text}>
                     {isWhitelistSet ? 'UPDATE ALLOWLIST' : 'SET ALLOWLIST'}
@@ -134,7 +132,7 @@ export const Table = ({
         return (
           <div className={cl.labelWrapper}>
             <Typography className={cl.label}>{label}</Typography>
-            {isOwnerOrManager && (
+            {isOwnerOrManager && !isSaleInitiated && (
               <Button
                 className={cl.button}
                 onClick={toggleModal}

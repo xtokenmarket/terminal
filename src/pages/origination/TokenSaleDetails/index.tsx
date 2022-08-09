@@ -248,6 +248,12 @@ const TokenSaleDetails = () => {
     }
   }
 
+  const isReserveAmountZero =
+    tokenOffer?.offeringOverview.reserveAmount.isZero()
+
+  const isVestingPeriodZero =
+    tokenOffer?.offeringOverview.vestingPeriod.isZero()
+
   const isSoldOut = tokenOffer?.offeringOverview.offerTokenAmountSold.eq(
     tokenOffer?.offeringOverview.totalOfferingAmount
   )
@@ -282,6 +288,16 @@ const TokenSaleDetails = () => {
     tokenOffer.publicSale.startingPrice &&
     tokenOffer.publicSale.startingPrice.gt(0)
 
+  // ref: https://discord.com/channels/790695551057657876/923246975137226842/1004704774580617216
+  // when vesting == 0, reserve == 0, pool manager has the the option to claim the accrued purchase token amount during and after sale
+  // if used during sale, I should receive the accrued purchase token (can be called multiple times during sale if purchase token accrued)
+  const isClaimableDuringSale =
+    isOwnerOrManager &&
+    !isSaleCompleted &&
+    isReserveAmountZero &&
+    isVestingPeriodZero &&
+    tokenOffer?.offerTokenBalance.gt(0)
+
   const isClaimManager =
     isOwnerOrManager && isSaleCompleted && !tokenOffer.sponsorTokensClaimed
 
@@ -291,20 +307,24 @@ const TokenSaleDetails = () => {
     tokenOffer.offeringOverview.vestingPeriod.gt(0)
 
   const isSuccessfulSaleClaimUser =
+    isCliffPeriodPassed() &&
+    !isReserveAmountZero &&
     !isOfferUnsuccessful &&
     tokenOffer?.userPosition.tokenPurchased.gt(0) &&
-    tokenOffer?.offeringOverview.vestingPeriod.isZero()
+    isVestingPeriodZero
 
   const isUnsuccessfulSaleClaimUser =
-    isOfferUnsuccessful && tokenOffer.userPosition.amountInvested.gt(0)
+    isOfferUnsuccessful &&
+    tokenOffer.userPosition.amountInvested.gt(0) &&
+    !isReserveAmountZero
 
   const isClaimButtonShow =
     tokenOffer &&
-    isCliffPeriodPassed() &&
     (isClaimManager ||
       isUnsuccessfulVestingSaleClaimUser ||
       isSuccessfulSaleClaimUser ||
-      isUnsuccessfulSaleClaimUser)
+      isUnsuccessfulSaleClaimUser ||
+      (isVestingPeriodZero && isReserveAmountZero && isOwnerOrManager))
 
   const isUserPositionShow =
     !isOwnerOrManager &&
@@ -376,6 +396,7 @@ const TokenSaleDetails = () => {
                 toggleModal={toggleInitiateSaleModal}
                 isOwnerOrManager={tokenOffer.offeringOverview.isOwnerOrManager}
                 isInitiateSaleButtonDisabled={isInitiateSaleButtonDisabled}
+                isSaleInitiated={tokenOffer.offeringOverview.salesBegin.gt(0)}
               />
             )}
             {!isSaleCompleted && isWhitelistSaleConfigured && (
@@ -393,44 +414,42 @@ const TokenSaleDetails = () => {
                     EPricingFormula.Standard
                   }
                 />
-                {!isOwnerOrManager && (
-                  <div className={cl.buttonWrapper}>
-                    <Tooltip
-                      title={
-                        isAddressCapExceeded && !isWhitelistSaleEnded
-                          ? 'Invested amount has reached the address cap.'
-                          : ''
-                      }
-                      arrow
-                      placement="right"
-                      classes={{
-                        arrow: cl.tooltipArrow,
-                        tooltip: cl.tooltip,
-                      }}
-                    >
-                      <div>
-                        <Button
-                          className={cl.button}
-                          onClick={toggleWhitelistInvestModal}
-                          disabled={iswhitelistSaleInvestDisabled}
-                        >
-                          <Typography className={cl.text}>INVEST</Typography>
-                        </Button>
-                      </div>
-                    </Tooltip>
-                    {!tokenOffer.whitelist.isAddressWhitelisted &&
-                      tokenOffer.whitelist.whitelist &&
-                      !isWhitelistSaleEnded && (
-                        <div className={cl.errorMessageWrapper}>
-                          <img alt="info" src="/assets/icons/warning.svg" />
-                          &nbsp;&nbsp;
-                          <div>
-                            Unfortunately, your address was not whitelisted
-                          </div>
+                <div className={cl.buttonWrapper}>
+                  <Tooltip
+                    title={
+                      isAddressCapExceeded && !isWhitelistSaleEnded
+                        ? 'Invested amount has reached the address cap.'
+                        : ''
+                    }
+                    arrow
+                    placement="right"
+                    classes={{
+                      arrow: cl.tooltipArrow,
+                      tooltip: cl.tooltip,
+                    }}
+                  >
+                    <div>
+                      <Button
+                        className={cl.button}
+                        onClick={toggleWhitelistInvestModal}
+                        disabled={iswhitelistSaleInvestDisabled}
+                      >
+                        <Typography className={cl.text}>INVEST</Typography>
+                      </Button>
+                    </div>
+                  </Tooltip>
+                  {!tokenOffer.whitelist.isAddressWhitelisted &&
+                    tokenOffer.whitelist.whitelist &&
+                    !isWhitelistSaleEnded && (
+                      <div className={cl.errorMessageWrapper}>
+                        <img alt="info" src="/assets/icons/warning.svg" />
+                        &nbsp;&nbsp;
+                        <div>
+                          Unfortunately, your address was not allowlisted
                         </div>
-                      )}
-                  </div>
-                )}
+                      </div>
+                    )}
+                </div>
               </>
             )}
             {!isSaleCompleted && isPublicSaleConfigured && (
@@ -479,7 +498,11 @@ const TokenSaleDetails = () => {
               </Button>
             )}
             {isClaimButtonShow && (
-              <Button className={cl.button} onClick={toggleClaimModal}>
+              <Button
+                className={cl.button}
+                onClick={toggleClaimModal}
+                disabled={!isClaimableDuringSale}
+              >
                 <Typography className={cl.text}>CLAIM</Typography>
               </Button>
             )}
