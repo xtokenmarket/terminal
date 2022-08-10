@@ -82,6 +82,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.primary500,
     padding: 32,
     width: '100%',
+    justifyContent: 'space-between',
+    alignItems: 'baseline',
+    display: 'flex',
   },
   plus: {
     marginLeft: 32,
@@ -114,6 +117,11 @@ const useStyles = makeStyles((theme) => ({
   buttonTextPending: {
     color: theme.colors.white,
     fontWeight: 'normal',
+  },
+  downloadFileText: {
+    textDecoration: 'underline',
+    color: theme.colors.primary100,
+    fontSize: 12,
   },
 }))
 
@@ -350,6 +358,13 @@ export const SetWhitelistModal: React.FC<IProps> = ({
                 </>
               )}
             </Button>
+            <a
+              className={classes.downloadFileText}
+              href="/assets/allowlistSample.csv"
+              download
+            >
+              Allowlist csv sample file
+            </a>
           </div>
         </div>
       )}
