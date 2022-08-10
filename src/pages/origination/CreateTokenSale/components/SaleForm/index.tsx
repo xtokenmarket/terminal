@@ -86,6 +86,11 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '14px',
     marginTop: '10px',
   },
+  inverseMarkedText: {
+    color: theme.colors.white,
+    fontSize: 12,
+    marginTop: 15,
+  },
 }))
 
 interface IProps {
@@ -245,7 +250,7 @@ export const SaleForm = ({
                 <div className={classes.inputContainer}>
                   <Input
                     id="standardPrice"
-                    label={`Price per token - ${purchaseToken?.symbol} per ${offerToken?.symbol}`}
+                    label={`Price per token - ${purchaseToken?.symbol} per 1 ${offerToken?.symbol}`}
                     value={startingPrice}
                     onChange={(event) => {
                       const price = event.target.value
@@ -255,6 +260,13 @@ export const SaleForm = ({
                       })
                     }}
                   />
+                  {startingPrice && Number(startingPrice) > 0 && (
+                    <div className={classes.inverseMarkedText}>
+                      {' '}
+                      1 {purchaseToken?.symbol} per {1 / Number(startingPrice)}{' '}
+                      {offerToken?.symbol}{' '}
+                    </div>
+                  )}
                 </div>
               ) : (
                 <>
