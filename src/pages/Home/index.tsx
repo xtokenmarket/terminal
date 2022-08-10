@@ -97,6 +97,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 42,
     width: '85%',
     lineHeight: 1.6,
+    letterSpacing: 1.5,
     [theme.breakpoints.down('xs')]: {
       width: '90%',
       marginTop: 20,
@@ -107,6 +108,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.secondary,
     fontSize: 32,
     marginBottom: 8,
+    letterSpacing: 1.5,
   },
 }))
 
