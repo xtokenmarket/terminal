@@ -248,6 +248,8 @@ const TokenSaleDetails = () => {
     }
   }
 
+  const isSaleInitiated = tokenOffer?.offeringOverview.salesBegin.gt(0)
+
   const isReserveAmountZero =
     tokenOffer?.offeringOverview.reserveAmount.isZero()
 
@@ -333,9 +335,7 @@ const TokenSaleDetails = () => {
       tokenOffer?.userPosition.amountAvailableToVest.gt(0))
 
   const isPublicSaleInvestDisabled =
-    !tokenOffer?.offeringOverview.salesBegin.gt(0) ||
-    tokenOffer.whitelist.timeRemaining.gt(0) ||
-    isSoldOut
+    !isSaleInitiated || tokenOffer?.whitelist.timeRemaining.gt(0) || isSoldOut
 
   const isWhitelistSaleEnded = BigNumber.from(
     Math.floor(Date.now() / 1000)
@@ -346,8 +346,8 @@ const TokenSaleDetails = () => {
   )
 
   const iswhitelistSaleInvestDisabled =
-    !tokenOffer?.offeringOverview.salesBegin.gt(0) ||
-    !tokenOffer.whitelist.isAddressWhitelisted ||
+    !isSaleInitiated ||
+    !tokenOffer?.whitelist.isAddressWhitelisted ||
     isSoldOut ||
     isWhitelistSaleEnded ||
     isAddressCapExceeded
@@ -356,7 +356,7 @@ const TokenSaleDetails = () => {
     (tokenOffer &&
       tokenOffer.whitelist.salesPeriod?.gt(0) &&
       !tokenOffer.whitelist.whitelist) ||
-    tokenOffer?.offeringOverview.salesBegin.gt(0)
+    isSaleInitiated
 
   const isVestedPropertiesShow =
     (tokenOffer?.userPosition.amountAvailableToVest.gt(0) ||
@@ -395,14 +395,14 @@ const TokenSaleDetails = () => {
                 toggleModal={toggleInitiateSaleModal}
                 isOwnerOrManager={tokenOffer.offeringOverview.isOwnerOrManager}
                 isInitiateSaleButtonDisabled={isInitiateSaleButtonDisabled}
-                isSaleInitiated={tokenOffer.offeringOverview.salesBegin.gt(0)}
+                isSaleInitiated={isSaleInitiated}
               />
             )}
             {!isSaleCompleted && isWhitelistSaleConfigured && (
               <>
                 <Table
                   onSaleEnd={onSaleEnd}
-                  isSaleInitiated={tokenOffer.offeringOverview.salesBegin.gt(0)}
+                  isSaleInitiated={isSaleInitiated}
                   item={tokenOffer.whitelist}
                   label={'Allowlist Sale'}
                   toggleModal={toggleSetWhitelistModal}
@@ -457,7 +457,7 @@ const TokenSaleDetails = () => {
                   onSaleEnd={onSaleEnd}
                   isWhitelistSaleEnded={isWhitelistSaleEnded}
                   isWhitelistSet={tokenOffer.whitelist.whitelist}
-                  isSaleInitiated={tokenOffer.offeringOverview.salesBegin.gt(0)}
+                  isSaleInitiated={isSaleInitiated}
                   item={tokenOffer.publicSale}
                   label={'Public Sale'}
                   isFormulaStandard={
