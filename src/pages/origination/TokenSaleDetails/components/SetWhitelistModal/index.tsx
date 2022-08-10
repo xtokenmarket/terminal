@@ -17,11 +17,8 @@ import { ChainId, CHAIN_NAMES, ORIGINATION_API_URL } from 'config/constants'
 import { useSnackbar } from 'notistack'
 import axios from 'axios'
 import { FungiblePoolService } from 'services'
-import { useOriginationPool } from 'helpers'
-import { getNetworkFromId } from 'utils/network'
-import { IToken, NetworkId } from 'types'
+import { IToken } from 'types'
 import { parseUnits } from 'ethers/lib/utils'
-import { BigNumber } from 'ethers'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
