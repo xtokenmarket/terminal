@@ -322,6 +322,7 @@ const TokenSaleDetails = () => {
 
   const isClaimButtonShow =
     tokenOffer &&
+    isSaleInitiated &&
     (isClaimManager ||
       isUnsuccessfulVestingSaleClaimUser ||
       isSuccessfulSaleClaimUser ||
