@@ -13,6 +13,7 @@ import { useConnectedWeb3Context } from 'contexts'
 import { getNetworkFromId } from 'utils/network'
 import { IOriginationPool, NetworkId } from 'types'
 import { useCountdown } from 'helpers/useCountdownClock'
+import moment from 'moment'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -125,6 +126,7 @@ export const OfferingTableRow = ({ offering }: IProps) => {
       vestingPeriod,
       cliffPeriod,
       salesEnd,
+      createTokenSaleTimestamp,
     } = _originationRow
 
     // TODO: Better way to parse time remaining info
@@ -154,7 +156,9 @@ export const OfferingTableRow = ({ offering }: IProps) => {
             <Typography className={cl.offerTokenLabel}>
               {offerToken.symbol}
             </Typography>
-            <Typography className={cl.offeringName}>Aug 2, 2022</Typography>
+            <Typography className={cl.offeringName}>
+              {moment.unix(createTokenSaleTimestamp).format('MMM DD[,] YYYY')}
+            </Typography>
           </div>
         </OfferingTd>
 

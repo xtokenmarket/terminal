@@ -241,6 +241,7 @@ export interface IOfferingOverview extends Label {
 export interface IOriginationRow extends IOfferingOverview {
   startingPrice: BigNumber
   saleDuration?: BigNumber
+  createTokenSaleTimestamp: number
 }
 
 export interface IWhitelistSale extends Label {

@@ -44,6 +44,7 @@ export const useOriginationPool = (
 ) => {
   const { account, networkId, library: provider } = useConnectedWeb3Context()
   const { multicall } = useServices(network)
+  const { originationService } = useServices()
 
   const [state, setState] = useState<IState>({ loading: true })
 
@@ -325,6 +326,19 @@ export const useOriginationPool = (
       ),
     }
 
+    // get sale created timestamp for default sale name
+    let createTokenSaleTimestamp = 0
+    try {
+      const initiateSaleFilter =
+        originationService.contract.filters.CreateFungibleListing(poolAddress)
+      const createTokenSaleHistory =
+        await originationService.contract.queryFilter(initiateSaleFilter)
+      createTokenSaleTimestamp = (await createTokenSaleHistory[0].getBlock())
+        .timestamp
+    } catch (error) {
+      console.log('get sale created timestamp error', error)
+    }
+
     // Fetch whitelist merkle root, only on Token Offer page
     if (isPoolDetails) {
       try {
@@ -450,6 +464,7 @@ export const useOriginationPool = (
         ...offeringOverview,
         startingPrice: publicStartingPrice,
         saleDuration: publicSaleDuration,
+        createTokenSaleTimestamp,
       },
       sponsorTokensClaimed: offerData.sponsorTokensClaimed,
       offerTokenBalance: offerData.offerTokenBalance,
