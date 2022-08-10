@@ -92,15 +92,21 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-end',
   },
   topDescription: {
+    fontSize: 18,
     color: theme.colors.white,
-    margin: '0 0 25px 0',
-    width: '70%',
-    lineHeight: 2,
+    marginBottom: 42,
+    width: '85%',
+    lineHeight: 1.6,
     [theme.breakpoints.down('xs')]: {
       width: '90%',
       marginTop: 20,
       lineHeight: 1.5,
     },
+  },
+  header: {
+    color: theme.colors.secondary,
+    fontSize: 32,
+    marginBottom: 8,
   },
 }))
 
@@ -128,6 +134,7 @@ const Home = () => {
 
   return (
     <div className={classes.root}>
+      <Typography className={classes.header}>The Xtoken terminal</Typography>
       <Typography className={classes.topDescription}>
         xToken Terminal is a permissionless investment bank, providing projects
         and individuals with seamless access to fundamental on-chain primitives.
