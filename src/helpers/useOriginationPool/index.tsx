@@ -354,6 +354,7 @@ export const useOriginationPool = (
             whitelistedAccountDetails.isAddressWhitelisted
         }
 
+        // get manager purchaseToken balance
         const { balance } = await getTokenDetails(
           offerData?.purchaseToken.address,
           poolAddress
