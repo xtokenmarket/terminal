@@ -451,7 +451,7 @@ export const useOriginationPool = (
         ...offeringOverview,
         startingPrice: publicStartingPrice,
         saleDuration: publicSaleDuration,
-        createdAt: offerData.createdAt,
+        createdAt,
       },
       sponsorTokensClaimed: offerData.sponsorTokensClaimed,
       offerTokenBalance: offerData.offerTokenBalance,
