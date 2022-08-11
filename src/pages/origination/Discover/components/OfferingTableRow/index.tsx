@@ -4,6 +4,7 @@ import { OfferingTd } from '../table'
 import { NavLink } from 'react-router-dom'
 import {
   formatBigNumber,
+  formatDateTime,
   getRemainingTimeSec,
   numberWithCommas,
   parseDurationSec,
@@ -13,7 +14,6 @@ import { useConnectedWeb3Context } from 'contexts'
 import { getNetworkFromId } from 'utils/network'
 import { IOriginationPool, NetworkId } from 'types'
 import { useCountdown } from 'helpers/useCountdownClock'
-import moment from 'moment'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -157,7 +157,7 @@ export const OfferingTableRow = ({ offering }: IProps) => {
               {offerToken.symbol}
             </Typography>
             <Typography className={cl.offeringName}>
-              {moment.unix(createdAt.toNumber()).format('MMM DD[,] YYYY')}
+              {formatDateTime(createdAt.toNumber())}
             </Typography>
           </div>
         </OfferingTd>
