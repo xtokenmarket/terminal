@@ -484,6 +484,10 @@ const TokenSaleDetails = () => {
                 toggleModal={toggleClaimModal}
                 isVestedPropertiesShow={isVestedPropertiesShow}
                 isOfferUnsuccessful={isOfferUnsuccessful}
+                isClaimButtonDisabled={
+                  !isClaimableDuringSale && !isSaleCompleted
+                }
+                isClaimButtonShow={isClaimButtonShow}
               />
             )}
             {isVestButtonShow && (
@@ -493,15 +497,6 @@ const TokenSaleDetails = () => {
                 disabled={!isCliffPeriodPassed()}
               >
                 <Typography className={cl.text}>VEST</Typography>
-              </Button>
-            )}
-            {isClaimButtonShow && (
-              <Button
-                className={cl.button}
-                onClick={toggleClaimModal}
-                disabled={!isClaimableDuringSale && !isSaleCompleted}
-              >
-                <Typography className={cl.text}>CLAIM</Typography>
               </Button>
             )}
             <InitiateSaleModal

@@ -72,6 +72,8 @@ interface IProps {
   onSaleEnd?: () => void
   onCliffTimeEnd?: () => void
   isSaleCompleted?: boolean
+  isClaimButtonDisabled?: boolean
+  isClaimButtonShow?: boolean
 }
 
 export const Table = ({
@@ -89,6 +91,8 @@ export const Table = ({
   onSaleEnd,
   onCliffTimeEnd,
   isSaleCompleted,
+  isClaimButtonDisabled,
+  isClaimButtonShow,
 }: IProps) => {
   const [saleInitiated, setSaleInitiated] = useState(false)
   const { account, library: provider } = useConnectedWeb3Context()
@@ -107,6 +111,17 @@ export const Table = ({
   const cl = useStyles()
 
   const renderLabel = (label: string) => {
+    console.log('label', label)
+
+    const ClaimButton = () => (
+      <Button
+        className={cl.button}
+        onClick={toggleModal}
+        disabled={isClaimButtonDisabled}
+      >
+        <Typography className={cl.text}>CLAIM</Typography>
+      </Button>
+    )
     switch (label) {
       case 'Allowlist Sale':
         return (
@@ -127,6 +142,7 @@ export const Table = ({
                 </Button>
               </span>
             )}
+            {isClaimButtonShow && <ClaimButton />}
           </div>
         )
       case 'Offering Overview':
@@ -143,6 +159,16 @@ export const Table = ({
                 <Typography className={cl.text}>INITIATE SALE</Typography>
               </Button>
             )}
+          </div>
+        )
+
+      case 'Public Sale':
+      case 'Offering Summary':
+      case 'My Position':
+        return (
+          <div className={cl.labelWrapper}>
+            <Typography className={cl.label}>{label}</Typography>
+            {isClaimButtonShow && <ClaimButton />}
           </div>
         )
       default:
