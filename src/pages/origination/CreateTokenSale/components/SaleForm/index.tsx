@@ -260,7 +260,7 @@ export const SaleForm = ({
                       })
                     }}
                   />
-                  {startingPrice && Number(startingPrice) > 0 && (
+                  {Number(startingPrice) > 0 && (
                     <div className={classes.inverseMarkedText}>
                       {' '}
                       1 {purchaseToken?.symbol} per {1 / Number(startingPrice)}{' '}

@@ -121,7 +121,7 @@ export const Table = ({
                   }}
                 >
                   <Typography className={cl.text}>
-                    {isWhitelistSet ? 'UPDATE ALLOWLIST' : 'SET ALLOWLIST'}
+                    {`${isWhitelistSet ? 'UPDATE' : 'SET'} ALLOWLIST`}
                   </Typography>
                 </Button>
               </span>
