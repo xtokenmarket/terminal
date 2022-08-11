@@ -126,7 +126,7 @@ export const OfferingTableRow = ({ offering }: IProps) => {
       vestingPeriod,
       cliffPeriod,
       salesEnd,
-      createTokenSaleTimestamp,
+      createdAt,
     } = _originationRow
 
     // TODO: Better way to parse time remaining info
@@ -157,7 +157,7 @@ export const OfferingTableRow = ({ offering }: IProps) => {
               {offerToken.symbol}
             </Typography>
             <Typography className={cl.offeringName}>
-              {moment.unix(createTokenSaleTimestamp).format('MMM DD[,] YYYY')}
+              {moment.unix(createdAt.toNumber()).format('MMM DD[,] YYYY')}
             </Typography>
           </div>
         </OfferingTd>
