@@ -62,16 +62,16 @@ export const useOriginationPool = (
   }
   const defaultTokenLogo = '/assets/tokens/unknown.png'
 
-  const getTokenDetails = async (address: string) => {
+  const getTokenDetails = async (address: string, _account?: string) => {
     try {
       return getTokenFromAddress(address, readonlyProvider?.network.chainId)
     } catch (error) {
       const erc20 = new ERC20Service(
         readonlyProvider,
-        isWrongNetwork ? null : account,
+        isWrongNetwork ? null : _account ? _account : account,
         address
       )
-      return erc20.getDetails()
+      return erc20.getDetails(_account)
     }
   }
 
@@ -354,13 +354,12 @@ export const useOriginationPool = (
             whitelistedAccountDetails.isAddressWhitelisted
         }
 
-        const erc20 = new ERC20Service(
-          provider,
-          poolAddress,
-          offerData.purchaseToken.address
+        const { balance } = await getTokenDetails(
+          offerData?.purchaseToken.address,
+          poolAddress
         )
-        const bal = await erc20.getBalanceOf(poolAddress)
-        offerData.offerTokenBalance = bal
+
+        offerData.offerTokenBalance = balance
       } catch (e) {
         // Whitelist detail for pool is missing
       }
