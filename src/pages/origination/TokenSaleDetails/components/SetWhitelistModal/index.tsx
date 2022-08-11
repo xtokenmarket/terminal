@@ -346,7 +346,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
                   ? 'Pending'
                   : state.whitelistFile
                   ? 'SET ALLOWLIST'
-                  : 'Approve  Allowlist'}
+                  : 'Approve Allowlist'}
               </Typography>
               {state.txState === TxState.InProgress && (
                 <>
@@ -360,7 +360,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
               href="/assets/allowlistSample.csv"
               download
             >
-              Allowlist csv sample file
+              Allowlist CSV sample file
             </a>
           </div>
         </div>
