@@ -242,12 +242,12 @@ class FungiblePoolService {
 
   waitUntilClaim = async (
     txId: string,
-    isOwnerOrManager?: boolean
+    isClaimToken: boolean
   ): Promise<string> => {
     let resolved = false
     return new Promise((resolve) => {
       this.contract.on(
-        isOwnerOrManager ? 'PurchaseTokenClaim' : 'TokensClaimed',
+        !isClaimToken ? 'PurchaseTokenClaim' : 'TokensClaimed',
         (...rest) => {
           if (!resolved) {
             resolved = true

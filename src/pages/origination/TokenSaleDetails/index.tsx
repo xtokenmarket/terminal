@@ -86,6 +86,7 @@ interface IState {
   isVestModalOpen: boolean
   open: boolean
   isWhitelistInvestClicked: boolean
+  isClaimToken: boolean
 }
 
 const TokenSaleDetails = () => {
@@ -106,6 +107,7 @@ const TokenSaleDetails = () => {
     isVestModalOpen: false,
     open: false,
     isWhitelistInvestClicked: false,
+    isClaimToken: false,
   })
 
   const onInitiateSuccess = async () => {
@@ -161,10 +163,11 @@ const TokenSaleDetails = () => {
     }))
   }
 
-  const toggleClaimModal = () => {
+  const toggleClaimModal = (label?: string) => {
     setState((prev) => ({
       ...prev,
       isClaimModalOpen: !state.isClaimModalOpen,
+      isClaimToken: !!(label === 'My Position'),
     }))
   }
 
@@ -293,7 +296,7 @@ const TokenSaleDetails = () => {
   // ref: https://discord.com/channels/790695551057657876/923246975137226842/1004704774580617216
   // when vesting == 0, reserve == 0, pool manager has the the option to claim the accrued purchase token amount during and after sale
   // if used during sale, I should receive the accrued purchase token (can be called multiple times during sale if purchase token accrued)
-  const isClaimableDuringSale =
+  const isClaimPurchaseTokenButtonDisabled =
     isOwnerOrManager &&
     !isSaleCompleted &&
     isReserveAmountZero &&
@@ -310,24 +313,28 @@ const TokenSaleDetails = () => {
 
   const isSuccessfulSaleClaimUser =
     isCliffPeriodPassed() &&
-    !isReserveAmountZero &&
     !isOfferUnsuccessful &&
-    tokenOffer?.userPosition.tokenPurchased.gt(0) &&
-    isVestingPeriodZero
+    tokenOffer?.userPosition.tokenPurchased.gt(0)
 
   const isUnsuccessfulSaleClaimUser =
-    isOfferUnsuccessful &&
-    tokenOffer.userPosition.amountInvested.gt(0) &&
-    !isReserveAmountZero
+    isOfferUnsuccessful && tokenOffer.userPosition.amountInvested.gt(0)
 
   const isClaimButtonShow =
     tokenOffer &&
     isSaleInitiated &&
-    (isClaimManager ||
-      isUnsuccessfulVestingSaleClaimUser ||
+    !(isReserveAmountZero && isVestingPeriodZero) &&
+    (isUnsuccessfulVestingSaleClaimUser ||
       isSuccessfulSaleClaimUser ||
-      isUnsuccessfulSaleClaimUser ||
-      (isVestingPeriodZero && isReserveAmountZero && isOwnerOrManager))
+      isUnsuccessfulSaleClaimUser)
+
+  const isClaimPurchaseTokenButtonShow =
+    (isSaleInitiated &&
+      isVestingPeriodZero &&
+      isOwnerOrManager &&
+      isReserveAmountZero &&
+      isOwnerOrManager &&
+      !isSaleCompleted) ||
+    isClaimManager
 
   const isUserPositionShow =
     tokenOffer &&
@@ -391,12 +398,16 @@ const TokenSaleDetails = () => {
                 item={tokenOffer.offeringSummary}
                 label={'Offering Summary'}
                 isOfferUnsuccessful={isOfferUnsuccessful}
+                toggleModal={toggleClaimModal}
+                isClaimButtonShow={isClaimPurchaseTokenButtonShow}
               />
             ) : (
               <Table
                 item={tokenOffer.offeringOverview}
                 label={'Offering Overview'}
-                toggleModal={toggleInitiateSaleModal}
+                toggleModal={
+                  isSaleInitiated ? toggleClaimModal : toggleInitiateSaleModal
+                }
                 isOwnerOrManager={tokenOffer.offeringOverview.isOwnerOrManager}
                 isInitiateSaleButtonDisabled={isInitiateSaleButtonDisabled}
                 isSaleInitiated={isSaleInitiated}
@@ -409,13 +420,17 @@ const TokenSaleDetails = () => {
                   isSaleInitiated={isSaleInitiated}
                   item={tokenOffer.whitelist}
                   label={'Allowlist Sale'}
-                  toggleModal={toggleSetWhitelistModal}
+                  toggleModal={
+                    isSaleInitiated ? toggleClaimModal : toggleSetWhitelistModal
+                  }
                   isOwnerOrManager={isOwnerOrManager}
                   isWhitelistSet={tokenOffer.whitelist.whitelist}
                   isFormulaStandard={
                     tokenOffer.whitelist.pricingFormula ===
                     EPricingFormula.Standard
                   }
+                  isClaimButtonShow={isClaimPurchaseTokenButtonShow}
+                  isClaimButtonDisabled={isClaimPurchaseTokenButtonDisabled}
                 />
                 <div className={cl.buttonWrapper}>
                   <Tooltip
@@ -468,6 +483,9 @@ const TokenSaleDetails = () => {
                     tokenOffer.publicSale.pricingFormula ===
                     EPricingFormula.Standard
                   }
+                  isClaimButtonShow={isClaimPurchaseTokenButtonShow}
+                  toggleModal={toggleClaimModal}
+                  isClaimButtonDisabled={isClaimPurchaseTokenButtonDisabled}
                 />
                 <Button
                   className={cl.button}
@@ -487,9 +505,7 @@ const TokenSaleDetails = () => {
                 toggleModal={toggleClaimModal}
                 isVestedPropertiesShow={isVestedPropertiesShow}
                 isOfferUnsuccessful={isOfferUnsuccessful}
-                isClaimButtonDisabled={
-                  !isClaimableDuringSale && !isSaleCompleted
-                }
+                isClaimButtonDisabled={isClaimPurchaseTokenButtonDisabled}
                 isClaimButtonShow={isClaimButtonShow}
               />
             )}
@@ -515,6 +531,7 @@ const TokenSaleDetails = () => {
               data={getClaimData()}
               isOwnerOrManager={isOwnerOrManager}
               onClaimSuccess={onClaimSuccess}
+              isClaimToken={state.isClaimToken}
             />
             <InvestModal
               isWhitelist={state.isWhitelistInvestClicked}

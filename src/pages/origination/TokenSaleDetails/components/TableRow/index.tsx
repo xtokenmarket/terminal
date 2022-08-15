@@ -132,7 +132,7 @@ interface IProps {
     | IPublicSale
     | IUserPosition
     | IOfferingSummary
-  toggleModal?: () => void
+  toggleModal?: (label?: string) => void
   isVestedPropertiesShow?: boolean
   isOfferUnsuccessful?: boolean
   isSaleInitiated?: boolean
