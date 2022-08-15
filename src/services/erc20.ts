@@ -1,4 +1,4 @@
-import { ChainId, NULL_ADDRESS } from 'config/constants'
+import { ChainId } from 'config/constants'
 import { BigNumber, Contract, Wallet, ethers, utils } from 'ethers'
 import { hexlify } from 'ethers/lib/utils'
 import { IToken, Maybe } from '../types'
@@ -147,12 +147,11 @@ class ERC20Service {
     return balance.gte(amount)
   }
 
-  getDetails = async (account?: string): Promise<IToken> => {
-    const [decimals, symbol, name, balance] = await Promise.all([
+  getDetails = async (): Promise<IToken> => {
+    const [decimals, symbol, name] = await Promise.all([
       this.contract.decimals(),
       this.contract.symbol(),
       this.contract.name(),
-      this.contract.balanceOf(account || NULL_ADDRESS),
     ])
     return {
       name,
@@ -160,7 +159,6 @@ class ERC20Service {
       decimals,
       address: this.contract.address,
       image: '/assets/tokens/unknown.png',
-      balance,
     }
   }
 
