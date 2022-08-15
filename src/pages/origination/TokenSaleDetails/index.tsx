@@ -382,6 +382,9 @@ const TokenSaleDetails = () => {
               onClose={onClose}
               onSuccess={onSuccess}
               purchaseToken={tokenOffer.offeringOverview.purchaseToken}
+              totalOfferingAmount={
+                tokenOffer.offeringOverview.totalOfferingAmount
+              }
             />
             {isSaleCompleted ? (
               <Table

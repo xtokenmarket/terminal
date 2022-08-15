@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef, useReducer } from 'react'
+import React, { ChangeEvent, useRef, useReducer, useEffect } from 'react'
 import {
   makeStyles,
   Typography,
@@ -20,6 +20,8 @@ import { FungiblePoolService } from 'services'
 import { IToken } from 'types'
 import { isAddress, parseUnits } from 'ethers/lib/utils'
 import { hasDuplicates } from 'utils'
+import { BigNumber } from 'ethers'
+import { ZERO } from 'utils/number'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -133,6 +135,7 @@ interface IProps {
   onClose: () => void
   onSuccess: () => Promise<void>
   purchaseToken: IToken
+  totalOfferingAmount: BigNumber
 }
 
 interface IState {
@@ -140,7 +143,8 @@ interface IState {
   txState: TxState
   whitelistFile: File | null
   value: string
-  errorMessages: string[]
+  errorMessages: (string | undefined)[]
+  maxLimit: BigNumber
 }
 
 export const SetWhitelistModal: React.FC<IProps> = ({
@@ -149,6 +153,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
   onClose,
   onSuccess,
   purchaseToken,
+  totalOfferingAmount,
 }) => {
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
@@ -166,6 +171,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
       whitelistFile: null,
       value: '',
       errorMessages: [],
+      maxLimit: ZERO,
     }
   )
 
@@ -174,6 +180,23 @@ export const SetWhitelistModal: React.FC<IProps> = ({
     account,
     poolAddress
   )
+
+  useEffect(() => {
+    const getMaxLimit = async () => {
+      let maxLimit
+      try {
+        maxLimit =
+          await fungibleOriginationPool.getPurchaseAmountFromOfferAmount(
+            totalOfferingAmount
+          )
+      } catch (error) {
+        console.error('getPurchaseAmountFromOfferAmount error', error)
+      }
+      setState({ maxLimit })
+    }
+
+    getMaxLimit()
+  }, [])
 
   const generateMerkleTreeRoot = async (signedPoolAddress: string) => {
     const requestData = new FormData()
@@ -247,7 +270,22 @@ export const SetWhitelistModal: React.FC<IProps> = ({
 
   const onInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => setState({ value: event.target.value })
+  ) => {
+    setState({ errorMessages: [state.errorMessages[0], undefined] })
+    if (
+      parseUnits(event.target.value || '0', purchaseToken.decimals).gt(
+        state.maxLimit
+      )
+    ) {
+      setState({
+        errorMessages: [
+          state.errorMessages[0],
+          'Address cap exceeds total amount',
+        ],
+      })
+    }
+    setState({ value: event.target.value })
+  }
 
   const onFileInputClick = () => {
     if (!hiddenFileInput.current) return
@@ -258,19 +296,22 @@ export const SetWhitelistModal: React.FC<IProps> = ({
     event: ChangeEvent<HTMLInputElement>
   ) => {
     if (!event.target.files) return
-    setState({ errorMessages: [] })
+    const errorMessages = [undefined, state.errorMessages[1]]
+    setState({ errorMessages })
     const fileUploaded = event.target?.files[0]
-    const name = fileUploaded.name
+    const name = fileUploaded?.name
 
     const reader = new FileReader()
     try {
       reader.onload = () => {
         if (fileUploaded && name && name.split('.')[1] !== 'csv') {
-          setState({ errorMessages: ['Invalid file extension'] })
+          errorMessages[0] = 'Invalid file extension'
+          setState({ errorMessages })
           return
         }
         if (!reader.result) {
-          setState({ errorMessages: ['Invalid format'] })
+          errorMessages[0] = 'Invalid format'
+          setState({ errorMessages })
           return
         }
         const content = reader?.result?.toString().split(/\n/)
@@ -281,13 +322,15 @@ export const SetWhitelistModal: React.FC<IProps> = ({
         })
 
         if (content.length === 0 || isAddressesInvalid) {
-          setState({ errorMessages: ['Invalid format'] })
+          errorMessages[0] = 'Invalid format'
+          setState({ errorMessages })
           return
         }
 
         const _hasDuplicates = hasDuplicates(content)
         if (_hasDuplicates) {
-          setState({ errorMessages: ['Duplicated addresses'] })
+          errorMessages[0] = 'Duplicated addresses'
+          setState({ errorMessages })
           return
         }
       }
@@ -305,9 +348,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
   }
 
   const isDisabled =
-    !state.whitelistFile ||
-    state.txState === TxState.InProgress ||
-    state.errorMessages.length > 0
+    !state.whitelistFile || state.txState === TxState.InProgress
 
   return (
     <Modal
@@ -376,7 +417,9 @@ export const SetWhitelistModal: React.FC<IProps> = ({
               onChange={onInputChange}
             />
             <div className={classes.errorMessage}>
-              {state.errorMessages.join(';')}
+              {state.errorMessages.join(
+                state.errorMessages.some((x) => x === undefined) ? '' : '; '
+              )}
             </div>
           </div>
 
@@ -388,7 +431,8 @@ export const SetWhitelistModal: React.FC<IProps> = ({
               className={clsx(
                 classes.button,
                 state.txState === TxState.InProgress && 'pending',
-                !canSetWhitelist() && 'disabled'
+                (!canSetWhitelist() || state.errorMessages.some((x) => x)) &&
+                  'disabled'
               )}
               onClick={handleSetWhitelistClick}
             >
