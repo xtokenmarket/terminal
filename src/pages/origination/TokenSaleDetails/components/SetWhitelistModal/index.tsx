@@ -18,7 +18,8 @@ import { useSnackbar } from 'notistack'
 import axios from 'axios'
 import { FungiblePoolService } from 'services'
 import { IToken } from 'types'
-import { parseUnits } from 'ethers/lib/utils'
+import { isAddress, parseUnits } from 'ethers/lib/utils'
+import { hasDuplicates } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -120,6 +121,10 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.primary100,
     fontSize: 12,
   },
+  errorMessage: {
+    color: theme.colors.warn,
+    marginTop: 10,
+  },
 }))
 
 interface IProps {
@@ -135,6 +140,7 @@ interface IState {
   txState: TxState
   whitelistFile: File | null
   value: string
+  errorMessages: string[]
 }
 
 export const SetWhitelistModal: React.FC<IProps> = ({
@@ -159,6 +165,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
       txState: TxState.None,
       whitelistFile: null,
       value: '',
+      errorMessages: [],
     }
   )
 
@@ -202,7 +209,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
     if (state.txState === TxState.Complete) {
       _clearTxState()
     }
-    setState({ whitelistFile: null })
+    setState({ whitelistFile: null, errorMessages: [] })
     onClose()
   }
 
@@ -247,9 +254,48 @@ export const SetWhitelistModal: React.FC<IProps> = ({
     hiddenFileInput.current.click()
   }
 
-  const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleFileInputChange = async (
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
     if (!event.target.files) return
+    setState({ errorMessages: [] })
     const fileUploaded = event.target?.files[0]
+    const name = fileUploaded.name
+
+    const reader = new FileReader()
+    try {
+      reader.onload = () => {
+        if (fileUploaded && name && name.split('.')[1] !== 'csv') {
+          setState({ errorMessages: ['Invalid file extension'] })
+          return
+        }
+        if (!reader.result) {
+          setState({ errorMessages: ['Invalid format'] })
+          return
+        }
+        const content = reader?.result?.toString().split(/\n/)
+        content?.shift()
+
+        const isAddressesInvalid = content?.some((address) => {
+          return !isAddress(address)
+        })
+
+        if (content.length === 0 || isAddressesInvalid) {
+          setState({ errorMessages: ['Invalid format'] })
+          return
+        }
+
+        const _hasDuplicates = hasDuplicates(content)
+        if (_hasDuplicates) {
+          setState({ errorMessages: ['Duplicated addresses'] })
+          return
+        }
+      }
+
+      await reader.readAsText(event.target.files[0])
+    } catch (error) {
+      console.log('handleFileInputChange error', error)
+    }
 
     setState({ whitelistFile: fileUploaded })
   }
@@ -257,6 +303,11 @@ export const SetWhitelistModal: React.FC<IProps> = ({
   const canSetWhitelist = () => {
     return state.whitelistFile && state.value && parseFloat(state.value) > 0
   }
+
+  const isDisabled =
+    !state.whitelistFile ||
+    state.txState === TxState.InProgress ||
+    state.errorMessages.length > 0
 
   return (
     <Modal
@@ -324,14 +375,14 @@ export const SetWhitelistModal: React.FC<IProps> = ({
               value={state.value}
               onChange={onInputChange}
             />
+            <div className={classes.errorMessage}>
+              {state.errorMessages.join(';')}
+            </div>
           </div>
 
           <div className={classes.buttonWrapper}>
             <Button
-              id="submitWhitelist"
-              disabled={
-                !state.whitelistFile || state.txState === TxState.InProgress
-              }
+              disabled={isDisabled}
               color="primary"
               variant="contained"
               className={clsx(
