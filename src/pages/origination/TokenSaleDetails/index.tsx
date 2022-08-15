@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 600,
   },
   root: {
-    paddingBottom: 10,
+    paddingBottom: 20,
     overflowX: 'auto',
     '&::-webkit-scrollbar': {
       backgroundColor: transparentize(0.6, theme.colors.primary),
@@ -248,6 +248,14 @@ const TokenSaleDetails = () => {
     }
   }
 
+  const isSaleInitiated = tokenOffer?.offeringOverview.salesBegin.gt(0)
+
+  const isReserveAmountZero =
+    tokenOffer?.offeringOverview.reserveAmount.isZero()
+
+  const isVestingPeriodZero =
+    tokenOffer?.offeringOverview.vestingPeriod.isZero()
+
   const isSoldOut = tokenOffer?.offeringOverview.offerTokenAmountSold.eq(
     tokenOffer?.offeringOverview.totalOfferingAmount
   )
@@ -282,6 +290,16 @@ const TokenSaleDetails = () => {
     tokenOffer.publicSale.startingPrice &&
     tokenOffer.publicSale.startingPrice.gt(0)
 
+  // ref: https://discord.com/channels/790695551057657876/923246975137226842/1004704774580617216
+  // when vesting == 0, reserve == 0, pool manager has the the option to claim the accrued purchase token amount during and after sale
+  // if used during sale, I should receive the accrued purchase token (can be called multiple times during sale if purchase token accrued)
+  const isClaimableDuringSale =
+    isOwnerOrManager &&
+    !isSaleCompleted &&
+    isReserveAmountZero &&
+    isVestingPeriodZero &&
+    tokenOffer?.offerTokenBalance.gt(0)
+
   const isClaimManager =
     isOwnerOrManager && isSaleCompleted && !tokenOffer.sponsorTokensClaimed
 
@@ -291,32 +309,34 @@ const TokenSaleDetails = () => {
     tokenOffer.offeringOverview.vestingPeriod.gt(0)
 
   const isSuccessfulSaleClaimUser =
+    isCliffPeriodPassed() &&
+    !isReserveAmountZero &&
     !isOfferUnsuccessful &&
     tokenOffer?.userPosition.tokenPurchased.gt(0) &&
-    tokenOffer?.offeringOverview.vestingPeriod.isZero()
+    isVestingPeriodZero
 
   const isUnsuccessfulSaleClaimUser =
-    isOfferUnsuccessful && tokenOffer.userPosition.amountInvested.gt(0)
+    isOfferUnsuccessful &&
+    tokenOffer.userPosition.amountInvested.gt(0) &&
+    !isReserveAmountZero
 
   const isClaimButtonShow =
     tokenOffer &&
-    isCliffPeriodPassed() &&
+    isSaleInitiated &&
     (isClaimManager ||
       isUnsuccessfulVestingSaleClaimUser ||
       isSuccessfulSaleClaimUser ||
-      isUnsuccessfulSaleClaimUser)
+      isUnsuccessfulSaleClaimUser ||
+      (isVestingPeriodZero && isReserveAmountZero && isOwnerOrManager))
 
   const isUserPositionShow =
-    !isOwnerOrManager &&
     tokenOffer &&
     (tokenOffer.userPosition.tokenPurchased.gt(0) ||
       tokenOffer.userPosition.amountInvested.gt(0) ||
       tokenOffer?.userPosition.amountAvailableToVest.gt(0))
 
   const isPublicSaleInvestDisabled =
-    !tokenOffer?.offeringOverview.salesBegin.gt(0) ||
-    tokenOffer.whitelist.timeRemaining.gt(0) ||
-    isSoldOut
+    !isSaleInitiated || tokenOffer?.whitelist.timeRemaining.gt(0) || isSoldOut
 
   const isWhitelistSaleEnded = BigNumber.from(
     Math.floor(Date.now() / 1000)
@@ -327,8 +347,8 @@ const TokenSaleDetails = () => {
   )
 
   const iswhitelistSaleInvestDisabled =
-    !tokenOffer?.offeringOverview.salesBegin.gt(0) ||
-    !tokenOffer.whitelist.isAddressWhitelisted ||
+    !isSaleInitiated ||
+    !tokenOffer?.whitelist.isAddressWhitelisted ||
     isSoldOut ||
     isWhitelistSaleEnded ||
     isAddressCapExceeded
@@ -337,7 +357,7 @@ const TokenSaleDetails = () => {
     (tokenOffer &&
       tokenOffer.whitelist.salesPeriod?.gt(0) &&
       !tokenOffer.whitelist.whitelist) ||
-    tokenOffer?.offeringOverview.salesBegin.gt(0)
+    isSaleInitiated
 
   const isVestedPropertiesShow =
     (tokenOffer?.userPosition.amountAvailableToVest.gt(0) ||
@@ -376,15 +396,16 @@ const TokenSaleDetails = () => {
                 toggleModal={toggleInitiateSaleModal}
                 isOwnerOrManager={tokenOffer.offeringOverview.isOwnerOrManager}
                 isInitiateSaleButtonDisabled={isInitiateSaleButtonDisabled}
+                isSaleInitiated={isSaleInitiated}
               />
             )}
             {!isSaleCompleted && isWhitelistSaleConfigured && (
               <>
                 <Table
                   onSaleEnd={onSaleEnd}
-                  isSaleInitiated={tokenOffer.offeringOverview.salesBegin.gt(0)}
+                  isSaleInitiated={isSaleInitiated}
                   item={tokenOffer.whitelist}
-                  label={'Whitelist Sale'}
+                  label={'Allowlist Sale'}
                   toggleModal={toggleSetWhitelistModal}
                   isOwnerOrManager={isOwnerOrManager}
                   isWhitelistSet={tokenOffer.whitelist.whitelist}
@@ -393,44 +414,42 @@ const TokenSaleDetails = () => {
                     EPricingFormula.Standard
                   }
                 />
-                {!isOwnerOrManager && (
-                  <div className={cl.buttonWrapper}>
-                    <Tooltip
-                      title={
-                        isAddressCapExceeded && !isWhitelistSaleEnded
-                          ? 'Invested amount has reached the address cap.'
-                          : ''
-                      }
-                      arrow
-                      placement="right"
-                      classes={{
-                        arrow: cl.tooltipArrow,
-                        tooltip: cl.tooltip,
-                      }}
-                    >
-                      <div>
-                        <Button
-                          className={cl.button}
-                          onClick={toggleWhitelistInvestModal}
-                          disabled={iswhitelistSaleInvestDisabled}
-                        >
-                          <Typography className={cl.text}>INVEST</Typography>
-                        </Button>
-                      </div>
-                    </Tooltip>
-                    {!tokenOffer.whitelist.isAddressWhitelisted &&
-                      tokenOffer.whitelist.whitelist &&
-                      !isWhitelistSaleEnded && (
-                        <div className={cl.errorMessageWrapper}>
-                          <img alt="info" src="/assets/icons/warning.svg" />
-                          &nbsp;&nbsp;
-                          <div>
-                            Unfortunately, your address was not whitelisted
-                          </div>
+                <div className={cl.buttonWrapper}>
+                  <Tooltip
+                    title={
+                      isAddressCapExceeded && !isWhitelistSaleEnded
+                        ? 'Invested amount has reached the address cap.'
+                        : ''
+                    }
+                    arrow
+                    placement="right"
+                    classes={{
+                      arrow: cl.tooltipArrow,
+                      tooltip: cl.tooltip,
+                    }}
+                  >
+                    <div>
+                      <Button
+                        className={cl.button}
+                        onClick={toggleWhitelistInvestModal}
+                        disabled={iswhitelistSaleInvestDisabled}
+                      >
+                        <Typography className={cl.text}>INVEST</Typography>
+                      </Button>
+                    </div>
+                  </Tooltip>
+                  {!tokenOffer.whitelist.isAddressWhitelisted &&
+                    tokenOffer.whitelist.whitelist &&
+                    !isWhitelistSaleEnded && (
+                      <div className={cl.errorMessageWrapper}>
+                        <img alt="info" src="/assets/icons/warning.svg" />
+                        &nbsp;&nbsp;
+                        <div>
+                          Unfortunately, your address was not allowlisted
                         </div>
-                      )}
-                  </div>
-                )}
+                      </div>
+                    )}
+                </div>
               </>
             )}
             {!isSaleCompleted && isPublicSaleConfigured && (
@@ -439,7 +458,7 @@ const TokenSaleDetails = () => {
                   onSaleEnd={onSaleEnd}
                   isWhitelistSaleEnded={isWhitelistSaleEnded}
                   isWhitelistSet={tokenOffer.whitelist.whitelist}
-                  isSaleInitiated={tokenOffer.offeringOverview.salesBegin.gt(0)}
+                  isSaleInitiated={isSaleInitiated}
                   item={tokenOffer.publicSale}
                   label={'Public Sale'}
                   isFormulaStandard={
@@ -447,15 +466,13 @@ const TokenSaleDetails = () => {
                     EPricingFormula.Standard
                   }
                 />
-                {!isOwnerOrManager && (
-                  <Button
-                    className={cl.button}
-                    onClick={toggleInvestModal}
-                    disabled={isPublicSaleInvestDisabled}
-                  >
-                    <Typography className={cl.text}>INVEST</Typography>
-                  </Button>
-                )}
+                <Button
+                  className={cl.button}
+                  onClick={toggleInvestModal}
+                  disabled={isPublicSaleInvestDisabled}
+                >
+                  <Typography className={cl.text}>INVEST</Typography>
+                </Button>
               </>
             )}
             {isUserPositionShow && (
@@ -479,7 +496,11 @@ const TokenSaleDetails = () => {
               </Button>
             )}
             {isClaimButtonShow && (
-              <Button className={cl.button} onClick={toggleClaimModal}>
+              <Button
+                className={cl.button}
+                onClick={toggleClaimModal}
+                disabled={!isClaimableDuringSale && !isSaleCompleted}
+              >
                 <Typography className={cl.text}>CLAIM</Typography>
               </Button>
             )}

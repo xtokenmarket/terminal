@@ -134,13 +134,13 @@ const networks: { [K in ChainId]: INetwork } = {
     contracts: {
       LM: '0x44a169aE49F253Cd22E523C3A47E27f049EB0600',
       multicall: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
-      origination: '0x0F34b127797d01E9d0233a6381f3DE9dd79Ac254',
+      origination: '0xfA320037d5FCFd5FBC27140Ce8033dAD54B930d6',
       rewardEscrow: '0x6C5758747602Bdc9514841b7BbfCc6b9d27f0707',
       uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
-      vestingEntryNFT: '0x435310297B51a565f07519A7c9C89bf3391B44f2',
+      vestingEntryNFT: '0x667fa382dc3cd773f3bb176Ad3C5C0B6f8C8B329',
     },
     terminal: {
       tradeFee: BigNumber.from(1000),

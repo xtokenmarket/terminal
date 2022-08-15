@@ -216,6 +216,7 @@ export interface ITokenOffer {
   userPosition: IUserPosition
   offeringSummary: IOfferingSummary
   sponsorTokensClaimed: boolean
+  offerTokenBalance: BigNumber
 }
 
 interface Label {
@@ -240,6 +241,7 @@ export interface IOfferingOverview extends Label {
 export interface IOriginationRow extends IOfferingOverview {
   startingPrice: BigNumber
   saleDuration?: BigNumber
+  createdAt: BigNumber
 }
 
 export interface IWhitelistSale extends Label {

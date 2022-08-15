@@ -9,7 +9,10 @@ const XYZ_ADDRESS = '0x67F0ecD58a6287d5ec8CA92b6Fda836EDa9aE41F'
 const NETWORK = 'goerli'
 const isCreatePublic = true
 const isCreateWhitelist = true
-const isSetVesting = true
+const isSetVesting = false
+const RESERVE_AMOUNT = '1'
+const OFFER_TOKEN_AMOUNT = '2'
+const OFFERING_PERIOD = '5'
 
 type Page = Dappeteer['page']
 jest.setTimeout(60000)
@@ -71,11 +74,11 @@ describe('create token sale', () => {
     await clickElement(page, 'div#tokenList > div')
 
     const input0 = await page.waitForSelector('input#OfferTokenAmount')
-    await input0?.type('3')
+    await input0?.type(OFFER_TOKEN_AMOUNT)
     const input1 = await page.waitForSelector(
       'input#ReservePurchaseTokenRaised'
     )
-    await input1?.type('2')
+    await input1?.type(RESERVE_AMOUNT)
     await clickElement(page, 'button#offeringStepBtn')
   })
 
@@ -94,7 +97,7 @@ describe('create token sale', () => {
       const offeringPeriodInput = await page.waitForSelector(
         '#offeringPeriodInput'
       )
-      await offeringPeriodInput?.type('5')
+      await offeringPeriodInput?.type(OFFERING_PERIOD)
     }
 
     if (isCreateWhitelist) {

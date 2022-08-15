@@ -148,9 +148,9 @@ export const InputSection = (props: IProps) => {
 
     if (isInvalidAmount) {
       setState({
-        errorMessage: `Invalid amount. Maximum limit is ${numberWithCommas(
+        errorMessage: `Maximum contribution is ${numberWithCommas(
           formatBigNumber(maxLimit, props.offerData.purchaseToken.decimals)
-        )}`,
+        )} ${offerData.purchaseToken.symbol}`,
       })
       return
     }

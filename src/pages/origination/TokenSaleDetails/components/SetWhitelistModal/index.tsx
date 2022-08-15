@@ -17,11 +17,8 @@ import { ChainId, CHAIN_NAMES, ORIGINATION_API_URL } from 'config/constants'
 import { useSnackbar } from 'notistack'
 import axios from 'axios'
 import { FungiblePoolService } from 'services'
-import { useOriginationPool } from 'helpers'
-import { getNetworkFromId } from 'utils/network'
-import { IToken, NetworkId } from 'types'
+import { IToken } from 'types'
 import { parseUnits } from 'ethers/lib/utils'
-import { BigNumber } from 'ethers'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -82,6 +79,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.primary500,
     padding: 32,
     width: '100%',
+    justifyContent: 'space-between',
+    alignItems: 'baseline',
+    display: 'flex',
   },
   plus: {
     marginLeft: 32,
@@ -114,6 +114,11 @@ const useStyles = makeStyles((theme) => ({
   buttonTextPending: {
     color: theme.colors.white,
     fontWeight: 'normal',
+  },
+  downloadFileText: {
+    textDecoration: 'underline',
+    color: theme.colors.primary100,
+    fontSize: 12,
   },
 }))
 
@@ -269,7 +274,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
         />
       ) : (
         <div className={classes.content}>
-          <Typography className={classes.title}>SET WHITELIST</Typography>
+          <Typography className={classes.title}>SET ALLOWLIST</Typography>
           <div className={classes.underline} />
           {!(state.txState === TxState.InProgress) && (
             <IconButton className={classes.closeButton} onClick={_onClose}>
@@ -302,7 +307,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
                 </>
               ) : (
                 <Typography className={classes.text}>
-                  Upload a CSV File with Whitelist addresses
+                  Upload a CSV File with allowlist addresses
                 </Typography>
               )}
             </Button>
@@ -310,7 +315,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
 
           <div className={classes.inputWrapper}>
             <Input
-              inputLabel="Max Sale Per whitelist address"
+              inputLabel="Max Sale Per Allowlist Address"
               value={state.value}
               onChange={onInputChange}
             />
@@ -340,8 +345,8 @@ export const SetWhitelistModal: React.FC<IProps> = ({
                 {state.txState === TxState.InProgress
                   ? 'Pending'
                   : state.whitelistFile
-                  ? 'SET WHITELIST'
-                  : 'Approve  WHITELIST'}
+                  ? 'SET ALLOWLIST'
+                  : 'Approve Allowlist'}
               </Typography>
               {state.txState === TxState.InProgress && (
                 <>
@@ -350,6 +355,13 @@ export const SetWhitelistModal: React.FC<IProps> = ({
                 </>
               )}
             </Button>
+            <a
+              className={classes.downloadFileText}
+              href="/assets/allowlistSample.csv"
+              download
+            >
+              Allowlist CSV sample file
+            </a>
           </div>
         </div>
       )}

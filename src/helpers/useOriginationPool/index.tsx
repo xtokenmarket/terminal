@@ -226,6 +226,7 @@ export const useOriginationPool = (
       // sponsorTokensClaimed,
       offerToken,
       purchaseToken,
+      createdAt,
     } = offerData
 
     const _publicSaleDuration = BigNumber.from(Number(publicSaleDuration))
@@ -352,6 +353,14 @@ export const useOriginationPool = (
           _whitelist.isAddressWhitelisted =
             whitelistedAccountDetails.isAddressWhitelisted
         }
+
+        const erc20 = new ERC20Service(
+          provider,
+          poolAddress,
+          offerData.purchaseToken.address
+        )
+        const bal = await erc20.getBalanceOf(poolAddress)
+        offerData.offerTokenBalance = bal
       } catch (e) {
         // Whitelist detail for pool is missing
       }
@@ -442,8 +451,10 @@ export const useOriginationPool = (
         ...offeringOverview,
         startingPrice: publicStartingPrice,
         saleDuration: publicSaleDuration,
+        createdAt,
       },
       sponsorTokensClaimed: offerData.sponsorTokensClaimed,
+      offerTokenBalance: offerData.offerTokenBalance,
     }
 
     setState({

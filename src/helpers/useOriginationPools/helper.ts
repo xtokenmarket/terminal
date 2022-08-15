@@ -41,6 +41,7 @@ query {
       getOfferTokenPrice
       vestableTokenAmount
       purchaseTokensAcquired
+      createdAt
     }
 }
 `

@@ -324,3 +324,11 @@ export const getRemainingTimeSec = (endingTime: BigNumber) => {
   remainingTime = BigNumber.from((Number(remainingTime) / 1000).toFixed())
   return Number(remainingTime) < 0 ? BigNumber.from(0) : remainingTime
 }
+
+export const formatDateTime = (timestamp: number) => {
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  }).format(new Date(timestamp * 1000))
+}

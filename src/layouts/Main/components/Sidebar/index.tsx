@@ -139,15 +139,22 @@ export const Sidebar = () => {
         <div onClick={(e) => e.stopPropagation()} className={classes.content}>
           <div className={classes.header}>
             <div className={classes.logoWrapper}>
-              <img alt="logo" src="/assets/logo.png" className={classes.logo} />
+              <NavLink to={'/'}>
+                <img
+                  alt="logo"
+                  src="/assets/logo.png"
+                  className={classes.logo}
+                />
+              </NavLink>
             </div>
           </div>
           <div className={classes.body}>
             {MENU_ITEMS.map(({ icon: Icon, href, enabled, label }) => {
+              if (href === '/') return
               const getIsActive = () =>
                 !!matchPath(history.location.pathname, {
                   path: href,
-                  exact: !!(href === '/'),
+                  exact: false,
                 })
 
               const content = (
