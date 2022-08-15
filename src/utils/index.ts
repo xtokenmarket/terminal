@@ -335,3 +335,11 @@ export const parsePeriod = (amount: string, unit: string) => {
   const _unit = Number(amount) > 1 ? unit : unit.slice(0, -1)
   return `${amount} ${_unit}`
 }
+
+export const formatDateTime = (timestamp: number) => {
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  }).format(new Date(timestamp * 1000))
+}

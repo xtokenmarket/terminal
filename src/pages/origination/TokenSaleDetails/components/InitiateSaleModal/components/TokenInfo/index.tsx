@@ -91,14 +91,8 @@ export const TokenInfo = (props: IProps) => {
           </div>
           &nbsp;&nbsp;
           <Typography className={classes.amount}>
-            {formatBigNumber(amount, token.decimals, 4)}
-            &nbsp;
-            <span>
-              ~ $
-              {numberWithCommas(
-                getTotalTokenPrice(amount, token.decimals, token.price)
-              )}
-            </span>
+            {numberWithCommas(formatBigNumber(amount, token.decimals, 4))}{' '}
+            {token.symbol}
           </Typography>
         </div>
       </div>

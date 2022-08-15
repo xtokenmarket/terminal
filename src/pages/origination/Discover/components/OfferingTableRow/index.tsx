@@ -4,6 +4,7 @@ import { OfferingTd } from '../table'
 import { NavLink } from 'react-router-dom'
 import {
   formatBigNumber,
+  formatDateTime,
   getRemainingTimeSec,
   numberWithCommas,
   parseDurationSec,
@@ -61,8 +62,8 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-end',
   },
   tokenIcon: {
-    width: 48,
-    height: 48,
+    width: 55,
+    height: 55,
     border: `6px solid ${theme.colors.primary400}`,
     position: 'relative',
     borderRadius: '50%',
@@ -79,10 +80,15 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
     textTransform: 'capitalize',
     fontWeight: 800,
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(1),
   },
   itemMarginLeft: {
-    marginLeft: 15,
+    marginLeft: 10,
+  },
+  offeringName: {
+    color: theme.colors.white,
+    fontSize: 14,
+    marginLeft: 8,
   },
 }))
 
@@ -120,6 +126,7 @@ export const OfferingTableRow = ({ offering }: IProps) => {
       vestingPeriod,
       cliffPeriod,
       salesEnd,
+      createdAt,
     } = _originationRow
 
     // TODO: Better way to parse time remaining info
@@ -148,6 +155,9 @@ export const OfferingTableRow = ({ offering }: IProps) => {
             />
             <Typography className={cl.offerTokenLabel}>
               {offerToken.symbol}
+            </Typography>
+            <Typography className={cl.offeringName}>
+              {formatDateTime(createdAt.toNumber())}
             </Typography>
           </div>
         </OfferingTd>

@@ -27,6 +27,8 @@ import moment from 'moment'
 import { useCountdown } from 'helpers/useCountdownClock'
 import { useEffect } from 'react'
 import { BigNumber } from 'ethers'
+import { useConnectedWeb3Context } from 'contexts'
+import { getEtherscanUri } from 'config/networks'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -118,8 +120,8 @@ const useStyles = makeStyles((theme) => ({
   itemMarginLeft: {
     marginLeft: 17,
   },
-  marginBottom: {
-    marginBottom: 53,
+  link: {
+    textDecoration: 'none',
   },
 }))
 
@@ -156,6 +158,8 @@ export const TableRow = ({
   isSaleCompleted,
 }: IProps) => {
   const cl = useStyles()
+  const { networkId } = useConnectedWeb3Context()
+  const etherscanUri = getEtherscanUri(networkId)
   const remainingTime = () => {
     if (
       item.label === OriginationLabels.UserPosition &&
@@ -227,29 +231,43 @@ export const TableRow = ({
       return (
         <div className={cl.content}>
           <Td type={OfferingOverview.OfferToken} label={item.label}>
-            <div className={clsx(cl.item, cl.itemMarginLeft)}>
-              <img
-                alt="offerToken"
-                className={cl.tokenIcon}
-                src={item.offerToken.image}
-              />
-              <Typography className={cl.symbol}>
-                {item.offerToken.symbol}
-              </Typography>
-            </div>
+            <a
+              href={`${etherscanUri}token/${item.offerToken.address}`}
+              target="_blank"
+              rel="noreferrer"
+              className={cl.link}
+            >
+              <div className={clsx(cl.item, cl.itemMarginLeft)}>
+                <img
+                  alt="offerToken"
+                  className={cl.tokenIcon}
+                  src={item.offerToken.image}
+                />
+                <Typography className={cl.symbol}>
+                  {item.offerToken.symbol}
+                </Typography>
+              </div>
+            </a>
           </Td>
 
           <Td type={OfferingOverview.PurchaseToken} label={item.label}>
-            <div className={cl.item}>
-              <img
-                alt="purchaseToken"
-                className={cl.tokenIcon}
-                src={item.purchaseToken.image}
-              />
-              <Typography className={cl.symbol}>
-                {item.purchaseToken.symbol}
-              </Typography>
-            </div>
+            <a
+              href={`${etherscanUri}token/${item.purchaseToken.address}`}
+              target="_blank"
+              rel="noreferrer"
+              className={cl.link}
+            >
+              <div className={cl.item}>
+                <img
+                  alt="purchaseToken"
+                  className={cl.tokenIcon}
+                  src={item.purchaseToken.image}
+                />
+                <Typography className={cl.symbol}>
+                  {item.purchaseToken.symbol}
+                </Typography>
+              </div>
+            </a>
           </Td>
 
           <Td type={OfferingOverview.OfferingStatus} label={item.label}>
@@ -328,9 +346,7 @@ export const TableRow = ({
 
       return (
         <>
-          <div
-            className={clsx(cl.content, [isOwnerOrManager && cl.marginBottom])}
-          >
+          <div className={cl.content}>
             <Td type={WhitelistSale.CurrentPrice} label={item.label}>
               <Typography
                 className={clsx(cl.item, cl.label, cl.itemMarginLeft)}
@@ -540,29 +556,43 @@ export const TableRow = ({
       return (
         <div className={cl.content}>
           <Td type={OfferingSummary.OfferToken} label={item.label}>
-            <div className={clsx(cl.item, cl.itemMarginLeft)}>
-              <img
-                alt="offerToken"
-                className={cl.tokenIcon}
-                src={item.offerToken.image}
-              />
-              <Typography className={cl.symbol}>
-                {item.offerToken.symbol}
-              </Typography>
-            </div>
+            <a
+              href={`${etherscanUri}token/${item.offerToken.address}`}
+              target="_blank"
+              rel="noreferrer"
+              className={cl.link}
+            >
+              <div className={clsx(cl.item, cl.itemMarginLeft)}>
+                <img
+                  alt="offerToken"
+                  className={cl.tokenIcon}
+                  src={item.offerToken.image}
+                />
+                <Typography className={cl.symbol}>
+                  {item.offerToken.symbol}
+                </Typography>
+              </div>
+            </a>
           </Td>
 
           <Td type={OfferingSummary.PurchaseToken} label={item.label}>
-            <div className={cl.item}>
-              <img
-                alt="purchaseToken"
-                className={cl.tokenIcon}
-                src={item.purchaseToken.image}
-              />
-              <Typography className={cl.symbol}>
-                {item.purchaseToken.symbol}
-              </Typography>
-            </div>
+            <a
+              href={`${etherscanUri}token/${item.purchaseToken.address}`}
+              target="_blank"
+              rel="noreferrer"
+              className={cl.link}
+            >
+              <div className={cl.item}>
+                <img
+                  alt="purchaseToken"
+                  className={cl.tokenIcon}
+                  src={item.purchaseToken.image}
+                />
+                <Typography className={cl.symbol}>
+                  {item.purchaseToken.symbol}
+                </Typography>
+              </div>
+            </a>
           </Td>
           {isOfferUnsuccessful && (
             <>

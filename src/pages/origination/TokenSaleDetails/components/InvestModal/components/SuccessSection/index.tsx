@@ -94,14 +94,14 @@ export const SuccessSection = (props: IProps) => {
         </div>
         <Typography className={classes.title}>
           {`${offerData.offerToken.symbol}/${offerData.purchaseToken.symbol}`}{' '}
-          offering invested!
+          Contribution confirmed!
         </Typography>
         <Typography className={classes.description}>
-          You have successfully invested{' '}
+          You have successfully contributed{' '}
           {numberWithCommas(
             formatBigNumber(purchaseAmount, offerData.purchaseToken.decimals)
           )}{' '}
-          {offerData.purchaseToken.symbol} for{' '}
+          {offerData.purchaseToken.symbol} in exchange for{' '}
           {numberWithCommas(
             formatBigNumber(offerAmount, offerData.offerToken.decimals)
           )}{' '}

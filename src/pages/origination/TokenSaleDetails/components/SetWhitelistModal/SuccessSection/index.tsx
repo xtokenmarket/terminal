@@ -65,12 +65,10 @@ export const SuccessSection = (props: IProps) => {
           src="/assets/icons/confirmed.png"
           className={classes.img}
         />
-        <Typography className={classes.title}>
-          Set Whitelist confirmed!
-        </Typography>
+        <Typography className={classes.title}>Allowlist set!</Typography>
         <Typography className={classes.description}>
-          You have successfully finished your Set Whitelist process! Below you
-          can see details of your transaction.
+          You have successfully set your allowlist! Below you can see details of
+          your transaction.
         </Typography>
       </div>
       <div className={classes.transaction}>

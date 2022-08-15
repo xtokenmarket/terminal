@@ -175,11 +175,11 @@ export enum ECreateTokenSaleModalStep {
 }
 
 export enum InfoText {
-  OfferToken = 'OfferToken',
-  PurchaseToken = 'PurchaseToken',
-  OfferTokenAmount = 'OfferTokenAmount',
-  ReserveOfferTokenAmount = 'ReserveOfferTokenAmount',
-  OfferingPeriod = 'OfferingPeriod',
+  OfferToken = 'The token being offered to contributors',
+  PurchaseToken = 'The token used by contributors to acquire the offer token',
+  OfferTokenAmount = 'Maximum amount of token offered to contributors',
+  ReserveOfferTokenAmount = 'Minimum amount of purchase token raised for successful sale',
+  OfferingPeriod = 'Duration of sale',
   Standard = 'All offer tokens sells for 1 USDC',
   Ascending = 'Price steadily goes up from offering standard price. ',
   Descending = 'Price steadily goes down from offering standard price. ',

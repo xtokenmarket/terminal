@@ -107,8 +107,7 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
             }
             selectorValue={`${data.vestingPeriodUnit}`}
             label="Vesting Period"
-            // TODO: add a non-placeholder text
-            infoText="Placeholder text"
+            infoText="Amount of time until all tokens are available to claim"
             inputValue={`${data.vestingPeriod}`}
             onChangeinput={(e) => {
               const newValue = parseInt(e.target.value)
@@ -125,6 +124,7 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
             }
             selectorValue={`${data.cliffPeriodUnit}`}
             label="Cliff Period"
+            infoText="Amount of time until first tokens are available to claim"
             inputValue={`${data.cliffPeriod}`}
             onChangeinput={(e) => {
               const newValue = parseInt(e.target.value)
