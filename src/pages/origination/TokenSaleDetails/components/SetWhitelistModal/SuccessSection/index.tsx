@@ -76,6 +76,7 @@ export const SuccessSection = (props: IProps) => {
       </div>
       <div className={classes.actions}>
         <Button
+          id="setWhitelistDone"
           color="primary"
           variant="contained"
           fullWidth
