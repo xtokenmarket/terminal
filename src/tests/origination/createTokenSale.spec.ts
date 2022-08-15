@@ -18,11 +18,11 @@ type Page = Dappeteer['page']
 jest.setTimeout(60000)
 export let page: Page, browser: any, metamask: Dappeteer
 
-function sleep(ms: number) {
+export function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-async function clickElement(
+export async function clickElement(
   page: Page,
   selector: any,
   timeout?: number
@@ -33,29 +33,33 @@ async function clickElement(
   await element?.click()
 }
 
+export async function launchAndConnect() {
+  const launchOptions = {
+    metamaskVersion: 'v10.15.0',
+    defaultViewport: null,
+  }
+  const browser = await dappeteer.launch(puppeteer, launchOptions)
+  metamask = await dappeteer.setupMetamask(browser, {
+    seed: process.env.SEED,
+  })
+  await sleep(2000)
+  await metamask.switchNetwork(NETWORK)
+  page = await browser.newPage()
+  await page.bringToFront()
+  await page.goto('http://localhost:3000/mining/discover', {
+    waitUntil: 'load',
+  })
+  await clickElement(page, '#connectWallet')
+  await clickElement(page, '#wallets > button:nth-child(1)')
+  await sleep(2000)
+  await page.bringToFront()
+  await metamask.approve()
+  await page.bringToFront()
+}
+
 describe('create token sale', () => {
   beforeAll(async () => {
-    const launchOptions = {
-      metamaskVersion: 'v10.15.0',
-      defaultViewport: null,
-    }
-    const browser = await dappeteer.launch(puppeteer, launchOptions)
-    metamask = await dappeteer.setupMetamask(browser, {
-      seed: process.env.SEED,
-    })
-    await sleep(2000)
-    await metamask.switchNetwork(NETWORK)
-    page = await browser.newPage()
-    page.bringToFront()
-    await page.goto('http://localhost:3000/mining/discover', {
-      waitUntil: 'load',
-    })
-    await clickElement(page, '#connectWallet')
-    await clickElement(page, '#wallets > button:nth-child(1)')
-    await sleep(2000)
-    page.bringToFront()
-    await metamask.approve()
-    page.bringToFront()
+    await launchAndConnect()
   })
 
   it('should fill in offeringStep inputs', async () => {
@@ -156,7 +160,7 @@ describe('create token sale', () => {
     await sleep(3000)
     await metamask.confirmTransaction()
     await sleep(2000)
-    page.bringToFront()
+    await page.bringToFront()
     await clickElement(page, 'button#createTokenSaleSuccessSectionBtn', 60000)
   })
 })
