@@ -332,10 +332,3 @@ export const formatDateTime = (timestamp: number) => {
     day: 'numeric',
   }).format(new Date(timestamp * 1000))
 }
-
-export const hasDuplicates = (arry: string[]) => {
-  const toFindDuplicates = (arry: string[]) =>
-    arry.filter((item, index) => arry.indexOf(item) !== index)
-  const duplicateElementa = toFindDuplicates(arry)
-  return duplicateElementa.length > 0
-}

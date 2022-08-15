@@ -18,8 +18,7 @@ import { useSnackbar } from 'notistack'
 import axios from 'axios'
 import { FungiblePoolService } from 'services'
 import { IToken } from 'types'
-import { isAddress, parseUnits } from 'ethers/lib/utils'
-import { hasDuplicates } from 'utils'
+import { parseUnits } from 'ethers/lib/utils'
 import { BigNumber } from 'ethers'
 import { ZERO } from 'utils/number'
 
@@ -317,19 +316,8 @@ export const SetWhitelistModal: React.FC<IProps> = ({
         const content = reader?.result?.toString().split(/\n/)
         content?.shift()
 
-        const isAddressesInvalid = content?.some((address) => {
-          return !isAddress(address)
-        })
-
-        if (content.length === 0 || isAddressesInvalid) {
+        if (content.length === 0) {
           errorMessages[0] = 'Invalid format'
-          setState({ errorMessages })
-          return
-        }
-
-        const _hasDuplicates = hasDuplicates(content)
-        if (_hasDuplicates) {
-          errorMessages[0] = 'Duplicated addresses'
           setState({ errorMessages })
           return
         }
