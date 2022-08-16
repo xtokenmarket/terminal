@@ -360,7 +360,7 @@ export const useOriginationPool = (
           offerData.purchaseToken.address
         )
         const bal = await erc20.getBalanceOf(poolAddress)
-        offerData.offerTokenBalance = bal
+        offerData.purchaseTokenBalance = bal
       } catch (e) {
         // Whitelist detail for pool is missing
       }
@@ -454,7 +454,7 @@ export const useOriginationPool = (
         createdAt,
       },
       sponsorTokensClaimed: offerData.sponsorTokensClaimed,
-      offerTokenBalance: offerData.offerTokenBalance,
+      purchaseTokenBalance: offerData.purchaseTokenBalance,
     }
 
     setState({

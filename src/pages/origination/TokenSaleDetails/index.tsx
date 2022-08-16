@@ -297,11 +297,10 @@ const TokenSaleDetails = () => {
   // when vesting == 0, reserve == 0, pool manager has the the option to claim the accrued purchase token amount during and after sale
   // if used during sale, I should receive the accrued purchase token (can be called multiple times during sale if purchase token accrued)
   const isClaimPurchaseTokenButtonDisabled =
-    isOwnerOrManager &&
     !isSaleCompleted &&
     isReserveAmountZero &&
     isVestingPeriodZero &&
-    tokenOffer?.offerTokenBalance.gt(0)
+    !tokenOffer?.purchaseTokenBalance.gt(0)
 
   const isClaimManager =
     isOwnerOrManager && isSaleCompleted && !tokenOffer.sponsorTokensClaimed
@@ -333,7 +332,8 @@ const TokenSaleDetails = () => {
       isOwnerOrManager &&
       isReserveAmountZero &&
       isOwnerOrManager &&
-      !isSaleCompleted) ||
+      (!isSaleCompleted ||
+        (tokenOffer?.purchaseTokenBalance.gt(0) && isSaleCompleted))) ||
     isClaimManager
 
   const isUserPositionShow =
@@ -342,7 +342,7 @@ const TokenSaleDetails = () => {
       tokenOffer.userPosition.amountInvested.gt(0) ||
       tokenOffer?.userPosition.amountAvailableToVest.gt(0))
 
-  const isPublicSaleInvestDisabled =
+  const isPublicSaleItemsDisabled =
     !isSaleInitiated || tokenOffer?.whitelist.timeRemaining.gt(0) || isSoldOut
 
   const isWhitelistSaleEnded = BigNumber.from(
@@ -352,6 +352,9 @@ const TokenSaleDetails = () => {
   const isAddressCapExceeded = tokenOffer?.userPosition.amountInvested.gte(
     tokenOffer?.whitelist.addressCap
   )
+
+  const isDuringWhitelistSale =
+    isSaleInitiated && !isSoldOut && !isWhitelistSaleEnded
 
   const iswhitelistSaleInvestDisabled =
     !isSaleInitiated ||
@@ -430,7 +433,9 @@ const TokenSaleDetails = () => {
                     EPricingFormula.Standard
                   }
                   isClaimButtonShow={isClaimPurchaseTokenButtonShow}
-                  isClaimButtonDisabled={isClaimPurchaseTokenButtonDisabled}
+                  isClaimButtonDisabled={
+                    isClaimPurchaseTokenButtonDisabled || !isDuringWhitelistSale
+                  }
                 />
                 <div className={cl.buttonWrapper}>
                   <Tooltip
@@ -485,12 +490,15 @@ const TokenSaleDetails = () => {
                   }
                   isClaimButtonShow={isClaimPurchaseTokenButtonShow}
                   toggleModal={toggleClaimModal}
-                  isClaimButtonDisabled={isClaimPurchaseTokenButtonDisabled}
+                  isClaimButtonDisabled={
+                    isClaimPurchaseTokenButtonDisabled ||
+                    isPublicSaleItemsDisabled
+                  }
                 />
                 <Button
                   className={cl.button}
                   onClick={toggleInvestModal}
-                  disabled={isPublicSaleInvestDisabled}
+                  disabled={isPublicSaleItemsDisabled}
                 >
                   <Typography className={cl.text}>INVEST</Typography>
                 </Button>

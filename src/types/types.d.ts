@@ -216,7 +216,7 @@ export interface ITokenOffer {
   userPosition: IUserPosition
   offeringSummary: IOfferingSummary
   sponsorTokensClaimed: boolean
-  offerTokenBalance: BigNumber
+  purchaseTokenBalance: BigNumber
 }
 
 interface Label {

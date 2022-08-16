@@ -248,7 +248,7 @@ class FungiblePoolService {
     return new Promise((resolve) => {
       this.contract.on(
         !isClaimToken ? 'PurchaseTokenClaim' : 'TokensClaimed',
-        (...rest) => {
+        (user, amountClaimed, ...rest) => {
           if (!resolved) {
             resolved = true
             resolve(rest[0].transactionHash)
