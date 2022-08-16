@@ -303,8 +303,10 @@ export type OriginationDetailItem =
   | IOfferingSummary
 
 export interface IClaimData {
-  token: IToken
-  amount: BigNumber
+  offerToken?: IToken
+  offerTokenAmount?: BigNumber
+  purchaseToken?: IToken
+  purchaseTokenAmount?: BigNumber
 }
 
 export interface IOriginationPool {

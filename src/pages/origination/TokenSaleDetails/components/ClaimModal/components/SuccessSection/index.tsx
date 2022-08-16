@@ -71,12 +71,25 @@ export const SuccessSection = ({
           className={classes.img}
         />
         <Typography className={classes.title}>
-          {data?.token.symbol} Token claimed!
+          {data?.purchaseToken && data?.purchaseToken?.symbol}{' '}
+          {data?.purchaseToken && data?.offerToken ? '/' : ''}{' '}
+          {data?.offerToken && data?.offerToken?.symbol} Token claimed!
         </Typography>
         <Typography className={classes.description}>
           You have successfully claimed{' '}
-          {formatBigNumber(data?.amount || 0, data?.token.decimals || 0)}{' '}
-          {data?.token.symbol}
+          {data?.purchaseToken &&
+            formatBigNumber(
+              data?.purchaseTokenAmount || 0,
+              data?.purchaseToken?.decimals || 0
+            )}{' '}
+          {data?.purchaseToken?.symbol}
+          {data?.purchaseToken && data?.offerToken ? '/' : ''}{' '}
+          {data?.offerToken &&
+            formatBigNumber(
+              data?.offerTokenAmount || 0,
+              data?.offerToken?.decimals || 0
+            )}{' '}
+          {data?.offerToken?.symbol}
         </Typography>
       </div>
       <div className={classes.actions}>

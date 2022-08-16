@@ -229,29 +229,37 @@ const TokenSaleDetails = () => {
       // manager claim all the offter tokens when sale is unsuccessful
       if (!state.isClaimToken && isOfferUnsuccessful) {
         return {
-          token: tokenOffer.offeringOverview.offerToken,
-          amount: tokenOffer.offeringOverview.totalOfferingAmount,
+          offerToken: tokenOffer.offeringOverview.offerToken,
+          offerTokenAmount: tokenOffer.offeringOverview.totalOfferingAmount,
         }
       }
       // manager claim all the purchase tokens and unsold offer tokens when sale is successful
       if (!state.isClaimToken && !isOfferUnsuccessful) {
         return {
-          token: tokenOffer.offeringOverview.purchaseToken,
-          amount: tokenOffer.offeringSummary.amountsRaised,
+          purchaseToken: tokenOffer.offeringOverview.purchaseToken,
+          purchaseTokenAmount: tokenOffer.offeringSummary.amountsRaised,
+          offerToken: tokenOffer.offeringOverview.offerToken,
+          offerTokenAmount: tokenOffer.offeringOverview.totalOfferingAmount.sub(
+            tokenOffer.offeringOverview.offerTokenAmountSold
+          ),
         }
       }
       // user/manager claim their purchase tokens when sale is unsuccessful
       if (state.isClaimToken && isOfferUnsuccessful) {
         return {
-          token: tokenOffer.offeringOverview.purchaseToken,
-          amount: BigNumber.from(tokenOffer.userPosition.amountInvested),
+          purchaseToken: tokenOffer.offeringOverview.purchaseToken,
+          purchaseTokenAmount: BigNumber.from(
+            tokenOffer.userPosition.amountInvested
+          ),
         }
       }
       // user/manager claim their offer tokens when sale is successful
       if (state.isClaimToken && !isOfferUnsuccessful) {
         return {
-          token: tokenOffer.offeringOverview.offerToken,
-          amount: BigNumber.from(tokenOffer.userPosition.tokenPurchased),
+          offerToken: tokenOffer.offeringOverview.offerToken,
+          offerTokenAmount: BigNumber.from(
+            tokenOffer.userPosition.tokenPurchased
+          ),
         }
       }
     }
@@ -260,15 +268,19 @@ const TokenSaleDetails = () => {
       // manager claim accrued purchase tokens during sale
       if (!state.isClaimToken && !isSaleCompleted) {
         return {
-          token: tokenOffer.offeringOverview.purchaseToken,
-          amount: tokenOffer.purchaseTokenBalance,
+          purchaseToken: tokenOffer.offeringOverview.purchaseToken,
+          purchaseTokenAmount: tokenOffer.purchaseTokenBalance,
         }
       }
       // manager claim accrued purchase tokens and unsold offer tokens after sale
       if (!state.isClaimToken && isSaleCompleted) {
         return {
-          token: tokenOffer.offeringOverview.purchaseToken,
-          amount: tokenOffer.purchaseTokenBalance,
+          purchaseToken: tokenOffer.offeringOverview.purchaseToken,
+          purchaseTokenAmount: tokenOffer.purchaseTokenBalance,
+          offerToken: tokenOffer.offeringOverview.offerToken,
+          offerTokenAmount: tokenOffer.offeringOverview.totalOfferingAmount.sub(
+            tokenOffer.offeringOverview.offerTokenAmountSold
+          ),
         }
       }
     }
