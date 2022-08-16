@@ -321,7 +321,7 @@ const TokenSaleDetails = () => {
   const isClaimButtonShow =
     tokenOffer &&
     isSaleInitiated &&
-    !(isReserveAmountZero && isVestingPeriodZero) &&
+    (!isReserveAmountZero || !isVestingPeriodZero) &&
     (isUnsuccessfulVestingSaleClaimUser ||
       isSuccessfulSaleClaimUser ||
       isUnsuccessfulSaleClaimUser)
@@ -331,10 +331,10 @@ const TokenSaleDetails = () => {
       isVestingPeriodZero &&
       isOwnerOrManager &&
       isReserveAmountZero &&
-      isOwnerOrManager &&
       (!isSaleCompleted ||
         (tokenOffer?.purchaseTokenBalance.gt(0) && isSaleCompleted))) ||
-    isClaimManager
+    (isClaimManager && (!isVestingPeriodZero || !isReserveAmountZero))
+
 
   const isUserPositionShow =
     tokenOffer &&
