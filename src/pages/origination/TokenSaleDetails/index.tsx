@@ -110,6 +110,11 @@ const TokenSaleDetails = () => {
     isClaimToken: false,
   })
 
+  const unsoldOfferTokenAmount =
+    tokenOffer?.offeringOverview.totalOfferingAmount.sub(
+      tokenOffer?.offeringOverview.offerTokenAmountSold
+    )
+
   const onInitiateSuccess = async () => {
     setState((prev) => ({
       ...prev,
@@ -274,13 +279,21 @@ const TokenSaleDetails = () => {
       }
       // manager claim accrued purchase tokens and unsold offer tokens after sale
       if (!state.isClaimToken && isSaleCompleted) {
+        const purchaseTokenData = tokenOffer.purchaseTokenBalance.gt(0)
+          ? {
+              purchaseToken: tokenOffer.offeringOverview.purchaseToken,
+              purchaseTokenAmount: tokenOffer.purchaseTokenBalance,
+            }
+          : {}
+        const offerTokenData = unsoldOfferTokenAmount?.gt(0)
+          ? {
+              offerToken: tokenOffer.offeringOverview.offerToken,
+              offerTokenAmount: unsoldOfferTokenAmount,
+            }
+          : {}
         return {
-          purchaseToken: tokenOffer.offeringOverview.purchaseToken,
-          purchaseTokenAmount: tokenOffer.purchaseTokenBalance,
-          offerToken: tokenOffer.offeringOverview.offerToken,
-          offerTokenAmount: tokenOffer.offeringOverview.totalOfferingAmount.sub(
-            tokenOffer.offeringOverview.offerTokenAmountSold
-          ),
+          ...purchaseTokenData,
+          ...offerTokenData,
         }
       }
     }
@@ -368,7 +381,9 @@ const TokenSaleDetails = () => {
       isOwnerOrManager &&
       isReserveAmountZero &&
       (!isSaleCompleted ||
-        (tokenOffer?.purchaseTokenBalance.gt(0) && isSaleCompleted))) ||
+        ((tokenOffer?.purchaseTokenBalance.gt(0) ||
+          unsoldOfferTokenAmount?.gt(0)) &&
+          isSaleCompleted))) ||
     (isClaimManager && (!isVestingPeriodZero || !isReserveAmountZero))
 
   const isUserPositionShow =
