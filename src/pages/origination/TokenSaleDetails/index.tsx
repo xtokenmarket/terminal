@@ -238,15 +238,18 @@ const TokenSaleDetails = () => {
           offerTokenAmount: tokenOffer.offeringOverview.totalOfferingAmount,
         }
       }
-      // manager claim all the purchase tokens and unsold offer tokens when sale is successful
+      // manager claim all the purchase tokens and unsold offer tokens(if exist) when sale is successful
       if (!state.isClaimToken && !isOfferUnsuccessful) {
+        const offerTokenData = unsoldOfferTokenAmount?.gt(0)
+          ? {
+              offerToken: tokenOffer.offeringOverview.offerToken,
+              offerTokenAmount: unsoldOfferTokenAmount,
+            }
+          : {}
         return {
           purchaseToken: tokenOffer.offeringOverview.purchaseToken,
           purchaseTokenAmount: tokenOffer.offeringSummary.amountsRaised,
-          offerToken: tokenOffer.offeringOverview.offerToken,
-          offerTokenAmount: tokenOffer.offeringOverview.totalOfferingAmount.sub(
-            tokenOffer.offeringOverview.offerTokenAmountSold
-          ),
+          ...offerTokenData,
         }
       }
       // user/manager claim their purchase tokens when sale is unsuccessful
@@ -277,7 +280,7 @@ const TokenSaleDetails = () => {
           purchaseTokenAmount: tokenOffer.purchaseTokenBalance,
         }
       }
-      // manager claim accrued purchase tokens and unsold offer tokens after sale
+      // manager claim accrued purchase tokens and/or unsold offer tokens after sale
       if (!state.isClaimToken && isSaleCompleted) {
         const purchaseTokenData = tokenOffer.purchaseTokenBalance.gt(0)
           ? {
