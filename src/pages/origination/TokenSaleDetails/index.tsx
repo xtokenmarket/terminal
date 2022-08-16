@@ -225,28 +225,51 @@ const TokenSaleDetails = () => {
   const getClaimData = (): IClaimData | undefined => {
     if (!tokenOffer) return undefined
 
-    if (isOwnerOrManager && isOfferUnsuccessful) {
-      return {
-        token: tokenOffer.offeringOverview.offerToken,
-        amount: tokenOffer.offeringOverview.totalOfferingAmount,
+    if (!isVestingPeriodZero || !isReserveAmountZero) {
+      // manager claim all the offter tokens when sale is unsuccessful
+      if (!state.isClaimToken && isOfferUnsuccessful) {
+        return {
+          token: tokenOffer.offeringOverview.offerToken,
+          amount: tokenOffer.offeringOverview.totalOfferingAmount,
+        }
+      }
+      // manager claim all the purchase tokens and unsold offer tokens when sale is successful
+      if (!state.isClaimToken && !isOfferUnsuccessful) {
+        return {
+          token: tokenOffer.offeringOverview.purchaseToken,
+          amount: tokenOffer.offeringSummary.amountsRaised,
+        }
+      }
+      // user/manager claim their purchase tokens when sale is unsuccessful
+      if (state.isClaimToken && isOfferUnsuccessful) {
+        return {
+          token: tokenOffer.offeringOverview.purchaseToken,
+          amount: BigNumber.from(tokenOffer.userPosition.amountInvested),
+        }
+      }
+      // user/manager claim their offer tokens when sale is successful
+      if (state.isClaimToken && !isOfferUnsuccessful) {
+        return {
+          token: tokenOffer.offeringOverview.offerToken,
+          amount: BigNumber.from(tokenOffer.userPosition.tokenPurchased),
+        }
       }
     }
-    if (isOwnerOrManager && !isOfferUnsuccessful) {
-      return {
-        token: tokenOffer.offeringOverview.purchaseToken,
-        amount: tokenOffer.offeringSummary.amountsRaised,
+
+    if (isVestingPeriodZero && isReserveAmountZero) {
+      // manager claim accrued purchase tokens during sale
+      if (!state.isClaimToken && !isSaleCompleted) {
+        return {
+          token: tokenOffer.offeringOverview.purchaseToken,
+          amount: tokenOffer.purchaseTokenBalance,
+        }
       }
-    }
-    if (!isOwnerOrManager && isOfferUnsuccessful) {
-      return {
-        token: tokenOffer.offeringOverview.purchaseToken,
-        amount: BigNumber.from(tokenOffer.userPosition.amountInvested),
-      }
-    }
-    if (!isOwnerOrManager && !isOfferUnsuccessful) {
-      return {
-        token: tokenOffer.offeringOverview.offerToken,
-        amount: BigNumber.from(tokenOffer.userPosition.tokenPurchased),
+      // manager claim accrued purchase tokens and unsold offer tokens after sale
+      if (!state.isClaimToken && isSaleCompleted) {
+        return {
+          token: tokenOffer.offeringOverview.purchaseToken,
+          amount: tokenOffer.purchaseTokenBalance,
+        }
       }
     }
   }
