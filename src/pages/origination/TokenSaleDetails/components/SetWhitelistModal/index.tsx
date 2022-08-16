@@ -142,7 +142,7 @@ interface IState {
   txState: TxState
   whitelistFile: File | null
   value: string
-  errorMessages: (string | undefined)[]
+  errorMessage: string
   maxLimit: BigNumber
 }
 
@@ -169,7 +169,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
       txState: TxState.None,
       whitelistFile: null,
       value: '',
-      errorMessages: [],
+      errorMessage: '',
       maxLimit: ZERO,
     }
   )
@@ -231,7 +231,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
     if (state.txState === TxState.Complete) {
       _clearTxState()
     }
-    setState({ whitelistFile: null, errorMessages: [] })
+    setState({ whitelistFile: null, errorMessage: '' })
     onClose()
   }
 
@@ -270,17 +270,14 @@ export const SetWhitelistModal: React.FC<IProps> = ({
   const onInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setState({ errorMessages: [state.errorMessages[0], undefined] })
+    setState({ errorMessage: '' })
     if (
       parseUnits(event.target.value || '0', purchaseToken.decimals).gt(
         state.maxLimit
       )
     ) {
       setState({
-        errorMessages: [
-          state.errorMessages[0],
-          'Address cap exceeds total amount',
-        ],
+        errorMessage: 'Address cap exceeds total amount',
       })
     }
     setState({ value: event.target.value })
@@ -295,39 +292,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
     event: ChangeEvent<HTMLInputElement>
   ) => {
     if (!event.target.files) return
-    const errorMessages = [undefined, state.errorMessages[1]]
-    setState({ errorMessages })
     const fileUploaded = event.target?.files[0]
-    const name = fileUploaded?.name
-
-    const reader = new FileReader()
-    try {
-      reader.onload = () => {
-        if (fileUploaded && name && name.split('.')[1] !== 'csv') {
-          errorMessages[0] = 'Invalid file extension'
-          setState({ errorMessages })
-          return
-        }
-        if (!reader.result) {
-          errorMessages[0] = 'Invalid format'
-          setState({ errorMessages })
-          return
-        }
-        const content = reader?.result?.toString().split(/\n/)
-        content?.shift()
-
-        if (content.length === 0) {
-          errorMessages[0] = 'Invalid format'
-          setState({ errorMessages })
-          return
-        }
-      }
-
-      await reader.readAsText(event.target.files[0])
-    } catch (error) {
-      console.log('handleFileInputChange error', error)
-    }
-
     setState({ whitelistFile: fileUploaded })
   }
 
@@ -377,6 +342,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
                 onChange={handleFileInputChange}
                 className={classes.file}
                 ref={hiddenFileInput}
+                accept=".csv"
               />
               {state.whitelistFile ? (
                 <>
@@ -405,9 +371,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
               onChange={onInputChange}
             />
             <div className={classes.errorMessage}>
-              {state.errorMessages.join(
-                state.errorMessages.some((x) => x === undefined) ? '' : '; '
-              )}
+              {state.errorMessage && state.errorMessage}
             </div>
           </div>
 
@@ -419,8 +383,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
               className={clsx(
                 classes.button,
                 state.txState === TxState.InProgress && 'pending',
-                (!canSetWhitelist() || state.errorMessages.some((x) => x)) &&
-                  'disabled'
+                (!canSetWhitelist() || state.errorMessage) && 'disabled'
               )}
               onClick={handleSetWhitelistClick}
             >
