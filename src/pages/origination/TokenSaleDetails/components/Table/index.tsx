@@ -111,8 +111,6 @@ export const Table = ({
   const cl = useStyles()
 
   const renderLabel = (label: string) => {
-    console.log('label', label)
-
     const ClaimButton = () => (
       <Button
         className={cl.button}
