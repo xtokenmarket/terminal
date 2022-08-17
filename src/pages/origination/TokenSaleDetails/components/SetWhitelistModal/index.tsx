@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef, useReducer } from 'react'
+import React, { ChangeEvent, useRef, useReducer, useEffect } from 'react'
 import {
   makeStyles,
   Typography,
@@ -19,6 +19,8 @@ import axios from 'axios'
 import { FungiblePoolService } from 'services'
 import { IToken } from 'types'
 import { parseUnits } from 'ethers/lib/utils'
+import { BigNumber } from 'ethers'
+import { ZERO } from 'utils/number'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -120,6 +122,10 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.primary100,
     fontSize: 12,
   },
+  errorMessage: {
+    color: theme.colors.warn,
+    marginTop: 10,
+  },
 }))
 
 interface IProps {
@@ -128,6 +134,7 @@ interface IProps {
   onClose: () => void
   onSuccess: () => Promise<void>
   purchaseToken: IToken
+  totalOfferingAmount: BigNumber
 }
 
 interface IState {
@@ -135,6 +142,8 @@ interface IState {
   txState: TxState
   whitelistFile: File | null
   value: string
+  errorMessage: string
+  maxLimit: BigNumber
 }
 
 export const SetWhitelistModal: React.FC<IProps> = ({
@@ -143,6 +152,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
   onClose,
   onSuccess,
   purchaseToken,
+  totalOfferingAmount,
 }) => {
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
@@ -159,6 +169,8 @@ export const SetWhitelistModal: React.FC<IProps> = ({
       txState: TxState.None,
       whitelistFile: null,
       value: '',
+      errorMessage: '',
+      maxLimit: ZERO,
     }
   )
 
@@ -167,6 +179,23 @@ export const SetWhitelistModal: React.FC<IProps> = ({
     account,
     poolAddress
   )
+
+  useEffect(() => {
+    const getMaxLimit = async () => {
+      let maxLimit
+      try {
+        maxLimit =
+          await fungibleOriginationPool.getPurchaseAmountFromOfferAmount(
+            totalOfferingAmount
+          )
+      } catch (error) {
+        console.error('getPurchaseAmountFromOfferAmount error', error)
+      }
+      setState({ maxLimit })
+    }
+
+    getMaxLimit()
+  }, [])
 
   const generateMerkleTreeRoot = async (signedPoolAddress: string) => {
     const requestData = new FormData()
@@ -202,7 +231,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
     if (state.txState === TxState.Complete) {
       _clearTxState()
     }
-    setState({ whitelistFile: null })
+    setState({ whitelistFile: null, errorMessage: '' })
     onClose()
   }
 
@@ -240,23 +269,39 @@ export const SetWhitelistModal: React.FC<IProps> = ({
 
   const onInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => setState({ value: event.target.value })
+  ) => {
+    setState({ errorMessage: '' })
+    if (
+      parseUnits(event.target.value || '0', purchaseToken.decimals).gt(
+        state.maxLimit
+      )
+    ) {
+      setState({
+        errorMessage: 'Address cap exceeds total amount',
+      })
+    }
+    setState({ value: event.target.value })
+  }
 
   const onFileInputClick = () => {
     if (!hiddenFileInput.current) return
     hiddenFileInput.current.click()
   }
 
-  const handleFileInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleFileInputChange = async (
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
     if (!event.target.files) return
     const fileUploaded = event.target?.files[0]
-
     setState({ whitelistFile: fileUploaded })
   }
 
   const canSetWhitelist = () => {
     return state.whitelistFile && state.value && parseFloat(state.value) > 0
   }
+
+  const isDisabled =
+    !state.whitelistFile || state.txState === TxState.InProgress
 
   return (
     <Modal
@@ -297,6 +342,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
                 onChange={handleFileInputChange}
                 className={classes.file}
                 ref={hiddenFileInput}
+                accept=".csv"
               />
               {state.whitelistFile ? (
                 <>
@@ -324,20 +370,20 @@ export const SetWhitelistModal: React.FC<IProps> = ({
               value={state.value}
               onChange={onInputChange}
             />
+            <div className={classes.errorMessage}>
+              {state.errorMessage && state.errorMessage}
+            </div>
           </div>
 
           <div className={classes.buttonWrapper}>
             <Button
-              id="submitWhitelist"
-              disabled={
-                !state.whitelistFile || state.txState === TxState.InProgress
-              }
+              disabled={isDisabled}
               color="primary"
               variant="contained"
               className={clsx(
                 classes.button,
                 state.txState === TxState.InProgress && 'pending',
-                !canSetWhitelist() && 'disabled'
+                (!canSetWhitelist() || state.errorMessage) && 'disabled'
               )}
               onClick={handleSetWhitelistClick}
             >
