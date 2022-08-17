@@ -121,29 +121,31 @@ export const RewardPeriodInput: React.FC<IProps> = ({
 
   return (
     <div className={cl.root}>
-      <TextField
-        type="number"
-        variant="outlined"
-        fullWidth
-        value={minuteValue}
-        onChange={onMinuteChangeInput}
-        className={clsx(cl.input, cl.marginBottom)}
-        InputLabelProps={{
-          shrink: true,
-          className: cl.inputLabel,
-        }}
-        InputProps={{
-          classes: {
-            notchedOutline: cl.notchedOutline,
-            input: clsx(commonClasses.hideInputArrow, cl.inputBox),
-          },
-          endAdornment: (
-            <InputAdornment position="end">Minutes(s)</InputAdornment>
-          ),
-        }}
-        label={'Reward Periods'}
-        disabled={isDisabled}
-      />
+      {label === 'Rewards period' && (
+        <TextField
+          type="number"
+          variant="outlined"
+          fullWidth
+          value={minuteValue}
+          onChange={onMinuteChangeInput}
+          className={clsx(cl.input, cl.marginBottom)}
+          InputLabelProps={{
+            shrink: true,
+            className: cl.inputLabel,
+          }}
+          InputProps={{
+            classes: {
+              notchedOutline: cl.notchedOutline,
+              input: clsx(commonClasses.hideInputArrow, cl.inputBox),
+            },
+            endAdornment: (
+              <InputAdornment position="end">Minutes(s)</InputAdornment>
+            ),
+          }}
+          label={label}
+          disabled={isDisabled}
+        />
+      )}
       <TextField
         type="number"
         variant="outlined"
