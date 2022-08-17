@@ -170,18 +170,22 @@ export const RewardSection = (props: IProps) => {
         initing: true,
       }))
 
+      const _duration = rewardState.durationMinute
+        ? Number(rewardState.durationMinute) * 60
+        : parseDuration(rewardState.duration)
+
       const initiateRewardsMethod = poolData.periodFinish.isZero()
         ? lmService.initiateRewardsProgram
         : lmService.initiateNewRewardsProgram
       const txId = await initiateRewardsMethod(
         poolData.address,
         rewardState.amounts,
-        parseDuration(rewardState.duration)
+        _duration
       )
       const finalTxId = await lmService.waitUntilRewardsProgramInitiated(
         poolData.address,
         rewardState.amounts,
-        parseDuration(rewardState.duration),
+        _duration,
         txId
       )
 

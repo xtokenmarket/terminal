@@ -64,6 +64,7 @@ export interface IRewardState {
   step: ERewardStep
   tokens: IToken[]
   vesting: string
+  durationMinute?: string
 }
 
 export const RewardModal: React.FC<IProps> = ({
@@ -89,6 +90,7 @@ export const RewardModal: React.FC<IProps> = ({
     step: ERewardStep.Input,
     tokens: poolData?.rewardState.tokens || [],
     vesting: poolData?.rewardState.vesting.toString() || '',
+    durationMinute: '',
   }
 
   const [state, setState] = useState<IRewardState>(initialRewardState)

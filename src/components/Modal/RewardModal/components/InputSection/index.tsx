@@ -105,6 +105,11 @@ export const InputSection: React.FC<IProps> = ({
                 duration: newValue,
               })
             }
+            onMinuteChange={(newValue) =>
+              updateState({
+                durationMinute: newValue,
+              })
+            }
           />
         )}
         <RewardPeriodInput

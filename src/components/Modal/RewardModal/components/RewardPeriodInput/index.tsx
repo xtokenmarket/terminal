@@ -69,6 +69,9 @@ const useStyles = makeStyles((theme) => ({
       color: theme.colors.white,
     },
   },
+  marginBottom: {
+    marginBottom: 20,
+  },
 }))
 
 interface IProps {
@@ -78,6 +81,7 @@ interface IProps {
   onChange: (_: string) => void
   className?: string
   isVesting?: boolean
+  onMinuteChange?: ((_: string) => void) | undefined
 }
 
 export const RewardPeriodInput: React.FC<IProps> = ({
@@ -87,6 +91,7 @@ export const RewardPeriodInput: React.FC<IProps> = ({
   onChange,
   className,
   isVesting = false,
+  onMinuteChange,
 }) => {
   const cl = useStyles()
   const commonClasses = useCommonStyles()
@@ -104,8 +109,39 @@ export const RewardPeriodInput: React.FC<IProps> = ({
     onChange(newValue)
   }
 
+  const onMinuteChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let newValue = e.target.value
+    if (newValue !== '') {
+      newValue = Math.floor(Number(e.target.value)).toString()
+    }
+    onMinuteChange && onMinuteChange(newValue)
+  }
+
   return (
     <div className={cl.root}>
+      <TextField
+        type="number"
+        variant="outlined"
+        fullWidth
+        value={value}
+        onChange={onMinuteChangeInput}
+        className={clsx(cl.input, cl.marginBottom)}
+        InputLabelProps={{
+          shrink: true,
+          className: cl.inputLabel,
+        }}
+        InputProps={{
+          classes: {
+            notchedOutline: cl.notchedOutline,
+            input: clsx(commonClasses.hideInputArrow, cl.inputBox),
+          },
+          endAdornment: (
+            <InputAdornment position="end">Minutes(s)</InputAdornment>
+          ),
+        }}
+        label={'Reward Periods'}
+        disabled={isDisabled}
+      />
       <TextField
         type="number"
         variant="outlined"
