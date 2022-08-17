@@ -82,6 +82,7 @@ interface IProps {
   className?: string
   isVesting?: boolean
   onMinuteChange?: ((_: string) => void) | undefined
+  minuteValue?: string
 }
 
 export const RewardPeriodInput: React.FC<IProps> = ({
@@ -92,6 +93,7 @@ export const RewardPeriodInput: React.FC<IProps> = ({
   className,
   isVesting = false,
   onMinuteChange,
+  minuteValue,
 }) => {
   const cl = useStyles()
   const commonClasses = useCommonStyles()
@@ -123,7 +125,7 @@ export const RewardPeriodInput: React.FC<IProps> = ({
         type="number"
         variant="outlined"
         fullWidth
-        value={value}
+        value={minuteValue}
         onChange={onMinuteChangeInput}
         className={clsx(cl.input, cl.marginBottom)}
         InputLabelProps={{

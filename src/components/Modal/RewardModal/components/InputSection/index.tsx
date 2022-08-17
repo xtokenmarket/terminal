@@ -74,9 +74,13 @@ export const InputSection: React.FC<IProps> = ({
 }) => {
   const cl = useStyles()
 
-  const { duration, errors, tokens } = rewardState
+  const { duration, errors, tokens, durationMinute } = rewardState
+
   const isDurationInvalid =
-    !isCreatePool && (duration === '' || Number(duration) === 0)
+    !isCreatePool &&
+    (duration === '' || Number(duration) === 0) &&
+    (durationMinute === '' || Number(durationMinute) === 0)
+
   const isDisabled =
     tokens.length === 0 || errors.some((error) => !!error) || isDurationInvalid
 
@@ -100,6 +104,7 @@ export const InputSection: React.FC<IProps> = ({
           <RewardPeriodInput
             label={'Rewards period'}
             value={rewardState.duration}
+            minuteValue={rewardState.durationMinute}
             onChange={(newValue) =>
               updateState({
                 duration: newValue,
