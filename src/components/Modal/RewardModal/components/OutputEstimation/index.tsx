@@ -63,6 +63,12 @@ export const OutputEstimation: React.FC<IProps> = ({
 }) => {
   const classes = useStyles()
 
+  const getDuration = () => {
+    return rewardState.durationMinute
+      ? rewardState.durationMinute
+      : rewardState.duration
+  }
+
   return (
     <div className={clsx(classes.root, className)}>
       <div className={classes.estimation}>
@@ -70,8 +76,8 @@ export const OutputEstimation: React.FC<IProps> = ({
           {isCreatePool ? 'VESTING' : 'REWARDS'} PERIOD
         </Typography>
         <Typography className={classes.amount}>
-          {isCreatePool ? rewardState.vesting || '0' : rewardState.duration}{' '}
-          week(s)
+          {isCreatePool ? rewardState.vesting || '0' : getDuration()}{' '}
+          {rewardState.durationMinute ? 'minute(s)' : 'week(s)'}
         </Typography>
         <br />
         <Typography className={classes.label}>
