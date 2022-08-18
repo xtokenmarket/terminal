@@ -5,7 +5,7 @@ import { useHistory, useParams } from 'react-router'
 import { Button, makeStyles, Tooltip, Typography } from '@material-ui/core'
 import { PageContent, PageHeader, PageWrapper, SimpleLoader } from 'components'
 import { useOriginationPool } from 'helpers'
-import { getCurrentTimeStamp, getRemainingTimeSec } from 'utils'
+import { formatDateTime, getCurrentTimeStamp, getRemainingTimeSec } from 'utils'
 import { EOriginationEvent, EPricingFormula, Network } from 'utils/enums'
 import { IClaimData } from 'types'
 
@@ -463,7 +463,13 @@ const TokenSaleDetails = () => {
           <SimpleLoader />
         ) : (
           <div className={cl.root}>
-            <TokenSaleDescription />
+            <TokenSaleDescription
+              defaultOfferingName={`${
+                tokenOffer.offeringOverview.offerToken.symbol
+              } ${formatDateTime(
+                tokenOffer.originationRow.createdAt.toNumber()
+              )}`}
+            />
             <SetWhitelistModal
               poolAddress={poolAddress}
               open={state.open}

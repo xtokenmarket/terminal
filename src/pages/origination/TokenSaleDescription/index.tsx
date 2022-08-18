@@ -1,5 +1,6 @@
 import { Button, makeStyles, TextField, Typography } from '@material-ui/core'
 import { ChangeEvent, useState } from 'react'
+import { ReactComponent as EditIcon } from 'assets/svgs/edit.svg'
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -8,11 +9,10 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
     margin: '24px 0 11px 0',
   },
-  subTitle: {
+  name: {
     fontWeight: 700,
     fontSize: 16,
     color: theme.colors.white,
-    marginBottom: 4,
   },
   description: {
     fontSize: 12,
@@ -66,19 +66,33 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 14,
     fontWeight: 600,
   },
+  icon: {
+    widows: 14,
+    height: 14,
+    marginLeft: 10,
+  },
+  nameWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+  },
 }))
 
 interface IState {
   description: string
 }
 
-export const TokenSaleDescription = () => {
+interface IProps {
+  defaultOfferingName: string
+}
+
+export const TokenSaleDescription = (props: IProps) => {
   const classes = useStyles()
   const [state, setState] = useState<IState>({
     description: '',
   })
 
   const { description } = state
+  const { defaultOfferingName } = props
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.value.length > 200) return
@@ -95,7 +109,11 @@ export const TokenSaleDescription = () => {
   return (
     <div>
       <div className={classes.title}>Offering Overview</div>
-      <div className={classes.subTitle}>Pool Description (Optional)</div>
+      <div className={classes.nameWrapper}>
+        <div className={classes.name}>{defaultOfferingName}</div>
+        <EditIcon />
+      </div>
+
       <div className={classes.description}>
         Offering Name and additonal information about your pool can be added
         here..
