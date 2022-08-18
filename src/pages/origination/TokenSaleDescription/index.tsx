@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme) => ({
   },
   name: {
     fontWeight: 700,
-    fontSize: 16,
+    fontSize: 18,
     color: theme.colors.white,
     marginRight: 10,
   },
@@ -92,7 +92,7 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
   },
   editDescriptionText: {
-    fontSize: 18,
+    fontSize: 14,
     color: theme.colors.secondary,
     cursor: 'pointer',
   },
