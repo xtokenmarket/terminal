@@ -1,5 +1,5 @@
 import { Button, makeStyles, TextField, Typography } from '@material-ui/core'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { ReactComponent as EditIcon } from 'assets/svgs/edit.svg'
 
 const useStyles = makeStyles((theme) => ({
@@ -40,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
       },
     },
   },
+  inputLabel: { color: `${theme.colors.white} !important` },
   inputBox: {
     color: theme.colors.white,
     border: `1px solid ${theme.colors.primary200} `,
@@ -95,10 +96,14 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.secondary,
     cursor: 'pointer',
   },
+  nameEditorWrapper: {
+    margin: '20px 0',
+  },
 }))
 
 interface IState {
   description: string
+  name: string
   isDescriptionEditing: boolean
   isNameEditing: boolean
 }
@@ -111,18 +116,34 @@ export const TokenSaleDescription = (props: IProps) => {
   const classes = useStyles()
   const [state, setState] = useState<IState>({
     description: '',
+    name: '',
     isDescriptionEditing: false,
     isNameEditing: false,
   })
 
-  const { description, isDescriptionEditing } = state
+  const { description, name, isDescriptionEditing, isNameEditing } = state
   const { defaultOfferingName } = props
 
-  const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    setState((prev) => ({
+      ...prev,
+      name: defaultOfferingName,
+    }))
+  }, [])
+
+  const onDescriptionChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.value.length > 200) return
     setState((prev) => ({
       ...prev,
       description: event.target.value,
+    }))
+  }
+
+  const onNameChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value.length > 20) return
+    setState((prev) => ({
+      ...prev,
+      name: event.target.value,
     }))
   }
 
@@ -137,15 +158,48 @@ export const TokenSaleDescription = (props: IProps) => {
     }))
   }
 
+  const toggleEditNameMode = () => {
+    setState((prev) => ({
+      ...prev,
+      isNameEditing: !isNameEditing,
+    }))
+  }
+
   return (
     <div className={classes.root}>
       <div className={classes.title}>Offering Overview</div>
-      <div className={classes.nameWrapper}>
-        <div className={classes.name}>{defaultOfferingName}</div>
-        <div className={classes.editWrapper}>
-          <EditIcon />
+      {isNameEditing ? (
+        <div className={classes.nameEditorWrapper}>
+          <TextField
+            multiline
+            className={classes.input}
+            value={state.name}
+            onChange={onNameChange}
+            variant="outlined"
+            fullWidth
+            label="Offering Name"
+            InputLabelProps={{
+              className: classes.inputLabel,
+            }}
+          />
+          <div className={classes.textLimitation}>{name.length}/20</div>
+          <div className={classes.buttonsWrapper}>
+            <div className={classes.cancelButton} onClick={toggleEditNameMode}>
+              CANCEL
+            </div>
+            <Button className={classes.button} onClick={onDescriptionSave}>
+              <Typography className={classes.text}>SAVE</Typography>
+            </Button>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className={classes.nameWrapper}>
+          <div className={classes.name}>{defaultOfferingName}</div>
+          <div className={classes.editWrapper} onClick={toggleEditNameMode}>
+            <EditIcon />
+          </div>
+        </div>
+      )}
 
       <div className={classes.description}>
         Offering Name and additonal information about your pool can be added
@@ -157,7 +211,7 @@ export const TokenSaleDescription = (props: IProps) => {
             multiline
             className={classes.input}
             value={state.description}
-            onChange={onChange}
+            onChange={onDescriptionChange}
             variant="outlined"
             fullWidth
           />
