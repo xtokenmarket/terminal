@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     width: '70%',
   },
-  editWrapper: {
+  editIconWrapper: {
     cursor: 'pointer',
   },
   editDescriptionText: {
@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.secondary,
     cursor: 'pointer',
   },
-  nameEditorWrapper: {
+  editorWrapper: {
     margin: '20px 0',
   },
   description: {
@@ -175,7 +175,7 @@ export const TokenSaleDescription = (props: IProps) => {
     <div className={classes.root}>
       <div className={classes.title}>Offering Details</div>
       {isNameEditing ? (
-        <div className={classes.nameEditorWrapper}>
+        <div className={classes.editorWrapper}>
           <TextField
             multiline
             className={classes.input}
@@ -201,7 +201,7 @@ export const TokenSaleDescription = (props: IProps) => {
       ) : (
         <div className={classes.nameWrapper}>
           <div className={classes.name}>{offeringName}</div>
-          <div className={classes.editWrapper} onClick={toggleEditNameMode}>
+          <div className={classes.editIconWrapper} onClick={toggleEditNameMode}>
             <EditIcon />
           </div>
         </div>
@@ -212,7 +212,7 @@ export const TokenSaleDescription = (props: IProps) => {
         here..
       </div>
       {isDescriptionEditing ? (
-        <>
+        <div className={classes.editorWrapper}>
           <TextField
             multiline
             className={classes.input}
@@ -220,6 +220,10 @@ export const TokenSaleDescription = (props: IProps) => {
             onChange={onDescriptionChange}
             variant="outlined"
             fullWidth
+            label="Offering Description"
+            InputLabelProps={{
+              className: classes.inputLabel,
+            }}
           />
           <div className={classes.textLimitation}>{description.length}/200</div>
           <div className={classes.buttonsWrapper}>
@@ -233,7 +237,7 @@ export const TokenSaleDescription = (props: IProps) => {
               <Typography className={classes.text}>SAVE</Typography>
             </Button>
           </div>
-        </>
+        </div>
       ) : (
         <>
           <div className={classes.description}>{description} </div>
