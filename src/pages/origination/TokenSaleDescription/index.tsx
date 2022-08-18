@@ -167,7 +167,7 @@ export const TokenSaleDescription = (props: IProps) => {
 
   return (
     <div className={classes.root}>
-      <div className={classes.title}>Offering Overview</div>
+      <div className={classes.title}>Offering Details</div>
       {isNameEditing ? (
         <div className={classes.nameEditorWrapper}>
           <TextField
