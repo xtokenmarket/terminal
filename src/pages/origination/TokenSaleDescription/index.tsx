@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 700,
     fontSize: 16,
     color: theme.colors.white,
+    marginRight: 10,
   },
   description: {
     fontSize: 12,
@@ -27,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
       borderColor: theme.colors.primary200,
       borderWidth: 1,
     },
-    width: '70%',
     '& .Mui-focused': {
       '& .MuiOutlinedInput-notchedOutline': {
         borderColor: theme.colors.primary100,
@@ -52,7 +52,6 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 15,
   },
   button: {
-    marginTop: 14,
     '&:hover': {
       opacity: 0.7,
       backgroundColor: theme.colors.secondary,
@@ -74,6 +73,17 @@ const useStyles = makeStyles((theme) => ({
   nameWrapper: {
     display: 'flex',
     alignItems: 'center',
+  },
+  cancelButton: {
+    color: theme.colors.white,
+  },
+  buttonsWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  root: {
+    width: '70%',
   },
 }))
 
@@ -107,7 +117,7 @@ export const TokenSaleDescription = (props: IProps) => {
   }
 
   return (
-    <div>
+    <div className={classes.root}>
       <div className={classes.title}>Offering Overview</div>
       <div className={classes.nameWrapper}>
         <div className={classes.name}>{defaultOfferingName}</div>
@@ -127,8 +137,8 @@ export const TokenSaleDescription = (props: IProps) => {
         fullWidth
       />
       <div className={classes.textLimitation}>{description.length}/200</div>
-      <div>
-        <div>CANCEL</div>
+      <div className={classes.buttonsWrapper}>
+        <div className={classes.cancelButton}>CANCEL</div>
         <Button className={classes.button} onClick={onDescriptionSave}>
           <Typography className={classes.text}>SAVE</Typography>
         </Button>
