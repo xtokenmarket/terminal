@@ -74,6 +74,10 @@ const useStyles = makeStyles((theme) => ({
   tooltipArrow: {
     color: theme.colors.primary300,
   },
+  hr: {
+    borderColor: theme.colors.primary200,
+    marginTop: 20,
+  },
 }))
 
 type RouteParams = {
@@ -471,6 +475,7 @@ const TokenSaleDetails = () => {
               )}`}
               offeringDescription={'Default description'}
             />
+            <hr className={cl.hr} />
             <SetWhitelistModal
               poolAddress={poolAddress}
               open={state.open}
