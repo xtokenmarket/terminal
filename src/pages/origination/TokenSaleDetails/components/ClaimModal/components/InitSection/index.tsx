@@ -19,6 +19,7 @@ interface IProps {
   onClose: () => void
   setTxId: (id: string) => void
   isOwnerOrManager?: boolean
+  isClaimToken: boolean
 }
 
 interface IState {
@@ -33,6 +34,7 @@ export const InitSection = ({
   onClose,
   setTxId,
   isOwnerOrManager,
+  isClaimToken,
 }: IProps) => {
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
@@ -67,12 +69,12 @@ export const InitSection = ({
       setState({ isClaiming: true })
 
       const txId = await fungibleOriginationPool[
-        isOwnerOrManager ? 'claimPurchaseToken' : 'claimTokens'
+        !isClaimToken ? 'claimPurchaseToken' : 'claimTokens'
       ]()
 
       const finalTxId = await fungibleOriginationPool.waitUntilClaim(
         txId,
-        isOwnerOrManager
+        isClaimToken
       )
 
       setTxId(finalTxId)

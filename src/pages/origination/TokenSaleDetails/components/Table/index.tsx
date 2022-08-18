@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   item: OriginationDetailItem
   label: string
-  toggleModal?: () => void
+  toggleModal?: (label?: string) => void
   isOwnerOrManager?: boolean
   isVestedPropertiesShow?: boolean
   isOfferUnsuccessful?: boolean
@@ -74,6 +74,7 @@ interface IProps {
   isSaleCompleted?: boolean
   isClaimButtonDisabled?: boolean
   isClaimButtonShow?: boolean
+  setIsClaimToken?: boolean
 }
 
 export const Table = ({
@@ -93,6 +94,7 @@ export const Table = ({
   isSaleCompleted,
   isClaimButtonDisabled,
   isClaimButtonShow,
+  setIsClaimToken,
 }: IProps) => {
   const [saleInitiated, setSaleInitiated] = useState(false)
   const { account, library: provider } = useConnectedWeb3Context()
@@ -114,10 +116,12 @@ export const Table = ({
     const ClaimButton = () => (
       <Button
         className={cl.button}
-        onClick={toggleModal}
+        onClick={() => toggleModal && toggleModal(label || '')}
         disabled={isClaimButtonDisabled}
       >
-        <Typography className={cl.text}>CLAIM</Typography>
+        <Typography className={cl.text}>
+          {label === 'My Position' ? 'CLAIM' : 'CLAIM PURCHASE TOKEN'}
+        </Typography>
       </Button>
     )
     switch (label) {
@@ -151,7 +155,7 @@ export const Table = ({
               <Button
                 id="initiateSale"
                 className={cl.button}
-                onClick={toggleModal}
+                onClick={() => toggleModal && toggleModal()}
                 disabled={isInitiateSaleButtonDisabled}
               >
                 <Typography className={cl.text}>INITIATE SALE</Typography>
