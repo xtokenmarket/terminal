@@ -76,6 +76,8 @@ const useStyles = makeStyles((theme) => ({
   },
   cancelButton: {
     color: theme.colors.white,
+    fontSize: 12,
+    cursor: 'pointer',
   },
   buttonsWrapper: {
     display: 'flex',
@@ -84,6 +86,9 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     width: '70%',
+  },
+  editWrapper: {
+    cursor: 'pointer',
   },
 }))
 
@@ -121,7 +126,9 @@ export const TokenSaleDescription = (props: IProps) => {
       <div className={classes.title}>Offering Overview</div>
       <div className={classes.nameWrapper}>
         <div className={classes.name}>{defaultOfferingName}</div>
-        <EditIcon />
+        <div className={classes.editWrapper}>
+          <EditIcon />
+        </div>
       </div>
 
       <div className={classes.description}>
