@@ -23,11 +23,20 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.primary200,
   },
   input: {
+    '& .MuiOutlinedInput-notchedOutline': {
+      borderColor: theme.colors.primary200,
+      borderWidth: 1,
+    },
     width: '70%',
     '& .Mui-focused': {
       '& .MuiOutlinedInput-notchedOutline': {
-        borderColor: theme.colors.primary200,
+        borderColor: theme.colors.primary100,
         borderWidth: 1,
+      },
+    },
+    '& .MuiOutlinedInput-root': {
+      '&:hover fieldset': {
+        borderColor: theme.colors.primary100,
       },
     },
   },
