@@ -7,6 +7,7 @@ import { Network } from 'utils/enums'
 import { isTestnet } from 'utils/network'
 import { fetchQuery } from 'utils/thegraph'
 import { parsePools, POOLS_QUERY } from './helper'
+import { useSnackbar } from 'notistack'
 
 interface IState {
   isLoading: boolean
@@ -18,6 +19,7 @@ const testNetworks = [Network.KOVAN, Network.RINKEBY, Network.GOERLI]
 export const useTerminalPools = () => {
   const [state, setState] = useState<IState>({ pools: [], isLoading: true })
   const { chainId } = useNetworkContext()
+  const { enqueueSnackbar } = useSnackbar()
 
   const loadPools = async () => {
     setState((prev) => ({ ...prev, isLoading: true }))
@@ -29,11 +31,10 @@ export const useTerminalPools = () => {
 
       const filteredPools = getFilteredPools(pools, chainId, true)
 
-      setState((prev) => ({
-        ...prev,
+      setState({
         pools: filteredPools as ITerminalPool[],
         isLoading: false,
-      }))
+      })
     } catch (error) {
       try {
         const graphqlUrls = Object.values(GRAPHQL_URLS).filter(
@@ -49,13 +50,18 @@ export const useTerminalPools = () => {
           })
           .flat()
         const filteredPools = getFilteredPools(pools, chainId, false)
-        setState((prev) => ({
-          ...prev,
+        setState({
           pools: filteredPools,
           isLoading: false,
-        }))
+        })
       } catch (e) {
-        setState((prev) => ({ ...prev, isLoading: false }))
+        enqueueSnackbar('Error while fetching pools data. Please try again!', {
+          variant: 'error',
+        })
+        setState((prev) => ({
+          ...prev,
+          isLoading: false,
+        }))
       }
     }
   }
