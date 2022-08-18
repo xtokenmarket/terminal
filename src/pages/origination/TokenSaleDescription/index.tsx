@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
     marginRight: 10,
   },
-  description: {
+  hint: {
     fontSize: 12,
     color: theme.colors.primary100,
     marginBottom: 15,
@@ -99,6 +99,10 @@ const useStyles = makeStyles((theme) => ({
   nameEditorWrapper: {
     margin: '20px 0',
   },
+  description: {
+    color: theme.colors.white,
+    fontSize: 18,
+  },
 }))
 
 interface IState {
@@ -109,7 +113,8 @@ interface IState {
 }
 
 interface IProps {
-  defaultOfferingName: string
+  offeringName: string
+  offeringDescription: string
 }
 
 export const TokenSaleDescription = (props: IProps) => {
@@ -122,12 +127,13 @@ export const TokenSaleDescription = (props: IProps) => {
   })
 
   const { description, name, isDescriptionEditing, isNameEditing } = state
-  const { defaultOfferingName } = props
+  const { offeringName, offeringDescription } = props
 
   useEffect(() => {
     setState((prev) => ({
       ...prev,
-      name: defaultOfferingName,
+      name: offeringName,
+      description: offeringDescription,
     }))
   }, [])
 
@@ -194,14 +200,14 @@ export const TokenSaleDescription = (props: IProps) => {
         </div>
       ) : (
         <div className={classes.nameWrapper}>
-          <div className={classes.name}>{defaultOfferingName}</div>
+          <div className={classes.name}>{offeringName}</div>
           <div className={classes.editWrapper} onClick={toggleEditNameMode}>
             <EditIcon />
           </div>
         </div>
       )}
 
-      <div className={classes.description}>
+      <div className={classes.hint}>
         Offering Name and additonal information about your pool can be added
         here..
       </div>
@@ -230,7 +236,7 @@ export const TokenSaleDescription = (props: IProps) => {
         </>
       ) : (
         <>
-          <div>{description} </div>
+          <div className={classes.description}>{description} </div>
           <div
             className={classes.editDescriptionText}
             onClick={toggleEditDescriptionMode}

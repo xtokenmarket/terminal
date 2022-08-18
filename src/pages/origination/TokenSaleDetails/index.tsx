@@ -464,11 +464,12 @@ const TokenSaleDetails = () => {
         ) : (
           <div className={cl.root}>
             <TokenSaleDescription
-              defaultOfferingName={`${
+              offeringName={`${
                 tokenOffer.offeringOverview.offerToken.symbol
               } ${formatDateTime(
                 tokenOffer.originationRow.createdAt.toNumber()
               )}`}
+              offeringDescription={'Default description'}
             />
             <SetWhitelistModal
               poolAddress={poolAddress}
