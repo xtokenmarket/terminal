@@ -135,19 +135,8 @@ export const OutputEstimation = (props: IProps) => {
                 userPositionData.amountAvailableToVest,
                 offerData.offerToken.decimals
               )
-            )}
-            {offerData.offerToken.price && (
-              <span>
-                ~ $
-                {numberWithCommas(
-                  getTotalTokenPrice(
-                    userPositionData.amountAvailableToVest,
-                    offerData.offerToken.decimals,
-                    offerData.offerToken.price
-                  )
-                )}
-              </span>
-            )}
+            )}{' '}
+            {offerData.offerToken.symbol}
           </Typography>
         </div>
         {vestState.step === VestStep.Info && (
@@ -165,7 +154,7 @@ export const OutputEstimation = (props: IProps) => {
         <Typography className={classes.label}>
           {vestState.step === VestStep.Info
             ? 'ALREADY VESTING'
-            : `TOTAL VESTING ${offerData.offerToken.symbol}`}
+            : 'TOTAL VESTING'}
         </Typography>
         <div className={classes.infoRow}>
           <TokenIcon
@@ -188,28 +177,8 @@ export const OutputEstimation = (props: IProps) => {
                     ),
                     offerData.offerToken.decimals
                   )
-                )}
-            &nbsp;
-            <span>
-              ~ $
-              {vestState.step === VestStep.Info
-                ? numberWithCommas(
-                    getTotalTokenPrice(
-                      userPositionData.amountvested,
-                      offerData.offerToken.decimals,
-                      offerData.offerToken.price
-                    )
-                  )
-                : numberWithCommas(
-                    getTotalTokenPrice(
-                      userPositionData.amountvested.add(
-                        userPositionData.amountAvailableToVest
-                      ),
-                      offerData.offerToken.decimals,
-                      offerData.offerToken.price
-                    )
-                  )}
-            </span>
+                )}{' '}
+            {offerData.offerToken.symbol}
           </Typography>
         </div>
       </div>

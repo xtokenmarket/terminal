@@ -267,7 +267,7 @@ export interface ITokenOffer {
   userPosition: IUserPosition
   offeringSummary: IOfferingSummary
   sponsorTokensClaimed: boolean
-  offerTokenBalance: BigNumber
+  purchaseTokenBalance: BigNumber
 }
 
 interface Label {
@@ -354,8 +354,10 @@ export type OriginationDetailItem =
   | IOfferingSummary
 
 export interface IClaimData {
-  token: IToken
-  amount: BigNumber
+  offerToken?: IToken
+  offerTokenAmount?: BigNumber
+  purchaseToken?: IToken
+  purchaseTokenAmount?: BigNumber
 }
 
 export interface IOriginationPool {
