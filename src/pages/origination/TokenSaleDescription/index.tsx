@@ -90,10 +90,17 @@ const useStyles = makeStyles((theme) => ({
   editWrapper: {
     cursor: 'pointer',
   },
+  editDescriptionText: {
+    fontSize: 18,
+    color: theme.colors.secondary,
+    cursor: 'pointer',
+  },
 }))
 
 interface IState {
   description: string
+  isDescriptionEditing: boolean
+  isNameEditing: boolean
 }
 
 interface IProps {
@@ -104,9 +111,11 @@ export const TokenSaleDescription = (props: IProps) => {
   const classes = useStyles()
   const [state, setState] = useState<IState>({
     description: '',
+    isDescriptionEditing: false,
+    isNameEditing: false,
   })
 
-  const { description } = state
+  const { description, isDescriptionEditing } = state
   const { defaultOfferingName } = props
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -119,6 +128,13 @@ export const TokenSaleDescription = (props: IProps) => {
 
   const onDescriptionSave = () => {
     console.log('onDescriptionSave click')
+  }
+
+  const toggleEditDescriptionMode = () => {
+    setState((prev) => ({
+      ...prev,
+      isDescriptionEditing: !isDescriptionEditing,
+    }))
   }
 
   return (
@@ -135,21 +151,40 @@ export const TokenSaleDescription = (props: IProps) => {
         Offering Name and additonal information about your pool can be added
         here..
       </div>
-      <TextField
-        multiline
-        className={classes.input}
-        value={state.description}
-        onChange={onChange}
-        variant="outlined"
-        fullWidth
-      />
-      <div className={classes.textLimitation}>{description.length}/200</div>
-      <div className={classes.buttonsWrapper}>
-        <div className={classes.cancelButton}>CANCEL</div>
-        <Button className={classes.button} onClick={onDescriptionSave}>
-          <Typography className={classes.text}>SAVE</Typography>
-        </Button>
-      </div>
+      {isDescriptionEditing ? (
+        <>
+          <TextField
+            multiline
+            className={classes.input}
+            value={state.description}
+            onChange={onChange}
+            variant="outlined"
+            fullWidth
+          />
+          <div className={classes.textLimitation}>{description.length}/200</div>
+          <div className={classes.buttonsWrapper}>
+            <div
+              className={classes.cancelButton}
+              onClick={toggleEditDescriptionMode}
+            >
+              CANCEL
+            </div>
+            <Button className={classes.button} onClick={onDescriptionSave}>
+              <Typography className={classes.text}>SAVE</Typography>
+            </Button>
+          </div>
+        </>
+      ) : (
+        <>
+          <div>{description} </div>
+          <div
+            className={classes.editDescriptionText}
+            onClick={toggleEditDescriptionMode}
+          >
+            Edit Description
+          </div>{' '}
+        </>
+      )}
     </div>
   )
 }
