@@ -87,6 +87,9 @@ const useStyles = makeStyles((theme) => ({
   },
   root: {
     width: '70%',
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
   },
   editIconWrapper: {
     cursor: 'pointer',
