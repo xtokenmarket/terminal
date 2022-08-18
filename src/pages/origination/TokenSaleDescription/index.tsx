@@ -1,4 +1,4 @@
-import { makeStyles, TextField } from '@material-ui/core'
+import { Button, makeStyles, TextField, Typography } from '@material-ui/core'
 import { ChangeEvent, useState } from 'react'
 
 const useStyles = makeStyles((theme) => ({
@@ -51,6 +51,21 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.primary100,
     marginBottom: 15,
   },
+  button: {
+    marginTop: 14,
+    '&:hover': {
+      opacity: 0.7,
+      backgroundColor: theme.colors.secondary,
+    },
+    padding: '8px 20px',
+    backgroundColor: theme.colors.secondary,
+    borderRadius: 4,
+  },
+  text: {
+    color: theme.colors.primary700,
+    fontSize: 14,
+    fontWeight: 600,
+  },
 }))
 
 interface IState {
@@ -73,12 +88,17 @@ export const TokenSaleDescription = () => {
     }))
   }
 
+  const onDescriptionSave = () => {
+    console.log('onDescriptionSave click')
+  }
+
   return (
     <div>
       <div className={classes.title}>Offering Overview</div>
       <div className={classes.subTitle}>Pool Description (Optional)</div>
       <div className={classes.description}>
-        Additonal information about your pool can be added here.
+        Offering Name and additonal information about your pool can be added
+        here..
       </div>
       <TextField
         multiline
@@ -89,6 +109,12 @@ export const TokenSaleDescription = () => {
         fullWidth
       />
       <div className={classes.textLimitation}>{description.length}/200</div>
+      <div>
+        <div>CANCEL</div>
+        <Button className={classes.button} onClick={onDescriptionSave}>
+          <Typography className={classes.text}>SAVE</Typography>
+        </Button>
+      </div>
     </div>
   )
 }
