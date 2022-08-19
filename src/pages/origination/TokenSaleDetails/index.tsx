@@ -314,6 +314,9 @@ const TokenSaleDetails = () => {
     tokenOffer?.offeringOverview.totalOfferingAmount
   )
 
+  const isAmountRaisedZero = tokenOffer?.offeringSummary.amountsRaised.isZero()
+  const isVestingReserveZero = isReserveAmountZero && isVestingPeriodZero
+
   const isSaleCompleted =
     tokenOffer &&
     !tokenOffer?.offeringOverview.salesBegin.isZero() &&
@@ -322,9 +325,10 @@ const TokenSaleDetails = () => {
   const isOfferUnsuccessful =
     tokenOffer &&
     isSaleCompleted &&
-    tokenOffer.offeringOverview.reserveAmount.gt(
+    (tokenOffer.offeringOverview.reserveAmount.gt(
       tokenOffer.offeringSummary.amountsRaised
-    )
+    ) ||
+      isAmountRaisedZero)
 
   const isVestButtonShow =
     tokenOffer &&
@@ -353,9 +357,6 @@ const TokenSaleDetails = () => {
     isVestingPeriodZero &&
     !tokenOffer?.purchaseTokenBalance.gt(0)
 
-  const isClaimManager =
-    isOwnerOrManager && isSaleCompleted && !tokenOffer.sponsorTokensClaimed
-
   const isUnsuccessfulVestingSaleClaimUser =
     isOfferUnsuccessful &&
     tokenOffer.userPosition.amountInvested.gt(0) &&
@@ -369,25 +370,35 @@ const TokenSaleDetails = () => {
   const isUnsuccessfulSaleClaimUser =
     isOfferUnsuccessful && tokenOffer.userPosition.amountInvested.gt(0)
 
-  const isClaimButtonShow =
+  // user/manager claim their offer/purchase tokens
+  const isClaimButtonShowAfterSale =
     tokenOffer &&
     isSaleInitiated &&
-    !(isReserveAmountZero && isVestingPeriodZero) &&
-    isVestingPeriodZero &&
+    !isVestingReserveZero &&
+    isSaleCompleted &&
     (isUnsuccessfulVestingSaleClaimUser ||
       isSuccessfulSaleClaimUser ||
       isUnsuccessfulSaleClaimUser)
 
-  const isClaimPurchaseTokenButtonShow =
-    (isSaleInitiated &&
-      isVestingPeriodZero &&
-      isOwnerOrManager &&
-      isReserveAmountZero &&
-      (!isSaleCompleted ||
-        ((tokenOffer?.purchaseTokenBalance.gt(0) ||
-          unsoldOfferTokenAmount?.gt(0)) &&
-          isSaleCompleted))) ||
-    (isClaimManager && (!isVestingPeriodZero || !isReserveAmountZero))
+  // manager claim all the purchase tokens and unsold offer tokens(if exist) after sale
+  const isClaimPurchaseTokenButtonShowAfterSale =
+    isOwnerOrManager && isSaleCompleted && !tokenOffer.sponsorTokensClaimed
+
+  // vesting and reserve === 0
+  // manager claim all the purchase tokens during sale
+  const isClaimPurchaseTokenButtonShowDuringSale =
+    isOwnerOrManager &&
+    !isSaleCompleted &&
+    isVestingReserveZero &&
+    tokenOffer?.purchaseTokenBalance.gt(0)
+
+  // vesting and reserve === 0
+  // manager claim all the purchase tokens and unsold offer tokens(if exist) after sale
+  const isClaimPurchaseTokenButtonShowAfterSaleVestingReserveZero =
+    isOwnerOrManager &&
+    isSaleCompleted &&
+    isVestingReserveZero &&
+    (tokenOffer?.purchaseTokenBalance.gt(0) || unsoldOfferTokenAmount?.gt(0))
 
   const isUserPositionShow =
     tokenOffer &&
@@ -455,7 +466,10 @@ const TokenSaleDetails = () => {
                 label={'Offering Summary'}
                 isOfferUnsuccessful={isOfferUnsuccessful}
                 toggleModal={toggleClaimModal}
-                isClaimButtonShow={isClaimPurchaseTokenButtonShow}
+                isClaimButtonShow={
+                  isClaimPurchaseTokenButtonShowAfterSale ||
+                  isClaimPurchaseTokenButtonShowAfterSaleVestingReserveZero
+                }
               />
             ) : (
               <Table
@@ -485,7 +499,7 @@ const TokenSaleDetails = () => {
                     tokenOffer.whitelist.pricingFormula ===
                     EPricingFormula.Standard
                   }
-                  isClaimButtonShow={isClaimPurchaseTokenButtonShow}
+                  isClaimButtonShow={isClaimPurchaseTokenButtonShowDuringSale}
                   isClaimButtonDisabled={
                     isClaimPurchaseTokenButtonDisabled || !isDuringWhitelistSale
                   }
@@ -541,7 +555,7 @@ const TokenSaleDetails = () => {
                     tokenOffer.publicSale.pricingFormula ===
                     EPricingFormula.Standard
                   }
-                  isClaimButtonShow={isClaimPurchaseTokenButtonShow}
+                  isClaimButtonShow={isClaimPurchaseTokenButtonShowDuringSale}
                   toggleModal={toggleClaimModal}
                   isClaimButtonDisabled={
                     isClaimPurchaseTokenButtonDisabled ||
@@ -567,7 +581,7 @@ const TokenSaleDetails = () => {
                 isVestedPropertiesShow={isVestedPropertiesShow}
                 isOfferUnsuccessful={isOfferUnsuccessful}
                 isClaimButtonDisabled={isClaimPurchaseTokenButtonDisabled}
-                isClaimButtonShow={isClaimButtonShow}
+                isClaimButtonShow={isClaimButtonShowAfterSale}
               />
             )}
             {isVestButtonShow && (
