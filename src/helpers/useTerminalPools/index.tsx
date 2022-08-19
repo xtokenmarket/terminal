@@ -2,12 +2,13 @@ import axios from 'axios'
 import { ChainId, GRAPHQL_URLS, TERMINAL_API_URL } from 'config/constants'
 import { useNetworkContext } from 'contexts/networkContext'
 import { useEffect, useState } from 'react'
+import { useSnackbar } from 'notistack'
 import { ITerminalPool } from 'types'
 import { Network } from 'utils/enums'
 import { isTestnet } from 'utils/network'
 import { fetchQuery } from 'utils/thegraph'
+
 import { parsePools, POOLS_QUERY } from './helper'
-import { useSnackbar } from 'notistack'
 
 interface IState {
   isLoading: boolean

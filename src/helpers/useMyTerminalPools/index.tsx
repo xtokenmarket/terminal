@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useConnectedWeb3Context, useNetworkContext } from 'contexts'
 import { useEffect, useState } from 'react'
-import { waitSeconds } from 'utils'
+import { useSnackbar } from 'notistack'
 import { TERMINAL_API_URL } from 'config/constants'
 import { ITerminalPool } from 'types'
 import { isTestnet } from 'utils/network'
@@ -18,13 +18,12 @@ export const useMyTerminalPools = () => {
   const [state, setState] = useState<IState>({ pools: [], loading: true })
   const { account, networkId } = useConnectedWeb3Context()
   const { chainId } = useNetworkContext()
+  const { enqueueSnackbar } = useSnackbar()
 
   const loadPools = async () => {
     setState((prev) => ({ ...prev, loading: true }))
 
     try {
-      await waitSeconds(1)
-
       if (account) {
         const userPools = (
           await axios.get<any[]>(
@@ -56,6 +55,9 @@ export const useMyTerminalPools = () => {
         setState((prev) => ({ ...prev, loading: false }))
       }
     } catch (error) {
+      enqueueSnackbar('Error while fetching pools data. Please try again!', {
+        variant: 'error',
+      })
       setState((prev) => ({ ...prev, loading: false }))
     }
   }
