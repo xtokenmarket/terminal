@@ -29,7 +29,7 @@ function App() {
             vertical: 'top',
             horizontal: 'right',
           }}
-          autoHideDuration={4000}
+          autoHideDuration={8000}
           maxSnack={3}
         >
           <ConnectedWeb3>
