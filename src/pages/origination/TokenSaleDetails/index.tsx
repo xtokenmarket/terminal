@@ -334,7 +334,6 @@ const TokenSaleDetails = () => {
     tokenOffer &&
     tokenOffer?.userPosition.amountAvailableToVest.gt(0) &&
     tokenOffer.offeringOverview.vestingPeriod.gt(0) &&
-    !isOwnerOrManager &&
     !isOfferUnsuccessful &&
     isSaleCompleted
 
@@ -376,6 +375,8 @@ const TokenSaleDetails = () => {
     isSaleInitiated &&
     !isVestingReserveZero &&
     isSaleCompleted &&
+    // vesting period must === 0 in this case. Otherwise it should show "vest"
+    isVestingPeriodZero &&
     (isUnsuccessfulVestingSaleClaimUser ||
       isSuccessfulSaleClaimUser ||
       isUnsuccessfulSaleClaimUser)
@@ -398,7 +399,8 @@ const TokenSaleDetails = () => {
     isOwnerOrManager &&
     isSaleCompleted &&
     isVestingReserveZero &&
-    (tokenOffer?.purchaseTokenBalance.gt(0) || unsoldOfferTokenAmount?.gt(0))
+    (tokenOffer?.purchaseTokenBalance.gt(0) ||
+      (unsoldOfferTokenAmount?.gt(0) && !tokenOffer.sponsorTokensClaimed))
 
   const isUserPositionShow =
     tokenOffer &&
@@ -507,7 +509,12 @@ const TokenSaleDetails = () => {
                 <div className={cl.buttonWrapper}>
                   <Tooltip
                     title={
-                      isAddressCapExceeded && !isWhitelistSaleEnded
+                      isAddressCapExceeded &&
+                      !isWhitelistSaleEnded &&
+                      !(
+                        tokenOffer.whitelist.whitelist &&
+                        !tokenOffer.whitelist.isAddressWhitelisted
+                      )
                         ? 'Invested amount has reached the address cap.'
                         : ''
                     }
@@ -555,7 +562,10 @@ const TokenSaleDetails = () => {
                     tokenOffer.publicSale.pricingFormula ===
                     EPricingFormula.Standard
                   }
-                  isClaimButtonShow={isClaimPurchaseTokenButtonShowDuringSale}
+                  isClaimButtonShow={
+                    isClaimPurchaseTokenButtonShowDuringSale &&
+                    isWhitelistSaleEnded
+                  }
                   toggleModal={toggleClaimModal}
                   isClaimButtonDisabled={
                     isClaimPurchaseTokenButtonDisabled ||
