@@ -65,7 +65,7 @@ export const SuccessSection = (props: IProps) => {
           className={classes.img}
         />
         <Typography className={classes.title}>
-          {data.offerToken?.symbol} token sale created!
+          {data.offerToken?.symbol} token offering created!
         </Typography>
         <Typography className={classes.description}>
           You have successfully created a {data.offerToken?.symbol} for{' '}

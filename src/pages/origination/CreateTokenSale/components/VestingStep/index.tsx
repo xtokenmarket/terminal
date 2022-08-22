@@ -86,7 +86,7 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
       <Grid item xs={12} md={5} className={classes.formContainer}>
         <Grid item xs={12}>
           <Typography className={classes.label}>
-            Do you want to add a vesting period to your token sale?
+            Do you want to add a vesting period to your token offering?
           </Typography>
           <Radio
             id={'isSetVesting'}

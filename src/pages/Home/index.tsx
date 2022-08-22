@@ -136,10 +136,12 @@ const Home = () => {
 
   return (
     <div className={classes.root}>
-      <Typography className={classes.header}>The Xtoken terminal</Typography>
+      <Typography className={classes.header}>
+        Permissionless Investment Bank
+      </Typography>
       <Typography className={classes.topDescription}>
-        xToken Terminal is a permissionless investment bank, providing projects
-        and individuals with seamless access to fundamental on-chain primitives.
+        xToken Terminal provides projects and individuals with seamless access
+        to fundamental on-chain primitives
       </Typography>
       <div>
         <Grid container spacing={5}>
