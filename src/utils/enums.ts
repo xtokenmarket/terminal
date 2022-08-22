@@ -178,7 +178,7 @@ export enum InfoText {
   OfferToken = 'The token being offered to contributors',
   PurchaseToken = 'The token used by contributors to acquire the offer token',
   OfferTokenAmount = 'Maximum amount of token offered to contributors',
-  ReserveOfferTokenAmount = 'Minimum amount of purchase token raised for successful sale',
+  ReserveOfferTokenAmount = 'Minimum amount of purchase token raised for successful offering',
   OfferingPeriod = 'Duration of sale',
   Standard = 'All offer tokens sells for 1 USDC',
   Ascending = 'Price steadily goes up from offering standard price. ',
