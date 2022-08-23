@@ -100,15 +100,17 @@ export const Table = ({
   const { account, library: provider } = useConnectedWeb3Context()
   const { poolAddress } = useParams<{ poolAddress: string }>()
   useEffect(() => {
-    const fungibleOriginationPool = new FungiblePoolService(
-      provider,
-      account,
-      poolAddress
-    )
+    if (account || provider) {
+      const fungibleOriginationPool = new FungiblePoolService(
+        provider,
+        account,
+        poolAddress
+      )
 
-    fungibleOriginationPool
-      .isSaleInitiated()
-      .then((initiated) => setSaleInitiated(initiated))
+      fungibleOriginationPool
+        .isSaleInitiated()
+        .then((initiated) => setSaleInitiated(initiated))
+    }
   }, [account, provider, poolAddress])
   const cl = useStyles()
 

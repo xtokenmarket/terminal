@@ -194,7 +194,9 @@ export const SetWhitelistModal: React.FC<IProps> = ({
       setState({ maxLimit })
     }
 
-    getMaxLimit()
+    if (account || provider) {
+      getMaxLimit()
+    }
   }, [])
 
   const generateMerkleTreeRoot = async (signedPoolAddress: string) => {

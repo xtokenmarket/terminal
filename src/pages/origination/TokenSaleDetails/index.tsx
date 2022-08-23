@@ -15,6 +15,7 @@ import { InvestModal } from './components/InvestModal'
 import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
 import { VestModal } from './components/VestModal'
+import { useConnectedWeb3Context } from 'contexts'
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -99,6 +100,7 @@ const TokenSaleDetails = () => {
     undefined,
     true
   )
+  const { account, library: provider } = useConnectedWeb3Context()
 
   const [state, setState] = useState<IState>({
     isClaimModalOpen: false,
@@ -354,7 +356,7 @@ const TokenSaleDetails = () => {
     !isSaleCompleted &&
     isReserveAmountZero &&
     isVestingPeriodZero &&
-    !tokenOffer?.purchaseTokenBalance.gt(0)
+    !tokenOffer?.purchaseTokenBalance?.gt(0)
 
   const isUnsuccessfulVestingSaleClaimUser =
     isOfferUnsuccessful &&
@@ -603,39 +605,43 @@ const TokenSaleDetails = () => {
                 <Typography className={cl.text}>VEST</Typography>
               </Button>
             )}
-            <InitiateSaleModal
-              offerData={tokenOffer.offeringOverview}
-              onClose={toggleInitiateSaleModal}
-              onSuccess={onInitiateSuccess}
-              open={state.isInitiateSaleModalOpen}
-            />
-            <ClaimModal
-              poolAddress={poolAddress}
-              isOpen={state.isClaimModalOpen}
-              onClose={toggleClaimModal}
-              data={getClaimData()}
-              isOwnerOrManager={isOwnerOrManager}
-              onClaimSuccess={onClaimSuccess}
-              isClaimToken={state.isClaimToken}
-            />
-            <InvestModal
-              isWhitelist={state.isWhitelistInvestClicked}
-              offerData={tokenOffer.offeringOverview}
-              onClose={toggleInvestModal}
-              onSuccess={onInvestSuccess}
-              open={state.isInvestModalOpen}
-              addressCap={tokenOffer.whitelist.addressCap}
-              isSaleCompleted={isSaleCompleted}
-              whitelistData={tokenOffer.whitelist}
-              userPositionData={tokenOffer.userPosition}
-            />
-            <VestModal
-              offerData={tokenOffer.offeringOverview}
-              onClose={toggleVestModal}
-              onSuccess={onVestSuccess}
-              open={state.isVestModalOpen}
-              userPositionData={tokenOffer.userPosition}
-            />
+            {(account || provider) && (
+              <>
+                <InitiateSaleModal
+                  offerData={tokenOffer.offeringOverview}
+                  onClose={toggleInitiateSaleModal}
+                  onSuccess={onInitiateSuccess}
+                  open={state.isInitiateSaleModalOpen}
+                />
+                <ClaimModal
+                  poolAddress={poolAddress}
+                  isOpen={state.isClaimModalOpen}
+                  onClose={toggleClaimModal}
+                  data={getClaimData()}
+                  isOwnerOrManager={isOwnerOrManager}
+                  onClaimSuccess={onClaimSuccess}
+                  isClaimToken={state.isClaimToken}
+                />
+                <InvestModal
+                  isWhitelist={state.isWhitelistInvestClicked}
+                  offerData={tokenOffer.offeringOverview}
+                  onClose={toggleInvestModal}
+                  onSuccess={onInvestSuccess}
+                  open={state.isInvestModalOpen}
+                  addressCap={tokenOffer.whitelist.addressCap}
+                  isSaleCompleted={isSaleCompleted}
+                  whitelistData={tokenOffer.whitelist}
+                  userPositionData={tokenOffer.userPosition}
+                />
+                <VestModal
+                  offerData={tokenOffer.offeringOverview}
+                  onClose={toggleVestModal}
+                  onSuccess={onVestSuccess}
+                  open={state.isVestModalOpen}
+                  userPositionData={tokenOffer.userPosition}
+                />
+              </>
+            )}
           </div>
         )}
       </PageContent>
