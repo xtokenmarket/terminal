@@ -292,12 +292,17 @@ export const TableRow = ({
             <div className={cl.item}>
               <Typography>
                 {item.reserveAmount &&
-                  formatToShortNumber(
+                  `${formatToShortNumber(
+                    formatBigNumber(
+                      item.amountsRaised,
+                      item.purchaseToken.decimals
+                    )
+                  )}/${formatToShortNumber(
                     formatBigNumber(
                       item.reserveAmount,
                       item.purchaseToken.decimals
                     )
-                  )}
+                  )}`}
               </Typography>
               <Typography className={cl.symbol}>
                 {item.purchaseToken.symbol}

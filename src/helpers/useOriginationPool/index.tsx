@@ -246,6 +246,7 @@ export const useOriginationPool = (
       totalOfferingAmount,
       poolAddress,
       isOwnerOrManager: false,
+      amountsRaised: purchaseTokensAcquired,
     }
 
     const endOfWhitelistPeriod = saleInitiatedTimestamp.add(
