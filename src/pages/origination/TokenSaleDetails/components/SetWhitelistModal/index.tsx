@@ -12,15 +12,12 @@ import clsx from 'clsx'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { SuccessSection } from './SuccessSection'
 import { Modal } from 'components/Common/Modal'
-import { Input } from 'pages/origination/CreateTokenSale/components'
 import { ChainId, CHAIN_NAMES, ORIGINATION_API_URL } from 'config/constants'
 import { useSnackbar } from 'notistack'
 import axios from 'axios'
 import { FungiblePoolService } from 'services'
 import { IToken } from 'types'
-import { parseUnits } from 'ethers/lib/utils'
 import { BigNumber } from 'ethers'
-import { ZERO } from 'utils/number'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -98,9 +95,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
-  inputWrapper: {
-    margin: 32,
-  },
   underline: {
     height: 1,
     width: '90%',
@@ -141,9 +135,6 @@ interface IState {
   setWhitelistTx: string
   txState: TxState
   whitelistFile: File | null
-  value: string
-  errorMessage: string
-  maxLimit: BigNumber
 }
 
 export const SetWhitelistModal: React.FC<IProps> = ({
@@ -151,7 +142,6 @@ export const SetWhitelistModal: React.FC<IProps> = ({
   open,
   onClose,
   onSuccess,
-  purchaseToken,
   totalOfferingAmount,
 }) => {
   const classes = useStyles()
@@ -168,9 +158,6 @@ export const SetWhitelistModal: React.FC<IProps> = ({
       setWhitelistTx: '',
       txState: TxState.None,
       whitelistFile: null,
-      value: '',
-      errorMessage: '',
-      maxLimit: ZERO,
     }
   )
 
@@ -180,23 +167,6 @@ export const SetWhitelistModal: React.FC<IProps> = ({
     poolAddress
   )
 
-  useEffect(() => {
-    const getMaxLimit = async () => {
-      let maxLimit
-      try {
-        maxLimit =
-          await fungibleOriginationPool.getPurchaseAmountFromOfferAmount(
-            totalOfferingAmount
-          )
-      } catch (error) {
-        console.error('getPurchaseAmountFromOfferAmount error', error)
-      }
-      setState({ maxLimit })
-    }
-
-    getMaxLimit()
-  }, [])
-
   const generateMerkleTreeRoot = async (signedPoolAddress: string) => {
     const requestData = new FormData()
     requestData.append('file', state.whitelistFile as File)
@@ -204,10 +174,6 @@ export const SetWhitelistModal: React.FC<IProps> = ({
     requestData.append(
       'network',
       CHAIN_NAMES[networkId as ChainId]?.toLowerCase()
-    )
-    requestData.append(
-      'maxAmountPerAddress',
-      parseUnits(state.value, purchaseToken.decimals).toString()
     )
     requestData.append('signedPoolAddress', signedPoolAddress)
 
@@ -231,12 +197,12 @@ export const SetWhitelistModal: React.FC<IProps> = ({
     if (state.txState === TxState.Complete) {
       _clearTxState()
     }
-    setState({ whitelistFile: null, errorMessage: '' })
+    setState({ whitelistFile: null })
     onClose()
   }
 
   const handleSetWhitelistClick = async () => {
-    if (!account || !provider || !canSetWhitelist()) {
+    if (!account || !provider || !state.whitelistFile) {
       return
     }
 
@@ -267,22 +233,6 @@ export const SetWhitelistModal: React.FC<IProps> = ({
 
   const resetTxState = () => setState({ txState: TxState.None })
 
-  const onInputChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setState({ errorMessage: '' })
-    if (
-      parseUnits(event.target.value || '0', purchaseToken.decimals).gt(
-        state.maxLimit
-      )
-    ) {
-      setState({
-        errorMessage: 'Address cap exceeds total amount',
-      })
-    }
-    setState({ value: event.target.value })
-  }
-
   const onFileInputClick = () => {
     if (!hiddenFileInput.current) return
     hiddenFileInput.current.click()
@@ -294,10 +244,6 @@ export const SetWhitelistModal: React.FC<IProps> = ({
     if (!event.target.files) return
     const fileUploaded = event.target?.files[0]
     setState({ whitelistFile: fileUploaded })
-  }
-
-  const canSetWhitelist = () => {
-    return state.whitelistFile && state.value && parseFloat(state.value) > 0
   }
 
   const isDisabled =
@@ -363,18 +309,6 @@ export const SetWhitelistModal: React.FC<IProps> = ({
             </Button>
           </div>
 
-          <div className={classes.inputWrapper}>
-            <Input
-              id="addressCapInput"
-              inputLabel="Max Sale Per Allowlist Address"
-              value={state.value}
-              onChange={onInputChange}
-            />
-            <div className={classes.errorMessage}>
-              {state.errorMessage && state.errorMessage}
-            </div>
-          </div>
-
           <div className={classes.buttonWrapper}>
             <Button
               disabled={isDisabled}
@@ -383,7 +317,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
               className={clsx(
                 classes.button,
                 state.txState === TxState.InProgress && 'pending',
-                (!canSetWhitelist() || state.errorMessage) && 'disabled'
+                !state.whitelistFile && 'disabled'
               )}
               onClick={handleSetWhitelistClick}
             >
