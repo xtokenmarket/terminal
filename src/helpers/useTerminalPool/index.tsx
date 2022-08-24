@@ -397,10 +397,7 @@ export const useTerminalPool = (
         }
       }
 
-      const apr =
-        Number(pool.periodFinish) * 1000 > Number(Date.now())
-          ? pool.apr || 'N/A'
-          : '0'
+      const apr = pool.apr || 'N/A'
 
       setState({
         loading: false,
