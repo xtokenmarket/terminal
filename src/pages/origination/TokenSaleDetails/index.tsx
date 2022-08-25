@@ -217,6 +217,13 @@ const TokenSaleDetails = () => {
     await loadInfo(true, EOriginationEvent.Claim)
   }
 
+  const _onClose = (key: string) => {
+    setState((prev) => ({
+      ...prev,
+      [key]: false,
+    }))
+  }
+
   const isCliffPeriodPassed = () => {
     if (!tokenOffer) return false
 
@@ -606,43 +613,39 @@ const TokenSaleDetails = () => {
                 <Typography className={cl.text}>VEST</Typography>
               </Button>
             )}
-            {(account || provider) && (
-              <>
-                <InitiateSaleModal
-                  offerData={tokenOffer.offeringOverview}
-                  onClose={toggleInitiateSaleModal}
-                  onSuccess={onInitiateSuccess}
-                  open={state.isInitiateSaleModalOpen}
-                />
-                <ClaimModal
-                  poolAddress={poolAddress}
-                  isOpen={state.isClaimModalOpen}
-                  onClose={toggleClaimModal}
-                  data={getClaimData()}
-                  isOwnerOrManager={isOwnerOrManager}
-                  onClaimSuccess={onClaimSuccess}
-                  isClaimToken={state.isClaimToken}
-                />
-                <InvestModal
-                  isWhitelist={state.isWhitelistInvestClicked}
-                  offerData={tokenOffer.offeringOverview}
-                  onClose={toggleInvestModal}
-                  onSuccess={onInvestSuccess}
-                  open={state.isInvestModalOpen}
-                  addressCap={tokenOffer.whitelist.addressCap}
-                  isSaleCompleted={isSaleCompleted}
-                  whitelistData={tokenOffer.whitelist}
-                  userPositionData={tokenOffer.userPosition}
-                />
-                <VestModal
-                  offerData={tokenOffer.offeringOverview}
-                  onClose={toggleVestModal}
-                  onSuccess={onVestSuccess}
-                  open={state.isVestModalOpen}
-                  userPositionData={tokenOffer.userPosition}
-                />
-              </>
-            )}
+            <InitiateSaleModal
+              offerData={tokenOffer.offeringOverview}
+              onClose={() => _onClose('isInitiateSaleModalOpen')}
+              onSuccess={onInitiateSuccess}
+              open={state.isInitiateSaleModalOpen}
+            />
+            <ClaimModal
+              poolAddress={poolAddress}
+              isOpen={state.isClaimModalOpen}
+              onClose={() => _onClose('isClaimModalOpen')}
+              data={getClaimData()}
+              isOwnerOrManager={isOwnerOrManager}
+              onClaimSuccess={onClaimSuccess}
+              isClaimToken={state.isClaimToken}
+            />
+            <InvestModal
+              isWhitelist={state.isWhitelistInvestClicked}
+              offerData={tokenOffer.offeringOverview}
+              onClose={() => _onClose('isInvestModalOpen')}
+              onSuccess={onInvestSuccess}
+              open={state.isInvestModalOpen}
+              addressCap={tokenOffer.whitelist.addressCap}
+              isSaleCompleted={isSaleCompleted}
+              whitelistData={tokenOffer.whitelist}
+              userPositionData={tokenOffer.userPosition}
+            />
+            <VestModal
+              offerData={tokenOffer.offeringOverview}
+              onClose={() => _onClose('isVestModalOpen')}
+              onSuccess={onVestSuccess}
+              open={state.isVestModalOpen}
+              userPositionData={tokenOffer.userPosition}
+            />
           </div>
         )}
       </PageContent>
