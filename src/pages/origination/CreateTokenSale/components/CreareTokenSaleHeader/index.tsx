@@ -75,7 +75,7 @@ export const CreareTokenSaleHeader = ({ step, onCancel, onBack }: IProps) => {
 
   return (
     <div className={clsx(classes.headerTop)}>
-      <Typography className={classes.title}>Token Sale</Typography>
+      <Typography className={classes.title}>Token Offering</Typography>
       <div className={classes.headerDataContainer}>
         {!isFirstStep && (
           <div

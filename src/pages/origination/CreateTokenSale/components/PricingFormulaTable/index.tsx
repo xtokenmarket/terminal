@@ -79,7 +79,7 @@ export const PricingFormulaTable: React.FC<IProps> = ({
             {saleData.pricingFormula === EPricingFormula.Standard ? (
               <TableCell className={cl.tableCellPrice}>
                 <Typography variant="h6" className={cl.rowHeader}>
-                  Price
+                  Price per {offerToken.symbol}
                 </Typography>
               </TableCell>
             ) : (

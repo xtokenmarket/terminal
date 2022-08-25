@@ -123,6 +123,13 @@ const useStyles = makeStyles((theme) => ({
   link: {
     textDecoration: 'none',
   },
+  tooltip: {
+    backgroundColor: theme.colors.primary300,
+    fontFamily: 'Gilmer',
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
+    fontSize: 8,
+  },
 }))
 
 interface IProps {
@@ -289,20 +296,31 @@ export const TableRow = ({
             </div>
           </Td>
           <Td type={OfferingOverview.ReserveAmount} label={item.label}>
-            <div className={cl.item}>
-              <Typography>
-                {item.reserveAmount &&
-                  formatToShortNumber(
-                    formatBigNumber(
-                      item.reserveAmount,
-                      item.purchaseToken.decimals
-                    )
-                  )}
-              </Typography>
-              <Typography className={cl.symbol}>
-                {item.purchaseToken.symbol}
-              </Typography>
-            </div>
+            <Tooltip
+              title="Amount raised over offering reserve amount"
+              arrow
+              classes={{ tooltip: cl.tooltip }}
+            >
+              <div className={cl.item}>
+                <Typography>
+                  {item.reserveAmount &&
+                    `${formatToShortNumber(
+                      formatBigNumber(
+                        item.purchaseTokenRaised,
+                        item.purchaseToken.decimals
+                      )
+                    )}/${formatToShortNumber(
+                      formatBigNumber(
+                        item.reserveAmount,
+                        item.purchaseToken.decimals
+                      )
+                    )}`}
+                </Typography>
+                <Typography className={cl.symbol}>
+                  {item.purchaseToken.symbol}
+                </Typography>
+              </div>
+            </Tooltip>
           </Td>
 
           <Td type={OfferingOverview.VestingPeriod} label={item.label}>
@@ -621,12 +639,12 @@ export const TableRow = ({
                   </Typography>
                 </div>
               </Td>
-              <Td type={OfferingSummary.AmountsRaised} label={item.label}>
+              <Td type={OfferingSummary.PurchaseTokenRaised} label={item.label}>
                 <div className={cl.item}>
                   <Typography>
                     {formatToShortNumber(
                       formatBigNumber(
-                        item.amountsRaised,
+                        item.purchaseTokenRaised,
                         item.purchaseToken.decimals
                       )
                     )}

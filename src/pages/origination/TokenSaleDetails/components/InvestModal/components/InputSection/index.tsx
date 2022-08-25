@@ -107,8 +107,8 @@ export const InputSection = (props: IProps) => {
 
   useEffect(() => {
     const getMaxLimit = async () => {
-      const availableAmount = props.offerData.totalOfferingAmount.sub(
-        props.offerData.offerTokenAmountSold
+      const availableAmount = props.offerData?.totalOfferingAmount.sub(
+        props.offerData?.offerTokenAmountSold
       )
 
       const fungiblePool = new FungiblePoolService(
@@ -128,7 +128,9 @@ export const InputSection = (props: IProps) => {
       setState({ maxLimit })
     }
 
-    getMaxLimit()
+    if (provider) {
+      getMaxLimit()
+    }
   }, [])
 
   useEffect(() => {

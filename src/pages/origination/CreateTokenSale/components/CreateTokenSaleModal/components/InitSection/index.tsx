@@ -161,7 +161,7 @@ export const InitSection = (props: IProps) => {
         isCompleted: true,
       }))
     } catch (error) {
-      console.error('Error when creating token sale', error)
+      console.error('Error when creating token offering', error)
       const metamaskError = getMetamaskError(error)
       setState((prev) => ({
         ...prev,
@@ -187,7 +187,7 @@ export const InitSection = (props: IProps) => {
     <div className={classes.root}>
       <WarningInfo
         title="Important"
-        description="This will deploy your token sale contract. This action cannot be undone or reversed."
+        description="This will deploy your token offering contract. This action cannot be undone or reversed."
       />
 
       <Button
