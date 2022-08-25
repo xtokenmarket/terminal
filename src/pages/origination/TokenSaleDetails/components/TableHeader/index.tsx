@@ -180,7 +180,7 @@ export const TableHeader = (props: IProps) => {
               <div className={classes.item}>Tokens Sold</div>
             </Td>
             <Td type={OfferingSummary.PurchaseTokenRaised} label={props.label}>
-              <div className={classes.item}>Amount Raised</div>
+              <div className={classes.item}>Purchase Token Raised</div>
             </Td>
             <Td type={OfferingSummary.VestingPeriod} label={props.label}>
               <div className={classes.item}>Vesting Period</div>
