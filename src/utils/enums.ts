@@ -248,7 +248,7 @@ export enum OfferingSummary {
   OfferToken = 'offerToken',
   PurchaseToken = 'purchaseToken',
   TokensSold = 'tokensSold',
-  AmountsRaised = 'amountsRaised',
+  PurchaseTokenRaised = 'purchaseTokenRaised',
   VestingPeriod = 'vestingPeriod',
   CliffPeriod = 'cliffPeriod',
   SalesCompleted = 'salesCompleted',

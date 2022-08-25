@@ -250,7 +250,7 @@ const TokenSaleDetails = () => {
           : {}
         return {
           purchaseToken: tokenOffer.offeringOverview.purchaseToken,
-          purchaseTokenAmount: tokenOffer.offeringSummary.amountsRaised,
+          purchaseTokenAmount: tokenOffer.offeringSummary.purchaseTokenRaised,
           ...offerTokenData,
         }
       }
@@ -316,7 +316,8 @@ const TokenSaleDetails = () => {
     tokenOffer?.offeringOverview.totalOfferingAmount
   )
 
-  const isAmountRaisedZero = tokenOffer?.offeringSummary.amountsRaised.isZero()
+  const isAmountRaisedZero =
+    tokenOffer?.offeringSummary.purchaseTokenRaised.isZero()
   const isVestingReserveZero = isReserveAmountZero && isVestingPeriodZero
 
   const isSaleCompleted =
@@ -328,7 +329,7 @@ const TokenSaleDetails = () => {
     tokenOffer &&
     isSaleCompleted &&
     (tokenOffer.offeringOverview.reserveAmount.gt(
-      tokenOffer.offeringSummary.amountsRaised
+      tokenOffer.offeringSummary.purchaseTokenRaised
     ) ||
       isAmountRaisedZero)
 

@@ -306,7 +306,7 @@ export const TableRow = ({
                   {item.reserveAmount &&
                     `${formatToShortNumber(
                       formatBigNumber(
-                        item.amountsRaised,
+                        item.purchaseTokenRaised,
                         item.purchaseToken.decimals
                       )
                     )}/${formatToShortNumber(
@@ -639,12 +639,12 @@ export const TableRow = ({
                   </Typography>
                 </div>
               </Td>
-              <Td type={OfferingSummary.AmountsRaised} label={item.label}>
+              <Td type={OfferingSummary.PurchaseTokenRaised} label={item.label}>
                 <div className={cl.item}>
                   <Typography>
                     {formatToShortNumber(
                       formatBigNumber(
-                        item.amountsRaised,
+                        item.purchaseTokenRaised,
                         item.purchaseToken.decimals
                       )
                     )}

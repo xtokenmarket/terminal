@@ -246,7 +246,7 @@ export const useOriginationPool = (
       totalOfferingAmount,
       poolAddress,
       isOwnerOrManager: false,
-      amountsRaised: purchaseTokensAcquired,
+      purchaseTokenRaised: purchaseTokensAcquired,
     }
 
     const endOfWhitelistPeriod = saleInitiatedTimestamp.add(
@@ -318,7 +318,7 @@ export const useOriginationPool = (
       offerToken: offerToken,
       purchaseToken: purchaseToken || ETH,
       tokensSold: offerTokenAmountSold,
-      amountsRaised: purchaseTokensAcquired,
+      purchaseTokenRaised: purchaseTokensAcquired,
       vestingPeriod,
       cliffPeriod,
       salesCompleted: saleEndTimestamp,

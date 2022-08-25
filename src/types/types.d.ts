@@ -224,7 +224,7 @@ interface Label {
 }
 
 export interface IOfferingOverview extends Label {
-  amountsRaised: BigNumberish
+  purchaseTokenRaised: BigNumberish
   cliffPeriod: BigNumber
   reserveAmount: BigNumber
   offerToken: IToken
@@ -289,7 +289,7 @@ export interface IOfferingSummary extends Label {
   offerToken: IToken
   purchaseToken: IToken
   tokensSold: BigNumber
-  amountsRaised: BigNumber
+  purchaseTokenRaised: BigNumber
   vestingPeriod: BigNumber
   cliffPeriod: BigNumber
   salesCompleted: BigNumber
