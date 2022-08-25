@@ -1,4 +1,10 @@
-import { Button, makeStyles, TextField, Typography } from '@material-ui/core'
+import {
+  Button,
+  CircularProgress,
+  makeStyles,
+  TextField,
+  Typography,
+} from '@material-ui/core'
 import { ChangeEvent, useEffect, useState } from 'react'
 import { ReactComponent as EditIcon } from 'assets/svgs/edit.svg'
 import { getAddress } from 'ethers/lib/utils'
@@ -9,6 +15,7 @@ import { getNetworkFromId } from 'utils/network'
 import { NetworkId } from 'types'
 import { useParams } from 'react-router-dom'
 import { RouteParams } from '../TokenSaleDetails'
+import clsx from 'clsx'
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -65,9 +72,15 @@ const useStyles = makeStyles((theme) => ({
       opacity: 0.7,
       backgroundColor: theme.colors.secondary,
     },
+    '&.pending': {
+      opacity: 0.7,
+      backgroundColor: theme.colors.secondary,
+    },
     padding: '8px 20px',
     backgroundColor: theme.colors.secondary,
     borderRadius: 4,
+    height: 33,
+    width: 80,
   },
   text: {
     color: theme.colors.primary700,
@@ -114,6 +127,9 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.white,
     fontSize: 18,
   },
+  loading: {
+    color: theme.colors.white,
+  },
 }))
 
 interface IState {
@@ -121,11 +137,13 @@ interface IState {
   name: string
   isDescriptionEditing: boolean
   isNameEditing: boolean
+  pending: boolean
 }
 
 interface IProps {
   offeringName: string
   offeringDescription: string
+  loadInfo: () => void
 }
 
 enum IKey {
@@ -140,10 +158,12 @@ export const TokenSaleDescription = (props: IProps) => {
     name: '',
     isDescriptionEditing: false,
     isNameEditing: false,
+    pending: false,
   })
 
-  const { description, name, isDescriptionEditing, isNameEditing } = state
-  const { offeringName, offeringDescription } = props
+  const { description, name, isDescriptionEditing, isNameEditing, pending } =
+    state
+  const { offeringName, offeringDescription, loadInfo } = props
   const { library: provider, networkId } = useConnectedWeb3Context()
   const { poolAddress } = useParams<RouteParams>()
 
@@ -173,6 +193,11 @@ export const TokenSaleDescription = (props: IProps) => {
 
   const onSave = async (key: IKey) => {
     if (!provider || !networkId) return
+    setState((prev) => ({
+      ...prev,
+      pending: true,
+    }))
+
     try {
       const signedPoolAddress = await provider
         .getSigner()
@@ -190,14 +215,21 @@ export const TokenSaleDescription = (props: IProps) => {
         ...prev,
         [key]: false,
       }))
+      loadInfo()
     } catch (error) {
       console.log('onDescriptionSave error', error)
+    } finally {
+      setState((prev) => ({
+        ...prev,
+        pending: false,
+      }))
     }
   }
 
   const toggleEditDescriptionMode = () => {
     setState((prev) => ({
       ...prev,
+      isNameEditing: false,
       isDescriptionEditing: !isDescriptionEditing,
     }))
   }
@@ -206,6 +238,7 @@ export const TokenSaleDescription = (props: IProps) => {
     setState((prev) => ({
       ...prev,
       isNameEditing: !isNameEditing,
+      isDescriptionEditing: false,
     }))
   }
 
@@ -232,19 +265,35 @@ export const TokenSaleDescription = (props: IProps) => {
               CANCEL
             </div>
             <Button
-              className={classes.button}
+              className={clsx(classes.button, [pending && 'pending'])}
               onClick={() => onSave(IKey.PoolName)}
             >
-              <Typography className={classes.text}>SAVE</Typography>
+              <Typography className={classes.text}>
+                {pending ? (
+                  <CircularProgress
+                    className={classes.loading}
+                    color="primary"
+                    size={10}
+                    // thickness={4}
+                  />
+                ) : (
+                  'SAVE'
+                )}
+              </Typography>
             </Button>
           </div>
         </div>
       ) : (
         <div className={classes.nameWrapper}>
           <div className={classes.name}>{offeringName}</div>
-          <div className={classes.editIconWrapper} onClick={toggleEditNameMode}>
-            <EditIcon />
-          </div>
+          {!pending && (
+            <div
+              className={classes.editIconWrapper}
+              onClick={toggleEditNameMode}
+            >
+              <EditIcon />
+            </div>
+          )}
         </div>
       )}
 
@@ -275,22 +324,35 @@ export const TokenSaleDescription = (props: IProps) => {
               CANCEL
             </div>
             <Button
-              className={classes.button}
+              className={clsx(classes.button, [pending && 'pending'])}
               onClick={() => onSave(IKey.Description)}
             >
-              <Typography className={classes.text}>SAVE</Typography>
+              <Typography className={classes.text}>
+                {pending ? (
+                  <CircularProgress
+                    className={classes.loading}
+                    color="primary"
+                    size={15}
+                    // thickness={3}
+                  />
+                ) : (
+                  'SAVE'
+                )}
+              </Typography>
             </Button>
           </div>
         </div>
       ) : (
         <>
           <div className={classes.description}>{offeringDescription} </div>
-          <div
-            className={classes.editDescriptionText}
-            onClick={toggleEditDescriptionMode}
-          >
-            Edit Description
-          </div>{' '}
+          {!pending && (
+            <div
+              className={classes.editDescriptionText}
+              onClick={toggleEditDescriptionMode}
+            >
+              Edit Description
+            </div>
+          )}
         </>
       )}
     </div>

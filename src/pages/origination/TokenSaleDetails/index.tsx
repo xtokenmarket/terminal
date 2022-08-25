@@ -482,6 +482,7 @@ const TokenSaleDetails = () => {
                   ? tokenOffer.originationRow.description
                   : 'Default description'
               }
+              loadInfo={() => loadInfo(true)}
             />
             <hr className={cl.hr} />
             <SetWhitelistModal
