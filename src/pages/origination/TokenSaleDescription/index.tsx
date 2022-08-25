@@ -333,7 +333,7 @@ export const TokenSaleDescription = (props: IProps) => {
                     className={classes.loading}
                     color="primary"
                     size={15}
-                    // thickness={3}
+                    thickness={4}
                   />
                 ) : (
                   'SAVE'
