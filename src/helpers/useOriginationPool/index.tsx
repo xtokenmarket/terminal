@@ -227,6 +227,8 @@ export const useOriginationPool = (
       offerToken,
       purchaseToken,
       createdAt,
+      description,
+      poolName,
     } = offerData
 
     const _publicSaleDuration = BigNumber.from(Number(publicSaleDuration))
@@ -453,6 +455,8 @@ export const useOriginationPool = (
         startingPrice: publicStartingPrice,
         saleDuration: publicSaleDuration,
         createdAt,
+        description,
+        poolName,
       },
       sponsorTokensClaimed: offerData.sponsorTokensClaimed,
       purchaseTokenBalance: offerData.purchaseTokenBalance,

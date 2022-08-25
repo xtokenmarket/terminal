@@ -243,6 +243,8 @@ export interface IOriginationRow extends IOfferingOverview {
   startingPrice: BigNumber
   saleDuration?: BigNumber
   createdAt: BigNumber
+  description: string
+  poolName: string
 }
 
 export interface IWhitelistSale extends Label {

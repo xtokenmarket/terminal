@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-type RouteParams = {
+export type RouteParams = {
   network: string
   poolAddress: string
 }
@@ -468,12 +468,20 @@ const TokenSaleDetails = () => {
         ) : (
           <div className={cl.root}>
             <TokenSaleDescription
-              offeringName={`${
-                tokenOffer.offeringOverview.offerToken.symbol
-              } ${formatDateTime(
-                tokenOffer.originationRow.createdAt.toNumber()
-              )}`}
-              offeringDescription={'Default description'}
+              offeringName={
+                tokenOffer.originationRow.poolName
+                  ? tokenOffer.originationRow.poolName
+                  : `${
+                      tokenOffer.offeringOverview.offerToken.symbol
+                    } ${formatDateTime(
+                      tokenOffer.originationRow.createdAt.toNumber()
+                    )}`
+              }
+              offeringDescription={
+                tokenOffer.originationRow.description
+                  ? tokenOffer.originationRow.description
+                  : 'Default description'
+              }
             />
             <hr className={cl.hr} />
             <SetWhitelistModal

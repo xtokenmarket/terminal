@@ -1,6 +1,14 @@
 import { Button, makeStyles, TextField, Typography } from '@material-ui/core'
 import { ChangeEvent, useEffect, useState } from 'react'
 import { ReactComponent as EditIcon } from 'assets/svgs/edit.svg'
+import { getAddress } from 'ethers/lib/utils'
+import { ORIGINATION_API_URL } from 'config/constants'
+import axios from 'axios'
+import { useConnectedWeb3Context } from 'contexts'
+import { getNetworkFromId } from 'utils/network'
+import { NetworkId } from 'types'
+import { useParams } from 'react-router-dom'
+import { RouteParams } from '../TokenSaleDetails'
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -120,6 +128,11 @@ interface IProps {
   offeringDescription: string
 }
 
+enum IKey {
+  PoolName = 'isNameEditing',
+  Description = 'isDescriptionEditing',
+}
+
 export const TokenSaleDescription = (props: IProps) => {
   const classes = useStyles()
   const [state, setState] = useState<IState>({
@@ -131,6 +144,8 @@ export const TokenSaleDescription = (props: IProps) => {
 
   const { description, name, isDescriptionEditing, isNameEditing } = state
   const { offeringName, offeringDescription } = props
+  const { library: provider, networkId } = useConnectedWeb3Context()
+  const { poolAddress } = useParams<RouteParams>()
 
   useEffect(() => {
     setState((prev) => ({
@@ -156,8 +171,28 @@ export const TokenSaleDescription = (props: IProps) => {
     }))
   }
 
-  const onDescriptionSave = () => {
-    console.log('onDescriptionSave click')
+  const onSave = async (key: IKey) => {
+    if (!provider || !networkId) return
+    try {
+      const signedPoolAddress = await provider
+        .getSigner()
+        .signMessage(poolAddress)
+      await axios.put(
+        `${ORIGINATION_API_URL}/pool/${getAddress(poolAddress)}`,
+        {
+          network: getNetworkFromId(networkId as NetworkId),
+          signedPoolAddress,
+          poolName: name,
+          description,
+        }
+      )
+      setState((prev) => ({
+        ...prev,
+        [key]: false,
+      }))
+    } catch (error) {
+      console.log('onDescriptionSave error', error)
+    }
   }
 
   const toggleEditDescriptionMode = () => {
@@ -196,7 +231,10 @@ export const TokenSaleDescription = (props: IProps) => {
             <div className={classes.cancelButton} onClick={toggleEditNameMode}>
               CANCEL
             </div>
-            <Button className={classes.button} onClick={onDescriptionSave}>
+            <Button
+              className={classes.button}
+              onClick={() => onSave(IKey.PoolName)}
+            >
               <Typography className={classes.text}>SAVE</Typography>
             </Button>
           </div>
@@ -236,14 +274,17 @@ export const TokenSaleDescription = (props: IProps) => {
             >
               CANCEL
             </div>
-            <Button className={classes.button} onClick={onDescriptionSave}>
+            <Button
+              className={classes.button}
+              onClick={() => onSave(IKey.Description)}
+            >
               <Typography className={classes.text}>SAVE</Typography>
             </Button>
           </div>
         </div>
       ) : (
         <>
-          <div className={classes.description}>{description} </div>
+          <div className={classes.description}>{offeringDescription} </div>
           <div
             className={classes.editDescriptionText}
             onClick={toggleEditDescriptionMode}
