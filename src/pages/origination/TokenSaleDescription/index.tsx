@@ -72,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
       opacity: 0.7,
       backgroundColor: theme.colors.secondary,
     },
-    '&.pending': {
+    '&.dark': {
       opacity: 0.7,
       backgroundColor: theme.colors.secondary,
     },
@@ -257,6 +257,7 @@ export const TokenSaleDescription = (props: IProps) => {
             label="Offering Name"
             InputLabelProps={{
               className: classes.inputLabel,
+              shrink: true,
             }}
           />
           <div className={classes.textLimitation}>{name.length}/20</div>
@@ -265,16 +266,17 @@ export const TokenSaleDescription = (props: IProps) => {
               CANCEL
             </div>
             <Button
-              className={clsx(classes.button, [pending && 'pending'])}
+              className={clsx(classes.button, [(pending || !name) && 'dark'])}
               onClick={() => onSave(IKey.PoolName)}
+              disabled={!name}
             >
               <Typography className={classes.text}>
                 {pending ? (
                   <CircularProgress
                     className={classes.loading}
                     color="primary"
-                    size={10}
-                    // thickness={4}
+                    size={15}
+                    thickness={4}
                   />
                 ) : (
                   'SAVE'
@@ -313,6 +315,7 @@ export const TokenSaleDescription = (props: IProps) => {
             label="Offering Description"
             InputLabelProps={{
               className: classes.inputLabel,
+              shrink: true,
             }}
           />
           <div className={classes.textLimitation}>{description.length}/200</div>
@@ -324,8 +327,11 @@ export const TokenSaleDescription = (props: IProps) => {
               CANCEL
             </div>
             <Button
-              className={clsx(classes.button, [pending && 'pending'])}
+              className={clsx(classes.button, [
+                (pending || !description) && 'dark',
+              ])}
               onClick={() => onSave(IKey.Description)}
+              disabled={!description}
             >
               <Typography className={classes.text}>
                 {pending ? (
