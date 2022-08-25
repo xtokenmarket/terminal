@@ -128,7 +128,7 @@ export const InputSection = (props: IProps) => {
       setState({ maxLimit })
     }
 
-    if (account || provider) {
+    if (provider) {
       getMaxLimit()
     }
   }, [])

@@ -100,7 +100,7 @@ export const Table = ({
   const { account, library: provider } = useConnectedWeb3Context()
   const { poolAddress } = useParams<{ poolAddress: string }>()
   useEffect(() => {
-    if (account || provider) {
+    if (provider) {
       const fungibleOriginationPool = new FungiblePoolService(
         provider,
         account,
