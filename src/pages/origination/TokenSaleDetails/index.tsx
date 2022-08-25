@@ -16,6 +16,7 @@ import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
 import { VestModal } from './components/VestModal'
 import { useConnectedWeb3Context } from 'contexts'
+import { TokenSaleDescription } from '../TokenSaleDescription'
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -462,6 +463,7 @@ const TokenSaleDetails = () => {
           <SimpleLoader />
         ) : (
           <div className={cl.root}>
+            <TokenSaleDescription />
             <SetWhitelistModal
               poolAddress={poolAddress}
               open={state.open}
