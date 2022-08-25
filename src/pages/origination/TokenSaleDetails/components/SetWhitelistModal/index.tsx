@@ -18,6 +18,7 @@ import axios from 'axios'
 import { FungiblePoolService } from 'services'
 import { IToken } from 'types'
 import { BigNumber } from 'ethers'
+import { ZERO } from 'utils/number'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -135,6 +136,7 @@ interface IState {
   setWhitelistTx: string
   txState: TxState
   whitelistFile: File | null
+  maxLimit: BigNumber
 }
 
 export const SetWhitelistModal: React.FC<IProps> = ({
@@ -158,6 +160,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
       setWhitelistTx: '',
       txState: TxState.None,
       whitelistFile: null,
+      maxLimit: ZERO,
     }
   )
 
@@ -166,6 +169,25 @@ export const SetWhitelistModal: React.FC<IProps> = ({
     account,
     poolAddress
   )
+
+  useEffect(() => {
+    const getMaxLimit = async () => {
+      let maxLimit
+      try {
+        maxLimit =
+          await fungibleOriginationPool.getPurchaseAmountFromOfferAmount(
+            totalOfferingAmount
+          )
+      } catch (error) {
+        console.error('getPurchaseAmountFromOfferAmount error', error)
+      }
+      setState({ maxLimit })
+    }
+
+    if (provider) {
+      getMaxLimit()
+    }
+  }, [])
 
   const generateMerkleTreeRoot = async (signedPoolAddress: string) => {
     const requestData = new FormData()
