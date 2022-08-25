@@ -75,10 +75,10 @@ export const SuccessSection = (props: IProps) => {
           src="/assets/icons/confirmed.png"
           className={classes.img}
         />
-        <Typography className={classes.title}>Sale confirmed!</Typography>
+        <Typography className={classes.title}>Offering deployed!</Typography>
         <Typography className={classes.description}>
-          You have successfully finished your sale initiation process! Below you
-          can see details of your transaction.
+          You have successfully initiated your offering. Contributors are now
+          able to invest or contribute.
         </Typography>
       </div>
       <OutputEstimation offerData={offerData} />

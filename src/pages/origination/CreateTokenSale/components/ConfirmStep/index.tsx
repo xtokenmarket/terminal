@@ -5,6 +5,8 @@ import { ICreateTokenSaleData, IToken } from 'types'
 import { CreateTokenSaleModal } from '../CreateTokenSaleModal'
 import { PricingFormulaTable } from '../PricingFormulaTable'
 import { getDurationSec, parseDurationSec } from 'utils'
+import { useNetworkContext } from 'contexts'
+import { ORIGINATION_FEE_TIPS } from 'config/constants'
 
 const useStyles = makeStyles((theme) => ({
   label: {
@@ -99,6 +101,11 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(3.3),
     border: `1px solid ${theme.colors.primary200}`,
   },
+  fee: {
+    fontSize: 12,
+    color: theme.colors.primary100,
+    marginBottom: 8,
+  },
 }))
 
 interface IProps {
@@ -112,6 +119,8 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit }) => {
   const classes = useStyles()
   const [isSellTokenModalVisible, setIsSellTokenModalVisible] = useState(false)
 
+  const { chainId } = useNetworkContext()
+  const feeTip = ORIGINATION_FEE_TIPS[chainId]
   const toggleSellTokenModal = () =>
     setIsSellTokenModalVisible((prevState) => !prevState)
 
@@ -233,16 +242,18 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit }) => {
         </Grid>
       </Grid>
 
-      <Button
-        id="submit"
-        className={classes.nextButton}
-        color="primary"
-        fullWidth
-        onClick={toggleSellTokenModal}
-        variant="contained"
-      >
-        SUBMIT
-      </Button>
+      <div className={classes.nextButton}>
+        <Typography className={classes.fee}>{feeTip}</Typography>
+        <Button
+          id="submit"
+          color="primary"
+          fullWidth
+          onClick={toggleSellTokenModal}
+          variant="contained"
+        >
+          SUBMIT
+        </Button>
+      </div>
 
       <CreateTokenSaleModal
         isOpen={isSellTokenModalVisible}

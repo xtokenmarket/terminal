@@ -100,15 +100,17 @@ export const Table = ({
   const { account, library: provider } = useConnectedWeb3Context()
   const { poolAddress } = useParams<{ poolAddress: string }>()
   useEffect(() => {
-    const fungibleOriginationPool = new FungiblePoolService(
-      provider,
-      account,
-      poolAddress
-    )
+    if (provider) {
+      const fungibleOriginationPool = new FungiblePoolService(
+        provider,
+        account,
+        poolAddress
+      )
 
-    fungibleOriginationPool
-      .isSaleInitiated()
-      .then((initiated) => setSaleInitiated(initiated))
+      fungibleOriginationPool
+        .isSaleInitiated()
+        .then((initiated) => setSaleInitiated(initiated))
+    }
   }, [account, provider, poolAddress])
   const cl = useStyles()
 
@@ -120,7 +122,9 @@ export const Table = ({
         disabled={isClaimButtonDisabled}
       >
         <Typography className={cl.text}>
-          {label === 'My Position' ? 'CLAIM' : 'CLAIM PURCHASE TOKEN'}
+          {label === 'My Position' || label === 'Offering Summary'
+            ? 'CLAIM'
+            : 'CLAIM PURCHASE TOKEN'}
         </Typography>
       </Button>
     )

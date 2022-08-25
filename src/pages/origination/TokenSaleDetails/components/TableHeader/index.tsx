@@ -53,7 +53,7 @@ export const TableHeader = (props: IProps) => {
           <div className={classes.item}>Offering Status</div>
         </Td>
         <Td type={OfferingOverview.ReserveAmount} label={props.label}>
-          <div className={classes.item}>Reserve Amount</div>
+          <div className={classes.item}>Purchase Token Raised</div>
         </Td>
         <Td type={OfferingOverview.VestingPeriod} label={props.label}>
           <div className={classes.item}>Vesting Period</div>
@@ -179,8 +179,8 @@ export const TableHeader = (props: IProps) => {
             <Td type={OfferingSummary.TokensSold} label={props.label}>
               <div className={classes.item}>Tokens Sold</div>
             </Td>
-            <Td type={OfferingSummary.AmountsRaised} label={props.label}>
-              <div className={classes.item}>Amount Raised</div>
+            <Td type={OfferingSummary.PurchaseTokenRaised} label={props.label}>
+              <div className={classes.item}>Purchase Token Raised</div>
             </Td>
             <Td type={OfferingSummary.VestingPeriod} label={props.label}>
               <div className={classes.item}>Vesting Period</div>
