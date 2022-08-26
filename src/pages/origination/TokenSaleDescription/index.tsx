@@ -322,7 +322,9 @@ export const TokenSaleDescription = (props: IProps) => {
               shrink: true,
             }}
           />
-          <div className={classes.textLimitation}>{description.length}/200</div>
+          <div className={classes.textLimitation}>
+            {description?.length}/200
+          </div>
           <div className={classes.buttonsWrapper}>
             <div
               className={classes.cancelButton}
