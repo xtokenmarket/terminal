@@ -152,6 +152,7 @@ interface IProps {
   offeringDescription: string
   loadInfo: () => void
   isOwnerOrManager?: boolean
+  isSaleInitiated?: boolean
 }
 
 enum IKey {
@@ -178,8 +179,13 @@ export const TokenSaleDescription = (props: IProps) => {
     pending,
     errorMessage,
   } = state
-  const { offeringName, offeringDescription, loadInfo, isOwnerOrManager } =
-    props
+  const {
+    offeringName,
+    offeringDescription,
+    loadInfo,
+    isOwnerOrManager,
+    isSaleInitiated,
+  } = props
   const { library: provider, networkId } = useConnectedWeb3Context()
   const { poolAddress } = useParams<RouteParams>()
   const { enqueueSnackbar } = useSnackbar()
@@ -316,7 +322,7 @@ export const TokenSaleDescription = (props: IProps) => {
       ) : (
         <div className={classes.nameWrapper}>
           <div className={classes.name}>{offeringName}</div>
-          {!pending && isOwnerOrManager && (
+          {!pending && isOwnerOrManager && !isSaleInitiated && (
             <div
               className={classes.editIconWrapper}
               onClick={toggleEditNameMode}
@@ -327,7 +333,7 @@ export const TokenSaleDescription = (props: IProps) => {
         </div>
       )}
 
-      {isOwnerOrManager && (
+      {isOwnerOrManager && !isSaleInitiated && (
         <div className={classes.hint}>
           Offering Name and additonal information about your pool can be added
           here.
@@ -385,7 +391,7 @@ export const TokenSaleDescription = (props: IProps) => {
       ) : (
         <>
           <div className={classes.description}>{offeringDescription} </div>
-          {!pending && isOwnerOrManager && (
+          {!pending && isOwnerOrManager && !isSaleInitiated && (
             <div
               className={classes.editDescriptionText}
               onClick={toggleEditDescriptionMode}
