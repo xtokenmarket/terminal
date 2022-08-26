@@ -477,12 +477,9 @@ const TokenSaleDetails = () => {
                       tokenOffer.originationRow.createdAt?.toNumber()
                     )}`
               }
-              offeringDescription={
-                tokenOffer.originationRow.description
-                  ? tokenOffer.originationRow.description
-                  : 'Default description'
-              }
+              offeringDescription={tokenOffer.originationRow.description}
               loadInfo={() => loadInfo(true)}
+              isOwnerOrManager={isOwnerOrManager}
             />
             <hr className={cl.hr} />
             <SetWhitelistModal

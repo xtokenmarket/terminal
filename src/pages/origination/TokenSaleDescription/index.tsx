@@ -144,6 +144,7 @@ interface IProps {
   offeringName: string
   offeringDescription: string
   loadInfo: () => void
+  isOwnerOrManager?: boolean
 }
 
 enum IKey {
@@ -163,7 +164,8 @@ export const TokenSaleDescription = (props: IProps) => {
 
   const { description, name, isDescriptionEditing, isNameEditing, pending } =
     state
-  const { offeringName, offeringDescription, loadInfo } = props
+  const { offeringName, offeringDescription, loadInfo, isOwnerOrManager } =
+    props
   const { library: provider, networkId } = useConnectedWeb3Context()
   const { poolAddress } = useParams<RouteParams>()
 
@@ -288,7 +290,7 @@ export const TokenSaleDescription = (props: IProps) => {
       ) : (
         <div className={classes.nameWrapper}>
           <div className={classes.name}>{offeringName}</div>
-          {!pending && (
+          {!pending && isOwnerOrManager && (
             <div
               className={classes.editIconWrapper}
               onClick={toggleEditNameMode}
@@ -299,10 +301,12 @@ export const TokenSaleDescription = (props: IProps) => {
         </div>
       )}
 
-      <div className={classes.hint}>
-        Offering Name and additonal information about your pool can be added
-        here..
-      </div>
+      {isOwnerOrManager && (
+        <div className={classes.hint}>
+          Offering Name and additonal information about your pool can be added
+          here.
+        </div>
+      )}
       {isDescriptionEditing ? (
         <div className={classes.editorWrapper}>
           <TextField
@@ -351,7 +355,7 @@ export const TokenSaleDescription = (props: IProps) => {
       ) : (
         <>
           <div className={classes.description}>{offeringDescription} </div>
-          {!pending && (
+          {!pending && isOwnerOrManager && (
             <div
               className={classes.editDescriptionText}
               onClick={toggleEditDescriptionMode}
