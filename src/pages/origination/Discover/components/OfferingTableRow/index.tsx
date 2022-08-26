@@ -127,6 +127,7 @@ export const OfferingTableRow = ({ offering }: IProps) => {
       cliffPeriod,
       salesEnd,
       createdAt,
+      poolName,
     } = _originationRow
 
     // TODO: Better way to parse time remaining info
@@ -157,7 +158,7 @@ export const OfferingTableRow = ({ offering }: IProps) => {
               {offerToken.symbol}
             </Typography>
             <Typography className={cl.offeringName}>
-              {formatDateTime(createdAt.toNumber())}
+              {poolName ? poolName : formatDateTime(createdAt.toNumber())}
             </Typography>
           </div>
         </OfferingTd>
