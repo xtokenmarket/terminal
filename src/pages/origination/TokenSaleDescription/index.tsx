@@ -130,6 +130,11 @@ const useStyles = makeStyles((theme) => ({
   loading: {
     color: theme.colors.white,
   },
+  error: {
+    color: theme.colors.warn,
+    marginTop: 10,
+    fontSize: 14,
+  },
 }))
 
 interface IState {
@@ -138,6 +143,7 @@ interface IState {
   isDescriptionEditing: boolean
   isNameEditing: boolean
   pending: boolean
+  errorMessage: string
 }
 
 interface IProps {
@@ -148,8 +154,8 @@ interface IProps {
 }
 
 enum IKey {
-  PoolName = 'isNameEditing',
-  Description = 'isDescriptionEditing',
+  PoolName = 'name',
+  Description = 'description',
 }
 
 export const TokenSaleDescription = (props: IProps) => {
@@ -160,10 +166,17 @@ export const TokenSaleDescription = (props: IProps) => {
     isDescriptionEditing: false,
     isNameEditing: false,
     pending: false,
+    errorMessage: '',
   })
 
-  const { description, name, isDescriptionEditing, isNameEditing, pending } =
-    state
+  const {
+    description,
+    name,
+    isDescriptionEditing,
+    isNameEditing,
+    pending,
+    errorMessage,
+  } = state
   const { offeringName, offeringDescription, loadInfo, isOwnerOrManager } =
     props
   const { library: provider, networkId } = useConnectedWeb3Context()
@@ -177,19 +190,22 @@ export const TokenSaleDescription = (props: IProps) => {
     }))
   }, [])
 
-  const onDescriptionChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value.length > 200) return
+  const onChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    key: IKey
+  ) => {
+    const textLengthLimit = key === IKey.PoolName ? 20 : 200
+    if (event.target.value.length > textLengthLimit) {
+      setState((prev) => ({
+        ...prev,
+        errorMessage: 'Text length exceeds limitation',
+      }))
+      return
+    }
     setState((prev) => ({
       ...prev,
-      description: event.target.value,
-    }))
-  }
-
-  const onNameChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.value.length > 20) return
-    setState((prev) => ({
-      ...prev,
-      name: event.target.value,
+      [key]: event.target.value,
+      errorMessage: '',
     }))
   }
 
@@ -215,7 +231,8 @@ export const TokenSaleDescription = (props: IProps) => {
       )
       setState((prev) => ({
         ...prev,
-        [key]: false,
+        [key === IKey.PoolName ? 'isNameEditing' : 'isDescriptionEditing']:
+          false,
       }))
       loadInfo()
     } catch (error) {
@@ -253,7 +270,7 @@ export const TokenSaleDescription = (props: IProps) => {
             multiline
             className={classes.input}
             value={state.name}
-            onChange={onNameChange}
+            onChange={(event) => onChange(event, IKey.PoolName)}
             variant="outlined"
             fullWidth
             label="Offering Name"
@@ -270,7 +287,7 @@ export const TokenSaleDescription = (props: IProps) => {
             <Button
               className={clsx(classes.button, [(pending || !name) && 'dark'])}
               onClick={() => onSave(IKey.PoolName)}
-              disabled={!name}
+              disabled={!name || !!errorMessage}
             >
               <Typography className={classes.text}>
                 {pending ? (
@@ -286,6 +303,7 @@ export const TokenSaleDescription = (props: IProps) => {
               </Typography>
             </Button>
           </div>
+          {errorMessage && <div className={classes.error}>{errorMessage}</div>}
         </div>
       ) : (
         <div className={classes.nameWrapper}>
@@ -313,7 +331,7 @@ export const TokenSaleDescription = (props: IProps) => {
             multiline
             className={classes.input}
             value={state.description}
-            onChange={onDescriptionChange}
+            onChange={(event) => onChange(event, IKey.Description)}
             variant="outlined"
             fullWidth
             label="Offering Description"
@@ -337,7 +355,7 @@ export const TokenSaleDescription = (props: IProps) => {
                 (pending || !description) && 'dark',
               ])}
               onClick={() => onSave(IKey.Description)}
-              disabled={!description}
+              disabled={!description || !!errorMessage}
             >
               <Typography className={classes.text}>
                 {pending ? (
@@ -353,6 +371,7 @@ export const TokenSaleDescription = (props: IProps) => {
               </Typography>
             </Button>
           </div>
+          {errorMessage && <div className={classes.error}>{errorMessage}</div>}
         </div>
       ) : (
         <>
