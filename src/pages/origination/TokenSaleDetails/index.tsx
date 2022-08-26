@@ -471,11 +471,13 @@ const TokenSaleDetails = () => {
               offeringName={
                 tokenOffer.originationRow.poolName
                   ? tokenOffer.originationRow.poolName
-                  : `${
-                      tokenOffer.offeringOverview.offerToken.symbol
-                    } ${formatDateTime(
-                      tokenOffer.originationRow.createdAt?.toNumber()
-                    )}`
+                  : `${tokenOffer.offeringOverview.offerToken.symbol} ${
+                      tokenOffer.originationRow.createdAt
+                        ? formatDateTime(
+                            tokenOffer.originationRow.createdAt?.toNumber()
+                          )
+                        : 0
+                    }`
               }
               offeringDescription={tokenOffer.originationRow.description}
               loadInfo={() => loadInfo(true)}
