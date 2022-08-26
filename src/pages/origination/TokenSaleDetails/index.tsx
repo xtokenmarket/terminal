@@ -448,7 +448,7 @@ const TokenSaleDetails = () => {
     (tokenOffer &&
       tokenOffer.whitelist.salesPeriod?.gt(0) &&
       !tokenOffer.whitelist.whitelist) ||
-    isSaleInitiated
+    !tokenOffer?.originationRow.poolName
 
   const isVestedPropertiesShow =
     (tokenOffer?.userPosition.amountAvailableToVest.gt(0) ||
@@ -474,7 +474,7 @@ const TokenSaleDetails = () => {
                   : `${
                       tokenOffer.offeringOverview.offerToken.symbol
                     } ${formatDateTime(
-                      tokenOffer.originationRow.createdAt.toNumber()
+                      tokenOffer.originationRow.createdAt?.toNumber()
                     )}`
               }
               offeringDescription={
