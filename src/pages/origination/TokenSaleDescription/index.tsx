@@ -200,6 +200,7 @@ export const TokenSaleDescription = (props: IProps) => {
     if (event.target.value.length > textLengthLimit) {
       setState((prev) => ({
         ...prev,
+        [key]: event.target.value,
         errorMessage: 'Text length exceeds limitation',
       }))
       return
@@ -282,6 +283,7 @@ export const TokenSaleDescription = (props: IProps) => {
               className: classes.inputLabel,
               shrink: true,
             }}
+            rows={1}
           />
           <div className={classes.textLimitation}>{name.length}/20</div>
           <div className={classes.buttonsWrapper}>
@@ -289,7 +291,9 @@ export const TokenSaleDescription = (props: IProps) => {
               CANCEL
             </div>
             <Button
-              className={clsx(classes.button, [(pending || !name) && 'dark'])}
+              className={clsx(classes.button, [
+                (pending || !name || !!errorMessage) && 'dark',
+              ])}
               onClick={() => onSave(IKey.PoolName)}
               disabled={!name || !!errorMessage}
             >
@@ -343,6 +347,7 @@ export const TokenSaleDescription = (props: IProps) => {
               className: classes.inputLabel,
               shrink: true,
             }}
+            rows={3}
           />
           <div className={classes.textLimitation}>
             {description?.length}/200
@@ -356,7 +361,7 @@ export const TokenSaleDescription = (props: IProps) => {
             </div>
             <Button
               className={clsx(classes.button, [
-                (pending || !description) && 'dark',
+                (pending || !description || !!errorMessage) && 'dark',
               ])}
               onClick={() => onSave(IKey.Description)}
               disabled={!description || !!errorMessage}
