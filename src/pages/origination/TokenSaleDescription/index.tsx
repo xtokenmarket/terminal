@@ -16,6 +16,7 @@ import { NetworkId } from 'types'
 import { useParams } from 'react-router-dom'
 import { RouteParams } from '../TokenSaleDetails'
 import clsx from 'clsx'
+import { useSnackbar } from 'notistack'
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -181,6 +182,7 @@ export const TokenSaleDescription = (props: IProps) => {
     props
   const { library: provider, networkId } = useConnectedWeb3Context()
   const { poolAddress } = useParams<RouteParams>()
+  const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {
     setState((prev) => ({
@@ -235,8 +237,10 @@ export const TokenSaleDescription = (props: IProps) => {
           false,
       }))
       loadInfo()
-    } catch (error) {
-      console.log('onDescriptionSave error', error)
+    } catch (error: any) {
+      enqueueSnackbar(error.message, {
+        variant: 'error',
+      })
     } finally {
       setState((prev) => ({
         ...prev,
