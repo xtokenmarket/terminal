@@ -1,12 +1,14 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Grid, Typography, makeStyles } from '@material-ui/core'
 import clsx from 'clsx'
 import { ICreateTokenSaleData, IToken } from 'types'
 import { CreateTokenSaleModal } from '../CreateTokenSaleModal'
 import { PricingFormulaTable } from '../PricingFormulaTable'
-import { getDurationSec, parseDurationSec } from 'utils'
 import { useNetworkContext } from 'contexts'
-import { ORIGINATION_FEE_TIPS } from 'config/constants'
+import { formatBigNumber, getDurationSec, parseDurationSec } from 'utils'
+import { useServices } from 'helpers'
+import { ZERO } from 'utils/number'
+import { ChainId } from 'config/constants'
 
 const useStyles = makeStyles((theme) => ({
   label: {
@@ -118,9 +120,19 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit }) => {
   const { offerToken } = data
   const classes = useStyles()
   const [isSellTokenModalVisible, setIsSellTokenModalVisible] = useState(false)
+  const [listingFee, setListingFee] = useState(ZERO)
+  const { originationService } = useServices()
+
+  useEffect(() => {
+    const getFee = async () => {
+      const _listingFee = await originationService.contract.listingFee()
+      setListingFee(_listingFee)
+    }
+
+    getFee()
+  }, [])
 
   const { chainId } = useNetworkContext()
-  const feeTip = ORIGINATION_FEE_TIPS[chainId]
   const toggleSellTokenModal = () =>
     setIsSellTokenModalVisible((prevState) => !prevState)
 
@@ -243,7 +255,11 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit }) => {
       </Grid>
 
       <div className={classes.nextButton}>
-        <Typography className={classes.fee}>{feeTip}</Typography>
+        <Typography
+          className={classes.fee}
+        >{`Deployment fee is ${formatBigNumber(listingFee, 18)} ${
+          chainId === ChainId.Polygon ? 'Matic' : 'ETH'
+        }.`}</Typography>
         <Button
           id="submit"
           color="primary"
