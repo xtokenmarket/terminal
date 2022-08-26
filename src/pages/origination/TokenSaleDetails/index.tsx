@@ -455,6 +455,12 @@ const TokenSaleDetails = () => {
       tokenOffer?.userPosition.amountvested.gt(0)) &&
     !isOfferUnsuccessful
 
+  const offeringName = tokenOffer?.originationRow.poolName
+    ? tokenOffer.originationRow.poolName
+    : `${tokenOffer?.offeringOverview.offerToken.symbol} ${formatDateTime(
+        tokenOffer?.originationRow.createdAt.toNumber() || 0
+      )}`
+
   return (
     <PageWrapper>
       <PageHeader
@@ -468,17 +474,7 @@ const TokenSaleDetails = () => {
         ) : (
           <div className={cl.root}>
             <TokenSaleDescription
-              offeringName={
-                tokenOffer.originationRow.poolName
-                  ? tokenOffer.originationRow.poolName
-                  : `${tokenOffer.offeringOverview.offerToken.symbol} ${
-                      tokenOffer.originationRow.createdAt
-                        ? formatDateTime(
-                            tokenOffer.originationRow.createdAt?.toNumber()
-                          )
-                        : 0
-                    }`
-              }
+              offeringName={offeringName}
               offeringDescription={tokenOffer.originationRow.description}
               loadInfo={() => loadInfo(true)}
               isOwnerOrManager={isOwnerOrManager}
