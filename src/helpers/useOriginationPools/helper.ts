@@ -42,6 +42,8 @@ query {
       vestableTokenAmount
       purchaseTokensAcquired
       createdAt
+      description
+      poolName
     }
 }
 `

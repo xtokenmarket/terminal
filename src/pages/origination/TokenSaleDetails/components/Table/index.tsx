@@ -55,6 +55,16 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  tooltipArrow: {
+    color: theme.colors.primary300,
+  },
+  tooltip: {
+    backgroundColor: theme.colors.primary300,
+    fontFamily: 'Gilmer',
+    textTransform: 'uppercase',
+    fontWeight: 'bold',
+    fontSize: 8,
+  },
 }))
 
 interface IProps {
@@ -156,14 +166,30 @@ export const Table = ({
           <div className={cl.labelWrapper}>
             <Typography className={cl.label}>{label}</Typography>
             {isOwnerOrManager && !isSaleInitiated && (
-              <Button
-                id="initiateSale"
-                className={cl.button}
-                onClick={() => toggleModal && toggleModal()}
-                disabled={isInitiateSaleButtonDisabled}
+              <Tooltip
+                title={
+                  isInitiateSaleButtonDisabled
+                    ? 'Set up allowlist and offering name before initiate sale'
+                    : ''
+                }
+                arrow
+                placement="top"
+                classes={{
+                  arrow: cl.tooltipArrow,
+                  tooltip: cl.tooltip,
+                }}
               >
-                <Typography className={cl.text}>INITIATE SALE</Typography>
-              </Button>
+                <div>
+                  <Button
+                    id="initiateSale"
+                    className={cl.button}
+                    onClick={() => toggleModal && toggleModal()}
+                    disabled={isInitiateSaleButtonDisabled}
+                  >
+                    <Typography className={cl.text}>INITIATE SALE</Typography>
+                  </Button>
+                </div>
+              </Tooltip>
             )}
           </div>
         )
