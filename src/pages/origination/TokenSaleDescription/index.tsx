@@ -356,7 +356,7 @@ export const TokenSaleDescription = (props: IProps) => {
             rows={3}
           />
           <div className={classes.textLimitation}>
-            {description?.length}/200
+            {description?.length || '0'}/200
           </div>
           <div className={classes.buttonsWrapper}>
             <div
