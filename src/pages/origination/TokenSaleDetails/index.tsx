@@ -5,7 +5,7 @@ import { useHistory, useParams } from 'react-router'
 import { Button, makeStyles, Tooltip, Typography } from '@material-ui/core'
 import { PageContent, PageHeader, PageWrapper, SimpleLoader } from 'components'
 import { useOriginationPool } from 'helpers'
-import { getCurrentTimeStamp, getRemainingTimeSec } from 'utils'
+import { formatDateTime, getCurrentTimeStamp, getRemainingTimeSec } from 'utils'
 import { EOriginationEvent, EPricingFormula, Network } from 'utils/enums'
 import { IClaimData } from 'types'
 
@@ -16,6 +16,7 @@ import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
 import { VestModal } from './components/VestModal'
 import { useConnectedWeb3Context } from 'contexts'
+import { TokenSaleDescription } from '../TokenSaleDescription'
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -73,9 +74,13 @@ const useStyles = makeStyles((theme) => ({
   tooltipArrow: {
     color: theme.colors.primary300,
   },
+  hr: {
+    borderColor: theme.colors.primary200,
+    marginTop: 20,
+  },
 }))
 
-type RouteParams = {
+export type RouteParams = {
   network: string
   poolAddress: string
 }
@@ -443,12 +448,18 @@ const TokenSaleDetails = () => {
     (tokenOffer &&
       tokenOffer.whitelist.salesPeriod?.gt(0) &&
       !tokenOffer.whitelist.whitelist) ||
-    isSaleInitiated
+    !tokenOffer?.originationRow.poolName
 
   const isVestedPropertiesShow =
     (tokenOffer?.userPosition.amountAvailableToVest.gt(0) ||
       tokenOffer?.userPosition.amountvested.gt(0)) &&
     !isOfferUnsuccessful
+
+  const offeringName = tokenOffer?.originationRow.poolName
+    ? tokenOffer.originationRow.poolName
+    : `${tokenOffer?.offeringOverview.offerToken.symbol} ${formatDateTime(
+        tokenOffer?.originationRow.createdAt.toNumber() || 0
+      )}`
 
   return (
     <PageWrapper>
@@ -462,6 +473,14 @@ const TokenSaleDetails = () => {
           <SimpleLoader />
         ) : (
           <div className={cl.root}>
+            <TokenSaleDescription
+              offeringName={offeringName}
+              offeringDescription={tokenOffer.originationRow.description}
+              loadInfo={() => loadInfo(true)}
+              isOwnerOrManager={isOwnerOrManager}
+              isSaleInitiated={isSaleInitiated}
+            />
+            <hr className={cl.hr} />
             <SetWhitelistModal
               poolAddress={poolAddress}
               open={state.open}
