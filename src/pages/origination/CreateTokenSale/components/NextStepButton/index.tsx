@@ -23,7 +23,7 @@ export const NextStepButton = ({
   const classes = useStyles()
   return (
     <div className={classes.root}>
-      <Grid container spacing={4}>
+      <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
           <Button
             color="secondary"
