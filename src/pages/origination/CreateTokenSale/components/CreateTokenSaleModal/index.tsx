@@ -72,7 +72,7 @@ export const CreateTokenSaleModal = (props: IProps) => {
 
   const onSuccessClose = () => {
     history.push(
-      `/origination/token-offers/${getNetworkFromId(
+      `/origination/offerings/${getNetworkFromId(
         (networkId || DEFAULT_NETWORK_ID) as NetworkId
       )}/${poolAddress}`
     )

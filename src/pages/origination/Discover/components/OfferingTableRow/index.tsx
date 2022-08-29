@@ -145,7 +145,7 @@ export const OfferingTableRow = ({ offering }: IProps) => {
     return (
       <NavLink
         className={cl.content}
-        to={`/origination/token-offers/${tokenOffer.network}/${tokenOffer.address}`}
+        to={`/origination/offerings/${tokenOffer.network}/${tokenOffer.address}`}
       >
         <OfferingTd type="offerToken">
           <div className={clsx(cl.item, cl.itemMarginLeft)}>
