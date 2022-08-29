@@ -26,9 +26,15 @@ interface IProps {
   data: ICreateTokenSaleData
   updateData: (_: any) => void
   onNext: () => void
+  onBack: () => void
 }
 
-export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
+export const AuctionStep: React.FC<IProps> = ({
+  data,
+  updateData,
+  onNext,
+  onBack,
+}) => {
   const [tokenSalePhase, setTokenSalePhase] = useState(
     ETokenSalePhase.Whitelist
   )
@@ -79,12 +85,14 @@ export const AuctionStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
           data={data}
           updateData={updateData}
           onNext={() => setTokenSalePhase(ETokenSalePhase.Public)}
+          onBack={onBack}
         />
       ) : (
         <PublicSaleForm
           data={data}
           updateData={updateData}
           onNext={handlePublicSaleSubmit}
+          onBack={onBack}
         />
       )}
     </>

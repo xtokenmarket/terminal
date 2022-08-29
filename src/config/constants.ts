@@ -215,9 +215,6 @@ const ETH_TIP =
   'Pool Deployment fee is 0.2 ETH. Additional 1% fee on any rewards distributed for this pool.'
 const POLYGON_TIP =
   'Pool Deployment fee is 350 MATIC. Additional 1% fee on any rewards distributed for this pool.'
-// TODO: confirm fee amount
-const ORIGINATION_ETH_TIP = 'Deployment fee is 0.01 ETH.'
-const ORIGINATION_POLYGON_TIP = 'Deployment fee is 350 MATIC.'
 
 export const FEE_TIPS: Record<ChainId, string> = {
   [ChainId.Mainnet]: ETH_TIP,
@@ -226,15 +223,6 @@ export const FEE_TIPS: Record<ChainId, string> = {
   [ChainId.Polygon]: POLYGON_TIP,
   [ChainId.Kovan]: ETH_TIP,
   [ChainId.Goerli]: ETH_TIP,
-}
-
-export const ORIGINATION_FEE_TIPS: Record<ChainId, string> = {
-  [ChainId.Mainnet]: ORIGINATION_ETH_TIP,
-  [ChainId.Arbitrum]: ORIGINATION_ETH_TIP,
-  [ChainId.Optimism]: ORIGINATION_ETH_TIP,
-  [ChainId.Polygon]: ORIGINATION_POLYGON_TIP,
-  [ChainId.Kovan]: ORIGINATION_ETH_TIP,
-  [ChainId.Goerli]: ORIGINATION_ETH_TIP,
 }
 
 export const PROD_TESTNET_DISCOVER_PAGE_SIZE = 5

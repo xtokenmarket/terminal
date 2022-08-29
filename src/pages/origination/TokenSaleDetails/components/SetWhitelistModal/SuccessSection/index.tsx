@@ -4,7 +4,15 @@ import { ViewTransaction } from 'components'
 const ICON_SIZE = 150
 
 const useStyles = makeStyles((theme) => ({
-  root: { paddingTop: ICON_SIZE / 2 },
+  root: {
+    paddingTop: ICON_SIZE / 2,
+    maxHeight: '80vh',
+    width: '70vw',
+    maxWidth: 600,
+    [theme.breakpoints.down('xs')]: {
+      width: '90vw',
+    },
+  },
   header: {
     backgroundColor: theme.colors.primary500,
     padding: 32,

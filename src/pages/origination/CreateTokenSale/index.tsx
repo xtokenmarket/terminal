@@ -159,6 +159,7 @@ const CreareTokenSale = () => {
             data={state as Required<IState>}
             updateData={updateData}
             onNext={onNext}
+            onBack={onBack}
           />
         )
       case ECreareTokenSaleStep.Vesting:
@@ -167,6 +168,7 @@ const CreareTokenSale = () => {
             data={state as Required<IState>}
             updateData={updateData}
             onNext={onNext}
+            onBack={onBack}
           />
         )
       case ECreareTokenSaleStep.Confirm:
@@ -175,6 +177,7 @@ const CreareTokenSale = () => {
             data={state as Required<IState>}
             updateData={updateData}
             onEdit={onPrev}
+            onBack={onBack}
           />
         )
       default:
@@ -184,11 +187,7 @@ const CreareTokenSale = () => {
 
   return (
     <PageWrapper className={classes.pageWrapper}>
-      <CreareTokenSaleHeader
-        step={state.step}
-        onCancel={onCancel}
-        onBack={onBack}
-      />
+      <CreareTokenSaleHeader step={state.step} onCancel={onCancel} />
       <PageContent>
         <div className={classes.content}>{renderContent()}</div>
       </PageContent>

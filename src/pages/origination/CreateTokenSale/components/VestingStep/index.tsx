@@ -1,12 +1,12 @@
 import { useEffect } from 'react'
-import moment, { unitOfTime } from 'moment'
-import { makeStyles, Grid, Typography, Button } from '@material-ui/core'
+import { makeStyles, Grid, Typography } from '@material-ui/core'
 import { ICreateTokenSaleData, PeriodUnit } from 'types'
 import { EPeriods, EVestingOption } from 'utils/enums'
 import { Radio } from '../Radio'
 import { Selector } from '../Selector'
 import { InfoPanel } from './InfoPanel'
 import { getDurationSec } from 'utils'
+import { NextStepButton } from '../NextStepButton'
 
 const useStyles = makeStyles((theme) => ({
   formContainer: {
@@ -31,9 +31,15 @@ interface IProps {
   data: ICreateTokenSaleData
   updateData: (_: any) => void
   onNext: () => void
+  onBack: () => void
 }
 
-export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
+export const VestingStep: React.FC<IProps> = ({
+  data,
+  updateData,
+  onNext,
+  onBack,
+}) => {
   const classes = useStyles()
   const vestingWanted = data.vestingEnabled === EVestingOption.Yes
   const { vestingPeriod, vestingPeriodUnit, cliffPeriod, cliffPeriodUnit } =
@@ -141,19 +147,14 @@ export const VestingStep: React.FC<IProps> = ({ data, updateData, onNext }) => {
         )}
       </Grid>
 
-      <Button
+      <NextStepButton
         id="vestingStepBtn"
-        className={classes.nextButton}
-        color="primary"
-        fullWidth
-        onClick={onNext}
-        variant="contained"
+        onNextClick={onNext}
+        onBackClick={onBack}
         disabled={
           !data.vestingEnabled || (vestingWanted && !validVestingDataInserted)
         }
-      >
-        Next
-      </Button>
+      />
     </>
   )
 }

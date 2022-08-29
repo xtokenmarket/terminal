@@ -371,16 +371,13 @@ const TokenSaleDetails = () => {
     isVestingPeriodZero &&
     !tokenOffer?.purchaseTokenBalance?.gt(0)
 
-  const isUnsuccessfulVestingSaleClaimUser =
-    isOfferUnsuccessful &&
-    tokenOffer.userPosition.amountInvested.gt(0) &&
-    tokenOffer.offeringOverview.vestingPeriod.gt(0)
-
+  // users calim their offer tokens when sale is successful after cliff period
   const isSuccessfulSaleClaimUser =
     isCliffPeriodPassed() &&
     !isOfferUnsuccessful &&
     tokenOffer?.userPosition.tokenPurchased.gt(0)
 
+  // users calim their purchase tokens when sale is unsuccessful(with/without vesting period. Not showing "vest" in this case)
   const isUnsuccessfulSaleClaimUser =
     isOfferUnsuccessful && tokenOffer.userPosition.amountInvested.gt(0)
 
@@ -392,9 +389,7 @@ const TokenSaleDetails = () => {
     isSaleCompleted &&
     // vesting period must === 0 in this case. Otherwise it should show "vest"
     isVestingPeriodZero &&
-    (isUnsuccessfulVestingSaleClaimUser ||
-      isSuccessfulSaleClaimUser ||
-      isUnsuccessfulSaleClaimUser)
+    isSuccessfulSaleClaimUser
 
   // manager claim all the purchase tokens and unsold offer tokens(if exist) after sale
   const isClaimPurchaseTokenButtonShowAfterSale =
@@ -402,7 +397,7 @@ const TokenSaleDetails = () => {
 
   // vesting and reserve === 0
   // manager claim all the purchase tokens during sale
-  const isClaimPurchaseTokenButtonShowDuringSale =
+  const isClaimButtonShowDuringSale =
     isOwnerOrManager &&
     !isSaleCompleted &&
     isVestingReserveZero &&
@@ -410,7 +405,7 @@ const TokenSaleDetails = () => {
 
   // vesting and reserve === 0
   // manager claim all the purchase tokens and unsold offer tokens(if exist) after sale
-  const isClaimPurchaseTokenButtonShowAfterSaleVestingReserveZero =
+  const isClaimButtonShowAfterSaleVestingReserve0 =
     isOwnerOrManager &&
     isSaleCompleted &&
     isVestingReserveZero &&
@@ -499,7 +494,7 @@ const TokenSaleDetails = () => {
                 toggleModal={toggleClaimModal}
                 isClaimButtonShow={
                   isClaimPurchaseTokenButtonShowAfterSale ||
-                  isClaimPurchaseTokenButtonShowAfterSaleVestingReserveZero
+                  isClaimButtonShowAfterSaleVestingReserve0
                 }
               />
             ) : (
@@ -530,7 +525,7 @@ const TokenSaleDetails = () => {
                     tokenOffer.whitelist.pricingFormula ===
                     EPricingFormula.Standard
                   }
-                  isClaimButtonShow={isClaimPurchaseTokenButtonShowDuringSale}
+                  isClaimButtonShow={isClaimButtonShowDuringSale}
                   isClaimButtonDisabled={
                     isClaimPurchaseTokenButtonDisabled || !isDuringWhitelistSale
                   }
@@ -592,8 +587,7 @@ const TokenSaleDetails = () => {
                     EPricingFormula.Standard
                   }
                   isClaimButtonShow={
-                    isClaimPurchaseTokenButtonShowDuringSale &&
-                    isWhitelistSaleEnded
+                    isClaimButtonShowDuringSale && isWhitelistSaleEnded
                   }
                   toggleModal={toggleClaimModal}
                   isClaimButtonDisabled={
@@ -620,7 +614,9 @@ const TokenSaleDetails = () => {
                 isVestedPropertiesShow={isVestedPropertiesShow}
                 isOfferUnsuccessful={isOfferUnsuccessful}
                 isClaimButtonDisabled={isClaimPurchaseTokenButtonDisabled}
-                isClaimButtonShow={isClaimButtonShowAfterSale}
+                isClaimButtonShow={
+                  isClaimButtonShowAfterSale || isUnsuccessfulSaleClaimUser
+                }
               />
             )}
             {isVestButtonShow && (
