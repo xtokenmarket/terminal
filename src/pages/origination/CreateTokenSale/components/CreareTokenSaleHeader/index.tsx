@@ -66,28 +66,15 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   step: ECreareTokenSaleStep
   onCancel: () => void
-  onBack: () => void
 }
 
-export const CreareTokenSaleHeader = ({ step, onCancel, onBack }: IProps) => {
+export const CreareTokenSaleHeader = ({ step, onCancel }: IProps) => {
   const classes = useStyles()
-  const isFirstStep = step === ECreareTokenSaleStep.Offering
 
   return (
     <div className={clsx(classes.headerTop)}>
       <Typography className={classes.title}>Token Offering</Typography>
       <div className={classes.headerDataContainer}>
-        {!isFirstStep && (
-          <div
-            className={classes.backWrapper}
-            onClick={() => {
-              onBack()
-            }}
-          >
-            <img alt="icon" src="/assets/icons/back.svg" />
-            <span className={classes.backText}>Back</span>
-          </div>
-        )}
         <CreateTokenSaleStepper step={step} />
         <span className={classes.cancel} onClick={onCancel}>
           Cancel

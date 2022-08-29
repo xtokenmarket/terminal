@@ -9,6 +9,7 @@ import { formatBigNumber, getDurationSec, parseDurationSec } from 'utils'
 import { useServices } from 'helpers'
 import { ZERO } from 'utils/number'
 import { ChainId } from 'config/constants'
+import { NextStepButton } from '../NextStepButton'
 
 const useStyles = makeStyles((theme) => ({
   label: {
@@ -114,9 +115,10 @@ interface IProps {
   data: ICreateTokenSaleData
   updateData: (_: any) => void
   onEdit: () => void
+  onBack: () => void
 }
 
-export const ConfirmStep: React.FC<IProps> = ({ data, onEdit }) => {
+export const ConfirmStep: React.FC<IProps> = ({ data, onEdit, onBack }) => {
   const { offerToken } = data
   const classes = useStyles()
   const [isSellTokenModalVisible, setIsSellTokenModalVisible] = useState(false)
@@ -260,15 +262,11 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit }) => {
         >{`Deployment fee is ${formatBigNumber(listingFee, 18)} ${
           chainId === ChainId.Polygon ? 'Matic' : 'ETH'
         }.`}</Typography>
-        <Button
+        <NextStepButton
           id="submit"
-          color="primary"
-          fullWidth
-          onClick={toggleSellTokenModal}
-          variant="contained"
-        >
-          SUBMIT
-        </Button>
+          onNextClick={toggleSellTokenModal}
+          onBackClick={onBack}
+        />
       </div>
 
       <CreateTokenSaleModal
