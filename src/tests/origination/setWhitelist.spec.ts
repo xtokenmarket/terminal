@@ -8,7 +8,7 @@ import {
 } from './createTokenSale.spec'
 
 const POOL_ADDRESS =
-  'http://localhost:3000/origination/token-offers/goerli/0x9539e6BE310EB44a9cbd81fAccbaDe659081CE0A'
+  'http://localhost:3000/origination/offerings/goerli/0x9539e6BE310EB44a9cbd81fAccbaDe659081CE0A'
 const ADDRESS_CAP = 1
 const WHITELIST_PATH = process.env.WHITELIST_PATH || ''
 jest.setTimeout(60000)

@@ -40,7 +40,7 @@ const routes = [
       },
       {
         exact: true,
-        path: '/origination/token-offers/:network/:poolAddress',
+        path: '/origination/offerings/:network/:poolAddress',
         component: lazy(() => import('pages/origination/TokenSaleDetails')),
       },
       {

@@ -8,7 +8,7 @@ import {
 } from './createTokenSale.spec'
 
 const POOL_ADDRESS =
-  'http://localhost:3000/origination/token-offers/goerli/0x8B8A2346Aebe65dc0070941d31a91BDF90562a8B'
+  'http://localhost:3000/origination/offerings/goerli/0x8B8A2346Aebe65dc0070941d31a91BDF90562a8B'
 jest.setTimeout(60000)
 
 describe('initiate sale', () => {
