@@ -23,12 +23,14 @@ interface IProps {
   data: ICreateTokenSaleData
   updateData: (_: any) => void
   onNext: () => void
+  onBack: () => void
 }
 
 export const WhitelistSaleForm: React.FC<IProps> = ({
   data,
   updateData,
   onNext,
+  onBack,
 }) => {
   const { whitelistSale } = data
   const {
@@ -67,6 +69,7 @@ export const WhitelistSaleForm: React.FC<IProps> = ({
       }
       onSubmit={onNext}
       submitDisabled={isNextBtnDisabled}
+      onBack={onBack}
     />
   )
 }

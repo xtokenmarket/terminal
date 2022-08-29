@@ -24,6 +24,7 @@ import { Selector } from '../Selector'
 import clsx from 'clsx'
 import { IToken, PeriodUnit, SaleData } from 'types'
 import { HOURS_IN_4_WEEKS } from 'config/constants'
+import { NextStepButton } from '../NextStepButton'
 
 const useStyles = makeStyles((theme) => ({
   label: {
@@ -101,6 +102,7 @@ interface IProps {
   updateSaleData: (_: Partial<SaleData>) => void
   onSubmit: () => void
   submitDisabled: boolean
+  onBack: () => void
 }
 
 export const SaleForm = ({
@@ -111,6 +113,7 @@ export const SaleForm = ({
   updateSaleData,
   onSubmit,
   submitDisabled,
+  onBack,
 }: IProps) => {
   const classes = useStyles()
   const {
@@ -303,21 +306,16 @@ export const SaleForm = ({
         </Grid>
       </Grid>
 
-      <Button
+      <NextStepButton
         id={
           tokenSalePhase === ETokenSalePhase.Whitelist
             ? 'whitelistSaleBtn'
             : 'publicSaleBtn'
         }
-        className={classes.nextButton}
-        color="primary"
-        fullWidth
-        onClick={onSubmit}
-        variant="contained"
+        onNextClick={onSubmit}
+        onBackClick={onBack}
         disabled={submitDisabled || isShowOfferingPeriodError}
-      >
-        Next
-      </Button>
+      />
     </>
   )
 }
