@@ -38,6 +38,7 @@ import { PoolShareSection } from '../PoolShareSection'
 import { tickToPrice } from '@uniswap/v3-sdk'
 import { Token } from '@uniswap/sdk-core'
 import { CLRService } from 'services'
+import { PoolDescription } from '../PoolDescription'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -206,6 +207,10 @@ const useStyles = makeStyles((theme) => ({
   infoIcon: {
     width: 16,
     height: 16,
+  },
+  hr: {
+    borderColor: theme.colors.primary200,
+    marginTop: 20,
   },
 }))
 
@@ -480,6 +485,13 @@ export const Content = (props: IProps) => {
 
       <div className={classes.content}>
         <div>
+          <PoolDescription
+            poolName={'default name'}
+            poolDescription={'default description'}
+            loadInfo={() => reloadTerminalPool(true)}
+            isOwnerOrManager={poolData.manager === account}
+          />
+          <hr className={classes.hr} />
           <Grid container spacing={0}>
             <Grid item xs={12} md={6} className={classes.balance}>
               <div className={classes.titleWrapper}>
