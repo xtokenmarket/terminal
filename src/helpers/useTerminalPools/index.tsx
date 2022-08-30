@@ -99,7 +99,6 @@ const getFilteredPools = (
             '0x6148a1bd2be586e981115f9c0b16a09bbc271e2c', // CitaDAO pool
             '0xc5f0237a2a2bb9dc60da73491ad39a1afc4c8b63', // frETH-WETH pool
             '0x7fc70abe76605d1ef1f7a5ddc5e2ad35a43a6949', // PONY-USDC pool
-            '0xda62d109064138c14d45085b6e49568e1c0b4e23', // 20SML025-USDC pool
           ].includes(pool.address.toLowerCase())
         )
     )
