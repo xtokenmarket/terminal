@@ -352,9 +352,7 @@ export const SetWhitelistModal: React.FC<IProps> = ({
               >
                 {state.txState === TxState.InProgress
                   ? 'Pending'
-                  : state.whitelistFile
-                  ? 'SET ALLOWLIST'
-                  : 'Approve Allowlist'}
+                  : 'Set Allowlist'}
               </Typography>
               {state.txState === TxState.InProgress && (
                 <>
