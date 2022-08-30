@@ -452,7 +452,9 @@ export const useOriginationPool = (
       publicSale,
       originationRow: {
         ...offeringOverview,
-        startingPrice: publicStartingPrice,
+        startingPrice: whitelistStartingPrice
+          ? whitelistStartingPrice
+          : publicStartingPrice,
         saleDuration: publicSaleDuration,
         createdAt,
         description,
