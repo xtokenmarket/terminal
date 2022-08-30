@@ -195,12 +195,8 @@ export const useTerminalPool = (
         const DCFC_POOL_ADDRESS = '0x47b3990D01e7fa3aF4bB2aA5e60927E0C722AFc9'
         if (poolAddress?.toLowerCase() === DCFC_POOL_ADDRESS.toLowerCase()) {
           const formatTokenPrice = (price: number) =>
-            formatUnits(
-              BigNumber.from((price * 1e8).toFixed(0)).div(
-                BigNumber.from(10).pow(8)
-              ),
-              12
-            )
+            formatUnits(BigNumber.from((price * 1e18).toFixed(0)), 18)
+
           token0.price = formatTokenPrice(token0.price)
           token1.price = formatTokenPrice(token1.price)
         } else {
