@@ -143,6 +143,7 @@ export const useTerminalPool = (
 
         const { amount0, amount1 } =
           await clrService.contract.getStakedTokenBalance()
+
         const token0Balance =
           token0.decimals === 18
             ? amount0
@@ -190,8 +191,18 @@ export const useTerminalPool = (
         token0.symbol = token0.symbol.toUpperCase()
         token1.symbol = token1.symbol.toUpperCase()
 
-        token0.price = token0.price.toString()
-        token1.price = token1.price.toString()
+        // TODO: remove this logic when the API returns token prices as string
+        const DCFC_POOL_ADDRESS = '0x47b3990D01e7fa3aF4bB2aA5e60927E0C722AFc9'
+        if (poolAddress?.toLowerCase() === DCFC_POOL_ADDRESS.toLowerCase()) {
+          const formatTokenPrice = (price: number) =>
+            formatEther(BigNumber.from((price * 1e18).toFixed(0)))
+
+          token0.price = formatTokenPrice(token0.price)
+          token1.price = formatTokenPrice(token1.price)
+        } else {
+          token0.price = token0.price.toString()
+          token1.price = token1.price.toString()
+        }
 
         token0.balance = token0.balance
           ? token0.decimals === 18
