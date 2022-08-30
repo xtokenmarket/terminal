@@ -192,10 +192,8 @@ export const useTerminalPool = (
         token1.symbol = token1.symbol.toUpperCase()
 
         // TODO: remove this logic when the API returns token prices as string
-        if (
-          poolAddress?.toLowerCase() ===
-          '0x47b3990D01e7fa3aF4bB2aA5e60927E0C722AFc9'.toLowerCase()
-        ) {
+        const DCFC_POOL_ADDRESS = '0x47b3990D01e7fa3aF4bB2aA5e60927E0C722AFc9'
+        if (poolAddress?.toLowerCase() === DCFC_POOL_ADDRESS.toLowerCase()) {
           const formatTokenPrice = (price: number) =>
             formatUnits(
               BigNumber.from((price * 1e8).toFixed(0)).div(
