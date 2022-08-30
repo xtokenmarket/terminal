@@ -143,6 +143,7 @@ export const useTerminalPool = (
 
         const { amount0, amount1 } =
           await clrService.contract.getStakedTokenBalance()
+
         const token0Balance =
           token0.decimals === 18
             ? amount0
@@ -190,8 +191,23 @@ export const useTerminalPool = (
         token0.symbol = token0.symbol.toUpperCase()
         token1.symbol = token1.symbol.toUpperCase()
 
-        token0.price = token0.price.toString()
-        token1.price = token1.price.toString()
+        if (
+          poolAddress?.toLowerCase() ===
+          '0x47b3990D01e7fa3aF4bB2aA5e60927E0C722AFc9'.toLowerCase()
+        ) {
+          const formatTokenPrice = (price: number) =>
+            formatUnits(
+              BigNumber.from((price * 1e8).toFixed(0)).div(
+                BigNumber.from(10).pow(8)
+              ),
+              12
+            )
+          token0.price = formatTokenPrice(token0.price)
+          token1.price = formatTokenPrice(token1.price)
+        } else {
+          token0.price = token0.price.toString()
+          token1.price = token1.price.toString()
+        }
 
         token0.balance = token0.balance
           ? token0.decimals === 18
