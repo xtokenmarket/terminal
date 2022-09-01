@@ -2,11 +2,12 @@ import { useEffect } from 'react'
 import { makeStyles, Grid, Typography } from '@material-ui/core'
 import { ICreateTokenSaleData, PeriodUnit } from 'types'
 import { EPeriods, EVestingOption } from 'utils/enums'
+import { getDurationSec } from 'utils'
+
+import { InfoPanel } from './InfoPanel'
+import { NextStepButton } from '../NextStepButton'
 import { Radio } from '../Radio'
 import { Selector } from '../Selector'
-import { InfoPanel } from './InfoPanel'
-import { getDurationSec } from 'utils'
-import { NextStepButton } from '../NextStepButton'
 
 const useStyles = makeStyles((theme) => ({
   formContainer: {
@@ -24,6 +25,11 @@ const useStyles = makeStyles((theme) => ({
   },
   nextButton: {
     marginTop: 'auto',
+  },
+  warning: {
+    color: theme.colors.warn2,
+    fontSize: 14,
+    marginTop: 10,
   },
 }))
 
@@ -87,6 +93,13 @@ export const VestingStep: React.FC<IProps> = ({
       cliffPeriodUnit
     )
 
+  const isVestingZero = data.vestingPeriod && Number(data.vestingPeriod) === 0
+
+  const onChangeInput = (e: any, type: string) => {
+    const value = e.target.value ? parseInt(e.target.value) : ''
+    updateData({ [type]: value.toString() })
+  }
+
   return (
     <>
       <Grid item xs={12} md={5} className={classes.formContainer}>
@@ -115,12 +128,14 @@ export const VestingStep: React.FC<IProps> = ({
             label="Vesting Period"
             infoText="Amount of time until all tokens are available to claim"
             inputValue={`${data.vestingPeriod}`}
-            onChangeinput={(e) => {
-              const newValue = parseInt(e.target.value)
-              updateData({ vestingPeriod: newValue.toString() })
-            }}
+            onChangeInput={(e) => onChangeInput(e, 'vestingPeriod')}
             disabled={!vestingWanted}
           />
+          {isVestingZero && (
+            <div className={classes.warning}>
+              Vesting period input cannot be zero
+            </div>
+          )}
         </Grid>
         <Grid item xs={12}>
           <Selector
@@ -132,10 +147,7 @@ export const VestingStep: React.FC<IProps> = ({
             label="Cliff Period"
             infoText="Amount of time until first tokens are available to claim"
             inputValue={`${data.cliffPeriod}`}
-            onChangeinput={(e) => {
-              const newValue = parseInt(e.target.value)
-              updateData({ cliffPeriod: newValue.toString() })
-            }}
+            onChangeInput={(e) => onChangeInput(e, 'cliffPeriod')}
             disabled={!vestingWanted}
           />
         </Grid>
@@ -146,7 +158,6 @@ export const VestingStep: React.FC<IProps> = ({
           />
         )}
       </Grid>
-
       <NextStepButton
         id="vestingStepBtn"
         onNextClick={onNext}

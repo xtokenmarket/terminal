@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import clsx from 'clsx'
 import { TokenIcon } from 'components'
 import { IToken } from 'types'
@@ -9,7 +9,6 @@ import { QuestionTooltip } from '../QuestionTooltip'
 import { useTokenBalance } from 'helpers'
 import { formatBigNumber, numberWithCommas } from 'utils'
 import { TokenAmountPriceEstimation } from '../TokenAmountPriceEstimation'
-import { formatUnits } from 'ethers/lib/utils'
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -135,7 +134,6 @@ interface IProps {
   tokenDetailsPlaceholder?: string
   disabled?: boolean
   infoText?: string
-  setIsInsufficientBalance?: (_: boolean) => void
 }
 
 export const TokenAmountInput: React.FC<IProps> = ({

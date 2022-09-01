@@ -65,7 +65,7 @@ export const AuctionStep: React.FC<IProps> = ({
           variant="contained"
           onClick={handleWhitelistSaleClick}
           className={clsx(
-            tokenSalePhase != ETokenSalePhase.Whitelist && classes.btnInactive
+            tokenSalePhase !== ETokenSalePhase.Whitelist && classes.btnInactive
           )}
         >
           Allowlist Sale

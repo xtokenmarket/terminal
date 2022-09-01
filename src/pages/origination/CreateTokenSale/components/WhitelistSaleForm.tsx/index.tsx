@@ -40,19 +40,23 @@ export const WhitelistSaleForm: React.FC<IProps> = ({
     offeringPeriod,
     offeringPeriodUnit,
   } = whitelistSale
+
+  const isPricingValid =
+    pricingFormula &&
+    validPricingDetailsSet(
+      pricingFormula,
+      Number(startingPrice),
+      Number(endingPrice)
+    )
+
   const isNextBtnDisabled =
-    (whitelistSale.enabled == undefined || !!whitelistSale.enabled) &&
+    (whitelistSale.enabled === undefined || !!whitelistSale.enabled) &&
     !(
-      pricingFormula &&
       startingPrice &&
       endingPrice &&
       offeringPeriod &&
       offeringPeriodUnit &&
-      validPricingDetailsSet(
-        pricingFormula,
-        Number(startingPrice),
-        Number(endingPrice)
-      ) &&
+      isPricingValid &&
       Number(startingPrice) > 0 &&
       Number(endingPrice) > 0 &&
       Number(offeringPeriod) > 0

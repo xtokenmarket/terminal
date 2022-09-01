@@ -24,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 4,
     position: 'relative',
     background: 'transparent',
-    color: theme.colors.primary100,
     border: `1px solid ${theme.colors.primary100}`,
     fontSize: 16,
     padding: '17px 26px 17px 12px',
@@ -73,8 +72,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   inputField: {
-    color: theme.colors.primary100,
-    fontWeight: 400,
+    fontWeight: 700,
   },
   labelContainer: {
     display: 'flex',
@@ -113,7 +111,7 @@ interface IProps {
   infoText?: string
   inputValue: string
   disabled?: boolean
-  onChangeinput: (
+  onChangeInput: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void
   saleDisplayName?: string
@@ -127,12 +125,12 @@ export const Selector: React.FC<IProps> = ({
   infoText,
   inputValue,
   disabled,
-  onChangeinput,
+  onChangeInput,
   saleDisplayName,
   id,
 }) => {
   const classes = useStyles()
-  const Eoptions = saleDisplayName ? EOfferingPeriods : EPeriods
+  const EOptions = saleDisplayName ? EOfferingPeriods : EPeriods
 
   return (
     <>
@@ -157,7 +155,7 @@ export const Selector: React.FC<IProps> = ({
             id={`${id}Input`}
             className={classes.inputField}
             value={inputValue}
-            onChange={onChangeinput}
+            onChange={onChangeInput}
             disabled={disabled}
           />
         </Grid>
@@ -166,7 +164,7 @@ export const Selector: React.FC<IProps> = ({
             id={`${id}Dropdown`}
             fullWidth
             disableUnderline
-            placeholder={Eoptions.Weeks}
+            placeholder={EOptions.Weeks}
             classes={{
               root: clsx(
                 classes.selectorInput,
@@ -189,7 +187,7 @@ export const Selector: React.FC<IProps> = ({
             onChange={onSelectorChange}
             disabled={disabled}
           >
-            {Object.values(Eoptions).map((unit, index) => {
+            {Object.values(EOptions).map((unit, index) => {
               return (
                 <MenuItem
                   className={classes.item}
