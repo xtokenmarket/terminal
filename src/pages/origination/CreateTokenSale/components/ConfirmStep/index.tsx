@@ -58,7 +58,6 @@ const useStyles = makeStyles((theme) => ({
       [theme.breakpoints.up('sm')]: {
         marginRight: 'auto',
         marginLeft: 'auto',
-        alignSelf: 'flex-end',
         width: 1,
         background: theme.colors.primary200,
         height: 58,

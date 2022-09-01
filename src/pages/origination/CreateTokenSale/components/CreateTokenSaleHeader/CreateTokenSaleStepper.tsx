@@ -7,7 +7,7 @@ import {
   makeStyles,
   useMediaQuery,
 } from '@material-ui/core'
-import { ECreareTokenSaleStep } from 'utils/enums'
+import { ECreateTokenSaleStep } from 'utils/enums'
 
 const useStyles = makeStyles((theme) => ({
   stepper: {
@@ -87,26 +87,26 @@ const StepCircleIcon = ({
 }
 
 interface IProps {
-  step: ECreareTokenSaleStep
+  step: ECreateTokenSaleStep
 }
 
 const STEPS_DATA: Record<
-  ECreareTokenSaleStep,
+  ECreateTokenSaleStep,
   { index: number; label: string }
 > = {
-  [ECreareTokenSaleStep.Offering]: {
+  [ECreateTokenSaleStep.Offering]: {
     index: 0,
     label: 'Offering Parameters',
   },
-  [ECreareTokenSaleStep.Auction]: {
+  [ECreateTokenSaleStep.Auction]: {
     index: 1,
     label: 'Auction Parameters',
   },
-  [ECreareTokenSaleStep.Vesting]: {
+  [ECreateTokenSaleStep.Vesting]: {
     index: 2,
     label: 'Vesting Parameters',
   },
-  [ECreareTokenSaleStep.Confirm]: {
+  [ECreateTokenSaleStep.Confirm]: {
     index: 3,
     label: 'Confirm',
   },

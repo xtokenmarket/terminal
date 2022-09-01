@@ -4,13 +4,13 @@ import { PageContent, PageWrapper } from 'components'
 import { useConnectedWeb3Context } from 'contexts'
 import { useHistory } from 'react-router'
 import { ICreateTokenSaleData } from 'types'
-import { ECreareTokenSaleStep, EPeriods } from 'utils/enums'
+import { ECreateTokenSaleStep, EPeriods } from 'utils/enums'
 import {
-  OfferingStep,
   AuctionStep,
-  VestingStep,
-  CreareTokenSaleHeader,
   ConfirmStep,
+  CreateTokenSaleHeader,
+  OfferingStep,
+  VestingStep,
 } from './components'
 
 const useStyles = makeStyles((theme) => ({
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IState extends Omit<ICreateTokenSaleData, 'token0' | 'token1'> {
-  step: ECreareTokenSaleStep
+  step: ECreateTokenSaleStep
 }
 
 const initialState: IState = {
@@ -52,7 +52,7 @@ const initialState: IState = {
   cliffPeriodUnit: '',
   offerToken: undefined,
   purchaseToken: undefined,
-  step: ECreareTokenSaleStep.Offering,
+  step: ECreateTokenSaleStep.Offering,
   whitelistSale: {
     enabled: null,
     offeringPeriod: '',
@@ -71,7 +71,7 @@ const initialState: IState = {
   },
 }
 
-const CreareTokenSale = () => {
+const CreateTokenSale = () => {
   const history = useHistory()
   const classes = useStyles()
   const { account, setWalletConnectModalOpened } = useConnectedWeb3Context()
@@ -90,14 +90,14 @@ const CreareTokenSale = () => {
 
   const onNext = () => {
     switch (state.step) {
-      case ECreareTokenSaleStep.Offering:
-        setState((prev) => ({ ...prev, step: ECreareTokenSaleStep.Auction }))
+      case ECreateTokenSaleStep.Offering:
+        setState((prev) => ({ ...prev, step: ECreateTokenSaleStep.Auction }))
         break
-      case ECreareTokenSaleStep.Auction:
-        setState((prev) => ({ ...prev, step: ECreareTokenSaleStep.Vesting }))
+      case ECreateTokenSaleStep.Auction:
+        setState((prev) => ({ ...prev, step: ECreateTokenSaleStep.Vesting }))
         break
-      case ECreareTokenSaleStep.Vesting:
-        setState((prev) => ({ ...prev, step: ECreareTokenSaleStep.Confirm }))
+      case ECreateTokenSaleStep.Vesting:
+        setState((prev) => ({ ...prev, step: ECreateTokenSaleStep.Confirm }))
         break
       default:
         onCancel()
@@ -107,8 +107,8 @@ const CreareTokenSale = () => {
 
   const onPrev = () => {
     switch (state.step) {
-      case ECreareTokenSaleStep.Confirm:
-        setState((prev) => ({ ...prev, step: ECreareTokenSaleStep.Offering }))
+      case ECreateTokenSaleStep.Confirm:
+        setState((prev) => ({ ...prev, step: ECreateTokenSaleStep.Offering }))
         break
       default:
         onCancel()
@@ -118,14 +118,14 @@ const CreareTokenSale = () => {
 
   const onBack = () => {
     switch (state.step) {
-      case ECreareTokenSaleStep.Auction:
-        setState((prev) => ({ ...prev, step: ECreareTokenSaleStep.Offering }))
+      case ECreateTokenSaleStep.Auction:
+        setState((prev) => ({ ...prev, step: ECreateTokenSaleStep.Offering }))
         break
-      case ECreareTokenSaleStep.Vesting:
-        setState((prev) => ({ ...prev, step: ECreareTokenSaleStep.Auction }))
+      case ECreateTokenSaleStep.Vesting:
+        setState((prev) => ({ ...prev, step: ECreateTokenSaleStep.Auction }))
         break
-      case ECreareTokenSaleStep.Confirm:
-        setState((prev) => ({ ...prev, step: ECreareTokenSaleStep.Vesting }))
+      case ECreateTokenSaleStep.Confirm:
+        setState((prev) => ({ ...prev, step: ECreateTokenSaleStep.Vesting }))
         break
       default:
         onCancel()
@@ -149,11 +149,11 @@ const CreareTokenSale = () => {
       )
     }
     switch (state.step) {
-      case ECreareTokenSaleStep.Offering:
+      case ECreateTokenSaleStep.Offering:
         return (
           <OfferingStep data={state} updateData={updateData} onNext={onNext} />
         )
-      case ECreareTokenSaleStep.Auction:
+      case ECreateTokenSaleStep.Auction:
         return (
           <AuctionStep
             data={state as Required<IState>}
@@ -162,7 +162,7 @@ const CreareTokenSale = () => {
             onBack={onBack}
           />
         )
-      case ECreareTokenSaleStep.Vesting:
+      case ECreateTokenSaleStep.Vesting:
         return (
           <VestingStep
             data={state as Required<IState>}
@@ -171,7 +171,7 @@ const CreareTokenSale = () => {
             onBack={onBack}
           />
         )
-      case ECreareTokenSaleStep.Confirm:
+      case ECreateTokenSaleStep.Confirm:
         return (
           <ConfirmStep
             data={state as Required<IState>}
@@ -187,7 +187,7 @@ const CreareTokenSale = () => {
 
   return (
     <PageWrapper className={classes.pageWrapper}>
-      <CreareTokenSaleHeader step={state.step} onCancel={onCancel} />
+      <CreateTokenSaleHeader step={state.step} onCancel={onCancel} />
       <PageContent>
         <div className={classes.content}>{renderContent()}</div>
       </PageContent>
@@ -195,4 +195,4 @@ const CreareTokenSale = () => {
   )
 }
 
-export default CreareTokenSale
+export default CreateTokenSale

@@ -24,8 +24,11 @@ export const PublicSaleForm: React.FC<IProps> = ({
     offeringPeriod,
     offeringPeriodUnit,
   } = publicSale
+
+  const isInvalidSale = !whitelistSale.enabled && !publicSale.enabled
+
   const isNextBtnDisabled =
-    (!whitelistSale.enabled && !publicSale.enabled) ||
+    isInvalidSale ||
     (!!publicSale.enabled &&
       !(
         pricingFormula &&
@@ -45,16 +48,21 @@ export const PublicSaleForm: React.FC<IProps> = ({
 
   return (
     <SaleForm
-      tokenSalePhase={ETokenSalePhase.Public}
-      purchaseToken={data.purchaseToken}
+      error={
+        isInvalidSale && publicSale.enabled !== null
+          ? 'Please select either Allowlist or Public sale to proceed further'
+          : ''
+      }
       offerToken={data.offerToken}
+      onBack={onBack}
+      onSubmit={onNext}
+      purchaseToken={data.purchaseToken}
       saleData={data.publicSale}
+      submitDisabled={isNextBtnDisabled}
+      tokenSalePhase={ETokenSalePhase.Public}
       updateSaleData={(data: Partial<SaleData>) =>
         updateData({ publicSale: { ...publicSale, ...data } })
       }
-      onSubmit={onNext}
-      submitDisabled={isNextBtnDisabled}
-      onBack={onBack}
     />
   )
 }
