@@ -376,7 +376,12 @@ export const TableRow = ({
                         item.purchaseToken.decimals
                       )
                     )} ${item.purchaseToken.symbol}`
-                  : 'N/A'}
+                  : `${formatToShortNumber(
+                      formatBigNumber(
+                        item.startingPrice || 0,
+                        item.purchaseToken.decimals
+                      )
+                    )} ${item.purchaseToken.symbol}`}
               </Typography>
             </Td>
 
@@ -461,7 +466,12 @@ export const TableRow = ({
                       item.purchaseToken.decimals
                     )
                   )} ${item.purchaseToken.symbol}`
-                : 'N/A'}
+                : `${formatToShortNumber(
+                    formatBigNumber(
+                      item.startingPrice || 0,
+                      item.purchaseToken.decimals
+                    )
+                  )} ${item.purchaseToken.symbol}`}
             </Typography>
           </Td>
           <Td type={PublicSale.PricingFormula} label={item.label}>

@@ -442,6 +442,12 @@ export const useOriginationPool = (
       }
     }
 
+    const _startingPrice = saleInitiatedTimestamp.gt(0)
+      ? getOfferTokenPrice
+      : !whitelistStartingPrice.isZero()
+      ? whitelistStartingPrice
+      : publicStartingPrice
+
     const _offerData: ITokenOffer = {
       address: poolAddress,
       network,
@@ -452,7 +458,7 @@ export const useOriginationPool = (
       publicSale,
       originationRow: {
         ...offeringOverview,
-        startingPrice: publicStartingPrice,
+        startingPrice: _startingPrice,
         saleDuration: publicSaleDuration,
         createdAt,
         description,
