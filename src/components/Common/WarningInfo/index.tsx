@@ -2,6 +2,7 @@ import { makeStyles, Typography } from '@material-ui/core'
 import { transparentize } from 'polished'
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined'
 import clsx from 'clsx'
+import { ReactElement } from 'react'
 
 const useStyles = makeStyles((theme) => ({
   noteWrapper: {
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   title: string
-  description: string
+  description: string | ReactElement
   className?: string
 }
 
