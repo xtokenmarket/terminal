@@ -92,7 +92,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-end',
   },
   topDescription: {
-    fontSize: 18,
+    fontSize: 16,
     color: theme.colors.white,
     marginBottom: 42,
     width: '85%',

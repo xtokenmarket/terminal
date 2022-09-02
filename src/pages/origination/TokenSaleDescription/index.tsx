@@ -17,6 +17,7 @@ import { useParams } from 'react-router-dom'
 import { RouteParams } from '../TokenSaleDetails'
 import clsx from 'clsx'
 import { useSnackbar } from 'notistack'
+import colors from 'theme/colors'
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -118,7 +119,7 @@ const useStyles = makeStyles((theme) => ({
   },
   editDescriptionText: {
     fontSize: 14,
-    color: theme.colors.secondary,
+    color: theme.colors.primary100,
     cursor: 'pointer',
   },
   editorWrapper: {
@@ -135,6 +136,10 @@ const useStyles = makeStyles((theme) => ({
     color: theme.colors.warn,
     marginTop: 10,
     fontSize: 14,
+  },
+  editIcon: {
+    color: theme.colors.warn,
+    backgroundColor: theme.colors.warn,
   },
 }))
 
@@ -327,18 +332,12 @@ export const TokenSaleDescription = (props: IProps) => {
               className={classes.editIconWrapper}
               onClick={toggleEditNameMode}
             >
-              <EditIcon />
+              <EditIcon fill={colors[0].colors.primary100} />
             </div>
           )}
         </div>
       )}
 
-      {isOwnerOrManager && !isSaleInitiated && (
-        <div className={classes.hint}>
-          Offering Name and additonal information about your pool can be added
-          here.
-        </div>
-      )}
       {isDescriptionEditing ? (
         <div className={classes.editorWrapper}>
           <TextField
