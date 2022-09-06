@@ -16,6 +16,7 @@ import { SuccessSection } from './SuccessSection'
 import { CollectableFees } from './CollectableFees'
 import { BigNumber } from 'ethers'
 import { Modal } from 'components/Common/Modal'
+import { WarningInfo } from 'components/Common/WarningInfo'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -61,6 +62,13 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.primary500,
     padding: 32,
     width: '100%',
+  },
+  warning: {
+    margin: '32px 32px 0 32px',
+  },
+  link: {
+    textDecoration: 'none',
+    color: theme.colors.primary100,
   },
 }))
 
@@ -183,6 +191,26 @@ export const ReinvestModal: React.FC<IProps> = ({
             reinvestState={state.txState}
             token0Fee={poolData.user.collectableFees0}
             token1Fee={poolData.user.collectableFees1}
+          />
+
+          <WarningInfo
+            className={classes.warning}
+            title="Important"
+            description={
+              <>
+                Please connect to the Flashbots RPC in Metamask by following the
+                guide{' '}
+                <a
+                  className={classes.link}
+                  href="https://docs.flashbots.net/flashbots-protect/rpc/quick-start/#how-to-use-flashbots-protect-rpc-in-metamask"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  here
+                </a>{' '}
+                to avoid risk of frontrunning
+              </>
+            }
           />
 
           <div className={classes.buttonWrapper}>
