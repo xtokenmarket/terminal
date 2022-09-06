@@ -191,7 +191,9 @@ export const SaleForm = ({
         <Grid item xs={12} md={6}>
           <FormControl component="fieldset">
             <div className={clsx(classes.label, classes.labelWrapper)}>
-              {`Will your offering have a ${saleDisplayName} period?`}
+              {`Will your offering have ${
+                saleDisplayName === 'Allowlist' ? 'an' : 'a'
+              } ${saleDisplayName.toLowerCase()} period?`}
             </div>
             <RadioGroup
               id={`isSet${tokenSalePhase}`}

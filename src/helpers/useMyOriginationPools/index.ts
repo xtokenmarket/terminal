@@ -24,33 +24,34 @@ export const useMyTokenOffers = () => {
   const loadTokenOffers = async () => {
     setState((prev) => ({ ...prev, isLoading: true }))
 
-    if (account) {
-      try {
-        const userTokenOffers = (
-          await axios.get<any[]>(
-            `${ORIGINATION_API_URL}/pools?userAddress=${account}`
+    if (!account) {
+      setState((prev) => ({ ...prev, isLoading: false }))
+      return
+    }
+
+    try {
+      const userTokenOffers = (
+        await axios.get<any[]>(
+          `${ORIGINATION_API_URL}/pools?userAddress=${account}`
+        )
+      ).data
+
+      // Filter testnet pools on production and parse API data
+      const filteredTokenOffers = isTestnet(chainId)
+        ? userTokenOffers.filter((tokenOffer) =>
+            TEST_NETWORKS.includes(tokenOffer.network as Network)
           )
-        ).data
+        : userTokenOffers.filter(
+            (tokenOffer) =>
+              !TEST_NETWORKS.includes(tokenOffer.network as Network)
+          )
 
-        // Filter testnet pools on production and parse API data
-        const filteredTokenOffers = isTestnet(chainId)
-          ? userTokenOffers.filter((tokenOffer) =>
-              TEST_NETWORKS.includes(tokenOffer.network as Network)
-            )
-          : userTokenOffers.filter(
-              (tokenOffer) =>
-                !TEST_NETWORKS.includes(tokenOffer.network as Network)
-            )
-
-        setState((prev) => ({
-          ...prev,
-          tokenOffers: filteredTokenOffers as IOriginationPool[],
-          isLoading: false,
-        }))
-      } catch (error) {
-        setState((prev) => ({ ...prev, isLoading: false }))
-      }
-    } else {
+      setState((prev) => ({
+        ...prev,
+        tokenOffers: filteredTokenOffers as IOriginationPool[],
+        isLoading: false,
+      }))
+    } catch (error) {
       setState((prev) => ({ ...prev, isLoading: false }))
     }
   }
