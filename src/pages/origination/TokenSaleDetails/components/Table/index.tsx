@@ -169,7 +169,7 @@ export const Table = ({
               <Tooltip
                 title={
                   isInitiateSaleButtonDisabled
-                    ? 'Set up allowlist and offering name before initiate sale'
+                    ? 'Set up allowlist and offering name before initiate offering'
                     : ''
                 }
                 arrow
@@ -186,7 +186,9 @@ export const Table = ({
                     onClick={() => toggleModal && toggleModal()}
                     disabled={isInitiateSaleButtonDisabled}
                   >
-                    <Typography className={cl.text}>INITIATE SALE</Typography>
+                    <Typography className={cl.text}>
+                      INITIATE OFFERING
+                    </Typography>
                   </Button>
                 </div>
               </Tooltip>
