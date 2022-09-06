@@ -515,7 +515,7 @@ const TokenSaleDetails = () => {
                   onSaleEnd={onSaleEnd}
                   isSaleInitiated={isSaleInitiated}
                   item={tokenOffer.whitelist}
-                  label={'Allowlist Sale'}
+                  label={'Allowlist Offering'}
                   toggleModal={
                     isSaleInitiated ? toggleClaimModal : toggleSetWhitelistModal
                   }

@@ -139,7 +139,7 @@ export const Table = ({
       </Button>
     )
     switch (label) {
-      case 'Allowlist Sale':
+      case 'Allowlist Offering':
         return (
           <div className={cl.labelWrapper}>
             <Typography className={cl.label}>{label}</Typography>
