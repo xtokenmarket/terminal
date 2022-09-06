@@ -132,9 +132,9 @@ export const Table = ({
         disabled={isClaimButtonDisabled}
       >
         <Typography className={cl.text}>
-          {label === 'My Position' || label === 'Offering Summary'
+          {label === 'My Activity' || label === 'Offering Summary'
             ? 'CLAIM'
-            : 'CLAIM PURCHASE TOKEN'}
+            : 'CLAIM PURCHASE TOKENS'}
         </Typography>
       </Button>
     )
@@ -198,7 +198,7 @@ export const Table = ({
 
       case 'Public Sale':
       case 'Offering Summary':
-      case 'My Position':
+      case 'My Activity':
         return (
           <div className={cl.labelWrapper}>
             <Typography className={cl.label}>{label}</Typography>

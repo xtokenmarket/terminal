@@ -179,7 +179,7 @@ const TokenSaleDetails = () => {
     setState((prev) => ({
       ...prev,
       isClaimModalOpen: !state.isClaimModalOpen,
-      isClaimToken: !!(label === 'My Position'),
+      isClaimToken: !!(label === 'My Activity'),
     }))
   }
 
@@ -609,7 +609,7 @@ const TokenSaleDetails = () => {
                 isSaleCompleted={isSaleCompleted}
                 onCliffTimeEnd={onCliffTimeEnd}
                 item={tokenOffer.userPosition}
-                label={'My Position'}
+                label={'My Activity'}
                 toggleModal={toggleClaimModal}
                 isVestedPropertiesShow={isVestedPropertiesShow}
                 isOfferUnsuccessful={isOfferUnsuccessful}
