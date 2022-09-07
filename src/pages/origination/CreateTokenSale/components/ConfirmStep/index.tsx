@@ -5,7 +5,12 @@ import { ICreateTokenSaleData, IToken } from 'types'
 import { CreateTokenSaleModal } from '../CreateTokenSaleModal'
 import { PricingFormulaTable } from '../PricingFormulaTable'
 import { useNetworkContext } from 'contexts'
-import { formatBigNumber, getDurationSec, parseDurationSec } from 'utils'
+import {
+  formatBigNumber,
+  formatToShortNumber,
+  getDurationSec,
+  parseDurationSec,
+} from 'utils'
 import { useServices } from 'helpers'
 import { ZERO } from 'utils/number'
 import { ChainId } from 'config/constants'
@@ -58,7 +63,6 @@ const useStyles = makeStyles((theme) => ({
       [theme.breakpoints.up('sm')]: {
         marginRight: 'auto',
         marginLeft: 'auto',
-        alignSelf: 'flex-end',
         width: 1,
         background: theme.colors.primary200,
         height: 58,
@@ -168,7 +172,8 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit, onBack }) => {
                   <div className="content">
                     <p className="title">Offer token amount</p>
                     <p className="data">
-                      {data.offerTokenAmount} {offerToken?.symbol.toUpperCase()}
+                      {formatToShortNumber(data.offerTokenAmount)}{' '}
+                      {offerToken?.symbol.toUpperCase()}
                     </p>
                   </div>
                 </Grid>
@@ -177,7 +182,7 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit, onBack }) => {
                   <div className="content">
                     <p className="title">Reserve amount</p>
                     <p className="data">
-                      {data.reserveOfferTokenAmount}{' '}
+                      {formatToShortNumber(data.reserveOfferTokenAmount)}{' '}
                       {data.purchaseToken?.symbol}
                     </p>
                   </div>

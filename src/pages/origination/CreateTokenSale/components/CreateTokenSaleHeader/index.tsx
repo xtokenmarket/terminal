@@ -1,6 +1,6 @@
 import { makeStyles, Typography } from '@material-ui/core'
 import clsx from 'clsx'
-import { ECreareTokenSaleStep } from 'utils/enums'
+import { ECreateTokenSaleStep } from 'utils/enums'
 import { CreateTokenSaleStepper } from './CreateTokenSaleStepper'
 
 const useStyles = makeStyles((theme) => ({
@@ -64,11 +64,11 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  step: ECreareTokenSaleStep
+  step: ECreateTokenSaleStep
   onCancel: () => void
 }
 
-export const CreareTokenSaleHeader = ({ step, onCancel }: IProps) => {
+export const CreateTokenSaleHeader = ({ step, onCancel }: IProps) => {
   const classes = useStyles()
 
   return (

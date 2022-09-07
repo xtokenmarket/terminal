@@ -1,9 +1,8 @@
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
 import { DetailedTokenSelect } from 'components/Modal/RewardModal/components/DetailedTokenSelect'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ICreateTokenSaleData } from 'types'
 import { Description, InfoText } from 'utils/enums'
-import { InputDescription } from '../InputDescription'
 import { QuestionTooltip } from '../QuestionTooltip'
 import { TokenAmountInput } from '../TokenAmountInput'
 
@@ -17,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
   tooltipQuestion: {
     marginLeft: 10,
   },
-  labelWarpper: {
+  labelWrapper: {
     display: 'flex',
     alignItems: 'center',
     marginBottom: 18,
@@ -49,6 +48,16 @@ const useStyles = makeStyles((theme) => ({
   nextButton: {
     marginTop: 'auto',
   },
+  tokenWarning: {
+    color: theme.colors.warn2,
+    fontSize: 14,
+    marginBottom: 15,
+  },
+  amountWarning: {
+    color: theme.colors.warn2,
+    fontSize: 14,
+    marginTop: 15,
+  },
 }))
 
 interface IProps {
@@ -63,22 +72,45 @@ export const OfferingStep: React.FC<IProps> = ({
   onNext,
 }) => {
   const classes = useStyles()
-  const [isInsufficientBalance, setIsInsufficientBalance] = useState(false)
+  const [tokenAmountError, setTokenAmountError] = useState('')
+  const [tokenSelectError, setTokenSelectError] = useState('')
 
   const isNextBtnDisabled = !(
     data.offerToken &&
     data.purchaseToken &&
     data.offerTokenAmount &&
     data.reserveOfferTokenAmount &&
-    data.offerToken.address !== data.purchaseToken.address &&
+    data.offerToken.address.toLowerCase() !==
+      data.purchaseToken.address.toLowerCase() &&
     Number(data.offerTokenAmount) > 0
   )
+
+  useEffect(() => {
+    if (
+      data.offerToken &&
+      data.purchaseToken &&
+      data.offerToken.address.toLowerCase() ===
+        data.purchaseToken.address.toLowerCase()
+    ) {
+      setTokenSelectError('Offer token cannot be same as purchase token')
+    } else {
+      setTokenSelectError('')
+    }
+  }, [data.offerToken, data.purchaseToken])
+
+  useEffect(() => {
+    if (data.offerTokenAmount && Number(data.offerTokenAmount) === 0) {
+      setTokenAmountError('Offer token amount must be greater than zero')
+    } else {
+      setTokenAmountError('')
+    }
+  }, [data.offerTokenAmount])
 
   return (
     <>
       <Grid container className={classes.selectInputsContainer}>
         <Grid item xs={12} md={6}>
-          <div className={classes.labelWarpper}>
+          <div className={classes.labelWrapper}>
             <Typography className={classes.label}>Offer Token</Typography>
             <QuestionTooltip
               title={InfoText.OfferToken}
@@ -91,7 +123,7 @@ export const OfferingStep: React.FC<IProps> = ({
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <div className={classes.labelWarpper}>
+          <div className={classes.labelWrapper}>
             <Typography className={classes.label}>Purchase Token</Typography>
             <QuestionTooltip
               title={InfoText.PurchaseToken}
@@ -105,6 +137,9 @@ export const OfferingStep: React.FC<IProps> = ({
             onChange={(purchaseToken) => updateData({ purchaseToken })}
           />
         </Grid>
+        {tokenSelectError && (
+          <div className={classes.tokenWarning}>{tokenSelectError}</div>
+        )}
       </Grid>
       <Grid
         container
@@ -119,8 +154,10 @@ export const OfferingStep: React.FC<IProps> = ({
             onChange={(value) => updateData({ offerTokenAmount: value })}
             infoText={InfoText.OfferTokenAmount}
             tokenDetailsPlaceholder={Description.OfferTokenAmount}
-            setIsInsufficientBalance={setIsInsufficientBalance}
           />
+          {tokenAmountError && (
+            <div className={classes.amountWarning}>{tokenAmountError}</div>
+          )}
         </Grid>
         <Grid item xs={12} md={6}>
           <TokenAmountInput
@@ -135,7 +172,6 @@ export const OfferingStep: React.FC<IProps> = ({
           />
         </Grid>
       </Grid>
-
       <Button
         id="offeringStepBtn"
         className={classes.nextButton}

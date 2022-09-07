@@ -156,7 +156,7 @@ export enum NetworkIcon {
   goerli = 'Ethereum',
 }
 
-export enum ECreareTokenSaleStep {
+export enum ECreateTokenSaleStep {
   Offering = 'Offering',
   Auction = 'Auction',
   Vesting = 'Vesting',

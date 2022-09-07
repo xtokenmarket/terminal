@@ -5,6 +5,7 @@ import { NavLink } from 'react-router-dom'
 import {
   formatBigNumber,
   formatDateTime,
+  formatToShortNumber,
   getRemainingTimeSec,
   numberWithCommas,
   parseDurationSec,
@@ -165,7 +166,7 @@ export const OfferingTableRow = ({ offering }: IProps) => {
 
         <OfferingTd type="maxOffering">
           <Typography className={cl.item}>
-            {numberWithCommas(
+            {formatToShortNumber(
               formatBigNumber(totalOfferingAmount, offerToken.decimals)
             )}{' '}
             {offerToken.symbol}
@@ -173,7 +174,7 @@ export const OfferingTableRow = ({ offering }: IProps) => {
         </OfferingTd>
         <OfferingTd type="remainingOffering">
           <Typography className={cl.item}>
-            {numberWithCommas(
+            {formatToShortNumber(
               formatBigNumber(remainingOfferingAmount, offerToken.decimals)
             )}{' '}
             {offerToken.symbol}

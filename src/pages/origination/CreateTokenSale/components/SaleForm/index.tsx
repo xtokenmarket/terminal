@@ -1,13 +1,13 @@
+import clsx from 'clsx'
 import React from 'react'
 import {
   Description,
-  InfoText,
+  EPeriods,
   EPricingFormula,
   ETokenSalePhase,
-  EPeriods,
+  InfoText,
 } from 'utils/enums'
 import {
-  Button,
   FormControl,
   FormControlLabel,
   Grid,
@@ -16,15 +16,15 @@ import {
   Typography,
 } from '@material-ui/core'
 import RadioItem from '@material-ui/core/Radio'
-import { InputDescription } from '../InputDescription'
-import { Input } from '../Input'
-import { Radio } from '../Radio'
-import { QuestionTooltip } from '../QuestionTooltip'
-import { Selector } from '../Selector'
-import clsx from 'clsx'
 import { IToken, PeriodUnit, SaleData } from 'types'
 import { HOURS_IN_4_WEEKS } from 'config/constants'
+
+import { Input } from '../Input'
+import { InputDescription } from '../InputDescription'
 import { NextStepButton } from '../NextStepButton'
+import { QuestionTooltip } from '../QuestionTooltip'
+import { Radio } from '../Radio'
+import { Selector } from '../Selector'
 
 const useStyles = makeStyles((theme) => ({
   label: {
@@ -52,7 +52,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(1),
   },
   inputContainer: {
-    marginBottom: 40,
+    '& + &': {
+      marginTop: 20,
+    },
   },
   nextButton: {
     marginTop: 'auto',
@@ -60,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
   saleTypeToggle: {
     display: 'flex',
   },
-  labelWarpper: {
+  labelWrapper: {
     display: 'flex',
     alignItems: 'center',
     marginBottom: theme.spacing(2),
@@ -79,8 +81,14 @@ const useStyles = makeStyles((theme) => ({
   pricingFormula: {
     marginBottom: 52,
   },
-  warning: {
+  offerWarning: {
     display: 'flex',
+    width: '100%',
+    color: theme.colors.warn2,
+    fontSize: '14px',
+    marginTop: '10px',
+  },
+  priceWarning: {
     width: '100%',
     color: theme.colors.warn2,
     fontSize: '14px',
@@ -94,25 +102,27 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  tokenSalePhase: ETokenSalePhase
-  purchaseToken?: IToken
+  error?: string
   offerToken?: IToken
-  saleData: SaleData
-  updateSaleData: (_: Partial<SaleData>) => void
-  onSubmit: () => void
-  submitDisabled: boolean
   onBack: () => void
+  onSubmit: () => void
+  purchaseToken?: IToken
+  saleData: SaleData
+  submitDisabled: boolean
+  tokenSalePhase: ETokenSalePhase
+  updateSaleData: (_: Partial<SaleData>) => void
 }
 
 export const SaleForm = ({
-  tokenSalePhase,
-  purchaseToken,
+  error,
   offerToken,
-  saleData,
-  updateSaleData,
-  onSubmit,
-  submitDisabled,
   onBack,
+  onSubmit,
+  purchaseToken,
+  saleData,
+  submitDisabled,
+  tokenSalePhase,
+  updateSaleData,
 }: IProps) => {
   const classes = useStyles()
   const {
@@ -126,6 +136,7 @@ export const SaleForm = ({
 
   const saleDisplayName =
     tokenSalePhase === ETokenSalePhase.Whitelist ? 'Allowlist' : 'Public Sale'
+
   const handlePricingFormulaChange = (
     newPricingFormula: EPricingFormula[keyof EPricingFormula]
   ) => {
@@ -144,7 +155,8 @@ export const SaleForm = ({
     }
   }
 
-  const isShowOfferingPeriodError =
+  const isOfferingPeriodInvalid =
+    (offeringPeriod && Number(offeringPeriod) === 0) ||
     (Number(offeringPeriod) > 4 && offeringPeriodUnit === EPeriods.Weeks) ||
     (Number(offeringPeriod) > 28 && offeringPeriodUnit === EPeriods.Days) ||
     (Number(offeringPeriod) > HOURS_IN_4_WEEKS &&
@@ -152,12 +164,33 @@ export const SaleForm = ({
     (Number(offeringPeriod) > HOURS_IN_4_WEEKS * 60 &&
       offeringPeriodUnit === EPeriods.Minutes)
 
+  let invalidPricingError = ''
+  if (pricingFormula) {
+    if (startingPrice && Number(startingPrice) === 0) {
+      invalidPricingError = 'Starting price must be greater than zero'
+    } else if (pricingFormula !== EPricingFormula.Standard) {
+      if (endingPrice && Number(endingPrice) === 0) {
+        invalidPricingError = 'Ending price must be greater than zero'
+      } else if (
+        pricingFormula === EPricingFormula.Ascending &&
+        Number(startingPrice) > Number(endingPrice)
+      ) {
+        invalidPricingError = 'Starting price must be less than ending price'
+      } else if (
+        pricingFormula === EPricingFormula.Descending &&
+        Number(startingPrice) < Number(endingPrice)
+      ) {
+        invalidPricingError = 'Starting price must be greater than ending price'
+      }
+    }
+  }
+
   return (
     <>
       <Grid container>
         <Grid item xs={12} md={6}>
           <FormControl component="fieldset">
-            <div className={clsx(classes.label, classes.labelWarpper)}>
+            <div className={clsx(classes.label, classes.labelWrapper)}>
               {`Will your offering have ${
                 saleDisplayName === 'Allowlist' ? 'an' : 'a'
               } ${saleDisplayName.toLowerCase()} period?`}
@@ -195,7 +228,7 @@ export const SaleForm = ({
               !enabled && classes.sectionDisabled
             )}
           >
-            <div className={classes.labelWarpper}>
+            <div className={classes.labelWrapper}>
               <Typography className={classes.label}>
                 {`${saleDisplayName} offering period`}
               </Typography>
@@ -204,7 +237,6 @@ export const SaleForm = ({
                 className={classes.tooltipQuestion}
               />
             </div>
-
             <Selector
               id="offeringPeriod"
               saleDisplayName={saleDisplayName}
@@ -215,13 +247,13 @@ export const SaleForm = ({
               }
               selectorValue={`${offeringPeriodUnit}`}
               inputValue={`${offeringPeriod}`}
-              onChangeinput={(e) => {
+              onChangeInput={(e) => {
                 const newValue = parseInt(e.target.value)
                 updateSaleData({ offeringPeriod: newValue.toString() })
               }}
             />
-            {isShowOfferingPeriodError && (
-              <div className={classes.warning}>
+            {isOfferingPeriodInvalid && (
+              <div className={classes.offerWarning}>
                 Offering period must be less than or equal to 4 weeks
               </div>
             )}
@@ -269,6 +301,11 @@ export const SaleForm = ({
                       {offerToken?.symbol}{' '}
                     </div>
                   )}
+                  {invalidPricingError && (
+                    <div className={classes.priceWarning}>
+                      {invalidPricingError}
+                    </div>
+                  )}
                 </div>
               ) : (
                 <>
@@ -300,6 +337,11 @@ export const SaleForm = ({
                       {Description.EndingPrice}
                     </InputDescription>
                   </div>
+                  {invalidPricingError && (
+                    <div className={classes.priceWarning}>
+                      {invalidPricingError}
+                    </div>
+                  )}
                 </>
               )}
             </>
@@ -308,6 +350,8 @@ export const SaleForm = ({
       </Grid>
 
       <NextStepButton
+        disabled={submitDisabled || isOfferingPeriodInvalid}
+        error={error}
         id={
           tokenSalePhase === ETokenSalePhase.Whitelist
             ? 'whitelistSaleBtn'
@@ -315,7 +359,6 @@ export const SaleForm = ({
         }
         onNextClick={onSubmit}
         onBackClick={onBack}
-        disabled={submitDisabled || isShowOfferingPeriodError}
       />
     </>
   )

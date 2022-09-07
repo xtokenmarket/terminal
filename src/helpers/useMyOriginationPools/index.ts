@@ -24,6 +24,11 @@ export const useMyTokenOffers = () => {
   const loadTokenOffers = async () => {
     setState((prev) => ({ ...prev, isLoading: true }))
 
+    if (!account) {
+      setState((prev) => ({ ...prev, isLoading: false }))
+      return
+    }
+
     try {
       const userTokenOffers = (
         await axios.get<any[]>(
