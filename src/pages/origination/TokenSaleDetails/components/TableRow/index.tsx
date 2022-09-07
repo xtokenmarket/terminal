@@ -643,9 +643,11 @@ export const TableRow = ({
             <>
               <Td type={OfferingSummary.TokensSold} label={item.label}>
                 <div className={cl.item}>
-                  {formatToShortNumber(
-                    formatBigNumber(item.tokensSold, item.offerToken.decimals)
-                  )}
+                  <Typography>
+                    {formatToShortNumber(
+                      formatBigNumber(item.tokensSold, item.offerToken.decimals)
+                    )}
+                  </Typography>
                   <Typography className={cl.symbol}>
                     {item.offerToken.symbol}
                   </Typography>
