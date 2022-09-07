@@ -251,14 +251,16 @@ export const Content = (props: IProps) => {
   const rippleRef = useRef(null)
   const buttonRef = useRef(null)
 
-  // CitaDAO pool
   const isDepositDisabled =
-    poolData.network === Network.MAINNET &&
-    [
-      '0x6148a1bd2be586e981115f9c0b16a09bbc271e2c', // CitaDAO pool
-      '0xc5f0237a2a2bb9dc60da73491ad39a1afc4c8b63', // frETH-WETH pool
-      '0x7fc70abe76605d1ef1f7a5ddc5e2ad35a43a6949', // PONY-USDC pool
-    ].includes(poolData.address.toLowerCase())
+    (poolData.network === Network.MAINNET &&
+      [
+        '0x6148a1bd2be586e981115f9c0b16a09bbc271e2c', // CitaDAO pool
+        '0xc5f0237a2a2bb9dc60da73491ad39a1afc4c8b63', // frETH-WETH pool
+        '0x7fc70abe76605d1ef1f7a5ddc5e2ad35a43a6949', // PONY-USDC pool
+      ].includes(poolData.address.toLowerCase())) ||
+    (poolData.network === Network.OPTIMISM &&
+      poolData.address.toLowerCase() ===
+        '0x6148a1bd2be586e981115f9c0b16a09bbc271e2c') // OP-WETH pool
 
   useEffect(() => {
     const timer = (ms: number) => new Promise((res) => setTimeout(res, ms))
