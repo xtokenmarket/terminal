@@ -252,7 +252,7 @@ export const getDurationSec = (amount: number, unit: string) => {
     durationSec = amount * secondsIn1Day * 7 * 4
   }
   if (unit === 'Years') {
-    durationSec = amount * secondsIn1Day * 7 * 4 * 365
+    durationSec = amount * secondsIn1Day * 7 * 4 * 12
   }
 
   return BigNumber.from(durationSec.toString())
