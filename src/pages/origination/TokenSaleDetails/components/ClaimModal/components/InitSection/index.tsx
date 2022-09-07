@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     padding: 32,
   },
-  button: { height: 48, marginTop: 24 },
+  button: { height: 48, marginBottom: 24 },
   progress: { color: theme.colors.white },
 }))
 
@@ -94,11 +94,6 @@ export const InitSection = ({
 
   return (
     <div className={classes.root}>
-      <WarningInfo
-        title="Important"
-        description="This will transfer the tokens from your address to the Terminal contract. This action cannot be undone or reversed."
-      />
-
       <Button
         className={classes.button}
         color="primary"
