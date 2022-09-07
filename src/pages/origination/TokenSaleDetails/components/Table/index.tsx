@@ -220,6 +220,7 @@ export const Table = ({
           isOfferUnsuccessful={isOfferUnsuccessful}
           isFormulaStandard={isFormulaStandard}
           isSaleCompleted={isSaleCompleted}
+          isSaleInitiated={isSaleInitiated}
         />
         <div>
           <TableRow

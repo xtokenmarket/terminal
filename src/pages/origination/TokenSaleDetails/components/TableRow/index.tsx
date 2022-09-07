@@ -411,11 +411,13 @@ export const TableRow = ({
               </Td>
             )}
 
-            <Td type={WhitelistSale.Whitelist} label={item.label}>
-              <Typography className={clsx(cl.item, cl.label)}>
-                {item.whitelist ? 'Set' : 'Not Set'}
-              </Typography>
-            </Td>
+            {!isSaleInitiated && (
+              <Td type={WhitelistSale.Whitelist} label={item.label}>
+                <Typography className={clsx(cl.item, cl.label)}>
+                  {item.whitelist ? 'Set' : 'Not Set'}
+                </Typography>
+              </Td>
+            )}
 
             <Td type={WhitelistSale.AddressCap} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
