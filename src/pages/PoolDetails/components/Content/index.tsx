@@ -502,6 +502,7 @@ export const Content = (props: IProps) => {
             poolDescription={poolData.description}
             loadInfo={() => reloadTerminalPool(true)}
             isOwnerOrManager={isOwnerOrManager}
+            poolAddress={poolData.address}
           />
           <hr className={classes.hr} />
           <Grid container spacing={0}>

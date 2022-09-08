@@ -152,15 +152,12 @@ interface IProps {
   poolDescription: string
   loadInfo: () => void
   isOwnerOrManager?: boolean
+  poolAddress: string
 }
 
 enum IKey {
   PoolName = 'name',
   Description = 'description',
-}
-
-type RouteParams = {
-  poolAddress: string
 }
 
 export const PoolDescription = (props: IProps) => {
@@ -182,16 +179,16 @@ export const PoolDescription = (props: IProps) => {
     pending,
     errorMessage,
   } = state
-  const { poolName, poolDescription, loadInfo, isOwnerOrManager } = props
+  const { poolName, poolDescription, loadInfo, isOwnerOrManager, poolAddress } =
+    props
   const { library: provider, networkId } = useConnectedWeb3Context()
-  const { poolAddress } = useParams<RouteParams>()
   const { enqueueSnackbar } = useSnackbar()
 
   useEffect(() => {
     setState((prev) => ({
       ...prev,
-      name: poolName,
-      description: poolDescription,
+      name: poolName || '',
+      description: poolDescription || '',
     }))
   }, [])
 
