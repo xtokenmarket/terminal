@@ -126,6 +126,8 @@ export enum EOfferingPeriods {
   Hours = 'Hours',
   Days = 'Days',
   Weeks = 'Weeks',
+  Month = 'Months',
+  Year = 'Years',
 }
 
 // uni v3

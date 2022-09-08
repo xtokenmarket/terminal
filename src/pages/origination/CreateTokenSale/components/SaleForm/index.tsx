@@ -6,6 +6,7 @@ import {
   EPricingFormula,
   ETokenSalePhase,
   InfoText,
+  EOfferingPeriods,
 } from 'utils/enums'
 import {
   FormControl,
@@ -157,12 +158,18 @@ export const SaleForm = ({
 
   const isOfferingPeriodInvalid =
     (offeringPeriod && Number(offeringPeriod) === 0) ||
-    (Number(offeringPeriod) > 4 && offeringPeriodUnit === EPeriods.Weeks) ||
-    (Number(offeringPeriod) > 28 && offeringPeriodUnit === EPeriods.Days) ||
+    (Number(offeringPeriod) > 1 &&
+      offeringPeriodUnit === EOfferingPeriods.Year) ||
+    (Number(offeringPeriod) > 12 &&
+      offeringPeriodUnit === EOfferingPeriods.Month) ||
+    (Number(offeringPeriod) > 4 &&
+      offeringPeriodUnit === EOfferingPeriods.Weeks) ||
+    (Number(offeringPeriod) > 28 &&
+      offeringPeriodUnit === EOfferingPeriods.Days) ||
     (Number(offeringPeriod) > HOURS_IN_4_WEEKS &&
-      offeringPeriodUnit === EPeriods.Hours) ||
+      offeringPeriodUnit === EOfferingPeriods.Hours) ||
     (Number(offeringPeriod) > HOURS_IN_4_WEEKS * 60 &&
-      offeringPeriodUnit === EPeriods.Minutes)
+      offeringPeriodUnit === EOfferingPeriods.Minutes)
 
   let invalidPricingError = ''
   if (pricingFormula) {
@@ -254,7 +261,7 @@ export const SaleForm = ({
             />
             {isOfferingPeriodInvalid && (
               <div className={classes.offerWarning}>
-                Offering period must be less than or equal to 4 weeks
+                Invalid offering period
               </div>
             )}
           </Grid>

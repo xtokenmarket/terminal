@@ -179,7 +179,7 @@ const TokenSaleDetails = () => {
     setState((prev) => ({
       ...prev,
       isClaimModalOpen: !state.isClaimModalOpen,
-      isClaimToken: !!(label === 'My Position'),
+      isClaimToken: !!(label === 'My Activity'),
     }))
   }
 
@@ -515,7 +515,7 @@ const TokenSaleDetails = () => {
                   onSaleEnd={onSaleEnd}
                   isSaleInitiated={isSaleInitiated}
                   item={tokenOffer.whitelist}
-                  label={'Allowlist Sale'}
+                  label={'Allowlist Offering'}
                   toggleModal={
                     isSaleInitiated ? toggleClaimModal : toggleSetWhitelistModal
                   }
@@ -609,7 +609,7 @@ const TokenSaleDetails = () => {
                 isSaleCompleted={isSaleCompleted}
                 onCliffTimeEnd={onCliffTimeEnd}
                 item={tokenOffer.userPosition}
-                label={'My Position'}
+                label={'My Activity'}
                 toggleModal={toggleClaimModal}
                 isVestedPropertiesShow={isVestedPropertiesShow}
                 isOfferUnsuccessful={isOfferUnsuccessful}
