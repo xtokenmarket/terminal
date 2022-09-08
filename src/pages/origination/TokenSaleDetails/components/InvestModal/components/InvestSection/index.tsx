@@ -141,6 +141,7 @@ export const InvestSection = (props: IProps) => {
       <Button
         className={classes.button}
         color="secondary"
+        disabled={state.isPurchasing}
         fullWidth
         onClick={onClose}
         variant="contained"

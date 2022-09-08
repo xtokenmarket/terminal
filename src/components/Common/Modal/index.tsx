@@ -11,8 +11,14 @@ type IProps = React.PropsWithChildren<{
   React.HTMLAttributes<HTMLDivElement>
 
 export const Modal: React.FC<IProps> = (props) => {
-  const { open, disableEscapeKeyDown, onClose, disableBackdropClick, ...rest } =
-    props
+  const {
+    children,
+    open,
+    disableEscapeKeyDown,
+    onClose,
+    disableBackdropClick,
+    ...rest
+  } = props
 
   const handleClose = (event: Event, reason: string) => {
     if (disableBackdropClick && reason === 'backdropClick') {
@@ -35,7 +41,7 @@ export const Modal: React.FC<IProps> = (props) => {
       disableEscapeKeyDown={disableEscapeKeyDown}
       {...rest}
     >
-      {props.children}
+      {children}
     </MaterialModal>
   )
 }

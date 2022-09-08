@@ -44,7 +44,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.primary500,
   },
   transaction: {
-    padding: theme.spacing(2),
     display: 'flex',
     justifyContent: 'center',
     backgroundColor: theme.colors.primary500,

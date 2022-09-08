@@ -15,7 +15,6 @@ import { InvestModal } from './components/InvestModal'
 import { SetWhitelistModal } from './components/SetWhitelistModal'
 import { Table } from './components/Table'
 import { VestModal } from './components/VestModal'
-import { useConnectedWeb3Context } from 'contexts'
 import { TokenSaleDescription } from '../TokenSaleDescription'
 
 const useStyles = makeStyles((theme) => ({
@@ -105,7 +104,6 @@ const TokenSaleDetails = () => {
     undefined,
     true
   )
-  const { account, library: provider } = useConnectedWeb3Context()
 
   const [state, setState] = useState<IState>({
     isClaimModalOpen: false,
@@ -179,7 +177,7 @@ const TokenSaleDetails = () => {
     setState((prev) => ({
       ...prev,
       isClaimModalOpen: !state.isClaimModalOpen,
-      isClaimToken: !!(label === 'My Activity'),
+      isClaimToken: label === 'My Activity',
     }))
   }
 
@@ -245,7 +243,7 @@ const TokenSaleDetails = () => {
     if (!tokenOffer) return undefined
 
     if (!isVestingPeriodZero || !isReserveAmountZero) {
-      // manager claim all the offter tokens when sale is unsuccessful
+      // manager claim all the offer tokens when sale is unsuccessful
       if (!state.isClaimToken && isOfferUnsuccessful) {
         return {
           offerToken: tokenOffer.offeringOverview.offerToken,
@@ -363,7 +361,7 @@ const TokenSaleDetails = () => {
     tokenOffer.publicSale.startingPrice.gt(0)
 
   // ref: https://discord.com/channels/790695551057657876/923246975137226842/1004704774580617216
-  // when vesting == 0, reserve == 0, pool manager has the the option to claim the accrued purchase token amount during and after sale
+  // when vesting == 0, reserve == 0, pool manager has the option to claim the accrued purchase token amount during and after sale
   // if used during sale, I should receive the accrued purchase token (can be called multiple times during sale if purchase token accrued)
   const isClaimPurchaseTokenButtonDisabled =
     !isSaleCompleted &&
@@ -371,13 +369,13 @@ const TokenSaleDetails = () => {
     isVestingPeriodZero &&
     !tokenOffer?.purchaseTokenBalance?.gt(0)
 
-  // users calim their offer tokens when sale is successful after cliff period
+  // users claim their offer tokens when sale is successful after cliff period
   const isSuccessfulSaleClaimUser =
     isCliffPeriodPassed() &&
     !isOfferUnsuccessful &&
     tokenOffer?.userPosition.tokenPurchased.gt(0)
 
-  // users calim their purchase tokens when sale is unsuccessful(with/without vesting period. Not showing "vest" in this case)
+  // users claim their purchase tokens when sale is unsuccessful(with/without vesting period. Not showing "vest" in this case)
   const isUnsuccessfulSaleClaimUser =
     isOfferUnsuccessful && tokenOffer.userPosition.amountInvested.gt(0)
 
@@ -387,7 +385,7 @@ const TokenSaleDetails = () => {
     isSaleInitiated &&
     !isVestingReserveZero &&
     isSaleCompleted &&
-    // vesting period must === 0 in this case. Otherwise it should show "vest"
+    // vesting period must === 0 in this case. Otherwise, it should show "vest"
     isVestingPeriodZero &&
     isSuccessfulSaleClaimUser
 
@@ -432,7 +430,7 @@ const TokenSaleDetails = () => {
   const isDuringWhitelistSale =
     isSaleInitiated && !isSoldOut && !isWhitelistSaleEnded
 
-  const iswhitelistSaleInvestDisabled =
+  const isWhitelistSaleInvestDisabled =
     !isSaleInitiated ||
     !tokenOffer?.whitelist.isAddressWhitelisted ||
     isSoldOut ||
@@ -530,47 +528,49 @@ const TokenSaleDetails = () => {
                     isClaimPurchaseTokenButtonDisabled || !isDuringWhitelistSale
                   }
                 />
-                <div className={cl.buttonWrapper}>
-                  <Tooltip
-                    title={
-                      isAddressCapExceeded &&
-                      !isWhitelistSaleEnded &&
-                      !(
-                        tokenOffer.whitelist.whitelist &&
-                        !tokenOffer.whitelist.isAddressWhitelisted
-                      )
-                        ? 'Invested amount has reached the address cap.'
-                        : ''
-                    }
-                    arrow
-                    placement="right"
-                    classes={{
-                      arrow: cl.tooltipArrow,
-                      tooltip: cl.tooltip,
-                    }}
-                  >
-                    <div>
-                      <Button
-                        className={cl.button}
-                        onClick={toggleWhitelistInvestModal}
-                        disabled={iswhitelistSaleInvestDisabled}
-                      >
-                        <Typography className={cl.text}>INVEST</Typography>
-                      </Button>
-                    </div>
-                  </Tooltip>
-                  {!tokenOffer.whitelist.isAddressWhitelisted &&
-                    tokenOffer.whitelist.whitelist &&
-                    !isWhitelistSaleEnded && (
-                      <div className={cl.errorMessageWrapper}>
-                        <img alt="info" src="/assets/icons/warning.svg" />
-                        &nbsp;&nbsp;
-                        <div>
-                          Unfortunately, your address was not allowlisted
-                        </div>
+                {isSaleInitiated && (
+                  <div className={cl.buttonWrapper}>
+                    <Tooltip
+                      title={
+                        isAddressCapExceeded &&
+                        !isWhitelistSaleEnded &&
+                        !(
+                          tokenOffer.whitelist.whitelist &&
+                          !tokenOffer.whitelist.isAddressWhitelisted
+                        )
+                          ? 'Invested amount has reached the address cap.'
+                          : ''
+                      }
+                      arrow
+                      placement="right"
+                      classes={{
+                        arrow: cl.tooltipArrow,
+                        tooltip: cl.tooltip,
+                      }}
+                    >
+                      <div>
+                        <Button
+                          className={cl.button}
+                          onClick={toggleWhitelistInvestModal}
+                          disabled={isWhitelistSaleInvestDisabled}
+                        >
+                          <Typography className={cl.text}>INVEST</Typography>
+                        </Button>
                       </div>
-                    )}
-                </div>
+                    </Tooltip>
+                    {!tokenOffer.whitelist.isAddressWhitelisted &&
+                      tokenOffer.whitelist.whitelist &&
+                      !isWhitelistSaleEnded && (
+                        <div className={cl.errorMessageWrapper}>
+                          <img alt="info" src="/assets/icons/warning.svg" />
+                          &nbsp;&nbsp;
+                          <div>
+                            Unfortunately, your address was not allow-listed
+                          </div>
+                        </div>
+                      )}
+                  </div>
+                )}
               </>
             )}
             {!isSaleCompleted && isPublicSaleConfigured && (
@@ -595,13 +595,15 @@ const TokenSaleDetails = () => {
                     isPublicSaleItemsDisabled
                   }
                 />
-                <Button
-                  className={cl.button}
-                  onClick={toggleInvestModal}
-                  disabled={isPublicSaleItemsDisabled}
-                >
-                  <Typography className={cl.text}>INVEST</Typography>
-                </Button>
+                {isSaleInitiated && (
+                  <Button
+                    className={cl.button}
+                    onClick={toggleInvestModal}
+                    disabled={isPublicSaleItemsDisabled}
+                  >
+                    <Typography className={cl.text}>INVEST</Typography>
+                  </Button>
+                )}
               </>
             )}
             {isUserPositionShow && (
