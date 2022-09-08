@@ -431,7 +431,7 @@ export const Content = (props: IProps) => {
     poolData.manager.toLowerCase(),
   ].includes(account ? account.toLowerCase() : '')
 
-  const offeringName = poolData.poolName
+  const poolName = poolData.poolName
     ? poolData.poolName
     : `${poolData.token0.symbol} ${formatDateTime(
         Number(poolData.createdAt) || 0
@@ -498,7 +498,7 @@ export const Content = (props: IProps) => {
       <div className={classes.content}>
         <div>
           <PoolDescription
-            poolName={offeringName}
+            poolName={poolName}
             poolDescription={poolData.description}
             loadInfo={() => reloadTerminalPool(true)}
             isOwnerOrManager={isOwnerOrManager}
