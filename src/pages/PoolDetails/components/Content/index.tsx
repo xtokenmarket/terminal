@@ -425,6 +425,11 @@ export const Content = (props: IProps) => {
     setTimeout(() => rippleRef.current.stop({}), 320)
   }
 
+  const isOwnerOrManager = [
+    poolData.owner.toLowerCase(),
+    poolData.manager.toLowerCase(),
+  ].includes(account ? account.toLowerCase() : '')
+
   return (
     <div className={classes.root}>
       {state.depositVisible && (
@@ -489,7 +494,7 @@ export const Content = (props: IProps) => {
             poolName={'default name'}
             poolDescription={'default description'}
             loadInfo={() => reloadTerminalPool(true)}
-            isOwnerOrManager={poolData.manager === account}
+            isOwnerOrManager={isOwnerOrManager}
           />
           <hr className={classes.hr} />
           <Grid container spacing={0}>
