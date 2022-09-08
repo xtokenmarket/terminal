@@ -3,6 +3,7 @@ import { PoolTd, SimpleLoader } from 'components'
 import { useTerminalPool } from 'helpers'
 import {
   formatBigNumber,
+  formatDateTime,
   formatToShortNumber,
   getFloatDecimalNumber,
   getTimeDurationStr,
@@ -95,8 +96,6 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '50%',
   },
   allocationItem: {
-    display: 'flex',
-    flexDirection: 'column',
     color: theme.colors.white,
     fontWeight: 700,
     '& span': {
@@ -133,6 +132,12 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
 
     const network = poolData.network || DEFAULT_NETWORK
 
+    const poolName = poolData.poolName
+      ? poolData.poolName
+      : `${poolData.token0.symbol} ${formatDateTime(
+          Number(poolData.createdAt) || 0
+        )}`
+
     return (
       <NavLink
         className={cl.content}
@@ -150,18 +155,18 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
               className={cl.tokenIcon}
               src={poolData.token1.image}
             />
+            <Typography className={cl.allocationItem}>
+              {poolData.token0.symbol}&nbsp;
+              <span>{`${
+                Number(poolData.token0.percent).toFixed() as string
+              }%`}</span>
+              {poolName}
+            </Typography>
           </div>
         </PoolTd>
         <PoolTd type="allocation">
           <div className={cl.item}>
             <div className={cl.allocation}>
-              <Typography className={cl.allocationItem}>
-                {poolData.token0.symbol}&nbsp;
-                <span>{`${
-                  Number(poolData.token0.percent).toFixed() as string
-                }%`}</span>
-              </Typography>
-              &nbsp; &nbsp;
               <Typography className={cl.allocationItem}>
                 {poolData.token1.symbol}&nbsp;
                 <span>{`${
