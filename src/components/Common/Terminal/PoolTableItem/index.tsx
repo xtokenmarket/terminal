@@ -134,9 +134,7 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
 
     const poolName = poolData.poolName
       ? poolData.poolName
-      : `${poolData.token0.symbol} ${formatDateTime(
-          Number(poolData.createdAt) || 0
-        )}`
+      : `${formatDateTime(Number(poolData.createdAt) || 0)}`
 
     return (
       <NavLink
