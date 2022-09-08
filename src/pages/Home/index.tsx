@@ -146,9 +146,9 @@ const Home = () => {
       <div>
         <Grid container spacing={5}>
           {getItem().map(
-            ({ icon: Icon, href, enabled, label, description }) => {
+            ({ id, icon: Icon, href, enabled, label, description }) => {
               return (
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6} key={id}>
                   <div className={classes.card}>
                     <div className={classes.titleWrapper}>
                       <div className={classes.icon}>
