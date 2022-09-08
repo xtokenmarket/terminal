@@ -4,11 +4,11 @@ import clsx from 'clsx'
 const useStyles = makeStyles((theme: any) => ({
   root: {
     '&.network': { width: '8%' },
-    '&.pool': { width: '10%' },
+    '&.pool': { width: '25%' },
     '&.allocation': { flex: 1 },
     '&.tvl': { width: '10%' },
     '&.vesting': { width: '10%' },
-    '&.program': { width: '25%' },
+    '&.program': { width: '15%' },
     '&.ending': { width: '15%' },
     '&.apr': { width: '10%' },
     '&+&': { paddingLeft: 16 },
