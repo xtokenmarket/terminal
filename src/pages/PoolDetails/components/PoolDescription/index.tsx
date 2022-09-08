@@ -327,12 +327,6 @@ export const PoolDescription = (props: IProps) => {
         </div>
       )}
 
-      {isOwnerOrManager && (
-        <div className={classes.hint}>
-          Offering Name and additonal information about your pool can be added
-          here.
-        </div>
-      )}
       {isDescriptionEditing ? (
         <div className={classes.editorWrapper}>
           <TextField
