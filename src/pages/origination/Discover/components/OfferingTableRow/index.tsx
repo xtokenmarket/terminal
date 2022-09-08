@@ -180,7 +180,6 @@ export const OfferingTableRow = ({ offering }: IProps) => {
             {offerToken.symbol}
           </Typography>
         </OfferingTd>
-        {/* TODO: replace this with true pricePerToken */}
         <OfferingTd type="pricePerToken">
           <Typography className={clsx(cl.item, cl.label)}>
             {startingPrice

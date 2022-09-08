@@ -132,14 +132,14 @@ export const Table = ({
         disabled={isClaimButtonDisabled}
       >
         <Typography className={cl.text}>
-          {label === 'My Position' || label === 'Offering Summary'
+          {label === 'My Activity' || label === 'Offering Summary'
             ? 'CLAIM'
-            : 'CLAIM PURCHASE TOKEN'}
+            : 'CLAIM PURCHASE TOKENS'}
         </Typography>
       </Button>
     )
     switch (label) {
-      case 'Allowlist Sale':
+      case 'Allowlist Offering':
         return (
           <div className={cl.labelWrapper}>
             <Typography className={cl.label}>{label}</Typography>
@@ -169,7 +169,7 @@ export const Table = ({
               <Tooltip
                 title={
                   isInitiateSaleButtonDisabled
-                    ? 'Set up allowlist and offering name before initiate sale'
+                    ? 'Set up allowlist and offering name before initiate offering'
                     : ''
                 }
                 arrow
@@ -186,7 +186,9 @@ export const Table = ({
                     onClick={() => toggleModal && toggleModal()}
                     disabled={isInitiateSaleButtonDisabled}
                   >
-                    <Typography className={cl.text}>INITIATE SALE</Typography>
+                    <Typography className={cl.text}>
+                      INITIATE OFFERING
+                    </Typography>
                   </Button>
                 </div>
               </Tooltip>
@@ -196,7 +198,7 @@ export const Table = ({
 
       case 'Public Sale':
       case 'Offering Summary':
-      case 'My Position':
+      case 'My Activity':
         return (
           <div className={cl.labelWrapper}>
             <Typography className={cl.label}>{label}</Typography>
@@ -218,6 +220,7 @@ export const Table = ({
           isOfferUnsuccessful={isOfferUnsuccessful}
           isFormulaStandard={isFormulaStandard}
           isSaleCompleted={isSaleCompleted}
+          isSaleInitiated={isSaleInitiated}
         />
         <div>
           <TableRow

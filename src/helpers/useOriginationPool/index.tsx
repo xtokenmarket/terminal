@@ -262,9 +262,25 @@ export const useOriginationPool = (
       ? getRemainingTimeSec(saleEndTimestamp)
       : ZERO
 
+    /*
+    call getOfferTokenPrice() directly for getting the correct result.  
+    ref: https://discord.com/channels/790695551057657876/951862075070750750/1014205744377241690
+    */
+    try {
+      if (saleInitiatedTimestamp.gt(0)) {
+        const _getOfferTokenPrice =
+          await fungiblePool.contract.getOfferTokenPrice()
+        console.log('_getOfferTokenPrice', _getOfferTokenPrice)
+
+        offerData.getOfferTokenPrice = _getOfferTokenPrice
+      }
+    } catch (error) {
+      console.log('getOfferTokenPrice error', getOfferTokenPrice)
+    }
+
     const _whitelist: IWhitelistSale = {
       label: OriginationLabels.WhitelistSale,
-      currentPrice: getOfferTokenPrice,
+      currentPrice: offerData.getOfferTokenPrice,
       pricingFormula:
         whitelistStartingPrice?.toString() === whitelistEndingPrice?.toString()
           ? EPricingFormula.Standard
@@ -286,7 +302,7 @@ export const useOriginationPool = (
 
     const publicSale = {
       label: OriginationLabels.PublicSale,
-      currentPrice: getOfferTokenPrice,
+      currentPrice: offerData.getOfferTokenPrice,
       pricingFormula:
         publicStartingPrice.toString() === publicEndingPrice.toString()
           ? EPricingFormula.Standard
@@ -443,7 +459,7 @@ export const useOriginationPool = (
     }
 
     const _startingPrice = saleInitiatedTimestamp.gt(0)
-      ? getOfferTokenPrice
+      ? offerData.getOfferTokenPrice
       : !whitelistStartingPrice.isZero()
       ? whitelistStartingPrice
       : publicStartingPrice

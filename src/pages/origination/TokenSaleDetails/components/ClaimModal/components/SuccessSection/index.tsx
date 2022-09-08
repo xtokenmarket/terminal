@@ -73,7 +73,7 @@ export const SuccessSection = ({
         <Typography className={classes.title}>
           {data?.purchaseToken && data?.purchaseToken?.symbol}{' '}
           {data?.purchaseToken && data?.offerToken ? '/' : ''}{' '}
-          {data?.offerToken && data?.offerToken?.symbol} Token claimed!
+          {data?.offerToken && data?.offerToken?.symbol} claimed!
         </Typography>
         <Typography className={classes.description}>
           You have successfully claimed{' '}

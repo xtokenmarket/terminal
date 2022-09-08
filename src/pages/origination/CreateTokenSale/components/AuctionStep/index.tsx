@@ -68,7 +68,7 @@ export const AuctionStep: React.FC<IProps> = ({
             tokenSalePhase !== ETokenSalePhase.Whitelist && classes.btnInactive
           )}
         >
-          Allowlist Sale
+          Allowlist Offering
         </Button>
         <Button
           color="primary"

@@ -411,11 +411,13 @@ export const TableRow = ({
               </Td>
             )}
 
-            <Td type={WhitelistSale.Whitelist} label={item.label}>
-              <Typography className={clsx(cl.item, cl.label)}>
-                {item.whitelist ? 'Set' : 'Not Set'}
-              </Typography>
-            </Td>
+            {!isSaleInitiated && (
+              <Td type={WhitelistSale.Whitelist} label={item.label}>
+                <Typography className={clsx(cl.item, cl.label)}>
+                  {item.whitelist ? 'Set' : 'Not Set'}
+                </Typography>
+              </Td>
+            )}
 
             <Td type={WhitelistSale.AddressCap} label={item.label}>
               <Typography className={clsx(cl.item, cl.label)}>
@@ -641,9 +643,11 @@ export const TableRow = ({
             <>
               <Td type={OfferingSummary.TokensSold} label={item.label}>
                 <div className={cl.item}>
-                  {formatToShortNumber(
-                    formatBigNumber(item.tokensSold, item.offerToken.decimals)
-                  )}
+                  <Typography>
+                    {formatToShortNumber(
+                      formatBigNumber(item.tokensSold, item.offerToken.decimals)
+                    )}
+                  </Typography>
                   <Typography className={cl.symbol}>
                     {item.offerToken.symbol}
                   </Typography>

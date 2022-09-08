@@ -35,6 +35,7 @@ interface IProps {
   isOfferUnsuccessful?: boolean
   isFormulaStandard?: boolean
   isSaleCompleted?: boolean
+  isSaleInitiated?: boolean
 }
 
 export const TableHeader = (props: IProps) => {
@@ -85,11 +86,13 @@ export const TableHeader = (props: IProps) => {
             <div className={classes.item}>Starting / Ending Price</div>
           </Td>
         )}
-        <Td type={WhitelistSale.Whitelist} label={props.label}>
-          <div className={classes.item}>Allowlist</div>
-        </Td>
+        {!props.isSaleInitiated && (
+          <Td type={WhitelistSale.Whitelist} label={props.label}>
+            <div className={classes.item}>Allowlist</div>
+          </Td>
+        )}
         <Td type={WhitelistSale.AddressCap} label={props.label}>
-          <div className={classes.item}>Address Cap</div>
+          <div className={classes.item}>Your Max Contribution</div>
         </Td>
         <Td type={WhitelistSale.TimeRemaining} label={props.label}>
           <div className={classes.item}>Time Remaining</div>

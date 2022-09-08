@@ -229,7 +229,7 @@ export const InitiateSection = (props: IProps) => {
   return (
     <div className={classes.root}>
       <div className={classes.header}>
-        <Typography className={classes.title}>Initiate Sale</Typography>
+        <Typography className={classes.title}>Initiate Offering</Typography>
         {!state.isApproving && (
           <IconButton className={classes.closeButton} onClick={onClose}>
             <CloseOutlinedIcon />
