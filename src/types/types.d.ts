@@ -81,6 +81,7 @@ interface EarnedToken extends IToken {
 export interface ITerminalPool {
   address: string
   apr: string
+  createdAt: string
   earnedTokens: EarnedToken[]
   history: History[]
   manager: string
@@ -88,6 +89,7 @@ export interface ITerminalPool {
   owner: string
   periodFinish: BigNumber
   poolFee: BigNumber
+  poolName: string
   poolShare: string
   rewardFeePercent: number
   rewardsAreEscrowed: boolean

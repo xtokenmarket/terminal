@@ -439,6 +439,9 @@ export const useTerminalPool = (
           poolShare,
           user,
           totalSupply: _totalSupply,
+          poolName: pool.poolName,
+          description: pool.description,
+          createdAt: pool.createdAt,
         },
       })
     } catch (error) {

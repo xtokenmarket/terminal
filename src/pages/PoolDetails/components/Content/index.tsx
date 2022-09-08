@@ -12,6 +12,7 @@ import { useState, useRef, useEffect } from 'react'
 import { ITerminalPool } from 'types'
 import {
   formatBigNumber,
+  formatDateTime,
   formatToShortNumber,
   getCurrentTimeStamp,
   getTimeDurationStr,
@@ -430,6 +431,12 @@ export const Content = (props: IProps) => {
     poolData.manager.toLowerCase(),
   ].includes(account ? account.toLowerCase() : '')
 
+  const offeringName = poolData.poolName
+    ? poolData.poolName
+    : `${poolData.token0.symbol} ${formatDateTime(
+        Number(poolData.createdAt) || 0
+      )}`
+
   return (
     <div className={classes.root}>
       {state.depositVisible && (
@@ -491,8 +498,8 @@ export const Content = (props: IProps) => {
       <div className={classes.content}>
         <div>
           <PoolDescription
-            poolName={'default name'}
-            poolDescription={'default description'}
+            poolName={offeringName}
+            poolDescription={poolData.description}
             loadInfo={() => reloadTerminalPool(true)}
             isOwnerOrManager={isOwnerOrManager}
           />
