@@ -4,8 +4,8 @@ import clsx from 'clsx'
 const useStyles = makeStyles((theme: any) => ({
   root: {
     '&.network': { width: '8%' },
-    '&.pool': { width: '25%' },
-    '&.allocation': { flex: 1 },
+    '&.pool': { width: '30%' },
+    '&.allocation': { width: '8%' },
     '&.tvl': { width: '10%' },
     '&.vesting': { width: '10%' },
     '&.program': { width: '15%' },

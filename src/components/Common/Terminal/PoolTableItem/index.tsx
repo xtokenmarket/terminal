@@ -154,10 +154,11 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
               src={poolData.token1.image}
             />
             <Typography className={cl.allocationItem}>
-              {poolData.token0.symbol}&nbsp;
+              {poolData.token0.symbol}&nbsp;&nbsp;
               <span>{`${
                 Number(poolData.token0.percent).toFixed() as string
               }%`}</span>
+              &nbsp;&nbsp;
               {poolName}
             </Typography>
           </div>
@@ -166,7 +167,7 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
           <div className={cl.item}>
             <div className={cl.allocation}>
               <Typography className={cl.allocationItem}>
-                {poolData.token1.symbol}&nbsp;
+                {poolData.token1.symbol}&nbsp;&nbsp;
                 <span>{`${
                   Number(poolData.token1.percent).toFixed() as string
                 }%`}</span>
