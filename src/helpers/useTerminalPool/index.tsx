@@ -125,7 +125,7 @@ export const useTerminalPool = (
       let tvl = pool.tvl
 
       // Fetch token details and relevant data, if API fails
-      if (!pool.token0.price || !pool.token1.price) {
+      if (pool.token0.price === undefined || pool.token1.price === undefined) {
         ;[token0, token1, stakedToken] = await Promise.all([
           getTokenDetails(pool.token0.address),
           getTokenDetails(pool.token1.address),
