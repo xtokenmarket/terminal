@@ -16,6 +16,7 @@ import { NetworkId } from 'types'
 import { useParams } from 'react-router-dom'
 import clsx from 'clsx'
 import { useSnackbar } from 'notistack'
+import colors from 'theme/colors'
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -117,7 +118,7 @@ const useStyles = makeStyles((theme) => ({
   },
   editDescriptionText: {
     fontSize: 14,
-    color: theme.colors.secondary,
+    color: theme.colors.primary100,
     cursor: 'pointer',
   },
   editorWrapper: {
@@ -320,7 +321,7 @@ export const PoolDescription = (props: IProps) => {
               className={classes.editIconWrapper}
               onClick={toggleEditNameMode}
             >
-              <EditIcon />
+              <EditIcon fill={colors[0].colors.primary100} />
             </div>
           )}
         </div>
