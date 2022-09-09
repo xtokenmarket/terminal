@@ -200,7 +200,7 @@ export const InitiateSection = (props: IProps) => {
         <Typography className={classes.subTitle}>
           Please complete the transaction to approve vesting process.
         </Typography>
-        {!state.isApproving && (
+        {!state.isApproving && !state.isInitiating && (
           <IconButton className={classes.closeButton} onClick={onClose}>
             <CloseOutlinedIcon />
           </IconButton>

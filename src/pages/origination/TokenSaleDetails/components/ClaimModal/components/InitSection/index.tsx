@@ -110,6 +110,7 @@ export const InitSection = ({
       <Button
         className={classes.button}
         color="secondary"
+        disabled={state.isClaiming}
         fullWidth
         onClick={onClose}
         variant="contained"
