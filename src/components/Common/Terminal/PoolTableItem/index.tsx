@@ -153,20 +153,18 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
               className={cl.tokenIcon}
               src={poolData.token1.image}
             />
-            <Typography className={cl.allocationItem}>
-              {poolData.token0.symbol}&nbsp;&nbsp;
-              <span>{`${
-                Number(poolData.token0.percent).toFixed() as string
-              }%`}</span>
-              &nbsp;&nbsp;
-              {poolName}
-            </Typography>
+            <Typography className={cl.allocationItem}>{poolName}</Typography>
           </div>
         </PoolTd>
         <PoolTd type="allocation">
           <div className={cl.item}>
             <div className={cl.allocation}>
               <Typography className={cl.allocationItem}>
+                {poolData.token0.symbol}&nbsp;&nbsp;
+                <span>{`${
+                  Number(poolData.token0.percent).toFixed() as string
+                }%`}</span>
+                &nbsp;&nbsp;
                 {poolData.token1.symbol}&nbsp;&nbsp;
                 <span>{`${
                   Number(poolData.token1.percent).toFixed() as string
