@@ -30,7 +30,10 @@ import {
 } from 'helpers/useTerminalPool/helper'
 
 import { fetchQuery } from 'utils/thegraph'
-import { ENTRY_IDS_QUERY } from 'helpers/useOriginationPools/helper'
+import {
+  ENTRY_IDS_QUERY,
+  TOKEN_PURCHASED_AMOUNT_QUERY,
+} from 'helpers/useOriginationPools/helper'
 interface IState {
   tokenOffer?: ITokenOffer
   loading: boolean
@@ -270,12 +273,10 @@ export const useOriginationPool = (
       if (saleInitiatedTimestamp.gt(0)) {
         const _getOfferTokenPrice =
           await fungiblePool.contract.getOfferTokenPrice()
-        console.log('_getOfferTokenPrice', _getOfferTokenPrice)
-
         offerData.getOfferTokenPrice = _getOfferTokenPrice
       }
     } catch (error) {
-      console.log('getOfferTokenPrice error', getOfferTokenPrice)
+      console.error('getOfferTokenPrice error', getOfferTokenPrice)
     }
 
     const _whitelist: IWhitelistSale = {
@@ -406,6 +407,27 @@ export const useOriginationPool = (
             account: account.toLowerCase(),
           }
 
+          let tokensClaimedEntry
+          if (reserveAmount.isZero() && vestingPeriod.isZero()) {
+            try {
+              tokensClaimedEntry = (
+                await fetchQuery(
+                  TOKEN_PURCHASED_AMOUNT_QUERY,
+                  eventVariables,
+                  graphqlUrl
+                )
+              ).tokensClaimedEntries
+
+              tokensClaimedEntry = tokensClaimedEntry.reduce(
+                (partialSum: string, a: any) =>
+                  BigNumber.from(partialSum).add(a.amountClaimed),
+                ZERO
+              )
+            } catch (error) {
+              console.error('Error while fetching tokensClaimedEntry')
+            }
+          }
+
           let userToVestingEntryIds = []
           try {
             userToVestingEntryIds = (
@@ -448,7 +470,10 @@ export const useOriginationPool = (
           )
           userPosition.amountInvested = purchaseTokenContribution
           userPosition.amountvested = totalTokenAmountClaimed
-          userPosition.tokenPurchased = offerTokenAmountPurchased
+          userPosition.tokenPurchased =
+            reserveAmount.isZero() && vestingPeriod.isZero()
+              ? tokensClaimedEntry
+              : offerTokenAmountPurchased
           userPosition.userToVestingId = userToVestingEntryIds.map(
             (x: any) => x.userToVestingId
           )

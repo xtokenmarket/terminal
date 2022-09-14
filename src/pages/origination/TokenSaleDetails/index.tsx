@@ -399,7 +399,7 @@ const TokenSaleDetails = () => {
     isOwnerOrManager &&
     !isSaleCompleted &&
     isVestingReserveZero &&
-    tokenOffer?.purchaseTokenBalance.gt(0)
+    tokenOffer?.purchaseTokenBalance?.gt(0)
 
   // vesting and reserve === 0
   // manager claim all the purchase tokens and unsold offer tokens(if exist) after sale
