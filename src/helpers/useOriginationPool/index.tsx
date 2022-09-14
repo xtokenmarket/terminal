@@ -416,15 +416,11 @@ export const useOriginationPool = (
                   eventVariables,
                   graphqlUrl
                 )
-              ).pools[0].tokensClaimedEntry
+              ).tokensClaimedEntries
 
               tokensClaimedEntry = tokensClaimedEntry.reduce(
-                (partialSum: string, a: any) => {
-                  if (a.user.id.toLowerCase() === account.toLowerCase()) {
-                    return BigNumber.from(partialSum).add(a.amountClaimed)
-                  }
-                  return ZERO
-                },
+                (partialSum: string, a: any) =>
+                  BigNumber.from(partialSum).add(a.amountClaimed),
                 ZERO
               )
             } catch (error) {

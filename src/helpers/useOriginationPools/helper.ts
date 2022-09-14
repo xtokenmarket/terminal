@@ -61,15 +61,9 @@ query ($poolAddress: String!, $account: String!) {
 
 export const TOKEN_PURCHASED_AMOUNT_QUERY = `
 query ($poolAddress: String!, $account: String!) {
-  pools(where: { pool: $poolAddress}) {
+  tokensClaimedEntries(where: { pool: $poolAddress, user: $account }) {
     id
-    tokensClaimedEntry {
-      id
-      user {
-        id
-      }
-      amountClaimed
-    }
+    amountClaimed
   }
 }
 `
