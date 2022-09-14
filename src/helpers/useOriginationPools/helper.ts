@@ -59,6 +59,15 @@ query ($poolAddress: String!, $account: String!) {
 }
 `
 
+export const TOKEN_PURCHASED_AMOUNT_QUERY = `
+query ($poolAddress: String!, $account: String!) {
+  tokensClaimedEntries(where: { pool: $poolAddress, user: $account }) {
+    id
+    amountClaimed
+  }
+}
+`
+
 export const parseTokenOffers = (data: any, network: Network) => {
   return data.errors
     ? []
