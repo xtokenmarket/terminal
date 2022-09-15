@@ -20,6 +20,7 @@ import {
 import {
   formatBigNumber,
   formatToShortNumber,
+  getRemainingTimeSec,
   numberWithCommas,
   parseDurationSec,
 } from 'utils'
@@ -362,6 +363,23 @@ export const TableRow = ({
     if (item.label === OriginationLabels.WhitelistSale) {
       item = whitelistSale
 
+      const getCurrentPrice = () => {
+        if (
+          isSaleInitiated &&
+          getRemainingTimeSec(whitelistSale.endOfWhitelistPeriod).isZero()
+        ) {
+          return 'N/A'
+        }
+        return `${formatToShortNumber(
+          formatBigNumber(
+            isSaleInitiated
+              ? whitelistSale.currentPrice
+              : whitelistSale.startingPrice || 0,
+            whitelistSale.purchaseToken.decimals
+          )
+        )} ${item.purchaseToken.symbol}`
+      }
+
       return (
         <>
           <div className={cl.content}>
@@ -369,19 +387,7 @@ export const TableRow = ({
               <Typography
                 className={clsx(cl.item, cl.label, cl.itemMarginLeft)}
               >
-                {isSaleInitiated
-                  ? `${formatToShortNumber(
-                      formatBigNumber(
-                        item.currentPrice,
-                        item.purchaseToken.decimals
-                      )
-                    )} ${item.purchaseToken.symbol}`
-                  : `${formatToShortNumber(
-                      formatBigNumber(
-                        item.startingPrice || 0,
-                        item.purchaseToken.decimals
-                      )
-                    )} ${item.purchaseToken.symbol}`}
+                {getCurrentPrice()}
               </Typography>
             </Td>
 
