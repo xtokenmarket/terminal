@@ -96,6 +96,9 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '50%',
   },
   allocationItem: {
+    marginRight: 10,
+    display: 'flex',
+    flexDirection: 'column',
     color: theme.colors.white,
     fontWeight: 700,
     '& span': {
@@ -103,6 +106,11 @@ const useStyles = makeStyles((theme) => ({
       color: theme.colors.primary100,
       fontSize: 14,
     },
+  },
+  name: {
+    fontWeight: 400,
+    color: theme.colors.primary100,
+    fontSize: 14,
   },
 }))
 
@@ -132,10 +140,6 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
 
     const network = poolData.network || DEFAULT_NETWORK
 
-    const poolName = poolData.poolName
-      ? poolData.poolName
-      : `${formatDateTime(Number(poolData.createdAt) || 0)}`
-
     return (
       <NavLink
         className={cl.content}
@@ -153,18 +157,23 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
               className={cl.tokenIcon}
               src={poolData.token1.image}
             />
-            <Typography className={cl.allocationItem}>{poolName}</Typography>
+            <Typography className={cl.allocationItem}>
+              {poolData.poolName
+                ? poolData.poolName
+                : `${poolData.token0.symbol} ${poolData.token1.symbol}`}
+            </Typography>
           </div>
         </PoolTd>
         <PoolTd type="allocation">
           <div className={cl.item}>
             <div className={cl.allocation}>
               <Typography className={cl.allocationItem}>
-                {poolData.token0.symbol}&nbsp;&nbsp;
+                {poolData.token0.symbol}
                 <span>{`${
                   Number(poolData.token0.percent).toFixed() as string
                 }%`}</span>
-                &nbsp;&nbsp;
+              </Typography>
+              <Typography className={cl.allocationItem}>
                 {poolData.token1.symbol}&nbsp;&nbsp;
                 <span>{`${
                   Number(poolData.token1.percent).toFixed() as string
