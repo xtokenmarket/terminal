@@ -1,8 +1,13 @@
-import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import {
+  Button,
+  Grid,
+  makeStyles,
+  Typography,
+  Checkbox,
+} from '@material-ui/core'
 import { FEE_TIERS, FEE_TIPS } from 'config/constants'
 import React, { useState } from 'react'
-import { ICreatePoolData, ITerminalPool } from 'types'
+import { ICreatePoolData } from 'types'
 import { RewardTokensTable } from './RewardTokensTable'
 import { IRewardState, RewardModal } from 'components'
 import { CreatePoolModal } from '../CreatePoolModal'
@@ -99,6 +104,24 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'row',
   },
+  checkboxItem: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    color: theme.colors.white,
+    cursor: 'pointer',
+    fontSize: 14,
+    marginBottom: 16,
+  },
+  checkboxIcon: {
+    position: 'absolute',
+    left: 0,
+    width: 16,
+    height: 16,
+  },
+  checkboxRoot: {
+    marginRight: 8,
+  },
 }))
 
 interface IProps {
@@ -114,6 +137,7 @@ export const RewardsStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
 
   const [isCreateModalVisible, setIsCreateModalVisible] = useState(false)
   const [isRewardsModalVisible, setIsRewardsModalVisible] = useState(false)
+  const [noRewardsChecked, setNoRewardsChecked] = useState(false)
 
   const feeLabel = FEE_TIERS.find((fee) => fee.value.eq(data.tier))?.label
   const priceLabel = `${data.token1.symbol.toUpperCase()} per ${data.token0.symbol.toUpperCase()}`
@@ -124,11 +148,17 @@ export const RewardsStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
   const toggleRewardsModal = () =>
     setIsRewardsModalVisible((prevState) => !prevState)
 
-  const hasRewards = data.rewardState.tokens.length > 0
+  const hasSpecifiedRewards = data.rewardState.tokens.length > 0
 
   const onNextStep = (state: IRewardState) => {
     updateData({ rewardState: state })
     toggleRewardsModal()
+  }
+
+  const onNoRewardCheck = () => {
+    const checked = !noRewardsChecked
+    setNoRewardsChecked(checked)
+    updateData({ nonRewardPool: checked })
   }
 
   return (
@@ -182,23 +212,53 @@ export const RewardsStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
 
           <Grid item xs={12} md={6}>
             <Typography className={cl.label}>Rewards</Typography>
-            <div className={cl.noRewardsWrapper}>
-              {hasRewards ? (
-                <RewardTokensTable rewardState={data.rewardState} />
-              ) : (
-                <Typography className={cl.noRewardsText}>
-                  You have not configured rewards for this pool
-                </Typography>
-              )}
-              <Button
-                className={cl.createRewardsBtn}
+            <Grid item xs={12} className={cl.checkboxItem}>
+              <Checkbox
+                checked={noRewardsChecked}
                 color="secondary"
-                onClick={toggleRewardsModal}
-                variant="contained"
-              >
-                {hasRewards ? 'EDIT REWARDS' : 'CONFIGURE REWARDS'}
-              </Button>
-            </div>
+                classes={{
+                  root: cl.checkboxRoot,
+                }}
+                icon={
+                  <img
+                    src="/assets/icons/unchecked.svg"
+                    className={cl.checkboxIcon}
+                  />
+                }
+                checkedIcon={
+                  <img
+                    src="/assets/icons/checked-white.svg"
+                    className={cl.checkboxIcon}
+                  />
+                }
+                onChange={() => onNoRewardCheck()}
+                value={noRewardsChecked}
+                disableRipple
+              />
+
+              <Typography onClick={() => onNoRewardCheck()}>
+                This pool has no rewards
+              </Typography>
+            </Grid>
+            {!noRewardsChecked && (
+              <div className={cl.noRewardsWrapper}>
+                {hasSpecifiedRewards ? (
+                  <RewardTokensTable rewardState={data.rewardState} />
+                ) : (
+                  <Typography className={cl.noRewardsText}>
+                    You have not configured rewards for this pool
+                  </Typography>
+                )}
+                <Button
+                  className={cl.createRewardsBtn}
+                  color="secondary"
+                  onClick={toggleRewardsModal}
+                  variant="contained"
+                >
+                  {hasSpecifiedRewards ? 'EDIT REWARDS' : 'CONFIGURE REWARDS'}
+                </Button>
+              </div>
+            )}
           </Grid>
         </Grid>
       </div>
@@ -209,7 +269,7 @@ export const RewardsStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
         fullWidth
         onClick={toggleCreateModal}
         variant="contained"
-        disabled={!hasRewards}
+        disabled={noRewardsChecked ? false : !hasSpecifiedRewards}
       >
         CREATE POOL
       </Button>

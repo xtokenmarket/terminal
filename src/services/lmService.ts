@@ -412,9 +412,7 @@ class LMService {
     })
   }
 
-  deployIncentivizedPool = async (
-    poolData: ICreatePoolData
-  ): Promise<string> => {
+  deployLmPool = async (poolData: ICreatePoolData): Promise<string> => {
     const isTokenSorted = BigNumber.from(poolData.token0.address).lt(
       BigNumber.from(poolData.token1.address)
     )
@@ -425,11 +423,6 @@ class LMService {
     }bps`
     const deploymentFee = await this.contract.deploymentFee()
 
-    const rewardsProgram = {
-      rewardTokens: poolData.rewardState.tokens.map((token) => token.address),
-      vestingPeriod: parseDuration(poolData.rewardState.vesting),
-    }
-
     const poolDetails = {
       amount0: isTokenSorted ? poolData.amount0 : poolData.amount1,
       amount1: isTokenSorted ? poolData.amount1 : poolData.amount0,
@@ -438,15 +431,33 @@ class LMService {
       token1: isTokenSorted ? poolData.token1.address : poolData.token0.address,
     }
 
-    const transactionObject = await this.contract.deployIncentivizedPool(
-      symbol,
-      poolData.ticks,
-      rewardsProgram,
-      poolDetails,
-      {
-        value: deploymentFee,
+    let transactionObject: any = {}
+    if (poolData.nonRewardPool) {
+      transactionObject = await this.contract.deployNonIncentivizedPool(
+        symbol,
+        poolData.ticks,
+        poolDetails,
+        {
+          value: deploymentFee,
+        }
+      )
+    } else {
+      const rewardsProgram = {
+        rewardTokens: poolData.rewardState.tokens.map((token) => token.address),
+        vestingPeriod: parseDuration(poolData.rewardState.vesting),
       }
-    )
+
+      transactionObject = await this.contract.deployIncentivizedPool(
+        symbol,
+        poolData.ticks,
+        rewardsProgram,
+        poolDetails,
+        {
+          value: deploymentFee,
+        }
+      )
+    }
+
     console.log(
       `deployIncentivizedPool transaction hash: ${transactionObject.hash}`
     )
