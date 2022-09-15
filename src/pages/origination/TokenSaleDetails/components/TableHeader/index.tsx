@@ -149,7 +149,7 @@ export const TableHeader = (props: IProps) => {
             </Td>
             {props.isSaleCompleted && (
               <Td type={UserPosition.AmountAvailableToVest} label={props.label}>
-                <div className={classes.item}>Cliff Time Remaining</div>
+                <div className={classes.item}>Time Remaining to Cliff</div>
               </Td>
             )}
           </>
