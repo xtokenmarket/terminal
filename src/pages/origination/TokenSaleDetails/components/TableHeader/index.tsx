@@ -146,6 +146,11 @@ export const TableHeader = (props: IProps) => {
             <Td type={UserPosition.Amountvested} label={props.label}>
               <div className={classes.item}>Amount Vested</div>
             </Td>
+            <Td type={UserPosition.Amountvested} label={props.label}>
+              <div className={classes.item}>
+                Amount Available To Vest To Wallet
+              </div>
+            </Td>
             <Td type={UserPosition.AmountAvailableToVest} label={props.label}>
               <div className={classes.item}>Amount of Future Vest</div>
             </Td>

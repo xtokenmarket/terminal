@@ -581,6 +581,20 @@ export const TableRow = ({
                   {item.offerToken.symbol}
                 </Typography>
               </Td>
+              <Td
+                type={UserPosition.AmountAvailableToVestToWallet}
+                label={item.label}
+              >
+                <Typography className={clsx(cl.item, cl.label)}>
+                  {formatToShortNumber(
+                    formatBigNumber(
+                      item.amountAvailableToVestToWallet,
+                      item.offerToken.decimals
+                    )
+                  )}{' '}
+                  {item.offerToken.symbol}
+                </Typography>
+              </Td>
               <Td type={UserPosition.AmountAvailableToVest} label={item.label}>
                 <Typography className={clsx(cl.item, cl.label)}>
                   {formatToShortNumber(
