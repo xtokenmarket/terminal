@@ -246,7 +246,6 @@ export const CreatePoolSection = (props: IProps) => {
       }))
 
       let txId = ''
-
       if (poolData.incentivized) {
         txId = await lmService.deployIncentivizedPool(poolData)
       } else {
