@@ -1,19 +1,9 @@
 import { makeStyles, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import { TokenIcon } from 'components'
-import { BigNumber } from 'ethers'
 import { IUserPosition, IOfferingOverview } from 'types'
-import {
-  formatBigNumber,
-  formatDurationUnits,
-  getCurrentTimeStamp,
-  getTimeRemainingUnits,
-  getTotalTokenPrice,
-  numberWithCommas,
-  parseDurationSec,
-} from 'utils'
+import { formatBigNumber, numberWithCommas, parseDurationSec } from 'utils'
 import { VestStep } from 'utils/enums'
-import { ONE_ETHER } from 'utils/number'
 import { VestState } from '../..'
 
 const useStyles = makeStyles((theme) => ({
@@ -100,20 +90,6 @@ interface IProps {
 export const OutputEstimation = (props: IProps) => {
   const classes = useStyles()
   const { offerData, vestState, userPositionData } = props
-
-  const now = getCurrentTimeStamp()
-
-  const getRemainingSec = () => {
-    const vestEndSec = Number(offerData.salesEnd)
-
-    const remainingPeriod =
-      vestEndSec + offerData.vestingPeriod.toNumber() / 1000 - now
-
-    return remainingPeriod * 1000
-  }
-
-  const durationRemaining = getTimeRemainingUnits(getRemainingSec())
-  const { primary, rest } = formatDurationUnits(durationRemaining)
 
   return (
     <div className={clsx(props.className)}>
