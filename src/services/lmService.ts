@@ -412,7 +412,9 @@ class LMService {
     })
   }
 
-  deployLmPool = async (poolData: ICreatePoolData): Promise<string> => {
+  deployIncentivizedPool = async (
+    poolData: ICreatePoolData
+  ): Promise<string> => {
     const isTokenSorted = BigNumber.from(poolData.token0.address).lt(
       BigNumber.from(poolData.token1.address)
     )
@@ -423,6 +425,11 @@ class LMService {
     }bps`
     const deploymentFee = await this.contract.deploymentFee()
 
+    const rewardsProgram = {
+      rewardTokens: poolData.rewardState.tokens.map((token) => token.address),
+      vestingPeriod: parseDuration(poolData.rewardState.vesting),
+    }
+
     const poolDetails = {
       amount0: isTokenSorted ? poolData.amount0 : poolData.amount1,
       amount1: isTokenSorted ? poolData.amount1 : poolData.amount0,
@@ -431,51 +438,71 @@ class LMService {
       token1: isTokenSorted ? poolData.token1.address : poolData.token0.address,
     }
 
-    let transactionObject: any = {}
-    if (poolData.nonRewardPool) {
-      transactionObject = await this.contract.deployNonIncentivizedPool(
-        symbol,
-        poolData.ticks,
-        poolDetails,
-        {
-          value: deploymentFee,
-        }
-      )
-    } else {
-      const rewardsProgram = {
-        rewardTokens: poolData.rewardState.tokens.map((token) => token.address),
-        vestingPeriod: parseDuration(poolData.rewardState.vesting),
+    const transactionObject = await this.contract.deployIncentivizedPool(
+      symbol,
+      poolData.ticks,
+      rewardsProgram,
+      poolDetails,
+      {
+        value: deploymentFee,
       }
-
-      transactionObject = await this.contract.deployIncentivizedPool(
-        symbol,
-        poolData.ticks,
-        rewardsProgram,
-        poolDetails,
-        {
-          value: deploymentFee,
-        }
-      )
-    }
-
+    )
     console.log(
       `deployIncentivizedPool transaction hash: ${transactionObject.hash}`
     )
     return transactionObject.hash
   }
 
+  deployNonIncentivizedPool = async (
+    poolData: ICreatePoolData
+  ): Promise<string> => {
+    const isTokenSorted = BigNumber.from(poolData.token0.address).lt(
+      BigNumber.from(poolData.token1.address)
+    )
+    // Includes fee tier as part of symbol
+    const symbol = `${poolData.token0.symbol}-${poolData.token1.symbol}-CLR-${
+      poolData.tier.toNumber() / 100
+    }bps`
+    const deploymentFee = await this.contract.deploymentFee()
+    const poolDetails = {
+      amount0: isTokenSorted ? poolData.amount0 : poolData.amount1,
+      amount1: isTokenSorted ? poolData.amount1 : poolData.amount0,
+      fee: poolData.tier,
+      token0: isTokenSorted ? poolData.token0.address : poolData.token1.address,
+      token1: isTokenSorted ? poolData.token1.address : poolData.token0.address,
+    }
+
+    const transactionObject = await this.contract.deployNonIncentivizedPool(
+      symbol,
+      poolData.ticks,
+      poolDetails,
+      {
+        value: deploymentFee,
+      }
+    )
+
+    console.log(
+      `deployNonIncentivizedPool transaction hash: ${transactionObject.hash}`
+    )
+    return transactionObject.hash
+  }
+
   waitUntilTerminalPoolCreated = async (
-    tokenA: string,
-    tokenB: string,
-    tier: BigNumber,
+    poolData: ICreatePoolData,
     txId: string
   ): Promise<string> => {
+    const { incentivized, tier } = poolData
+    const tokenA = poolData.token0.address
+    const tokenB = poolData.token1.address
+
     const [token0, token1] = getSortedToken(tokenA, tokenB)
     let resolved = false
 
     return new Promise((resolve) => {
       this.contract.on(
-        'DeployedIncentivizedPool',
+        incentivized
+          ? 'DeployedIncentivizedPool'
+          : 'DeployedNonIncentivizedPool',
         (poolAddress, t0, t1, fee, lowerTick, upperTick, ...rest) => {
           if (
             t0.toLowerCase() === token0 &&
@@ -499,7 +526,10 @@ class LMService {
     })
   }
 
-  parseTerminalPoolCreatedTx = async (txId: string): Promise<string> => {
+  parseTerminalPoolCreatedTx = async (
+    poolData: ICreatePoolData,
+    txId: string
+  ): Promise<string> => {
     const { logs } = await this.contract.provider.getTransactionReceipt(txId)
 
     const filteredLogs = logs.filter(
@@ -511,7 +541,18 @@ class LMService {
       const log = filteredLogs[index]
       try {
         const parsed = uniPositionInterface.parseLog(log)
-        if (parsed.name === 'DeployedIncentivizedPool') {
+
+        if (
+          poolData.incentivized &&
+          parsed.name === 'DeployedIncentivizedPool'
+        ) {
+          return parsed.args[0]
+        }
+
+        if (
+          !poolData.incentivized &&
+          parsed.name === 'DeployedNonIncentivizedPool'
+        ) {
           return parsed.args[0]
         }
       } catch (error) {

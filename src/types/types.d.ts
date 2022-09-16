@@ -124,7 +124,7 @@ export interface ICreatePoolData {
   token0: IToken
   token1: IToken
   uniPool: string
-  nonRewardPool: boolean
+  incentivized: boolean
 }
 
 export type IFullRange = true

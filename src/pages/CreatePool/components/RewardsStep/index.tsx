@@ -158,7 +158,7 @@ export const RewardsStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
   const onNoRewardCheck = () => {
     const checked = !noRewardsChecked
     setNoRewardsChecked(checked)
-    updateData({ nonRewardPool: checked })
+    updateData({ incentivized: !checked })
   }
 
   return (

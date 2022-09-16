@@ -245,25 +245,23 @@ export const CreatePoolSection = (props: IProps) => {
         isCreatingPool: true,
       }))
 
-      // TODO: can delete later
-      // this lets us make a pool that vests in 50 mins, for testing
+      let txId = ''
 
-      // const tempPoolData = {
-      //   ...poolData,
-      //   rewardState: {
-      //     ...poolData.rewardState,
-      //     vesting: '0.005',
-      //   },
-      // }
-      const txId = await lmService.deployLmPool(poolData)
+      if (poolData.incentivized) {
+        txId = await lmService.deployIncentivizedPool(poolData)
+      } else {
+        txId = await lmService.deployNonIncentivizedPool(poolData)
+      }
+
       const finalTxId = await lmService.waitUntilTerminalPoolCreated(
-        poolData.token0.address,
-        poolData.token1.address,
-        poolData.tier,
+        poolData,
         txId
       )
 
-      const poolAddress = await lmService.parseTerminalPoolCreatedTx(finalTxId)
+      const poolAddress = await lmService.parseTerminalPoolCreatedTx(
+        poolData,
+        finalTxId
+      )
       setPoolAddress(poolAddress)
       setTxId(finalTxId)
 
