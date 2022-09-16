@@ -334,7 +334,7 @@ export const useOriginationPool = (
       userToVestingId: [],
       vestableAt: saleEndTimestamp.add(cliffPeriod),
       vestingPeriod,
-      amountAvailableToVestToWllet: ZERO,
+      amountAvailableToVestToWallet: ZERO,
     }
 
     const offeringSummary = {
@@ -488,7 +488,7 @@ export const useOriginationPool = (
           userPosition.userToVestingId = userToVestingEntryIds.map(
             (x: any) => x.userToVestingId
           )
-          userPosition.amountAvailableToVestToWllet = offerTokenPayout
+          userPosition.amountAvailableToVestToWallet = offerTokenPayout
         } catch (e) {
           console.error('Error while fetching account related data', e)
         }
