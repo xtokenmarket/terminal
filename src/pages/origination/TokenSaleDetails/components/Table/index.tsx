@@ -222,6 +222,19 @@ export const Table = ({
     return false
   }
 
+  const getIsTimeToFullVestShow = () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (item.vestableAt && getRemainingTimeSec(item.vestableAt).isZero()) {
+      return !getRemainingTimeSec(
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        item.vestableAt.add(item.vestingPeriod)
+      ).isZero()
+    }
+    return false
+  }
+
   return (
     <>
       {renderLabel(label)}
@@ -234,6 +247,7 @@ export const Table = ({
           isSaleCompleted={isSaleCompleted}
           isSaleInitiated={isSaleInitiated}
           isTimeRemainingToCliffShow={getIsTimeRemainingToCliffShow()}
+          isTimeToFullVestShow={getIsTimeToFullVestShow()}
         />
         <div>
           <TableRow

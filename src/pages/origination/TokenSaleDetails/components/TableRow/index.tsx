@@ -601,14 +601,18 @@ export const TableRow = ({
                       </Typography>
                     </Td>
                   )}
-                  <Td
-                    type={UserPosition.AmountAvailableToVest}
-                    label={item.label}
-                  >
-                    <Typography className={clsx(cl.item, cl.label)}>
-                      {getTimeToFullVestText(item.vestableAt)}
-                    </Typography>
-                  </Td>
+                  {!getRemainingTimeSec(
+                    item.vestableAt.add(item.vestingPeriod)
+                  ).isZero() && (
+                    <Td
+                      type={UserPosition.AmountAvailableToVest}
+                      label={item.label}
+                    >
+                      <Typography className={clsx(cl.item, cl.label)}>
+                        {getTimeToFullVestText(item.vestableAt)}
+                      </Typography>
+                    </Td>
+                  )}
                 </>
               )}
             </>

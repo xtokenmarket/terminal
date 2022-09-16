@@ -37,6 +37,7 @@ interface IProps {
   isSaleCompleted?: boolean
   isSaleInitiated?: boolean
   isTimeRemainingToCliffShow?: boolean
+  isTimeToFullVestShow?: boolean
 }
 
 export const TableHeader = (props: IProps) => {
@@ -155,9 +156,11 @@ export const TableHeader = (props: IProps) => {
                     <div className={classes.item}>Time Remaining to Cliff</div>
                   </Td>
                 )}
-                <Td type={UserPosition.TimeToFullVest} label={props.label}>
-                  <div className={classes.item}>Time to Full Vest</div>
-                </Td>
+                {props.isTimeToFullVestShow && (
+                  <Td type={UserPosition.TimeToFullVest} label={props.label}>
+                    <div className={classes.item}>Time to Full Vest</div>
+                  </Td>
+                )}
               </>
             )}
           </>
