@@ -1,9 +1,4 @@
-import {
-  Button,
-  CircularProgress,
-  makeStyles,
-  Typography,
-} from '@material-ui/core'
+import { makeStyles, Typography } from '@material-ui/core'
 import clsx from 'clsx'
 import { IToken } from 'types'
 import { TokenIcon } from 'components'
@@ -62,24 +57,13 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   title: string
   actionLabel: string
-  actionDone: boolean
-  actionPending: boolean
-  onConfirm: () => Promise<void>
   token: IToken
   amount: BigNumber
 }
 
 export const TokenInfo = (props: IProps) => {
   const classes = useStyles()
-  const {
-    title,
-    token,
-    actionLabel,
-    actionDone,
-    actionPending,
-    onConfirm,
-    amount,
-  } = props
+  const { title, token, amount } = props
 
   return (
     <div className={clsx(classes.root)}>
@@ -92,34 +76,10 @@ export const TokenInfo = (props: IProps) => {
           &nbsp;&nbsp;
           <Typography className={classes.amount}>
             {formatBigNumber(amount, token.decimals, 4)}
-            &nbsp;
-            <span>
-              ~ $
-              {numberWithCommas(
-                getTotalTokenPrice(amount, token.decimals, token.price)
-              )}
-            </span>
+            &nbsp;{token.symbol}
           </Typography>
         </div>
       </div>
-      <Button
-        color="primary"
-        disabled={actionPending || actionDone}
-        variant="contained"
-        className={clsx(
-          classes.button,
-          (actionPending || actionDone) && 'pending'
-        )}
-        onClick={onConfirm}
-      >
-        {actionPending ? 'Pending' : actionLabel}
-        {actionPending && (
-          <>
-            &nbsp;
-            <CircularProgress className={classes.progress} size={10} />
-          </>
-        )}
-      </Button>
     </div>
   )
 }
