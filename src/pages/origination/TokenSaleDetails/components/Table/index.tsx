@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { FungiblePoolService } from 'services'
 import { OriginationDetailItem } from 'types'
+import { getRemainingTimeSec } from 'utils'
 import { TableHeader } from '../TableHeader'
 import { TableRow } from '../TableRow'
 
@@ -210,6 +211,17 @@ export const Table = ({
     }
   }
 
+  const getIsTimeRemainingToCliffShow = () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (item.vestableAt) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      return !getRemainingTimeSec(item.vestableAt).isZero()
+    }
+    return false
+  }
+
   return (
     <>
       {renderLabel(label)}
@@ -221,6 +233,7 @@ export const Table = ({
           isFormulaStandard={isFormulaStandard}
           isSaleCompleted={isSaleCompleted}
           isSaleInitiated={isSaleInitiated}
+          isTimeRemainingToCliffShow={getIsTimeRemainingToCliffShow()}
         />
         <div>
           <TableRow

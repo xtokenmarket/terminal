@@ -333,6 +333,7 @@ export const useOriginationPool = (
       vestableTokenAmount,
       userToVestingId: [],
       vestableAt: saleEndTimestamp.add(cliffPeriod),
+      vestingPeriod,
     }
 
     const offeringSummary = {

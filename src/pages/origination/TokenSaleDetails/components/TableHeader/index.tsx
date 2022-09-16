@@ -36,6 +36,7 @@ interface IProps {
   isFormulaStandard?: boolean
   isSaleCompleted?: boolean
   isSaleInitiated?: boolean
+  isTimeRemainingToCliffShow?: boolean
 }
 
 export const TableHeader = (props: IProps) => {
@@ -148,9 +149,16 @@ export const TableHeader = (props: IProps) => {
               <div className={classes.item}>Amount of Future Vest</div>
             </Td>
             {props.isSaleCompleted && (
-              <Td type={UserPosition.AmountAvailableToVest} label={props.label}>
-                <div className={classes.item}>Time Remaining to Cliff</div>
-              </Td>
+              <>
+                {props.isTimeRemainingToCliffShow && (
+                  <Td type={UserPosition.VestableAt} label={props.label}>
+                    <div className={classes.item}>Time Remaining to Cliff</div>
+                  </Td>
+                )}
+                <Td type={UserPosition.TimeToFullVest} label={props.label}>
+                  <div className={classes.item}>Time to Full Vest</div>
+                </Td>
+              </>
             )}
           </>
         )}
