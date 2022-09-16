@@ -120,7 +120,7 @@ export const OutputEstimation = (props: IProps) => {
       <div className={classes.estimation}>
         <Typography className={classes.label}>
           {vestState.step === VestStep.Info
-            ? 'AVAILABLE TO VEST'
+            ? 'VESTED TOKEN AVAILABLE TO CLAIM'
             : 'YOU VESTED'}
         </Typography>
         <div className={classes.infoRow}>
@@ -149,38 +149,6 @@ export const OutputEstimation = (props: IProps) => {
             </div>
           </div>
         )}
-      </div>
-      <div className={classes.period}>
-        <Typography className={classes.label}>
-          {vestState.step === VestStep.Info
-            ? 'ALREADY VESTING'
-            : 'TOTAL VESTING'}
-        </Typography>
-        <div className={classes.infoRow}>
-          <TokenIcon
-            token={offerData.offerToken}
-            className={classes.tokenIconSmall}
-          />
-          &nbsp;&nbsp;
-          <Typography className={classes.amountSmall}>
-            {vestState.step === VestStep.Info
-              ? numberWithCommas(
-                  formatBigNumber(
-                    userPositionData.amountvested,
-                    offerData.offerToken.decimals
-                  )
-                )
-              : numberWithCommas(
-                  formatBigNumber(
-                    userPositionData.amountvested.add(
-                      userPositionData.amountAvailableToVest
-                    ),
-                    offerData.offerToken.decimals
-                  )
-                )}{' '}
-            {offerData.offerToken.symbol}
-          </Typography>
-        </div>
       </div>
     </div>
   )
