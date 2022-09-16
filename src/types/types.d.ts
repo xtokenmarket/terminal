@@ -286,6 +286,7 @@ export interface IUserPosition extends Label {
   userToVestingId: string[]
   vestableAt: BigNumber
   vestingPeriod: BigNumber
+  amountAvailableToVestToWllet: BigNumber
 }
 
 export interface IOfferingSummary extends Label {

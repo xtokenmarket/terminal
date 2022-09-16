@@ -132,7 +132,7 @@ export const OutputEstimation = (props: IProps) => {
           <Typography className={classes.amount}>
             {numberWithCommas(
               formatBigNumber(
-                userPositionData.amountAvailableToVest,
+                userPositionData.amountAvailableToVestToWllet,
                 offerData.offerToken.decimals
               )
             )}{' '}
