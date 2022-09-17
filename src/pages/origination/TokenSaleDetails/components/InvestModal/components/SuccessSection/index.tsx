@@ -93,8 +93,7 @@ export const SuccessSection = (props: IProps) => {
           />
         </div>
         <Typography className={classes.title}>
-          {`${offerData.offerToken.symbol}/${offerData.purchaseToken.symbol}`}{' '}
-          Contribution confirmed!
+          {`${offerData.purchaseToken.symbol} contribution confirmed!`}
         </Typography>
         <Typography className={classes.description}>
           You have successfully contributed{' '}

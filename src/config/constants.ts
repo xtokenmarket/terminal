@@ -34,11 +34,9 @@ export const NULL_ADDRESS_WHITELIST =
 
 export const LOCKED_STARTING_TIME = 'LOCKED_STARTING_TIME'
 
-export const FIVE_MINUTES_IN_MS = 5 * 60 * 1000
-
-export const ONE_HOUR_IN_MS = 1000 * 60 * 60
-export const ONE_MINUTE_IN_MS = 1000 * 60
-export const HOURS_IN_4_WEEKS = 24 * 7 * 4
+export const ONE_MINUTE_IN_MS = 60 * 1000
+export const FIVE_MINUTES_IN_MS = 5 * ONE_MINUTE_IN_MS
+export const ONE_HOUR_IN_MS = 60 * ONE_MINUTE_IN_MS
 
 export enum ChainId {
   Mainnet = 1,

@@ -133,11 +133,11 @@ export const TableHeader = (props: IProps) => {
       <div className={classes.root}>
         {!props.isOfferUnsuccessful && (
           <Td type={UserPosition.TokenPurchased} label={props.label}>
-            <div className={classes.item}>Token Purchased</div>
+            <div className={classes.item}>Tokens Purchased</div>
           </Td>
         )}
         <Td type={UserPosition.AmountInvested} label={props.label}>
-          <div className={classes.item}>Amount Invested</div>
+          <div className={classes.item}>Amount Contributed</div>
         </Td>
         {props.isVestedPropertiesShow && (
           <>
@@ -145,7 +145,7 @@ export const TableHeader = (props: IProps) => {
               <div className={classes.item}>Amount Vested</div>
             </Td>
             <Td type={UserPosition.AmountAvailableToVest} label={props.label}>
-              <div className={classes.item}>Amount Available To Vest</div>
+              <div className={classes.item}>Amount of Future Vest</div>
             </Td>
             {props.isSaleCompleted && (
               <Td type={UserPosition.AmountAvailableToVest} label={props.label}>

@@ -438,10 +438,9 @@ const TokenSaleDetails = () => {
     isAddressCapExceeded
 
   const isInitiateSaleButtonDisabled =
-    (tokenOffer &&
-      tokenOffer.whitelist.salesPeriod?.gt(0) &&
-      !tokenOffer.whitelist.whitelist) ||
-    !tokenOffer?.originationRow.poolName
+    tokenOffer &&
+    tokenOffer.whitelist.salesPeriod?.gt(0) &&
+    !tokenOffer.whitelist.whitelist
 
   const isVestedPropertiesShow =
     (tokenOffer?.userPosition.amountAvailableToVest.gt(0) ||
@@ -451,7 +450,7 @@ const TokenSaleDetails = () => {
   const offeringName = tokenOffer?.originationRow.poolName
     ? tokenOffer.originationRow.poolName
     : `${tokenOffer?.offeringOverview.offerToken.symbol} ${formatDateTime(
-        tokenOffer?.originationRow.createdAt.toNumber() || 0
+        tokenOffer?.originationRow.createdAt?.toNumber() || 0
       )}`
 
   return (
@@ -471,7 +470,7 @@ const TokenSaleDetails = () => {
               offeringDescription={tokenOffer.originationRow.description}
               loadInfo={() => loadInfo(true)}
               isOwnerOrManager={isOwnerOrManager}
-              isSaleInitiated={isSaleInitiated}
+              isSaleCompleted={isSaleCompleted}
             />
             <hr className={cl.hr} />
             <SetWhitelistModal

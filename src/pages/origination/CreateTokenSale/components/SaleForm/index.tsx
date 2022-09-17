@@ -2,7 +2,6 @@ import clsx from 'clsx'
 import React from 'react'
 import {
   Description,
-  EPeriods,
   EPricingFormula,
   ETokenSalePhase,
   InfoText,
@@ -18,7 +17,6 @@ import {
 } from '@material-ui/core'
 import RadioItem from '@material-ui/core/Radio'
 import { IToken, PeriodUnit, SaleData } from 'types'
-import { HOURS_IN_4_WEEKS } from 'config/constants'
 
 import { Input } from '../Input'
 import { InputDescription } from '../InputDescription'
@@ -162,13 +160,14 @@ export const SaleForm = ({
       offeringPeriodUnit === EOfferingPeriods.Year) ||
     (Number(offeringPeriod) > 12 &&
       offeringPeriodUnit === EOfferingPeriods.Month) ||
-    (Number(offeringPeriod) > 4 &&
+    (Number(offeringPeriod) > 52 &&
       offeringPeriodUnit === EOfferingPeriods.Weeks) ||
-    (Number(offeringPeriod) > 28 &&
+    (Number(offeringPeriod) > 365 &&
       offeringPeriodUnit === EOfferingPeriods.Days) ||
-    (Number(offeringPeriod) > HOURS_IN_4_WEEKS &&
+    // TODO: Remove for production
+    (Number(offeringPeriod) > 8760 &&
       offeringPeriodUnit === EOfferingPeriods.Hours) ||
-    (Number(offeringPeriod) > HOURS_IN_4_WEEKS * 60 &&
+    (Number(offeringPeriod) > 525600 &&
       offeringPeriodUnit === EOfferingPeriods.Minutes)
 
   let invalidPricingError = ''

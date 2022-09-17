@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { makeStyles, Grid, Typography } from '@material-ui/core'
 import { ICreateTokenSaleData, PeriodUnit } from 'types'
-import { EPeriods, EVestingOption } from 'utils/enums'
+import { EPeriods, EVestingOption, InfoText } from 'utils/enums'
 import { getDurationSec } from 'utils'
 
 import { InfoPanel } from './InfoPanel'
@@ -126,7 +126,7 @@ export const VestingStep: React.FC<IProps> = ({
             }
             selectorValue={`${data.vestingPeriodUnit}`}
             label="Vesting Period"
-            infoText="Amount of time until all tokens are available to claim"
+            infoText={InfoText.VestingPeriod}
             inputValue={`${data.vestingPeriod}`}
             onChangeInput={(e) => onChangeInput(e, 'vestingPeriod')}
             disabled={!vestingWanted}

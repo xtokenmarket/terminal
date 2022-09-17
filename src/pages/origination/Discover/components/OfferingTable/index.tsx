@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core'
 import { transparentize } from 'polished'
 import { IOriginationPool } from 'types'
-import { OfferingTableHeader, OfferingTableRow } from '../table'
+import { OfferingTableHeader, OfferingTableRow } from '../index'
 
 const useStyles = makeStyles((theme) => ({
   root: {

@@ -1,9 +1,10 @@
-import { HeaderSection, OfferingTable } from './components/table'
 import { SimpleLoader } from 'components'
 import { IS_PROD, PROD_TESTNET_DISCOVER_PAGE_SIZE } from 'config/constants'
-import { useNetworkContext } from 'contexts/networkContext'
+import { useNetworkContext } from 'contexts'
+import { useOriginationPools } from 'helpers'
 import { isTestnet } from 'utils/network'
-import { useOriginationPools } from 'helpers/useOriginationPools'
+
+import { HeaderSection, OfferingTable } from './components'
 
 const Discover = () => {
   const { tokenOffers, isLoading } = useOriginationPools()
