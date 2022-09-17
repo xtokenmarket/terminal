@@ -169,7 +169,7 @@ export const Table = ({
               <Tooltip
                 title={
                   isInitiateSaleButtonDisabled
-                    ? 'Set up allowlist and offering name before initiate offering'
+                    ? 'Set up allowlist before initiate offering'
                     : ''
                 }
                 arrow

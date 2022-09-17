@@ -3,13 +3,13 @@ import { makeStyles } from '@material-ui/core'
 
 const useStyles = makeStyles(() => ({
   root: {
-    '&.offerToken': { width: '25%' },
-    '&.remainingOffering': { width: '14%' },
-    '&.maxOffering': { width: '14%' },
+    '&.offerToken': { width: '14%' },
+    '&.offeringName': { width: '21%' },
+    '&.remainingOffering': { width: '18%' },
     '&.pricePerToken': { width: '14%' },
+    '&.amountRaised': { width: '14%' },
     '&.timeRemaining': { width: '14%' },
-    '&.vestingPeriod': { width: '14%' },
-    '&.vestingCliff': { width: '11%' },
+    '&.vestingPeriod': { width: '11%' },
     '&+&': { paddingLeft: 16 },
     '&:last-child': {
       textAlign: 'right',
@@ -20,12 +20,12 @@ const useStyles = makeStyles(() => ({
 interface IProps {
   type:
     | 'offerToken'
-    | 'maxOffering'
+    | 'offeringName'
     | 'remainingOffering'
     | 'pricePerToken'
+    | 'amountRaised'
     | 'timeRemaining'
     | 'vestingPeriod'
-    | 'vestingCliff'
   children: React.ReactNode | React.ReactNode[]
 }
 

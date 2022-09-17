@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme) => ({
   textLimitation: {
     fontSize: 12,
     color: theme.colors.primary100,
-    marginBottom: 15,
+    margin: '5px 0',
   },
   button: {
     '&:hover': {
@@ -118,16 +118,19 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
   },
   editDescriptionText: {
-    fontSize: 14,
     color: theme.colors.primary100,
     cursor: 'pointer',
+    display: 'inline-block',
+    fontSize: 14,
+    marginTop: 6,
   },
   editorWrapper: {
     margin: '20px 0',
   },
   description: {
     color: theme.colors.white,
-    fontSize: 18,
+    fontSize: 16,
+    marginTop: 6,
   },
   loading: {
     color: theme.colors.white,
@@ -157,7 +160,7 @@ interface IProps {
   offeringDescription: string
   loadInfo: () => void
   isOwnerOrManager?: boolean
-  isSaleInitiated?: boolean
+  isSaleCompleted?: boolean
 }
 
 enum IKey {
@@ -189,7 +192,7 @@ export const TokenSaleDescription = (props: IProps) => {
     offeringDescription,
     loadInfo,
     isOwnerOrManager,
-    isSaleInitiated,
+    isSaleCompleted,
   } = props
   const { library: provider, networkId } = useConnectedWeb3Context()
   const { poolAddress } = useParams<RouteParams>()
@@ -327,7 +330,7 @@ export const TokenSaleDescription = (props: IProps) => {
       ) : (
         <div className={classes.nameWrapper}>
           <div className={classes.name}>{offeringName}</div>
-          {!pending && isOwnerOrManager && !isSaleInitiated && (
+          {!pending && isOwnerOrManager && !isSaleCompleted && (
             <div
               className={classes.editIconWrapper}
               onClick={toggleEditNameMode}
@@ -389,14 +392,14 @@ export const TokenSaleDescription = (props: IProps) => {
         </div>
       ) : (
         <>
-          <div className={classes.description}>{offeringDescription} </div>
-          {!pending && isOwnerOrManager && !isSaleInitiated && (
-            <div
+          <div className={classes.description}>{offeringDescription}</div>
+          {!pending && isOwnerOrManager && !isSaleCompleted && (
+            <span
               className={classes.editDescriptionText}
               onClick={toggleEditDescriptionMode}
             >
-              Edit Description
-            </div>
+              {`${description ? 'Edit' : 'Add'}`} Description
+            </span>
           )}
         </>
       )}

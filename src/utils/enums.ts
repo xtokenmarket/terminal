@@ -177,20 +177,24 @@ export enum ECreateTokenSaleModalStep {
 }
 
 export enum InfoText {
-  OfferToken = 'The token being offered to contributors',
-  PurchaseToken = 'The token used by contributors to acquire the offer token',
-  OfferTokenAmount = 'Maximum amount of token offered to contributors',
-  ReserveOfferTokenAmount = 'Minimum amount of purchase token raised for successful offering',
-  OfferingPeriod = 'Duration of sale',
-  Standard = 'All offer tokens sells for 1 USDC',
+  AmountRaised = 'Total amount of purchase token raised',
   Ascending = 'Price steadily goes up from offering standard price. ',
   Descending = 'Price steadily goes down from offering standard price. ',
+  OfferingPeriod = 'Duration of sale',
+  OfferName = 'Name of the token offering',
+  OfferToken = 'The token being offered to contributors',
+  OfferTokenAmount = 'Maximum amount of token offered to contributors',
+  PricePerToken = 'Price of purchase token per 1 offer token',
+  PurchaseToken = 'The token used by contributors to acquire the offer token',
+  RemainingOffering = 'The amount of offer tokens remaining and the maximum amount available in this offering',
+  ReserveOfferTokenAmount = 'Minimum amount of purchase token raised for successful offering',
+  Standard = 'All offer tokens sells for 1 USDC',
+  TimeRemaining = 'Duration remaining until the sale ends',
+  VestingPeriod = 'Amount of time until all tokens are available to claim',
 }
 
 export enum Description {
-  PurchaseToken = 'choose what to sell your offer token for',
   OfferTokenAmount = 'Determine the amount of token you want to sell',
-  ReserveOfferTokenAmount = 'Minimum amount of purchase token raised for successful sale',
   StartingPrice = 'Price at the beginning of the period',
   EndingPrice = 'Price at the end of the period',
 }
