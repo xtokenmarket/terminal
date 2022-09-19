@@ -180,7 +180,10 @@ export const useOriginationPool = (
     }
 
     // Fetch token details and price, in fallback behaviour
-    if (!offerData?.offerToken.price || !offerData?.purchaseToken.price) {
+    if (
+      offerData?.offerToken.price === undefined ||
+      offerData?.purchaseToken.price === undefined
+    ) {
       const [offerToken, purchaseToken] = await Promise.all([
         getTokenDetails(offerData?.offerToken.address || offerData?.offerToken),
         getTokenDetails(
