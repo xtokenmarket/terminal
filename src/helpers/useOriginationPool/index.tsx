@@ -330,7 +330,7 @@ export const useOriginationPool = (
       amountAvailableToVest: ZERO,
       offerToken: offerToken,
       purchaseToken: purchaseToken || ETH,
-      vestableTokenAmount,
+      vestableTokenAmount, // TODO: Redundant?
       userToVestingId: [],
       vestableAt: saleEndTimestamp.add(cliffPeriod),
       vestingPeriod,

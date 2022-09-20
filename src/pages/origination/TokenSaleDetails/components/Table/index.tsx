@@ -1,11 +1,8 @@
 import { Button, makeStyles, Tooltip, Typography } from '@material-ui/core'
-import { useConnectedWeb3Context } from 'contexts'
 import { transparentize } from 'polished'
-import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { FungiblePoolService } from 'services'
 import { OriginationDetailItem } from 'types'
 import { getRemainingTimeSec } from 'utils'
+
 import { TableHeader } from '../TableHeader'
 import { TableRow } from '../TableRow'
 
@@ -85,7 +82,6 @@ interface IProps {
   isSaleCompleted?: boolean
   isClaimButtonDisabled?: boolean
   isClaimButtonShow?: boolean
-  setIsClaimToken?: boolean
 }
 
 export const Table = ({
@@ -105,24 +101,7 @@ export const Table = ({
   isSaleCompleted,
   isClaimButtonDisabled,
   isClaimButtonShow,
-  setIsClaimToken,
 }: IProps) => {
-  const [saleInitiated, setSaleInitiated] = useState(false)
-  const { account, library: provider } = useConnectedWeb3Context()
-  const { poolAddress } = useParams<{ poolAddress: string }>()
-  useEffect(() => {
-    if (provider) {
-      const fungibleOriginationPool = new FungiblePoolService(
-        provider,
-        account,
-        poolAddress
-      )
-
-      fungibleOriginationPool
-        .isSaleInitiated()
-        .then((initiated) => setSaleInitiated(initiated))
-    }
-  }, [account, provider, poolAddress])
   const cl = useStyles()
 
   const renderLabel = (label: string) => {
@@ -139,6 +118,7 @@ export const Table = ({
         </Typography>
       </Button>
     )
+
     switch (label) {
       case 'Allowlist Offering':
         return (
@@ -211,6 +191,7 @@ export const Table = ({
     }
   }
 
+  // TODO: Simplify
   const getIsTimeRemainingToCliffShow = () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -222,6 +203,7 @@ export const Table = ({
     return false
   }
 
+  // TODO: Simplify
   const getIsTimeToFullVestShow = () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore

@@ -1,6 +1,4 @@
-import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core'
-import { Td } from '../Td'
 import {
   UserPosition,
   OfferingOverview,
@@ -9,6 +7,8 @@ import {
   PublicSale,
   WhitelistSale,
 } from 'utils/enums'
+
+import { Td } from '../Td'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -148,7 +148,7 @@ export const TableHeader = (props: IProps) => {
             </Td>
             <Td type={UserPosition.Amountvested} label={props.label}>
               <div className={classes.item}>
-                Amount Available To Vest To Wallet
+                Amount Available to Vest to Wallet
               </div>
             </Td>
             <Td type={UserPosition.AmountAvailableToVest} label={props.label}>
