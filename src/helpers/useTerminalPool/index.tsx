@@ -439,7 +439,7 @@ export const useTerminalPool = (
           poolShare,
           user,
           totalSupply: _totalSupply,
-          poolName: pool.poolName,
+          poolName: pool.poolName || `${token0.symbol} ${token1.symbol}`,
           description: pool.description,
           createdAt: pool.createdAt,
         },

@@ -13,7 +13,6 @@ import axios from 'axios'
 import { useConnectedWeb3Context } from 'contexts'
 import { getNetworkFromId } from 'utils/network'
 import { NetworkId } from 'types'
-import { useParams } from 'react-router-dom'
 import clsx from 'clsx'
 import { useSnackbar } from 'notistack'
 import colors from 'theme/colors'
@@ -66,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
   textLimitation: {
     fontSize: 12,
     color: theme.colors.primary100,
-    marginBottom: 15,
+    margin: '5px 0',
   },
   button: {
     '&:hover': {
@@ -74,7 +73,11 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: theme.colors.secondary,
     },
     '&.dark': {
-      opacity: 0.7,
+      opacity: 0.5,
+      backgroundColor: theme.colors.secondary,
+    },
+    '&.Mui-disabled': {
+      opacity: 0.5,
       backgroundColor: theme.colors.secondary,
     },
     padding: '8px 20px',
@@ -117,16 +120,19 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
   },
   editDescriptionText: {
-    fontSize: 14,
     color: theme.colors.primary100,
     cursor: 'pointer',
+    display: 'inline-block',
+    fontSize: 14,
+    marginTop: 6,
   },
   editorWrapper: {
     margin: '20px 0',
   },
   description: {
     color: theme.colors.white,
-    fontSize: 18,
+    fontSize: 16,
+    marginTop: 6,
   },
   loading: {
     color: theme.colors.white,
@@ -190,7 +196,7 @@ export const PoolDescription = (props: IProps) => {
       name: poolName || '',
       description: poolDescription || '',
     }))
-  }, [])
+  }, [poolName, poolDescription])
 
   const onChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -214,6 +220,7 @@ export const PoolDescription = (props: IProps) => {
 
   const onSave = async (key: IKey) => {
     if (!provider || !networkId) return
+
     setState((prev) => ({
       ...prev,
       pending: true,
@@ -223,17 +230,20 @@ export const PoolDescription = (props: IProps) => {
       const signedPoolAddress = await provider
         .getSigner()
         .signMessage(poolAddress)
+
       await axios.put(`${TERMINAL_API_URL}/pool/${getAddress(poolAddress)}`, {
         network: getNetworkFromId(networkId as NetworkId),
         signedPoolAddress,
-        poolName: name,
-        description,
+        poolName: isNameEditing ? name : undefined,
+        description: isDescriptionEditing ? description : undefined,
       })
+
       setState((prev) => ({
         ...prev,
         [key === IKey.PoolName ? 'isNameEditing' : 'isDescriptionEditing']:
           false,
       }))
+
       loadInfo()
     } catch (error: any) {
       enqueueSnackbar(error.message, {
@@ -250,18 +260,25 @@ export const PoolDescription = (props: IProps) => {
   const toggleEditDescriptionMode = () => {
     setState((prev) => ({
       ...prev,
+      description: poolDescription || '',
       isNameEditing: false,
-      isDescriptionEditing: !isDescriptionEditing,
+      isDescriptionEditing: !prev.isDescriptionEditing,
     }))
   }
 
   const toggleEditNameMode = () => {
     setState((prev) => ({
       ...prev,
-      isNameEditing: !isNameEditing,
+      name: poolName || '',
+      isNameEditing: !prev.isNameEditing,
       isDescriptionEditing: false,
     }))
   }
+
+  const isEditingDisabled = pending || !!errorMessage
+  const isEditingNameDisabled = isEditingDisabled || !name || name === poolName
+  const isEditingDescriptionDisabled =
+    isEditingDisabled || !description || description === poolDescription
 
   return (
     <div className={classes.root}>
@@ -289,10 +306,10 @@ export const PoolDescription = (props: IProps) => {
             </div>
             <Button
               className={clsx(classes.button, [
-                (pending || !name || !!errorMessage) && 'dark',
+                isEditingNameDisabled && 'dark',
               ])}
               onClick={() => onSave(IKey.PoolName)}
-              disabled={!name || !!errorMessage}
+              disabled={isEditingNameDisabled}
             >
               <Typography className={classes.text}>
                 {pending ? (
@@ -352,10 +369,10 @@ export const PoolDescription = (props: IProps) => {
             </div>
             <Button
               className={clsx(classes.button, [
-                (pending || !description || !!errorMessage) && 'dark',
+                isEditingDescriptionDisabled && 'dark',
               ])}
               onClick={() => onSave(IKey.Description)}
-              disabled={!description || !!errorMessage}
+              disabled={isEditingDescriptionDisabled}
             >
               <Typography className={classes.text}>
                 {pending ? (

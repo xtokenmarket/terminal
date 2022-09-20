@@ -244,12 +244,14 @@ export const Content = (props: IProps) => {
   const [state, setState] = useState<IState>(initialState)
 
   const { clrService, poolData, reloadTerminalPool } = props
-  const { token0, token1 } = poolData
+  const { manager, owner, poolName, token0, token1 } = poolData
 
   const timestamp = getCurrentTimeStamp()
-  const isManageable = [poolData.owner, poolData.manager]
-    .map((e) => e.toLowerCase())
-    .includes((account || '').toLowerCase())
+  const isManageable = account
+    ? [owner.toLowerCase(), manager.toLowerCase()].includes(
+        account.toLowerCase()
+      )
+    : false
   const isDeposited = !poolData.user.stakedTokenBalance.isZero()
   const rewardPeriodFinished = poolData.periodFinish.toNumber() < timestamp
   const { vesting } = poolData.rewardState
@@ -407,6 +409,7 @@ export const Content = (props: IProps) => {
   const triggerRipple = () => {
     const container = buttonRef.current
     if (!container) return
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const rect = container.getBoundingClientRect()
@@ -420,22 +423,11 @@ export const Content = (props: IProps) => {
       // when center is true, the ripple doesn't travel to the border of the container
       { center: false }
     )
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-
     setTimeout(() => rippleRef.current.stop({}), 320)
   }
-
-  const isOwnerOrManager = [
-    poolData.owner.toLowerCase(),
-    poolData.manager.toLowerCase(),
-  ].includes(account ? account.toLowerCase() : '')
-
-  const poolName = poolData.poolName
-    ? poolData.poolName
-    : `${poolData.token0.symbol} ${formatDateTime(
-        Number(poolData.createdAt) || 0
-      )}`
 
   return (
     <div className={classes.root}>
@@ -501,7 +493,7 @@ export const Content = (props: IProps) => {
             poolName={poolName}
             poolDescription={poolData.description}
             loadInfo={() => reloadTerminalPool(true)}
-            isOwnerOrManager={isOwnerOrManager}
+            isOwnerOrManager={isManageable}
             poolAddress={poolData.address}
           />
           <hr className={classes.hr} />

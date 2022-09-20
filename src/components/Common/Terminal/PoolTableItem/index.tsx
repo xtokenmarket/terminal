@@ -134,10 +134,10 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
     }
 
     const {
+      poolName,
       rewardState: { amounts, duration, tokens, vesting },
     } = poolData
     const isInitiateRewardsPending = duration === '0'
-
     const network = poolData.network || DEFAULT_NETWORK
 
     return (
@@ -157,11 +157,7 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
               className={cl.tokenIcon}
               src={poolData.token1.image}
             />
-            <Typography className={cl.allocationItem}>
-              {poolData.poolName
-                ? poolData.poolName
-                : `${poolData.token0.symbol} ${poolData.token1.symbol}`}
-            </Typography>
+            <Typography className={cl.allocationItem}>{poolName}</Typography>
           </div>
         </PoolTd>
         <PoolTd type="allocation">

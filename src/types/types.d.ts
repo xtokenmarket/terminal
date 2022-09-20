@@ -82,6 +82,7 @@ export interface ITerminalPool {
   address: string
   apr: string
   createdAt: string
+  description: string
   earnedTokens: EarnedToken[]
   history: History[]
   manager: string
