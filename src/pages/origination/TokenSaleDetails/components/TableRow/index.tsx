@@ -20,6 +20,7 @@ import {
 import {
   formatBigNumber,
   formatToShortNumber,
+  getRemainingTimeSec,
   numberWithCommas,
   parseDurationSec,
 } from 'utils'
@@ -176,6 +177,13 @@ export const TableRow = ({
     ) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
+      if (getRemainingTimeSec(item.vestableAt).isZero()) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        return item.vestableAt.add(item.vestingPeriod).toNumber() * 1000
+      }
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       return item.vestableAt.toNumber() * 1000
     }
     if (item.label === OriginationLabels.WhitelistSale) {
@@ -224,6 +232,17 @@ export const TableRow = ({
     if (days + hours + minutes + seconds > 0)
       return `${days}D:${hours}H:${minutes}M:${seconds}S`
     return 'Started'
+  }
+
+  const getTimeToFullVestText = (vestableAt: BigNumber) => {
+    if (
+      getRemainingTimeSec(vestableAt).isZero() &&
+      days + hours + minutes + seconds > 0
+    ) {
+      return `${days}D:${hours}H:${minutes}M:${seconds}S`
+    }
+
+    return 'Not Started'
   }
 
   const renderContent = () => {
@@ -362,6 +381,23 @@ export const TableRow = ({
     if (item.label === OriginationLabels.WhitelistSale) {
       item = whitelistSale
 
+      const getCurrentPrice = () => {
+        if (
+          isSaleInitiated &&
+          getRemainingTimeSec(whitelistSale.endOfWhitelistPeriod).isZero()
+        ) {
+          return 'N/A'
+        }
+        return `${formatToShortNumber(
+          formatBigNumber(
+            isSaleInitiated
+              ? whitelistSale.currentPrice
+              : whitelistSale.startingPrice || 0,
+            whitelistSale.purchaseToken.decimals
+          )
+        )} ${item.purchaseToken.symbol}`
+      }
+
       return (
         <>
           <div className={cl.content}>
@@ -369,19 +405,7 @@ export const TableRow = ({
               <Typography
                 className={clsx(cl.item, cl.label, cl.itemMarginLeft)}
               >
-                {isSaleInitiated
-                  ? `${formatToShortNumber(
-                      formatBigNumber(
-                        item.currentPrice,
-                        item.purchaseToken.decimals
-                      )
-                    )} ${item.purchaseToken.symbol}`
-                  : `${formatToShortNumber(
-                      formatBigNumber(
-                        item.startingPrice || 0,
-                        item.purchaseToken.decimals
-                      )
-                    )} ${item.purchaseToken.symbol}`}
+                {getCurrentPrice()}
               </Typography>
             </Td>
 
@@ -557,6 +581,20 @@ export const TableRow = ({
                   {item.offerToken.symbol}
                 </Typography>
               </Td>
+              <Td
+                type={UserPosition.AmountAvailableToVestToWallet}
+                label={item.label}
+              >
+                <Typography className={clsx(cl.item, cl.label)}>
+                  {formatToShortNumber(
+                    formatBigNumber(
+                      item.amountAvailableToVestToWallet,
+                      item.offerToken.decimals
+                    )
+                  )}{' '}
+                  {item.offerToken.symbol}
+                </Typography>
+              </Td>
               <Td type={UserPosition.AmountAvailableToVest} label={item.label}>
                 <Typography className={clsx(cl.item, cl.label)}>
                   {formatToShortNumber(
@@ -569,11 +607,27 @@ export const TableRow = ({
                 </Typography>
               </Td>
               {isSaleCompleted && (
-                <Td type={UserPosition.VestableAt} label={item.label}>
-                  <Typography className={clsx(cl.item, cl.label)}>
-                    {getCliffTimeRemainingText()}
-                  </Typography>
-                </Td>
+                <>
+                  {!getRemainingTimeSec(item.vestableAt).isZero() && (
+                    <Td type={UserPosition.VestableAt} label={item.label}>
+                      <Typography className={clsx(cl.item, cl.label)}>
+                        {getCliffTimeRemainingText()}
+                      </Typography>
+                    </Td>
+                  )}
+                  {!getRemainingTimeSec(
+                    item.vestableAt.add(item.vestingPeriod)
+                  ).isZero() && (
+                    <Td
+                      type={UserPosition.AmountAvailableToVest}
+                      label={item.label}
+                    >
+                      <Typography className={clsx(cl.item, cl.label)}>
+                        {getTimeToFullVestText(item.vestableAt)}
+                      </Typography>
+                    </Td>
+                  )}
+                </>
               )}
             </>
           )}

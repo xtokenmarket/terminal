@@ -126,36 +126,6 @@ export const InitiateSection = (props: IProps) => {
     }
   }, [state.isInitiated])
 
-  const onApprove = async () => {
-    if (!account || !provider || !networkId) {
-      return
-    }
-
-    try {
-      setState((prev) => ({
-        ...prev,
-        isApproving: true,
-      }))
-
-      const txHash = await erc20Token.approveUnlimited(
-        offerData.poolAddress,
-        networkId
-      )
-      await erc20Token.waitUntilApproved(account, offerData.poolAddress, txHash)
-
-      setState((prev) => ({
-        ...prev,
-        isApproving: false,
-        isApproved: true,
-      }))
-    } catch (error) {
-      setState((prev) => ({
-        ...prev,
-        isApproving: false,
-      }))
-    }
-  }
-
   const onVest = async () => {
     if (!account || !provider) {
       return
@@ -211,9 +181,6 @@ export const InitiateSection = (props: IProps) => {
           <TokenInfo
             title="Approve vest of"
             actionLabel={state.isApproved ? 'APPROVED' : 'APPROVE'}
-            onConfirm={onApprove}
-            actionPending={state.isApproving}
-            actionDone={state.isApproved}
             token={offerData.offerToken}
             amount={userPositionData.amountAvailableToVest}
           />
