@@ -330,9 +330,11 @@ export const useOriginationPool = (
       amountAvailableToVest: ZERO,
       offerToken: offerToken,
       purchaseToken: purchaseToken || ETH,
-      vestableTokenAmount,
+      vestableTokenAmount, // TODO: Redundant?
       userToVestingId: [],
       vestableAt: saleEndTimestamp.add(cliffPeriod),
+      vestingPeriod,
+      amountAvailableToVestToWallet: ZERO,
     }
 
     const offeringSummary = {
@@ -466,6 +468,12 @@ export const useOriginationPool = (
             return a.add(b.tokenAmountClaimed)
           }, ZERO)
 
+          const offerTokenPayout =
+            await fungiblePool.contract.calculateClaimableVestedAmount(
+              totalTokenAmount,
+              totalTokenAmountClaimed
+            )
+
           offeringOverview.isOwnerOrManager = isOwnerOrManager
 
           userPosition.amountAvailableToVest = totalTokenAmount.sub(
@@ -480,6 +488,7 @@ export const useOriginationPool = (
           userPosition.userToVestingId = userToVestingEntryIds.map(
             (x: any) => x.userToVestingId
           )
+          userPosition.amountAvailableToVestToWallet = offerTokenPayout
         } catch (e) {
           console.error('Error while fetching account related data', e)
         }

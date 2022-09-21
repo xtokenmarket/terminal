@@ -1,6 +1,4 @@
-import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core'
-import { Td } from '../Td'
 import {
   UserPosition,
   OfferingOverview,
@@ -9,6 +7,8 @@ import {
   PublicSale,
   WhitelistSale,
 } from 'utils/enums'
+
+import { Td } from '../Td'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,6 +36,8 @@ interface IProps {
   isFormulaStandard?: boolean
   isSaleCompleted?: boolean
   isSaleInitiated?: boolean
+  isTimeRemainingToCliffShow?: boolean
+  isTimeToFullVestShow?: boolean
 }
 
 export const TableHeader = (props: IProps) => {
@@ -144,13 +146,27 @@ export const TableHeader = (props: IProps) => {
             <Td type={UserPosition.Amountvested} label={props.label}>
               <div className={classes.item}>Amount Vested</div>
             </Td>
+            <Td type={UserPosition.Amountvested} label={props.label}>
+              <div className={classes.item}>
+                Amount Available to Vest to Wallet
+              </div>
+            </Td>
             <Td type={UserPosition.AmountAvailableToVest} label={props.label}>
               <div className={classes.item}>Amount of Future Vest</div>
             </Td>
             {props.isSaleCompleted && (
-              <Td type={UserPosition.AmountAvailableToVest} label={props.label}>
-                <div className={classes.item}>Cliff Time Remaining</div>
-              </Td>
+              <>
+                {props.isTimeRemainingToCliffShow && (
+                  <Td type={UserPosition.VestableAt} label={props.label}>
+                    <div className={classes.item}>Time Remaining to Cliff</div>
+                  </Td>
+                )}
+                {props.isTimeToFullVestShow && (
+                  <Td type={UserPosition.TimeToFullVest} label={props.label}>
+                    <div className={classes.item}>Time to Full Vest</div>
+                  </Td>
+                )}
+              </>
             )}
           </>
         )}

@@ -54,10 +54,10 @@ const useStyles = makeStyles(() => ({
     '&.amountInvested': { width: '12%' },
     '&.amountvested': { width: '12%' },
     '&.amountAvailableToVest': { width: '12%' },
+    '&.vestableAt': { width: '12%' },
+    '&.timeToFullVest': { width: '12%' },
+    '&.amountAvailableToVestToWallet': { width: '12%' },
     '&+&': { paddingLeft: 16 },
-    '&:last-child': {
-      textAlign: 'right',
-    },
   },
   offeringSummary: {
     '&.offerToken': { width: '12%' },

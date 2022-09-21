@@ -1,10 +1,8 @@
 import { Button, makeStyles, Tooltip, Typography } from '@material-ui/core'
-import { useConnectedWeb3Context } from 'contexts'
 import { transparentize } from 'polished'
-import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { FungiblePoolService } from 'services'
 import { OriginationDetailItem } from 'types'
+import { getRemainingTimeSec } from 'utils'
+
 import { TableHeader } from '../TableHeader'
 import { TableRow } from '../TableRow'
 
@@ -84,7 +82,6 @@ interface IProps {
   isSaleCompleted?: boolean
   isClaimButtonDisabled?: boolean
   isClaimButtonShow?: boolean
-  setIsClaimToken?: boolean
 }
 
 export const Table = ({
@@ -104,24 +101,7 @@ export const Table = ({
   isSaleCompleted,
   isClaimButtonDisabled,
   isClaimButtonShow,
-  setIsClaimToken,
 }: IProps) => {
-  const [saleInitiated, setSaleInitiated] = useState(false)
-  const { account, library: provider } = useConnectedWeb3Context()
-  const { poolAddress } = useParams<{ poolAddress: string }>()
-  useEffect(() => {
-    if (provider) {
-      const fungibleOriginationPool = new FungiblePoolService(
-        provider,
-        account,
-        poolAddress
-      )
-
-      fungibleOriginationPool
-        .isSaleInitiated()
-        .then((initiated) => setSaleInitiated(initiated))
-    }
-  }, [account, provider, poolAddress])
   const cl = useStyles()
 
   const renderLabel = (label: string) => {
@@ -132,12 +112,13 @@ export const Table = ({
         disabled={isClaimButtonDisabled}
       >
         <Typography className={cl.text}>
-          {label === 'My Activity' || label === 'Offering Summary'
+          {label === 'My Activity'
             ? 'CLAIM'
-            : 'CLAIM PURCHASE TOKENS'}
+            : `CLAIM ${item.purchaseToken.symbol}`}
         </Typography>
       </Button>
     )
+
     switch (label) {
       case 'Allowlist Offering':
         return (
@@ -210,6 +191,32 @@ export const Table = ({
     }
   }
 
+  // TODO: Simplify
+  const getIsTimeRemainingToCliffShow = () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (item.vestableAt) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      return !getRemainingTimeSec(item.vestableAt).isZero()
+    }
+    return false
+  }
+
+  // TODO: Simplify
+  const getIsTimeToFullVestShow = () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (item.vestableAt && getRemainingTimeSec(item.vestableAt).isZero()) {
+      return !getRemainingTimeSec(
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        item.vestableAt.add(item.vestingPeriod)
+      ).isZero()
+    }
+    return false
+  }
+
   return (
     <>
       {renderLabel(label)}
@@ -221,6 +228,8 @@ export const Table = ({
           isFormulaStandard={isFormulaStandard}
           isSaleCompleted={isSaleCompleted}
           isSaleInitiated={isSaleInitiated}
+          isTimeRemainingToCliffShow={getIsTimeRemainingToCliffShow()}
+          isTimeToFullVestShow={getIsTimeToFullVestShow()}
         />
         <div>
           <TableRow
