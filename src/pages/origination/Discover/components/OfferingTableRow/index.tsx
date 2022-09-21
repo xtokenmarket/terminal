@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import { makeStyles, Typography } from '@material-ui/core'
-import { OfferingTd } from '../table'
+import { OfferingTd } from '../index'
 import { NavLink } from 'react-router-dom'
 import {
   formatBigNumber,
@@ -89,7 +89,6 @@ const useStyles = makeStyles((theme) => ({
   offeringName: {
     color: theme.colors.white,
     fontSize: 14,
-    marginLeft: 8,
   },
 }))
 
@@ -118,22 +117,23 @@ export const OfferingTableRow = ({ offering }: IProps) => {
     }
 
     const {
-      offerToken,
-      purchaseToken,
-      totalOfferingAmount,
-      offerTokenAmountSold,
-      salesBegin,
-      startingPrice,
-      vestingPeriod,
-      cliffPeriod,
-      salesEnd,
       createdAt,
+      offerToken,
+      offerTokenAmountSold,
       poolName,
+      purchaseToken,
+      purchaseTokenRaised,
+      salesBegin,
+      salesEnd,
+      startingPrice,
+      totalOfferingAmount,
+      vestingPeriod,
     } = _originationRow
+
+    const isSaleInitiated = !salesBegin.isZero()
 
     // TODO: Better way to parse time remaining info
     const getTimeRemainingText = () => {
-      const isSaleInitiated = !salesBegin.isZero()
       if (!isSaleInitiated) return "Hasn't started"
       if (getRemainingTimeSec(salesEnd).isZero()) return 'Ended'
       if (days < 0) return `0D:0H:0M:0S`
@@ -158,24 +158,21 @@ export const OfferingTableRow = ({ offering }: IProps) => {
             <Typography className={cl.offerTokenLabel}>
               {offerToken.symbol}
             </Typography>
-            <Typography className={cl.offeringName}>
-              {poolName ? poolName : formatDateTime(createdAt.toNumber())}
-            </Typography>
           </div>
         </OfferingTd>
-
-        <OfferingTd type="maxOffering">
-          <Typography className={cl.item}>
-            {formatToShortNumber(
-              formatBigNumber(totalOfferingAmount, offerToken.decimals)
-            )}{' '}
-            {offerToken.symbol}
+        <OfferingTd type="offeringName">
+          <Typography className={cl.offeringName}>
+            {poolName || offerToken.symbol}
           </Typography>
         </OfferingTd>
         <OfferingTd type="remainingOffering">
           <Typography className={cl.item}>
             {formatToShortNumber(
               formatBigNumber(remainingOfferingAmount, offerToken.decimals)
+            )}
+            /
+            {formatToShortNumber(
+              formatBigNumber(totalOfferingAmount, offerToken.decimals)
             )}{' '}
             {offerToken.symbol}
           </Typography>
@@ -190,6 +187,15 @@ export const OfferingTableRow = ({ offering }: IProps) => {
             {purchaseToken.symbol}
           </Typography>
         </OfferingTd>
+        <OfferingTd type="amountRaised">
+          <Typography className={clsx(cl.item, cl.label)}>
+            {isSaleInitiated
+              ? `${formatToShortNumber(
+                  formatBigNumber(purchaseTokenRaised, purchaseToken.decimals)
+                )} ${purchaseToken.symbol}`
+              : 'N/A'}
+          </Typography>
+        </OfferingTd>
         <OfferingTd type="timeRemaining">
           <Typography className={clsx(cl.item, cl.label)}>
             {getTimeRemainingText()}
@@ -200,13 +206,6 @@ export const OfferingTableRow = ({ offering }: IProps) => {
             {vestingPeriod.isZero()
               ? 'None'
               : parseDurationSec(vestingPeriod.toNumber())}
-          </Typography>
-        </OfferingTd>
-        <OfferingTd type="vestingCliff">
-          <Typography className={clsx(cl.item, cl.label)}>
-            {cliffPeriod.isZero()
-              ? 'None'
-              : parseDurationSec(cliffPeriod.toNumber())}
           </Typography>
         </OfferingTd>
       </NavLink>

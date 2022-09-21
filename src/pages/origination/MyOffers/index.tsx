@@ -6,7 +6,7 @@ import { useNetworkContext } from 'contexts/networkContext'
 import { IS_PROD } from 'config/constants'
 import { isTestnet } from 'utils/network'
 import { useMyTokenOffers } from 'helpers/useMyOriginationPools'
-import { OfferingTable, HeaderSection } from '../Discover/components/table'
+import { OfferingTable, HeaderSection } from '../Discover/components'
 
 const useStyles = makeStyles((theme) => ({
   root: {

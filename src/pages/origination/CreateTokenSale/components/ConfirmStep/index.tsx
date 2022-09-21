@@ -109,7 +109,7 @@ const useStyles = makeStyles((theme) => ({
     border: `1px solid ${theme.colors.primary200}`,
   },
   fee: {
-    fontSize: 12,
+    fontSize: 14,
     color: theme.colors.primary100,
     marginBottom: 8,
   },
@@ -190,7 +190,7 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit, onBack }) => {
                 <span className="separator" />
                 <Grid item xs={12} sm={3} className={classes.section}>
                   <div className="content">
-                    <p className="title">Offering period</p>
+                    <p className="title">Offering duration</p>
                     <p className="data">{getOfferingPeriod()}</p>
                   </div>
                 </Grid>
@@ -249,7 +249,7 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit, onBack }) => {
           {data.publicSale.enabled && offerToken && (
             <>
               <Typography className={classes.label}>
-                Public Sale Summary
+                Public Offering Summary
               </Typography>
               <PricingFormulaTable
                 saleData={data.publicSale}
