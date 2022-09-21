@@ -19,10 +19,15 @@ const useStyles = makeStyles((theme) => ({
       textDecoration: 'underline',
     },
   },
+  warning: {
+    color: theme.colors.warn2,
+    fontSize: 14,
+  },
 }))
 
 interface IProps {
   isCreatePool: boolean
+  error: string | null
   token?: IToken
   balance?: BigNumber
   rewardFeePercent: number
@@ -37,6 +42,7 @@ interface IProps {
 
 export const RewardToken: React.FC<IProps> = ({
   isCreatePool,
+  error,
   token,
   balance,
   rewardFeePercent,
@@ -72,6 +78,9 @@ export const RewardToken: React.FC<IProps> = ({
           value={balance}
           onChange={onChangeAmount}
         />
+      )}
+      {!!error && error !== 'Enter amount' && error !== 'Select token' && (
+        <div className={cl.warning}>{error}</div>
       )}
     </div>
   )

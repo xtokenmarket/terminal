@@ -81,11 +81,15 @@ interface EarnedToken extends IToken {
 export interface ITerminalPool {
   address: string
   apr: string
+  earnedTokens: EarnedToken[]
+  history: History[]
   manager: string
   network?: Network
   owner: string
   periodFinish: BigNumber
   poolFee: BigNumber
+  poolShare: string
+  rewardFeePercent: number
   rewardsAreEscrowed: boolean
   rewardState: IRewardState
   stakedToken: IToken
@@ -93,23 +97,20 @@ export interface ITerminalPool {
   token1: IToken
   token0: IToken
   tokenId: BigNumber // token id representing this uniswap position
+  totalSupply: BigNumber
   tradeFee: BigNumber // xToken Trade Fee as a divisor (100 = 1%)
   tvl: string
   uniswapPool: string
-  vestingTokens: VestingToken[]
-  earnedTokens: EarnedToken[]
-  history: History[]
-  poolShare: string
-  totalSupply: BigNumber
   user: {
-    token0Deposit: BigNumber
-    token1Deposit: BigNumber
-    token0Tvl: string
-    token1Tvl: string
-    stakedTokenBalance: BigNumber
-    collectableFees0: BigNumber
     collectableFees1: BigNumber
+    collectableFees0: BigNumber
+    stakedTokenBalance: BigNumber
+    token1Deposit: BigNumber
+    token1Tvl: string
+    token0Deposit: BigNumber
+    token0Tvl: string
   }
+  vestingTokens: VestingToken[]
 }
 
 export interface ICreatePoolData {

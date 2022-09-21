@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import {
   makeStyles,
   Typography,
@@ -9,9 +9,7 @@ import {
   TableBody,
   TableCell,
 } from '@material-ui/core'
-import { useServices } from 'helpers'
 import { IRewardState } from 'components'
-import { parseFee } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
   tableContainer: {},
@@ -44,15 +42,6 @@ export const RewardTokensTable: React.FC<IProps> = ({
   rewardState: { tokens, vesting },
 }) => {
   const cl = useStyles()
-  const { lmService } = useServices()
-  const [rewardFeePercent, setRewardFeePercent] = useState(0)
-
-  useEffect(() => {
-    ;(async () => {
-      const fee = await lmService.getRewardFee()
-      setRewardFeePercent(parseFee(fee))
-    })()
-  }, [lmService])
 
   return (
     <TableContainer>

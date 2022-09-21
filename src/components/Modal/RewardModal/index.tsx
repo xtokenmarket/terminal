@@ -84,7 +84,7 @@ export const RewardModal: React.FC<IProps> = ({
     duration: '',
     errors:
       (!isCreatePool &&
-        poolData?.rewardState.tokens.map(() => 'Amount is 0')) ||
+        poolData?.rewardState.tokens.map(() => 'Enter amount')) ||
       [],
     step: ERewardStep.Input,
     tokens: poolData?.rewardState.tokens || [],
@@ -143,6 +143,9 @@ export const RewardModal: React.FC<IProps> = ({
             isCreatePool={isCreatePool}
             onNext={onNextStep}
             updateState={updateState}
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            rewardFeePercent={poolData?.rewardFeePercent || 0}
             rewardState={state}
             onClose={_onClose}
           />
