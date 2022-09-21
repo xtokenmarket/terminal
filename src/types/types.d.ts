@@ -83,6 +83,7 @@ export interface ITerminalPool {
   apr: string
   earnedTokens: EarnedToken[]
   history: History[]
+  isReward?: boolean
   manager: string
   network?: Network
   owner: string
@@ -92,7 +93,7 @@ export interface ITerminalPool {
   rewardFeePercent: number
   rewardsAreEscrowed: boolean
   rewardState: IRewardState
-  stakedToken: IToken
+  stakedToken?: IToken
   ticks: { tick0: BigNumber; tick1: BigNumber }
   token1: IToken
   token0: IToken

@@ -7,6 +7,7 @@ export const POOLS_QUERY = `
 query {
   pools(first: 1000, orderBy: createdAt, orderDirection: desc) {
       id
+      isReward
       token0 {
         id
         symbol
@@ -84,7 +85,8 @@ export const parsePools = (data: any, network: Network) => {
           tick0: pool.ticks[0],
           tick1: pool.ticks[1],
         },
-        totalRewardAmounts: pool.rewards.map(({ amount }: any) => amount) || [],
+        totalRewardAmounts:
+          pool.rewards?.map(({ amount }: any) => amount) || [],
         tradeFee: pool.tradeFee,
         tvl: '0',
         uniswapPool: pool.uniswapPool

@@ -68,7 +68,11 @@ export const useTerminalPool = (
     readonlyProvider = getNetworkProvider(network)
   }
 
-  const getTokenDetails = async (addr: string) => {
+  const getTokenDetails = async (addr?: string) => {
+    if (!addr) {
+      return
+    }
+
     try {
       return getTokenFromAddress(addr, readonlyProvider?.network.chainId)
     } catch (error) {
@@ -184,11 +188,12 @@ export const useTerminalPool = (
         token0.image = token0.image || defaultTokenLogo
         token1.image = token1.image || defaultTokenLogo
         stakedToken.image = stakedToken.image || defaultTokenLogo
-        pool.rewardTokens = pool.rewardTokens.map((token: IToken) => ({
-          ...token,
-          image: token.image || defaultTokenLogo,
-          symbol: token.symbol.toUpperCase(),
-        }))
+        pool.rewardTokens =
+          pool.rewardTokens?.map((token: IToken) => ({
+            ...token,
+            image: token.image || defaultTokenLogo,
+            symbol: token.symbol.toUpperCase(),
+          })) || []
 
         token0.symbol = token0.symbol.toUpperCase()
         token1.symbol = token1.symbol.toUpperCase()
@@ -208,34 +213,36 @@ export const useTerminalPool = (
         token1.percent = token1.percent ? token1.percent.toString() : '0'
       }
 
-      if (pool.vestingPeriod == null) {
-        pool.vestingPeriod = (
-          await rewardEscrow.clrPoolVestingPeriod(poolAddress as string)
-        ).toString()
-      }
+      if (pool.isReward) {
+        if (pool.vestingPeriod == null) {
+          pool.vestingPeriod = (
+            await rewardEscrow.clrPoolVestingPeriod(poolAddress as string)
+          ).toString()
+        }
 
-      if (pool.rewardTokens.length !== 0 && !pool.rewardTokens[0].price) {
-        pool.rewardTokens = (await Promise.all(
-          pool.rewardTokens.map((token: { address: string }) =>
-            getTokenDetails(token.address)
+        if (pool.rewardTokens.length !== 0 && !pool.rewardTokens[0].price) {
+          pool.rewardTokens = (await Promise.all(
+            pool.rewardTokens.map((token: { address: string }) =>
+              getTokenDetails(token.address)
+            )
+          )) as IToken[]
+        }
+
+        if (pool.totalRewardAmounts == null) {
+          const rewardCalls = pool.rewardTokens.map((token: IToken) => ({
+            name: 'rewardInfo',
+            address: poolAddress as string,
+            params: [token.address],
+          }))
+          const rewardsResponse = await multicall.multicallv2(
+            clrService.abi,
+            rewardCalls,
+            { requireSuccess: false }
           )
-        )) as IToken[]
-      }
-
-      if (pool.totalRewardAmounts == null) {
-        const rewardCalls = pool.rewardTokens.map((token: IToken) => ({
-          name: 'rewardInfo',
-          address: poolAddress as string,
-          params: [token.address],
-        }))
-        const rewardsResponse = await multicall.multicallv2(
-          clrService.abi,
-          rewardCalls,
-          { requireSuccess: false }
-        )
-        pool.totalRewardAmounts = rewardsResponse.map((response: any) =>
-          response.totalRewardAmount.toString()
-        )
+          pool.totalRewardAmounts = rewardsResponse.map((response: any) =>
+            response.totalRewardAmount.toString()
+          )
+        }
       }
 
       let history: History[] = []
@@ -328,16 +335,21 @@ export const useTerminalPool = (
         }
 
         // User deposit amounts + TVL
-        const stakedCLRToken = new ethers.Contract(
-          pool.stakedToken.address,
-          Abi.StakedCLRToken,
-          readonlyProvider
-        )
+        let stakedTokenBalance = ZERO
+        let totalSupply = ZERO
 
-        const [stakedTokenBalance, totalSupply] = await Promise.all([
-          stakedCLRToken.balanceOf(account),
-          clrService.contract.totalSupply(),
-        ])
+        if (pool.isReward) {
+          const stakedCLRToken = new ethers.Contract(
+            pool.stakedToken.address,
+            Abi.StakedCLRToken,
+            readonlyProvider
+          )
+
+          ;[stakedTokenBalance, totalSupply] = await Promise.all([
+            stakedCLRToken.balanceOf(account),
+            clrService.contract.totalSupply(),
+          ])
+        }
 
         _totalSupply = totalSupply
 
@@ -402,6 +414,7 @@ export const useTerminalPool = (
 
       const apr = pool.apr || 'N/A'
 
+      console.log('0-0--------->, ', pool.periodFinish)
       setState({
         loading: false,
         clrService,
@@ -416,9 +429,11 @@ export const useTerminalPool = (
           rewardFeePercent,
           rewardsAreEscrowed: pool.rewardsAreEscrowed,
           rewardState: {
-            amounts: pool.totalRewardAmounts.map((reward: string) =>
-              BigNumber.from(reward)
-            ),
+            amounts: pool.isReward
+              ? pool.totalRewardAmounts.map((reward: string) =>
+                  BigNumber.from(reward)
+                )
+              : [],
             duration: pool.rewardProgramDuration,
             errors: [],
             step: ERewardStep.Input,
@@ -439,6 +454,7 @@ export const useTerminalPool = (
           poolShare,
           user,
           totalSupply: _totalSupply,
+          isReward: pool.isReward,
         },
       })
     } catch (error) {

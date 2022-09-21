@@ -303,11 +303,13 @@ export const Content = (props: IProps) => {
   const shouldDisplayVestButton =
     Number(poolData.rewardState.vesting) > 0 && readyToVest.length !== 0
 
+  const shouldDisplayRewardsButton = isManageable && poolData.isReward
+
   const getRewardsPerWeek = () => {
     const { duration, amounts } = poolData.rewardState
 
     const isInitiateRewardsPending = duration === '0'
-    if (isInitiateRewardsPending) {
+    if (isInitiateRewardsPending || !poolData.isReward) {
       return 'N/A'
     }
 
@@ -457,7 +459,7 @@ export const Content = (props: IProps) => {
         />
       )}
 
-      {poolData.vestingTokens.length !== 0 && (
+      {poolData.isReward && poolData.vestingTokens.length !== 0 && (
         <VestAllModal
           open={state.vestVisible}
           onClose={() => setVestModalVisible(false)}
@@ -573,7 +575,7 @@ export const Content = (props: IProps) => {
               <InfoSection
                 label="REWARDS ENDING"
                 value={
-                  poolData.periodFinish.isZero()
+                  poolData.periodFinish.isZero() || !poolData.isReward
                     ? 'N/A'
                     : moment(
                         new Date(poolData.periodFinish.toNumber() * 1000)
@@ -585,7 +587,9 @@ export const Content = (props: IProps) => {
               <InfoSection
                 label="VESTING PERIOD"
                 value={
-                  Number(vesting) === 0
+                  !poolData.isReward
+                    ? 'N/A'
+                    : Number(vesting) === 0
                     ? 'None'
                     : getTimeDurationStr(parseDuration(vesting))
                 }
@@ -644,7 +648,7 @@ export const Content = (props: IProps) => {
             </Button>
           )}
 
-          {isManageable && (
+          {shouldDisplayRewardsButton && (
             <Button
               ref={buttonRef}
               className={classes.button}

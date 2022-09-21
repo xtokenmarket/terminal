@@ -13,6 +13,7 @@ import { ActionStepRow, WarningInfo } from '..'
 import { useCountdown } from 'helpers/useCountdownClock'
 import { FIVE_MINUTES_IN_MS } from 'config/constants'
 import { Network } from 'utils/enums'
+import { hexlify } from 'ethers/lib/utils'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },

@@ -64,6 +64,15 @@ export const getPoolDataMulticall = async (
       address: poolAddress,
       params: [],
     }))
+    console.log(
+      'Response:',
+      (
+        await multicall.multicallv2(Abi.CLRV0, calls, {
+          requireSuccess: false,
+        })
+      ).map((resItem: Array<any> | null) => resItem || [])
+    )
+
     const [
       [token0Address],
       [token1Address],
@@ -79,20 +88,24 @@ export const getPoolDataMulticall = async (
       [periodFinish],
       ticks,
       [manager],
-    ] = await multicall.multicallv2(Abi.CLRV0, calls, {
-      requireSuccess: false,
-    })
+    ] = (
+      await multicall.multicallv2(Abi.CLRV0, calls, {
+        requireSuccess: false,
+      })
+    ).map((resItem: Array<any> | null) => resItem || [])
+
     return {
       address: poolAddress,
       manager,
       owner,
-      periodFinish: periodFinish.toString(),
+      periodFinish: periodFinish ? periodFinish.toString() : '0',
       poolFee,
-      rewardsAreEscrowed,
-      rewardProgramDuration: rewardsDuration.toString(),
-      rewardTokens: rewardTokenAddresses.map((address: string) => ({
-        address,
-      })),
+      rewardsAreEscrowed: !!rewardsAreEscrowed,
+      rewardProgramDuration: rewardsDuration?.toString(),
+      rewardTokens:
+        rewardTokenAddresses?.map((address: string) => ({
+          address,
+        })) || [],
       stakedToken: {
         address: stakedTokenAddress,
       },
