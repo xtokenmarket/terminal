@@ -163,20 +163,43 @@ export interface ICollectableFees {
 export interface PoolService {
   version: string
   address: string
-  calculateAmountsMintedSingleToken: any
-  getLiquidityForAmounts: any
-  deposit: any
-  waitUntilDeposit: any
-  parseProvideLiquidityTx: any
-  withdrawAndClaimReward: any
-  withdraw: any
-  parseWithdrawTx: any
-  parseClaimTx: any
-  waitUntilWithdraw: any
-  claimReward: any
-  waitUntilClaimReward: any
-  earned: any
-  reinvest: any
-  waitUntilReinvest: any
-  calculateWithdrawAmounts: any
+  calculateAmountsMintedSingleToken: (
+    inputAsset: number,
+    amount: BigNumber
+  ) => Promise<any>
+  getLiquidityForAmounts: (
+    amount0: BigNumber,
+    amount1: BigNumber
+  ) => Promise<any>
+  deposit: (
+    amount0: BigNumber,
+    amount1: BigNumber,
+    isToken1Deposit?: boolean
+  ) => Promise<any>
+  waitUntilDeposit: (
+    amount0: BigNumber,
+    amount1: BigNumber,
+    account: string,
+    txId: string
+  ) => Promise<string>
+  parseProvideLiquidityTx: (txId: string) => Promise<any>
+  withdrawAndClaimReward: (
+    amount: BigNumber,
+    amount0Estimation: BigNumber,
+    amount1Estimation: BigNumber
+  ) => Promise<any>
+  withdraw: (
+    amount: BigNumber,
+    amount0Estimation: BigNumber,
+    amount1Estimation: BigNumber
+  ) => Promise<any>
+  parseWithdrawTx: (txId: string) => Promise<any>
+  parseClaimTx: (txId: string) => Promise<any>
+  waitUntilWithdraw: (account: string, txId: string) => Promise<any>
+  claimReward: () => Promise<any>
+  waitUntilClaimReward: (account: string, txId: string) => Promise<any>
+  earned: (account: Maybe<string>, tokenAddress: string) => Promise<any>
+  reinvest: () => Promise<any>
+  waitUntilReinvest: (txId: string) => Promise<any>
+  calculateWithdrawAmounts: (amount: BigNumber) => Promise<any>
 }
