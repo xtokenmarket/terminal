@@ -6,7 +6,7 @@ import {
   Button,
   CircularProgress,
 } from '@material-ui/core'
-import { ICollectableFees, ITerminalPool } from 'types'
+import { ICollectableFees, ITerminalPool, PoolService } from 'types'
 import { useConnectedWeb3Context } from 'contexts'
 import { TxState } from 'utils/enums'
 import clsx from 'clsx'
@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   open: boolean
   onClose: () => void
-  clrService: CLRService
+  clrService: PoolService
   poolData: ITerminalPool
   onSuccess: () => Promise<void>
 }

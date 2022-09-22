@@ -12,9 +12,8 @@ import { formatUnits } from 'ethers/lib/utils'
 import { ViewTransaction } from 'components'
 import { WarningInfo } from 'components/Common/WarningInfo'
 import { useConnectedWeb3Context } from 'contexts'
-import { CLRService } from 'services'
 import { toUsd, ZERO } from 'utils/number'
-import { EarnedToken } from 'types'
+import { EarnedToken, PoolService } from 'types'
 import { TxState } from 'utils/enums'
 import { getEtherscanUri } from 'config/networks'
 
@@ -128,7 +127,7 @@ interface IProps {
   open: boolean
   onClose: () => void
   earnedTokens: EarnedToken[]
-  clrService: CLRService
+  clrService: PoolService
   reloadTerminalPool: (isReloadPool: boolean) => Promise<void>
 }
 

@@ -9,7 +9,7 @@ import TouchRipple from '@material-ui/core/ButtonBase/TouchRipple'
 import { useConnectedWeb3Context } from 'contexts'
 import moment from 'moment'
 import { useState, useRef, useEffect } from 'react'
-import { ITerminalPool } from 'types'
+import { ITerminalPool, PoolService } from 'types'
 import {
   formatBigNumber,
   formatToShortNumber,
@@ -210,7 +210,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  clrService: CLRService
+  clrService: PoolService
   poolData: ITerminalPool
   reloadTerminalPool: (isReloadPool: boolean) => Promise<void>
 }

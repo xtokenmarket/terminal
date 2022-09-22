@@ -159,3 +159,24 @@ export interface ICollectableFees {
   token0Fee: BigNumber
   token1Fee: BigNumber
 }
+
+export interface PoolService {
+  version: string
+  address: string
+  calculateAmountsMintedSingleToken: any
+  getLiquidityForAmounts: any
+  deposit: any
+  waitUntilDeposit: any
+  parseProvideLiquidityTx: any
+  withdrawAndClaimReward: any
+  withdraw: any
+  parseWithdrawTx: any
+  parseClaimTx: any
+  waitUntilWithdraw: any
+  claimReward: any
+  waitUntilClaimReward: any
+  earned: any
+  reinvest: any
+  waitUntilReinvest: any
+  calculateWithdrawAmounts: any
+}

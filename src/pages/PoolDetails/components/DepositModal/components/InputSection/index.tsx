@@ -5,8 +5,7 @@ import { TokenBalanceInput } from 'components'
 import { WarningInfo } from 'components/Common/WarningInfo'
 import { useIsMountedRef, useTokenBalance } from 'helpers'
 import { IDepositState } from 'pages/PoolDetails/components'
-import { CLRService } from 'services'
-import { ITerminalPool } from 'types'
+import { ITerminalPool, PoolService } from 'types'
 import { ZERO } from 'utils/number'
 import { useEffect, useState } from 'react'
 import _ from 'lodash'
@@ -63,7 +62,7 @@ interface IProps {
   onClose: () => void
   depositState: IDepositState
   updateState: (e: any) => void
-  clrService: CLRService
+  clrService: PoolService
   poolData: ITerminalPool
 }
 

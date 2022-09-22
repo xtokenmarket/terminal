@@ -64,14 +64,6 @@ export const getPoolDataMulticall = async (
       address: poolAddress,
       params: [],
     }))
-    console.log(
-      'Response:',
-      (
-        await multicall.multicallv2(Abi.CLRV0, calls, {
-          requireSuccess: false,
-        })
-      ).map((resItem: Array<any> | null) => resItem || [])
-    )
 
     const [
       [token0Address],

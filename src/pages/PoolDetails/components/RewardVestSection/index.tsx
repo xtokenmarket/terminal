@@ -3,9 +3,8 @@ import { useConnectedWeb3Context } from 'contexts'
 import { getEtherscanUri } from 'config/networks'
 import { formatUnits } from 'ethers/lib/utils'
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
-import { CLRService } from 'services'
 import { toUsd } from 'utils/number'
-import { ITerminalPool } from 'types'
+import { ITerminalPool, PoolService } from 'types'
 
 import { ClaimRewardsModal } from './ClaimRewardsModal'
 
@@ -100,7 +99,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  clrService: CLRService
+  clrService: PoolService
   pool: ITerminalPool
   reloadTerminalPool: (isReloadPool: boolean) => Promise<void>
 }

@@ -21,7 +21,7 @@ import {
 import { useServices } from 'helpers'
 import { useEffect, useState } from 'react'
 import { CLRService, ERC20Service } from 'services'
-import { History, ITerminalPool, IToken } from 'types'
+import { History, ITerminalPool, IToken, PoolService } from 'types'
 import { BigNumber } from '@ethersproject/bignumber'
 import { getCurrentTimeStamp, getTimeRemainingUnits, parseFee } from 'utils'
 import { ERewardStep, Network } from 'utils/enums'
@@ -38,9 +38,10 @@ import {
 } from './helper'
 import { ethers, Contract } from 'ethers'
 import { fetchQuery } from 'utils/thegraph'
+import { NonRewardPoolService } from 'services/nonRewardPoolService'
 
 interface IState {
-  clrService?: CLRService
+  clrService?: PoolService
   pool?: ITerminalPool
   loading: boolean
 }
@@ -118,11 +119,17 @@ export const useTerminalPool = (
       }
     }
 
-    const clrService = new CLRService(
-      readonlyProvider,
-      isWrongNetwork ? null : account,
-      poolAddress as string
-    )
+    const clrService = pool.isReward
+      ? new NonRewardPoolService(
+          readonlyProvider,
+          isWrongNetwork ? null : account,
+          poolAddress as string
+        )
+      : new CLRService(
+          readonlyProvider,
+          isWrongNetwork ? null : account,
+          poolAddress as string
+        )
 
     try {
       let { token0, token1, stakedToken } = pool
@@ -130,12 +137,13 @@ export const useTerminalPool = (
       let rewardFeePercent = 0
       let tvl = pool.tvl
 
+      stakedToken = stakedToken || {}
       // Fetch token details and relevant data, if API fails
       if (pool.token0.price === undefined || pool.token1.price === undefined) {
         ;[token0, token1, stakedToken] = await Promise.all([
           getTokenDetails(pool.token0.address),
           getTokenDetails(pool.token1.address),
-          getTokenDetails(pool.stakedToken.address),
+          getTokenDetails(pool.stakedToken?.address),
         ])
 
         let rates = undefined
@@ -187,7 +195,7 @@ export const useTerminalPool = (
 
         token0.image = token0.image || defaultTokenLogo
         token1.image = token1.image || defaultTokenLogo
-        stakedToken.image = stakedToken.image || defaultTokenLogo
+        stakedToken.image = stakedToken?.image || defaultTokenLogo
         pool.rewardTokens =
           pool.rewardTokens?.map((token: IToken) => ({
             ...token,
@@ -414,7 +422,6 @@ export const useTerminalPool = (
 
       const apr = pool.apr || 'N/A'
 
-      console.log('0-0--------->, ', pool.periodFinish)
       setState({
         loading: false,
         clrService,
