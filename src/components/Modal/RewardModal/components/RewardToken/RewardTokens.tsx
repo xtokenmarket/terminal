@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Button, makeStyles } from '@material-ui/core'
 import { IToken } from 'types'
 import { BigNumber } from 'ethers'
 import { ZERO } from 'utils/number'
-import { useServices } from 'helpers'
 import { formatEther, formatUnits } from 'ethers/lib/utils'
-import { parseFee } from 'utils'
 
 import { RewardToken } from '.'
 import { IRewardState } from '../..'
@@ -21,27 +19,20 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   isCreatePool: boolean
+  rewardFeePercent: number
   rewardState: IRewardState
   updateState: (_: Partial<IRewardState>) => void
 }
 
 export const RewardTokens: React.FC<IProps> = ({
   isCreatePool,
+  rewardFeePercent,
   rewardState,
   updateState,
 }) => {
   const cl = useStyles()
 
   const { tokens, amounts, errors } = rewardState
-  const { lmService } = useServices()
-  const [rewardFeePercent, setRewardFeePercent] = useState(0)
-
-  useEffect(() => {
-    ;(async () => {
-      const fee = await lmService.getRewardFee()
-      setRewardFeePercent(parseFee(fee))
-    })()
-  }, [lmService])
 
   const onSelectToken = (token: IToken, i: number) => {
     if (
@@ -80,7 +71,7 @@ export const RewardTokens: React.FC<IProps> = ({
     const newErrors = errors
 
     if (!isCreatePool && (exceedsBalance || isZero)) {
-      const errorMsg = isZero ? 'Amount is 0' : 'Amount exceed user balance'
+      const errorMsg = isZero ? 'Invalid input' : 'Amount exceeds token balance'
       newErrors.splice(i, 1, errorMsg)
       updateState({ errors: newErrors })
     } else {
@@ -100,7 +91,7 @@ export const RewardTokens: React.FC<IProps> = ({
     newAmounts.push(ZERO)
 
     const newErrors = errors
-    newErrors.push('New token is not selected')
+    newErrors.push('Select token')
 
     updateState({
       amounts: newAmounts,
@@ -130,6 +121,7 @@ export const RewardTokens: React.FC<IProps> = ({
       <RewardToken
         isCreatePool={isCreatePool}
         rewardFeePercent={rewardFeePercent}
+        error={errors[0]}
         balance={ZERO}
         onSelectToken={(token) => onSelectToken(token, 0)}
         onChangeAmount={() => onChangeAmount(ZERO, ZERO, 0)}
@@ -149,6 +141,7 @@ export const RewardTokens: React.FC<IProps> = ({
         <div key={i}>
           <RewardToken
             isCreatePool={isCreatePool}
+            error={errors[i]}
             token={tokens[i]}
             balance={amount}
             rewardFeePercent={rewardFeePercent}

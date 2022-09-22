@@ -1,6 +1,7 @@
 import { Button, IconButton, makeStyles, Typography } from '@material-ui/core'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { IRewardState } from 'components'
+
 import { RewardPeriodInput } from '../index'
 import { RewardTokens } from '../RewardToken/RewardTokens'
 import { FeeInfo } from '../FeeInfo'
@@ -61,6 +62,7 @@ interface IProps {
   isCreatePool: boolean
   onNext: () => void
   onClose: () => void
+  rewardFeePercent: number
   rewardState: IRewardState
   updateState: (e: any) => void
 }
@@ -69,6 +71,7 @@ export const InputSection: React.FC<IProps> = ({
   isCreatePool,
   onNext,
   onClose,
+  rewardFeePercent,
   rewardState,
   updateState,
 }) => {
@@ -120,6 +123,7 @@ export const InputSection: React.FC<IProps> = ({
         />
         <RewardTokens
           isCreatePool={isCreatePool}
+          rewardFeePercent={rewardFeePercent}
           rewardState={rewardState}
           updateState={updateState}
         />

@@ -23,7 +23,7 @@ import { useEffect, useState } from 'react'
 import { CLRService, ERC20Service } from 'services'
 import { History, ITerminalPool, IToken } from 'types'
 import { BigNumber } from '@ethersproject/bignumber'
-import { getCurrentTimeStamp, getTimeRemainingUnits } from 'utils'
+import { getCurrentTimeStamp, getTimeRemainingUnits, parseFee } from 'utils'
 import { ERewardStep, Network } from 'utils/enums'
 import { getIdFromNetwork, isTestnet } from 'utils/network'
 import { formatDuration, ONE_ETHER, ZERO } from 'utils/number'
@@ -57,7 +57,7 @@ export const useTerminalPool = (
     pool: undefined,
   })
   const { account, library: provider, networkId } = useConnectedWeb3Context()
-  const { multicall, rewardEscrow } = useServices(network)
+  const { lmService, multicall, rewardEscrow } = useServices(network)
 
   let readonlyProvider = provider
 
@@ -122,6 +122,8 @@ export const useTerminalPool = (
 
     try {
       let { token0, token1, stakedToken } = pool
+
+      let rewardFeePercent = 0
       let tvl = pool.tvl
 
       // Fetch token details and relevant data, if API fails
@@ -369,8 +371,11 @@ export const useTerminalPool = (
           )
         }
 
-        // Get collectable fees
+        // Get pool reward fee and collectable fees
         if (isOwnerOrManager) {
+          // TODO: Can be moved to `PoolDetails` component
+          rewardFeePercent = parseFee(await lmService.getRewardFee())
+
           const MAX_UINT128 = BigNumber.from(2).pow(128).sub(1)
           const nonfungiblePositionManagerAddress = getContractAddress(
             'uniPositionManager',
@@ -408,6 +413,7 @@ export const useTerminalPool = (
           owner: pool.owner.toLowerCase(),
           periodFinish: BigNumber.from(pool.periodFinish),
           poolFee: pool.poolFee,
+          rewardFeePercent,
           rewardsAreEscrowed: pool.rewardsAreEscrowed,
           rewardState: {
             amounts: pool.totalRewardAmounts.map((reward: string) =>
