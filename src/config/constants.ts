@@ -243,8 +243,9 @@ export const GRAPHQL_URLS: Record<Network, string> = {
   [Network.KOVAN]:
     'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-kovan',
   [Network.RINKEBY]: '',
+  // TODO: REVERT ONE SUBGRAPH IS UPDATED WITH THE NON-REWARDS POOLS SUPPORT
   [Network.GOERLI]:
-    'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-goerli',
+    'https://api.thegraph.com/subgraphs/name/ivanzhelyazkov/mining-goerli',
 }
 
 export const MINING_EVENTS = {

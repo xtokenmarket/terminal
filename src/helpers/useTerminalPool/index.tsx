@@ -120,12 +120,12 @@ export const useTerminalPool = (
     }
 
     const clrService = pool.isReward
-      ? new NonRewardPoolService(
+      ? new CLRService(
           readonlyProvider,
           isWrongNetwork ? null : account,
           poolAddress as string
         )
-      : new CLRService(
+      : new NonRewardPoolService(
           readonlyProvider,
           isWrongNetwork ? null : account,
           poolAddress as string
@@ -346,18 +346,18 @@ export const useTerminalPool = (
         let stakedTokenBalance = ZERO
         let totalSupply = ZERO
 
-        if (pool.isReward) {
-          const stakedCLRToken = new ethers.Contract(
-            pool.stakedToken.address,
-            Abi.StakedCLRToken,
-            readonlyProvider
-          )
+        const stakedCLRToken = pool.isReward
+          ? new ethers.Contract(
+              pool.stakedToken.address,
+              Abi.StakedCLRToken,
+              readonlyProvider
+            )
+          : new ethers.Contract(pool.address, Abi.ERC20, readonlyProvider)
 
-          ;[stakedTokenBalance, totalSupply] = await Promise.all([
-            stakedCLRToken.balanceOf(account),
-            clrService.contract.totalSupply(),
-          ])
-        }
+        ;[stakedTokenBalance, totalSupply] = await Promise.all([
+          stakedCLRToken.balanceOf(account),
+          clrService.contract.totalSupply(),
+        ])
 
         _totalSupply = totalSupply
 
