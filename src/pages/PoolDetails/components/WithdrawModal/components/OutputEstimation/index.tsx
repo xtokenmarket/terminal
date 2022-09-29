@@ -101,38 +101,45 @@ export const OutputEstimation = (props: IProps) => {
             )}
           </Typography>
         </div>
-        <Typography className={classes.label}>
-          {isEstimation ? 'CLAIMABLE REWARDS' : 'REWARDS YOU EARNED'}
-        </Typography>
-        {poolData.rewardState.tokens.map((rewardToken, index) => {
-          return (
-            <div className={classes.infoRow} key={rewardToken.address}>
-              <div>
-                <TokenIcon token={rewardToken} className={classes.tokenIcon} />
-              </div>
-              &nbsp;&nbsp;
-              <Typography className={classes.amount}>
-                {formatBigNumber(
-                  earned[index] || ZERO,
-                  rewardToken.decimals,
-                  4
-                )}
-                &nbsp;
-                {rewardToken.symbol}
-                {rewardToken.price && earned.length > 0 && (
-                  <span>
-                    ~ $
-                    {getTotalTokenPrice(
-                      earned[index],
-                      Number(rewardToken.decimals),
-                      rewardToken.price
+        {poolData.isReward && (
+          <>
+            <Typography className={classes.label}>
+              {isEstimation ? 'CLAIMABLE REWARDS' : 'REWARDS YOU EARNED'}
+            </Typography>
+            {poolData.rewardState.tokens.map((rewardToken, index) => {
+              return (
+                <div className={classes.infoRow} key={rewardToken.address}>
+                  <div>
+                    <TokenIcon
+                      token={rewardToken}
+                      className={classes.tokenIcon}
+                    />
+                  </div>
+                  &nbsp;&nbsp;
+                  <Typography className={classes.amount}>
+                    {formatBigNumber(
+                      earned[index] || ZERO,
+                      rewardToken.decimals,
+                      4
                     )}
-                  </span>
-                )}
-              </Typography>
-            </div>
-          )
-        })}
+                    &nbsp;
+                    {rewardToken.symbol}
+                    {rewardToken.price && earned.length > 0 && (
+                      <span>
+                        ~ $
+                        {getTotalTokenPrice(
+                          earned[index],
+                          Number(rewardToken.decimals),
+                          rewardToken.price
+                        )}
+                      </span>
+                    )}
+                  </Typography>
+                </div>
+              )
+            })}
+          </>
+        )}
       </div>
     </div>
   )

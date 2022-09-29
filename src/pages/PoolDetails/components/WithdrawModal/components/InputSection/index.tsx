@@ -145,18 +145,20 @@ export const InputSection = (props: IProps) => {
         earned={earned}
       />
       <div className={classes.actions}>
-        <Button
-          color="primary"
-          variant="contained"
-          fullWidth
-          onClick={() => {
-            updateState({ withdrawOnly: false })
-            onNext()
-          }}
-          disabled={isDisabled}
-        >
-          CLAIM & WITHDRAW
-        </Button>
+        {poolData.isReward && (
+          <Button
+            color="primary"
+            variant="contained"
+            fullWidth
+            onClick={() => {
+              updateState({ withdrawOnly: false })
+              onNext()
+            }}
+            disabled={isDisabled}
+          >
+            CLAIM & WITHDRAW
+          </Button>
+        )}
         <Button
           color="secondary"
           variant="contained"
