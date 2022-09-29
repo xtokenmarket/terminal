@@ -561,7 +561,9 @@ export const Content = (props: IProps) => {
               <InfoSection
                 label="APR"
                 value={
-                  poolData.apr === 'N/A' ? poolData.apr : `${poolData.apr}%`
+                  poolData.apr === 'N/A' || poolData.apr === '0'
+                    ? 'N/A'
+                    : `${poolData.apr}%`
                 }
               />
             </Grid>

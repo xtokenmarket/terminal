@@ -237,7 +237,7 @@ export const RewardsStep: React.FC<IProps> = ({ data, updateData, onEdit }) => {
               />
 
               <Typography onClick={() => onNoRewardCheck()}>
-                This pool has no rewards
+                This pool does not pay out incentives
               </Typography>
             </Grid>
             {!noRewardsChecked && (

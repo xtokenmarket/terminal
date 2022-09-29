@@ -190,35 +190,39 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
         <PoolTd type="program">
           <div className={cl.itemAlignRight}>
             {/* TODO: Display token logo? */}
-            {tokens?.map((rewardToken, index) => {
-              if (isInitiateRewardsPending) {
-                return (
-                  <Typography className={cl.label} key={rewardToken.address}>
-                    &nbsp;{rewardToken.symbol}
-                    {index !== tokens?.length - 1 ? ' / ' : ''}
-                  </Typography>
-                )
-              } else {
-                const durationInfo = getTimeDurationUnitInfo(Number(duration))
-                const uintAmount = amounts?.[index]
-                  ? amounts?.[index]
-                      .mul(durationInfo.unit)
-                      .div(Number(duration))
-                  : ZERO
-                return (
-                  <Typography className={cl.label} key={rewardToken.address}>
-                    {formatToShortNumber(
-                      formatBigNumber(uintAmount, rewardToken.decimals)
-                    )}{' '}
-                    {rewardToken.symbol}
-                    {index !== tokens.length - 1 ? ' + ' : ' '}
-                    {index === tokens.length - 1
-                      ? `/ ${durationInfo.unitStr}`
-                      : ''}
-                  </Typography>
-                )
-              }
-            })}
+            {!tokens || !tokens.length ? (
+              <Typography className={cl.label}>Active Manager</Typography>
+            ) : (
+              tokens.map((rewardToken, index) => {
+                if (isInitiateRewardsPending) {
+                  return (
+                    <Typography className={cl.label} key={rewardToken.address}>
+                      &nbsp;{rewardToken.symbol}
+                      {index !== tokens?.length - 1 ? ' / ' : ''}
+                    </Typography>
+                  )
+                } else {
+                  const durationInfo = getTimeDurationUnitInfo(Number(duration))
+                  const uintAmount = amounts?.[index]
+                    ? amounts?.[index]
+                        .mul(durationInfo.unit)
+                        .div(Number(duration))
+                    : ZERO
+                  return (
+                    <Typography className={cl.label} key={rewardToken.address}>
+                      {formatToShortNumber(
+                        formatBigNumber(uintAmount, rewardToken.decimals)
+                      )}{' '}
+                      {rewardToken.symbol}
+                      {index !== tokens.length - 1 ? ' + ' : ' '}
+                      {index === tokens.length - 1
+                        ? `/ ${durationInfo.unitStr}`
+                        : ''}
+                    </Typography>
+                  )
+                }
+              })
+            )}
           </div>
         </PoolTd>
         <PoolTd type="ending">
