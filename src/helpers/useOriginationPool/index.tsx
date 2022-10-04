@@ -78,6 +78,15 @@ export const useOriginationPool = (
     }
   }
 
+  const getTokenLogo = (address: string) => {
+    try {
+      return getTokenFromAddress(address, readonlyProvider?.network.chainId)
+        .image
+    } catch (error) {
+      return defaultTokenLogo
+    }
+  }
+
   const fungiblePool = new FungiblePoolService(provider, account, poolAddress)
 
   const loadInfo = async (isReloadPool = false, event?: EOriginationEvent) => {
@@ -208,9 +217,12 @@ export const useOriginationPool = (
         rates && rates[1] ? rates[1].toString() : '0'
     }
 
-    offerData.offerToken.image = offerData.offerToken?.image || defaultTokenLogo
+    offerData.offerToken.image =
+      offerData.offerToken?.image ||
+      getTokenLogo(offerData?.offerToken.address || offerData?.offerToken)
     offerData.purchaseToken.image =
-      offerData.purchaseToken?.image || defaultTokenLogo
+      offerData.purchaseToken?.image ||
+      getTokenLogo(offerData?.purchaseToken.address || offerData?.purchaseToken)
 
     const {
       cliffPeriod,
