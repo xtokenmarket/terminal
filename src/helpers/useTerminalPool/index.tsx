@@ -462,6 +462,9 @@ export const useTerminalPool = (
           user,
           totalSupply: _totalSupply,
           isReward: pool.isReward,
+          poolName: pool.poolName || `${token0.symbol} ${token1.symbol}`,
+          description: pool.description,
+          createdAt: pool.createdAt,
         },
       })
     } catch (error) {

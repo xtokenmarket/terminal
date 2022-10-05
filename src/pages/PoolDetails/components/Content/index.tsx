@@ -12,6 +12,7 @@ import { useState, useRef, useEffect } from 'react'
 import { ITerminalPool, PoolService } from 'types'
 import {
   formatBigNumber,
+  formatDateTime,
   formatToShortNumber,
   getCurrentTimeStamp,
   getTimeDurationStr,
@@ -38,6 +39,7 @@ import { PoolShareSection } from '../PoolShareSection'
 import { tickToPrice } from '@uniswap/v3-sdk'
 import { Token } from '@uniswap/sdk-core'
 import { CLRService } from 'services'
+import { PoolDescription } from '../PoolDescription'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -207,6 +209,10 @@ const useStyles = makeStyles((theme) => ({
     width: 16,
     height: 16,
   },
+  hr: {
+    borderColor: theme.colors.primary200,
+    marginTop: 20,
+  },
 }))
 
 interface IProps {
@@ -238,12 +244,14 @@ export const Content = (props: IProps) => {
   const [state, setState] = useState<IState>(initialState)
 
   const { clrService, poolData, reloadTerminalPool } = props
-  const { token0, token1 } = poolData
+  const { manager, owner, poolName, token0, token1 } = poolData
 
   const timestamp = getCurrentTimeStamp()
-  const isManageable = [poolData.owner, poolData.manager]
-    .map((e) => e.toLowerCase())
-    .includes((account || '').toLowerCase())
+  const isManageable = account
+    ? [owner.toLowerCase(), manager.toLowerCase()].includes(
+        account.toLowerCase()
+      )
+    : false
   const isDeposited = !poolData.user.stakedTokenBalance.isZero()
   const rewardPeriodFinished = poolData.periodFinish.toNumber() < timestamp
   const { vesting } = poolData.rewardState
@@ -403,6 +411,7 @@ export const Content = (props: IProps) => {
   const triggerRipple = () => {
     const container = buttonRef.current
     if (!container) return
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const rect = container.getBoundingClientRect()
@@ -416,9 +425,9 @@ export const Content = (props: IProps) => {
       // when center is true, the ripple doesn't travel to the border of the container
       { center: false }
     )
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-
     setTimeout(() => rippleRef.current.stop({}), 320)
   }
 
@@ -482,6 +491,14 @@ export const Content = (props: IProps) => {
 
       <div className={classes.content}>
         <div>
+          <PoolDescription
+            poolName={poolName}
+            poolDescription={poolData.description}
+            loadInfo={() => reloadTerminalPool(true)}
+            isOwnerOrManager={isManageable}
+            poolAddress={poolData.address}
+          />
+          <hr className={classes.hr} />
           <Grid container spacing={0}>
             <Grid item xs={12} md={6} className={classes.balance}>
               <div className={classes.titleWrapper}>

@@ -3,6 +3,7 @@ import { PoolTd, SimpleLoader } from 'components'
 import { useTerminalPool } from 'helpers'
 import {
   formatBigNumber,
+  formatDateTime,
   formatToShortNumber,
   getFloatDecimalNumber,
   getTimeDurationStr,
@@ -95,6 +96,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: '50%',
   },
   allocationItem: {
+    marginRight: 10,
     display: 'flex',
     flexDirection: 'column',
     color: theme.colors.white,
@@ -104,6 +106,11 @@ const useStyles = makeStyles((theme) => ({
       color: theme.colors.primary100,
       fontSize: 14,
     },
+  },
+  name: {
+    fontWeight: 400,
+    color: theme.colors.primary100,
+    fontSize: 14,
   },
 }))
 
@@ -127,10 +134,10 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
     }
 
     const {
+      poolName,
       rewardState: { amounts, duration, tokens, vesting },
     } = poolData
     const isInitiateRewardsPending = duration === '0'
-
     const network = poolData.network || DEFAULT_NETWORK
 
     return (
@@ -150,20 +157,20 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
               className={cl.tokenIcon}
               src={poolData.token1.image}
             />
+            <Typography className={cl.allocationItem}>{poolName}</Typography>
           </div>
         </PoolTd>
         <PoolTd type="allocation">
           <div className={cl.item}>
             <div className={cl.allocation}>
               <Typography className={cl.allocationItem}>
-                {poolData.token0.symbol}&nbsp;
+                {poolData.token0.symbol}
                 <span>{`${
                   Number(poolData.token0.percent).toFixed() as string
                 }%`}</span>
               </Typography>
-              &nbsp; &nbsp;
               <Typography className={cl.allocationItem}>
-                {poolData.token1.symbol}&nbsp;
+                {poolData.token1.symbol}&nbsp;&nbsp;
                 <span>{`${
                   Number(poolData.token1.percent).toFixed() as string
                 }%`}</span>

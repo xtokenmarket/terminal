@@ -7,15 +7,17 @@ import {
   CircularProgress,
 } from '@material-ui/core'
 import { ICollectableFees, ITerminalPool, PoolService } from 'types'
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
+import clsx from 'clsx'
+import { BigNumber } from 'ethers'
 import { useConnectedWeb3Context } from 'contexts'
 import { TxState } from 'utils/enums'
-import clsx from 'clsx'
-import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
-import { SuccessSection } from './SuccessSection'
-import { CollectableFees } from './CollectableFees'
-import { BigNumber } from 'ethers'
 import { Modal } from 'components/Common/Modal'
 import { WarningInfo } from 'components/Common/WarningInfo'
+
+import { SuccessSection } from './SuccessSection'
+import { CollectableFees } from './CollectableFees'
+import { ChainId } from 'config/constants'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -93,7 +95,7 @@ export const ReinvestModal: React.FC<IProps> = ({
   onSuccess,
 }) => {
   const classes = useStyles()
-  const { account, library: provider } = useConnectedWeb3Context()
+  const { account, library: provider, networkId } = useConnectedWeb3Context()
 
   const [state, setState] = useState<IState>({
     reinvestTx: '',
@@ -192,25 +194,27 @@ export const ReinvestModal: React.FC<IProps> = ({
             token1Fee={poolData.user.collectableFees1}
           />
 
-          <WarningInfo
-            className={classes.warning}
-            title="Important"
-            description={
-              <>
-                Please connect to the Flashbots RPC in Metamask by following the
-                guide{' '}
-                <a
-                  className={classes.link}
-                  href="https://docs.flashbots.net/flashbots-protect/rpc/quick-start/#how-to-use-flashbots-protect-rpc-in-metamask"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  here
-                </a>{' '}
-                to avoid risk of frontrunning
-              </>
-            }
-          />
+          {networkId === ChainId.Mainnet && (
+            <WarningInfo
+              className={classes.warning}
+              title="Important"
+              description={
+                <>
+                  Please connect to the Flashbots RPC in Metamask by following
+                  the guide{' '}
+                  <a
+                    className={classes.link}
+                    href="https://docs.flashbots.net/flashbots-protect/rpc/quick-start/#how-to-use-flashbots-protect-rpc-in-metamask"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    here
+                  </a>{' '}
+                  to avoid risk of frontrunning
+                </>
+              }
+            />
+          )}
 
           <div className={classes.buttonWrapper}>
             <Button
