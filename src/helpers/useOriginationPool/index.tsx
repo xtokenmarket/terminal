@@ -418,7 +418,7 @@ export const useOriginationPool = (
           ])
 
           const graphqlUrl =
-            'https://api.thegraph.com/subgraphs/name/cryptopixelfrog/subgraph-study'
+            `https://api.thegraph.com/subgraphs/name/xtokenmarket/origination-${offerData.network}`
           const eventVariables = {
             poolAddress: poolAddress.toLowerCase(),
             account: account.toLowerCase(),
@@ -480,11 +480,16 @@ export const useOriginationPool = (
             return a.add(b.tokenAmountClaimed)
           }, ZERO)
 
-          const offerTokenPayout =
-            await fungiblePool.contract.calculateClaimableVestedAmount(
+
+          let offerTokenPayout = BigNumber.from(0);
+          try {
+            offerTokenPayout = await fungiblePool.contract.calculateClaimableVestedAmount(
               totalTokenAmount,
               totalTokenAmountClaimed
             )
+          } catch (error) {
+            console.error('Error while calculating claimable vested amount:', error)
+          }
 
           offeringOverview.isOwnerOrManager = isOwnerOrManager
 
