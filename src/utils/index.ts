@@ -1,6 +1,7 @@
 import { INSUFFICIENT_FUNDS_ERROR } from 'config/constants'
 import { BigNumber, BigNumberish, utils } from 'ethers'
 import moment from 'moment'
+import { ZERO } from './number'
 
 const { formatUnits } = utils
 
@@ -57,10 +58,11 @@ export const formatToShortNumber = (number: string, decimals = 2): string => {
       unitIndex += 1
       rNumber = rNumber / 1000
     }
-
-    return `${Math.round(parseFloat(rNumber.toFixed(decimals)))}${
-      units[unitIndex]
-    }`
+    let value = parseFloat(rNumber.toFixed(decimals))
+    if (value > 100) {
+      value = Math.round(value)
+    }
+    return `${value}${units[unitIndex]}`
   }
 
   return formatSmallNumber(number)
@@ -317,12 +319,12 @@ export const formatDurationUnits = (duration: string[]) => {
 }
 
 export const getRemainingTimeSec = (endingTime: BigNumber) => {
-  if (endingTime.toString() === '0') return BigNumber.from(0)
+  if (endingTime.toString() === '0') return ZERO
   let remainingTime = BigNumber.from(Number(endingTime.toString()) * 1000).sub(
     BigNumber.from(Date.now().toString())
   )
   remainingTime = BigNumber.from((Number(remainingTime) / 1000).toFixed())
-  return Number(remainingTime) < 0 ? BigNumber.from(0) : remainingTime
+  return Number(remainingTime) < 0 ? ZERO : remainingTime
 }
 
 export const formatDateTime = (timestamp: number) => {

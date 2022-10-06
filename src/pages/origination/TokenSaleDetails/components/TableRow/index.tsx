@@ -481,23 +481,36 @@ export const TableRow = ({
 
     if (item.label === OriginationLabels.PublicSale) {
       item = publicSale
+
+      const getCurrentPublicPrice = () => {
+        if (!isSaleInitiated) {
+          return `${formatToShortNumber(
+            formatBigNumber(
+              publicSale.startingPrice || 0,
+              publicSale.purchaseToken.decimals
+            )
+          )} ${publicSale.purchaseToken.symbol}`
+        }
+        if (
+          isSaleInitiated &&
+          ((isWhitelistSet && !isWhitelistSaleEnded) ||
+            getRemainingTimeSec(publicSale.saleEndTimestamp).isZero())
+        ) {
+          return 'N/A'
+        }
+        return `${formatToShortNumber(
+          formatBigNumber(
+            publicSale.currentPrice,
+            publicSale.purchaseToken.decimals
+          )
+        )} ${publicSale.purchaseToken.symbol}`
+      }
+
       return (
         <div className={cl.content}>
           <Td type={PublicSale.CurrentPrice} label={item.label}>
             <Typography className={clsx(cl.item, cl.label, cl.itemMarginLeft)}>
-              {isSaleInitiated
-                ? `${formatToShortNumber(
-                    formatBigNumber(
-                      item.currentPrice,
-                      item.purchaseToken.decimals
-                    )
-                  )} ${item.purchaseToken.symbol}`
-                : `${formatToShortNumber(
-                    formatBigNumber(
-                      item.startingPrice || 0,
-                      item.purchaseToken.decimals
-                    )
-                  )} ${item.purchaseToken.symbol}`}
+              {getCurrentPublicPrice()}
             </Typography>
           </Td>
           <Td type={PublicSale.PricingFormula} label={item.label}>

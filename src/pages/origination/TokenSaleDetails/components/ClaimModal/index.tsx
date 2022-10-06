@@ -32,7 +32,6 @@ interface IProps {
   isOpen: boolean
   onClose: () => void
   data?: IClaimData
-  isOwnerOrManager?: boolean
   onClaimSuccess: () => void
   isClaimToken: boolean
 }
@@ -43,7 +42,6 @@ export const ClaimModal = ({
   onClose,
   data,
   poolAddress,
-  isOwnerOrManager,
   onClaimSuccess,
   isClaimToken,
 }: IProps) => {
@@ -92,11 +90,11 @@ export const ClaimModal = ({
       >
         {step === EClaimModalStep.Init ? (
           <InitSection
+            data={data}
             poolAddress={poolAddress}
             onNext={onNextStep}
             onClose={onClose}
             setTxId={setTxId}
-            isOwnerOrManager={isOwnerOrManager}
             isClaimToken={isClaimToken}
           />
         ) : (

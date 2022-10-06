@@ -640,7 +640,6 @@ const TokenSaleDetails = () => {
               isOpen={state.isClaimModalOpen}
               onClose={() => _onClose('isClaimModalOpen')}
               data={getClaimData()}
-              isOwnerOrManager={isOwnerOrManager}
               onClaimSuccess={onClaimSuccess}
               isClaimToken={state.isClaimToken}
             />

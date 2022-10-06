@@ -80,14 +80,14 @@ export const SuccessSection = ({
           {data?.purchaseToken &&
             formatBigNumber(
               data?.purchaseTokenAmount || 0,
-              data?.purchaseToken?.decimals || 0
+              data?.purchaseToken?.decimals
             )}{' '}
           {data?.purchaseToken?.symbol}
           {data?.purchaseToken && data?.offerToken ? '/' : ''}{' '}
           {data?.offerToken &&
             formatBigNumber(
               data?.offerTokenAmount || 0,
-              data?.offerToken?.decimals || 0
+              data?.offerToken?.decimals
             )}{' '}
           {data?.offerToken?.symbol}
         </Typography>
