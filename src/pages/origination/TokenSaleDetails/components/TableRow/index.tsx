@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { Button, makeStyles, Tooltip, Typography } from '@material-ui/core'
+import { makeStyles, Tooltip, Typography } from '@material-ui/core'
 import { Td } from '../Td'
 import {
   EPricingFormula,
@@ -21,15 +21,15 @@ import {
   formatBigNumber,
   formatToShortNumber,
   getRemainingTimeSec,
-  numberWithCommas,
   parseDurationSec,
 } from 'utils'
 import moment from 'moment'
-import { useCountdown } from 'helpers/useCountdownClock'
+import { useCountdown } from 'helpers'
 import { useEffect } from 'react'
 import { BigNumber } from 'ethers'
 import { useConnectedWeb3Context } from 'contexts'
 import { getEtherscanUri } from 'config/networks'
+import { addLeadingZeros } from 'utils/number'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -223,7 +223,9 @@ export const TableRow = ({
     if (isWhitelistSet && !isWhitelistSaleEnded && isPublicSale)
       return 'Not Started'
     if (isSaleInitiated && timeRemaining.toNumber() > 0 && days >= 0)
-      return `${days}D:${hours}H:${minutes}M:${seconds}S`
+      return `${days ? `${days}D:` : ''}${
+        hours ? `${addLeadingZeros(hours)}H:` : ''
+      }${addLeadingZeros(minutes)}M:${addLeadingZeros(seconds)}S`
     if (isSaleInitiated && days + hours + minutes + seconds <= 0) return 'Ended'
     return 'Not Started'
   }

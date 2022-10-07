@@ -2,7 +2,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { makeStyles, Typography, IconButton } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
 import { ViewTransaction } from 'components'
-import { IWithdrawState } from 'pages/mining/PoolDetails/components/index'
 import { useEffect, useState } from 'react'
 import { CLRService } from 'services'
 import { ITerminalPool } from 'types'
@@ -11,9 +10,10 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import ClockIcon from '@material-ui/icons/AccessTime'
 import { FIVE_MINUTES_IN_MS, LOCKED_STARTING_TIME } from 'config/constants'
-import { useCountdown } from 'helpers/useCountdownClock'
+import { useCountdown } from 'helpers'
 
 import { ActionStepRow, WarningInfo } from '../index'
+import { IWithdrawState } from '../../index'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },

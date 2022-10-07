@@ -44,7 +44,7 @@ export const numberWithCommas = (
   return formattedNumber
 }
 
-export const formatToShortNumber = (number: string, decimals = 2): string => {
+export const formatToShortNumber = (number: string, decimals = 1): string => {
   if (number.length < 1) {
     return '0'
   }
@@ -58,11 +58,7 @@ export const formatToShortNumber = (number: string, decimals = 2): string => {
       unitIndex += 1
       rNumber = rNumber / 1000
     }
-    let value = parseFloat(rNumber.toFixed(decimals))
-    if (value > 100) {
-      value = Math.round(value)
-    }
-    return `${value}${units[unitIndex]}`
+    return `${parseFloat(rNumber.toFixed(decimals))}${units[unitIndex]}`
   }
 
   return formatSmallNumber(number)
@@ -70,8 +66,7 @@ export const formatToShortNumber = (number: string, decimals = 2): string => {
 
 const getToFixed = (value: string) => {
   const priceInt = parseInt(value)
-  const toFixed = priceInt >= 100 ? 0 : priceInt >= 1 ? 2 : 4
-  return toFixed
+  return priceInt >= 100 ? 0 : priceInt >= 1 ? 2 : 4
 }
 
 const formatSmallNumber = (number: string) => {

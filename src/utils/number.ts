@@ -17,3 +17,7 @@ export const toUsd = (n: number) => {
     currency: 'USD',
   })
 }
+
+export const addLeadingZeros = (n: number, totalLength = 2): string => {
+  return String(n).padStart(totalLength, '0')
+}
