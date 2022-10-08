@@ -300,17 +300,19 @@ export const TableRow = ({
 
           <Td type={OfferingOverview.OfferingStatus} label={item.label}>
             <div className={cl.item}>
-              {`${formatToShortNumber(
-                formatBigNumber(
-                  item.offerTokenAmountSold,
-                  item.offerToken.decimals
-                )
-              )}/${formatToShortNumber(
-                formatBigNumber(
-                  item.totalOfferingAmount,
-                  item.offerToken.decimals
-                )
-              )}`}
+              <Typography>
+                {`${formatToShortNumber(
+                  formatBigNumber(
+                    item.offerTokenAmountSold,
+                    item.offerToken.decimals
+                  )
+                )}/${formatToShortNumber(
+                  formatBigNumber(
+                    item.totalOfferingAmount,
+                    item.offerToken.decimals
+                  )
+                )}`}
+              </Typography>
               <Typography className={cl.symbol}>
                 {item.offerToken.symbol}
               </Typography>

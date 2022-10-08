@@ -396,8 +396,7 @@ export const useOriginationPool = (
           poolAddress,
           offerData.purchaseToken.address
         )
-        const bal = await erc20.getBalanceOf(poolAddress)
-        offerData.purchaseTokenBalance = bal
+        offerData.purchaseTokenBalance = await erc20.getBalanceOf(poolAddress)
       } catch (e) {
         // Whitelist detail for pool is missing
       }
@@ -417,8 +416,7 @@ export const useOriginationPool = (
             fungiblePool.contract.vestingEntryNFT(),
           ])
 
-          const graphqlUrl =
-            `https://api.thegraph.com/subgraphs/name/xtokenmarket/origination-${offerData.network}`
+          const graphqlUrl = `https://api.thegraph.com/subgraphs/name/xtokenmarket/origination-${offerData.network}`
           const eventVariables = {
             poolAddress: poolAddress.toLowerCase(),
             account: account.toLowerCase(),
@@ -480,15 +478,18 @@ export const useOriginationPool = (
             return a.add(b.tokenAmountClaimed)
           }, ZERO)
 
-
-          let offerTokenPayout = BigNumber.from(0);
+          let offerTokenPayout = ZERO
           try {
-            offerTokenPayout = await fungiblePool.contract.calculateClaimableVestedAmount(
-              totalTokenAmount,
-              totalTokenAmountClaimed
-            )
+            offerTokenPayout =
+              await fungiblePool.contract.calculateClaimableVestedAmount(
+                totalTokenAmount,
+                totalTokenAmountClaimed
+              )
           } catch (error) {
-            console.error('Error while calculating claimable vested amount:', error)
+            console.error(
+              'Error while calculating claimable vested amount:',
+              error
+            )
           }
 
           offeringOverview.isOwnerOrManager = isOwnerOrManager
