@@ -111,10 +111,9 @@ class FungiblePoolService {
 
   waitUntilPurchase = async (
     contributionAmount: BigNumber,
-    offerAmount: BigNumber,
     account: string,
     txId: string
-  ): Promise<string> => {
+  ): Promise<[string, BigNumber]> => {
     let resolved = false
     return new Promise((resolve) => {
       this.contract.on(
@@ -129,22 +128,15 @@ class FungiblePoolService {
           if (
             account.toLowerCase() === _purchaser.toLowerCase() &&
             contributionAmount.eq(_contributionAmount) &&
-            offerAmount.eq(_offerAmount)
+            txId.toLowerCase() === rest[0].transactionHash.toLowerCase()
           ) {
             if (!resolved) {
               resolved = true
-              resolve(rest[0].transactionHash)
+              resolve([rest[0].transactionHash, _offerAmount])
             }
           }
         }
       )
-
-      this.contract.provider.waitForTransaction(txId).then(() => {
-        if (!resolved) {
-          resolved = true
-          resolve(txId)
-        }
-      })
     })
   }
 
