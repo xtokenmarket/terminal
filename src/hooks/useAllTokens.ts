@@ -6,8 +6,15 @@ import { IToken } from 'types'
 export const useAllTokens: (includeETH: boolean) => IToken[] = (includeETH) => {
   const { networkId } = useConnectedWeb3Context()
   const fNetworkId = networkId || DEFAULT_NETWORK_ID
-  const tokens = Object.values(knownTokens)
-    .filter((tokenData) => (includeETH ? true : tokenData.symbol !== 'ETH'))
+
+  return Object.values(knownTokens)
+    .filter((tokenData) =>
+      tokenData.symbol !== 'AGG'
+        ? includeETH
+          ? true
+          : tokenData.symbol !== 'ETH'
+        : false
+    )
     .map((tokenData) => {
       if (!validNetworkId(fNetworkId)) {
         throw new Error(`Unsupported network id: '${networkId}'`)
@@ -21,6 +28,4 @@ export const useAllTokens: (includeETH: boolean) => IToken[] = (includeETH) => {
         image: tokenData.image,
       }
     })
-
-  return tokens
 }

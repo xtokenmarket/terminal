@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { makeStyles, Typography, IconButton } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
-import { ViewTransaction } from 'components'
+import { ViewTransaction, WarningInfo } from 'components'
 import { useEffect, useState } from 'react'
 import { ITerminalPool, PoolService } from 'types'
 import { ZERO } from 'utils/number'
@@ -13,8 +13,7 @@ import {
   MINUTE_TIMELOCK_TIMESTAMP,
   ONE_MINUTE_IN_MS,
 } from 'config/constants'
-import { useCountdown } from 'helpers/useCountdownClock'
-import { WarningInfo } from 'components/Common/WarningInfo'
+import { useCountdown } from 'helpers'
 
 import { ActionStepRow } from '../index'
 import { IWithdrawState } from '../../index'

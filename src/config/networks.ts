@@ -134,13 +134,13 @@ const networks: { [K in ChainId]: INetwork } = {
     contracts: {
       LM: '0x56eA5814Fa0fB464447FFDde7A30ef86A8D32E76',
       multicall: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
-      origination: '0x2B669d15D05e07d5837e41242D44395f1c90Ef13',
+      origination: '0x973Aa28cDBBa248CF944648F93896eB5661246a3',
       rewardEscrow: '0x950f63d235D163314E68c80A9d5c06200FAC7978',
       uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
-      vestingEntryNFT: '0x28d958aa9A04abF67d484268FbB98e21341c93d5',
+      vestingEntryNFT: '0x9D7264704773895731D19DF14C713932fEC4aBD0',
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -153,6 +153,20 @@ const networks: { [K in ChainId]: INetwork } = {
 }
 
 export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
+  agg: {
+    name: 'AmpliFi DAO',
+    symbol: 'AGG',
+    addresses: {
+      [ChainId.Mainnet]: '0x492798Fb464e77Cb3cDA62b9a2C3c65162db198e',
+      [ChainId.Arbitrum]: '0x492798Fb464e77Cb3cDA62b9a2C3c65162db198e',
+      [ChainId.Optimism]: '0x492798Fb464e77Cb3cDA62b9a2C3c65162db198e',
+      [ChainId.Polygon]: '0x492798Fb464e77Cb3cDA62b9a2C3c65162db198e',
+      [ChainId.Kovan]: '0x492798Fb464e77Cb3cDA62b9a2C3c65162db198e',
+      [ChainId.Goerli]: '0xEEECa680a86Aef71C00c90A7750D1D65D92300fA',
+    },
+    decimals: 18,
+    image: '/assets/tokens/agg.png',
+  },
   eth: {
     name: 'Ethereum',
     symbol: 'ETH',
@@ -225,7 +239,6 @@ export const knownTokens: { [K in KnownToken]: IKnownTokenData } = {
   },
 }
 
-export const tokenSymbols = Object.keys(knownTokens)
 export const commonBaseTokenSymbols = ['eth', 'usdt', 'weth', 'dai', 'usdc']
 
 export const supportedNetworkIds = [

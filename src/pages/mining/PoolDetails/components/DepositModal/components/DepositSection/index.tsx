@@ -1,14 +1,13 @@
 import { makeStyles, Typography, IconButton } from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
 import { ViewTransaction, WarningInfo } from 'components'
-import { useIsMountedRef } from 'helpers'
+import { useCountdown, useIsMountedRef } from 'helpers'
 import { useEffect, useState } from 'react'
 import { ERC20Service } from 'services'
 import { ITerminalPool, PoolService } from 'types'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 import ClockIcon from '@material-ui/icons/AccessTime'
-import { useCountdown } from 'helpers/useCountdownClock'
 import {
   FIVE_MINUTES_IN_MS,
   MINUTE_TIMELOCK_TIMESTAMP,

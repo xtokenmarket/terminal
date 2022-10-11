@@ -168,7 +168,7 @@ export const InitiateSection = (props: IProps) => {
           Vest {offerData.offerToken.symbol} tokens
         </Typography>
         <Typography className={classes.subTitle}>
-          Please complete the transaction to approve vesting process.
+          Please complete the transaction to initiate vesting process.
         </Typography>
         {!state.isApproving && !state.isInitiating && (
           <IconButton className={classes.closeButton} onClick={onClose}>
@@ -179,7 +179,7 @@ export const InitiateSection = (props: IProps) => {
       <div className={classes.content}>
         <div className={classes.actions}>
           <TokenInfo
-            title="Approve vest of"
+            title="Initiate vest of"
             actionLabel={state.isApproved ? 'APPROVED' : 'APPROVE'}
             token={offerData.offerToken}
             amount={userPositionData.amountAvailableToVest}

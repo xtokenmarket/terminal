@@ -3,7 +3,7 @@ import { Contract, Wallet, ethers, BigNumber } from 'ethers'
 import { Maybe } from 'types'
 import Abi from 'abis'
 import { CHAIN_NAMES, ChainId, ORIGINATION_API_URL } from 'config/constants'
-import { hexlify } from 'ethers/lib/utils'
+import { hexlify, keccak256 } from 'ethers/lib/utils'
 
 class FungiblePoolService {
   provider: any
@@ -111,10 +111,9 @@ class FungiblePoolService {
 
   waitUntilPurchase = async (
     contributionAmount: BigNumber,
-    offerAmount: BigNumber,
     account: string,
     txId: string
-  ): Promise<string> => {
+  ): Promise<[string, BigNumber]> => {
     let resolved = false
     return new Promise((resolve) => {
       this.contract.on(
@@ -128,21 +127,41 @@ class FungiblePoolService {
         ) => {
           if (
             account.toLowerCase() === _purchaser.toLowerCase() &&
-            contributionAmount.eq(_contributionAmount) &&
-            offerAmount.eq(_offerAmount)
+            contributionAmount.eq(_contributionAmount)
           ) {
             if (!resolved) {
               resolved = true
-              resolve(rest[0].transactionHash)
+              resolve([rest[0].transactionHash, _offerAmount])
             }
           }
         }
       )
 
-      this.contract.provider.waitForTransaction(txId).then(() => {
+      this.contract.provider.waitForTransaction(txId).then(async () => {
         if (!resolved) {
           resolved = true
-          resolve(txId)
+          const eventSignature = ethers.utils.keccak256(
+            Buffer.from('Purchase(address,uint256,uint256,uint256)', 'utf-8')
+          )
+          const eventInterface = new ethers.utils.Interface([
+            `event Purchase(
+              address indexed purchaser,
+              uint256 contributionAmount,
+              uint256 offerAmount,
+              uint256 purchaseFee
+            )`,
+          ])
+          const txReceipt = await this.contract.provider.getTransactionReceipt(
+            txId
+          )
+          const logIdx = txReceipt.logs.findIndex(
+            (log) => log.topics[0] === eventSignature
+          )
+          const { offerAmount } = eventInterface.parseLog(
+            txReceipt.logs[logIdx]
+          ).args
+
+          resolve([txId, offerAmount])
         }
       })
     })

@@ -24,16 +24,16 @@ import { ZERO } from 'utils/number'
 import { getIdFromNetwork, isTestnet } from 'utils/network'
 import { isAddress } from 'utils/tools'
 import { getAddress } from 'ethers/lib/utils'
+import { fetchQuery } from 'utils/thegraph'
 import {
   getCoinGeckoIDs,
   getTokenExchangeRate,
 } from 'helpers/useTerminalPool/helper'
-
-import { fetchQuery } from 'utils/thegraph'
 import {
   ENTRY_IDS_QUERY,
   TOKEN_PURCHASED_AMOUNT_QUERY,
 } from 'helpers/useOriginationPools/helper'
+
 interface IState {
   tokenOffer?: ITokenOffer
   loading: boolean
@@ -75,6 +75,15 @@ export const useOriginationPool = (
         address
       )
       return erc20.getDetails()
+    }
+  }
+
+  const getTokenLogo = (address: string) => {
+    try {
+      return getTokenFromAddress(address, readonlyProvider?.network.chainId)
+        .image
+    } catch (error) {
+      return defaultTokenLogo
     }
   }
 
@@ -208,9 +217,12 @@ export const useOriginationPool = (
         rates && rates[1] ? rates[1].toString() : '0'
     }
 
-    offerData.offerToken.image = offerData.offerToken?.image || defaultTokenLogo
+    offerData.offerToken.image =
+      offerData.offerToken?.image ||
+      getTokenLogo(offerData?.offerToken.address || offerData?.offerToken)
     offerData.purchaseToken.image =
-      offerData.purchaseToken?.image || defaultTokenLogo
+      offerData.purchaseToken?.image ||
+      getTokenLogo(offerData?.purchaseToken.address || offerData?.purchaseToken)
 
     const {
       cliffPeriod,
@@ -323,18 +335,19 @@ export const useOriginationPool = (
     }
 
     const userPosition = {
-      label: OriginationLabels.UserPosition,
-      tokenPurchased: ZERO,
-      amountInvested: ZERO,
-      amountvested: ZERO,
       amountAvailableToVest: ZERO,
+      amountAvailableToVestToWallet: ZERO,
+      amountInvested: ZERO,
+      amountVested: ZERO,
+      fullyVestableAt: saleEndTimestamp.add(vestingPeriod.sub(cliffPeriod)),
+      label: OriginationLabels.UserPosition,
       offerToken: offerToken,
       purchaseToken: purchaseToken || ETH,
-      vestableTokenAmount, // TODO: Redundant?
+      tokenPurchased: ZERO,
       userToVestingId: [],
       vestableAt: saleEndTimestamp.add(cliffPeriod),
+      vestableTokenAmount, // TODO: Redundant?
       vestingPeriod,
-      amountAvailableToVestToWallet: ZERO,
     }
 
     const offeringSummary = {
@@ -384,8 +397,7 @@ export const useOriginationPool = (
           poolAddress,
           offerData.purchaseToken.address
         )
-        const bal = await erc20.getBalanceOf(poolAddress)
-        offerData.purchaseTokenBalance = bal
+        offerData.purchaseTokenBalance = await erc20.getBalanceOf(poolAddress)
       } catch (e) {
         // Whitelist detail for pool is missing
       }
@@ -405,17 +417,16 @@ export const useOriginationPool = (
             fungiblePool.contract.vestingEntryNFT(),
           ])
 
-          const graphqlUrl =
-            'https://api.thegraph.com/subgraphs/name/cryptopixelfrog/subgraph-study'
+          const graphqlUrl = `https://api.thegraph.com/subgraphs/name/xtokenmarket/origination-${offerData.network}`
           const eventVariables = {
             poolAddress: poolAddress.toLowerCase(),
             account: account.toLowerCase(),
           }
 
-          let tokensClaimedEntry
+          let tokensClaimedEntry = ZERO
           if (reserveAmount.isZero() && vestingPeriod.isZero()) {
             try {
-              tokensClaimedEntry = (
+              const entries = (
                 await fetchQuery(
                   TOKEN_PURCHASED_AMOUNT_QUERY,
                   eventVariables,
@@ -423,7 +434,7 @@ export const useOriginationPool = (
                 )
               ).tokensClaimedEntries
 
-              tokensClaimedEntry = tokensClaimedEntry.reduce(
+              tokensClaimedEntry = entries.reduce(
                 (partialSum: string, a: any) =>
                   BigNumber.from(partialSum).add(a.amountClaimed),
                 ZERO
@@ -468,11 +479,16 @@ export const useOriginationPool = (
             return a.add(b.tokenAmountClaimed)
           }, ZERO)
 
-          const offerTokenPayout =
-            await fungiblePool.contract.calculateClaimableVestedAmount(
-              totalTokenAmount,
-              totalTokenAmountClaimed
-            )
+          let offerTokenPayout = ZERO
+          try {
+            offerTokenPayout =
+              await fungiblePool.contract.calculateClaimableVestedAmount(
+                totalTokenAmount,
+                totalTokenAmountClaimed
+              )
+          } catch (error) {
+            // Ignore
+          }
 
           offeringOverview.isOwnerOrManager = isOwnerOrManager
 
@@ -480,7 +496,7 @@ export const useOriginationPool = (
             totalTokenAmountClaimed
           )
           userPosition.amountInvested = purchaseTokenContribution
-          userPosition.amountvested = totalTokenAmountClaimed
+          userPosition.amountVested = totalTokenAmountClaimed
           userPosition.tokenPurchased =
             reserveAmount.isZero() && vestingPeriod.isZero()
               ? tokensClaimedEntry

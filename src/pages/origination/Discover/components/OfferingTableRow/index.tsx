@@ -1,20 +1,20 @@
 import clsx from 'clsx'
 import { makeStyles, Typography } from '@material-ui/core'
-import { OfferingTd } from '../index'
 import { NavLink } from 'react-router-dom'
 import {
   formatBigNumber,
-  formatDateTime,
   formatToShortNumber,
   getRemainingTimeSec,
   numberWithCommas,
   parseDurationSec,
 } from 'utils'
-import { useOriginationPool } from 'helpers/useOriginationPool'
+import { useCountdown, useOriginationPool } from 'helpers'
 import { useConnectedWeb3Context } from 'contexts'
 import { getNetworkFromId } from 'utils/network'
 import { IOriginationPool, NetworkId } from 'types'
-import { useCountdown } from 'helpers/useCountdownClock'
+import { getCountdownText } from 'utils/number'
+
+import { OfferingTd } from '../index'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -117,7 +117,6 @@ export const OfferingTableRow = ({ offering }: IProps) => {
     }
 
     const {
-      createdAt,
       offerToken,
       offerTokenAmountSold,
       poolName,
@@ -136,8 +135,7 @@ export const OfferingTableRow = ({ offering }: IProps) => {
     const getTimeRemainingText = () => {
       if (!isSaleInitiated) return "Hasn't started"
       if (getRemainingTimeSec(salesEnd).isZero()) return 'Ended'
-      if (days < 0) return `0D:0H:0M:0S`
-      return `${days}D:${hours}H:${minutes}M:${seconds}S`
+      return getCountdownText(days, hours, minutes, seconds)
     }
 
     const remainingOfferingAmount =
