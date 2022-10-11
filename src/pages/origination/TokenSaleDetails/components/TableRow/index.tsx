@@ -1,6 +1,5 @@
 import clsx from 'clsx'
 import { makeStyles, Tooltip, Typography } from '@material-ui/core'
-import { Td } from '../Td'
 import {
   EPricingFormula,
   UserPosition,
@@ -29,7 +28,9 @@ import { useEffect } from 'react'
 import { BigNumber } from 'ethers'
 import { useConnectedWeb3Context } from 'contexts'
 import { getEtherscanUri } from 'config/networks'
-import { addLeadingZeros } from 'utils/number'
+import { getCountdownText } from 'utils/number'
+
+import { Td } from '../Td'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -168,6 +169,7 @@ export const TableRow = ({
   const cl = useStyles()
   const { networkId } = useConnectedWeb3Context()
   const etherscanUri = getEtherscanUri(networkId)
+
   const remainingTime = () => {
     if (
       item.label === OriginationLabels.UserPosition &&
@@ -180,7 +182,7 @@ export const TableRow = ({
       if (getRemainingTimeSec(item.vestableAt).isZero()) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        return item.vestableAt.add(item.vestingPeriod).toNumber() * 1000
+        return item.fullyVestableAt.toNumber() * 1000
       }
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -220,19 +222,22 @@ export const TableRow = ({
     isPublicSale?: boolean
   ) => {
     if (item.label === OriginationLabels.UserPosition) return
-    if (isWhitelistSet && !isWhitelistSaleEnded && isPublicSale)
+    if (isWhitelistSet && !isWhitelistSaleEnded && isPublicSale) {
       return 'Not Started'
-    if (isSaleInitiated && timeRemaining.toNumber() > 0 && days >= 0)
-      return `${days ? `${days}D:` : ''}${
-        hours ? `${addLeadingZeros(hours)}H:` : ''
-      }${addLeadingZeros(minutes)}M:${addLeadingZeros(seconds)}S`
-    if (isSaleInitiated && days + hours + minutes + seconds <= 0) return 'Ended'
+    }
+    if (isSaleInitiated && timeRemaining.toNumber() > 0 && days >= 0) {
+      return getCountdownText(days, hours, minutes, seconds)
+    }
+    if (isSaleInitiated && days + hours + minutes + seconds <= 0) {
+      return 'Ended'
+    }
     return 'Not Started'
   }
 
   const getCliffTimeRemainingText = () => {
-    if (days + hours + minutes + seconds > 0)
-      return `${days}D:${hours}H:${minutes}M:${seconds}S`
+    if (days + hours + minutes + seconds > 0) {
+      return getCountdownText(days, hours, minutes, seconds)
+    }
     return 'Started'
   }
 
@@ -241,9 +246,8 @@ export const TableRow = ({
       getRemainingTimeSec(vestableAt).isZero() &&
       days + hours + minutes + seconds > 0
     ) {
-      return `${days}D:${hours}H:${minutes}M:${seconds}S`
+      return getCountdownText(days, hours, minutes, seconds)
     }
-
     return 'Not Started'
   }
 
@@ -590,10 +594,10 @@ export const TableRow = ({
           </Td>
           {isVestedPropertiesShow && (
             <>
-              <Td type={UserPosition.Amountvested} label={item.label}>
+              <Td type={UserPosition.AmountVested} label={item.label}>
                 <Typography className={clsx(cl.item, cl.label)}>
                   {formatToShortNumber(
-                    formatBigNumber(item.amountvested, item.offerToken.decimals)
+                    formatBigNumber(item.amountVested, item.offerToken.decimals)
                   )}{' '}
                   {item.offerToken.symbol}
                 </Typography>
@@ -632,15 +636,13 @@ export const TableRow = ({
                       </Typography>
                     </Td>
                   )}
-                  {!getRemainingTimeSec(
-                    item.vestableAt.add(item.vestingPeriod)
-                  ).isZero() && (
+                  {!getRemainingTimeSec(item.fullyVestableAt).isZero() && (
                     <Td
                       type={UserPosition.AmountAvailableToVest}
                       label={item.label}
                     >
                       <Typography className={clsx(cl.item, cl.label)}>
-                        {getTimeToFullVestText(item.vestableAt)}
+                        {getTimeToFullVestText(item.fullyVestableAt)}
                       </Typography>
                     </Td>
                   )}

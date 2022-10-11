@@ -115,16 +115,6 @@ export const OutputEstimation = (props: IProps) => {
             {offerData.offerToken.symbol}
           </Typography>
         </div>
-        {vestState.step === VestStep.Info && (
-          <div className={classes.infoRow}>
-            <div>
-              <Typography className={classes.label}>VESTING PERIOD</Typography>
-              <Typography className={classes.amount}>
-                {parseDurationSec(offerData.vestingPeriod.toNumber())}
-              </Typography>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   )

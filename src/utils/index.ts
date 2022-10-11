@@ -17,11 +17,12 @@ export const formatBigNumber = (
   precision = 2
 ): string => {
   const _value = Number(formatUnits(value, decimals))
-
   if (_value < 1000) {
     return formatSmallNumber(_value.toString())
   }
-  return Number(_value).toFixed(precision)
+  return Number.isInteger(_value)
+    ? _value.toString()
+    : _value.toFixed(precision)
 }
 
 export const numberWithCommas = (

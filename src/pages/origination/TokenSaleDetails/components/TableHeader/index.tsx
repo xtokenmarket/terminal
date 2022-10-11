@@ -143,10 +143,10 @@ export const TableHeader = (props: IProps) => {
         </Td>
         {props.isVestedPropertiesShow && (
           <>
-            <Td type={UserPosition.Amountvested} label={props.label}>
+            <Td type={UserPosition.AmountVested} label={props.label}>
               <div className={classes.item}>Amount Vested</div>
             </Td>
-            <Td type={UserPosition.Amountvested} label={props.label}>
+            <Td type={UserPosition.AmountVested} label={props.label}>
               <div className={classes.item}>
                 Amount Available to Vest to Wallet
               </div>

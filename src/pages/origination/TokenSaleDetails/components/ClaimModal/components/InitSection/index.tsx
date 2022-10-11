@@ -148,9 +148,9 @@ export const InitSection = ({
             <Typography className={classes.amount}>
               {formatBigNumber(
                 data?.purchaseTokenAmount || 0,
-                data?.purchaseToken?.decimals
+                data?.purchaseToken.decimals
               )}{' '}
-              {data?.purchaseToken?.symbol}
+              {data?.purchaseToken.symbol}
             </Typography>
           </div>
         )}
@@ -163,7 +163,7 @@ export const InitSection = ({
                 data?.offerTokenAmount || 0,
                 data?.offerToken.decimals
               )}{' '}
-              {data?.offerToken?.symbol}
+              {data?.offerToken.symbol}
             </Typography>
           </div>
         )}

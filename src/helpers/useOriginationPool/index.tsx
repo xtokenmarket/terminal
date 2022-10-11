@@ -24,16 +24,16 @@ import { ZERO } from 'utils/number'
 import { getIdFromNetwork, isTestnet } from 'utils/network'
 import { isAddress } from 'utils/tools'
 import { getAddress } from 'ethers/lib/utils'
+import { fetchQuery } from 'utils/thegraph'
 import {
   getCoinGeckoIDs,
   getTokenExchangeRate,
 } from 'helpers/useTerminalPool/helper'
-
-import { fetchQuery } from 'utils/thegraph'
 import {
   ENTRY_IDS_QUERY,
   TOKEN_PURCHASED_AMOUNT_QUERY,
 } from 'helpers/useOriginationPools/helper'
+
 interface IState {
   tokenOffer?: ITokenOffer
   loading: boolean
@@ -335,18 +335,19 @@ export const useOriginationPool = (
     }
 
     const userPosition = {
-      label: OriginationLabels.UserPosition,
-      tokenPurchased: ZERO,
-      amountInvested: ZERO,
-      amountvested: ZERO,
       amountAvailableToVest: ZERO,
+      amountAvailableToVestToWallet: ZERO,
+      amountInvested: ZERO,
+      amountVested: ZERO,
+      fullyVestableAt: saleEndTimestamp.add(vestingPeriod.sub(cliffPeriod)),
+      label: OriginationLabels.UserPosition,
       offerToken: offerToken,
       purchaseToken: purchaseToken || ETH,
-      vestableTokenAmount, // TODO: Redundant?
+      tokenPurchased: ZERO,
       userToVestingId: [],
       vestableAt: saleEndTimestamp.add(cliffPeriod),
+      vestableTokenAmount, // TODO: Redundant?
       vestingPeriod,
-      amountAvailableToVestToWallet: ZERO,
     }
 
     const offeringSummary = {
@@ -422,10 +423,10 @@ export const useOriginationPool = (
             account: account.toLowerCase(),
           }
 
-          let tokensClaimedEntry
+          let tokensClaimedEntry = ZERO
           if (reserveAmount.isZero() && vestingPeriod.isZero()) {
             try {
-              tokensClaimedEntry = (
+              const entries = (
                 await fetchQuery(
                   TOKEN_PURCHASED_AMOUNT_QUERY,
                   eventVariables,
@@ -433,7 +434,7 @@ export const useOriginationPool = (
                 )
               ).tokensClaimedEntries
 
-              tokensClaimedEntry = tokensClaimedEntry.reduce(
+              tokensClaimedEntry = entries.reduce(
                 (partialSum: string, a: any) =>
                   BigNumber.from(partialSum).add(a.amountClaimed),
                 ZERO
@@ -486,10 +487,7 @@ export const useOriginationPool = (
                 totalTokenAmountClaimed
               )
           } catch (error) {
-            console.error(
-              'Error while calculating claimable vested amount:',
-              error
-            )
+            // Ignore
           }
 
           offeringOverview.isOwnerOrManager = isOwnerOrManager
@@ -498,7 +496,7 @@ export const useOriginationPool = (
             totalTokenAmountClaimed
           )
           userPosition.amountInvested = purchaseTokenContribution
-          userPosition.amountvested = totalTokenAmountClaimed
+          userPosition.amountVested = totalTokenAmountClaimed
           userPosition.tokenPurchased =
             reserveAmount.isZero() && vestingPeriod.isZero()
               ? tokensClaimedEntry
