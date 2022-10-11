@@ -31,6 +31,7 @@ interface IState {
   isPurchased: boolean
   isPurchasing: boolean
   txHash: string
+  purchasedOfferAmount: BigNumber
 }
 
 export const InvestSection = (props: IProps) => {
@@ -57,12 +58,17 @@ export const InvestSection = (props: IProps) => {
       isPurchased: false,
       isPurchasing: false,
       txHash: '',
+      purchasedOfferAmount: BigNumber.from(0),
     }
   )
 
   useEffect(() => {
     if (state.isPurchased) {
-      updateState({ isPurchased: true, txHash: state.txHash })
+      updateState({
+        isPurchased: true,
+        txHash: state.txHash,
+        offerAmount: state.purchasedOfferAmount,
+      })
       onNext()
     }
   }, [state.isPurchased])
@@ -96,17 +102,14 @@ export const InvestSection = (props: IProps) => {
         txId = await fungiblePool.purchase(purchaseAmount, isPurchaseTokenETH)
       }
 
-      const finalTxId = await fungiblePool.waitUntilPurchase(
-        purchaseAmount,
-        offerAmount,
-        account,
-        txId
-      )
+      const [finalTxId, purchasedOfferAmount] =
+        await fungiblePool.waitUntilPurchase(purchaseAmount, account, txId)
 
       setState({
         isPurchasing: false,
         isPurchased: true,
         txHash: finalTxId,
+        purchasedOfferAmount,
       })
     } catch (error) {
       console.error('Error when trying invest', error)

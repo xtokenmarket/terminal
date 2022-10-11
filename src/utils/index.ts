@@ -1,6 +1,7 @@
 import { INSUFFICIENT_FUNDS_ERROR } from 'config/constants'
 import { BigNumber, BigNumberish, utils } from 'ethers'
 import moment from 'moment'
+import { ZERO } from './number'
 
 const { formatUnits } = utils
 
@@ -16,11 +17,12 @@ export const formatBigNumber = (
   precision = 2
 ): string => {
   const _value = Number(formatUnits(value, decimals))
-
   if (_value < 1000) {
     return formatSmallNumber(_value.toString())
   }
-  return Number(_value).toFixed(precision)
+  return Number.isInteger(_value)
+    ? _value.toString()
+    : _value.toFixed(precision)
 }
 
 export const numberWithCommas = (
@@ -43,7 +45,7 @@ export const numberWithCommas = (
   return formattedNumber
 }
 
-export const formatToShortNumber = (number: string, decimals = 2): string => {
+export const formatToShortNumber = (number: string, decimals = 1): string => {
   if (number.length < 1) {
     return '0'
   }
@@ -57,10 +59,7 @@ export const formatToShortNumber = (number: string, decimals = 2): string => {
       unitIndex += 1
       rNumber = rNumber / 1000
     }
-
-    return `${Math.round(parseFloat(rNumber.toFixed(decimals)))}${
-      units[unitIndex]
-    }`
+    return `${parseFloat(rNumber.toFixed(decimals))}${units[unitIndex]}`
   }
 
   return formatSmallNumber(number)
@@ -68,8 +67,7 @@ export const formatToShortNumber = (number: string, decimals = 2): string => {
 
 const getToFixed = (value: string) => {
   const priceInt = parseInt(value)
-  const toFixed = priceInt >= 100 ? 0 : priceInt >= 1 ? 2 : 4
-  return toFixed
+  return priceInt >= 100 ? 0 : priceInt >= 1 ? 2 : 4
 }
 
 const formatSmallNumber = (number: string) => {
@@ -317,12 +315,12 @@ export const formatDurationUnits = (duration: string[]) => {
 }
 
 export const getRemainingTimeSec = (endingTime: BigNumber) => {
-  if (endingTime.toString() === '0') return BigNumber.from(0)
+  if (endingTime.toString() === '0') return ZERO
   let remainingTime = BigNumber.from(Number(endingTime.toString()) * 1000).sub(
     BigNumber.from(Date.now().toString())
   )
   remainingTime = BigNumber.from((Number(remainingTime) / 1000).toFixed())
-  return Number(remainingTime) < 0 ? BigNumber.from(0) : remainingTime
+  return Number(remainingTime) < 0 ? ZERO : remainingTime
 }
 
 export const formatDateTime = (timestamp: number) => {

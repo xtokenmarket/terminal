@@ -2,7 +2,8 @@ import { ONE_HOUR_IN_MS, ONE_MINUTE_IN_MS } from 'config/constants'
 import { useEffect, useState } from 'react'
 
 const useCountdown = (targetDate: number) => {
-  const countDownDate = new Date(targetDate).getTime()
+  const countDownDate =
+    targetDate > 0 ? new Date(targetDate).getTime() : new Date().getTime()
 
   const [countDown, setCountDown] = useState(
     countDownDate - new Date().getTime()
@@ -20,7 +21,6 @@ const useCountdown = (targetDate: number) => {
 }
 
 const getReturnValues = (countDown: number) => {
-  // calculate time left
   const days = Math.floor(countDown / (ONE_HOUR_IN_MS * 24))
   const hours = Math.floor((countDown % (ONE_HOUR_IN_MS * 24)) / ONE_HOUR_IN_MS)
   const minutes = Math.floor((countDown % ONE_HOUR_IN_MS) / ONE_MINUTE_IN_MS)

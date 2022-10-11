@@ -211,7 +211,7 @@ export const Table = ({
       return !getRemainingTimeSec(
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        item.vestableAt.add(item.vestingPeriod)
+        item.fullyVestableAt
       ).isZero()
     }
     return false
