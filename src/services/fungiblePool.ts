@@ -3,7 +3,7 @@ import { Contract, Wallet, ethers, BigNumber } from 'ethers'
 import { Maybe } from 'types'
 import Abi from 'abis'
 import { CHAIN_NAMES, ChainId, ORIGINATION_API_URL } from 'config/constants'
-import { hexlify } from 'ethers/lib/utils'
+import { hexlify, keccak256 } from 'ethers/lib/utils'
 
 class FungiblePoolService {
   provider: any
@@ -111,7 +111,8 @@ class FungiblePoolService {
 
   waitUntilPurchase = async (
     contributionAmount: BigNumber,
-    account: string
+    account: string,
+    txId: string
   ): Promise<[string, BigNumber]> => {
     let resolved = false
     return new Promise((resolve) => {
@@ -135,6 +136,34 @@ class FungiblePoolService {
           }
         }
       )
+
+      this.contract.provider.waitForTransaction(txId).then(async () => {
+        if (!resolved) {
+          resolved = true
+          const eventSignature = ethers.utils.keccak256(
+            Buffer.from('Purchase(address,uint256,uint256,uint256)', 'utf-8')
+          )
+          const eventInterface = new ethers.utils.Interface([
+            `event Purchase(
+              address indexed purchaser,
+              uint256 contributionAmount,
+              uint256 offerAmount,
+              uint256 purchaseFee
+            )`,
+          ])
+          const txReceipt = await this.contract.provider.getTransactionReceipt(
+            txId
+          )
+          const logIdx = txReceipt.logs.findIndex(
+            (log) => log.topics[0] === eventSignature
+          )
+          const { offerAmount } = eventInterface.parseLog(
+            txReceipt.logs[logIdx]
+          ).args
+
+          resolve([txId, offerAmount])
+        }
+      })
     })
   }
 
