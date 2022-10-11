@@ -21,3 +21,14 @@ export const toUsd = (n: number) => {
 export const addLeadingZeros = (n: number, totalLength = 2): string => {
   return String(n).padStart(totalLength, '0')
 }
+
+export const getCountdownText = (
+  days: number,
+  hours: number,
+  minutes: number,
+  seconds: number
+) => {
+  return `${days ? `${days}D:` : ''}${
+    hours ? `${addLeadingZeros(hours)}H:` : ''
+  }${addLeadingZeros(minutes)}M:${addLeadingZeros(seconds)}S`
+}

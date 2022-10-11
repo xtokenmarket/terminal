@@ -276,17 +276,18 @@ export interface IPublicSale extends Label {
 }
 
 export interface IUserPosition extends Label {
-  tokenPurchased: BigNumber
-  amountInvested: BigNumber
-  amountvested: BigNumber
   amountAvailableToVest: BigNumber
+  amountAvailableToVestToWallet: BigNumber
+  amountInvested: BigNumber
+  amountVested: BigNumber
+  fullyVestableAt: BigNumber
   offerToken: IToken
   purchaseToken: IToken
-  vestableTokenAmount: BigNumber
+  tokenPurchased: BigNumber
   userToVestingId: string[]
   vestableAt: BigNumber
+  vestableTokenAmount: BigNumber
   vestingPeriod: BigNumber
-  amountAvailableToVestToWallet: BigNumber
 }
 
 export interface IOfferingSummary extends Label {

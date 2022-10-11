@@ -52,7 +52,7 @@ const useStyles = makeStyles(() => ({
   userPosition: {
     '&.tokenPurchased': { width: '12%' },
     '&.amountInvested': { width: '12%' },
-    '&.amountvested': { width: '12%' },
+    '&.amountVested': { width: '12%' },
     '&.amountAvailableToVest': { width: '12%' },
     '&.vestableAt': { width: '12%' },
     '&.timeToFullVest': { width: '12%' },

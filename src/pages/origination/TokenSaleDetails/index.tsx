@@ -260,7 +260,10 @@ const TokenSaleDetails = () => {
           : {}
         return {
           purchaseToken: tokenOffer.offeringOverview.purchaseToken,
-          purchaseTokenAmount: tokenOffer.offeringSummary.purchaseTokenRaised,
+          purchaseTokenAmount: tokenOffer.offeringSummary.purchaseTokenRaised
+            .mul(1e3)
+            .mul(995)
+            .div(1e6), // 0.5% purchaseFee
           ...offerTokenData,
         }
       }
@@ -268,18 +271,14 @@ const TokenSaleDetails = () => {
       if (state.isClaimToken && isOfferUnsuccessful) {
         return {
           purchaseToken: tokenOffer.offeringOverview.purchaseToken,
-          purchaseTokenAmount: BigNumber.from(
-            tokenOffer.userPosition.amountInvested
-          ),
+          purchaseTokenAmount: tokenOffer.userPosition.amountInvested,
         }
       }
       // user/manager claim their offer tokens when sale is successful
       if (state.isClaimToken && !isOfferUnsuccessful) {
         return {
           offerToken: tokenOffer.offeringOverview.offerToken,
-          offerTokenAmount: BigNumber.from(
-            tokenOffer.userPosition.tokenPurchased
-          ),
+          offerTokenAmount: tokenOffer.userPosition.tokenPurchased,
         }
       }
     }
@@ -444,7 +443,7 @@ const TokenSaleDetails = () => {
 
   const isVestedPropertiesShow =
     (tokenOffer?.userPosition.amountAvailableToVest.gt(0) ||
-      tokenOffer?.userPosition.amountvested.gt(0)) &&
+      tokenOffer?.userPosition.amountVested.gt(0)) &&
     !isOfferUnsuccessful
 
   const offeringName = tokenOffer?.originationRow.poolName
