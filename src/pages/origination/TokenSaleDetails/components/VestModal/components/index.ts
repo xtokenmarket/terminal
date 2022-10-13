@@ -1,4 +1,3 @@
-export * from './InitiateSection'
-export * from './SuccessSection'
+export * from './InfoSection'
 export * from './OutputEstimation'
-export * from './TokenInfo'
+export * from './SuccessSection'

@@ -293,7 +293,7 @@ export interface IUserPosition extends Label {
 export interface IOfferingSummary extends Label {
   offerToken: IToken
   purchaseToken: IToken
-  tokensSold: BigNumber
+  tokensAcquired: BigNumber
   purchaseTokenRaised: BigNumber
   vestingPeriod: BigNumber
   cliffPeriod: BigNumber

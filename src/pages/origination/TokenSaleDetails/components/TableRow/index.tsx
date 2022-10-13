@@ -714,11 +714,14 @@ export const TableRow = ({
 
           {!isOfferUnsuccessful && (
             <>
-              <Td type={OfferingSummary.TokensSold} label={item.label}>
+              <Td type={OfferingSummary.TokensAcquired} label={item.label}>
                 <div className={cl.item}>
                   <Typography>
                     {formatToShortNumber(
-                      formatBigNumber(item.tokensSold, item.offerToken.decimals)
+                      formatBigNumber(
+                        item.tokensAcquired,
+                        item.offerToken.decimals
+                      )
                     )}
                   </Typography>
                   <Typography className={cl.symbol}>

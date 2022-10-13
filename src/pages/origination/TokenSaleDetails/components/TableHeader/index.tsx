@@ -6,9 +6,11 @@ import {
   OriginationLabels,
   PublicSale,
   WhitelistSale,
+  InfoText,
 } from 'utils/enums'
 
 import { Td } from '../Td'
+import { QuestionTooltip } from '../../../CreateTokenSale/components/QuestionTooltip'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   item: {
     color: theme.colors.purple0,
     fontSize: 12,
-    display: 'flex',
+    display: 'inline-flex',
     alignItems: 'center',
   },
   itemAlignRight: {
@@ -26,6 +28,10 @@ const useStyles = makeStyles((theme) => ({
   },
   itemAlignCenter: {
     justifyContent: 'center',
+  },
+  tooltipQuestion: {
+    marginLeft: 4,
+    verticalAlign: 'middle',
   },
 }))
 
@@ -48,21 +54,45 @@ export const TableHeader = (props: IProps) => {
       <div className={classes.root}>
         <Td type={OfferingOverview.OfferToken} label={props.label}>
           <div className={classes.item}>Offer Token</div>
+          <QuestionTooltip
+            title={InfoText.OfferToken}
+            className={classes.tooltipQuestion}
+          />
         </Td>
         <Td type={OfferingOverview.PurchaseToken} label={props.label}>
           <div className={classes.item}>Purchase Token</div>
+          <QuestionTooltip
+            title={InfoText.PurchaseToken}
+            className={classes.tooltipQuestion}
+          />
         </Td>
         <Td type={OfferingOverview.OfferingStatus} label={props.label}>
           <div className={classes.item}>Offering Status</div>
+          <QuestionTooltip
+            title={InfoText.OfferingStatus}
+            className={classes.tooltipQuestion}
+          />
         </Td>
         <Td type={OfferingOverview.ReserveAmount} label={props.label}>
           <div className={classes.item}>Purchase Token Raised</div>
+          <QuestionTooltip
+            title={InfoText.ReserveOfferTokenAmount}
+            className={classes.tooltipQuestion}
+          />
         </Td>
         <Td type={OfferingOverview.VestingPeriod} label={props.label}>
           <div className={classes.item}>Vesting Period</div>
+          <QuestionTooltip
+            title={InfoText.VestingPeriod}
+            className={classes.tooltipQuestion}
+          />
         </Td>
         <Td type={OfferingOverview.CliffPeriod} label={props.label}>
           <div className={classes.item}>Cliff Period</div>
+          <QuestionTooltip
+            title={InfoText.CliffPeriod}
+            className={classes.tooltipQuestion}
+          />
         </Td>
         <Td type={OfferingOverview.SalesBegin} label={props.label}>
           <div className={classes.item}>Sale Begins</div>
@@ -100,7 +130,7 @@ export const TableHeader = (props: IProps) => {
           <div className={classes.item}>Time Remaining</div>
         </Td>
         <Td type={WhitelistSale.SalesPeriod} label={props.label}>
-          <div className={classes.item}>Sale Period</div>
+          <div className={classes.item}>Offering Period</div>
         </Td>
       </div>
     )
@@ -124,7 +154,7 @@ export const TableHeader = (props: IProps) => {
           <div className={classes.item}>Time Remaining</div>
         </Td>
         <Td type={PublicSale.SalesPeriod} label={props.label}>
-          <div className={classes.item}>Sale Period</div>
+          <div className={classes.item}>Offering Period</div>
         </Td>
       </div>
     )
@@ -179,14 +209,26 @@ export const TableHeader = (props: IProps) => {
       <div className={classes.root}>
         <Td type={OfferingSummary.OfferToken} label={props.label}>
           <div className={classes.item}>Offer Token</div>
+          <QuestionTooltip
+            title={InfoText.OfferToken}
+            className={classes.tooltipQuestion}
+          />
         </Td>
         <Td type={OfferingSummary.PurchaseToken} label={props.label}>
           <div className={classes.item}>Purchase Token</div>
+          <QuestionTooltip
+            title={InfoText.PurchaseToken}
+            className={classes.tooltipQuestion}
+          />
         </Td>
         {props.isOfferUnsuccessful && (
           <>
             <Td type={OfferingSummary.OfferingStatus} label={props.label}>
               <div className={classes.item}>Offering Status</div>
+              <QuestionTooltip
+                title={InfoText.OfferingStatus}
+                className={classes.tooltipQuestion}
+              />
             </Td>
             <Td type={OfferingSummary.SalesEnded} label={props.label}>
               <div className={classes.item}>Sales Ended</div>
@@ -195,20 +237,32 @@ export const TableHeader = (props: IProps) => {
         )}
         {!props.isOfferUnsuccessful && (
           <>
-            <Td type={OfferingSummary.TokensSold} label={props.label}>
-              <div className={classes.item}>Tokens Sold</div>
+            <Td type={OfferingSummary.TokensAcquired} label={props.label}>
+              <div className={classes.item}>Tokens Acquired</div>
             </Td>
             <Td type={OfferingSummary.PurchaseTokenRaised} label={props.label}>
               <div className={classes.item}>Purchase Token Raised</div>
+              <QuestionTooltip
+                title={InfoText.ReserveOfferTokenAmount}
+                className={classes.tooltipQuestion}
+              />
             </Td>
             <Td type={OfferingSummary.VestingPeriod} label={props.label}>
               <div className={classes.item}>Vesting Period</div>
+              <QuestionTooltip
+                title={InfoText.VestingPeriod}
+                className={classes.tooltipQuestion}
+              />
             </Td>
             <Td type={OfferingSummary.CliffPeriod} label={props.label}>
               <div className={classes.item}>Cliff Period</div>
+              <QuestionTooltip
+                title={InfoText.CliffPeriod}
+                className={classes.tooltipQuestion}
+              />
             </Td>
             <Td type={OfferingSummary.SalesCompleted} label={props.label}>
-              <div className={classes.item}>Sales Completed</div>
+              <div className={classes.item}>Offering Completed</div>
             </Td>
             <Td type={OfferingSummary.TimeSinceCompleted} label={props.label}>
               <div className={classes.item}>Time Since Completed</div>

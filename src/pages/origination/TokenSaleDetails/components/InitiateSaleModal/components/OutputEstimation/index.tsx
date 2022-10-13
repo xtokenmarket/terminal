@@ -4,14 +4,8 @@ import { TokenIcon } from 'components'
 import { IOfferingOverview } from 'types'
 import {
   formatBigNumber,
-  formatDurationUnits,
   formatToShortNumber,
-  getCurrentTimeStamp,
-  getTimeRemainingUnits,
-  getTotalTokenPrice,
-  numberWithCommas,
   parseRemainingDurationSec,
-  // getTotalTokenPrice,
 } from 'utils'
 
 const useStyles = makeStyles((theme) => ({
@@ -88,11 +82,6 @@ export const OutputEstimation = (props: IProps) => {
   const classes = useStyles()
   const { offerData } = props
 
-  const now = getCurrentTimeStamp()
-  const diff = (Number(offerData.salesEnd) - now) * 1000
-  const durationRemaining = getTimeRemainingUnits(diff)
-  const { primary, rest } = formatDurationUnits(durationRemaining)
-
   return (
     <div className={clsx(classes.root, props.className)}>
       <div className={classes.estimation}>
@@ -115,7 +104,7 @@ export const OutputEstimation = (props: IProps) => {
         </div>
       </div>
       <div className={classes.period}>
-        <Typography className={classes.label}>SALE PERIOD</Typography>
+        <Typography className={classes.label}>OFFERING PERIOD</Typography>
         <Typography className={classes.whiteText}>
           {parseRemainingDurationSec(Number(offerData.salesPeriod?.toString()))}
         </Typography>
