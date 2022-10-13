@@ -43,14 +43,6 @@ export const OfferingTableHeader = () => {
           </Tooltip>
         </div>
       </OfferingTd>
-      <OfferingTd type="remainingOffering">
-        <div className={classes.item}>
-          Remaining Offering&nbsp;
-          <Tooltip title={InfoText.RemainingOffering}>
-            <img alt="question" src="/assets/icons/question.svg" />
-          </Tooltip>
-        </div>
-      </OfferingTd>
       <OfferingTd type="pricePerToken">
         <div className={classes.item}>
           Price Per Token&nbsp;
@@ -63,6 +55,14 @@ export const OfferingTableHeader = () => {
         <div className={classes.item}>
           Amount Raised&nbsp;
           <Tooltip title={InfoText.AmountRaised}>
+            <img alt="question" src="/assets/icons/question.svg" />
+          </Tooltip>
+        </div>
+      </OfferingTd>
+      <OfferingTd type="remainingOffering">
+        <div className={classes.item}>
+          Remaining Offering&nbsp;
+          <Tooltip title={InfoText.RemainingOffering}>
             <img alt="question" src="/assets/icons/question.svg" />
           </Tooltip>
         </div>

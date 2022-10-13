@@ -179,8 +179,10 @@ export enum ECreateTokenSaleModalStep {
 export enum InfoText {
   AmountRaised = 'Total amount of purchase token raised',
   Ascending = 'Price steadily goes up from offering standard price. ',
+  CliffPeriod = 'Amount of time until first tokens are available to claim',
   Descending = 'Price steadily goes down from offering standard price. ',
   OfferingPeriod = 'Duration of sale',
+  OfferingStatus = 'Number of offer tokens already acquired as share of total offering',
   OfferName = 'Name of the token offering',
   OfferToken = 'The token being offered to contributors',
   OfferTokenAmount = 'Maximum amount of token offered to contributors',
@@ -253,16 +255,16 @@ export enum UserPosition {
 }
 
 export enum OfferingSummary {
+  CliffPeriod = 'cliffPeriod',
+  OfferingStatus = 'offeringStatus',
   OfferToken = 'offerToken',
   PurchaseToken = 'purchaseToken',
-  TokensSold = 'tokensSold',
   PurchaseTokenRaised = 'purchaseTokenRaised',
-  VestingPeriod = 'vestingPeriod',
-  CliffPeriod = 'cliffPeriod',
   SalesCompleted = 'salesCompleted',
-  TimeSinceCompleted = 'timeSinceCompleted',
-  OfferingStatus = 'offeringStatus',
   SalesEnded = 'salesEnded',
+  TimeSinceCompleted = 'timeSinceCompleted',
+  TokensAcquired = 'tokensAcquired',
+  VestingPeriod = 'vestingPeriod',
 }
 
 export enum EClaimModalStep {
@@ -278,7 +280,6 @@ export enum ETokenSalePhase {
 export enum VestStep {
   Info = 'Info',
   Success = 'Success',
-  Vest = 'Vest',
 }
 
 export enum EInvestModalStep {

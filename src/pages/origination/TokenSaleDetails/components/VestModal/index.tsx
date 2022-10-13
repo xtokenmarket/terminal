@@ -1,11 +1,11 @@
 import { makeStyles } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import { Modal } from 'components'
-import { InitiateSection, SuccessSection } from './components'
 import { useConnectedWeb3Context } from 'contexts'
 import { IUserPosition, IOfferingOverview } from 'types'
 import { VestStep } from 'utils/enums'
-import { InfoSection } from './components/InfoSection'
+
+import { InfoSection, SuccessSection } from './components'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -76,9 +76,6 @@ export const VestModal: React.FC<IProps> = ({
   const onNextStep = () => {
     switch (state.step) {
       case VestStep.Info:
-        setState((prev) => ({ ...prev, step: VestStep.Vest }))
-        break
-      case VestStep.Vest:
         setState((prev) => ({ ...prev, step: VestStep.Success }))
         break
       default:
@@ -95,16 +92,7 @@ export const VestModal: React.FC<IProps> = ({
             offerData={offerData}
             onNext={onNextStep}
             vestState={state}
-            userPositionData={userPositionData}
-          />
-        )
-      case VestStep.Vest:
-        return (
-          <InitiateSection
-            onClose={_onClose}
-            offerData={offerData}
             updateState={updateState}
-            onNext={onNextStep}
             userPositionData={userPositionData}
           />
         )
