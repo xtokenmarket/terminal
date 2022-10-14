@@ -43,16 +43,6 @@ const About = () => {
         empower projects to be their own CFOs and investment bankers.
         <br />
         <br />
-        Our first app on Terminal - Mining - allows projects to deploy a highly
-        configurable Uniswap V3 liquidity mining campaign in a few clicks.
-        Liquidity mining is the first in a series of financial “primitives” we
-        plan on bringing to Terminal. Our vision is to give projects seamless
-        and permissionless access to these primitives. By standardizing and
-        enhancing these common financial methods - as well as building some
-        novel ones - we believe Terminal will become the go-to capital markets
-        platform for Web3.
-        <br />
-        <br />
         Join us in{' '}
         <a
           className={classes.link}
