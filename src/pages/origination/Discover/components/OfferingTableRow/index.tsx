@@ -163,18 +163,6 @@ export const OfferingTableRow = ({ offering }: IProps) => {
             {poolName || offerToken.symbol}
           </Typography>
         </OfferingTd>
-        <OfferingTd type="remainingOffering">
-          <Typography className={cl.item}>
-            {formatToShortNumber(
-              formatBigNumber(remainingOfferingAmount, offerToken.decimals)
-            )}
-            /
-            {formatToShortNumber(
-              formatBigNumber(totalOfferingAmount, offerToken.decimals)
-            )}{' '}
-            {offerToken.symbol}
-          </Typography>
-        </OfferingTd>
         <OfferingTd type="pricePerToken">
           <Typography className={clsx(cl.item, cl.label)}>
             {startingPrice
@@ -192,6 +180,18 @@ export const OfferingTableRow = ({ offering }: IProps) => {
                   formatBigNumber(purchaseTokenRaised, purchaseToken.decimals)
                 )} ${purchaseToken.symbol}`
               : 'N/A'}
+          </Typography>
+        </OfferingTd>
+        <OfferingTd type="remainingOffering">
+          <Typography className={cl.item}>
+            {formatToShortNumber(
+              formatBigNumber(remainingOfferingAmount, offerToken.decimals)
+            )}
+            /
+            {formatToShortNumber(
+              formatBigNumber(totalOfferingAmount, offerToken.decimals)
+            )}{' '}
+            {offerToken.symbol}
           </Typography>
         </OfferingTd>
         <OfferingTd type="timeRemaining">

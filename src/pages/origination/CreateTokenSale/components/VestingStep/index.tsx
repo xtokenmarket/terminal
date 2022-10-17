@@ -145,7 +145,7 @@ export const VestingStep: React.FC<IProps> = ({
             }
             selectorValue={`${data.cliffPeriodUnit}`}
             label="Cliff Period"
-            infoText="Amount of time until first tokens are available to claim"
+            infoText={InfoText.CliffPeriod}
             inputValue={`${data.cliffPeriod}`}
             onChangeInput={(e) => onChangeInput(e, 'cliffPeriod')}
             disabled={!vestingWanted}
