@@ -15,10 +15,10 @@ interface IState {
 }
 
 const ORIGINATION_NETWORKS = [
-  // Network.MAINNET,
-  // Network.ARBITRUM,
-  // Network.OPTIMISM,
-  // Network.POLYGON,
+  Network.MAINNET,
+  Network.ARBITRUM,
+  Network.OPTIMISM,
+  Network.POLYGON,
   Network.GOERLI,
 ]
 
@@ -48,9 +48,7 @@ export const useOriginationPools = () => {
       try {
         const graphqlUrls = ORIGINATION_NETWORKS.map(
           (network: string) =>
-            // TODO: Update subgraph
-            'https://api.thegraph.com/subgraphs/name/cryptopixelfrog/subgraph-study'
-          // `https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-${network}`
+            `https://api.thegraph.com/subgraphs/name/xtokenmarket/origination-${network}`
         )
         let pools = await Promise.all(
           graphqlUrls.map((url: string) =>
@@ -59,10 +57,8 @@ export const useOriginationPools = () => {
         )
         pools = pools
           .map((p: any, index: number) => {
-            // TODO: Update `network`
-            // const _network = graphqlUrls[index].split('terminal-')[1]
-            // return parsePools(p, _network as Network)
-            return parseTokenOffers(p, Network.GOERLI)
+            const _network = graphqlUrls[index].split('origination-')[1]
+            return parseTokenOffers(p, _network as Network)
           })
           .flat()
 

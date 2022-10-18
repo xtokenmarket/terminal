@@ -24,13 +24,13 @@ const networks: { [K in ChainId]: INetwork } = {
     contracts: {
       LM: '0x090559D58aAB8828C27eE7a7EAb18efD5bB90374',
       multicall: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
-      origination: '',
+      origination: '0x7843BCB6e41fa7b481f282Da516a8aBdBF19C478',
       rewardEscrow: '0x40E8cb3440C0B05EB20522D1F63397e5B36efcf2',
       uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
-      vestingEntryNFT: '0x4912b8afa0045d0B676A53Bf5f80a44587b12674',
+      vestingEntryNFT: '0x494FfdEC5797C2741B7d8d6dB1B3eC8bD0BB9aE1',
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -46,13 +46,13 @@ const networks: { [K in ChainId]: INetwork } = {
     contracts: {
       LM: '0x090559D58aAB8828C27eE7a7EAb18efD5bB90374',
       multicall: '0x80C7DD17B01855a6D2347444a0FCC36136a314de', // 3rd party deployment: https://github.com/joshstevens19/ethereum-multicall/pull/20
-      origination: '',
+      origination: '0x7843BCB6e41fa7b481f282Da516a8aBdBF19C478',
       rewardEscrow: '0x40E8cb3440C0B05EB20522D1F63397e5B36efcf2',
       uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
-      vestingEntryNFT: '0x4912b8afa0045d0B676A53Bf5f80a44587b12674',
+      vestingEntryNFT: '0x494FfdEC5797C2741B7d8d6dB1B3eC8bD0BB9aE1',
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -68,13 +68,13 @@ const networks: { [K in ChainId]: INetwork } = {
     contracts: {
       LM: '0x090559D58aAB8828C27eE7a7EAb18efD5bB90374',
       multicall: '0x2DC0E2aa608532Da689e89e237dF582B783E552C', // 3rd party deployment: https://github.com/makerdao/multicall/pull/35
-      origination: '',
+      origination: '0x7843BCB6e41fa7b481f282Da516a8aBdBF19C478',
       rewardEscrow: '0x40E8cb3440C0B05EB20522D1F63397e5B36efcf2',
       uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
-      vestingEntryNFT: '0x4912b8afa0045d0B676A53Bf5f80a44587b12674',
+      vestingEntryNFT: '0x494FfdEC5797C2741B7d8d6dB1B3eC8bD0BB9aE1',
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
@@ -90,13 +90,13 @@ const networks: { [K in ChainId]: INetwork } = {
     contracts: {
       LM: '0x090559D58aAB8828C27eE7a7EAb18efD5bB90374',
       multicall: '0x275617327c958bD06b5D6b871E7f491D76113dd8', // 3rd party deployment: https://github.com/makerdao/multicall/pull/24
-      origination: '',
+      origination: '0x7843BCB6e41fa7b481f282Da516a8aBdBF19C478',
       rewardEscrow: '0x40E8cb3440C0B05EB20522D1F63397e5B36efcf2',
       uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
-      vestingEntryNFT: '0x4912b8afa0045d0B676A53Bf5f80a44587b12674',
+      vestingEntryNFT: '0x494FfdEC5797C2741B7d8d6dB1B3eC8bD0BB9aE1',
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
