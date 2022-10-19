@@ -430,10 +430,8 @@ const TokenSaleDetails = () => {
     isSaleInitiated && !isSoldOut && !isWhitelistSaleEnded
 
   const isWhitelistSaleInvestDisabled =
-    !isSaleInitiated ||
     !tokenOffer?.whitelist.isAddressWhitelisted ||
     isSoldOut ||
-    isWhitelistSaleEnded ||
     isAddressCapExceeded
 
   const isInitiateSaleButtonDisabled =
@@ -526,12 +524,11 @@ const TokenSaleDetails = () => {
                     isClaimPurchaseTokenButtonDisabled || !isDuringWhitelistSale
                   }
                 />
-                {isSaleInitiated && (
+                {isSaleInitiated && !isWhitelistSaleEnded && (
                   <div className={cl.buttonWrapper}>
                     <Tooltip
                       title={
                         isAddressCapExceeded &&
-                        !isWhitelistSaleEnded &&
                         !(
                           tokenOffer.whitelist.whitelist &&
                           !tokenOffer.whitelist.isAddressWhitelisted

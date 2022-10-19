@@ -1,4 +1,11 @@
-import { makeStyles, Typography, IconButton, Button } from '@material-ui/core'
+import {
+  makeStyles,
+  Checkbox,
+  FormControlLabel,
+  Typography,
+  IconButton,
+  Button,
+} from '@material-ui/core'
 import { useConnectedWeb3Context } from 'contexts'
 import { useEffect, useReducer } from 'react'
 import { FungiblePoolService } from 'services'
@@ -34,8 +41,22 @@ const useStyles = makeStyles((theme) => ({
     minHeight: '20vh',
     maxHeight: '50vh',
   },
-  actions: {
+  inputs: {
     marginTop: 32,
+  },
+  actions: {},
+  checkLabel: {
+    color: theme.colors.purple0,
+    '& span': {
+      fontSize: 14,
+    },
+  },
+  link: {
+    textDecoration: 'none',
+    color: theme.colors.primary100,
+    '& span': {
+      borderBottom: `1px solid ${theme.colors.primary200}`,
+    },
   },
   tokenIcon: {
     width: 24,
@@ -76,6 +97,7 @@ interface IProps {
 }
 
 interface IState {
+  isChecked: boolean
   isEstimating: boolean
   offerAmount: BigNumber
   purchaseAmount: BigNumber
@@ -97,6 +119,7 @@ export const InputSection = (props: IProps) => {
       ...newState,
     }),
     {
+      isChecked: false,
       isEstimating: false,
       offerAmount: ZERO,
       purchaseAmount: ZERO,
@@ -179,6 +202,10 @@ export const InputSection = (props: IProps) => {
     })
   }
 
+  const onClickCheckbox = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setState({ isChecked: event.target.checked })
+  }
+
   const _onInvest = () => {
     updateState({
       offerAmount: state.offerAmount,
@@ -196,7 +223,7 @@ export const InputSection = (props: IProps) => {
         </IconButton>
       </div>
       <div className={classes.content}>
-        <div>
+        <div className={classes.inputs}>
           <TokenBalanceInput
             label={'Amount to Invest'}
             onChange={estimateOfferAmount}
@@ -217,6 +244,22 @@ export const InputSection = (props: IProps) => {
           />
         </div>
         <div className={classes.actions}>
+          <FormControlLabel
+            className={classes.checkLabel}
+            control={
+              <Checkbox checked={state.isChecked} onChange={onClickCheckbox} />
+            }
+            label={
+              <a
+                className={classes.link}
+                href="https://docs.xtokenterminal.io/terminal/capital-origination/xtoken-terminal-terms"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>I agree to the xToken Terminal terms</span>
+              </a>
+            }
+          />
           <Button
             color="primary"
             variant="contained"
@@ -226,6 +269,7 @@ export const InputSection = (props: IProps) => {
             disabled={
               state.offerAmount.isZero() ||
               state.purchaseAmount.isZero() ||
+              !state.isChecked ||
               !!state.errorMessage
             }
           >
