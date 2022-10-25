@@ -90,13 +90,13 @@ const networks: { [K in ChainId]: INetwork } = {
     contracts: {
       LM: '0x090559D58aAB8828C27eE7a7EAb18efD5bB90374',
       multicall: '0x275617327c958bD06b5D6b871E7f491D76113dd8', // 3rd party deployment: https://github.com/makerdao/multicall/pull/24
-      origination: '0x7843BCB6e41fa7b481f282Da516a8aBdBF19C478',
+      origination: '0xab1CADaD8e2a84ff456e3c83ECb820d671c7Df97',
       rewardEscrow: '0x40E8cb3440C0B05EB20522D1F63397e5B36efcf2',
       uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',
       uniPositionManager: '0xc36442b4a4522e871399cd717abdd847ab11fe88',
-      vestingEntryNFT: '0x494FfdEC5797C2741B7d8d6dB1B3eC8bD0BB9aE1',
+      vestingEntryNFT: '0x56eA5814Fa0fB464447FFDde7A30ef86A8D32E76',
     },
     terminal: {
       tradeFee: BigNumber.from(1000),
