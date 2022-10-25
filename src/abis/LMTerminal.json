@@ -1,5 +1,10 @@
 [
   {
+    "inputs": [],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -202,32 +207,72 @@
     "inputs": [],
     "name": "clrDeployer",
     "outputs": [
-      { "internalType": "contract CLRDeployer", "name": "", "type": "address" }
+      {
+        "internalType": "contract CLRDeployer",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "name": "customDeploymentFee",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
-    "name": "customDeploymentFeeEnabled",
-    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "string", "name": "symbol", "type": "string" },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "customDeploymentFeeEnabled",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "symbol",
+        "type": "string"
+      },
       {
         "components": [
-          { "internalType": "int24", "name": "lowerTick", "type": "int24" },
-          { "internalType": "int24", "name": "upperTick", "type": "int24" }
+          {
+            "internalType": "int24",
+            "name": "lowerTick",
+            "type": "int24"
+          },
+          {
+            "internalType": "int24",
+            "name": "upperTick",
+            "type": "int24"
+          }
         ],
         "internalType": "struct LMTerminal.PositionTicks",
         "name": "ticks",
@@ -252,11 +297,31 @@
       },
       {
         "components": [
-          { "internalType": "uint24", "name": "fee", "type": "uint24" },
-          { "internalType": "address", "name": "token0", "type": "address" },
-          { "internalType": "address", "name": "token1", "type": "address" },
-          { "internalType": "uint256", "name": "amount0", "type": "uint256" },
-          { "internalType": "uint256", "name": "amount1", "type": "uint256" }
+          {
+            "internalType": "uint24",
+            "name": "fee",
+            "type": "uint24"
+          },
+          {
+            "internalType": "address",
+            "name": "token0",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "token1",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount0",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount1",
+            "type": "uint256"
+          }
         ],
         "internalType": "struct LMTerminal.PoolDetails",
         "name": "pool",
@@ -270,11 +335,23 @@
   },
   {
     "inputs": [
-      { "internalType": "string", "name": "symbol", "type": "string" },
+      {
+        "internalType": "string",
+        "name": "symbol",
+        "type": "string"
+      },
       {
         "components": [
-          { "internalType": "int24", "name": "lowerTick", "type": "int24" },
-          { "internalType": "int24", "name": "upperTick", "type": "int24" }
+          {
+            "internalType": "int24",
+            "name": "lowerTick",
+            "type": "int24"
+          },
+          {
+            "internalType": "int24",
+            "name": "upperTick",
+            "type": "int24"
+          }
         ],
         "internalType": "struct LMTerminal.PositionTicks",
         "name": "ticks",
@@ -282,11 +359,31 @@
       },
       {
         "components": [
-          { "internalType": "uint24", "name": "fee", "type": "uint24" },
-          { "internalType": "address", "name": "token0", "type": "address" },
-          { "internalType": "address", "name": "token1", "type": "address" },
-          { "internalType": "uint256", "name": "amount0", "type": "uint256" },
-          { "internalType": "uint256", "name": "amount1", "type": "uint256" }
+          {
+            "internalType": "uint24",
+            "name": "fee",
+            "type": "uint24"
+          },
+          {
+            "internalType": "address",
+            "name": "token0",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "token1",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount0",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount1",
+            "type": "uint256"
+          }
         ],
         "internalType": "struct LMTerminal.PoolDetails",
         "name": "pool",
@@ -300,23 +397,53 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "token0", "type": "address" },
-      { "internalType": "address", "name": "token1", "type": "address" },
-      { "internalType": "uint24", "name": "fee", "type": "uint24" },
-      { "internalType": "uint160", "name": "initPrice", "type": "uint160" }
+      {
+        "internalType": "address",
+        "name": "token0",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "token1",
+        "type": "address"
+      },
+      {
+        "internalType": "uint24",
+        "name": "fee",
+        "type": "uint24"
+      },
+      {
+        "internalType": "uint160",
+        "name": "initPrice",
+        "type": "uint160"
+      }
     ],
     "name": "deployUniswapPool",
     "outputs": [
-      { "internalType": "address", "name": "pool", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "pool",
+        "type": "address"
+      }
     ],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "name": "deployedCLRPools",
     "outputs": [
-      { "internalType": "contract ICLR", "name": "", "type": "address" }
+      {
+        "internalType": "contract ICLR",
+        "name": "",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -324,13 +451,23 @@
   {
     "inputs": [],
     "name": "deploymentFee",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "deployer", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "deployer",
+        "type": "address"
+      }
     ],
     "name": "disableCustomDeploymentFee",
     "outputs": [],
@@ -339,8 +476,16 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "deployer", "type": "address" },
-      { "internalType": "uint256", "name": "feeAmount", "type": "uint256" }
+      {
+        "internalType": "address",
+        "name": "deployer",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "feeAmount",
+        "type": "uint256"
+      }
     ],
     "name": "enableCustomDeploymentFee",
     "outputs": [],
@@ -349,13 +494,29 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "token0", "type": "address" },
-      { "internalType": "address", "name": "token1", "type": "address" },
-      { "internalType": "uint24", "name": "fee", "type": "uint24" }
+      {
+        "internalType": "address",
+        "name": "token0",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "token1",
+        "type": "address"
+      },
+      {
+        "internalType": "uint24",
+        "name": "fee",
+        "type": "uint24"
+      }
     ],
     "name": "getPool",
     "outputs": [
-      { "internalType": "address", "name": "pool", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "pool",
+        "type": "address"
+      }
     ],
     "stateMutability": "view",
     "type": "function"
@@ -367,9 +528,21 @@
         "name": "_xTokenManager",
         "type": "address"
       },
-      { "internalType": "address", "name": "_rewardEscrow", "type": "address" },
-      { "internalType": "address", "name": "_proxyAdmin", "type": "address" },
-      { "internalType": "address", "name": "_clrDeployer", "type": "address" },
+      {
+        "internalType": "address",
+        "name": "_rewardEscrow",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_proxyAdmin",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_clrDeployer",
+        "type": "address"
+      },
       {
         "internalType": "address",
         "name": "_nonRewardPoolDeployer",
@@ -382,8 +555,16 @@
       },
       {
         "components": [
-          { "internalType": "address", "name": "router", "type": "address" },
-          { "internalType": "address", "name": "quoter", "type": "address" },
+          {
+            "internalType": "address",
+            "name": "router",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "quoter",
+            "type": "address"
+          },
           {
             "internalType": "address",
             "name": "positionManager",
@@ -399,8 +580,16 @@
         "name": "_deploymentFee",
         "type": "uint256"
       },
-      { "internalType": "uint256", "name": "_rewardFee", "type": "uint256" },
-      { "internalType": "uint256", "name": "_tradeFee", "type": "uint256" }
+      {
+        "internalType": "uint256",
+        "name": "_rewardFee",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_tradeFee",
+        "type": "uint256"
+      }
     ],
     "name": "initialize",
     "outputs": [],
@@ -409,7 +598,11 @@
   },
   {
     "inputs": [
-      { "internalType": "contract ICLR", "name": "clrPool", "type": "address" },
+      {
+        "internalType": "contract ICLR",
+        "name": "clrPool",
+        "type": "address"
+      },
       {
         "internalType": "uint256[]",
         "name": "totalRewardAmounts",
@@ -428,7 +621,11 @@
   },
   {
     "inputs": [
-      { "internalType": "contract ICLR", "name": "clrPool", "type": "address" },
+      {
+        "internalType": "contract ICLR",
+        "name": "clrPool",
+        "type": "address"
+      },
       {
         "internalType": "uint256[]",
         "name": "totalRewardAmounts",
@@ -461,7 +658,13 @@
   {
     "inputs": [],
     "name": "owner",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -481,7 +684,13 @@
   {
     "inputs": [],
     "name": "proxyAdmin",
-    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
@@ -508,13 +717,23 @@
   {
     "inputs": [],
     "name": "rewardFee",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "newDeployer", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "newDeployer",
+        "type": "address"
+      }
     ],
     "name": "setCLRDeployer",
     "outputs": [],
@@ -523,7 +742,11 @@
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "newDeployer", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "newDeployer",
+        "type": "address"
+      }
     ],
     "name": "setNonRewardPoolDeployer",
     "outputs": [],
@@ -533,13 +756,23 @@
   {
     "inputs": [],
     "name": "tradeFee",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      { "internalType": "address", "name": "newOwner", "type": "address" }
+      {
+        "internalType": "address",
+        "name": "newOwner",
+        "type": "address"
+      }
     ],
     "name": "transferOwnership",
     "outputs": [],
@@ -550,8 +783,16 @@
     "inputs": [],
     "name": "uniContracts",
     "outputs": [
-      { "internalType": "address", "name": "router", "type": "address" },
-      { "internalType": "address", "name": "quoter", "type": "address" },
+      {
+        "internalType": "address",
+        "name": "router",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "quoter",
+        "type": "address"
+      },
       {
         "internalType": "address",
         "name": "positionManager",
@@ -576,7 +817,11 @@
   },
   {
     "inputs": [
-      { "internalType": "contract IERC20", "name": "token", "type": "address" }
+      {
+        "internalType": "contract IERC20",
+        "name": "token",
+        "type": "address"
+      }
     ],
     "name": "withdrawFees",
     "outputs": [],
@@ -596,5 +841,8 @@
     "stateMutability": "view",
     "type": "function"
   },
-  { "stateMutability": "payable", "type": "receive" }
+  {
+    "stateMutability": "payable",
+    "type": "receive"
+  }
 ]

@@ -19,7 +19,7 @@ export const STORAGE_KEY_CONNECTOR = 'CONNECTOR'
 
 export const LOGGER_ID = 'terminal'
 
-export const TERMINAL_API_URL = 'https://terminalstage.xtokenapi.link/api'
+export const TERMINAL_API_URL = 'https://terminal.xtokenapi.link/api'
 export const POLL_API_DATA = 120000 // 2 min
 
 export const ETHER_DECIMAL = 18
@@ -243,9 +243,8 @@ export const GRAPHQL_URLS: Record<Network, string> = {
   [Network.KOVAN]:
     'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-kovan',
   [Network.RINKEBY]: '',
-  // TODO: REVERT ONE SUBGRAPH IS UPDATED WITH THE NON-REWARDS POOLS SUPPORT
   [Network.GOERLI]:
-    'https://api.thegraph.com/subgraphs/name/ivanzhelyazkov/mining-goerli',
+    'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-goerli',
 }
 
 export const MINING_EVENTS = {
