@@ -4,7 +4,8 @@ import Abi from 'abis'
 import { parseDuration } from 'utils/number'
 import { getSortedToken } from 'utils/token'
 import { Interface } from '@ethersproject/abi'
-import { NULL_ADDRESS } from 'config/constants'
+import { ChainId, NULL_ADDRESS } from 'config/constants'
+import { hexlify } from 'ethers/lib/utils'
 
 const lmAbi = Abi.LMTerminal
 
@@ -444,7 +445,8 @@ class LMService {
       rewardsProgram,
       poolDetails,
       {
-        value: deploymentFee,
+        value: 0,
+        gasLimit: hexlify(7000000),
       }
     )
     console.log(
