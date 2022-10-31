@@ -444,7 +444,7 @@ class LMService {
       rewardsProgram,
       poolDetails,
       {
-        value: 0,
+        value: deploymentFee,
       }
     )
     console.log(
