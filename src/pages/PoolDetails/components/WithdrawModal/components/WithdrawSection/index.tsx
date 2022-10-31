@@ -5,7 +5,7 @@ import { ViewTransaction } from 'components'
 import { IWithdrawState } from 'pages/PoolDetails/components'
 import { useEffect, useState } from 'react'
 import { CLRService } from 'services'
-import { ITerminalPool } from 'types'
+import { ITerminalPool, PoolService } from 'types'
 import { ZERO } from 'utils/number'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   onNext: () => void
   withdrawState: IWithdrawState
-  clrService: CLRService
+  clrService: PoolService
   poolData: ITerminalPool
   updateState: (e: any) => void
   goBack: () => void

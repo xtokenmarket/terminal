@@ -8,6 +8,7 @@ import StakedCLRTokenAbi from './StakedCLRToken.json'
 import UniswapV3FactoryAbi from './UniswapV3Factory.json'
 import UniswapV3PoolStateAbi from './UniswapV3PoolState.json'
 import UniswapV3PositionAbi from './UniswapV3Position.json'
+import NonRewardPoolAbi from './NonRewardPool.json'
 
 const Abi = {
   CLRV0: CLRV0Abi,
@@ -20,6 +21,7 @@ const Abi = {
   UniswapV3Factory: UniswapV3FactoryAbi,
   UniswapV3PoolState: UniswapV3PoolStateAbi,
   UniswapV3Position: UniswapV3PositionAbi, // NonfungiblePositionManager
+  NonRewardPool: NonRewardPoolAbi,
 }
 
 export default Abi

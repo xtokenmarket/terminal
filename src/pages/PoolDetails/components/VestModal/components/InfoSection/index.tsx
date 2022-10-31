@@ -63,7 +63,7 @@ export const InfoSection: React.FC<IProps> = ({
   const { multicall } = useServices()
 
   const loadBasicInfo = async () => {
-    if (!account || !provider) {
+    if (!account || !provider || !poolData.stakedToken) {
       return
     }
     try {

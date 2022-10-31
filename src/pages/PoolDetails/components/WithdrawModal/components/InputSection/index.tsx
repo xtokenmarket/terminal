@@ -4,7 +4,7 @@ import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import { LPTokenAmountInput } from 'components'
 import { ETHER_DECIMAL, LP_TOKEN_BASIC } from 'config/constants'
 import { IWithdrawState } from 'pages/PoolDetails/components'
-import { ITerminalPool } from 'types'
+import { ITerminalPool, PoolService } from 'types'
 import { parseUnits } from 'ethers/lib/utils'
 import { CLRService } from 'services'
 import { formatBigNumber } from 'utils'
@@ -44,7 +44,7 @@ interface IProps {
   onClose: () => void
   withdrawState: IWithdrawState
   updateState: (e: any) => void
-  clrService: CLRService
+  clrService: PoolService
   poolData: ITerminalPool
 }
 
@@ -145,18 +145,20 @@ export const InputSection = (props: IProps) => {
         earned={earned}
       />
       <div className={classes.actions}>
-        <Button
-          color="primary"
-          variant="contained"
-          fullWidth
-          onClick={() => {
-            updateState({ withdrawOnly: false })
-            onNext()
-          }}
-          disabled={isDisabled}
-        >
-          CLAIM & WITHDRAW
-        </Button>
+        {poolData.isReward && (
+          <Button
+            color="primary"
+            variant="contained"
+            fullWidth
+            onClick={() => {
+              updateState({ withdrawOnly: false })
+              onNext()
+            }}
+            disabled={isDisabled}
+          >
+            CLAIM & WITHDRAW
+          </Button>
+        )}
         <Button
           color="secondary"
           variant="contained"

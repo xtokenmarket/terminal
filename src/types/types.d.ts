@@ -85,6 +85,7 @@ export interface ITerminalPool {
   description: string
   earnedTokens: EarnedToken[]
   history: History[]
+  isReward?: boolean
   manager: string
   network?: Network
   owner: string
@@ -95,7 +96,7 @@ export interface ITerminalPool {
   rewardFeePercent: number
   rewardsAreEscrowed: boolean
   rewardState: IRewardState
-  stakedToken: IToken
+  stakedToken?: IToken
   ticks: { tick0: BigNumber; tick1: BigNumber }
   token1: IToken
   token0: IToken
@@ -127,6 +128,7 @@ export interface ICreatePoolData {
   token0: IToken
   token1: IToken
   uniPool: string
+  incentivized: boolean
 }
 
 export type IFullRange = true
@@ -159,4 +161,48 @@ export interface History {
 export interface ICollectableFees {
   token0Fee: BigNumber
   token1Fee: BigNumber
+}
+
+export interface PoolService {
+  version: string
+  address: string
+  calculateAmountsMintedSingleToken: (
+    inputAsset: number,
+    amount: BigNumber
+  ) => Promise<any>
+  getLiquidityForAmounts: (
+    amount0: BigNumber,
+    amount1: BigNumber
+  ) => Promise<any>
+  deposit: (
+    amount0: BigNumber,
+    amount1: BigNumber,
+    isToken1Deposit?: boolean
+  ) => Promise<any>
+  waitUntilDeposit: (
+    amount0: BigNumber,
+    amount1: BigNumber,
+    account: string,
+    txId: string
+  ) => Promise<string>
+  parseProvideLiquidityTx: (txId: string) => Promise<any>
+  withdrawAndClaimReward: (
+    amount: BigNumber,
+    amount0Estimation: BigNumber,
+    amount1Estimation: BigNumber
+  ) => Promise<any>
+  withdraw: (
+    amount: BigNumber,
+    amount0Estimation: BigNumber,
+    amount1Estimation: BigNumber
+  ) => Promise<any>
+  parseWithdrawTx: (txId: string) => Promise<any>
+  parseClaimTx: (txId: string) => Promise<any>
+  waitUntilWithdraw: (account: string, txId: string) => Promise<any>
+  claimReward: () => Promise<any>
+  waitUntilClaimReward: (account: string, txId: string) => Promise<any>
+  earned: (account: Maybe<string>, tokenAddress: string) => Promise<any>
+  reinvest: () => Promise<any>
+  waitUntilReinvest: (txId: string) => Promise<any>
+  calculateWithdrawAmounts: (amount: BigNumber) => Promise<any>
 }

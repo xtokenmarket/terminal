@@ -21,7 +21,7 @@ import {
 import { useServices } from 'helpers'
 import { useEffect, useState } from 'react'
 import { CLRService, ERC20Service } from 'services'
-import { History, ITerminalPool, IToken } from 'types'
+import { History, ITerminalPool, IToken, PoolService } from 'types'
 import { BigNumber } from '@ethersproject/bignumber'
 import { getCurrentTimeStamp, getTimeRemainingUnits, parseFee } from 'utils'
 import { ERewardStep, Network } from 'utils/enums'
@@ -38,9 +38,10 @@ import {
 } from './helper'
 import { ethers, Contract } from 'ethers'
 import { fetchQuery } from 'utils/thegraph'
+import { NonRewardPoolService } from 'services/nonRewardPoolService'
 
 interface IState {
-  clrService?: CLRService
+  clrService?: PoolService
   pool?: ITerminalPool
   loading: boolean
 }
@@ -68,7 +69,11 @@ export const useTerminalPool = (
     readonlyProvider = getNetworkProvider(network)
   }
 
-  const getTokenDetails = async (addr: string) => {
+  const getTokenDetails = async (addr?: string) => {
+    if (!addr) {
+      return
+    }
+
     try {
       return getTokenFromAddress(addr, readonlyProvider?.network.chainId)
     } catch (error) {
@@ -114,11 +119,17 @@ export const useTerminalPool = (
       }
     }
 
-    const clrService = new CLRService(
-      readonlyProvider,
-      isWrongNetwork ? null : account,
-      poolAddress as string
-    )
+    const clrService = pool.isReward
+      ? new CLRService(
+          readonlyProvider,
+          isWrongNetwork ? null : account,
+          poolAddress as string
+        )
+      : new NonRewardPoolService(
+          readonlyProvider,
+          isWrongNetwork ? null : account,
+          poolAddress as string
+        )
 
     try {
       let { token0, token1, stakedToken } = pool
@@ -126,12 +137,13 @@ export const useTerminalPool = (
       let rewardFeePercent = 0
       let tvl = pool.tvl
 
+      stakedToken = stakedToken || {}
       // Fetch token details and relevant data, if API fails
       if (pool.token0.price === undefined || pool.token1.price === undefined) {
         ;[token0, token1, stakedToken] = await Promise.all([
           getTokenDetails(pool.token0.address),
           getTokenDetails(pool.token1.address),
-          getTokenDetails(pool.stakedToken.address),
+          getTokenDetails(pool.stakedToken?.address),
         ])
 
         let rates = undefined
@@ -183,12 +195,13 @@ export const useTerminalPool = (
 
         token0.image = token0.image || defaultTokenLogo
         token1.image = token1.image || defaultTokenLogo
-        stakedToken.image = stakedToken.image || defaultTokenLogo
-        pool.rewardTokens = pool.rewardTokens.map((token: IToken) => ({
-          ...token,
-          image: token.image || defaultTokenLogo,
-          symbol: token.symbol.toUpperCase(),
-        }))
+        stakedToken.image = stakedToken?.image || defaultTokenLogo
+        pool.rewardTokens =
+          pool.rewardTokens?.map((token: IToken) => ({
+            ...token,
+            image: token.image || defaultTokenLogo,
+            symbol: token.symbol.toUpperCase(),
+          })) || []
 
         token0.symbol = token0.symbol.toUpperCase()
         token1.symbol = token1.symbol.toUpperCase()
@@ -208,34 +221,36 @@ export const useTerminalPool = (
         token1.percent = token1.percent ? token1.percent.toString() : '0'
       }
 
-      if (pool.vestingPeriod == null) {
-        pool.vestingPeriod = (
-          await rewardEscrow.clrPoolVestingPeriod(poolAddress as string)
-        ).toString()
-      }
+      if (pool.isReward) {
+        if (pool.vestingPeriod == null) {
+          pool.vestingPeriod = (
+            await rewardEscrow.clrPoolVestingPeriod(poolAddress as string)
+          ).toString()
+        }
 
-      if (pool.rewardTokens.length !== 0 && !pool.rewardTokens[0].price) {
-        pool.rewardTokens = (await Promise.all(
-          pool.rewardTokens.map((token: { address: string }) =>
-            getTokenDetails(token.address)
+        if (pool.rewardTokens.length !== 0 && !pool.rewardTokens[0].price) {
+          pool.rewardTokens = (await Promise.all(
+            pool.rewardTokens.map((token: { address: string }) =>
+              getTokenDetails(token.address)
+            )
+          )) as IToken[]
+        }
+
+        if (pool.totalRewardAmounts == null) {
+          const rewardCalls = pool.rewardTokens.map((token: IToken) => ({
+            name: 'rewardInfo',
+            address: poolAddress as string,
+            params: [token.address],
+          }))
+          const rewardsResponse = await multicall.multicallv2(
+            clrService.abi,
+            rewardCalls,
+            { requireSuccess: false }
           )
-        )) as IToken[]
-      }
-
-      if (pool.totalRewardAmounts == null) {
-        const rewardCalls = pool.rewardTokens.map((token: IToken) => ({
-          name: 'rewardInfo',
-          address: poolAddress as string,
-          params: [token.address],
-        }))
-        const rewardsResponse = await multicall.multicallv2(
-          clrService.abi,
-          rewardCalls,
-          { requireSuccess: false }
-        )
-        pool.totalRewardAmounts = rewardsResponse.map((response: any) =>
-          response.totalRewardAmount.toString()
-        )
+          pool.totalRewardAmounts = rewardsResponse.map((response: any) =>
+            response.totalRewardAmount.toString()
+          )
+        }
       }
 
       let history: History[] = []
@@ -328,13 +343,18 @@ export const useTerminalPool = (
         }
 
         // User deposit amounts + TVL
-        const stakedCLRToken = new ethers.Contract(
-          pool.stakedToken.address,
-          Abi.StakedCLRToken,
-          readonlyProvider
-        )
+        let stakedTokenBalance = ZERO
+        let totalSupply = ZERO
 
-        const [stakedTokenBalance, totalSupply] = await Promise.all([
+        const stakedCLRToken = pool.isReward
+          ? new ethers.Contract(
+              pool.stakedToken.address,
+              Abi.StakedCLRToken,
+              readonlyProvider
+            )
+          : new ethers.Contract(pool.address, Abi.ERC20, readonlyProvider)
+
+        ;[stakedTokenBalance, totalSupply] = await Promise.all([
           stakedCLRToken.balanceOf(account),
           clrService.contract.totalSupply(),
         ])
@@ -416,9 +436,11 @@ export const useTerminalPool = (
           rewardFeePercent,
           rewardsAreEscrowed: pool.rewardsAreEscrowed,
           rewardState: {
-            amounts: pool.totalRewardAmounts.map((reward: string) =>
-              BigNumber.from(reward)
-            ),
+            amounts: pool.isReward
+              ? pool.totalRewardAmounts.map((reward: string) =>
+                  BigNumber.from(reward)
+                )
+              : [],
             duration: pool.rewardProgramDuration,
             errors: [],
             step: ERewardStep.Input,
@@ -439,6 +461,7 @@ export const useTerminalPool = (
           poolShare,
           user,
           totalSupply: _totalSupply,
+          isReward: pool.isReward,
           poolName: pool.poolName || `${token0.symbol} ${token1.symbol}`,
           description: pool.description,
           createdAt: pool.createdAt,

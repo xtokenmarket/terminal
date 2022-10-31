@@ -3,7 +3,7 @@ import { makeStyles, Modal } from '@material-ui/core'
 import React, { useEffect, useState } from 'react'
 import { EWithdrawStep } from 'utils/enums'
 import { WithdrawSection, InputSection, SuccessSection } from './components'
-import { ITerminalPool } from 'types'
+import { ITerminalPool, PoolService } from 'types'
 import { BigNumber } from '@ethersproject/bignumber'
 import { ZERO } from 'utils/number'
 import useCommonStyles from 'style/common'
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   className?: string
   onClose: () => void
-  clrService: CLRService
+  clrService: PoolService
   poolData: ITerminalPool
   onSuccess: () => Promise<void>
 }

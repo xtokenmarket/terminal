@@ -4,8 +4,8 @@ import { ViewTransaction } from 'components'
 import { useIsMountedRef } from 'helpers'
 import { IDepositState } from 'pages/PoolDetails/components'
 import { useEffect, useState } from 'react'
-import { ERC20Service, CLRService } from 'services'
-import { ITerminalPool } from 'types'
+import { ERC20Service } from 'services'
+import { ITerminalPool, PoolService } from 'types'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 import ClockIcon from '@material-ui/icons/AccessTime'
@@ -94,7 +94,7 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   onNext: () => void
   depositState: IDepositState
-  clrService: CLRService
+  clrService: PoolService
   poolData: ITerminalPool
   updateState: (e: any) => void
   onClose: () => void

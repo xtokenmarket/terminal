@@ -143,9 +143,9 @@ const networks: { [K in ChainId]: INetwork } = {
     label: CHAIN_NAMES[ChainId.Goerli],
     url: 'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
     contracts: {
-      LM: '0x44a169aE49F253Cd22E523C3A47E27f049EB0600',
+      LM: '0x56eA5814Fa0fB464447FFDde7A30ef86A8D32E76',
       multicall: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
-      rewardEscrow: '0x6C5758747602Bdc9514841b7BbfCc6b9d27f0707',
+      rewardEscrow: '0x950f63d235D163314E68c80A9d5c06200FAC7978',
       uniswapFactory: '0x1f98431c8ad98523631ae4a59f267346ea31f984',
       uniRouter: '0xe592427a0aece92de3edee1f18e0157c05861564',
       uniQuoter: '0xb27308f9f90d607463bb33ea1bebb41c27ce5ab6',

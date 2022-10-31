@@ -51,6 +51,7 @@ const initialState: IState = {
   },
   tier: BigNumber.from(500),
   uniPool: '',
+  incentivized: true,
 }
 
 const CreatePool = () => {

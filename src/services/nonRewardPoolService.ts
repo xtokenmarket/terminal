@@ -4,7 +4,7 @@ import Abi from 'abis'
 import { Interface } from '@ethersproject/abi'
 import { getContractAddress } from 'config/networks'
 
-class CLRService implements PoolService {
+class NonRewardPoolService implements PoolService {
   abi: any
   contract: Contract
   provider: any
@@ -13,14 +13,13 @@ class CLRService implements PoolService {
   constructor(provider: any, signerAddress: Maybe<string>, address: string) {
     this.abi = Abi.CLRV0
     this.provider = provider
-    this.version = 'v1.0.0'
-    this.contract = new ethers.Contract(address, Abi.CLRV1, provider)
+    this.version = ''
+    this.contract = new ethers.Contract(address, Abi.NonRewardPool, provider)
 
     this.contract
       .getVersion()
       .then((version: string) => {
         this.abi = Abi.CLRV1
-        this.version = version
         if (signerAddress) {
           const signer: Wallet = provider.getSigner()
           this.contract = this.contract.connect(signer)
@@ -50,20 +49,8 @@ class CLRService implements PoolService {
     return this.contract.getLiquidityForAmounts(amount0, amount1)
   }
 
-  // TODO: Remove `isToken1Deposit` arg
-  deposit = async (
-    amount0: BigNumber,
-    amount1: BigNumber,
-    isToken1Deposit = false
-  ) => {
-    if (this.version === 'v1.0.0') {
-      return this.contract.deposit(
-        isToken1Deposit ? 1 : 0,
-        isToken1Deposit ? amount1 : amount0
-      )
-    } else {
-      return this.contract.deposit(amount0, amount1)
-    }
+  deposit = async (amount0: BigNumber, amount1: BigNumber) => {
+    return this.contract.deposit(amount0, amount1)
   }
 
   waitUntilDeposit = async (
@@ -146,16 +133,7 @@ class CLRService implements PoolService {
     amount0Estimation: BigNumber,
     amount1Estimation: BigNumber
   ) => {
-    if (this.version === 'v1.0.0') {
-      return this.contract.withdrawAndClaimReward(amount)
-    } else {
-      return this.contract.withdrawAndClaimReward(
-        amount,
-        // 1% slippage
-        amount0Estimation.mul(99).div(100),
-        amount1Estimation.mul(99).div(100)
-      )
-    }
+    return
   }
 
   withdraw = async (
@@ -163,16 +141,12 @@ class CLRService implements PoolService {
     amount0Estimation: BigNumber,
     amount1Estimation: BigNumber
   ) => {
-    if (this.version === 'v1.0.0') {
-      return this.contract.withdraw(amount)
-    } else {
-      return this.contract.withdraw(
-        amount,
-        // 1% slippage
-        amount0Estimation.mul(99).div(100),
-        amount1Estimation.mul(99).div(100)
-      )
-    }
+    return this.contract.withdraw(
+      amount,
+      // 1% slippage
+      amount0Estimation.mul(99).div(100),
+      amount1Estimation.mul(99).div(100)
+    )
   }
 
   parseWithdrawTx = async (
@@ -212,33 +186,8 @@ class CLRService implements PoolService {
     return null
   }
 
-  parseClaimTx = async (
-    txId: string
-  ): Promise<{
-    [key: string]: BigNumber
-  }> => {
-    const result: {
-      [key: string]: BigNumber
-    } = {}
-    const { logs } = await this.contract.provider.getTransactionReceipt(txId)
-
-    const filteredLogs = logs.filter(
-      (log) => log.address.toLowerCase() === this.contract.address.toLowerCase()
-    )
-
-    const uniPositionInterface = new Interface(Abi.CLRV0)
-    for (let index = 0; index < filteredLogs.length; index++) {
-      const log = filteredLogs[index]
-      try {
-        const parsed = uniPositionInterface.parseLog(log)
-        if (parsed.name === 'RewardClaimed') {
-          result[String(parsed.args[1]).toLowerCase()] = parsed.args[2]
-        }
-      } catch (error) {
-        console.error(error)
-      }
-    }
-    return result
+  parseClaimTx = async (txId: string) => {
+    return
   }
 
   waitUntilWithdraw = async (
@@ -268,52 +217,8 @@ class CLRService implements PoolService {
     })
   }
 
-  claimReward = async (): Promise<string> => {
-    const transactionObject = await this.contract.claimReward()
-    console.log(`claimReward transaction hash: ${transactionObject.hash}`)
-
-    return transactionObject.hash
-  }
-
-  waitUntilClaimReward = async (
-    account: string,
-    txId: string
-  ): Promise<string> => {
-    let resolved = false
-    return new Promise((resolve) => {
-      this.contract.on(
-        'RewardClaimed',
-        (clrPool: string, sender: any, ...rest) => {
-          if (account.toLowerCase() === sender.toLowerCase()) {
-            if (!resolved) {
-              resolved = true
-              resolve(rest[0].transactionHash)
-            }
-          }
-        }
-      )
-
-      this.contract.provider.waitForTransaction(txId).then(() => {
-        if (!resolved) {
-          resolved = true
-          resolve(txId)
-        }
-      })
-    })
-  }
-
-  earned = async (
-    account: Maybe<string>,
-    tokenAddress: string
-  ): Promise<BigNumber> => {
-    return this.contract.earned(account, tokenAddress)
-  }
-
-  reinvest = async (): Promise<string> => {
-    const transactionObject = await this.contract.collectAndReinvest()
-    console.log(`reinvest transaction hash: ${transactionObject.hash}`)
-
-    return transactionObject.hash
+  claimReward = async () => {
+    return
   }
 
   waitUntilReinvest = async (txId: string): Promise<string> => {
@@ -335,9 +240,21 @@ class CLRService implements PoolService {
     })
   }
 
+  waitUntilClaimReward = async (account: string, txId: string) => {
+    return
+  }
+
   calculateWithdrawAmounts = async (amount: BigNumber) => {
     return this.contract.calculateWithdrawAmounts(amount)
   }
+
+  earned = async (account: Maybe<string>, tokenAddress: string) => {
+    return
+  }
+
+  reinvest = async () => {
+    return
+  }
 }
 
-export { CLRService }
+export { NonRewardPoolService }

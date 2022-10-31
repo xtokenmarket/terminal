@@ -6,19 +6,18 @@ import {
   Button,
   CircularProgress,
 } from '@material-ui/core'
+import { ICollectableFees, ITerminalPool, PoolService } from 'types'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 import clsx from 'clsx'
 import { BigNumber } from 'ethers'
 import { useConnectedWeb3Context } from 'contexts'
-import { CLRService } from 'services'
-import { ICollectableFees, ITerminalPool } from 'types'
-import { ChainId } from 'config/constants'
 import { TxState } from 'utils/enums'
 import { Modal } from 'components/Common/Modal'
 import { WarningInfo } from 'components/Common/WarningInfo'
 
 import { SuccessSection } from './SuccessSection'
 import { CollectableFees } from './CollectableFees'
+import { ChainId } from 'config/constants'
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -77,7 +76,7 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   open: boolean
   onClose: () => void
-  clrService: CLRService
+  clrService: PoolService
   poolData: ITerminalPool
   onSuccess: () => Promise<void>
 }
