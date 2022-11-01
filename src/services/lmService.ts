@@ -32,6 +32,14 @@ class LMService {
     return this.contract.rewardFee()
   }
 
+  isCustomFeeEnabled = async (address: string): Promise<boolean> => {
+    return this.contract.customDeploymentFeeEnabled(address)
+  }
+
+  getCustomFee = async (address: string): Promise<BigNumber> => {
+    return this.contract.customDeploymentFee(address)
+  }
+
   provideLiquidity = async (
     clrPool: string,
     inputAsset: number,
@@ -413,17 +421,23 @@ class LMService {
   }
 
   deployIncentivizedPool = async (
-    poolData: ICreatePoolData
+    poolData: ICreatePoolData,
+    deploymentFee?: BigNumber
   ): Promise<string> => {
+    // Default deployment fee
+    deploymentFee = await this.contract.deploymentFee()
+
     const isTokenSorted = BigNumber.from(poolData.token0.address).lt(
       BigNumber.from(poolData.token1.address)
     )
 
+    const _sortedToken0 = isTokenSorted ? poolData.token0 : poolData.token1
+    const _sortedToken1 = isTokenSorted ? poolData.token1 : poolData.token0
+
     // Includes fee tier as part of symbol
-    const symbol = `${poolData.token0.symbol}-${poolData.token1.symbol}-CLR-${
+    const symbol = `${_sortedToken0.symbol}-${_sortedToken1.symbol}-CLR-${
       poolData.tier.toNumber() / 100
     }bps`
-    const deploymentFee = await this.contract.deploymentFee()
 
     const rewardsProgram = {
       rewardTokens: poolData.rewardState.tokens.map((token) => token.address),
@@ -434,8 +448,8 @@ class LMService {
       amount0: isTokenSorted ? poolData.amount0 : poolData.amount1,
       amount1: isTokenSorted ? poolData.amount1 : poolData.amount0,
       fee: poolData.tier,
-      token0: isTokenSorted ? poolData.token0.address : poolData.token1.address,
-      token1: isTokenSorted ? poolData.token1.address : poolData.token0.address,
+      token0: _sortedToken0.address,
+      token1: _sortedToken1.address,
     }
 
     const transactionObject = await this.contract.deployIncentivizedPool(
@@ -454,22 +468,30 @@ class LMService {
   }
 
   deployNonIncentivizedPool = async (
-    poolData: ICreatePoolData
+    poolData: ICreatePoolData,
+    deploymentFee?: BigNumber
   ): Promise<string> => {
+    // Default deployment fee
+    deploymentFee = await this.contract.deploymentFee()
+
     const isTokenSorted = BigNumber.from(poolData.token0.address).lt(
       BigNumber.from(poolData.token1.address)
     )
+
+    const _sortedToken0 = isTokenSorted ? poolData.token0 : poolData.token1
+    const _sortedToken1 = isTokenSorted ? poolData.token1 : poolData.token0
+
     // Includes fee tier as part of symbol
-    const symbol = `${poolData.token0.symbol}-${poolData.token1.symbol}-CLR-${
+    const symbol = `${_sortedToken0.symbol}-${_sortedToken1.symbol}-CLR-${
       poolData.tier.toNumber() / 100
     }bps`
-    const deploymentFee = await this.contract.deploymentFee()
+
     const poolDetails = {
       amount0: isTokenSorted ? poolData.amount0 : poolData.amount1,
       amount1: isTokenSorted ? poolData.amount1 : poolData.amount0,
       fee: poolData.tier,
-      token0: isTokenSorted ? poolData.token0.address : poolData.token1.address,
-      token1: isTokenSorted ? poolData.token1.address : poolData.token0.address,
+      token0: _sortedToken0.address,
+      token1: _sortedToken1.address,
     }
 
     const transactionObject = await this.contract.deployNonIncentivizedPool(
@@ -480,7 +502,6 @@ class LMService {
         value: deploymentFee,
       }
     )
-
     console.log(
       `deployNonIncentivizedPool transaction hash: ${transactionObject.hash}`
     )

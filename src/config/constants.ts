@@ -200,6 +200,10 @@ export const LP_TOKEN_BASIC: IToken = {
 
 export const FEE_TIERS = [
   {
+    value: BigNumber.from(100),
+    label: 'Best for bluechip stables',
+  },
+  {
     value: BigNumber.from(500),
     label: 'Best for stable pairs',
   },
