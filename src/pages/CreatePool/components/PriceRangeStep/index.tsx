@@ -139,6 +139,7 @@ export const PriceRangeStep = (props: IProps) => {
     invalidRange,
     errorMessage,
     outOfRange,
+    tickSpaceLimits,
   } = useV3DerivedMintInfo(
     state,
     baseCurrency ?? undefined,
@@ -311,7 +312,7 @@ export const PriceRangeStep = (props: IProps) => {
                     isMinPrice
                     priceLower={priceLower}
                     priceUpper={priceUpper}
-                    label={'Min price'}
+                    label="Min price"
                     onUserInput={(amount0) => onLeftRangeInput(amount0)}
                     ticksAtLimit={ticksAtLimit}
                     decrement={isSorted ? getDecrementLower : getIncrementUpper}
@@ -320,7 +321,9 @@ export const PriceRangeStep = (props: IProps) => {
                       ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]
                     }
                     incrementDisabled={
-                      ticksAtLimit[isSorted ? Bound.LOWER : Bound.UPPER]
+                      !!tickLower &&
+                      !!tickSpaceLimits.UPPER &&
+                      tickLower >= tickSpaceLimits.UPPER
                     }
                   />
                 </Grid>
@@ -340,20 +343,21 @@ export const PriceRangeStep = (props: IProps) => {
                     getIncrementUpper={getIncrementUpper}
                     priceLower={priceLower}
                     priceUpper={priceUpper}
-                    label={'Max price'}
+                    label="Max price"
                     onUserInput={(amount1) => onRightRangeInput(amount1)}
                     ticksAtLimit={ticksAtLimit}
                     decrement={isSorted ? getDecrementUpper : getIncrementLower}
                     increment={isSorted ? getIncrementUpper : getDecrementLower}
                     decrementDisabled={
-                      ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]
+                      !!tickUpper &&
+                      !!tickSpaceLimits.LOWER &&
+                      tickUpper <= tickSpaceLimits.LOWER
                     }
                     incrementDisabled={
                       ticksAtLimit[isSorted ? Bound.UPPER : Bound.LOWER]
                     }
                   />
                 </Grid>
-
                 <Button
                   color="secondary"
                   fullWidth
