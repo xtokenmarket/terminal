@@ -330,3 +330,8 @@ export const formatDateTime = (timestamp: number) => {
     day: 'numeric',
   }).format(new Date(timestamp * 1000))
 }
+
+export const parsePeriod = (amount: string, unit: string) => {
+  const _unit = Number(amount) > 1 ? unit : unit.slice(0, -1)
+  return `${amount} ${_unit}`
+}

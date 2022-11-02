@@ -10,10 +10,10 @@ import {
   TableCell,
 } from '@material-ui/core'
 import { IToken, SaleData } from 'types'
-import { TokenAmountPriceEstimation } from '../TokenAmountPriceEstimation'
 import { EPricingFormula } from 'utils/enums'
-import clsx from 'clsx'
-import { getDurationSec, parseDurationSec } from 'utils'
+import { parsePeriod } from 'utils'
+
+import { TokenAmountPriceEstimation } from '../TokenAmountPriceEstimation'
 
 const useStyles = makeStyles((theme) => ({
   tableContainer: {},
@@ -159,11 +159,9 @@ export const PricingFormulaTable: React.FC<IProps> = ({
             )}
             <TableCell className={cl.tableCell}>
               <Typography className={cl.bodyRowText}>
-                {parseDurationSec(
-                  getDurationSec(
-                    Number(saleData.offeringPeriod),
-                    saleData.offeringPeriodUnit.toString()
-                  ).toNumber()
+                {parsePeriod(
+                  saleData.offeringPeriod,
+                  saleData.offeringPeriodUnit as string
                 )}
               </Typography>
             </TableCell>
