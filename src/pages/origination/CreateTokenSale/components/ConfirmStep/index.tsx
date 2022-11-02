@@ -10,6 +10,7 @@ import {
   formatToShortNumber,
   getDurationSec,
   parseDurationSec,
+  parsePeriod,
 } from 'utils'
 import { useServices } from 'helpers'
 import { ZERO } from 'utils/number'
@@ -201,7 +202,10 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit, onBack }) => {
                     <div className="content">
                       <p className="title">Vesting Period</p>
                       <p className="data">
-                        {data.vestingPeriod} {data.vestingPeriodUnit}
+                        {parsePeriod(
+                          data.vestingPeriod,
+                          data.vestingPeriodUnit as string
+                        )}
                       </p>
                     </div>
                   </Grid>
@@ -210,7 +214,10 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit, onBack }) => {
                     <div className="content">
                       <p className="title">Cliff Period</p>
                       <p className="data">
-                        {data.cliffPeriod} {data.cliffPeriodUnit}
+                        {parsePeriod(
+                          data.cliffPeriod,
+                          data.cliffPeriodUnit as string
+                        )}
                       </p>
                     </div>
                   </Grid>
