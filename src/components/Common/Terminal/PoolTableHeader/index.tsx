@@ -28,7 +28,7 @@ export const PoolTableHeader = () => {
   return (
     <div className={classes.root}>
       <PoolTd type="pool">
-        <div className={classes.item}>POOL</div>
+        <div className={classes.item}>POOL NAME</div>
       </PoolTd>
       <PoolTd type="allocation">
         <div className={classes.item}>
