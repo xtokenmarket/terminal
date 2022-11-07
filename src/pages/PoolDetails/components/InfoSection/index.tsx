@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
-  label: string
+  label: string | React.ReactNode
   value: string
   right?: React.ReactNode
 }
@@ -30,7 +30,7 @@ export const InfoSection = (props: IProps) => {
 
   return (
     <div className={classes.root}>
-      <Typography className={classes.label}>{label}</Typography>
+      <div className={classes.label}>{label}</div>
       <div className={classes.valueWrapper}>
         <Typography className={classes.value}>{value}</Typography>
         {RightComponent}

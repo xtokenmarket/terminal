@@ -201,8 +201,7 @@ const useStyles = makeStyles((theme) => ({
   tooltipWrapper: {
     fontSize: 10,
     color: theme.colors.primary300,
-    marginTop: 16,
-    marginLeft: 10,
+    marginLeft: 6,
     cursor: 'pointer',
   },
   infoIcon: {
@@ -212,6 +211,11 @@ const useStyles = makeStyles((theme) => ({
   hr: {
     borderColor: theme.colors.primary200,
     marginTop: 20,
+  },
+  tvlLabel: {
+    display: 'flex',
+    position: 'relative',
+    alignItems: 'center',
   },
 }))
 
@@ -501,23 +505,6 @@ export const Content = (props: IProps) => {
             <Grid item xs={12} md={6} className={classes.balance}>
               <div className={classes.titleWrapper}>
                 <Typography className={classes.title}>POOL BALANCE</Typography>
-                <div className={classes.tooltipWrapper}>
-                  <Tooltip
-                    arrow
-                    placement="right"
-                    classes={{
-                      arrow: classes.tooltipArrow,
-                      tooltip: classes.tooltip,
-                    }}
-                    title={`Price Range: ${getPriceRange()}`}
-                  >
-                    <img
-                      className={classes.infoIcon}
-                      alt="question"
-                      src="/assets/icons/info.svg"
-                    />
-                  </Tooltip>
-                </div>
               </div>
 
               <Grid container spacing={0}>
@@ -566,7 +553,28 @@ export const Content = (props: IProps) => {
           <Grid container spacing={0}>
             <Grid item xs={6} sm={4} md={2} className={classes.info}>
               <InfoSection
-                label="TVL"
+                label={
+                  <div className={classes.tvlLabel}>
+                    <span>TVL</span>
+                    <div className={classes.tooltipWrapper}>
+                      <Tooltip
+                        arrow
+                        placement="right"
+                        classes={{
+                          arrow: classes.tooltipArrow,
+                          tooltip: classes.tooltip,
+                        }}
+                        title={`Price Range: ${getPriceRange()}`}
+                      >
+                        <img
+                          className={classes.infoIcon}
+                          alt="question"
+                          src="/assets/icons/info.svg"
+                        />
+                      </Tooltip>
+                    </div>
+                  </div>
+                }
                 value={`$${numberWithCommas(
                   formatBigNumber(poolData.tvl, ETHER_DECIMAL)
                 )}`}
