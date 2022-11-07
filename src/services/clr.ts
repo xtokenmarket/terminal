@@ -3,6 +3,8 @@ import { Maybe, PoolService } from 'types'
 import Abi from 'abis'
 import { Interface } from '@ethersproject/abi'
 import { getContractAddress } from 'config/networks'
+import { ChainId } from 'config/constants'
+import { hexlify } from 'ethers/lib/utils'
 
 class CLRService implements PoolService {
   abi: any
@@ -54,15 +56,22 @@ class CLRService implements PoolService {
   deposit = async (
     amount0: BigNumber,
     amount1: BigNumber,
+    networkId: number,
     isToken1Deposit = false
   ) => {
     if (this.version === 'v1.0.0') {
       return this.contract.deposit(
         isToken1Deposit ? 1 : 0,
-        isToken1Deposit ? amount1 : amount0
+        isToken1Deposit ? amount1 : amount0,
+        {
+          gasLimit:
+            networkId === ChainId.Optimism ? hexlify(700000) : undefined,
+        }
       )
     } else {
-      return this.contract.deposit(amount0, amount1)
+      return this.contract.deposit(amount0, amount1, {
+        gasLimit: networkId === ChainId.Optimism ? hexlify(700000) : undefined,
+      })
     }
   }
 

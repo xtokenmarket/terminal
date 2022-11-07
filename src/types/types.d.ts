@@ -177,6 +177,7 @@ export interface PoolService {
   deposit: (
     amount0: BigNumber,
     amount1: BigNumber,
+    networkId: number,
     isToken1Deposit?: boolean
   ) => Promise<any>
   waitUntilDeposit: (
