@@ -31,7 +31,7 @@ export const FIVE_MINUTES_IN_MS = 5 * 60 * 1000
 export const ONE_HOUR_IN_MS = 1000 * 60 * 60
 export const ONE_MINUTE_IN_MS = 1000 * 60
 
-export const MINUTE_TIMELOCK_TIMESTAMP = 1666389600
+export const MINUTE_TIMELOCK_TIMESTAMP = 1666886400
 
 export enum ChainId {
   Mainnet = 1,
