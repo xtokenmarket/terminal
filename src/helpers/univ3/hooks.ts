@@ -193,6 +193,9 @@ export function useV3DerivedMintInfo(
   depositBDisabled: boolean
   invertPrice: boolean
   ticksAtLimit: { [bound in Bound]?: boolean | undefined }
+  tickSpaceLimits: {
+    [bound in Bound]: number | undefined
+  }
 } {
   const { account, networkId } = useConnectedWeb3Context()
   const chainId = networkId || DEFAULT_NETWORK_ID
@@ -487,6 +490,7 @@ export function useV3DerivedMintInfo(
     tickUpper,
     poolForPosition,
     invalidRange,
+    tickSpaceLimits,
   ])
 
   const parsedAmounts: {
@@ -633,6 +637,7 @@ export function useV3DerivedMintInfo(
     depositBDisabled,
     invertPrice,
     ticksAtLimit,
+    tickSpaceLimits,
   }
 }
 

@@ -11,7 +11,11 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos'
 import ClockIcon from '@material-ui/icons/AccessTime'
 import { ActionStepRow, WarningInfo } from '..'
 import { useCountdown } from 'helpers/useCountdownClock'
-import { FIVE_MINUTES_IN_MS } from 'config/constants'
+import {
+  FIVE_MINUTES_IN_MS,
+  MINUTE_TIMELOCK_TIMESTAMP,
+  ONE_MINUTE_IN_MS,
+} from 'config/constants'
 import { Network } from 'utils/enums'
 
 const useStyles = makeStyles((theme) => ({
@@ -141,10 +145,14 @@ export const DepositSection = (props: IProps) => {
 
   const isMountedRef = useIsMountedRef()
 
+  const lockDuration =
+    Number(poolData.createdAt) >= MINUTE_TIMELOCK_TIMESTAMP
+      ? ONE_MINUTE_IN_MS
+      : FIVE_MINUTES_IN_MS
   const lockStartingTime =
     localStorage.getItem(poolData.address.toLowerCase()) || 0
   const { minutes, seconds } = useCountdown(
-    Number(lockStartingTime) + FIVE_MINUTES_IN_MS
+    Number(lockStartingTime) + lockDuration
   )
   const isLocked = minutes + seconds > 0 && !state.depositDone
 
