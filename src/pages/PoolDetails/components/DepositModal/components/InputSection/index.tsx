@@ -162,12 +162,6 @@ export const InputSection = (props: IProps) => {
     }
   }, [balance0, balance1, depositState])
 
-  // TODO: Remove the disable check after PONY pool upgrade
-  const PONY_LP_ADDRESS = '0x11AE2b89175792F57D320a020eaEa879E837fe6c'
-  const isPonyLP =
-    poolData.network === Network.MAINNET &&
-    poolData.address.toLowerCase() === PONY_LP_ADDRESS.toLowerCase()
-
   return (
     <div className={classes.root}>
       <div className={classes.header}>
@@ -177,7 +171,6 @@ export const InputSection = (props: IProps) => {
         </IconButton>
         <div>
           <TokenBalanceInput
-            isDisabled={isPonyLP}
             value={depositState.amount0}
             onChange={(amount0) => {
               handleAmountsChange(amount0, ZERO)

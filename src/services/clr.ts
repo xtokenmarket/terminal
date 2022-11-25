@@ -52,22 +52,15 @@ class CLRService implements PoolService {
     return this.contract.getLiquidityForAmounts(amount0, amount1)
   }
 
-  // TODO: Remove `isToken1Deposit` arg
   deposit = async (
     amount0: BigNumber,
     amount1: BigNumber,
-    networkId: number,
-    isToken1Deposit = false
+    networkId: number
   ) => {
     if (this.version === 'v1.0.0') {
-      return this.contract.deposit(
-        isToken1Deposit ? 1 : 0,
-        isToken1Deposit ? amount1 : amount0,
-        {
-          gasLimit:
-            networkId === ChainId.Optimism ? hexlify(700000) : undefined,
-        }
-      )
+      return this.contract.deposit(0, amount0, {
+        gasLimit: networkId === ChainId.Optimism ? hexlify(700000) : undefined,
+      })
     } else {
       return this.contract.deposit(amount0, amount1, {
         gasLimit: networkId === ChainId.Optimism ? hexlify(700000) : undefined,

@@ -16,7 +16,6 @@ import {
   MINUTE_TIMELOCK_TIMESTAMP,
   ONE_MINUTE_IN_MS,
 } from 'config/constants'
-import { Network } from 'utils/enums'
 
 const useStyles = makeStyles((theme) => ({
   root: { backgroundColor: theme.colors.primary500 },
@@ -278,17 +277,7 @@ export const DepositSection = (props: IProps) => {
 
       const { amount0, amount1 } = depositState
 
-      const PONY_LP_ADDRESS = '0x11AE2b89175792F57D320a020eaEa879E837fe6c'
-      const isPonyLP =
-        poolData.network === Network.MAINNET &&
-        poolData.address.toLowerCase() === PONY_LP_ADDRESS.toLowerCase()
-
-      const txId = await clrService.deposit(
-        amount0,
-        amount1,
-        networkId,
-        isPonyLP
-      )
+      const txId = await clrService.deposit(amount0, amount1, networkId)
 
       const finalTxId = await clrService.waitUntilDeposit(
         amount0,
