@@ -4,7 +4,8 @@ import Abi from 'abis'
 import { parseDuration } from 'utils/number'
 import { getSortedToken } from 'utils/token'
 import { Interface } from '@ethersproject/abi'
-import { NULL_ADDRESS } from 'config/constants'
+import { ChainId, NULL_ADDRESS } from 'config/constants'
+import { hexlify } from 'ethers/lib/utils'
 
 const lmAbi = Abi.LMTerminal
 
@@ -422,10 +423,13 @@ class LMService {
 
   deployIncentivizedPool = async (
     poolData: ICreatePoolData,
+    networkId: number,
     deploymentFee?: BigNumber
   ): Promise<string> => {
-    // Default deployment fee
-    deploymentFee = await this.contract.deploymentFee()
+    if (!deploymentFee) {
+      // Default deployment fee
+      deploymentFee = await this.contract.deploymentFee()
+    }
 
     const isTokenSorted = BigNumber.from(poolData.token0.address).lt(
       BigNumber.from(poolData.token1.address)
@@ -458,6 +462,7 @@ class LMService {
       rewardsProgram,
       poolDetails,
       {
+        gasLimit: networkId === ChainId.Optimism ? hexlify(700000) : undefined,
         value: deploymentFee,
       }
     )
@@ -469,10 +474,13 @@ class LMService {
 
   deployNonIncentivizedPool = async (
     poolData: ICreatePoolData,
+    networkId: number,
     deploymentFee?: BigNumber
   ): Promise<string> => {
-    // Default deployment fee
-    deploymentFee = await this.contract.deploymentFee()
+    if (!deploymentFee) {
+      // Default deployment fee
+      deploymentFee = await this.contract.deploymentFee()
+    }
 
     const isTokenSorted = BigNumber.from(poolData.token0.address).lt(
       BigNumber.from(poolData.token1.address)
@@ -499,6 +507,7 @@ class LMService {
       poolData.ticks,
       poolDetails,
       {
+        gasLimit: networkId === ChainId.Optimism ? hexlify(700000) : undefined,
         value: deploymentFee,
       }
     )

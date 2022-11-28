@@ -235,7 +235,7 @@ export const CreatePoolSection = (props: IProps) => {
   }
 
   const onCreatePool = async () => {
-    if (!account || !provider) {
+    if (!account || !provider || !networkId) {
       return
     }
 
@@ -256,10 +256,15 @@ export const CreatePoolSection = (props: IProps) => {
 
       let txId = ''
       if (poolData.incentivized) {
-        txId = await lmService.deployIncentivizedPool(poolData, deploymentFee)
+        txId = await lmService.deployIncentivizedPool(
+          poolData,
+          networkId,
+          deploymentFee
+        )
       } else {
         txId = await lmService.deployNonIncentivizedPool(
           poolData,
+          networkId,
           deploymentFee
         )
       }
