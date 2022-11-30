@@ -380,7 +380,7 @@ export const Content = (props: IProps) => {
 
     const formatNumber = (price: string) => {
       const priceInt = parseInt(price)
-      const toFixed = priceInt >= 100 ? 0 : priceInt >= 1 ? 2 : 4
+      const toFixed = priceInt >= 100 ? 0 : priceInt >= 1 ? 3 : 4
       return parseFloat(Number(price).toFixed(toFixed))
     }
 

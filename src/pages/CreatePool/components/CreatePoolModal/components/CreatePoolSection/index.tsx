@@ -235,7 +235,7 @@ export const CreatePoolSection = (props: IProps) => {
   }
 
   const onCreatePool = async () => {
-    if (!account || !provider) {
+    if (!account || !provider || !networkId) {
       return
     }
 
@@ -245,11 +245,28 @@ export const CreatePoolSection = (props: IProps) => {
         isCreatingPool: true,
       }))
 
+      const isCustomFeeEnabled = await lmService.isCustomFeeEnabled(
+        account as string
+      )
+
+      let deploymentFee
+      if (isCustomFeeEnabled) {
+        deploymentFee = await lmService.getCustomFee(account as string)
+      }
+
       let txId = ''
       if (poolData.incentivized) {
-        txId = await lmService.deployIncentivizedPool(poolData)
+        txId = await lmService.deployIncentivizedPool(
+          poolData,
+          networkId,
+          deploymentFee
+        )
       } else {
-        txId = await lmService.deployNonIncentivizedPool(poolData)
+        txId = await lmService.deployNonIncentivizedPool(
+          poolData,
+          networkId,
+          deploymentFee
+        )
       }
 
       const finalTxId = await lmService.waitUntilTerminalPoolCreated(
