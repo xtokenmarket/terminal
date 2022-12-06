@@ -63,7 +63,7 @@ describe('create token sale', () => {
   })
 
   it('should fill in offeringStep inputs', async () => {
-    await page.goto('http://localhost:3000/origination/new-token-sale', {
+    await page.goto('http://localhost:3000/origination/new-token-offering', {
       waitUntil: 'load',
     })
     await clickElement(page, 'div#selectToken0')

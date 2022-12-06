@@ -44,6 +44,7 @@ interface IProps {
   isSaleInitiated?: boolean
   isTimeRemainingToCliffShow?: boolean
   isTimeToFullVestShow?: boolean
+  isBonding?: boolean
 }
 
 export const TableHeader = (props: IProps) => {
@@ -95,10 +96,14 @@ export const TableHeader = (props: IProps) => {
           />
         </Td>
         <Td type={OfferingOverview.SalesBegin} label={props.label}>
-          <div className={classes.item}>Sale Begins</div>
+          <div className={classes.item}>
+            {props.isBonding ? 'Bonding Start' : 'Offering Begins'}
+          </div>
         </Td>
         <Td type={OfferingOverview.SalesEnd} label={props.label}>
-          <div className={classes.item}>Sale Ends</div>
+          <div className={classes.item}>
+            {props.isBonding ? 'Bonding End' : 'Offering Ends'}
+          </div>
         </Td>
       </div>
     )
@@ -231,7 +236,7 @@ export const TableHeader = (props: IProps) => {
               />
             </Td>
             <Td type={OfferingSummary.SalesEnded} label={props.label}>
-              <div className={classes.item}>Sales Ended</div>
+              <div className={classes.item}>Offering Ended</div>
             </Td>
           </>
         )}

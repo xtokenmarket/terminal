@@ -50,7 +50,7 @@ export const PublicSaleForm: React.FC<IProps> = ({
     <SaleForm
       error={
         isInvalidSale && publicSale.enabled !== null
-          ? 'Please select either Allowlist or Public sale to proceed further'
+          ? 'Please select either Allowlist or Public offering to proceed further'
           : ''
       }
       offerToken={data.offerToken}

@@ -20,7 +20,7 @@ const routes = [
       },
       {
         exact: true,
-        path: '/origination/new-token-sale',
+        path: '/origination/new-token-offering',
         component: lazy(() => import('pages/origination/CreateTokenSale')),
       },
       {

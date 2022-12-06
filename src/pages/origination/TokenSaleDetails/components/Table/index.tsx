@@ -82,6 +82,7 @@ interface IProps {
   isSaleCompleted?: boolean
   isClaimButtonDisabled?: boolean
   isClaimButtonShow?: boolean
+  isBonding?: boolean
 }
 
 export const Table = ({
@@ -101,6 +102,7 @@ export const Table = ({
   isSaleCompleted,
   isClaimButtonDisabled,
   isClaimButtonShow,
+  isBonding,
 }: IProps) => {
   const cl = useStyles()
 
@@ -177,12 +179,16 @@ export const Table = ({
           </div>
         )
 
-      case 'Public Sale':
+      case 'Public Offering':
       case 'Offering Summary':
       case 'My Activity':
         return (
           <div className={cl.labelWrapper}>
-            <Typography className={cl.label}>{label}</Typography>
+            <Typography className={cl.label}>
+              {label === 'Public Offering' && isBonding
+                ? 'Bonding Programme'
+                : label}
+            </Typography>
             {isClaimButtonShow && <ClaimButton />}
           </div>
         )
@@ -230,6 +236,7 @@ export const Table = ({
           isSaleInitiated={isSaleInitiated}
           isTimeRemainingToCliffShow={getIsTimeRemainingToCliffShow()}
           isTimeToFullVestShow={getIsTimeToFullVestShow()}
+          isBonding={isBonding}
         />
         <div>
           <TableRow

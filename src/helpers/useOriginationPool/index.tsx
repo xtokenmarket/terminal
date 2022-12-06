@@ -224,6 +224,20 @@ export const useOriginationPool = (
       offerData.purchaseToken?.image ||
       getTokenLogo(offerData?.purchaseToken.address || offerData?.purchaseToken)
 
+    // Bonding curve
+    offerData.isBonding = false
+    try {
+      const purchaseTokenContract = new Contract(
+        offerData.purchaseToken.address,
+        Abi.CLRV1,
+        provider
+      )
+      await purchaseTokenContract.getVersion()
+      offerData.isBonding = true
+    } catch (e) {
+      // Do nothing
+    }
+
     const {
       cliffPeriod,
       getOfferTokenPrice,
@@ -247,6 +261,7 @@ export const useOriginationPool = (
       createdAt,
       description,
       poolName,
+      isBonding,
     } = offerData
 
     const _publicSaleDuration = BigNumber.from(Number(publicSaleDuration))
@@ -267,6 +282,7 @@ export const useOriginationPool = (
       poolAddress,
       isOwnerOrManager: false,
       purchaseTokenRaised: purchaseTokensAcquired,
+      isBonding,
     }
 
     const endOfWhitelistPeriod = saleInitiatedTimestamp.add(
@@ -286,12 +302,11 @@ export const useOriginationPool = (
     */
     try {
       if (saleInitiatedTimestamp.gt(0)) {
-        const _getOfferTokenPrice =
+        offerData.getOfferTokenPrice =
           await fungiblePool.contract.getOfferTokenPrice()
-        offerData.getOfferTokenPrice = _getOfferTokenPrice
       }
     } catch (error) {
-      console.error('getOfferTokenPrice error', getOfferTokenPrice)
+      console.error('getOfferTokenPrice error', error)
     }
 
     const _whitelist: IWhitelistSale = {

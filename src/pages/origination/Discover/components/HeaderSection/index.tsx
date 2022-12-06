@@ -62,7 +62,10 @@ export const HeaderSection = () => {
     <div className={cl.root}>
       <div className={cl.bottomSection}>
         {isConnected && (
-          <NavLink to="/origination/new-token-sale" className={cl.createBtn}>
+          <NavLink
+            to="/origination/new-token-offering"
+            className={cl.createBtn}
+          >
             <AddIcon />
             &nbsp; CREATE
           </NavLink>

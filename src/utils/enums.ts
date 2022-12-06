@@ -181,7 +181,7 @@ export enum InfoText {
   Ascending = 'Price steadily goes up from offering standard price. ',
   CliffPeriod = 'Amount of time until first tokens are available to claim',
   Descending = 'Price steadily goes down from offering standard price. ',
-  OfferingPeriod = 'Duration of sale',
+  OfferingPeriod = 'Duration of offer',
   OfferingStatus = 'Number of offer tokens already acquired as share of total offering',
   OfferName = 'Name of the token offering',
   OfferToken = 'The token being offered to contributors',
@@ -191,7 +191,7 @@ export enum InfoText {
   RemainingOffering = 'The amount of offer tokens remaining and the maximum amount available in this offering',
   ReserveOfferTokenAmount = 'Minimum amount of purchase token raised for successful offering',
   Standard = 'All offer tokens sells for 1 USDC',
-  TimeRemaining = 'Duration remaining until the sale ends',
+  TimeRemaining = 'Duration remaining until the offer ends',
   VestingPeriod = 'Amount of time until all tokens are available to claim',
 }
 

@@ -49,7 +49,7 @@ const MyOffers = () => {
   const isConnected = !!account
 
   const onCreateTokenSale = () => {
-    history.push('/origination/new-token-sale')
+    history.push('/origination/new-token-offering')
   }
 
   const onBrowseSales = () => {

@@ -501,6 +501,7 @@ const TokenSaleDetails = () => {
                 isOwnerOrManager={tokenOffer.offeringOverview.isOwnerOrManager}
                 isInitiateSaleButtonDisabled={isInitiateSaleButtonDisabled}
                 isSaleInitiated={isSaleInitiated}
+                isBonding={tokenOffer.offeringOverview.isBonding}
               />
             )}
             {!isSaleCompleted && isWhitelistSaleConfigured && (
@@ -576,7 +577,7 @@ const TokenSaleDetails = () => {
                   isWhitelistSet={tokenOffer.whitelist.whitelist}
                   isSaleInitiated={isSaleInitiated}
                   item={tokenOffer.publicSale}
-                  label={'Public Sale'}
+                  label={'Public Offering'}
                   isFormulaStandard={
                     tokenOffer.publicSale.pricingFormula ===
                     EPricingFormula.Standard
@@ -589,6 +590,7 @@ const TokenSaleDetails = () => {
                     isClaimPurchaseTokenButtonDisabled ||
                     isPublicSaleItemsDisabled
                   }
+                  isBonding={tokenOffer.offeringOverview.isBonding}
                 />
                 {isSaleInitiated && (
                   <Button
@@ -596,7 +598,11 @@ const TokenSaleDetails = () => {
                     onClick={toggleInvestModal}
                     disabled={isPublicSaleItemsDisabled}
                   >
-                    <Typography className={cl.text}>INVEST</Typography>
+                    <Typography className={cl.text}>
+                      {tokenOffer.offeringOverview.isBonding
+                        ? 'BOND'
+                        : 'INVEST'}
+                    </Typography>
                   </Button>
                 )}
               </>
