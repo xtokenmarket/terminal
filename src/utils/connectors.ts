@@ -18,6 +18,7 @@ const walletconnect = new WalletConnectConnector({
     [ChainId.Arbitrum]: supportedNetworkURLs[ChainId.Arbitrum],
     [ChainId.Polygon]: supportedNetworkURLs[ChainId.Polygon],
     [ChainId.Optimism]: supportedNetworkURLs[ChainId.Optimism],
+    [ChainId.Goerli]: supportedNetworkURLs[ChainId.Goerli]
   },
   bridge: 'https://bridge.walletconnect.org',
   qrcode: true,
