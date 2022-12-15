@@ -93,6 +93,7 @@ interface IProps {
   updateState: (e: any) => void
   whitelistData: IWhitelistSale
   userPositionData: IUserPosition
+  isBonding: boolean
   isWhitelist: boolean
 }
 
@@ -108,7 +109,15 @@ interface IState {
 export const InputSection = (props: IProps) => {
   const classes = useStyles()
   const { account, library: provider } = useConnectedWeb3Context()
-  const { offerData, onClose, onNext, updateState } = props
+  const {
+    isBonding,
+    isWhitelist,
+    offerData,
+    onClose,
+    onNext,
+    updateState,
+    whitelistData: { addressCap },
+  } = props
   const { balance, isLoading } = useTokenBalance(
     offerData.purchaseToken.address || ''
   )
@@ -130,8 +139,8 @@ export const InputSection = (props: IProps) => {
 
   useEffect(() => {
     const getMaxLimit = async () => {
-      const availableAmount = props.offerData?.totalOfferingAmount.sub(
-        props.offerData?.offerTokenAmountSold
+      const availableAmount = offerData?.totalOfferingAmount.sub(
+        offerData?.offerTokenAmountSold
       )
 
       const fungiblePool = new FungiblePoolService(
@@ -159,10 +168,10 @@ export const InputSection = (props: IProps) => {
   useEffect(() => {
     const isInsufficientBalance = state.purchaseAmount.gt(balance) && !isLoading
 
-    const maxLimit = props.isWhitelist
-      ? props.whitelistData.addressCap.gt(state.maxLimit)
+    const maxLimit = isWhitelist
+      ? addressCap.gt(state.maxLimit)
         ? state.maxLimit
-        : props.whitelistData.addressCap
+        : addressCap
       : state.maxLimit
     const isInvalidAmount = state.purchaseAmount.gt(maxLimit)
 
@@ -174,7 +183,7 @@ export const InputSection = (props: IProps) => {
     if (isInvalidAmount) {
       setState({
         errorMessage: `Maximum contribution is ${numberWithCommas(
-          formatBigNumber(maxLimit, props.offerData.purchaseToken.decimals)
+          formatBigNumber(maxLimit, offerData.purchaseToken.decimals)
         )} ${offerData.purchaseToken.symbol}`,
       })
       return
@@ -217,7 +226,9 @@ export const InputSection = (props: IProps) => {
   return (
     <div className={classes.root}>
       <div className={classes.header}>
-        <Typography className={classes.title}>Invest</Typography>
+        <Typography className={classes.title}>
+          {isBonding ? 'Bond' : 'Invest'}
+        </Typography>
         <IconButton className={classes.closeButton} onClick={onClose}>
           <CloseOutlinedIcon />
         </IconButton>
@@ -225,7 +236,7 @@ export const InputSection = (props: IProps) => {
       <div className={classes.content}>
         <div className={classes.inputs}>
           <TokenBalanceInput
-            label={'Amount to Invest'}
+            label={`Amount to ${isBonding ? 'bond' : 'invest'}`}
             onChange={estimateOfferAmount}
             setLoadingStart={() => setState({ isEstimating: true })}
             showSwapCTA={false}
@@ -234,7 +245,7 @@ export const InputSection = (props: IProps) => {
           />
           <TokenBalanceInput
             isDisabled
-            label={'Estimated Amount to Receive'}
+            label={'Estimated amount to receive'}
             loading={state.isEstimating}
             onChange={() => undefined}
             showAvailableBalance={false}
@@ -273,7 +284,7 @@ export const InputSection = (props: IProps) => {
               !!state.errorMessage
             }
           >
-            INVEST
+            {isBonding ? 'BOND' : 'INVEST'}
           </Button>
           {state.errorMessage && (
             <div className={classes.warning}>{state.errorMessage}</div>

@@ -21,9 +21,9 @@ const useStyles = makeStyles(() => ({
     '&.salesEnd': { width: '12%' },
     '&.salesPeriod': { width: '12%' },
     '&+&': { paddingLeft: 16 },
-    '&:last-child': {
-      textAlign: 'right',
-    },
+    // '&:last-child': {
+    //   textAlign: 'right',
+    // },
   },
   whitelistSale: {
     '&.currentPrice': { width: '12%' },
@@ -34,9 +34,9 @@ const useStyles = makeStyles(() => ({
     '&.timeRemaining': { width: '12%' },
     '&.salesPeriod': { width: '12%' },
     '&+&': { paddingLeft: 16 },
-    '&:last-child': {
-      textAlign: 'right',
-    },
+    // '&:last-child': {
+    //   textAlign: 'right',
+    // },
   },
   publicSale: {
     '&.currentPrice': { width: '12%' },
@@ -45,9 +45,9 @@ const useStyles = makeStyles(() => ({
     '&.timeRemaining': { width: '12%' },
     '&.salesPeriod': { width: '12%' },
     '&+&': { paddingLeft: 16 },
-    '&:last-child': {
-      textAlign: 'right',
-    },
+    // '&:last-child': {
+    //   textAlign: 'right',
+    // },
   },
   userPosition: {
     '&.tokenPurchased': { width: '12%' },
@@ -71,9 +71,9 @@ const useStyles = makeStyles(() => ({
     '&.offeringStatus': { width: '12%' },
     '&.salesEnded': { width: '12%' },
     '&+&': { paddingLeft: 16 },
-    '&:last-child': {
-      textAlign: 'right',
-    },
+    // '&:last-child': {
+    //   textAlign: 'right',
+    // },
   },
 }))
 

@@ -68,7 +68,7 @@ export const TableHeader = (props: IProps) => {
           />
         </Td>
         <Td type={OfferingOverview.OfferingStatus} label={props.label}>
-          <div className={classes.item}>Offering Status</div>
+          <div className={classes.item}>Program Status</div>
           <QuestionTooltip
             title={InfoText.OfferingStatus}
             className={classes.tooltipQuestion}
@@ -97,12 +97,12 @@ export const TableHeader = (props: IProps) => {
         </Td>
         <Td type={OfferingOverview.SalesBegin} label={props.label}>
           <div className={classes.item}>
-            {props.isBonding ? 'Bonding Start' : 'Offering Begins'}
+            {props.isBonding ? 'Bonding Start' : 'Program Begins'}
           </div>
         </Td>
         <Td type={OfferingOverview.SalesEnd} label={props.label}>
           <div className={classes.item}>
-            {props.isBonding ? 'Bonding End' : 'Offering Ends'}
+            {props.isBonding ? 'Bonding End' : 'Program Ends'}
           </div>
         </Td>
       </div>
@@ -135,7 +135,9 @@ export const TableHeader = (props: IProps) => {
           <div className={classes.item}>Time Remaining</div>
         </Td>
         <Td type={WhitelistSale.SalesPeriod} label={props.label}>
-          <div className={classes.item}>Offering Period</div>
+          <div className={classes.item}>
+            {props.isBonding ? 'Bonding Period' : 'Program Period'}
+          </div>
         </Td>
       </div>
     )
@@ -159,7 +161,7 @@ export const TableHeader = (props: IProps) => {
           <div className={classes.item}>Time Remaining</div>
         </Td>
         <Td type={PublicSale.SalesPeriod} label={props.label}>
-          <div className={classes.item}>Offering Period</div>
+          <div className={classes.item}>Program Period</div>
         </Td>
       </div>
     )
@@ -229,14 +231,14 @@ export const TableHeader = (props: IProps) => {
         {props.isOfferUnsuccessful && (
           <>
             <Td type={OfferingSummary.OfferingStatus} label={props.label}>
-              <div className={classes.item}>Offering Status</div>
+              <div className={classes.item}>Program Status</div>
               <QuestionTooltip
                 title={InfoText.OfferingStatus}
                 className={classes.tooltipQuestion}
               />
             </Td>
             <Td type={OfferingSummary.SalesEnded} label={props.label}>
-              <div className={classes.item}>Offering Ended</div>
+              <div className={classes.item}>Program Ended</div>
             </Td>
           </>
         )}
@@ -267,7 +269,7 @@ export const TableHeader = (props: IProps) => {
               />
             </Td>
             <Td type={OfferingSummary.SalesCompleted} label={props.label}>
-              <div className={classes.item}>Offering Completed</div>
+              <div className={classes.item}>Program Completed</div>
             </Td>
             <Td type={OfferingSummary.TimeSinceCompleted} label={props.label}>
               <div className={classes.item}>Time Since Completed</div>

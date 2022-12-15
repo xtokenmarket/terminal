@@ -203,7 +203,7 @@ export const InitSection = (props: IProps) => {
             <CircularProgress className={classes.progress} size={30} />
           </>
         ) : (
-          'DEPLOY OFFERING'
+          'DEPLOY PROGRAM'
         )}
       </Button>
       <Button

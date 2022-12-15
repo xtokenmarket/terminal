@@ -122,7 +122,7 @@ export const Table = ({
     )
 
     switch (label) {
-      case 'Allowlist Offering':
+      case 'Allowlist Program':
         return (
           <div className={cl.labelWrapper}>
             <Typography className={cl.label}>{label}</Typography>
@@ -144,7 +144,7 @@ export const Table = ({
             {isClaimButtonShow && <ClaimButton />}
           </div>
         )
-      case 'Offering Overview':
+      case 'Program Overview':
         return (
           <div className={cl.labelWrapper}>
             <Typography className={cl.label}>{label}</Typography>
@@ -152,7 +152,7 @@ export const Table = ({
               <Tooltip
                 title={
                   isInitiateSaleButtonDisabled
-                    ? 'Set up allowlist before initiate offering'
+                    ? 'Set up allowlist before initiate program'
                     : ''
                 }
                 arrow
@@ -170,7 +170,7 @@ export const Table = ({
                     disabled={isInitiateSaleButtonDisabled}
                   >
                     <Typography className={cl.text}>
-                      INITIATE OFFERING
+                      INITIATE PROGRAM
                     </Typography>
                   </Button>
                 </div>

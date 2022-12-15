@@ -75,9 +75,9 @@ export const SuccessSection = (props: IProps) => {
           src="/assets/icons/confirmed.png"
           className={classes.img}
         />
-        <Typography className={classes.title}>Offering deployed!</Typography>
+        <Typography className={classes.title}>Program deployed!</Typography>
         <Typography className={classes.description}>
-          You have successfully initiated your offering. Contributors are now
+          You have successfully initiated your program. Contributors are now
           able to invest or contribute.
         </Typography>
       </div>

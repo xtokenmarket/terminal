@@ -20,7 +20,7 @@ const routes = [
       },
       {
         exact: true,
-        path: '/origination/new-token-offering',
+        path: '/origination/new-token-program',
         component: lazy(() => import('pages/origination/CreateTokenSale')),
       },
       {
@@ -40,7 +40,7 @@ const routes = [
       },
       {
         exact: true,
-        path: '/origination/offerings/:network/:poolAddress',
+        path: '/origination/programs/:network/:poolAddress',
         component: lazy(() => import('pages/origination/TokenSaleDetails')),
       },
       {
@@ -86,7 +86,7 @@ const routes = [
           },
           {
             exact: true,
-            path: '/origination/my-offers',
+            path: '/origination/my-programs',
             component: lazy(() => import('pages/origination/MyOffers')),
           },
           {

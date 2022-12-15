@@ -7,8 +7,12 @@ import { EInvestModalStep } from 'utils/enums'
 import { BigNumber } from 'ethers'
 import { ZERO } from 'utils/number'
 
-import { InputSection, InvestSection, SuccessSection } from './components'
-import { ApproveSection } from './components/ApproveSection'
+import {
+  ApproveSection,
+  InputSection,
+  InvestSection,
+  SuccessSection,
+} from './components'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined'
 
 const useStyles = makeStyles((theme) => ({
@@ -60,6 +64,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 interface IProps {
+  isBonding: boolean
   isWhitelist: boolean
   offerData: IOfferingOverview
   onClose: () => void
@@ -90,6 +95,7 @@ const DEFAULT_STATE = {
 }
 
 export const InvestModal: React.FC<IProps> = ({
+  isBonding,
   isWhitelist,
   offerData,
   onClose,
@@ -175,6 +181,7 @@ export const InvestModal: React.FC<IProps> = ({
             updateState={updateState}
             whitelistData={whitelistData}
             userPositionData={userPositionData}
+            isBonding={isBonding}
             isWhitelist={isWhitelist}
           />
         )
