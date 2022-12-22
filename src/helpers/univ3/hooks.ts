@@ -613,10 +613,10 @@ export function useV3DerivedMintInfo(
       'Invalid range selected. The min price must be lower than the max'
   }
 
-  if (outOfRange) {
-    errorMessage =
-      'Your position will not earn fees or be used in trades until the market price moves into your range.'
-  }
+  // if (outOfRange) {
+  //   errorMessage =
+  //     'Your position will not earn fees or be used in trades until the market price moves into your range.'
+  // }
 
   const invalidPool = poolState === PoolState.INVALID
 

@@ -13,7 +13,7 @@ import {
   useV3DerivedMintInfo,
 } from 'helpers/univ3/hooks'
 import _ from 'lodash'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { ICreatePoolData, MintState } from 'types'
 import { Bound, Field } from 'utils/enums'
 import { WarningInfo } from 'components/Common/WarningInfo'
@@ -140,6 +140,8 @@ export const PriceRangeStep = (props: IProps) => {
     errorMessage,
     outOfRange,
     tickSpaceLimits,
+    depositADisabled,
+    depositBDisabled,
   } = useV3DerivedMintInfo(
     state,
     baseCurrency ?? undefined,
@@ -156,10 +158,13 @@ export const PriceRangeStep = (props: IProps) => {
   const { [Bound.LOWER]: priceLower, [Bound.UPPER]: priceUpper } = pricesAtTicks
 
   // get formatted amounts
-  const formattedAmounts = {
-    [state.independentField]: state.typedValue,
-    [dependentField]: parsedAmounts[dependentField]?.toSignificant(6) ?? '',
-  }
+  const formattedAmounts = useMemo(
+    () => ({
+      [state.independentField]: state.typedValue,
+      [dependentField]: parsedAmounts[dependentField]?.toSignificant(6) ?? '',
+    }),
+    [dependentField, parsedAmounts, state.independentField, state.typedValue]
+  )
 
   const tokenA = (baseCurrency ?? undefined)?.wrapped
   const tokenB = (currencyB ?? undefined)?.wrapped
@@ -169,10 +174,7 @@ export const PriceRangeStep = (props: IProps) => {
   const rightPrice = isSorted ? priceUpper : priceLower?.invert()
 
   const isTokenInputDisabled =
-    tickLower === undefined ||
-    tickUpper === undefined ||
-    invalidRange ||
-    outOfRange
+    tickLower === undefined || tickUpper === undefined || invalidRange
 
   const {
     getDecrementLower,
@@ -243,7 +245,7 @@ export const PriceRangeStep = (props: IProps) => {
     const newErrors: string[] = []
     const newErrorA = `${data.token0.symbol} input exceeds balance`
     const newErrorB = `${data.token1.symbol} input exceeds balance`
-    const newErrorC = `Your position will not earn fees or be used in trades until the market price moves into your range.`
+    // const newErrorC = `Your position will not earn fees or be used in trades until the market price moves into your range.`
 
     if (amountA > Number(formatUnits(balanceA, data.token0.decimals))) {
       newErrors.push(newErrorA)
@@ -251,9 +253,9 @@ export const PriceRangeStep = (props: IProps) => {
     if (amountB > Number(formatUnits(balanceB, data.token1.decimals))) {
       newErrors.push(newErrorB)
     }
-    if ((amountA > 0 && amountB === 0) || (amountB > 0 && amountA === 0)) {
-      newErrors.push(newErrorC)
-    }
+    // if ((amountA > 0 && amountB === 0) || (amountB > 0 && amountA === 0)) {
+    //   newErrors.push(newErrorC)
+    // }
 
     if (!_.isEqual(state.balanceErrors, newErrors)) {
       setState((prev) => ({
@@ -266,12 +268,11 @@ export const PriceRangeStep = (props: IProps) => {
   const isNextBtnDisabled = !(
     state.leftRangeTypedValue &&
     state.rightRangeTypedValue &&
-    parsedAmounts.CURRENCY_A &&
-    parsedAmounts.CURRENCY_B &&
+    ((!depositADisabled && !!parsedAmounts.CURRENCY_A) ||
+      (!depositBDisabled && !!parsedAmounts.CURRENCY_B)) &&
     !invalidRange &&
     !errorMessage &&
-    !state.balanceErrors.some((e) => !!e) &&
-    !outOfRange
+    !state.balanceErrors.some((e) => !!e)
   )
 
   const onFullRangeClick = () => {
@@ -284,7 +285,15 @@ export const PriceRangeStep = (props: IProps) => {
 
   const totalErrors = [...state.balanceErrors].filter((e) => !!e)
 
-  if (errorMessage) totalErrors.push(errorMessage)
+  if (errorMessage) {
+    totalErrors.push(errorMessage)
+  }
+
+  if (outOfRange) {
+    totalErrors.push(
+      'Your position will not earn fees or be used in trades until the market price moves into your range.'
+    )
+  }
 
   return (
     <div className={classes.root}>
@@ -385,7 +394,7 @@ export const PriceRangeStep = (props: IProps) => {
                 onTokenInputChange(Field.CURRENCY_A, amount)
               }
               token={data.token0}
-              isDisabled={isTokenInputDisabled}
+              isDisabled={isTokenInputDisabled || depositADisabled}
             />
             <TokenBalanceInput
               className="token1-balance-input"
@@ -397,7 +406,7 @@ export const PriceRangeStep = (props: IProps) => {
                 onTokenInputChange(Field.CURRENCY_B, amount)
               }
               token={data.token1}
-              isDisabled={isTokenInputDisabled}
+              isDisabled={isTokenInputDisabled || depositBDisabled}
             />
           </Grid>
         </Grid>
