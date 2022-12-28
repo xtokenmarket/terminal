@@ -5,8 +5,8 @@ import { useConnectedWeb3Context } from 'contexts'
 import { ICreateTokenSaleData } from 'types'
 import { getDurationSec, getMetamaskError } from 'utils'
 import { parseUnits } from 'ethers/lib/utils'
-import { BigNumber } from 'ethers'
 import { useServices } from 'helpers'
+import { ZERO } from 'utils/number'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -81,9 +81,9 @@ export const InitSection = (props: IProps) => {
           ),
         }
       : {
-          publicStartingPrice: BigNumber.from(0),
-          publicEndingPrice: BigNumber.from(0),
-          publicSaleDuration: BigNumber.from(0),
+          publicStartingPrice: ZERO,
+          publicEndingPrice: ZERO,
+          publicSaleDuration: ZERO,
         }
 
     const whitelistSaleParams = whitelistSale.enabled
@@ -102,9 +102,9 @@ export const InitSection = (props: IProps) => {
           ),
         }
       : {
-          whitelistStartingPrice: BigNumber.from(0),
-          whitelistEndingPrice: BigNumber.from(0),
-          whitelistSaleDuration: BigNumber.from(0),
+          whitelistStartingPrice: ZERO,
+          whitelistEndingPrice: ZERO,
+          whitelistSaleDuration: ZERO,
         }
 
     try {
@@ -112,6 +112,15 @@ export const InitSection = (props: IProps) => {
         ...prev,
         isCreatingTokenSale: true,
       }))
+
+      const isCustomFeeEnabled = await originationService.isCustomFeeEnabled(
+        account as string
+      )
+
+      let listingFee
+      if (isCustomFeeEnabled) {
+        listingFee = await originationService.getCustomFee(account as string)
+      }
 
       const saleParams = {
         ...publicSaleParams,
@@ -136,15 +145,10 @@ export const InitSection = (props: IProps) => {
         ),
       }
 
-      // ====test data====
-      // const testSaleParams = {
-      //   ...saleParams,
-      //   publicSaleDuration: BigNumber.from('120'),
-      //   vestingPeriod: BigNumber.from('3000'),
-      //   cliffPeriod: BigNumber.from('60'),
-      // }
-
-      const txId = await originationService.createFungibleListing(saleParams)
+      const txId = await originationService.createFungibleListing(
+        saleParams,
+        listingFee
+      )
       const finalTxId = await originationService.waitUntilCreateFungibleListing(
         account,
         txId

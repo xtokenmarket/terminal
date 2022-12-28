@@ -1,4 +1,4 @@
-import { Contract, Wallet, ethers } from 'ethers'
+import { Contract, Wallet, ethers, BigNumber } from 'ethers'
 import { ISaleParams, Maybe } from 'types'
 import Abi from 'abis'
 import { Interface } from 'ethers/lib/utils'
@@ -30,8 +30,15 @@ class OriginationService {
     return this.contract.address
   }
 
-  createFungibleListing = async (saleParams: ISaleParams): Promise<string> => {
-    const listingFee = await this.contract.listingFee()
+  createFungibleListing = async (
+    saleParams: ISaleParams,
+    listingFee?: BigNumber
+  ): Promise<string> => {
+    if (!listingFee) {
+      // Default listing fee
+      listingFee = await this.contract.listingFee()
+    }
+
     const transactionObject = await this.contract.createFungibleListing(
       saleParams,
       { value: listingFee }
@@ -88,6 +95,14 @@ class OriginationService {
       }
     }
     return NULL_ADDRESS
+  }
+
+  isCustomFeeEnabled = async (address: string): Promise<boolean> => {
+    return this.contract.customListingFeeEnabled(address)
+  }
+
+  getCustomFee = async (address: string): Promise<BigNumber> => {
+    return this.contract.customListingFee(address)
   }
 }
 
