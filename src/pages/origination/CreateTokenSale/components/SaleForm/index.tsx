@@ -134,7 +134,7 @@ export const SaleForm = ({
   } = saleData
 
   const saleDisplayName =
-    tokenSalePhase === ETokenSalePhase.Whitelist ? 'Allowlist' : 'Public Sale'
+    tokenSalePhase === ETokenSalePhase.Whitelist ? 'Allowlist' : 'Public'
 
   const handlePricingFormulaChange = (
     newPricingFormula: EPricingFormula[keyof EPricingFormula]
@@ -199,7 +199,7 @@ export const SaleForm = ({
             <div className={clsx(classes.label, classes.labelWrapper)}>
               {`Will your offering have ${
                 saleDisplayName === 'Allowlist' ? 'an' : 'a'
-              } ${saleDisplayName.toLowerCase()} period?`}
+              } ${saleDisplayName.toLowerCase()} offering period?`}
             </div>
             <RadioGroup
               id={`isSet${tokenSalePhase}`}

@@ -224,6 +224,20 @@ export const useOriginationPool = (
       offerData.purchaseToken?.image ||
       getTokenLogo(offerData?.purchaseToken.address || offerData?.purchaseToken)
 
+    // Bonding curve
+    offerData.isBonding = false
+    try {
+      const purchaseTokenContract = new Contract(
+        offerData.purchaseToken.address,
+        Abi.CLRV1,
+        provider
+      )
+      await purchaseTokenContract.getVersion()
+      offerData.isBonding = true
+    } catch (e) {
+      // Do nothing
+    }
+
     const {
       cliffPeriod,
       getOfferTokenPrice,
@@ -247,10 +261,11 @@ export const useOriginationPool = (
       createdAt,
       description,
       poolName,
+      isBonding,
     } = offerData
 
-    const _publicSaleDuration = BigNumber.from(Number(publicSaleDuration))
-    const _whitelistSaleDuration = BigNumber.from(Number(whitelistSaleDuration))
+    const _publicSaleDuration = BigNumber.from(publicSaleDuration)
+    const _whitelistSaleDuration = BigNumber.from(whitelistSaleDuration)
 
     const offeringOverview = {
       label: OriginationLabels.OfferingOverview,
@@ -267,6 +282,7 @@ export const useOriginationPool = (
       poolAddress,
       isOwnerOrManager: false,
       purchaseTokenRaised: purchaseTokensAcquired,
+      isBonding,
     }
 
     const endOfWhitelistPeriod = saleInitiatedTimestamp.add(
@@ -286,12 +302,11 @@ export const useOriginationPool = (
     */
     try {
       if (saleInitiatedTimestamp.gt(0)) {
-        const _getOfferTokenPrice =
+        offerData.getOfferTokenPrice =
           await fungiblePool.contract.getOfferTokenPrice()
-        offerData.getOfferTokenPrice = _getOfferTokenPrice
       }
     } catch (error) {
-      console.error('getOfferTokenPrice error', getOfferTokenPrice)
+      console.error('getOfferTokenPrice error', error)
     }
 
     const _whitelist: IWhitelistSale = {
@@ -367,29 +382,27 @@ export const useOriginationPool = (
     // Fetch whitelist merkle root, only on Token Offer page
     if (isPoolDetails) {
       try {
-        // TODO: Fetch Whitelist sale details, only if `whitelistSaleDuration` is set
-        const whitelistMerkleRoot = (
-          await axios.get(
-            `${ORIGINATION_API_URL}/whitelistMerkleRoot?network=${offerData.network}&poolAddress=${poolAddress}`
-          )
-        ).data
-
-        _whitelist.whitelist = whitelistMerkleRoot.hasSetWhitelistMerkleRoot
-        _whitelist.whitelistMerkleRoot = whitelistMerkleRoot.merkleRoot
-
-        if (whitelistMerkleRoot.hasSetWhitelistMerkleRoot) {
-          // `maxContributionAmount` doesn't exist on contract level. Can only get from API.
-          const whitelistedAccountDetails = (
+        if (whitelistSaleDuration.gt(0)) {
+          const { hasSetWhitelistMerkleRoot, merkleRoot } = (
             await axios.get(
-              `${ORIGINATION_API_URL}/whitelistedAccountDetails/?accountAddress=${account}&poolAddress=${poolAddress}&network=${offerData.network}`
+              `${ORIGINATION_API_URL}/whitelistMerkleRoot?network=${offerData.network}&poolAddress=${poolAddress}`
             )
           ).data
 
-          _whitelist.addressCap = BigNumber.from(
-            whitelistedAccountDetails.maxContributionAmount
-          )
-          _whitelist.isAddressWhitelisted =
-            whitelistedAccountDetails.isAddressWhitelisted
+          _whitelist.whitelist = hasSetWhitelistMerkleRoot
+          _whitelist.whitelistMerkleRoot = merkleRoot
+
+          if (hasSetWhitelistMerkleRoot) {
+            // `maxContributionAmount` doesn't exist on contract level. Can only get from API.
+            const { maxContributionAmount, isAddressWhitelisted } = (
+              await axios.get(
+                `${ORIGINATION_API_URL}/whitelistedAccountDetails/?accountAddress=${account}&poolAddress=${poolAddress}&network=${offerData.network}`
+              )
+            ).data
+
+            _whitelist.addressCap = BigNumber.from(maxContributionAmount)
+            _whitelist.isAddressWhitelisted = isAddressWhitelisted
+          }
         }
 
         const erc20 = new ERC20Service(

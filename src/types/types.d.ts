@@ -288,6 +288,7 @@ export interface IOfferingOverview extends Label {
   totalOfferingAmount: BigNumber
   vestingPeriod: BigNumber
   isOwnerOrManager: boolean
+  isBonding: boolean
 }
 
 export interface IOriginationRow extends IOfferingOverview {

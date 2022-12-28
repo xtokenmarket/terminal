@@ -96,7 +96,7 @@ const STEPS_DATA: Record<
 > = {
   [ECreateTokenSaleStep.Offering]: {
     index: 0,
-    label: 'Offering Parameters',
+    label: 'Program Parameters',
   },
   [ECreateTokenSaleStep.Auction]: {
     index: 1,

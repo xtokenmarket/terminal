@@ -483,7 +483,7 @@ const TokenSaleDetails = () => {
             {isSaleCompleted ? (
               <Table
                 item={tokenOffer.offeringSummary}
-                label={'Offering Summary'}
+                label={'Program Summary'}
                 isOfferUnsuccessful={isOfferUnsuccessful}
                 toggleModal={toggleClaimModal}
                 isClaimButtonShow={
@@ -494,13 +494,14 @@ const TokenSaleDetails = () => {
             ) : (
               <Table
                 item={tokenOffer.offeringOverview}
-                label={'Offering Overview'}
+                label={'Program Overview'}
                 toggleModal={
                   isSaleInitiated ? toggleClaimModal : toggleInitiateSaleModal
                 }
                 isOwnerOrManager={tokenOffer.offeringOverview.isOwnerOrManager}
                 isInitiateSaleButtonDisabled={isInitiateSaleButtonDisabled}
                 isSaleInitiated={isSaleInitiated}
+                isBonding={tokenOffer.offeringOverview.isBonding}
               />
             )}
             {!isSaleCompleted && isWhitelistSaleConfigured && (
@@ -509,7 +510,7 @@ const TokenSaleDetails = () => {
                   onSaleEnd={onSaleEnd}
                   isSaleInitiated={isSaleInitiated}
                   item={tokenOffer.whitelist}
-                  label={'Allowlist Offering'}
+                  label={'Allowlist Program'}
                   toggleModal={
                     isSaleInitiated ? toggleClaimModal : toggleSetWhitelistModal
                   }
@@ -523,6 +524,7 @@ const TokenSaleDetails = () => {
                   isClaimButtonDisabled={
                     isClaimPurchaseTokenButtonDisabled || !isDuringWhitelistSale
                   }
+                  isBonding={tokenOffer.offeringOverview.isBonding}
                 />
                 {isSaleInitiated && !isWhitelistSaleEnded && (
                   <div className={cl.buttonWrapper}>
@@ -549,7 +551,11 @@ const TokenSaleDetails = () => {
                           onClick={toggleWhitelistInvestModal}
                           disabled={isWhitelistSaleInvestDisabled}
                         >
-                          <Typography className={cl.text}>INVEST</Typography>
+                          <Typography className={cl.text}>
+                            {tokenOffer.offeringOverview.isBonding
+                              ? 'BOND'
+                              : 'INVEST'}
+                          </Typography>
                         </Button>
                       </div>
                     </Tooltip>
@@ -576,7 +582,7 @@ const TokenSaleDetails = () => {
                   isWhitelistSet={tokenOffer.whitelist.whitelist}
                   isSaleInitiated={isSaleInitiated}
                   item={tokenOffer.publicSale}
-                  label={'Public Sale'}
+                  label={'Public Program'}
                   isFormulaStandard={
                     tokenOffer.publicSale.pricingFormula ===
                     EPricingFormula.Standard
@@ -589,6 +595,7 @@ const TokenSaleDetails = () => {
                     isClaimPurchaseTokenButtonDisabled ||
                     isPublicSaleItemsDisabled
                   }
+                  isBonding={tokenOffer.offeringOverview.isBonding}
                 />
                 {isSaleInitiated && (
                   <Button
@@ -596,7 +603,11 @@ const TokenSaleDetails = () => {
                     onClick={toggleInvestModal}
                     disabled={isPublicSaleItemsDisabled}
                   >
-                    <Typography className={cl.text}>INVEST</Typography>
+                    <Typography className={cl.text}>
+                      {tokenOffer.offeringOverview.isBonding
+                        ? 'BOND'
+                        : 'INVEST'}
+                    </Typography>
                   </Button>
                 )}
               </>
@@ -640,6 +651,7 @@ const TokenSaleDetails = () => {
               isClaimToken={state.isClaimToken}
             />
             <InvestModal
+              isBonding={tokenOffer.offeringOverview.isBonding}
               isWhitelist={state.isWhitelistInvestClicked}
               offerData={tokenOffer.offeringOverview}
               onClose={() => _onClose('isInvestModalOpen')}

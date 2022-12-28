@@ -37,7 +37,7 @@ export const OfferingTableHeader = () => {
       </OfferingTd>
       <OfferingTd type="offeringName">
         <div className={classes.item}>
-          Offering Name&nbsp;
+          Program Name&nbsp;
           <Tooltip title={InfoText.OfferName}>
             <img alt="question" src="/assets/icons/question.svg" />
           </Tooltip>

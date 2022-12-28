@@ -73,7 +73,7 @@ export const CreateTokenSaleHeader = ({ step, onCancel }: IProps) => {
 
   return (
     <div className={clsx(classes.headerTop)}>
-      <Typography className={classes.title}>Token Offering</Typography>
+      <Typography className={classes.title}>Token Program</Typography>
       <div className={classes.headerDataContainer}>
         <CreateTokenSaleStepper step={step} />
         <span className={classes.cancel} onClick={onCancel}>

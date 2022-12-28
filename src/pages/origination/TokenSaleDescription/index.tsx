@@ -282,7 +282,7 @@ export const TokenSaleDescription = (props: IProps) => {
 
   return (
     <div className={classes.root}>
-      <div className={classes.title}>Offering Details</div>
+      <div className={classes.title}>Program Details</div>
       {isNameEditing ? (
         <div className={classes.editorWrapper}>
           <TextField
@@ -292,7 +292,7 @@ export const TokenSaleDescription = (props: IProps) => {
             onChange={(event) => onChange(event, IKey.PoolName)}
             variant="outlined"
             fullWidth
-            label="Offering Name"
+            label="Program Name"
             InputLabelProps={{
               className: classes.inputLabel,
               shrink: true,
@@ -350,7 +350,7 @@ export const TokenSaleDescription = (props: IProps) => {
             onChange={(event) => onChange(event, IKey.Description)}
             variant="outlined"
             fullWidth
-            label="Offering Description"
+            label="Program Description"
             InputLabelProps={{
               className: classes.inputLabel,
               shrink: true,

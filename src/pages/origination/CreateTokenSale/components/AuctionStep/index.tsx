@@ -76,7 +76,7 @@ export const AuctionStep: React.FC<IProps> = ({
           variant="contained"
           disabled={tokenSalePhase !== ETokenSalePhase.Public}
         >
-          Public Sale
+          Public Offering
         </Button>
       </div>
 

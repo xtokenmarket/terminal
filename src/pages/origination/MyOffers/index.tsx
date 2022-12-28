@@ -49,7 +49,7 @@ const MyOffers = () => {
   const isConnected = !!account
 
   const onCreateTokenSale = () => {
-    history.push('/origination/new-token-sale')
+    history.push('/origination/new-token-program')
   }
 
   const onBrowseSales = () => {
@@ -66,7 +66,7 @@ const MyOffers = () => {
     <div className={classes.root}>
       <div className={classes.title}>You have no sales yet.</div>{' '}
       <div className={classes.description}>
-        Browse token offers, or Create your own sales.
+        Browse token programs, or Create your own sales.
       </div>
       <div>
         <Button
@@ -76,7 +76,7 @@ const MyOffers = () => {
           onClick={onBrowseSales}
           variant="contained"
         >
-          BROWSE OFFERS
+          BROWSE PROGRAMS
         </Button>
         {isConnected && (
           <Button

@@ -104,7 +104,7 @@ export const OutputEstimation = (props: IProps) => {
         </div>
       </div>
       <div className={classes.period}>
-        <Typography className={classes.label}>OFFERING PERIOD</Typography>
+        <Typography className={classes.label}>PROGRAM PERIOD</Typography>
         <Typography className={classes.whiteText}>
           {parseRemainingDurationSec(Number(offerData.salesPeriod?.toString()))}
         </Typography>

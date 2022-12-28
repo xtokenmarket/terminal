@@ -324,7 +324,7 @@ export const TableRow = ({
           </Td>
           <Td type={OfferingOverview.ReserveAmount} label={item.label}>
             <Tooltip
-              title="Amount raised over offering reserve amount"
+              title="Amount raised over program reserve amount"
               arrow
               classes={{ tooltip: cl.tooltip }}
             >
