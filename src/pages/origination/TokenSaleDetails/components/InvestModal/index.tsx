@@ -193,19 +193,20 @@ export const InvestModal: React.FC<IProps> = ({
             offerData={offerData}
             updateState={updateState}
             purchaseAmount={state.purchaseAmount}
+            isBonding={isBonding}
           />
         )
       case EInvestModalStep.Invest:
         return (
           <InvestSection
             isWhitelist={isWhitelist}
-            offerAmount={state.offerAmount}
             offerData={offerData}
             onNext={onNextStep}
             onClose={_onClose}
             updateState={updateState}
             maxContributionAmount={addressCap}
             purchaseAmount={state.purchaseAmount}
+            isBonding={isBonding}
           />
         )
       default:

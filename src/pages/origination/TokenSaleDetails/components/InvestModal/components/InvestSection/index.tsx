@@ -20,11 +20,11 @@ interface IProps {
   isWhitelist: boolean
   onNext: () => void
   onClose: () => void
-  offerAmount: BigNumber
   offerData: IOfferingOverview
   updateState: (e: any) => void
   maxContributionAmount: BigNumber
   purchaseAmount: BigNumber
+  isBonding: boolean
 }
 
 interface IState {
@@ -39,8 +39,8 @@ export const InvestSection = (props: IProps) => {
   const { account, library: provider } = useConnectedWeb3Context()
 
   const {
+    isBonding,
     isWhitelist,
-    offerAmount,
     offerData,
     onClose,
     onNext,
@@ -138,7 +138,7 @@ export const InvestSection = (props: IProps) => {
             <CircularProgress className={classes.progress} size={24} />
           </>
         ) : (
-          'INVEST TOKEN'
+          `${isBonding ? 'BOND' : 'INVEST'} TOKEN`
         )}
       </Button>
       <Button
