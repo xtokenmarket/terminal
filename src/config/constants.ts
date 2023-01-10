@@ -23,7 +23,7 @@ export const LOGGER_ID = 'terminal'
 
 export const TERMINAL_API_URL = 'https://terminal.xtokenapi.link/api'
 export const ORIGINATION_API_URL =
-  'https://terminalstage.xtokenapi.link/api/origination'
+  'https://terminal.xtokenapi.link/api/origination'
 export const POLL_API_DATA = 120000 // 2 min
 
 export const ETHER_DECIMAL = 18
