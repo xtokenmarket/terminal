@@ -1,13 +1,15 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { BigNumber } from 'ethers'
 import { transparentize } from 'polished'
 import { useHistory, useParams } from 'react-router'
 import { Button, makeStyles, Tooltip, Typography } from '@material-ui/core'
 import { PageContent, PageHeader, PageWrapper, SimpleLoader } from 'components'
+import { useConnectedWeb3Context, useNetworkContext } from 'contexts'
 import { useOriginationPool } from 'helpers'
 import { formatDateTime, getCurrentTimeStamp, getRemainingTimeSec } from 'utils'
 import { EOriginationEvent, EPricingFormula, Network } from 'utils/enums'
-import { IClaimData } from 'types'
+import { getIdFromNetwork, getNetworkFromId } from 'utils/network'
+import { IClaimData, NetworkId } from 'types'
 
 import { ClaimModal } from './components/ClaimModal'
 import { InitiateSaleModal } from './components/InitiateSaleModal'
@@ -77,6 +79,11 @@ const useStyles = makeStyles((theme) => ({
     borderColor: theme.colors.primary200,
     marginTop: 20,
   },
+  switchNetworkContainer: {
+    textAlign: 'center',
+    height: '300px',
+  },
+  switchNetworkButton: { height: 48, margin: 20, width: 220 },
 }))
 
 export type RouteParams = {
@@ -98,6 +105,8 @@ const TokenSaleDetails = () => {
   const cl = useStyles()
   const history = useHistory()
   const { network, poolAddress } = useParams<RouteParams>()
+  const { networkId } = useConnectedWeb3Context()
+  const { switchChain } = useNetworkContext()
   const { tokenOffer, loadInfo } = useOriginationPool(
     poolAddress,
     network as Network,
@@ -119,6 +128,10 @@ const TokenSaleDetails = () => {
     tokenOffer?.offeringOverview.totalOfferingAmount.sub(
       tokenOffer?.offeringOverview.offerTokenAmountSold
     )
+
+  const handleNetworkChange = useCallback(async () => {
+    await switchChain(getIdFromNetwork(network as Network))
+  }, [switchChain])
 
   const onInitiateSuccess = async () => {
     setState((prev) => ({
@@ -449,6 +462,22 @@ const TokenSaleDetails = () => {
     : `${tokenOffer?.offeringOverview.offerToken.symbol} ${formatDateTime(
         tokenOffer?.originationRow.createdAt?.toNumber() || 0
       )}`
+
+  if (networkId && getNetworkFromId(networkId as NetworkId) !== network) {
+    return (
+      <div className={cl.switchNetworkContainer}>
+        <Button
+          className={cl.switchNetworkButton}
+          color="primary"
+          fullWidth
+          onClick={handleNetworkChange}
+          variant="contained"
+        >
+          SWITCH TO {network.toUpperCase()}
+        </Button>
+      </div>
+    )
+  }
 
   return (
     <PageWrapper>

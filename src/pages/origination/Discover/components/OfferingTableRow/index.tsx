@@ -9,9 +9,7 @@ import {
   parseDurationSec,
 } from 'utils'
 import { useCountdown, useOriginationPool } from 'helpers'
-import { useConnectedWeb3Context } from 'contexts'
-import { getNetworkFromId } from 'utils/network'
-import { IOriginationPool, NetworkId } from 'types'
+import { IOriginationPool } from 'types'
 import { getCountdownText } from 'utils/number'
 
 import { OfferingTd } from '../index'
@@ -98,10 +96,9 @@ interface IProps {
 
 export const OfferingTableRow = ({ offering }: IProps) => {
   const cl = useStyles()
-  const { networkId } = useConnectedWeb3Context()
   const { tokenOffer } = useOriginationPool(
     offering.address,
-    getNetworkFromId(networkId as NetworkId),
+    offering.network,
     offering,
     false
   )
