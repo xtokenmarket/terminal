@@ -1,5 +1,5 @@
 import { LoadingScreen } from 'components'
-import { MainLayout, TerminalLayout } from 'layouts'
+import { MainLayout, TerminalLayout, OriginationLayout } from 'layouts'
 import React, { Fragment, Suspense, lazy } from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
 
@@ -8,11 +8,11 @@ const routes = [
     path: '/',
     layout: MainLayout,
     routes: [
-      // {
-      //   exact: true,
-      //   path: "/home",
-      //   component: lazy(() => import("pages/ComingSoon")),
-      // },
+      {
+        exact: true,
+        path: '/',
+        component: lazy(() => import('pages/Home')),
+      },
       {
         exact: true,
         path: '/native',
@@ -20,8 +20,8 @@ const routes = [
       },
       {
         exact: true,
-        path: '/origination',
-        component: lazy(() => import('pages/ComingSoon')),
+        path: '/origination/new-token-program',
+        component: lazy(() => import('pages/origination/CreateTokenSale')),
       },
       {
         exact: true,
@@ -31,12 +31,22 @@ const routes = [
       {
         exact: true,
         path: '/mining/new-pool',
-        component: lazy(() => import('pages/CreatePool')),
+        component: lazy(() => import('pages/mining/CreatePool')),
       },
       {
         exact: true,
         path: '/mining/pools/:network/:id',
-        component: lazy(() => import('pages/PoolDetails')),
+        component: lazy(() => import('pages/mining/PoolDetails')),
+      },
+      {
+        exact: true,
+        path: '/origination/programs/:network/:poolAddress',
+        component: lazy(() => import('pages/origination/TokenSaleDetails')),
+      },
+      {
+        exact: true,
+        path: '/minter',
+        component: lazy(() => import('pages/ComingSoon')),
       },
       {
         path: '/mining',
@@ -45,12 +55,12 @@ const routes = [
           {
             exact: true,
             path: '/mining/discover',
-            component: lazy(() => import('pages/Discover')),
+            component: lazy(() => import('pages/mining/Discover')),
           },
           {
             exact: true,
             path: '/mining/my-pools',
-            component: lazy(() => import('pages/MyPools')),
+            component: lazy(() => import('pages/mining/MyPools')),
           },
           {
             exact: true,
@@ -66,9 +76,35 @@ const routes = [
         ],
       },
       {
+        path: '/origination',
+        layout: OriginationLayout,
+        routes: [
+          {
+            exact: true,
+            path: '/origination/discover',
+            component: lazy(() => import('pages/origination/Discover')),
+          },
+          {
+            exact: true,
+            path: '/origination/my-programs',
+            component: lazy(() => import('pages/origination/MyOffers')),
+          },
+          {
+            exact: true,
+            path: '/origination/about',
+            component: lazy(() => import('pages/About')),
+          },
+          {
+            path: '*',
+            // eslint-disable-next-line
+            component: () => <Redirect to="/origination/discover" />,
+          },
+        ],
+      },
+      {
         path: '*',
         // eslint-disable-next-line
-        component: () => <Redirect to="/mining" />,
+        component: () => <Redirect to="/" />,
       },
     ],
   },

@@ -1,10 +1,16 @@
 import { SvgIcons } from './constants'
 
 export const MENU_ITEMS = [
-  // { id: "home", label: "home", icon: SvgIcons.home, href: "/home" },
   {
     id: 'terminal',
     label: 'terminal',
+    icon: SvgIcons.home,
+    href: '/',
+    enabled: true,
+  },
+  {
+    id: 'mining',
+    label: 'mining',
     icon: SvgIcons.mining,
     href: '/mining',
     enabled: true,
@@ -14,13 +20,13 @@ export const MENU_ITEMS = [
     label: 'origination',
     icon: SvgIcons.origination,
     href: '/origination',
-    enabled: false,
+    enabled: true,
   },
   {
-    id: 'auction',
-    label: 'liquidity auction',
-    icon: SvgIcons.auction,
-    href: '/auction',
+    id: 'minter',
+    label: 'Minter',
+    icon: SvgIcons.minter,
+    href: '/minter',
     enabled: false,
   },
   {
@@ -28,6 +34,13 @@ export const MENU_ITEMS = [
     label: 'native collateral',
     icon: SvgIcons.native,
     href: '/native',
+    enabled: false,
+  },
+  {
+    id: 'auction',
+    label: 'liquidity auction',
+    icon: SvgIcons.auction,
+    href: '/auction',
     enabled: false,
   },
 ]

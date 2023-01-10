@@ -10,6 +10,11 @@ import UniswapV3PoolStateAbi from './UniswapV3PoolState.json'
 import UniswapV3PositionAbi from './UniswapV3Position.json'
 import NonRewardPoolAbi from './NonRewardPool.json'
 
+// Origination
+import OriginationCoreAbi from './origination/OriginationCore.json'
+import OriginationPoolAbi from './origination/OriginationPool.json'
+import VestingEntryNFTAbi from './origination/VestingEntryNFT.json'
+
 const Abi = {
   CLRV0: CLRV0Abi,
   CLRV1: CLRV1Abi,
@@ -22,6 +27,11 @@ const Abi = {
   UniswapV3PoolState: UniswapV3PoolStateAbi,
   UniswapV3Position: UniswapV3PositionAbi, // NonfungiblePositionManager
   NonRewardPool: NonRewardPoolAbi,
+
+  // Origination
+  OriginationCore: OriginationCoreAbi,
+  OriginationPool: OriginationPoolAbi,
+  VestingEntryNFT: VestingEntryNFTAbi,
 }
 
 export default Abi

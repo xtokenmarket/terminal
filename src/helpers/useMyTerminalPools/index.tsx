@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useConnectedWeb3Context, useNetworkContext } from 'contexts'
 import { useEffect, useState } from 'react'
 import { useSnackbar } from 'notistack'
-import { TERMINAL_API_URL } from 'config/constants'
+import { TERMINAL_API_URL, TEST_NETWORKS } from 'config/constants'
 import { ITerminalPool } from 'types'
 import { isTestnet } from 'utils/network'
 import { Network } from 'utils/enums'
@@ -11,8 +11,6 @@ interface IState {
   loading: boolean
   pools: ITerminalPool[]
 }
-
-const testNetworks = [Network.KOVAN, Network.RINKEBY, Network.GOERLI]
 
 export const useMyTerminalPools = () => {
   const [state, setState] = useState<IState>({ pools: [], loading: true })
@@ -34,10 +32,10 @@ export const useMyTerminalPools = () => {
         // Filter testnet pools on production and parse API data
         let filteredPools = isTestnet(chainId)
           ? userPools.filter((pool) =>
-              testNetworks.includes(pool.network as Network)
+              TEST_NETWORKS.includes(pool.network as Network)
             )
           : userPools.filter(
-              (pool) => !testNetworks.includes(pool.network as Network)
+              (pool) => !TEST_NETWORKS.includes(pool.network as Network)
             )
         filteredPools = filteredPools.map(
           ({ poolAddress: address, ...pool }) => ({

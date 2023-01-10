@@ -12,8 +12,6 @@ export const getNetworkFromId = (networkId?: NetworkId) => {
       return Network.OPTIMISM
     case ChainId.Polygon:
       return Network.POLYGON
-    case ChainId.Rinkeby:
-      return Network.RINKEBY
     case ChainId.Kovan:
       return Network.KOVAN
     case ChainId.Goerli:
@@ -33,8 +31,6 @@ export const getIdFromNetwork = (network?: Network): ChainId => {
       return ChainId.Optimism
     case Network.POLYGON:
       return ChainId.Polygon
-    case Network.RINKEBY:
-      return ChainId.Rinkeby
     case Network.KOVAN:
       return ChainId.Kovan
     case Network.GOERLI:
@@ -44,6 +40,9 @@ export const getIdFromNetwork = (network?: Network): ChainId => {
   }
 }
 
+export const isTestNetwork = (network?: Network): boolean =>
+  !!network && [Network.KOVAN, Network.GOERLI].includes(network)
+
 export const isTestnet = (chainId: ChainId): boolean => {
-  return [ChainId.Kovan, ChainId.Rinkeby, ChainId.Goerli].includes(chainId)
+  return [ChainId.Kovan, ChainId.Goerli].includes(chainId)
 }

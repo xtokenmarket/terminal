@@ -1,6 +1,11 @@
 import { BigNumber } from 'ethers'
 import { IRewardState } from 'components'
-import { Network } from '../utils/enums'
+import {
+  Network,
+  EPricingFormula,
+  EPeriods,
+  EVestingOption,
+} from '../utils/enums'
 
 declare global {
   interface Window {
@@ -18,11 +23,13 @@ export interface INetwork {
   contracts: {
     LM: string
     multicall: string
+    origination: string
     rewardEscrow: string
     uniswapFactory: string
     uniRouter: string
     uniQuoter: string
     uniPositionManager: string
+    vestingEntryNFT: string
   }
   terminal: {
     tradeFee: BigNumber
@@ -33,11 +40,11 @@ export interface INetwork {
   unigraph: string
 }
 
-export type NetworkId = 1 | 4 | 5 | 10 | 42 | 137 | 42161
+export type NetworkId = 1 | 5 | 10 | 42 | 137 | 42161
 
 export type KnownContracts = keyof INetwork['contracts']
 
-export type KnownToken = 'dai' | 'weth' | 'usdt' | 'usdc'
+export type KnownToken = 'dai' | 'weth' | 'usdt' | 'usdc' | 'eth' | 'agg'
 
 export interface IKnownTokenData {
   name: string
@@ -206,4 +213,182 @@ export interface PoolService {
   reinvest: () => Promise<any>
   waitUntilReinvest: (txId: string) => Promise<any>
   calculateWithdrawAmounts: (amount: BigNumber) => Promise<any>
+}
+
+export type PeriodUnit = EPeriods[keyof EPeriods]
+
+type VestingOption = EVestingOption[keyof EVestingOption]
+
+export type SaleData = {
+  enabled: boolean | null
+  offeringPeriod: string
+  offeringPeriodUnit: PeriodUnit
+  startingPrice: string
+  endingPrice: string
+  pricingFormula?: EPricingFormula
+}
+
+export interface ICreateTokenSaleData {
+  offerTokenAmount: string
+  reserveOfferTokenAmount: string
+  offerToken?: IToken
+  purchaseToken?: IToken
+  vestingEnabled?: VestingOption
+  vestingPeriod: string
+  vestingPeriodUnit: PeriodUnit
+  cliffPeriod: string
+  cliffPeriodUnit: PeriodUnit
+  whitelistSale: SaleData
+  publicSale: SaleData
+}
+
+export interface ISaleParams {
+  offerToken: string
+  purchaseToken: string
+  totalOfferingAmount: BigNumber
+  reserveAmount: BigNumber
+  vestingPeriod: BigNumber
+  cliffPeriod: BigNumber
+  publicStartingPrice: BigNumber
+  publicEndingPrice: BigNumber
+  whitelistStartingPrice: BigNumber
+  whitelistEndingPrice: BigNumber
+  publicSaleDuration: BigNumber
+  whitelistSaleDuration: BigNumber
+}
+
+export interface ITokenOffer {
+  address: string
+  network: Network
+  offeringOverview: IOfferingOverview
+  originationRow: IOriginationRow
+  whitelist: IWhitelistSale
+  publicSale: IPublicSale
+  userPosition: IUserPosition
+  offeringSummary: IOfferingSummary
+  sponsorTokensClaimed: boolean
+  purchaseTokenBalance: BigNumber
+}
+
+interface Label {
+  label: OriginationLabels
+}
+
+export interface IOfferingOverview extends Label {
+  purchaseTokenRaised: BigNumberish
+  cliffPeriod: BigNumber
+  reserveAmount: BigNumber
+  offerToken: IToken
+  offerTokenAmountSold: BigNumber
+  poolAddress: string
+  purchaseToken: IToken
+  salesBegin: BigNumber
+  salesEnd: BigNumber
+  salesPeriod?: BigNumber
+  totalOfferingAmount: BigNumber
+  vestingPeriod: BigNumber
+  isOwnerOrManager: boolean
+  isBonding: boolean
+}
+
+export interface IOriginationRow extends IOfferingOverview {
+  startingPrice: BigNumber
+  saleDuration?: BigNumber
+  createdAt: BigNumber
+  description: string
+  poolName: string
+}
+
+export interface IWhitelistSale extends Label {
+  currentPrice: BigNumber
+  pricingFormula: string
+  startingPrice?: BigNumber
+  endingPrice?: BigNumber
+  whitelist?: boolean
+  addressCap: BigNumber
+  timeRemaining: BigNumber
+  salesPeriod?: BigNumber
+  offerToken: IToken
+  purchaseToken: IToken
+  whitelistMerkleRoot?: string[]
+  isAddressWhitelisted: boolean
+  endOfWhitelistPeriod: BigNumber
+}
+
+export interface IPublicSale extends Label {
+  currentPrice: BigNumber
+  pricingFormula: string
+  salesPeriod?: BigNumber
+  timeRemaining: BigNumber
+  offerToken: IToken
+  purchaseToken: IToken
+  startingPrice: BigNumber
+  endingPrice: BigNumber
+  saleEndTimestamp: BigNumber
+}
+
+export interface IUserPosition extends Label {
+  amountAvailableToVest: BigNumber
+  amountAvailableToVestToWallet: BigNumber
+  amountInvested: BigNumber
+  amountVested: BigNumber
+  fullyVestableAt: BigNumber
+  offerToken: IToken
+  purchaseToken: IToken
+  tokenPurchased: BigNumber
+  userToVestingId: string[]
+  vestableAt: BigNumber
+  vestableTokenAmount: BigNumber
+  vestingPeriod: BigNumber
+}
+
+export interface IOfferingSummary extends Label {
+  offerToken: IToken
+  purchaseToken: IToken
+  tokensAcquired: BigNumber
+  purchaseTokenRaised: BigNumber
+  vestingPeriod: BigNumber
+  cliffPeriod: BigNumber
+  salesCompleted: BigNumber
+  timeSinceCompleted: BigNumber
+}
+
+export type OriginationDetailItem =
+  | IOfferingOverview
+  | IWhitelistSale
+  | IPublicSale
+  | IUserPosition
+  | IOfferingSummary
+
+export interface IClaimData {
+  offerToken?: IToken
+  offerTokenAmount?: BigNumber
+  purchaseToken?: IToken
+  purchaseTokenAmount?: BigNumber
+}
+
+export interface IOriginationPool {
+  address: string
+  offerToken: IToken
+  purchaseToken: IToken
+  owner: string
+  manager: string
+  network: Network
+  reserveAmount: BigNumber
+  totalOfferingAmount: BigNumber
+  offerTokenAmountSold: BigNumber
+  publicStartingPrice: BigNumber
+  publicEndingPrice: BigNumber
+  publicSaleDuration: BigNumber
+  saleInitiatedTimestamp: BigNumber
+  saleEndTimestamp: BigNumber
+  vestingPeriod: BigNumber
+  cliffPeriod: BigNumber
+  whitelistStartingPrice: BigNumber
+  whitelistEndingPrice: BigNumber
+  whitelistSaleDuration: BigNumber
+  getOfferTokenPrice: BigNumber
+  vestableTokenAmount: BigNumber
+  purchaseTokensAcquired: BigNumber
+  sponsorTokensClaimed: boolean
 }

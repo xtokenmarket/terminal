@@ -3,6 +3,8 @@ import Tooltip from '@material-ui/core/Tooltip'
 import clsx from 'clsx'
 import { MENU_ITEMS, SOCIAL_ITEMS } from 'config/layout'
 import { NavLink, useHistory, matchPath } from 'react-router-dom'
+import { ReactComponent as OriginationIcon } from 'assets/svgs/origination.svg'
+import colors from 'theme/colors'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,10 +56,6 @@ const useStyles = makeStyles((theme) => ({
     height: 36,
     marginRight: 24,
   },
-  logoLabel: {
-    color: theme.colors.white,
-    fontWeight: 600,
-  },
   body: { flex: 1, paddingTop: 32 },
   footer: {},
   item: {
@@ -84,7 +82,6 @@ const useStyles = makeStyles((theme) => ({
       '& svg': {
         width: 20,
         height: 20,
-        '& g': { opacity: 0.6 },
       },
     },
 
@@ -142,15 +139,33 @@ export const Sidebar = () => {
         <div onClick={(e) => e.stopPropagation()} className={classes.content}>
           <div className={classes.header}>
             <div className={classes.logoWrapper}>
-              <img alt="logo" src="/assets/logo.png" className={classes.logo} />
-              <Typography className={classes.logoLabel}>XTOKEN</Typography>
+              <NavLink to={'/'}>
+                <img
+                  alt="logo"
+                  src="/assets/logo.png"
+                  className={classes.logo}
+                />
+              </NavLink>
             </div>
           </div>
           <div className={classes.body}>
-            {MENU_ITEMS.map(({ icon: Icon, href, enabled }) => {
+            {MENU_ITEMS.map(({ icon: Icon, href, enabled, label }) => {
+              if (href === '/') return
+              const getIsActive = () =>
+                !!matchPath(history.location.pathname, {
+                  path: href,
+                  exact: false,
+                })
+
               const content = (
                 <div className="menu-item-icon-wrapper">
-                  <Icon />
+                  <Icon
+                    fill={
+                      getIsActive()
+                        ? colors[0].colors.white
+                        : colors[0].colors.primary100
+                    }
+                  />
                 </div>
               )
 
@@ -172,19 +187,25 @@ export const Sidebar = () => {
               }
 
               return (
-                <NavLink
-                  isActive={() =>
-                    !!matchPath(history.location.pathname, {
-                      path: href,
-                      exact: false,
-                    })
-                  }
-                  to={href}
+                <Tooltip
+                  title={label}
+                  arrow
+                  placement="top"
+                  classes={{
+                    arrow: classes.tooltipArrow,
+                    tooltip: classes.tooltip,
+                  }}
                   key={href}
-                  className={classes.item}
                 >
-                  {content}
-                </NavLink>
+                  <NavLink
+                    isActive={getIsActive}
+                    to={href}
+                    key={href}
+                    className={classes.item}
+                  >
+                    {content}
+                  </NavLink>
+                </Tooltip>
               )
             })}
           </div>
@@ -201,7 +222,7 @@ export const Sidebar = () => {
                   className={classes.item}
                 >
                   <div className="menu-item-icon-wrapper">
-                    <Icon />
+                    <Icon fill="white" />
                   </div>
                 </a>
               )

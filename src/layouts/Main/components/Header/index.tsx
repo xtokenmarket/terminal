@@ -1,5 +1,4 @@
 import { makeStyles, Button } from '@material-ui/core'
-
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet'
 import { matchPath, useHistory } from 'react-router'
 import { useEffect, useMemo, useState } from 'react'
@@ -12,6 +11,8 @@ import { useScrollYPosition } from 'helpers'
 import clsx from 'clsx'
 import connectors from 'utils/connectors'
 import { ChainId, STORAGE_KEY_CONNECTOR } from 'config/constants'
+import colors from 'theme/colors'
+import { NavLink } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -110,7 +111,7 @@ export const Header = () => {
       (item) =>
         !!matchPath(history.location.pathname, {
           path: item.href,
-          exact: false,
+          exact: !!(item.href === '/'),
         })
     )
     return item
@@ -147,10 +148,12 @@ export const Header = () => {
   return (
     <div className={clsx(classes.root, yPosition >= 30 && 'blur-header')}>
       <div className={classes.logo}>
-        <img alt="logo" src="/assets/logo.png" />
+        <NavLink to={'/'}>
+          <img alt="logo" src="/assets/logo.png" />
+        </NavLink>
       </div>
       <div className={classes.title}>
-        {Icon && <Icon />}
+        {Icon && <Icon fill={colors[0].colors.white} />}
         <span>
           xtoken <span>{selectedMenuItem?.label}</span>
         </span>
@@ -163,6 +166,7 @@ export const Header = () => {
           />
         )}
         <Button
+          id="connectWallet"
           className={classes.connect}
           color="primary"
           variant="contained"

@@ -94,12 +94,14 @@ const useStyles = makeStyles((theme) => ({
 interface IProps {
   onClose: () => void
   onSelect: (_: IToken) => void
+  includeETH?: boolean
   open: boolean
 }
 
 export const TokenSelectModal: React.FC<IProps> = ({
   onSelect,
   onClose,
+  includeETH = false,
   open,
 }) => {
   const cl = useStyles()
@@ -114,7 +116,7 @@ export const TokenSelectModal: React.FC<IProps> = ({
   }, [])
 
   const debouncedQuery = useDebounce(searchQuery, 500)
-  const allTokens = useAllTokens()
+  const allTokens = useAllTokens(!!includeETH)
   const [tokensList, setTokensList] = useState<IToken[]>(allTokens)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -167,9 +169,10 @@ export const TokenSelectModal: React.FC<IProps> = ({
               placeholder="Search by token name or paste address"
               value={searchQuery}
               onChange={onSearchQueryChange}
+              id="tokenAddress"
             />
             <Typography className={cl.commonLabel}>COMMON BASES</Typography>
-            <CommonTokens onSelectToken={onSelect} />
+            <CommonTokens onSelectToken={onSelect} includeETH={includeETH} />
           </div>
         </div>
         <TokensList

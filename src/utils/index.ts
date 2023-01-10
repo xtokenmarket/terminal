@@ -1,8 +1,11 @@
 import { INSUFFICIENT_FUNDS_ERROR } from 'config/constants'
 import { BigNumber, BigNumberish, utils } from 'ethers'
 import moment from 'moment'
+import { ZERO } from './number'
 
 const { formatUnits } = utils
+
+const secondsIn1Day = 24 * 60 * 60
 
 export const shortenAddress = (address: string) => {
   return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`
@@ -12,7 +15,15 @@ export const formatBigNumber = (
   value: BigNumberish,
   decimals: number,
   precision = 2
-): string => Number(formatUnits(value, decimals)).toFixed(precision)
+): string => {
+  const _value = Number(formatUnits(value, decimals))
+  if (_value < 1000) {
+    return formatSmallNumber(_value.toString())
+  }
+  return Number.isInteger(_value)
+    ? _value.toString()
+    : _value.toFixed(precision)
+}
 
 export const numberWithCommas = (
   x: string,
@@ -22,7 +33,9 @@ export const numberWithCommas = (
   if (!x) return '0'
   const n = Number(x)
   if (n < 1000) {
-    return Number.isInteger(n) && !forcePrecision ? x : n.toFixed(decimals)
+    // TODO: need to check the formatting consistency in mining app
+    // return Number.isInteger(n) && !forcePrecision ? x : n.toFixed(decimals)
+    return formatSmallNumber(x)
   }
   let formattedNumber = n.toFixed(decimals).replace(/\d(?=(\d{3})+\.)/g, '$&,')
   const splitArray = formattedNumber.split('.')
@@ -32,7 +45,7 @@ export const numberWithCommas = (
   return formattedNumber
 }
 
-export const formatToShortNumber = (number: string, decimals = 2): string => {
+export const formatToShortNumber = (number: string, decimals = 1): string => {
   if (number.length < 1) {
     return '0'
   }
@@ -41,14 +54,24 @@ export const formatToShortNumber = (number: string, decimals = 2): string => {
   let unitIndex = 0
   let rNumber = parseFloat(number.split(',').join(''))
 
-  while (rNumber >= 1000 && unitIndex < 4) {
-    unitIndex += 1
-    rNumber = rNumber / 1000
+  if (rNumber >= 1000) {
+    while (rNumber >= 1000 && unitIndex < 4) {
+      unitIndex += 1
+      rNumber = rNumber / 1000
+    }
+    return `${parseFloat(rNumber.toFixed(decimals))}${units[unitIndex]}`
   }
 
-  return `${Math.round(parseFloat(rNumber.toFixed(decimals)))}${
-    units[unitIndex]
-  }`
+  return formatSmallNumber(number)
+}
+
+const getToFixed = (value: string) => {
+  const priceInt = parseInt(value)
+  return priceInt >= 100 ? 0 : priceInt >= 1 ? 2 : 4
+}
+
+const formatSmallNumber = (number: string) => {
+  return parseFloat(Number(number).toFixed(getToFixed(number))).toString()
 }
 
 export const hideInsignificantZeros = (x: string) => {
@@ -173,7 +196,7 @@ export const getCurrentTimeStamp = () => Math.floor(Date.now() / 1000)
 export const getTotalTokenPrice = (
   amount: BigNumber,
   decimal: number,
-  price: string
+  price = '0'
 ) => {
   const totalPrice =
     Number(formatUnits(amount, decimal).toString()) * Number(price)
@@ -205,10 +228,110 @@ export const getMetamaskError = (error: any) => {
   return null
 }
 
+export const getDurationSec = (amount: number, unit: string) => {
+  let durationSec = 0
+  if (isNaN(amount)) {
+    amount = 0
+  }
+
+  if (unit === 'Minutes') {
+    durationSec = amount * 60
+  }
+  if (unit === 'Hours') {
+    durationSec = amount * 60 * 60
+  }
+  if (unit === 'Days') {
+    durationSec = amount * secondsIn1Day
+  }
+  if (unit === 'Weeks') {
+    durationSec = amount * secondsIn1Day * 7
+  }
+  if (unit === 'Months') {
+    durationSec = amount * secondsIn1Day * 30
+  }
+  if (unit === 'Years') {
+    durationSec = amount * secondsIn1Day * 365
+  }
+
+  return BigNumber.from(durationSec.toString())
+}
+
+export const parseDurationSec = (amount: number) => {
+  if (amount === 0) return '0 seconds'
+
+  const unitNames = ['Year', 'Month', 'Week', 'Day', 'Hour', 'Minute', 'Second']
+  const amountByUnit = [
+    amount / (secondsIn1Day * 365),
+    amount / (secondsIn1Day * 30),
+    amount / (secondsIn1Day * 7),
+    amount / secondsIn1Day,
+    amount / (60 * 60),
+    amount / 60,
+    amount,
+  ].map(Math.floor)
+  const applicableUnitIndex = amountByUnit.findIndex((amount) => amount > 0)
+  const getUnitEnding = (unitAmount: number) => (unitAmount > 1 ? 's' : '')
+
+  if (!amountByUnit[applicableUnitIndex]) return 'None'
+
+  return `${amountByUnit[applicableUnitIndex]} ${
+    unitNames[applicableUnitIndex]
+  }${getUnitEnding(amountByUnit[applicableUnitIndex])}`
+}
+
+export const parseRemainingDurationSec = (
+  amount: number,
+  unitPrecision = 3
+) => {
+  if (amount === 0) return '0 Seconds'
+
+  const duration = moment.duration(amount * 1000)
+
+  return [
+    { Year: duration.years() },
+    { Minutes: duration.months() },
+    { Week: duration.weeks() },
+    // for some reason, moment keeps days and weeks irrespective of each other
+    { Day: Math.max(duration.days() - duration.weeks() * 7, 0) },
+    { Hour: duration.hours() },
+    { Minute: duration.minutes() },
+  ]
+    .filter((unit) => Object.values(unit)[0] > 0)
+    .map((unit) => {
+      const [key, value] = Object.entries(unit)[0]
+      return `${value.toString()} ${key}${
+        Number(value.toString()) > 1 ? 's' : ''
+      }`
+    })
+    .filter((_, i) => i < unitPrecision)
+    .join(' ')
+}
+
+export const formatDurationUnits = (duration: string[]) => {
+  const primary = duration[0] || ''
+  const rest = duration.slice(1, duration.length)
+  rest.splice(0, 0, '')
+  return { primary, rest: rest.join(' — ') }
+}
+
+export const getRemainingTimeSec = (endingTime: BigNumber) => {
+  if (endingTime.toString() === '0') return ZERO
+  let remainingTime = BigNumber.from(Number(endingTime.toString()) * 1000).sub(
+    BigNumber.from(Date.now().toString())
+  )
+  remainingTime = BigNumber.from((Number(remainingTime) / 1000).toFixed())
+  return Number(remainingTime) < 0 ? ZERO : remainingTime
+}
+
 export const formatDateTime = (timestamp: number) => {
   return new Intl.DateTimeFormat('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
   }).format(new Date(timestamp * 1000))
+}
+
+export const parsePeriod = (amount: string, unit: string) => {
+  const _unit = Number(amount) > 1 ? unit : unit.slice(0, -1)
+  return `${amount} ${_unit}`
 }

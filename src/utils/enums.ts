@@ -108,8 +108,26 @@ export enum Network {
   OPTIMISM = 'optimism',
   POLYGON = 'polygon',
   KOVAN = 'kovan',
-  RINKEBY = 'rinkeby',
   GOERLI = 'goerli',
+}
+
+export enum EPeriods {
+  // TODO: remove on production
+  Minutes = 'Minutes',
+  Hours = 'Hours',
+  Days = 'Days',
+  Weeks = 'Weeks',
+  Month = 'Months',
+}
+
+export enum EOfferingPeriods {
+  // TODO: remove on production
+  Minutes = 'Minutes',
+  Hours = 'Hours',
+  Days = 'Days',
+  Weeks = 'Weeks',
+  Month = 'Months',
+  Year = 'Years',
 }
 
 // uni v3
@@ -138,4 +156,143 @@ export enum NetworkIcon {
   kovan = 'Ethereum',
   rinkeby = 'Ethereum',
   goerli = 'Ethereum',
+}
+
+export enum ECreateTokenSaleStep {
+  Offering = 'Offering',
+  Auction = 'Auction',
+  Vesting = 'Vesting',
+  Confirm = 'Confirm',
+}
+
+export enum EPricingFormula {
+  Standard = 'Standard',
+  Ascending = 'Ascending',
+  Descending = 'Descending',
+}
+
+export enum ECreateTokenSaleModalStep {
+  Init = 'Init',
+  Success = 'Success',
+}
+
+export enum InfoText {
+  AmountRaised = 'Total amount of purchase token raised',
+  Ascending = 'Price steadily goes up from program standard price. ',
+  CliffPeriod = 'Amount of time until first tokens are available to claim',
+  Descending = 'Price steadily goes down from program standard price. ',
+  OfferingPeriod = 'Duration of offer',
+  OfferingStatus = 'Number of offer tokens already acquired as share of total program',
+  OfferName = 'Name of the token program',
+  OfferToken = 'The token being offered to contributors',
+  OfferTokenAmount = 'Maximum amount of token offered to contributors',
+  PricePerToken = 'Price of purchase token per 1 offer token',
+  PurchaseToken = 'The token used by contributors to acquire the offer token',
+  RemainingOffering = 'The amount of offer tokens remaining and the maximum amount available in this program',
+  ReserveOfferTokenAmount = 'Minimum amount of purchase token raised for successful program',
+  Standard = 'All offer tokens sells for 1 USDC',
+  TimeRemaining = 'Duration remaining until the offer ends',
+  VestingPeriod = 'Amount of time until all tokens are available to claim',
+}
+
+export enum Description {
+  OfferTokenAmount = 'Determine the amount of token you want to sell',
+  StartingPrice = 'Price at the beginning of the period',
+  EndingPrice = 'Price at the end of the period',
+}
+
+export enum EVestingOption {
+  Yes = 'Yes',
+  No = 'No',
+}
+
+export enum OriginationLabels {
+  OfferingOverview = 'offeringOverview',
+  WhitelistSale = 'whitelistSale',
+  PublicSale = 'publicSale',
+  UserPosition = 'userPosition',
+  OfferingSummary = 'offeringSummary',
+}
+
+export enum OfferingOverview {
+  OfferToken = 'offerToken',
+  PurchaseToken = 'purchaseToken',
+  OfferingStatus = 'offeringStatus',
+  ReserveAmount = 'reserveAmount',
+  VestingPeriod = 'vestingPeriod',
+  CliffPeriod = 'cliffPeriod',
+  SalesBegin = 'salesBegin',
+  SalesEnd = 'salesEnd',
+  SalesPeriod = 'salesPeriod',
+}
+
+export enum WhitelistSale {
+  CurrentPrice = 'currentPrice',
+  PricingFormula = 'pricingFormula',
+  StartingEndingPrice = 'startingEndingPrice',
+  Whitelist = 'whitelist',
+  AddressCap = 'addressCap',
+  TimeRemaining = 'timeRemaining',
+  SalesPeriod = 'salesPeriod',
+}
+
+export enum PublicSale {
+  CurrentPrice = 'currentPrice',
+  PricingFormula = 'pricingFormula',
+  TimeRemaining = 'timeRemaining',
+  SalesPeriod = 'salesPeriod',
+  StartingEndingPrice = 'startingEndingPrice',
+}
+
+export enum UserPosition {
+  TokenPurchased = 'tokenPurchased',
+  AmountInvested = 'amountInvested',
+  AmountVested = 'amountVested',
+  AmountAvailableToVest = 'amountAvailableToVest',
+  VestableAt = 'vestableAt',
+  TimeToFullVest = 'timeToFullVest',
+  AmountAvailableToVestToWallet = 'amountAvailableToVestToWallet',
+}
+
+export enum OfferingSummary {
+  CliffPeriod = 'cliffPeriod',
+  OfferingStatus = 'offeringStatus',
+  OfferToken = 'offerToken',
+  PurchaseToken = 'purchaseToken',
+  PurchaseTokenRaised = 'purchaseTokenRaised',
+  SalesCompleted = 'salesCompleted',
+  SalesEnded = 'salesEnded',
+  TimeSinceCompleted = 'timeSinceCompleted',
+  TokensAcquired = 'tokensAcquired',
+  VestingPeriod = 'vestingPeriod',
+}
+
+export enum EClaimModalStep {
+  Init = 'Init',
+  Success = 'Success',
+}
+
+export enum ETokenSalePhase {
+  Whitelist = 'Whitelist',
+  Public = 'Public',
+}
+
+export enum VestStep {
+  Info = 'Info',
+  Success = 'Success',
+}
+
+export enum EInvestModalStep {
+  Input = 'Input',
+  Invest = 'Invest',
+  Success = 'Success',
+  Approve = 'Approve',
+}
+
+export enum EOriginationEvent {
+  Claim = 'Claim',
+  InitiateSale = 'InitiateSale',
+  Invest = 'Invest',
+  SaleEnded = 'SaleEnded',
+  Vestable = 'Vestable',
 }

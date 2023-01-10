@@ -41,15 +41,23 @@ const useStyles = makeStyles((theme) => ({
 
 interface IProps {
   onSelectToken: (_: IToken) => void
+  includeETH: boolean
 }
 
-export const CommonTokens: React.FC<IProps> = ({ onSelectToken }) => {
+export const CommonTokens: React.FC<IProps> = ({
+  onSelectToken,
+  includeETH,
+}) => {
   const cl = useStyles()
   const { networkId } = useConnectedWeb3Context()
 
+  const filteredSymbols = commonBaseTokenSymbols.filter((token) =>
+    includeETH ? true : token !== 'eth'
+  )
+
   return (
     <div className={cl.commonTokens}>
-      {commonBaseTokenSymbols.map((tokenId) => {
+      {filteredSymbols.map((tokenId) => {
         const token = getToken(tokenId as any, networkId)
         return (
           <span

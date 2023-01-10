@@ -7,8 +7,10 @@ import { ReactComponent as HomeIcon } from 'assets/svgs/home.svg'
 import { ReactComponent as MiningIcon } from 'assets/svgs/mining.svg'
 import { ReactComponent as NativeIcon } from 'assets/svgs/native.svg'
 import { ReactComponent as OriginationIcon } from 'assets/svgs/origination.svg'
+import { ReactComponent as MinterIcon } from 'assets/svgs/minter.svg'
 import { ReactComponent as TwitterIcon } from 'assets/svgs/twitter.svg'
 import { IToken } from 'types'
+import { ethers } from 'ethers'
 
 // Enable testnet chain support for Vercel deployment
 export const IS_PROD =
@@ -20,16 +22,19 @@ export const STORAGE_KEY_CONNECTOR = 'CONNECTOR'
 export const LOGGER_ID = 'terminal'
 
 export const TERMINAL_API_URL = 'https://terminal.xtokenapi.link/api'
+export const ORIGINATION_API_URL =
+  'https://terminal.xtokenapi.link/api/origination'
 export const POLL_API_DATA = 120000 // 2 min
 
 export const ETHER_DECIMAL = 18
 export const MINT_BURN_SLIPPAGE = BigNumber.from(100)
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000'
+export const NULL_ADDRESS_WHITELIST =
+  '0x0000000000000000000000000000000000000000000000000000000000000000'
 
-export const FIVE_MINUTES_IN_MS = 5 * 60 * 1000
-
-export const ONE_HOUR_IN_MS = 1000 * 60 * 60
-export const ONE_MINUTE_IN_MS = 1000 * 60
+export const ONE_MINUTE_IN_MS = 60 * 1000
+export const FIVE_MINUTES_IN_MS = 5 * ONE_MINUTE_IN_MS
+export const ONE_HOUR_IN_MS = 60 * ONE_MINUTE_IN_MS
 
 export const MINUTE_TIMELOCK_TIMESTAMP = 1666886400
 
@@ -39,7 +44,6 @@ export enum ChainId {
   Optimism = 10,
   Polygon = 137,
   Kovan = 42,
-  Rinkeby = 4,
   Goerli = 5,
 }
 
@@ -49,7 +53,6 @@ export const CHAIN_NAMES: Record<ChainId, string> = {
   [ChainId.Optimism]: 'Optimism',
   [ChainId.Polygon]: 'Polygon',
   [ChainId.Kovan]: 'Kovan',
-  [ChainId.Rinkeby]: 'Rinkeby',
   [ChainId.Goerli]: 'Goerli',
 }
 
@@ -59,7 +62,6 @@ export const CHAIN_ICONS: Record<ChainId, string> = {
   [ChainId.Optimism]: 'Optimism',
   [ChainId.Polygon]: 'Polygon',
   [ChainId.Kovan]: 'Ethereum',
-  [ChainId.Rinkeby]: 'Ethereum',
   [ChainId.Goerli]: 'Ethereum',
 }
 
@@ -69,12 +71,12 @@ export const COINGECKO_CHAIN_IDS: Record<ChainId, string> = {
   [ChainId.Optimism]: 'optimistic-ethereum',
   [ChainId.Polygon]: 'polygon-pos',
   [ChainId.Kovan]: Network.KOVAN,
-  [ChainId.Rinkeby]: Network.RINKEBY,
   [ChainId.Goerli]: Network.GOERLI,
 }
 
 export const DEFAULT_NETWORK = Network.MAINNET
 export const DEFAULT_NETWORK_ID = ChainId.Mainnet
+export const TEST_NETWORKS = [Network.KOVAN, Network.GOERLI]
 
 export interface AddNetworkChainParameters {
   chainId: string // A 0x-prefixed hexadecimal string
@@ -146,17 +148,6 @@ export const CHAIN_PARAMS: Record<ChainId, AddNetworkChainParameters> = {
     rpcUrls: ['https://kovan.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
     blockExplorerUrls: ['https://kovan.etherscan.io'],
   },
-  [ChainId.Rinkeby]: {
-    chainId: `0x${ChainId.Rinkeby.toString(16)}`,
-    chainName: 'Rinkeby Test Network',
-    nativeCurrency: {
-      name: 'Ethereum',
-      symbol: 'ETH',
-      decimals: 18,
-    },
-    rpcUrls: ['https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'],
-    blockExplorerUrls: ['https://rinkeby.etherscan.io'],
-  },
   [ChainId.Goerli]: {
     chainId: `0x${ChainId.Goerli.toString(16)}`,
     chainName: 'Goerli Test Network',
@@ -186,6 +177,7 @@ export const SvgIcons = {
   mining: MiningIcon,
   native: NativeIcon,
   origination: OriginationIcon,
+  minter: MinterIcon,
   twitter: TwitterIcon,
 }
 
@@ -228,7 +220,6 @@ export const FEE_TIPS: Record<ChainId, string> = {
   [ChainId.Optimism]: ETH_TIP,
   [ChainId.Polygon]: POLYGON_TIP,
   [ChainId.Kovan]: ETH_TIP,
-  [ChainId.Rinkeby]: ETH_TIP,
   [ChainId.Goerli]: ETH_TIP,
 }
 
@@ -237,22 +228,6 @@ export const PROD_TESTNET_DISCOVER_PAGE_SIZE = 5
 export const INSUFFICIENT_FUNDS_ERROR =
   'Insufficient funds to process the transaction'
 
-export const GRAPHQL_URLS: Record<Network, string> = {
-  [Network.MAINNET]:
-    'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-mainnet',
-  [Network.ARBITRUM]:
-    'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-arbitrum',
-  [Network.OPTIMISM]:
-    'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-optimism',
-  [Network.POLYGON]:
-    'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-polygon',
-  [Network.KOVAN]:
-    'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-kovan',
-  [Network.RINKEBY]: '',
-  [Network.GOERLI]:
-    'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-goerli',
-}
-
 export const MINING_EVENTS = {
   Collect: 'Reinvest',
   Deposit: 'Deposit',
@@ -260,4 +235,12 @@ export const MINING_EVENTS = {
   RewardClaimed: 'Claim',
   Vested: 'Vest',
   Withdraw: 'Withdraw',
+}
+
+export const ETH = {
+  name: 'Ethereum',
+  symbol: 'ETH',
+  decimals: 18,
+  image: '/assets/tokens/eth.png',
+  address: ethers.constants.AddressZero,
 }
