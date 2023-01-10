@@ -84,6 +84,7 @@ interface IProps {
   updateState: (e: any) => void
   onNext: () => void
   purchaseAmount: BigNumber
+  isBonding: boolean
 }
 
 interface IState {
@@ -98,7 +99,8 @@ export const ApproveSection = (props: IProps) => {
   const classes = useStyles()
   const { account, library: provider, networkId } = useConnectedWeb3Context()
   const isMountedRef = useIsMountedRef()
-  const { offerData, onClose, updateState, purchaseAmount, onNext } = props
+  const { isBonding, offerData, onClose, updateState, purchaseAmount, onNext } =
+    props
 
   const [state, setState] = useState<IState>({
     isApproved: false,
@@ -177,7 +179,9 @@ export const ApproveSection = (props: IProps) => {
   return (
     <div className={classes.root}>
       <div className={classes.header}>
-        <Typography className={classes.title}>Invest</Typography>
+        <Typography className={classes.title}>
+          {isBonding ? 'Bond' : 'Invest'}
+        </Typography>
         {!state.isApproving && (
           <IconButton className={classes.closeButton} onClick={onClose}>
             <CloseOutlinedIcon />
@@ -187,7 +191,7 @@ export const ApproveSection = (props: IProps) => {
       <div className={classes.content}>
         <div className={classes.actions}>
           <TokenInfo
-            title="Amount to Invest"
+            title={`Amount to ${isBonding ? 'bond' : 'invest'}`}
             actionLabel={state.isApproved ? 'APPROVED' : 'APPROVE'}
             onConfirm={onApprove}
             actionPending={state.isApproving}
@@ -210,6 +214,8 @@ export const ApproveSection = (props: IProps) => {
                 &nbsp;
                 <CircularProgress className={classes.progress} size={24} />
               </>
+            ) : isBonding ? (
+              'BOND'
             ) : (
               'INVEST'
             )}
