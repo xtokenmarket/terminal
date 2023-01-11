@@ -330,18 +330,21 @@ export const TableRow = ({
             >
               <div className={cl.item}>
                 <Typography>
-                  {item.reserveAmount &&
-                    `${formatToShortNumber(
-                      formatBigNumber(
-                        item.purchaseTokenRaised,
-                        item.purchaseToken.decimals
-                      )
-                    )}/${formatToShortNumber(
-                      formatBigNumber(
-                        item.reserveAmount,
-                        item.purchaseToken.decimals
-                      )
-                    )}`}
+                  {`${formatToShortNumber(
+                    formatBigNumber(
+                      item.purchaseTokenRaised,
+                      item.purchaseToken.decimals
+                    )
+                  )}${
+                    item.reserveAmount.isZero()
+                      ? ''
+                      : formatToShortNumber(
+                          formatBigNumber(
+                            item.reserveAmount,
+                            item.purchaseToken.decimals
+                          )
+                        )
+                  }`}
                 </Typography>
                 <Typography className={cl.symbol}>
                   {item.purchaseToken.symbol}

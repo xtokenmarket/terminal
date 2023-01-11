@@ -14,10 +14,12 @@ import { useConnectedWeb3Context } from 'contexts'
 import { getNetworkFromId } from 'utils/network'
 import { NetworkId } from 'types'
 import { useParams } from 'react-router-dom'
-import { RouteParams } from '../TokenSaleDetails'
 import clsx from 'clsx'
 import { useSnackbar } from 'notistack'
 import colors from 'theme/colors'
+import * as DOMPurify from 'dompurify'
+
+import { RouteParams } from '../TokenSaleDetails'
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -166,6 +168,20 @@ interface IProps {
 enum IKey {
   PoolName = 'name',
   Description = 'description',
+}
+
+const urlify = (text: string) => {
+  const urlRegex = /(https?:\/\/[^\s]+)/g
+  return text.replace(urlRegex, (url) => {
+    return `<a
+      class="link"
+      href="${url}"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <span>${url}</span>
+    </a>`
+  })
 }
 
 export const TokenSaleDescription = (props: IProps) => {
@@ -392,7 +408,16 @@ export const TokenSaleDescription = (props: IProps) => {
         </div>
       ) : (
         <>
-          <div className={classes.description}>{offeringDescription}</div>
+          <div
+            className={classes.description}
+            dangerouslySetInnerHTML={{
+              __html: urlify(
+                DOMPurify.sanitize(offeringDescription, {
+                  USE_PROFILES: { html: true },
+                })
+              ),
+            }}
+          />
           {!pending && isOwnerOrManager && !isSaleCompleted && (
             <span
               className={classes.editDescriptionText}

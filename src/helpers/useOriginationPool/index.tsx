@@ -234,13 +234,14 @@ export const useOriginationPool = (
       )
       await purchaseTokenContract.getVersion()
       offerData.isBonding = true
+      offerData.purchaseToken.symbol =
+        offerData.purchaseToken.symbol.split('-CLR')[0] + ' CLR'
     } catch (e) {
       // Do nothing
     }
 
     const {
       cliffPeriod,
-      getOfferTokenPrice,
       offerTokenAmountSold,
       publicEndingPrice,
       publicSaleDuration,
@@ -255,7 +256,6 @@ export const useOriginationPool = (
       whitelistEndingPrice,
       whitelistSaleDuration,
       whitelistStartingPrice,
-      // sponsorTokensClaimed,
       offerToken,
       purchaseToken,
       createdAt,

@@ -172,7 +172,9 @@ export const TableHeader = (props: IProps) => {
       <div className={classes.root}>
         {!props.isOfferUnsuccessful && (
           <Td type={UserPosition.TokenPurchased} label={props.label}>
-            <div className={classes.item}>Tokens Purchased</div>
+            <div className={classes.item}>
+              Tokens {props.isBonding ? 'Acquired' : 'Purchased'}
+            </div>
           </Td>
         )}
         <Td type={UserPosition.AmountInvested} label={props.label}>
