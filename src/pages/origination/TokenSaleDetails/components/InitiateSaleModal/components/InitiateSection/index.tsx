@@ -163,10 +163,7 @@ export const InitiateSection = (props: IProps) => {
         isApproving: true,
       }))
 
-      const txHash = await erc20Token.approveUnlimited(
-        offerData.poolAddress,
-        networkId
-      )
+      const txHash = await erc20Token.approveUnlimited(offerData.poolAddress)
       await erc20Token.waitUntilApproved(account, offerData.poolAddress, txHash)
 
       setState((prev) => ({

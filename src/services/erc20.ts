@@ -67,33 +67,25 @@ class ERC20Service {
   }
 
   /**
-   * Approve `spender` to transfer `amount` tokens on behalf of the connected user.
-   */
-  approve = (
-    spender: string,
-    amount: BigNumber
-  ): ethers.providers.TransactionResponse => {
-    return this.contract.approve(spender, amount, {
-      value: '0x0',
-      gasLimit: hexlify(100000),
-    })
-  }
-
-  /**
    * Approve `spender` to transfer an "unlimited" amount of tokens on behalf of the connected user.
    */
-  approveUnlimited = async (
-    spender: string,
-    networkId: number
-  ): Promise<string> => {
+  approveUnlimited = async (spender: string): Promise<string> => {
+    // add 500 more gas units than the estimated tx gas cost
+    const gasDelta = 10000
+    const estimatedGas = await this.contract.estimateGas['approve'](
+      spender,
+      ethers.constants.MaxUint256
+    )
+
     const transactionObject = await this.contract.approve(
       spender,
       ethers.constants.MaxUint256,
       {
         value: '0x0',
-        gasLimit: hexlify(networkId === ChainId.Arbitrum ? 600000 : 100000),
+        gasLimit: estimatedGas.add(gasDelta),
       }
     )
+
     console.log(`Approve unlimited transaction hash: ${transactionObject.hash}`)
     return transactionObject.hash
   }

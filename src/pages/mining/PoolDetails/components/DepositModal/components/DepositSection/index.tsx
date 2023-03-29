@@ -217,7 +217,7 @@ export const DepositSection = (props: IProps) => {
         account,
         poolData.token0.address
       )
-      const txHash = await token0.approveUnlimited(poolData.address, networkId)
+      const txHash = await token0.approveUnlimited(poolData.address)
 
       await token0.waitUntilApproved(account, poolData.address, txHash)
 
@@ -228,6 +228,7 @@ export const DepositSection = (props: IProps) => {
         step: 2,
       }))
     } catch (error) {
+      console.error(error)
       setState((prev) => ({
         ...prev,
         token0Approving: false,
@@ -248,7 +249,7 @@ export const DepositSection = (props: IProps) => {
         account,
         poolData.token1.address
       )
-      const txHash = await token1.approveUnlimited(poolData.address, networkId)
+      const txHash = await token1.approveUnlimited(poolData.address)
 
       await token1.waitUntilApproved(account, poolData.address, txHash)
 

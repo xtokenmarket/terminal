@@ -213,7 +213,7 @@ export const RewardSection = (props: IProps) => {
           eIndex === index ? true : element
         ),
       }))
-      const txHash = await token.approveUnlimited(lmService.address, networkId)
+      const txHash = await token.approveUnlimited(lmService.address)
       const finalHash = await token.waitUntilApproved(
         account,
         lmService.address,
