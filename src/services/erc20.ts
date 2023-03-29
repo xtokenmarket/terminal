@@ -71,7 +71,7 @@ class ERC20Service {
    */
   approveUnlimited = async (spender: string): Promise<string> => {
     // add 500 more gas units than the estimated tx gas cost
-    const gasDelta = 500
+    const gasDelta = 10000
     const estimatedGas = await this.contract.estimateGas['approve'](
       spender,
       ethers.constants.MaxUint256
