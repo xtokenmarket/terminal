@@ -105,7 +105,8 @@ const TokenSaleDetails = () => {
   const cl = useStyles()
   const history = useHistory()
   const { network, poolAddress } = useParams<RouteParams>()
-  const { networkId } = useConnectedWeb3Context()
+  const { account, networkId, setWalletConnectModalOpened } =
+    useConnectedWeb3Context()
   const { switchChain } = useNetworkContext()
   const { tokenOffer, loadInfo } = useOriginationPool(
     poolAddress,
@@ -215,6 +216,10 @@ const TokenSaleDetails = () => {
       isInvestModalOpen: !state.isInvestModalOpen,
       isWhitelistInvestClicked: true,
     }))
+  }
+
+  const handleWalletConnect = () => {
+    setWalletConnectModalOpened(true)
   }
 
   const onInvestSuccess = async () => {
@@ -629,7 +634,7 @@ const TokenSaleDetails = () => {
                 {isSaleInitiated && (
                   <Button
                     className={cl.button}
-                    onClick={toggleInvestModal}
+                    onClick={!account ? handleWalletConnect : toggleInvestModal}
                     disabled={isPublicSaleItemsDisabled}
                   >
                     <Typography className={cl.text}>

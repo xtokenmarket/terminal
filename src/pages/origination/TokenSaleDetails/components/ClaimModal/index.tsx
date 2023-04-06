@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import clsx from 'clsx'
 import { makeStyles, Modal } from '@material-ui/core'
 import { EClaimModalStep } from 'utils/enums'
 import { InitSection, SuccessSection } from './components'
 import { IClaimData } from 'types'
 import useCommonStyles from 'style/common'
-import { useConnectedWeb3Context } from 'contexts'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,16 +46,9 @@ export const ClaimModal = ({
 }: IProps) => {
   const classes = useStyles()
   const commonClasses = useCommonStyles()
-  const { account } = useConnectedWeb3Context()
 
   const [step, setStep] = useState<EClaimModalStep>(EClaimModalStep.Init)
   const [txId, setTxId] = useState('')
-
-  useEffect(() => {
-    if (!account) {
-      onClose()
-    }
-  }, [account, onClose])
 
   const onNextStep = () => {
     switch (step) {

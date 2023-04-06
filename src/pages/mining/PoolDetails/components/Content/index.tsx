@@ -38,6 +38,7 @@ import { PoolDescription } from '../PoolDescription'
 import { PoolShareSection } from '../PoolShareSection'
 import { RewardVestSection } from '../RewardVestSection'
 import { VestAllModal } from '../VestAllModal'
+import { BigNumber } from 'ethers'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -372,6 +373,9 @@ export const Content = (props: IProps) => {
     const { token0, token1, ticks, poolFee } = poolData
     const { tick0, tick1 } = ticks
 
+    const baseCurrency = token0.symbol
+    const quoteCurrency = token1.symbol
+
     const numberPoolFee = Number(poolFee)
     const numberTick0 = Number(tick0)
     const numberTick1 = Number(tick1)
@@ -403,11 +407,11 @@ export const Content = (props: IProps) => {
       token1
     )
 
-    return `${formatNumber(priceLower.toSignificant(4))} ${token0.symbol} per ${
-      token1.symbol
-    } to ${formatNumber(priceUpper.toSignificant(4))} ${token0.symbol} per ${
-      token1.symbol
-    }`
+    return `${formatNumber(
+      priceLower.toSignificant(4)
+    )} ${quoteCurrency} per ${baseCurrency} to ${formatNumber(
+      priceUpper.toSignificant(4)
+    )} ${quoteCurrency} per ${baseCurrency}`
   }
 
   const triggerRipple = () => {
