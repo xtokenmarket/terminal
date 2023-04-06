@@ -64,6 +64,7 @@ export const useOriginationPool = (
     address: constants.AddressZero,
   }
   const defaultTokenLogo = '/assets/tokens/unknown.png'
+  const clrTokenLogo = '/assets/tokens/clr.png'
 
   const getTokenDetails = async (address: string) => {
     try {
@@ -87,7 +88,11 @@ export const useOriginationPool = (
     }
   }
 
-  const fungiblePool = new FungiblePoolService(provider, account, poolAddress)
+  const fungiblePool = new FungiblePoolService(
+    readonlyProvider,
+    account,
+    poolAddress
+  )
 
   const loadInfo = async (isReloadPool = false, event?: EOriginationEvent) => {
     if (!offerData && !poolAddress) return
@@ -230,12 +235,13 @@ export const useOriginationPool = (
       const purchaseTokenContract = new Contract(
         offerData.purchaseToken.address,
         Abi.CLRV1,
-        provider
+        readonlyProvider
       )
       await purchaseTokenContract.getVersion()
       offerData.isBonding = true
       offerData.purchaseToken.symbol =
         offerData.purchaseToken.symbol.split('-CLR')[0] + ' CLR'
+      offerData.purchaseToken.image = clrTokenLogo
     } catch (e) {
       // Do nothing
     }
@@ -406,7 +412,7 @@ export const useOriginationPool = (
         }
 
         const erc20 = new ERC20Service(
-          provider,
+          readonlyProvider,
           poolAddress,
           offerData.purchaseToken.address
         )
@@ -469,7 +475,7 @@ export const useOriginationPool = (
           const vestingEntryNFTContract = new Contract(
             vestingEntryNFTAddress,
             Abi.VestingEntryNFT,
-            provider
+            readonlyProvider
           )
 
           let nftInfos = []
