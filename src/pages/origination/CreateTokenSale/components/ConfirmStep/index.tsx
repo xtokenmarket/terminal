@@ -243,7 +243,7 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit, onBack }) => {
           {data.whitelistSale.enabled && offerToken && (
             <div className={classes.whitelistSaleSummary}>
               <Typography className={classes.label}>
-                Allowlist Offering Summary
+                Allowlist Program Summary
               </Typography>
               <PricingFormulaTable
                 saleData={data.whitelistSale}
@@ -256,7 +256,7 @@ export const ConfirmStep: React.FC<IProps> = ({ data, onEdit, onBack }) => {
           {data.publicSale.enabled && offerToken && (
             <>
               <Typography className={classes.label}>
-                Public Offering Summary
+                Public Program Summary
               </Typography>
               <PricingFormulaTable
                 saleData={data.publicSale}

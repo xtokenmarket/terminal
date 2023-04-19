@@ -350,7 +350,7 @@ export const PoolDescription = (props: IProps) => {
             onChange={(event) => onChange(event, IKey.Description)}
             variant="outlined"
             fullWidth
-            label="Offering Description"
+            label="Program Description"
             InputLabelProps={{
               className: classes.inputLabel,
               shrink: true,
