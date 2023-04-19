@@ -179,13 +179,13 @@ export const Table = ({
           </div>
         )
 
-      case 'Public Offering':
-      case 'Offering Summary':
+      case 'Public Program':
+      case 'Program Summary':
       case 'My Activity':
         return (
           <div className={cl.labelWrapper}>
             <Typography className={cl.label}>
-              {label === 'Public Offering' && isBonding
+              {label === 'Public Program' && isBonding
                 ? 'Bonding Programme'
                 : label}
             </Typography>
