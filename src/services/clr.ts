@@ -52,18 +52,25 @@ class CLRService implements PoolService {
     return this.contract.getLiquidityForAmounts(amount0, amount1)
   }
 
-  deposit = async (
-    amount0: BigNumber,
-    amount1: BigNumber,
-    networkId: number
-  ) => {
+  deposit = async (amount0: BigNumber, amount1: BigNumber) => {
+    const gasDelta = 10000
     if (this.version === 'v1.0.0') {
+      const estimatedGas = await this.contract.estimateGas['deposit'](
+        0,
+        amount0
+      )
+
       return this.contract.deposit(0, amount0, {
-        gasLimit: networkId === ChainId.Optimism ? hexlify(700000) : undefined,
+        gasLimit: estimatedGas.add(gasDelta),
       })
     } else {
+      const estimatedGas = await this.contract.estimateGas['deposit'](
+        amount0,
+        amount1
+      )
+
       return this.contract.deposit(amount0, amount1, {
-        gasLimit: networkId === ChainId.Optimism ? hexlify(700000) : undefined,
+        gasLimit: estimatedGas,
       })
     }
   }

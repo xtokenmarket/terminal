@@ -51,13 +51,15 @@ class NonRewardPoolService implements PoolService {
     return this.contract.getLiquidityForAmounts(amount0, amount1)
   }
 
-  deposit = async (
-    amount0: BigNumber,
-    amount1: BigNumber,
-    networkId: number
-  ) => {
+  deposit = async (amount0: BigNumber, amount1: BigNumber) => {
+    const gasDelta = 10000
+    const estimatedGas = await this.contract.estimateGas['deposit'](
+      amount0,
+      amount1
+    )
+
     return this.contract.deposit(amount0, amount1, {
-      gasLimit: networkId === ChainId.Optimism ? hexlify(700000) : undefined,
+      gasLimit: estimatedGas.add(gasDelta),
     })
   }
 
