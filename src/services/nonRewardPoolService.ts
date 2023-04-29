@@ -2,7 +2,7 @@ import { BigNumber, Contract, Wallet, ethers } from 'ethers'
 import { Maybe, PoolService } from 'types'
 import Abi from 'abis'
 import { Interface } from '@ethersproject/abi'
-import { ChainId } from 'config/constants'
+import { ChainId, GAS_DELTA } from 'config/constants'
 import { getContractAddress } from 'config/networks'
 import { hexlify } from 'ethers/lib/utils'
 
@@ -52,14 +52,13 @@ class NonRewardPoolService implements PoolService {
   }
 
   deposit = async (amount0: BigNumber, amount1: BigNumber) => {
-    const gasDelta = 10000
     const estimatedGas = await this.contract.estimateGas['deposit'](
       amount0,
       amount1
     )
 
     return this.contract.deposit(amount0, amount1, {
-      gasLimit: estimatedGas.add(gasDelta),
+      gasLimit: estimatedGas.add(GAS_DELTA),
     })
   }
 

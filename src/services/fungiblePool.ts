@@ -2,8 +2,12 @@ import axios from 'axios'
 import { Contract, Wallet, ethers, BigNumber } from 'ethers'
 import { Maybe } from 'types'
 import Abi from 'abis'
-import { CHAIN_NAMES, ChainId, ORIGINATION_API_URL } from 'config/constants'
-import { hexlify, keccak256 } from 'ethers/lib/utils'
+import {
+  CHAIN_NAMES,
+  ChainId,
+  GAS_DELTA,
+  ORIGINATION_API_URL,
+} from 'config/constants'
 
 class FungiblePoolService {
   provider: any
@@ -221,7 +225,6 @@ class FungiblePoolService {
    * Set origination pool whitelist merkle root
    */
   setWhitelist = async (whitelistMerkleRoot: string): Promise<string> => {
-    const gasDelta = 10000
     const estimatedGas = await this.contract.estimateGas['setWhitelist'](
       whitelistMerkleRoot
     )
@@ -229,7 +232,7 @@ class FungiblePoolService {
     const transactionObject = await this.contract.setWhitelist(
       whitelistMerkleRoot,
       {
-        gasLimit: estimatedGas.add(gasDelta),
+        gasLimit: estimatedGas.add(GAS_DELTA),
       }
     )
 

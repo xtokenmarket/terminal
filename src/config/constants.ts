@@ -12,6 +12,9 @@ import { ReactComponent as TwitterIcon } from 'assets/svgs/twitter.svg'
 import { IToken } from 'types'
 import { ethers } from 'ethers'
 
+// gas units to be added to the estimated tx gas costs
+export const GAS_DELTA = 10000
+
 // Enable testnet chain support for Vercel deployment
 export const IS_PROD =
   process.env.NODE_ENV === 'production' &&

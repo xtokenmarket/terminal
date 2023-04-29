@@ -264,7 +264,6 @@ export const CreatePoolSection = (props: IProps) => {
       } else {
         txId = await lmService.deployNonIncentivizedPool(
           poolData,
-          networkId,
           deploymentFee
         )
       }

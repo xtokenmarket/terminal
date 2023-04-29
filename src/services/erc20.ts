@@ -1,6 +1,7 @@
 import { BigNumber, Contract, Wallet, ethers, utils } from 'ethers'
 import { IToken, Maybe } from '../types'
 import { isAddress, isContract } from '../utils/tools'
+import { GAS_DELTA } from 'config/constants'
 
 const erc20Abi = [
   'function allowance(address owner, address spender) external view returns (uint256)',
@@ -68,8 +69,6 @@ class ERC20Service {
    * Approve `spender` to transfer an "unlimited" amount of tokens on behalf of the connected user.
    */
   approveUnlimited = async (spender: string): Promise<string> => {
-    // add 10000 more gas units than the estimated tx gas cost
-    const gasDelta = 10000
     const estimatedGas = await this.contract.estimateGas['approve'](
       spender,
       ethers.constants.MaxUint256
@@ -80,7 +79,7 @@ class ERC20Service {
       ethers.constants.MaxUint256,
       {
         value: '0x0',
-        gasLimit: estimatedGas.add(gasDelta),
+        gasLimit: estimatedGas.add(GAS_DELTA),
       }
     )
 
