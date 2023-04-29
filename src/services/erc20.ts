@@ -68,6 +68,7 @@ class ERC20Service {
    * Approve `spender` to transfer an "unlimited" amount of tokens on behalf of the connected user.
    */
   approveUnlimited = async (spender: string): Promise<string> => {
+    // add 10000 more gas units than the estimated tx gas cost
     const gasDelta = 10000
     const estimatedGas = await this.contract.estimateGas['approve'](
       spender,

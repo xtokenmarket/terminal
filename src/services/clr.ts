@@ -70,7 +70,7 @@ class CLRService implements PoolService {
       )
 
       return this.contract.deposit(amount0, amount1, {
-        gasLimit: estimatedGas,
+        gasLimit: estimatedGas.add(gasDelta),
       })
     }
   }

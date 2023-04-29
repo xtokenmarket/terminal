@@ -221,11 +221,15 @@ class FungiblePoolService {
    * Set origination pool whitelist merkle root
    */
   setWhitelist = async (whitelistMerkleRoot: string): Promise<string> => {
+    const gasDelta = 10000
+    const estimatedGas = await this.contract.estimateGas['setWhitelist'](
+      whitelistMerkleRoot
+    )
+
     const transactionObject = await this.contract.setWhitelist(
       whitelistMerkleRoot,
       {
-        value: '0x0',
-        gasLimit: hexlify(100000),
+        gasLimit: estimatedGas.add(gasDelta),
       }
     )
 
