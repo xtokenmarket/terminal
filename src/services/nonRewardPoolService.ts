@@ -40,6 +40,10 @@ class NonRewardPoolService implements PoolService {
     return this.contract.address
   }
 
+  getRewardTokens = async (): Promise<string[]> => {
+    return []
+  }
+
   calculateAmountsMintedSingleToken = async (
     inputAsset: number,
     amount: BigNumber
