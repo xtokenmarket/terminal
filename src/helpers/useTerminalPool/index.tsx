@@ -191,12 +191,20 @@ export const useTerminalPool = (
         token0.image = token0.image || defaultTokenLogo
         token1.image = token1.image || defaultTokenLogo
         stakedToken.image = stakedToken?.image || defaultTokenLogo
-        pool.rewardTokens =
-          pool.rewardTokens?.map((token: IToken) => ({
-            ...token,
-            image: token.image || defaultTokenLogo,
-            symbol: token.symbol.toUpperCase(),
-          })) || []
+        pool.rewardTokens = (await clrService.getRewardTokens())?.map(
+          (tokenAddress) => {
+            const token = pool.rewardTokens?.find(
+              (token: IToken) =>
+                token.address.toLowerCase() === tokenAddress.toLowerCase()
+            )
+
+            return {
+              ...token,
+              image: token.image || defaultTokenLogo,
+              symbol: token.symbol.toUpperCase(),
+            }
+          }
+        )
 
         token0.symbol = token0.symbol.toUpperCase()
         token1.symbol = token1.symbol.toUpperCase()

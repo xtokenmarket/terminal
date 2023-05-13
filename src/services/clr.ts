@@ -41,6 +41,10 @@ class CLRService implements PoolService {
     return this.contract.address
   }
 
+  getRewardTokens = async (): Promise<string[]> => {
+    return this.contract.getRewardTokens()
+  }
+
   calculateAmountsMintedSingleToken = async (
     inputAsset: number,
     amount: BigNumber
