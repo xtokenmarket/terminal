@@ -200,35 +200,37 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
             {!tokens || !tokens.length ? (
               <Typography className={cl.label}>Active Manager</Typography>
             ) : (
-              tokens.map((rewardToken, index) => {
-                if (isInitiateRewardsPending) {
-                  return (
-                    <Typography className={cl.label} key={rewardToken.address}>
-                      &nbsp;{rewardToken.symbol}
-                      {index !== tokens?.length - 1 ? ' / ' : ''}
-                    </Typography>
-                  )
-                } else {
-                  const durationInfo = getTimeDurationUnitInfo(Number(duration))
-                  const uintAmount = amounts?.[index]
-                    ? amounts?.[index]
-                        .mul(durationInfo.unit)
-                        .div(Number(duration))
-                    : ZERO
-                  return (
-                    <Typography className={cl.label} key={rewardToken.address}>
-                      {formatToShortNumber(
+              <Typography className={cl.label}>
+                {tokens
+                  .map((rewardToken, index) => {
+                    if (isInitiateRewardsPending) {
+                      return `
+                          &nbsp;${rewardToken.symbol}
+                          ${index !== tokens?.length - 1 ? ' / ' : ''}
+                          `
+                    } else {
+                      const durationInfo = getTimeDurationUnitInfo(
+                        Number(duration)
+                      )
+                      const uintAmount = amounts?.[index]
+                        ? amounts?.[index]
+                            .mul(durationInfo.unit)
+                            .div(Number(duration))
+                        : ZERO
+                      return `${formatToShortNumber(
                         formatBigNumber(uintAmount, rewardToken.decimals)
-                      )}{' '}
-                      {rewardToken.symbol}
-                      {index !== tokens.length - 1 ? ' + ' : ' '}
-                      {index === tokens.length - 1
-                        ? `/ ${durationInfo.unitStr}`
-                        : ''}
-                    </Typography>
-                  )
-                }
-              })
+                      )} 
+                          ${rewardToken.symbol}
+                          ${index !== tokens.length - 1 ? ' + ' : ' '}
+                          ${
+                            index === tokens.length - 1
+                              ? `/ ${durationInfo.unitStr}`
+                              : ''
+                          }`
+                    }
+                  })
+                  .concat()}
+              </Typography>
             )}
           </div>
         </PoolTd>
