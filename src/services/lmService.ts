@@ -4,8 +4,7 @@ import Abi from 'abis'
 import { parseDuration } from 'utils/number'
 import { getSortedToken } from 'utils/token'
 import { Interface } from '@ethersproject/abi'
-import { ChainId, NULL_ADDRESS } from 'config/constants'
-import { hexlify } from 'ethers/lib/utils'
+import { GAS_DELTA, NULL_ADDRESS } from 'config/constants'
 
 const lmAbi = Abi.LMTerminal
 
@@ -456,13 +455,18 @@ class LMService {
       token1: _sortedToken1.address,
     }
 
+    const estimatedGas = await this.contract.estimateGas[
+      'deployIncentivizedPool'
+    ](symbol, poolData.ticks, rewardsProgram, poolDetails, {
+      value: deploymentFee,
+    })
     const transactionObject = await this.contract.deployIncentivizedPool(
       symbol,
       poolData.ticks,
       rewardsProgram,
       poolDetails,
       {
-        gasLimit: networkId === ChainId.Optimism ? hexlify(700000) : undefined,
+        gasLimit: estimatedGas.add(GAS_DELTA),
         value: deploymentFee,
       }
     )
@@ -474,7 +478,6 @@ class LMService {
 
   deployNonIncentivizedPool = async (
     poolData: ICreatePoolData,
-    networkId: number,
     deploymentFee?: BigNumber
   ): Promise<string> => {
     if (!deploymentFee) {
@@ -502,12 +505,15 @@ class LMService {
       token1: _sortedToken1.address,
     }
 
+    const estimatedGas = await this.contract.estimateGas[
+      'deployNonIncentivizedPool'
+    ](symbol, poolData.ticks, poolDetails, { value: deploymentFee })
     const transactionObject = await this.contract.deployNonIncentivizedPool(
       symbol,
       poolData.ticks,
       poolDetails,
       {
-        gasLimit: networkId === ChainId.Optimism ? hexlify(700000) : undefined,
+        gasLimit: estimatedGas,
         value: deploymentFee,
       }
     )
