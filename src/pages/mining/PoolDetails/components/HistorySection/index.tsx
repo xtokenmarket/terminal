@@ -121,8 +121,9 @@ export const HistorySection = (props: IProps) => {
     }
 
     if (
-      item.action === MINING_EVENTS.StakeDeposit ||
-      item.action === MINING_EVENTS.StakeWithdraw
+      pool.isSingleAssetPool &&
+      (item.action === MINING_EVENTS.StakeDeposit ||
+        item.action === MINING_EVENTS.StakeWithdraw)
     ) {
       return (
         <td>
@@ -201,6 +202,15 @@ export const HistorySection = (props: IProps) => {
     }
   }
 
+  // filter out Stake/Unstake events if they are not related to a single asset pool
+  const displayHistoryItems = pool.isSingleAssetPool
+    ? pool.history
+    : pool.history.filter(
+        (item) =>
+          item.action !== MINING_EVENTS.StakeDeposit &&
+          item.action !== MINING_EVENTS.StakeWithdraw
+      )
+
   return (
     <div className={classes.root}>
       <Typography className={classes.title}>History</Typography>
@@ -216,7 +226,7 @@ export const HistorySection = (props: IProps) => {
               </tr>
             </thead>
             <tbody>
-              {pool.history.map((item) => (
+              {displayHistoryItems.map((item) => (
                 <tr key={`${item.tx}_${item.action}_${item.symbol}`}>
                   <td>{item.action}</td>
                   {renderValue(item)}
