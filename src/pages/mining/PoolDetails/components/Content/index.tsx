@@ -444,6 +444,17 @@ export const Content = (props: IProps) => {
 
   return (
     <div className={classes.root}>
+      <RewardModal
+        isCreatePool={false}
+        isOpen={state.rewardVisible}
+        onClose={() => setRewardModalVisible(false)}
+        onSuccess={async () => {
+          setRewardModalVisible(false)
+          await reloadTerminalPool(true)
+        }}
+        poolData={poolData}
+      />
+
       {state.depositVisible && (
         <>
           {poolData.isSingleAssetPool ? (
