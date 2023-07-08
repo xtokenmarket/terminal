@@ -93,6 +93,7 @@ export interface ITerminalPool {
   earnedTokens: EarnedToken[]
   history: History[]
   isReward?: boolean
+  isSingleAssetPool?: boolean
   manager: string
   network?: Network
   owner: string
@@ -181,6 +182,10 @@ export interface PoolService {
     amount0: BigNumber,
     amount1: BigNumber
   ) => Promise<any>
+  getStakedTokenBalance: () => Promise<{
+    amount0: BigNumber
+    amount1: BigNumber
+  }>
   deposit: (amount0: BigNumber, amount1: BigNumber) => Promise<any>
   waitUntilDeposit: (
     amount0: BigNumber,

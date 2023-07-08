@@ -9,6 +9,7 @@ import UniswapV3FactoryAbi from './UniswapV3Factory.json'
 import UniswapV3PoolStateAbi from './UniswapV3PoolState.json'
 import UniswapV3PositionAbi from './UniswapV3Position.json'
 import NonRewardPoolAbi from './NonRewardPool.json'
+import SingleAssetPoolAbi from './SingleAssetPool.json'
 
 // Origination
 import OriginationCoreAbi from './origination/OriginationCore.json'
@@ -27,6 +28,7 @@ const Abi = {
   UniswapV3PoolState: UniswapV3PoolStateAbi,
   UniswapV3Position: UniswapV3PositionAbi, // NonfungiblePositionManager
   NonRewardPool: NonRewardPoolAbi,
+  SingleAssetPool: SingleAssetPoolAbi,
 
   // Origination
   OriginationCore: OriginationCoreAbi,

@@ -34,6 +34,7 @@ import {
 import { ethers, Contract } from 'ethers'
 import { fetchQuery } from 'utils/thegraph'
 import { NonRewardPoolService } from 'services/nonRewardPoolService'
+import { SingleAssetPoolService } from 'services/singleAssetPoolService'
 
 interface IState {
   clrService?: PoolService
@@ -81,6 +82,30 @@ export const useTerminalPool = (
     }
   }
 
+  const getPoolServiceInstance = (pool: any) => {
+    if (pool.isReward) {
+      return new CLRService(
+        readonlyProvider,
+        isWrongNetwork ? null : account,
+        poolAddress as string
+      )
+    }
+
+    if (pool.isSingleAssetPool) {
+      return new SingleAssetPoolService(
+        readonlyProvider,
+        isWrongNetwork ? null : account,
+        poolAddress as string
+      )
+    }
+
+    return new NonRewardPoolService(
+      readonlyProvider,
+      isWrongNetwork ? null : account,
+      poolAddress as string
+    )
+  }
+
   const loadInfo = async (isReloadPool = false) => {
     if (!pool && !poolAddress) return
 
@@ -114,18 +139,7 @@ export const useTerminalPool = (
       }
     }
 
-    const clrService = pool.isReward
-      ? new CLRService(
-          readonlyProvider,
-          isWrongNetwork ? null : account,
-          poolAddress as string
-        )
-      : new NonRewardPoolService(
-          readonlyProvider,
-          isWrongNetwork ? null : account,
-          poolAddress as string
-        )
-
+    const clrService = getPoolServiceInstance(pool)
     try {
       let { token0, token1, stakedToken } = pool
 
@@ -133,26 +147,33 @@ export const useTerminalPool = (
       let tvl = pool.tvl
 
       stakedToken = stakedToken || {}
-      // Fetch token details and relevant data, if API fails
       if (pool.token0.price === undefined || pool.token1.price === undefined) {
-        ;[token0, token1, stakedToken] = await Promise.all([
-          getTokenDetails(pool.token0.address),
-          getTokenDetails(pool.token1.address),
-          getTokenDetails(pool.stakedToken?.address),
-        ])
+        // Fetch token details and relevant data, if API fails
+        if (pool.token0.price === undefined) {
+          ;[token0, stakedToken] = await Promise.all([
+            getTokenDetails(pool.token0.address),
+            getTokenDetails(pool.stakedToken?.address),
+          ])
 
-        let rates = undefined
-        if (!isTestnet(readonlyProvider?.network.chainId as ChainId)) {
-          const ids = await getCoinGeckoIDs([token0.symbol, token1.symbol])
-          rates = await getTokenExchangeRate(ids)
+          if (!isTestnet(readonlyProvider?.network.chainId as ChainId)) {
+            const ids = await getCoinGeckoIDs([token0.symbol])
+            const rates = await getTokenExchangeRate(ids)
+            pool.token0.price = rates && rates[0] ? rates[0].toString() : '0'
+          }
         }
 
-        pool.token0.price = rates && rates[0] ? rates[0].toString() : '0'
-        pool.token1.price = rates && rates[1] ? rates[1].toString() : '0'
+        // token1 is empty for single asset pools
+        if (pool.token1?.address && pool.token0.price === undefined) {
+          token1 = await getTokenDetails(pool.token1.address)
 
-        const { amount0, amount1 } =
-          await clrService.contract.getStakedTokenBalance()
+          if (!isTestnet(readonlyProvider?.network.chainId as ChainId)) {
+            const ids = await getCoinGeckoIDs([token1.symbol])
+            const rates = await getTokenExchangeRate(ids)
+            pool.token1.price = rates && rates[0] ? rates[0].toString() : '0'
+          }
+        }
 
+        const { amount0, amount1 } = await clrService.getStakedTokenBalance()
         const token0Balance =
           token0.decimals === 18
             ? amount0
@@ -186,7 +207,9 @@ export const useTerminalPool = (
         const defaultTokenLogo = '/assets/tokens/unknown.png'
 
         // Parse API data
-        pool.tokenId = BigNumber.from(pool.tokenId)
+        pool.tokenId = pool.isSingleAssetPool
+          ? null
+          : BigNumber.from(pool.tokenId)
 
         token0.image = token0.image || defaultTokenLogo
         token1.image = token1.image || defaultTokenLogo
@@ -384,7 +407,6 @@ export const useTerminalPool = (
         )
 
         const totalBalance = token0.balance.add(token1.balance)
-
         if (!totalBalance.isZero()) {
           poolShare = formatEther(
             user.token0Deposit
@@ -395,7 +417,7 @@ export const useTerminalPool = (
         }
 
         // Get pool reward fee and collectable fees
-        if (isOwnerOrManager) {
+        if (isOwnerOrManager && pool.tokenId) {
           // TODO: Can be moved to `PoolDetails` component
           rewardFeePercent = parseFee(await lmService.getRewardFee())
 
@@ -465,6 +487,7 @@ export const useTerminalPool = (
           user,
           totalSupply: _totalSupply,
           isReward: pool.isReward,
+          isSingleAssetPool: pool.isSingleAssetPool,
           poolName: pool.poolName || `${token0.symbol} ${token1.symbol}`,
           description: pool.description,
           createdAt: pool.createdAt,

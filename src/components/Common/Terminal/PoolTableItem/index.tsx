@@ -139,6 +139,7 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
     } = poolData
     const isInitiateRewardsPending = duration === '0'
     const network = poolData.network || DEFAULT_NETWORK
+    const showAllocPerc = !poolData.isSingleAssetPool
 
     return (
       <NavLink
@@ -152,11 +153,13 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
               className={cl.tokenIcon}
               src={poolData.token0.image}
             />
-            <img
-              alt="token1"
-              className={cl.tokenIcon}
-              src={poolData.token1.image}
-            />
+            {!poolData.isSingleAssetPool && (
+              <img
+                alt="token1"
+                className={cl.tokenIcon}
+                src={poolData.token1.image}
+              />
+            )}
             <Typography className={cl.allocationItem}>{poolName}</Typography>
           </div>
         </PoolTd>
@@ -165,15 +168,19 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
             <div className={cl.allocation}>
               <Typography className={cl.allocationItem}>
                 {poolData.token0.symbol}
-                <span>{`${
-                  Number(poolData.token0.percent).toFixed() as string
-                }%`}</span>
+                {showAllocPerc && (
+                  <span>{`${
+                    Number(poolData.token0.percent).toFixed() as string
+                  }%`}</span>
+                )}
               </Typography>
               <Typography className={cl.allocationItem}>
                 {poolData.token1.symbol}&nbsp;&nbsp;
-                <span>{`${
-                  Number(poolData.token1.percent).toFixed() as string
-                }%`}</span>
+                {showAllocPerc && (
+                  <span>{`${
+                    Number(poolData.token1.percent).toFixed() as string
+                  }%`}</span>
+                )}
               </Typography>
             </div>
           </div>
@@ -205,7 +212,7 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
                   .map((rewardToken, index) => {
                     if (isInitiateRewardsPending) {
                       return `
-                          &nbsp;${rewardToken.symbol}
+                          ${'  '}${rewardToken.symbol}
                           ${index !== tokens?.length - 1 ? ' / ' : ''}
                           `
                     } else {

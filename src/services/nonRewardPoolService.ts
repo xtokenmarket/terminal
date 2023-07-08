@@ -44,6 +44,13 @@ class NonRewardPoolService implements PoolService {
     return []
   }
 
+  getStakedTokenBalance = async (): Promise<{
+    amount0: BigNumber
+    amount1: BigNumber
+  }> => {
+    return this.contract.getStakedTokenBalance()
+  }
+
   calculateAmountsMintedSingleToken = async (
     inputAsset: number,
     amount: BigNumber

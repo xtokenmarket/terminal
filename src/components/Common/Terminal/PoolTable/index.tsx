@@ -34,11 +34,11 @@ export const PoolTable: React.FC<IProps> = ({ pools, search }) => {
     filteredPools = pools.filter((pool: any) => {
       return (
         pool.token0.address.toLowerCase().startsWith(searchText) ||
-        pool.token1.address.toLowerCase().startsWith(searchText) ||
+        pool.token1.address?.toLowerCase().startsWith(searchText) ||
         pool.token0.name.toLowerCase().includes(searchText) ||
-        pool.token1.name.toLowerCase().includes(searchText) ||
+        pool.token1.name?.toLowerCase().includes(searchText) ||
         pool.token0.symbol.toLowerCase().startsWith(searchText) ||
-        pool.token1.symbol.toLowerCase().startsWith(searchText) ||
+        pool.token1.symbol?.toLowerCase().startsWith(searchText) ||
         pool.rewardTokens.some(
           (rewardToken: IToken) =>
             rewardToken.address.toLowerCase().startsWith(searchText) ||
