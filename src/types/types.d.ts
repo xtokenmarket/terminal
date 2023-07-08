@@ -94,6 +94,7 @@ export interface ITerminalPool {
   history: History[]
   isReward?: boolean
   isSingleAssetPool?: boolean
+  poolOffersRewards?: boolean
   manager: string
   network?: Network
   owner: string
@@ -123,6 +124,7 @@ export interface ITerminalPool {
     token0Tvl: string
   }
   vestingTokens: VestingToken[]
+  hasReinvestibleFees?: boolean
 }
 
 export interface ICreatePoolData {
@@ -174,6 +176,7 @@ export interface ICollectableFees {
 export interface PoolService {
   version: string
   address: string
+  totalSupply: () => Promise<BigNumber>
   calculateAmountsMintedSingleToken: (
     inputAsset: number,
     amount: BigNumber

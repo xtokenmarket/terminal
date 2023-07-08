@@ -51,6 +51,10 @@ class CLRService implements PoolService {
     return this.contract.getStakedTokenBalance()
   }
 
+  totalSupply = async (): Promise<BigNumber> => {
+    return this.contract.totalSupply()
+  }
+
   calculateAmountsMintedSingleToken = async (
     inputAsset: number,
     amount: BigNumber

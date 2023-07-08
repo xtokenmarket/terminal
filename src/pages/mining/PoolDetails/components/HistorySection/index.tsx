@@ -120,6 +120,22 @@ export const HistorySection = (props: IProps) => {
       )
     }
 
+    if (
+      item.action === MINING_EVENTS.StakeDeposit ||
+      item.action === MINING_EVENTS.StakeWithdraw
+    ) {
+      return (
+        <td>
+          <span>
+            {numberWithCommas(
+              formatBigNumber(item.amount0, pool.token0.decimals)
+            )}
+          </span>{' '}
+          {pool.token0.symbol}
+        </td>
+      )
+    }
+
     if (item.action === MINING_EVENTS.RewardClaimed) {
       return (
         <td>

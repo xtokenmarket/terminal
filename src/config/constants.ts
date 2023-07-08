@@ -234,6 +234,8 @@ export const INSUFFICIENT_FUNDS_ERROR =
 export const MINING_EVENTS = {
   Collect: 'Reinvest',
   Deposit: 'Deposit',
+  StakeDeposit: 'Stake',
+  StakeWithdraw: 'Unstake',
   InitiatedRewardsProgram: 'Initiate Rewards',
   RewardClaimed: 'Claim',
   Vested: 'Vest',

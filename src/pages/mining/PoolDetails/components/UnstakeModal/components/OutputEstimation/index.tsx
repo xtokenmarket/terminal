@@ -48,14 +48,13 @@ interface IProps {
   className?: string
   poolData: ITerminalPool
   amount0: BigNumber
-  amount1: BigNumber
   isEstimation?: boolean
   earned: BigNumber[]
 }
 
 export const OutputEstimation = (props: IProps) => {
   const classes = useStyles()
-  const { poolData, amount0, amount1, earned } = props
+  const { poolData, amount0, earned } = props
   const isEstimation =
     props.isEstimation !== undefined ? props.isEstimation : true
 
@@ -78,24 +77,6 @@ export const OutputEstimation = (props: IProps) => {
                   amount0,
                   poolData.token0.decimals,
                   poolData.token0.price
-                )}`}
-              </span>
-            )}
-          </Typography>
-        </div>
-        <div className={classes.infoRow}>
-          <TokenIcon token={poolData.token1} className={classes.tokenIcon} />
-          &nbsp;&nbsp;
-          <Typography className={classes.amount}>
-            {formatBigNumber(amount1, poolData.token1.decimals, 4)}
-            &nbsp;
-            {poolData.token1.symbol}
-            {poolData.token1.price && (
-              <span>
-                {` ~ $${getTotalTokenPrice(
-                  amount1,
-                  poolData.token1.decimals,
-                  poolData.token1.price
                 )}`}
               </span>
             )}

@@ -140,6 +140,16 @@ query ($poolAddress: String!, $userAddress: String!) {
     amount1
     timestamp
   }
+  stakeDeposits(where: {pool: $poolAddress, user: $userAddress}) {
+    id
+    amount
+    timestamp
+  }
+  stakeWithdrawals(where: {pool: $poolAddress, user: $userAddress}) {
+    id
+    amount
+    timestamp
+  }
   rewardClaims(where: { pool: $poolAddress, user: $userAddress }) {
     id
     amount
@@ -191,6 +201,16 @@ export const parseEventsHistory = (
     ...data.withdrawals.map((withdrawal: any) =>
       _parseEventHistory(withdrawal, MINING_EVENTS.Withdraw, rewardTokens)
     ),
+    ...data.stakeDeposits.map((stakeDeposit: any) =>
+      _parseEventHistory(stakeDeposit, MINING_EVENTS.StakeDeposit, rewardTokens)
+    ),
+    ...data.stakeWithdrawals.map((stakeWithdraw: any) =>
+      _parseEventHistory(
+        stakeWithdraw,
+        MINING_EVENTS.StakeWithdraw,
+        rewardTokens
+      )
+    ),
     ...data.rewardClaims.map((claim: any) =>
       _parseEventHistory(claim, MINING_EVENTS.RewardClaimed, rewardTokens)
     ),
@@ -210,6 +230,26 @@ export const parseEventsHistory = (
         )
       : []),
   ]
+}
+
+const extractAmount0 = (data: any) => {
+  if (data.amount) {
+    return BigNumber.from(data.amount)
+  }
+
+  if (data.token0Fee) {
+    return BigNumber.from(data.token0Fee)
+  }
+
+  return data.amount0 ? BigNumber.from(data.amount0) : ZERO
+}
+
+const extractAmount1 = (data: any) => {
+  if (data.token1Fee) {
+    return BigNumber.from(data.token0Fee)
+  }
+
+  return data.amount1 ? BigNumber.from(data.amount1) : ZERO
 }
 
 const _parseEventHistory = (data: any, action: string, rewardTokens: any) => {
@@ -232,16 +272,8 @@ const _parseEventHistory = (data: any, action: string, rewardTokens: any) => {
 
   return {
     action,
-    amount0: data.token0Fee
-      ? BigNumber.from(data.token0Fee)
-      : data.amount0
-      ? BigNumber.from(data.amount0)
-      : ZERO,
-    amount1: data.token1Fee
-      ? BigNumber.from(data.token1Fee)
-      : data.amount1
-      ? BigNumber.from(data.amount1)
-      : ZERO,
+    amount0: extractAmount0(data),
+    amount1: extractAmount1(data),
     tx: _getTxHash(data, action),
     rewardAmount:
       action === MINING_EVENTS.RewardClaimed

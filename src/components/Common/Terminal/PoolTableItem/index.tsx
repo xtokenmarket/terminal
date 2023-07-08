@@ -137,6 +137,7 @@ export const PoolTableItem: React.FC<IProps> = ({ pool, className }) => {
       poolName,
       rewardState: { amounts, duration, tokens, vesting },
     } = poolData
+
     const isInitiateRewardsPending = duration === '0'
     const network = poolData.network || DEFAULT_NETWORK
     const showAllocPerc = !poolData.isSingleAssetPool

@@ -138,8 +138,9 @@ export const useTerminalPool = (
         pool = await getPoolDataMulticall(poolAddress as string, multicall)
       }
     }
-
     const clrService = getPoolServiceInstance(pool)
+    const poolOffersRewards = pool.isReward || pool.isSingleAssetPool
+
     try {
       let { token0, token1, stakedToken } = pool
 
@@ -160,10 +161,12 @@ export const useTerminalPool = (
             const rates = await getTokenExchangeRate(ids)
             pool.token0.price = rates && rates[0] ? rates[0].toString() : '0'
           }
+
+          pool.token0.price = pool.token0.price || '0'
         }
 
         // token1 is empty for single asset pools
-        if (pool.token1?.address && pool.token0.price === undefined) {
+        if (pool.token1?.address && pool.token1.price === undefined) {
           token1 = await getTokenDetails(pool.token1.address)
 
           if (!isTestnet(readonlyProvider?.network.chainId as ChainId)) {
@@ -171,6 +174,8 @@ export const useTerminalPool = (
             const rates = await getTokenExchangeRate(ids)
             pool.token1.price = rates && rates[0] ? rates[0].toString() : '0'
           }
+
+          pool.token1.price = pool.token1.price || '0'
         }
 
         const { amount0, amount1 } = await clrService.getStakedTokenBalance()
@@ -247,7 +252,7 @@ export const useTerminalPool = (
         token1.percent = token1.percent ? token1.percent.toString() : '0'
       }
 
-      if (pool.isReward) {
+      if (poolOffersRewards) {
         if (pool.vestingPeriod == null) {
           pool.vestingPeriod = (
             await rewardEscrow.clrPoolVestingPeriod(poolAddress as string)
@@ -304,12 +309,13 @@ export const useTerminalPool = (
 
         // Fetch pool events history from subgraph
         try {
-          const graphqlUrl = `https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-${network}`
+          const graphqlUrl = `https://api.thegraph.com/subgraphs/name/conache/terminal-${network}`
           const eventVariables = {
             poolAddress: (poolAddress as string).toLowerCase(),
             userAddress: account.toLowerCase(),
           }
 
+          // todo: handle these events
           const eventsHistory = await fetchQuery(
             EVENTS_HISTORY_QUERY,
             eventVariables,
@@ -370,9 +376,7 @@ export const useTerminalPool = (
 
         // User deposit amounts + TVL
         let stakedTokenBalance = ZERO
-        let totalSupply = ZERO
-
-        const stakedCLRToken = pool.isReward
+        const stakedCLRToken = poolOffersRewards
           ? new ethers.Contract(
               pool.stakedToken.address,
               Abi.StakedCLRToken,
@@ -380,12 +384,10 @@ export const useTerminalPool = (
             )
           : new ethers.Contract(pool.address, Abi.ERC20, readonlyProvider)
 
-        ;[stakedTokenBalance, totalSupply] = await Promise.all([
-          stakedCLRToken.balanceOf(account),
-          clrService.contract.totalSupply(),
-        ])
-
-        _totalSupply = totalSupply
+        stakedTokenBalance = pool.isSingleAssetPool
+          ? await clrService.contract.stakedBalanceOf(account)
+          : await stakedCLRToken.balanceOf(account)
+        _totalSupply = await clrService.totalSupply()
 
         user.stakedTokenBalance = stakedTokenBalance
 
@@ -395,7 +397,6 @@ export const useTerminalPool = (
         user.token1Deposit = _totalSupply.isZero()
           ? ZERO
           : token1.balance.mul(stakedTokenBalance).div(_totalSupply)
-
         user.token0Tvl = formatUnits(
           user.token0Deposit.mul(parseEther(pool.token0.price)).div(ONE_ETHER),
           ETHER_DECIMAL
@@ -461,7 +462,7 @@ export const useTerminalPool = (
           rewardFeePercent,
           rewardsAreEscrowed: pool.rewardsAreEscrowed,
           rewardState: {
-            amounts: pool.isReward
+            amounts: poolOffersRewards
               ? pool.totalRewardAmounts.map((reward: string) =>
                   BigNumber.from(reward)
                 )
@@ -488,9 +489,11 @@ export const useTerminalPool = (
           totalSupply: _totalSupply,
           isReward: pool.isReward,
           isSingleAssetPool: pool.isSingleAssetPool,
+          poolOffersRewards: poolOffersRewards,
           poolName: pool.poolName || `${token0.symbol} ${token1.symbol}`,
           description: pool.description,
           createdAt: pool.createdAt,
+          hasReinvestibleFees: !pool.isSingleAssetPool,
         },
       })
     } catch (error) {

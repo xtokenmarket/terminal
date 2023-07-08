@@ -144,7 +144,7 @@ export const InputSection = (props: IProps) => {
         earned={earned}
       />
       <div className={classes.actions}>
-        {poolData.isReward && (
+        {poolData.poolOffersRewards && (
           <Button
             color="primary"
             variant="contained"
