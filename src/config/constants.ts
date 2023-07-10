@@ -262,5 +262,5 @@ export const TERMINAL_GQL_URL = {
   [Network.GOERLI]:
     'https://api.thegraph.com/subgraphs/name/conache/terminal-goerli',
   [Network.KOVAN]:
-    'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-kovan',
+    'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-kovan ',
 }
