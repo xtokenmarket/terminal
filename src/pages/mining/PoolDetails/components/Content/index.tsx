@@ -39,6 +39,9 @@ import { PoolShareSection } from '../PoolShareSection'
 import { RewardVestSection } from '../RewardVestSection'
 import { VestAllModal } from '../VestAllModal'
 import { BigNumber } from 'ethers'
+import { StakeModal } from '../StakeModal'
+import { SingleAssetPoolService } from 'services/singleAssetPoolService'
+import { UnstakeModal } from '../UnstakeModal'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -314,13 +317,15 @@ export const Content = (props: IProps) => {
   const shouldDisplayVestButton =
     Number(poolData.rewardState.vesting) > 0 && readyToVest.length !== 0
 
-  const shouldDisplayRewardsButton = isManageable && poolData.isReward
+  const shouldDisplayRewardsButton = isManageable && poolData.poolOffersRewards
+  const shouldDisplayReinvestButton =
+    isManageable && poolData.hasReinvestibleFees
 
   const getRewardsPerWeek = () => {
     const { duration, amounts } = poolData.rewardState
 
     const isInitiateRewardsPending = duration === '0'
-    if (isInitiateRewardsPending || !poolData.isReward) {
+    if (isInitiateRewardsPending || !poolData.poolOffersRewards) {
       return 'N/A'
     }
 
@@ -439,18 +444,6 @@ export const Content = (props: IProps) => {
 
   return (
     <div className={classes.root}>
-      {state.depositVisible && (
-        <DepositModal
-          onClose={() => setDepositModalVisible(false)}
-          onSuccess={async () => {
-            setDepositModalVisible(false)
-            await reloadTerminalPool(true)
-          }}
-          clrService={clrService}
-          poolData={poolData}
-        />
-      )}
-
       <RewardModal
         isCreatePool={false}
         isOpen={state.rewardVisible}
@@ -462,19 +455,59 @@ export const Content = (props: IProps) => {
         poolData={poolData}
       />
 
-      {state.withdrawVisible && (
-        <WithdrawModal
-          onClose={() => setWithdrawModalVisible(false)}
-          onSuccess={async () => {
-            setWithdrawModalVisible(false)
-            await reloadTerminalPool(true)
-          }}
-          clrService={clrService}
-          poolData={poolData}
-        />
+      {state.depositVisible && (
+        <>
+          {poolData.isSingleAssetPool ? (
+            <StakeModal
+              onClose={() => setDepositModalVisible(false)}
+              onSuccess={async () => {
+                setDepositModalVisible(false)
+                await reloadTerminalPool(true)
+              }}
+              clrService={clrService as any}
+              poolData={poolData}
+            />
+          ) : (
+            <DepositModal
+              onClose={() => setDepositModalVisible(false)}
+              onSuccess={async () => {
+                setDepositModalVisible(false)
+                await reloadTerminalPool(true)
+              }}
+              clrService={clrService}
+              poolData={poolData}
+            />
+          )}
+        </>
       )}
 
-      {poolData.isReward && poolData.vestingTokens.length !== 0 && (
+      {state.withdrawVisible && (
+        <>
+          {poolData.isSingleAssetPool ? (
+            <UnstakeModal
+              onClose={() => setWithdrawModalVisible(false)}
+              onSuccess={async () => {
+                setWithdrawModalVisible(false)
+                await reloadTerminalPool(true)
+              }}
+              clrService={clrService as any}
+              poolData={poolData}
+            />
+          ) : (
+            <WithdrawModal
+              onClose={() => setWithdrawModalVisible(false)}
+              onSuccess={async () => {
+                setWithdrawModalVisible(false)
+                await reloadTerminalPool(true)
+              }}
+              clrService={clrService}
+              poolData={poolData}
+            />
+          )}
+        </>
+      )}
+
+      {poolData.poolOffersRewards && poolData.vestingTokens.length !== 0 && (
         <VestAllModal
           open={state.vestVisible}
           onClose={() => setVestModalVisible(false)}
@@ -515,9 +548,11 @@ export const Content = (props: IProps) => {
                 <Grid item xs={12} md={6}>
                   <BalanceSection token={token0} />
                 </Grid>
-                <Grid item xs={12} md={6}>
-                  <BalanceSection token={token1} />
-                </Grid>
+                {token1.address && (
+                  <Grid item xs={12} md={6}>
+                    <BalanceSection token={token1} />
+                  </Grid>
+                )}
               </Grid>
             </Grid>
 
@@ -532,14 +567,16 @@ export const Content = (props: IProps) => {
                     tokenTvl={poolData.user.token0Tvl}
                   />
                 </Grid>
-                <Grid item xs={12} md={6}>
-                  <BalanceSection
-                    token={token1}
-                    isDeposit
-                    deposit={poolData.user.token1Deposit}
-                    tokenTvl={poolData.user.token1Tvl}
-                  />
-                </Grid>
+                {token1.address && (
+                  <Grid item xs={12} md={6}>
+                    <BalanceSection
+                      token={token1}
+                      isDeposit
+                      deposit={poolData.user.token1Deposit}
+                      tokenTvl={poolData.user.token1Tvl}
+                    />
+                  </Grid>
+                )}
               </Grid>
             </Grid>
 
@@ -560,23 +597,25 @@ export const Content = (props: IProps) => {
                 label={
                   <div className={classes.tvlLabel}>
                     <span>TVL</span>
-                    <div className={classes.tooltipWrapper}>
-                      <Tooltip
-                        arrow
-                        placement="right"
-                        classes={{
-                          arrow: classes.tooltipArrow,
-                          tooltip: classes.tooltip,
-                        }}
-                        title={`Price Range: ${getPriceRange()}`}
-                      >
-                        <img
-                          className={classes.infoIcon}
-                          alt="question"
-                          src="/assets/icons/info.svg"
-                        />
-                      </Tooltip>
-                    </div>
+                    {!poolData.isSingleAssetPool && (
+                      <div className={classes.tooltipWrapper}>
+                        <Tooltip
+                          arrow
+                          placement="right"
+                          classes={{
+                            arrow: classes.tooltipArrow,
+                            tooltip: classes.tooltip,
+                          }}
+                          title={`Price Range: ${getPriceRange()}`}
+                        >
+                          <img
+                            className={classes.infoIcon}
+                            alt="question"
+                            src="/assets/icons/info.svg"
+                          />
+                        </Tooltip>
+                      </div>
+                    )}
                   </div>
                 }
                 value={`$${numberWithCommas(
@@ -604,7 +643,7 @@ export const Content = (props: IProps) => {
               <InfoSection
                 label="REWARDS ENDING"
                 value={
-                  poolData.periodFinish.isZero() || !poolData.isReward
+                  poolData.periodFinish.isZero() || !poolData.poolOffersRewards
                     ? 'N/A'
                     : moment(
                         new Date(poolData.periodFinish.toNumber() * 1000)
@@ -616,7 +655,7 @@ export const Content = (props: IProps) => {
               <InfoSection
                 label="VESTING PERIOD"
                 value={
-                  !poolData.isReward
+                  !poolData.poolOffersRewards
                     ? 'N/A'
                     : Number(vesting) === 0
                     ? 'None'
@@ -695,7 +734,7 @@ export const Content = (props: IProps) => {
             </Button>
           )}
 
-          {isManageable && (
+          {shouldDisplayReinvestButton && (
             <Button
               className={classes.button}
               color="secondary"

@@ -93,6 +93,8 @@ export interface ITerminalPool {
   earnedTokens: EarnedToken[]
   history: History[]
   isReward?: boolean
+  isSingleAssetPool?: boolean
+  poolOffersRewards?: boolean
   manager: string
   network?: Network
   owner: string
@@ -122,6 +124,7 @@ export interface ITerminalPool {
     token0Tvl: string
   }
   vestingTokens: VestingToken[]
+  hasReinvestibleFees?: boolean
 }
 
 export interface ICreatePoolData {
@@ -173,6 +176,7 @@ export interface ICollectableFees {
 export interface PoolService {
   version: string
   address: string
+  totalSupply: () => Promise<BigNumber>
   calculateAmountsMintedSingleToken: (
     inputAsset: number,
     amount: BigNumber
@@ -181,6 +185,10 @@ export interface PoolService {
     amount0: BigNumber,
     amount1: BigNumber
   ) => Promise<any>
+  getStakedTokenBalance: () => Promise<{
+    amount0: BigNumber
+    amount1: BigNumber
+  }>
   deposit: (amount0: BigNumber, amount1: BigNumber) => Promise<any>
   waitUntilDeposit: (
     amount0: BigNumber,

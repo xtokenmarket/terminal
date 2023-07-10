@@ -3,7 +3,6 @@ import { useConnectedWeb3Context } from 'contexts'
 import { getEtherscanUri } from 'config/networks'
 import { formatUnits } from 'ethers/lib/utils'
 import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
-import { formatDurationUnits } from 'utils'
 import { toUsd } from 'utils/number'
 import { ITerminalPool, PoolService } from 'types'
 
@@ -168,37 +167,6 @@ export const RewardVestSection: React.FC<IProps> = ({
                   ~ {price}
                 </Typography>
               </div>
-            </div>
-          )
-        })}
-      </>
-    )
-  }
-
-  const renderVestingPeriods = () => {
-    if (!pool || !pool.vestingTokens) {
-      return (
-        <Typography variant="h5" className={cl.whiteText}>
-          N/A
-        </Typography>
-      )
-    }
-
-    return (
-      <>
-        {pool.vestingTokens.map((token, i) => {
-          const { primary, rest } = formatDurationUnits(token.durationRemaining)
-          if (token.durationRemaining.length === 0) {
-            return (
-              <div key={i} className={cl.vestingWrapper}>
-                <Typography className={cl.whiteText}>N/A</Typography>
-              </div>
-            )
-          }
-          return (
-            <div key={i} className={cl.vestingWrapper}>
-              <Typography className={cl.whiteText}>{primary}</Typography>
-              <Typography className={cl.lightPurpletext}>{rest}</Typography>
             </div>
           )
         })}

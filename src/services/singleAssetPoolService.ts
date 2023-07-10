@@ -2,11 +2,9 @@ import { BigNumber, Contract, Wallet, ethers } from 'ethers'
 import { Maybe, PoolService } from 'types'
 import Abi from 'abis'
 import { Interface } from '@ethersproject/abi'
-import { ChainId, GAS_DELTA } from 'config/constants'
-import { getContractAddress } from 'config/networks'
-import { hexlify } from 'ethers/lib/utils'
+import { GAS_DELTA } from 'config/constants'
 
-class NonRewardPoolService implements PoolService {
+class SingleAssetPoolService implements PoolService {
   abi: any
   contract: Contract
   provider: any
@@ -16,7 +14,7 @@ class NonRewardPoolService implements PoolService {
     this.abi = Abi.CLRV0
     this.provider = provider
     this.version = ''
-    this.contract = new ethers.Contract(address, Abi.NonRewardPool, provider)
+    this.contract = new ethers.Contract(address, Abi.SingleAssetPool, provider)
 
     this.contract
       .getVersion()
@@ -41,62 +39,55 @@ class NonRewardPoolService implements PoolService {
   }
 
   getRewardTokens = async (): Promise<string[]> => {
-    return []
+    return this.contract.getRewardTokens()
   }
 
   getStakedTokenBalance = async (): Promise<{
     amount0: BigNumber
     amount1: BigNumber
   }> => {
-    return this.contract.getStakedTokenBalance()
+    const stakedTokenBalance = await this.contract.stakedTotalSupply()
+
+    return { amount0: stakedTokenBalance, amount1: BigNumber.from(0) }
   }
 
   totalSupply = async (): Promise<BigNumber> => {
-    return this.contract.totalSupply()
+    return this.contract.stakedTotalSupply()
   }
 
   calculateAmountsMintedSingleToken = async (
     inputAsset: number,
     amount: BigNumber
   ) => {
-    return this.contract.calculateAmountsMintedSingleToken(inputAsset, amount)
+    return
   }
 
   getLiquidityForAmounts = async (amount0: BigNumber, amount1: BigNumber) => {
-    return this.contract.getLiquidityForAmounts(amount0, amount1)
+    return
   }
 
-  deposit = async (amount0: BigNumber, amount1: BigNumber) => {
-    const estimatedGas = await this.contract.estimateGas['deposit'](
-      amount0,
-      amount1
-    )
+  deposit = async (amount0: BigNumber, _: BigNumber) => {
+    const estimatedGas = await this.contract.estimateGas['stake'](amount0)
 
-    return this.contract.deposit(amount0, amount1, {
+    return this.contract.stake(amount0, {
       gasLimit: estimatedGas.add(GAS_DELTA),
     })
   }
 
   waitUntilDeposit = async (
-    amount0: BigNumber,
-    amount1: BigNumber,
+    amount: BigNumber,
+    _: BigNumber,
     account: string,
     txId: string
   ): Promise<string> => {
     let resolved = false
     return new Promise((resolve) => {
       this.contract.on(
-        'Deposit',
-        (
-          _sender: string,
-          _amount0: BigNumber,
-          _amount1: BigNumber,
-          ...rest
-        ) => {
+        'Staked',
+        (_sender: string, _amount: BigNumber, ...rest) => {
           if (
             account.toLowerCase() === _sender.toLowerCase() &&
-            amount0.eq(_amount0) &&
-            amount1.eq(_amount1)
+            amount.eq(_amount)
           ) {
             if (!resolved) {
               resolved = true
@@ -118,31 +109,23 @@ class NonRewardPoolService implements PoolService {
   parseProvideLiquidityTx = async (
     txId: string
   ): Promise<{
-    amount0: BigNumber
-    amount1: BigNumber
-    liquidity: BigNumber
+    account: string
+    amount: BigNumber
   } | null> => {
     const { logs } = await this.contract.provider.getTransactionReceipt(txId)
-
-    const address = getContractAddress(
-      'uniPositionManager',
-      this.provider.networkId
-    )
-
     const filteredLogs = logs.filter(
-      (log) => log.address.toLowerCase() === address.toLowerCase()
+      (log) => log.address.toLowerCase() === this.address.toLowerCase()
     )
 
-    const uniPositionInterface = new Interface(Abi.UniswapV3Position)
+    const contractInterface = new Interface(Abi.SingleAssetPool)
     for (let index = 0; index < filteredLogs.length; index++) {
       const log = filteredLogs[index]
       try {
-        const parsed = uniPositionInterface.parseLog(log)
-        if (parsed.name === 'IncreaseLiquidity') {
+        const parsed = contractInterface.parseLog(log)
+        if (parsed.name === 'Staked') {
           return {
-            amount0: parsed.args[2],
-            amount1: parsed.args[3],
-            liquidity: parsed.args[1],
+            account: parsed.args[1],
+            amount: parsed.args[2],
           }
         }
       } catch (error) {
@@ -150,14 +133,6 @@ class NonRewardPoolService implements PoolService {
       }
     }
     return null
-  }
-
-  withdrawAndClaimReward = async (
-    amount: BigNumber,
-    amount0Estimation: BigNumber,
-    amount1Estimation: BigNumber
-  ) => {
-    return
   }
 
   withdraw = async (
@@ -165,42 +140,33 @@ class NonRewardPoolService implements PoolService {
     amount0Estimation: BigNumber,
     amount1Estimation: BigNumber
   ) => {
-    return this.contract.withdraw(
-      amount,
-      // 1% slippage
-      amount0Estimation.mul(99).div(100),
-      amount1Estimation.mul(99).div(100)
-    )
+    const estimatedGas = await this.contract.estimateGas['unstake'](amount)
+
+    return this.contract.unstake(amount, {
+      gasLimit: estimatedGas.add(GAS_DELTA),
+    })
   }
 
   parseWithdrawTx = async (
     txId: string
   ): Promise<{
-    amount0: BigNumber
-    amount1: BigNumber
-    liquidity: BigNumber
+    account: string
+    amount: BigNumber
   } | null> => {
     const { logs } = await this.contract.provider.getTransactionReceipt(txId)
-
-    const address = getContractAddress(
-      'uniPositionManager',
-      this.provider.networkId
-    )
-
     const filteredLogs = logs.filter(
-      (log) => log.address.toLowerCase() === address.toLowerCase()
+      (log) => log.address.toLowerCase() === this.address.toLowerCase()
     )
 
-    const uniPositionInterface = new Interface(Abi.UniswapV3Position)
+    const contractInterface = new Interface(Abi.SingleAssetPool)
     for (let index = 0; index < filteredLogs.length; index++) {
       const log = filteredLogs[index]
       try {
-        const parsed = uniPositionInterface.parseLog(log)
-        if (parsed.name === 'DecreaseLiquidity') {
+        const parsed = contractInterface.parseLog(log)
+        if (parsed.name === 'Withdrawn') {
           return {
-            amount0: parsed.args[2],
-            amount1: parsed.args[3],
-            liquidity: parsed.args[1],
+            account: parsed.args[0],
+            amount: parsed.args[1],
           }
         }
       } catch (error) {
@@ -208,10 +174,6 @@ class NonRewardPoolService implements PoolService {
       }
     }
     return null
-  }
-
-  parseClaimTx = async (txId: string) => {
-    return
   }
 
   waitUntilWithdraw = async (
@@ -221,9 +183,9 @@ class NonRewardPoolService implements PoolService {
     let resolved = false
     return new Promise((resolve) => {
       this.contract.on(
-        'Withdraw',
-        (sender: string, amount0: BigNumber, amount1: BigNumber, ...rest) => {
-          if (account.toLowerCase() === sender.toLowerCase()) {
+        'Withdrawn',
+        (_sender: string, _amount: BigNumber, ...rest) => {
+          if (account.toLowerCase() === _sender.toLowerCase()) {
             if (!resolved) {
               resolved = true
               resolve(rest[0].transactionHash)
@@ -241,17 +203,61 @@ class NonRewardPoolService implements PoolService {
     })
   }
 
-  claimReward = async () => {
-    return
+  withdrawAndClaimReward = async (
+    amount: BigNumber,
+    amount0Estimation: BigNumber,
+    amount1Estimation: BigNumber
+  ) => {
+    const estimatedGas = await this.contract.estimateGas[
+      'unstakeAndClaimReward'
+    ](amount)
+
+    return this.contract.unstakeAndClaimReward(amount, {
+      gasLimit: estimatedGas.add(GAS_DELTA),
+    })
   }
 
-  waitUntilReinvest = async (txId: string): Promise<string> => {
+  parseClaimTx = async (txId: string) => {
+    const result: {
+      [key: string]: BigNumber
+    } = {}
+    const { logs } = await this.contract.provider.getTransactionReceipt(txId)
+
+    const filteredLogs = logs.filter(
+      (log) => log.address.toLowerCase() === this.contract.address.toLowerCase()
+    )
+
+    const contractInterface = new Interface(Abi.SingleAssetPool)
+    for (let index = 0; index < filteredLogs.length; index++) {
+      const log = filteredLogs[index]
+      try {
+        const parsed = contractInterface.parseLog(log)
+        if (parsed.name === 'RewardClaimed') {
+          result[String(parsed.args[1]).toLowerCase()] = parsed.args[2]
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
+    return result
+  }
+
+  claimReward = async () => {
+    const transactionObject = await this.contract.claimReward()
+    console.log(`claimReward transaction hash: ${transactionObject.hash}`)
+
+    return transactionObject.hash
+  }
+
+  waitUntilClaimReward = async (account: string, txId: string) => {
     let resolved = false
     return new Promise((resolve) => {
-      this.contract.on('Reinvest', (...rest) => {
-        if (!resolved) {
-          resolved = true
-          resolve(rest[0].transactionHash)
+      this.contract.on('RewardClaimed', (_: string, sender: any, ...rest) => {
+        if (account.toLowerCase() === sender.toLowerCase()) {
+          if (!resolved) {
+            resolved = true
+            resolve(rest[0].transactionHash)
+          }
         }
       })
 
@@ -264,21 +270,24 @@ class NonRewardPoolService implements PoolService {
     })
   }
 
-  waitUntilClaimReward = async (account: string, txId: string) => {
-    return
-  }
-
   calculateWithdrawAmounts = async (amount: BigNumber) => {
     return this.contract.calculateWithdrawAmounts(amount)
   }
 
-  earned = async (account: Maybe<string>, tokenAddress: string) => {
-    return BigNumber.from(0)
+  earned = async (
+    account: Maybe<string>,
+    tokenAddress: string
+  ): Promise<BigNumber> => {
+    return this.contract.earned(account, tokenAddress)
   }
 
   reinvest = async () => {
     return
   }
+
+  waitUntilReinvest = async (txId: string): Promise<string> => {
+    return ''
+  }
 }
 
-export { NonRewardPoolService }
+export { SingleAssetPoolService }
