@@ -24,7 +24,7 @@ export const STORAGE_KEY_CONNECTOR = 'CONNECTOR'
 
 export const LOGGER_ID = 'terminal'
 
-export const TERMINAL_API_URL = 'http://localhost:443/api'
+export const TERMINAL_API_URL = 'https://terminalstage.xtokenapi.link/api'
 export const ORIGINATION_API_URL =
   'https://terminal.xtokenapi.link/api/origination'
 export const POLL_API_DATA = 120000 // 2 min
@@ -248,4 +248,19 @@ export const ETH = {
   decimals: 18,
   image: '/assets/tokens/eth.png',
   address: ethers.constants.AddressZero,
+}
+
+export const TERMINAL_GQL_URL = {
+  [Network.MAINNET]:
+    'https://api.thegraph.com/subgraphs/name/conache/terminal-mainnet',
+  [Network.ARBITRUM]:
+    'https://api.thegraph.com/subgraphs/name/conache/terminal-arbitrum',
+  [Network.OPTIMISM]:
+    'https://api.thegraph.com/subgraphs/name/conache/terminal-optimism',
+  [Network.POLYGON]:
+    'https://api.thegraph.com/subgraphs/name/conache/terminal-polygon',
+  [Network.GOERLI]:
+    'https://api.thegraph.com/subgraphs/name/conache/terminal-goerli',
+  [Network.KOVAN]:
+    'https://api.thegraph.com/subgraphs/name/xtokenmarket/terminal-kovan',
 }

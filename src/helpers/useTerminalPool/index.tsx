@@ -1,6 +1,11 @@
 import Abi from 'abis'
 import axios from 'axios'
-import { ChainId, ETHER_DECIMAL, TERMINAL_API_URL } from 'config/constants'
+import {
+  ChainId,
+  ETHER_DECIMAL,
+  TERMINAL_API_URL,
+  TERMINAL_GQL_URL,
+} from 'config/constants'
 import {
   getNetworkProvider,
   getTokenFromAddress,
@@ -309,7 +314,7 @@ export const useTerminalPool = (
 
         // Fetch pool events history from subgraph
         try {
-          const graphqlUrl = `https://api.thegraph.com/subgraphs/name/conache/terminal-${network}`
+          const graphqlUrl = TERMINAL_GQL_URL[network as Network]
           const eventVariables = {
             poolAddress: (poolAddress as string).toLowerCase(),
             userAddress: account.toLowerCase(),
